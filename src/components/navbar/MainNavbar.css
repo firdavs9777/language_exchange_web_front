@@ -4,6 +4,14 @@
     justify-content: space-between;
     background-color: #071a28;
 }
+.navbar-nav {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-nav .nav-item {
+    margin: 0 10px; /* Adjust spacing as needed */
+  }
 
 .custom-nav-link {
     padding: 10px;

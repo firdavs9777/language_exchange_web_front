@@ -1,13 +1,20 @@
-// src/store/index.ts
-import { createStore, combineReducers } from 'redux';
-import { counterReducer } from './reducers/counterReducer/counterReducer';
-
-const rootReducer = combineReducers({
-  counter: counterReducer,
+import { configureStore } from "@reduxjs/toolkit";
+import { apiSlice } from "../store/slices/apiSlice";
+import momentSliceReducer from "./slices/momentsSlice";
+// import cartSliceReducer from '../store/slices/';
+import authSliceReducer from "../store/slices/authSlice";
+import commentsSliceReducer from "../store/slices/comments";
+const rootReducer = configureStore({
+  reducer: {
+    [apiSlice.reducerPath]: apiSlice.reducer,
+    moments: momentSliceReducer,
+    auth: authSliceReducer,
+    comments: commentsSliceReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
+  devTools: true,
 });
+export type RootState = ReturnType<typeof rootReducer.getState>;
 
-export type RootState = ReturnType<typeof rootReducer>;
-
-const store = createStore(rootReducer);
-
-export default store;
+export default rootReducer;

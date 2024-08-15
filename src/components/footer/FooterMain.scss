@@ -1,5 +1,95 @@
-.footer 
-{
-    color: rgb(17, 255, 0);
-    background-color: rgb(8, 105, 242);
+.footer-main {
+    background-color: #333;
+    color: #fff;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.footer-section {
+    flex: 1;
+    margin: 1rem;
+    min-width: 200px;
+}
+
+.footer-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.footer-section p {
+    margin: 0.5rem 0;
+}
+
+.footer-section a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: #007bff;
+}
+
+.social-media-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.social-media-links a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-media-links a:hover {
+    color: #007bff;
+}
+
+.newsletter-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.newsletter-form input {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    max-width: 300px;
+}
+
+.newsletter-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.newsletter-form button:hover {
+    background-color: #0056b3;
+}
+
+.footer-bottom {
+    padding: 1rem 0;
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 0.875rem;
 }
