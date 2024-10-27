@@ -1,15 +1,15 @@
 import React from "react";
 import { Container, Navbar, Nav, NavDropdown } from "react-bootstrap";
-import { FaUser, FaUsers, FaComment, FaGlobe } from "react-icons/fa";
+import { FaUser, FaUsers, FaComment, FaGlobe, FaBook } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "./MainNavbar.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { useLogoutUserMutation } from "../../store/slices/usersSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "@reduxjs/toolkit/query";
 import { logout } from "../../store/slices/authSlice";
 import { LinkContainer } from "react-router-bootstrap";
+import { toast } from "react-toastify";
 
 const MainNavbar = () => {
   // const cart = useSelector((state: any) => state.cart.cartItems);
@@ -18,14 +18,14 @@ const MainNavbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [logoutApiCall] = useLogoutUserMutation();
+  // const [logoutApiCall] = useLogoutUserMutation();
 
   const logoutHandler = async () => {
-    console.log(userInfo);
     try {
-      logoutApiCall(userInfo).unwrap();
+      // logoutApiCall(userInfo).unwrap();
       dispatch(logout(userInfo)); // Corrected dispatch call without passing userInfo
       navigate("/login");
+      toast.success("User successfully logged out!");
     } catch (error: any) {
       alert(error.message);
     }
@@ -40,7 +40,7 @@ const MainNavbar = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="w-100 justify-content-center justify-content-md-end">
-              <Nav.Link href="/community" className="custom-nav-link">
+              <Nav.Link href="/communities" className="custom-nav-link">
                 <FaUsers /> Community
               </Nav.Link>
               {userInfo && (
@@ -50,6 +50,9 @@ const MainNavbar = () => {
                   </Nav.Link>
                   <Nav.Link href="/moments" className="custom-nav-link">
                     <FaGlobe /> Moments
+                  </Nav.Link>
+                  <Nav.Link href="/courses" className="custom-nav-link">
+                    <FaBook /> Courses
                   </Nav.Link>
                 </>
               )}

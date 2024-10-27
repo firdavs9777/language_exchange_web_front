@@ -43,7 +43,7 @@ const FooterMain: React.FC = () => {
             <h3>Contact Info</h3>
             <p>Email: support@bananatalk.com</p>
             <p>Phone: +1 (234) 567-890</p>
-            <p>Address: 123 Language Lane, Fluent City, FL 12345</p>
+            <p>Address: Seoul, South Korea, Gangnam-gu</p>
           </Col>
 
           {/* Social Media Links */}

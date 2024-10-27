@@ -1,0 +1,53 @@
+.chat-content {
+    padding: 10px;
+  /* Light background for the chat area */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chat-messages {
+    margin-bottom: 1rem;
+  }
+  
+  .message-item {
+    display: flex;
+    margin-bottom: 10px; /* Space between messages */
+  }
+  
+  .my-message {
+    justify-content: flex-end; /* Align to the left */
+  }
+  
+  .other-message {
+    justify-content: flex-start; /* Align to the right */
+  }
+  
+  .message-sender {
+    background-color: #2cc1d7; /* Light green for user's messages */
+    padding: 10px;
+    color: #fff;
+    border-radius: 10px;
+    max-width: 50%; /* Limit width */
+    word-wrap: break-word; /* Wrap long words */
+  }
+  
+  .message-receiver {
+    background-color: #e9e6e3; /* Light yellow for other user's messages */
+    padding: 8px 12px;
+    color: #333;
+    border-radius: 20px;
+    max-width: 70%; /* Limit width */
+    word-wrap: break-word; /* Wrap long words */
+  }
+  .avatar {
+    width: 40px; /* Adjust the width as needed */
+    height: 40px; /* Adjust the height as needed */
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image covers the entire area */
+    margin-right: 10px; /* Adds space between the avatar and text */
+  }
+  .send-button {
+    /* Customize the send button */
+    width: 100px; /* Set a fixed width */
+  }
+  

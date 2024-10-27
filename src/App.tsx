@@ -7,6 +7,7 @@ import { Container } from "react-bootstrap";
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import FooterMain from "./components/footer/FooterMain";
 // import TodoList from './components/TodoList';
 
 const App = () => {
@@ -16,7 +17,7 @@ const App = () => {
       <Container fluid>
         <Outlet />
       </Container>
-
+      <FooterMain />
       <ToastContainer />
     </>
   );

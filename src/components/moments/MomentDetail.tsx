@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useGetMomentDetailsQuery } from "../../store/slices/momentsSlice";
+import {
+  useDislikeMomentMutation,
+  useGetMomentDetailsQuery,
+  useLikeMomentMutation,
+} from "../../store/slices/momentsSlice";
 import {
   Card,
   Container,
@@ -12,7 +16,7 @@ import {
   Form,
   Button,
 } from "react-bootstrap";
-import { AiFillLike } from "react-icons/ai";
+import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
 import "./MomentDetails.css";
@@ -73,9 +77,19 @@ interface CommentResponse {
 
 const MomentDetail = () => {
   const { id: momentId } = useParams();
-  const { data, isLoading, error } = useGetMomentDetailsQuery(momentId);
+  const {
+    data,
+    isLoading,
+    refetch: refetchMomentDetails,
+    error,
+  } = useGetMomentDetailsQuery(momentId);
   const [newComment, setNewComment] = useState<string>("");
   const { userInfo } = useSelector((state: any) => state.auth);
+  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
+  const [likeMoment] = useLikeMomentMutation();
+  const [dislikeMoment] = useDislikeMomentMutation();
+
+  const [liked, setLiked] = useState(false);
   const [addComment, { isLoading: isAddingComment, error: addCommentError }] =
     useAddCommentMutation();
 
@@ -130,6 +144,20 @@ const MomentDetail = () => {
       console.error("Error adding comment:", error);
     }
   };
+
+  const toggleLike = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevents the Link from triggering on button click
+    if (momentDetails.likedUsers.includes(userId)) {
+      await dislikeMoment({ momentId: momentDetails._id, userId });
+      // Call the dislike mutation
+    } else {
+      await likeMoment({ momentId: momentDetails._id, userId }); // Call the like mutation
+    }
+
+    setLiked(momentDetails.likedUsers.includes(userId));
+    refetchMomentDetails(); // Call refetch to update the moments list
+  };
+
   return (
     <Container className="my-4">
       <Row className="justify-content-center">
@@ -176,10 +204,22 @@ const MomentDetail = () => {
               <hr />
               <Row className="text-center">
                 <Col>
-                  <AiFillLike className="icon" /> {momentDetails.likeCount}
+                  <Button
+                    variant="link"
+                    className="text-dark"
+                    onClick={toggleLike}
+                  >
+                    {momentDetails.likedUsers.includes(userId) ? (
+                      <AiFillLike className="icon" />
+                    ) : (
+                      <AiOutlineLike className="icon" />
+                    )}
+                    <span className="likeCount">{momentDetails.likeCount}</span>
+                  </Button>
                 </Col>
                 <Col>
-                  <FaRegComment className="icon" /> {commentsList.length}
+                  <FaRegComment className="icon" />
+                  <span className="commentCount">{commentsList.length}</span>
                 </Col>
                 <Col>
                   <IoMdShare className="icon" />

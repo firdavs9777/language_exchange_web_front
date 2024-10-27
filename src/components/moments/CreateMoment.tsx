@@ -14,7 +14,6 @@ import {
 } from "../../store/slices/momentsSlice";
 import Loader from "../Loader";
 import { FaPlus, FaTimes } from "react-icons/fa";
-import { RootState } from "@reduxjs/toolkit/query";
 import { useSelector } from "react-redux";
 
 // TypeScript interfaces for the API response

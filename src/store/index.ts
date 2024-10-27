@@ -1,15 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { apiSlice } from "../store/slices/apiSlice";
+import { apiSlice } from "./slices/apiSlice";
 import momentSliceReducer from "./slices/momentsSlice";
-// import cartSliceReducer from '../store/slices/';
-import authSliceReducer from "../store/slices/authSlice";
-import commentsSliceReducer from "../store/slices/comments";
+import authSliceReducer from "./slices/authSlice";
+import commentsSliceReducer from "./slices/comments";
+import chatApiSliceReducer from "./slices/chatSlice";
 const rootReducer = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
     moments: momentSliceReducer,
     auth: authSliceReducer,
     comments: commentsSliceReducer,
+    chats: chatApiSliceReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

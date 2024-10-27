@@ -12,6 +12,7 @@ export interface MomentType {
   description: string;
   images: string[];
   likeCount: number;
+  likedUsers: string[];
   user: {
     _id: string;
     name: string;
@@ -31,6 +32,7 @@ export interface MomentType {
   createdAt: string;
   __v: number;
   imageUrls: string[];
+  refetch?: () => {};
 }
 
 //     final String id;
@@ -41,7 +43,7 @@ export interface MomentType {
 //     likeCount: string
 // }
 const MainMoments = () => {
-  const { data, isLoading, error } = useGetMomentsQuery({});
+  const { data, isLoading, error, refetch } = useGetMomentsQuery({});
 
   const navigate = useNavigate();
   const handleAddMoment = () => {
@@ -50,8 +52,8 @@ const MainMoments = () => {
 
   const moments = data as MomentType[];
   return (
-    <Container>
-      <Row className="mt-4">
+    <Container fluid>
+      <Row className="mt-2">
         <Col className="d-flex justify-content-end text-center">
           <Button
             className="add-button mt-1 ml-auto"
@@ -69,7 +71,7 @@ const MainMoments = () => {
           <Message variant="danger">Error Occured</Message>
         ) : moments ? (
           moments.map((moment: MomentType) => (
-            <Col md={6} sm={12} lg={4} xl={3} key={moment._id} className="mb-4">
+            <Col md={6} sm={6} lg={4} xl={3} key={moment._id} className="mb-4">
               <SingleMoment
                 _id={moment._id}
                 title={moment.title}
@@ -77,9 +79,11 @@ const MainMoments = () => {
                 images={[]}
                 likeCount={moment.likeCount}
                 user={moment.user}
+                likedUsers={moment.likedUsers}
                 imageUrls={moment.imageUrls}
                 createdAt={moment.createdAt}
                 __v={moment.__v}
+                refetch={refetch}
               />
             </Col>
           ))

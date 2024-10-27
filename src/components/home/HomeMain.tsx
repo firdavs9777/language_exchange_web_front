@@ -186,7 +186,6 @@ const HomeMain: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <FooterMain />
     </section>
   );
 };

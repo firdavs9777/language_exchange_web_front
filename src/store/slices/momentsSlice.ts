@@ -1,4 +1,4 @@
-import { MOMENTS_URL } from "../../constants";
+import { MOMENTS_URL, USERS_URL } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
 export const momentsApiSlice = apiSlice.injectEndpoints({
@@ -41,6 +41,26 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Moments"],
     }),
+    likeMoment: builder.mutation({
+      query: ({ momentId, userId }: { momentId: string; userId: string }) => ({
+        url: `${MOMENTS_URL}/${momentId}/like`,
+        method: "POST",
+        body: { userId },
+      }),
+    }),
+    dislikeMoment: builder.mutation({
+      query: ({ momentId, userId }: { momentId: string; userId: string }) => ({
+        url: `${MOMENTS_URL}/${momentId}/dislike`,
+        method: "POST",
+        body: { userId },
+      }),
+    }),
+    getMyMoments: builder.query({
+      query: ({ userId }: { userId: string }) => ({
+        url: `${MOMENTS_URL}/user/${userId}`,
+      }),
+      keepUnusedDataFor: 5,
+    }),
   }),
 });
 export const {
@@ -48,6 +68,9 @@ export const {
   useGetMomentDetailsQuery,
   useCreateMomentMutation,
   useUploadMomentPhotosMutation,
+  useLikeMomentMutation,
+  useDislikeMomentMutation,
+  useGetMyMomentsQuery,
 } = momentsApiSlice;
 
 export default momentsApiSlice.reducer;

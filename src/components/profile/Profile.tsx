@@ -1,5 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useGetUserProfileQuery } from "../../store/slices/usersSlice";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  useGetFollowersQuery,
+  useGetFollowingsQuery,
+  useGetUserProfileQuery,
+  useUploadUserPhotoMutation,
+} from "../../store/slices/usersSlice";
 import {
   Button,
   Card,
@@ -10,28 +15,58 @@ import {
   Form,
 } from "react-bootstrap";
 import backgroundImage from "../../assets/profile_background.png";
-import { FaEdit, FaSave, FaTimes } from "react-icons/fa";
+import {
+  FaCameraRetro,
+  FaEdit,
+  FaEye,
+  FaSave,
+  FaTimes,
+  FaUserCheck,
+  FaUserFriends,
+} from "react-icons/fa";
 import "./Profile.css";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useGetMyMomentsQuery } from "../../store/slices/momentsSlice";
+import { MomentType } from "../moments/MainMoments";
+import { FollowerInterface, UserProfileData } from "./ProfileTypes/types";
+import ImageViewerModal from "./ImageViewer/ImageModal";
+import ImageUploaderModal from "./ImageUploader/ImageUploader";
+import { toast } from "react-toastify";
 
-interface UserProfileData {
-  _id: string;
-  name: string;
-  gender: string;
-  email: string;
-  bio: string;
-  birth_year: string;
-  birth_month: string;
-  birth_day: string;
-  image: string;
-  native_language: string;
-  language_to_learn: string;
-  createdAt: string;
-  images: string[];
-  imageUrls: string[];
+interface Moment {
+  count: number;
+  success: string;
+  data: MomentType[];
 }
-
 const ProfileScreen: React.FC = () => {
   const { data, isLoading, error } = useGetUserProfileQuery({});
+  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
+  const {
+    data: followers,
+    isLoading: isLoading_two,
+    error: ErrorMessage,
+  } = useGetFollowersQuery({ userId });
+  const {
+    data: followings,
+    isLoading: isLoading_three,
+    error: ErrorMessageCode,
+  } = useGetFollowingsQuery({ userId });
+  const {
+    data: moments,
+    isLoading: momentLoading,
+    error: MomentError,
+  } = useGetMyMomentsQuery({ userId });
+  const [uploadUserPhoto] = useUploadUserPhotoMutation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const followersDataMain = followers as FollowerInterface;
+  const [followersData, setFollowersData] = useState({});
+  const followingsDataMain = followings as FollowerInterface;
+  const [followingsData, setFollowingsData] = useState({});
+  const momentsData = moments as Moment;
+  const [momentsMain, setMomentsMain] = useState({});
+
   const [formData, setFormData] = useState<UserProfileData>({
     _id: "",
     name: "",
@@ -57,16 +92,74 @@ const ProfileScreen: React.FC = () => {
     if (data) {
       setFormData(data.data);
     }
-  }, [data]);
+    if (followers) {
+      setFollowersData(followersDataMain);
+    }
+    if (followings) {
+      setFollowingsData(followingsDataMain);
+    }
+    if (moments) {
+      setMomentsMain(momentsData);
+    }
+  }, [
+    data,
+    followers,
+    followersDataMain,
+    followings,
+    followingsDataMain,
+    moments,
+  ]);
+  const [images, setImages] = useState<string[]>(formData.imageUrls);
+  const [showModal, setShowModal] = useState(false);
+  const [showImageViewer, setShowImageViewer] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  const handleUploadImages = async (newFiles: File[]) => {
+    // Convert File objects to URLs or any method you prefer for displaying
+
+    try {
+      const newImageUrls = newFiles.map((file) => URL.createObjectURL(file));
+      setImages((prevImages) => [...prevImages, ...newImageUrls]);
+
+      const formData = new FormData();
+      newFiles.forEach((file) => {
+        formData.append("file", file); // Append the actual File objects
+      });
+
+      // Check if userId is available before making the upload call
+      if (newFiles.length > 0 && userId) {
+        await uploadUserPhoto({
+          userId: userId,
+          imageFiles: formData,
+        }).unwrap();
+      }
+      toast.success("Profile Image updated successfully");
+    } catch (error) {
+      toast.error(`Error Occured, Please upload a file properly`);
+    }
+    // Update the images state
+  };
+
+  const handleOpenUploadModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+  const handleCloseViewer = () => setShowImageViewer(false);
+  const handleImageClick = (index: number) => {
+    setCurrentImageIndex(index);
+    setShowImageViewer(true);
+  };
   if (isLoading) return <div>Loading...</div>;
+  if (isLoading_two) return <div>Loading..</div>;
   if (error) return <div>Error loading user profile</div>;
   if (!data) return <div>No user profile data available</div>;
 
   const handleSaveChanges = () => {
     setEditMode(null);
     // Implement save logic, e.g., API call to update profile data
-    console.log("Saved data:", formData);
   };
 
   const handleCancelChanges = () => {
@@ -77,7 +170,7 @@ const ProfileScreen: React.FC = () => {
   return (
     <Container fluid className="profile-section">
       {/* Banner Section */}
-      <Row className="justify-content-center my-3">
+      <Row className="justify-content-center my-1">
         <Image src={backgroundImage} className="banner" />
         <Col xs="auto" className="d-flex align-items-center">
           <h1 className="profile-heading">My Profile</h1>
@@ -92,10 +185,75 @@ const ProfileScreen: React.FC = () => {
             alt="User Image"
             roundedCircle
             className="profile-avatar-image"
+            onClick={() => handleImageClick(0)} // Open viewer starting from the first image
+            style={{ cursor: "pointer" }} // Indicate it's clickable
           />
-          <Button variant="primary" className="profile-avatar-edit">
+          <Button
+            variant="primary"
+            className="profile-avatar-edit"
+            onClick={handleOpenUploadModal}
+          >
             <FaEdit /> Edit
           </Button>
+        </Col>
+      </Row>
+
+      <ImageViewerModal
+        show={showImageViewer}
+        images={formData.imageUrls}
+        currentIndex={currentImageIndex}
+        onClose={handleCloseViewer}
+        onSelectImage={handleImageClick}
+      />
+
+      <ImageUploaderModal
+        images={formData.imageUrls}
+        show={showModal}
+        onClose={handleCloseModal}
+        onUploadImages={handleUploadImages}
+      />
+
+      <Row className="justify-content-center my-4 profile-stats-section">
+        <Col md={3} className="text-center">
+          <Link to={`/followersList`}>
+            <Card className="p-3 shadow-sm profile-stat-card">
+              <FaUserFriends className="stat-icon mb-2" />
+              <Card.Title className="stat-number">
+                {followersDataMain?.count}
+              </Card.Title>
+              <Card.Text className="stat-text">Followers</Card.Text>
+            </Card>
+          </Link>
+        </Col>
+
+        <Col md={3} className="text-center">
+          <Link to={`/followingsList`}>
+            <Card className="p-3 shadow-sm profile-stat-card">
+              <FaUserCheck className="stat-icon mb-2" />
+              <Card.Title className="stat-number">
+                {followingsDataMain?.count}
+              </Card.Title>
+              <Card.Text className="stat-text">Following</Card.Text>
+            </Card>
+          </Link>
+        </Col>
+        <Col md={3} className="text-center">
+          <Link to={`/my-moments`}>
+            <Card className="p-3 shadow-sm profile-stat-card">
+              <FaCameraRetro className="stat-icon mb-2" />
+              <Card.Title className="stat-number">
+                {momentsData?.count}
+              </Card.Title>
+              <Card.Text className="stat-text">Moments</Card.Text>
+            </Card>
+          </Link>
+        </Col>
+        <Col md={3} className="text-center">
+          <Card className="p-3 shadow-sm profile-stat-card">
+            <FaEye className="stat-icon mb-2" />
+            <Card.Title className="stat-number">320</Card.Title>
+            <Card.Text className="stat-text">Visitors</Card.Text>
+          </Card>
         </Col>
       </Row>
 

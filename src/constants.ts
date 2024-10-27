@@ -1,7 +1,9 @@
 export const BASE_URL =
-  process.env.NODE_ENV === "development" ? "http://localhost:5002" : "";
+  process.env.NODE_ENV === "development" ? "http://localhost:5003" : "";
 export const MOMENTS_URL = "/api/v1/moments";
 export const USERS_URL = "/api/v1/users";
+export const COMMUNITY_URL = "/api/v1/auth/users";
+export const MESSAGES_URL = "/api/v1/messages";
 export const LOGIN_URL = "/api/v1/auth/login";
 export const REGISTER_URL = "/api/v1/auth/register";
 export const LOGOUT_URL = "/api/v1/auth/logout";

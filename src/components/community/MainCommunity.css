@@ -1,0 +1,81 @@
+.community-card {
+    display: flex;
+    flex-direction: row;
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 10px;
+    height: 200px;
+    background-color: #f8f9fa; /* Subtle background color */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+}
+
+.community-card:hover {
+    transform: scale(1.03);
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.community-image {
+    width: 40%;
+    max-width: 250px; /* Prevent the image from growing too large */
+    object-fit: cover;
+    filter: brightness(90%); /* Slight darkening to improve text contrast */
+    transition: filter 0.3s ease;
+}
+
+.community-card:hover .community-image {
+    filter: brightness(100%);
+}
+
+.community-profile {
+    width: 60%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #ffffff; /* White background for profile section */
+    transition: background-color 0.3s ease;
+}
+
+.community-profile .card-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333; /* Darker color for better readability */
+    margin-bottom: 0.5rem;
+}
+
+.community-profile .card-text {
+    font-size: 1rem;
+    color: #555; /* Subtle color for secondary text */
+    margin-bottom: 0.25rem;
+}
+
+.community-card:hover .community-profile {
+    background-color: #f1f1f1; /* Slightly darker background on hover */
+}
+
+@media (max-width: 768px) {
+    .community-card {
+        height: auto;
+        flex-direction: column;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Adjust shadow for smaller screens */
+    }
+
+    .community-image {
+        width: 100px;
+        height: 100px;
+    }
+
+    .community-profile {
+        width: 100%;
+        padding: 20px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .community-image {
+        width: 35%; /* Adjust width for very large screens */
+        max-width: 300px; /* Increase max-width if needed */
+    }
+}

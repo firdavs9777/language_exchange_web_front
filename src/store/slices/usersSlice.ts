@@ -4,6 +4,8 @@ import {
   REGISTER_URL,
   LOGIN_URL,
   USER_PROFILE_URL,
+  USERS_URL,
+  COMMUNITY_URL,
 } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
@@ -24,12 +26,26 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
     }),
     registerUser: builder.mutation({
-      query: (data: AuthInfo) => ({
+      query: (data: any) => ({
         url: `${REGISTER_URL}`,
         method: "POST",
         body: data,
       }),
       keepUnusedDataFor: 5,
+    }),
+    uploadUserPhoto: builder.mutation({
+      query: ({
+        userId,
+        imageFiles,
+      }: {
+        userId: string;
+        imageFiles: File[];
+      }) => ({
+        url: `${COMMUNITY_URL}/${userId}/photo`,
+        method: "PUT",
+        body: imageFiles,
+      }),
+      invalidatesTags: ["User"],
     }),
     getUserProfile: builder.query({
       query: () => ({
@@ -46,6 +62,49 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
     }),
+    followUser: builder.mutation({
+      query: ({
+        userId,
+        targetUserId,
+      }: {
+        userId: string;
+        targetUserId: string;
+      }) => ({
+        url: `${COMMUNITY_URL}/${userId}/follow/${targetUserId}`,
+        method: "PUT",
+      }),
+      keepUnusedDataFor: 5,
+      providesTags: ["User"],
+    }),
+    unFollowUser: builder.mutation({
+      query: ({
+        userId,
+        targetUserId,
+      }: {
+        userId: string;
+        targetUserId: string;
+      }) => ({
+        url: `${COMMUNITY_URL}/${userId}/unfollow/${targetUserId}`,
+        method: "PUT", // Ensure the correct HTTP method is specified
+      }),
+      keepUnusedDataFor: 5, // Optionally, how long unused data is kept in the cache
+      invalidatesTags: ["User"], // Invalidate cache after this mutation to update user state
+    }),
+    getFollowers: builder.query({
+      query: ({ userId }: { userId: string }) => ({
+        url: `${COMMUNITY_URL}/${userId}/followers`,
+      }),
+      keepUnusedDataFor: 5,
+      providesTags: ["User"],
+    }),
+    getFollowings: builder.query({
+      query: ({ userId }: { userId: string }) => ({
+        url: `${COMMUNITY_URL}/${userId}/following`,
+      }),
+      keepUnusedDataFor: 5,
+      providesTags: ["User"],
+    }),
+
     // updateUser: builder.query({
     //     query: (productId: string)=> ({
     //         url:`${PRODUCTS_URL}/${productId}`
@@ -59,4 +118,9 @@ export const {
   useLogoutUserMutation,
   useRegisterUserMutation,
   useGetUserProfileQuery,
+  useGetFollowersQuery,
+  useGetFollowingsQuery,
+  useFollowUserMutation,
+  useUnFollowUserMutation,
+  useUploadUserPhotoMutation,
 } = usersApiSlice;

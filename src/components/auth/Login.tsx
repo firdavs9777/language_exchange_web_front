@@ -36,32 +36,35 @@ const Login = () => {
       dispatch(setCredentials({ ...ActionPayload }));
       toast.success("Successfully logged in");
       navigate(redirect);
-      // Handle successful login (e.g., redirect to dashboard, store token in localStorage, etc.)
     } catch (error: any) {
       if (error instanceof Error) {
         toast(error.message);
       } else {
-        toast("Invalid ");
+        toast("Invalid credentials");
       }
     }
   };
+
   const clickHandler = () => {
     setShowPass((prev) => !prev);
   };
+
   return (
     <FormContainer>
-      <Form onSubmit={submitHandler}>
-        <h1>Sign In</h1>
-        <Form.Group controlId="email" className="my-4">
+      <Form onSubmit={submitHandler} className="p-4 m-4 shadow-lg rounded">
+        <h1 className="mb-4 text-center">Sign In</h1>
+        <Form.Group controlId="email" className="mb-3">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
             type="email"
             placeholder="Enter email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-          ></Form.Control>
+            required
+          />
         </Form.Group>
-        <Form.Group controlId="email" className="my-4">
+
+        <Form.Group controlId="password" className="mb-3">
           <Form.Label>Password</Form.Label>
           <InputGroup>
             <Form.Control
@@ -69,18 +72,34 @@ const Login = () => {
               placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
-            <InputGroup.Text onClick={clickHandler}>
+            <InputGroup.Text onClick={clickHandler} className="password-toggle">
               {showPass ? <FaEyeSlash /> : <FaEye />}
             </InputGroup.Text>
           </InputGroup>
         </Form.Group>
-        <Button disabled={isLoading} type="submit" variant="primary">
-          Sign In
+
+        <Row className="mb-3">
+          <Col className="text-end">
+            <Link to="/forgot-password" className="text-muted">
+              Forgot Password?
+            </Link>
+          </Col>
+        </Row>
+
+        <Button
+          disabled={isLoading}
+          type="submit"
+          variant="primary"
+          className="w-100"
+        >
+          {isLoading ? "Signing In..." : "Sign In"}
         </Button>
 
         {isLoading && <Loader />}
-        <Row className="py-3">
+
+        <Row className="py-3 text-center">
           <Col>
             New User?{" "}
             <Link
@@ -94,4 +113,5 @@ const Login = () => {
     </FormContainer>
   );
 };
+
 export default Login;

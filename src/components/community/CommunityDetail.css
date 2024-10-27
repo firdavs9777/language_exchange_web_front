@@ -1,0 +1,38 @@
+.community-detail-container {
+    padding: 20px;
+  }
+  
+  .community-image {
+    border-radius: 20px;
+    margin: auto;
+    height: 300px;
+    object-fit: cover;
+  }
+  
+  .error-message {
+    text-align: center;
+    color: red;
+    padding: 20px;
+  }
+  
+  .loading-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .loading-container p {
+    margin-top: 10px;
+  }
+  
+  .shadow-lg {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .mx-2 {
+    margin: 0 8px;
+  }
+  
