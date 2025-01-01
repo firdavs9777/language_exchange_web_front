@@ -115,7 +115,10 @@ const HomeMain: React.FC = () => {
             <Col md={4} className="mb-4">
               <div className="pricing-card text-center">
                 <h3>Basic Plan</h3>
-                <p>Perfect for beginners. Includes access to basic lessons.</p>
+                <p>
+                  Perfect for beginners. Includes access to basic lessons & and
+                  chat features.
+                </p>
                 <span className="price">$19/month</span>
                 <Button variant="outline-primary" className="pricing-button">
                   Choose Plan
@@ -127,7 +130,7 @@ const HomeMain: React.FC = () => {
                 <h3>Standard Plan</h3>
                 <p>
                   Includes all features of the Basic Plan plus additional
-                  interactive sessions.
+                  interactive sessions an.
                 </p>
                 <span className="price">$39/month</span>
                 <Button variant="outline-primary" className="pricing-button">
@@ -151,8 +154,6 @@ const HomeMain: React.FC = () => {
           </Row>
         </Container>
       </div>
-
-      {/* Contact Section */}
       <div className="contact-section py-5 card ">
         <Container>
           <h2 className="section-heading text-center mb-4">Get in Touch</h2>

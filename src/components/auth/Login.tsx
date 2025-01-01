@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useLoginUserMutation } from "../../store/slices/usersSlice";
 import { setCredentials } from "../../store/slices/authSlice";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Loader from "../Loader";
@@ -34,7 +34,13 @@ const Login = () => {
       const userInfo = await loginUser({ email, password }).unwrap();
       const ActionPayload: Response | any = userInfo;
       dispatch(setCredentials({ ...ActionPayload }));
-      toast.success("Successfully logged in");
+      toast.success("Successfully logged in", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
       navigate(redirect);
     } catch (error: any) {
       if (error instanceof Error) {

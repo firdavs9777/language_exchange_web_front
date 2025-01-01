@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Image } from "react-bootstrap";
 import { toast } from "react-toastify";
+import "./ImageUploader.css";
 
 export interface ImageViewerModalProps {
   images: string[];
@@ -27,11 +28,11 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
   };
 
   const handleUpload = () => {
-    onUploadImages(selectedImages);
-    if (selectedImages.length === 0) {
-      toast.error("Please upload image first");
+    if (selectedImages.length === 0 && images.length === 0) {
+      toast.error("Please upload at least one image");
       return;
     }
+    onUploadImages(selectedImages);
     setSelectedImages([]);
     setIsInputVisible(true);
     onClose();
@@ -42,65 +43,51 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
   };
 
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal show={show} onHide={onClose} className="image-uploader-section">
       <Modal.Header closeButton>
         <Modal.Title>Upload Images</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <div
-          style={{
-            height: "200px",
-          }}
-        >
+      <Modal.Body className="image-main">
+        <div className="uploaded-images">
           {images.length > 0 ? (
             images.map((item, index) => (
               <Image
-                key={index} // Unique key for each image
+                key={index}
                 src={item}
-                alt={`Uploaded image ${index + 1}`} // Descriptive alt text for accessibility
-                className="img-thumbnail" // Optional: Add some styling
-                style={{ margin: "10px" }} // Optional: Margin between images
+                alt={`Uploaded image ${index + 1}`}
+                className="img-thumbnail"
               />
             ))
           ) : (
-            <p>No images available</p> // Fallback message if no images exist
+            <p>No images available</p>
           )}
         </div>
         <div className="selected-images-preview">
           {selectedImages.length > 0 ? (
             selectedImages.map((file, index) => (
-              <div
-                key={index}
-                className="image-preview"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "10px",
-                }}
-              >
+              <div key={index} className="image-preview">
                 <img
                   src={URL.createObjectURL(file)}
                   alt={`Selected preview ${index + 1}`}
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    objectFit: "cover",
-                    marginRight: "10px",
-                  }}
+                  className="preview-image"
                 />
                 {/* Render "+" button only if more images can be added */}
-                {selectedImages.length < 3 && (
-                  <Button
-                    variant="outline-secondary"
-                    onClick={handleAddImageClick}
-                  >
-                    +
-                  </Button>
-                )}
               </div>
             ))
           ) : (
-            <p>No images selected</p>
+            <p>Please select new images</p>
+          )}
+
+          {images.length <= 10 ? (
+            <Button
+              className="add-image"
+              variant="outline-secondary"
+              onClick={handleAddImageClick}
+            >
+              +
+            </Button>
+          ) : (
+            <p>You can upload maximum 10 images</p>
           )}
         </div>
 
@@ -118,7 +105,7 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
       </Modal.Body>
       <Modal.Footer>
         <Button variant="primary" onClick={handleUpload}>
-          Upload
+          Apply
         </Button>
         <Button variant="secondary" onClick={onClose}>
           Close

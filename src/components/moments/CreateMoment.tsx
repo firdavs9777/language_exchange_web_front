@@ -84,7 +84,6 @@ const CreateMoment: React.FC = () => {
           description,
           user,
         }).unwrap();
-        console.log(response);
         const newMoment = response as Moment;
 
         if (selectedImages.length > 0 && newMoment.data._id) {

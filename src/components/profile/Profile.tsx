@@ -83,7 +83,7 @@ const ProfileScreen: React.FC = () => {
     images: [],
     imageUrls: [],
   });
-
+  const [images, setImages] = useState<string[]>();
   const [editMode, setEditMode] = useState<
     "personal" | "bio" | "languages" | null
   >(null);
@@ -101,6 +101,9 @@ const ProfileScreen: React.FC = () => {
     if (moments) {
       setMomentsMain(momentsData);
     }
+    if (formData) {
+      setImages(formData.imageUrls);
+    }
   }, [
     data,
     followers,
@@ -108,8 +111,9 @@ const ProfileScreen: React.FC = () => {
     followings,
     followingsDataMain,
     moments,
+    formData,
   ]);
-  const [images, setImages] = useState<string[]>(formData.imageUrls);
+
   const [showModal, setShowModal] = useState(false);
   const [showImageViewer, setShowImageViewer] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -135,7 +139,9 @@ const ProfileScreen: React.FC = () => {
       }
       toast.success("Profile Image updated successfully");
     } catch (error) {
-      toast.error(`Error Occured, Please upload a file properly`);
+      toast.error(
+        `Error Occured, Please upload a file properly ${error?.error}`
+      );
     }
     // Update the images state
   };

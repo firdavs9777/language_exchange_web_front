@@ -1,6 +1,16 @@
 import React from "react";
-import { Container, Navbar, Nav, NavDropdown } from "react-bootstrap";
-import { FaUser, FaUsers, FaComment, FaGlobe, FaBook } from "react-icons/fa";
+import { Container, Navbar, Nav, NavDropdown, Dropdown } from "react-bootstrap";
+import {
+  FaUser,
+  FaUsers,
+  FaComment,
+  FaGlobe,
+  FaBook,
+  FaCaretDown,
+  FaRegUser, // Fallback icon for profile
+  FaRegComments,
+  FaBell, // Fallback icon for chat
+} from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "./MainNavbar.css";
 import { useNavigate } from "react-router-dom";
@@ -12,17 +22,13 @@ import { LinkContainer } from "react-router-bootstrap";
 import { toast } from "react-toastify";
 
 const MainNavbar = () => {
-  // const cart = useSelector((state: any) => state.cart.cartItems);
   const userInfo = useSelector((state: any) => state.auth.userInfo);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // const [logoutApiCall] = useLogoutUserMutation();
-
   const logoutHandler = async () => {
     try {
-      // logoutApiCall(userInfo).unwrap();
       dispatch(logout(userInfo)); // Corrected dispatch call without passing userInfo
       navigate("/login");
       toast.success("User successfully logged out!");
@@ -30,6 +36,7 @@ const MainNavbar = () => {
       alert(error.message);
     }
   };
+
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
@@ -43,37 +50,91 @@ const MainNavbar = () => {
               <Nav.Link href="/communities" className="custom-nav-link">
                 <FaUsers /> Community
               </Nav.Link>
+
               {userInfo && (
                 <>
                   <Nav.Link href="/chat" className="custom-nav-link">
                     <FaComment /> Chat
                   </Nav.Link>
+                  <Nav.Link href="/notifications" className="custom-nav-link">
+                    <FaBell /> Notifications
+                  </Nav.Link>
                   <Nav.Link href="/moments" className="custom-nav-link">
                     <FaGlobe /> Moments
-                  </Nav.Link>
-                  <Nav.Link href="/courses" className="custom-nav-link">
-                    <FaBook /> Courses
                   </Nav.Link>
                 </>
               )}
 
               {userInfo ? (
                 <NavDropdown
-                  title={`${
-                    userInfo.user ? userInfo.user.name : userInfo.name
-                  }`}
+                  drop="down-centered"
+                  title={
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100px",
+                        gap: "10px", // Space between image and name
+                      }}
+                    >
+                      <img
+                        src={
+                          userInfo.user.images && userInfo.user.images[0]
+                            ? userInfo.user.images[0]
+                            : "/default-avatar.png"
+                        }
+                        alt="Profile"
+                        style={{
+                          width: "30px",
+                          height: "30px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
+                      />
+                      <span>
+                        {userInfo.user ? (
+                          <>
+                            {userInfo.user.name}
+                            <FaCaretDown size={22} color="#fff" />
+                          </>
+                        ) : (
+                          ""
+                        )}
+                      </span>
+                    </div>
+                  }
                   id="username"
                 >
                   <LinkContainer to="/profile">
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                    <NavDropdown.Item>
+                      <FaRegUser /> Profile
+                    </NavDropdown.Item>
                   </LinkContainer>
+                  <LinkContainer to="/followersList">
+                    <NavDropdown.Item>
+                      <FaUsers /> Followers
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/followingsList">
+                    <NavDropdown.Item>
+                      <FaUsers /> Followings
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/my-moments">
+                    <NavDropdown.Item>
+                      <FaGlobe /> My Moments
+                    </NavDropdown.Item>
+                  </LinkContainer>
+
+                  <Dropdown.Divider />
+
                   <NavDropdown.Item onClick={logoutHandler}>
-                    Logout
+                    <FaUser /> Logout
                   </NavDropdown.Item>
                 </NavDropdown>
               ) : (
                 <Nav.Link href="/login" className="custom-nav-link">
-                  <FaUser /> Sign In
+                  <FaRegUser /> Sign In
                 </Nav.Link>
               )}
             </Nav>
@@ -83,4 +144,5 @@ const MainNavbar = () => {
     </header>
   );
 };
+
 export default MainNavbar;

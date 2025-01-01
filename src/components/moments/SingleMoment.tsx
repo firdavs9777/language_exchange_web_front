@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Card, ListGroup, ListGroupItem, Image } from "react-bootstrap";
-import { MomentType } from "./MainMoments";
-import { Link } from "react-router-dom";
+
+import { Link, useNavigate } from "react-router-dom";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
@@ -12,6 +12,8 @@ import {
 } from "../../store/slices/momentsSlice";
 import { useSelector } from "react-redux";
 import { useGetCommentsQuery } from "../../store/slices/comments";
+import { toast } from "react-toastify";
+import { MomentType } from "./types";
 
 const SingleMoment: React.FC<MomentType> = ({
   _id,
@@ -19,17 +21,24 @@ const SingleMoment: React.FC<MomentType> = ({
   description,
   likeCount,
   likedUsers,
+  createdAt,
   user,
   imageUrls,
   refetch,
 }) => {
   const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
   const [liked, setLiked] = useState(false);
+  const navigate = useNavigate();
 
   const [likeMoment] = useLikeMomentMutation();
   const [dislikeMoment] = useDislikeMomentMutation();
 
   const toggleLike = async (e: React.MouseEvent) => {
+    if (!userId) {
+      toast.error("Please login first");
+      navigate("/login");
+      return;
+    }
     e.preventDefault(); // Prevents the Link from triggering on button click
     if (liked) {
       await dislikeMoment({ momentId: _id, userId });
@@ -56,7 +65,7 @@ const SingleMoment: React.FC<MomentType> = ({
                 <div className="ms-3">
                   <h6 className="mb-0">{user.name}</h6>
                   <small className="text-muted">
-                    {new Date().toLocaleString()}
+                    {new Date(createdAt).toLocaleString()}
                   </small>
                 </div>
               </ListGroupItem>
@@ -84,7 +93,8 @@ const SingleMoment: React.FC<MomentType> = ({
               {likeCount}
             </Button>
             <Button variant="link" className="text-dark">
-              <FaRegComment className="icon" /> {user.__v}
+              <FaRegComment className="icon" />
+              22
             </Button>
             <Button variant="link" className="text-dark">
               <IoMdShare className="icon" />

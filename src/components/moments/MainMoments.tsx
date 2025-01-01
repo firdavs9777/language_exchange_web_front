@@ -1,69 +1,62 @@
 import React from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  FormControl,
+  Image,
+} from "react-bootstrap";
+import { FaPlus } from "react-icons/fa"; // Importing the plus icon
 import { useGetMomentsQuery } from "../../store/slices/momentsSlice";
 import Loader from "../Loader";
 import Message from "../Message";
 import SingleMoment from "./SingleMoment";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { MomentType } from "./types";
+import "./MainMoments.scss";
 
-export interface MomentType {
-  _id: string;
-  title: string;
-  description: string;
-  images: string[];
-  likeCount: number;
-  likedUsers: string[];
-  user: {
-    _id: string;
-    name: string;
-    gender: string;
-    email: string;
-    bio: string;
-    birth_year: string;
-    birth_month: string;
-    birth_day: string;
-    image: string;
-    native_language: string;
-    language_to_learn: string;
-    createdAt: string;
-    imageUrls: string[];
-    __v: number;
-  };
-  createdAt: string;
-  __v: number;
-  imageUrls: string[];
-  refetch?: () => {};
-}
-
-//     final String id;
-//     final String title;
-//     final String description;
-//     final String image;
-//     final DateTime createdAt;
-//     likeCount: string
-// }
 const MainMoments = () => {
   const { data, isLoading, error, refetch } = useGetMomentsQuery({});
+  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
+  const userInfo = useSelector((state: any) => state.auth.userInfo);
 
   const navigate = useNavigate();
   const handleAddMoment = () => {
     navigate("/add-moment"); // Navigate to the desired route
   };
-
   const moments = data as MomentType[];
+
   return (
-    <Container fluid>
-      <Row className="mt-2">
-        <Col className="d-flex justify-content-end text-center">
+    <Container
+      style={{ minHeight: "100vh" }}
+      className="d-flex flex-column justify-content-center"
+    >
+      <Row className="mt-3">
+        <Col xs={9} className="d-flex justify-content-center">
+          <Image
+            src={userInfo.user.images[0]} // Replace with your image URL or source
+            roundedCircle
+            width="50" // Adjust size as needed
+            height="50"
+          />
+
           <Button
-            className="add-button mt-1 ml-auto"
-            variant="success"
+            variant="outline-secondary"
             onClick={handleAddMoment}
+            style={{
+              marginLeft: "10px",
+              padding: "10px",
+              width: "100%", // Full width to align with the image size
+              textAlign: "start", // Center the button text
+            }}
           >
-            Add Moment
+            What's on your mind, {userInfo.user.name}?
           </Button>
         </Col>
       </Row>
+
       <Row className="mt-2">
         {isLoading ? (
           <Loader />
@@ -91,7 +84,26 @@ const MainMoments = () => {
           <p>No Moments yet</p>
         )}
       </Row>
+      {userId && (
+        <Button
+          className="add-button fixed-bottom-right d-flex justify-content-center align-items-center"
+          variant="success"
+          onClick={handleAddMoment}
+          style={{
+            position: "fixed",
+            bottom: "20px", // Adjust to desired spacing from the bottom
+            right: "20px", // Adjust to desired spacing from the right
+            borderRadius: "50%",
+            width: "60px", // Button size
+            height: "60px", // Button size
+            padding: "0",
+          }}
+        >
+          <FaPlus style={{ fontSize: "30px", color: "white" }} />
+        </Button>
+      )}
     </Container>
   );
 };
+
 export default MainMoments;

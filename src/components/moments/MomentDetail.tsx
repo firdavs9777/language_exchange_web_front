@@ -146,6 +146,10 @@ const MomentDetail = () => {
   };
 
   const toggleLike = async (e: React.MouseEvent) => {
+    if (!userId) {
+      toast.error("Please login first");
+      return;
+    }
     e.preventDefault(); // Prevents the Link from triggering on button click
     if (momentDetails.likedUsers.includes(userId)) {
       await dislikeMoment({ momentId: momentDetails._id, userId });
@@ -277,13 +281,13 @@ const MomentDetail = () => {
                   >
                     {isAddingComment ? "Adding..." : "Add Comment"}
                   </Button>
-                  {/* {addCommentError && (
-   <div className="text-danger mt-2">Error adding comment</div>
- )} */}
                 </Form>
               ) : (
                 <Message>
-                  Please <Link to="/login">sign in</Link> to write a review
+                  Please{" "}
+                  <Link to="/login" style={{ textDecoration: "underline" }}>
+                    sign in to write a review
+                  </Link>
                 </Message>
               )}
             </Card.Body>

@@ -1,0 +1,50 @@
+.image-uploader-section {
+    background-color: azure;
+    width: 100%;
+}
+
+.image-main {
+    display: flex;
+    flex-direction: column; /* Changed to column for better layout */
+    gap: 20px; /* Add some spacing between sections */
+}
+
+.uploaded-images {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping of images */
+    gap: 20px; /* Add space between uploaded images */
+}
+
+.img-thumbnail {
+    height: 150px; /* Adjust height for better fit */
+    width: 150px; /* Adjust width for better fit */
+    object-fit: cover; /* Ensure images cover the area */
+}
+
+.selected-images-preview {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 10px; /* Space between selected image previews */
+}
+
+.image-preview {
+    display: flex;
+    align-items: row;
+    gap: 10px; /* Space between image and button */
+}
+
+.preview-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.add-image{
+    display: flex;
+    padding: 20px;
+    max-width: 70px;
+    max-height: 90px;
+    font-size: 28px;
+    text-align: center;    /* Ensure button has a minimum width */
+}
