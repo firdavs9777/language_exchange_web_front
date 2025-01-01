@@ -16,7 +16,6 @@ import "./MainNavbar.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
 import { logout } from "../../store/slices/authSlice";
 import { LinkContainer } from "react-router-bootstrap";
 import { toast } from "react-toastify";
