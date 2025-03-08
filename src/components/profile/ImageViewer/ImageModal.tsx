@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, Carousel, Image } from "react-bootstrap";
 import { ImageViewerModalProps } from "../ProfileTypes/types";
 import "./ImageModal.css";
+
 const ImageUploaderModal: React.FC<ImageViewerModalProps> = ({
   show,
   images,
@@ -14,7 +15,7 @@ const ImageUploaderModal: React.FC<ImageViewerModalProps> = ({
       show={show}
       onHide={onClose}
       centered
-      size="sm"
+      size="lg"
       className="image-uploader-modal"
     >
       <Modal.Header closeButton>
@@ -29,11 +30,11 @@ const ImageUploaderModal: React.FC<ImageViewerModalProps> = ({
           indicators={false}
         >
           {images.map((url, index) => (
-            <Carousel.Item key={index}>
+            <Carousel.Item key={index} className="carousel-item-custom">
               <Image
                 src={url}
                 alt={`User Image ${index + 1}`}
-                className="d-block w-100 rounded shadow" // Added shadow and rounded corners
+                className="d-block w-100 carousel-image"
               />
             </Carousel.Item>
           ))}

@@ -1,87 +1,128 @@
-import { useNavigate } from "react-router-dom";
-import { Col, Container, Row, Card, Button } from "react-bootstrap";
+import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useGetCommunityMembersQuery } from "../../store/slices/communitySlice";
+
+// Components
 import Message from "../Message";
 import Loader from "../Loader";
-import { useGetCommunityMembersQuery } from "../../store/slices/communitySlice";
-import { Link } from "react-router-dom";
 
+// Styles
 import "./MainCommunity.css";
-import { useSelector } from "react-redux";
-export interface CommunityType {
+
+export interface CommunityMember {
+  _id: string;
+  name: string;
+  bio: string;
+  native_language: string;
+  language_to_learn: string;
+  imageUrls: string[];
+}
+
+export interface CommunityResponse {
   success: boolean;
   count: number;
-  data: {
-    _id: string;
-    name: string;
-    gender: string;
-    email: string;
-    bio: string;
-    birth_year: string;
-    birth_month: string;
-    birth_day: string;
-    images: string[];
-    native_language: string;
-    language_to_learn: string;
-    createdAt: string;
-    imageUrls: string[];
-    __v: number;
-  }[];
+  data: CommunityMember[];
 }
 
 const MainCommunity = () => {
+  const [filter, setFilter] = useState("");
   const { data, isLoading, error } = useGetCommunityMembersQuery({});
   const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
-  const community = data as CommunityType | undefined;
+
+  const filteredMembers = useMemo(() => {
+    if (!data?.data) return [];
+
+    return data.data
+      .filter((member: any) => member._id !== userId)
+      .filter(
+        (member: any) =>
+          filter === "" ||
+          member.name.toLowerCase().includes(filter.toLowerCase()) ||
+          member.native_language.toLowerCase().includes(filter.toLowerCase()) ||
+          member.language_to_learn.toLowerCase().includes(filter.toLowerCase())
+      );
+  }, [data, userId, filter]);
+
+  if (isLoading)
+    return (
+      <div className="loader-container">
+        <Loader />
+      </div>
+    );
+  if (error)
+    return (
+      <div className="error-container">
+        <Message variant="danger">Error loading community members</Message>
+      </div>
+    );
 
   return (
-    <Container fluid>
-      <Row className="mt-4">
-        {isLoading ? (
-          <Loader />
-        ) : error ? (
-          <Message variant="danger">Error Occurred</Message>
-        ) : community ? (
-          community.data
-            .filter((member) => member._id !== userId)
-            .map((member) => (
-              <Col
-                md={6}
-                sm={6}
-                lg={3}
-                xl={3}
-                key={member._id}
-                className="mb-4"
-              >
-                <Link to={`/community/${member._id}`}>
-                  <Card className="shadow-sm community-card">
-                    <Card.Img
-                      variant="top"
-                      src={member.imageUrls[0] || "placeholder.jpg"}
-                      alt={member.name}
-                      className="community-image"
-                    />
-                    <Card.Body className="community-profile">
-                      <Card.Title>{member.name}</Card.Title>
-                      <Card.Text className="bio">
-                        <strong>Bio:</strong> {member.bio}
-                      </Card.Text>
-                      <Card.Text>
-                        <strong>Native Language:</strong>{" "}
-                        {member.native_language}
-                      </Card.Text>
-                      <Card.Text>
-                        <strong>Learning:</strong> {member.language_to_learn}
-                      </Card.Text>
-                    </Card.Body>
-                  </Card>
-                </Link>
-              </Col>
-            ))
-        ) : (
-          <p>No Members yet</p>
-        )}
-      </Row>
-    </Container>
+    <div className="community-container">
+      <div className="community-header">
+        <h2>Language Exchange Community</h2>
+      </div>
+
+      {filteredMembers.length === 0 ? (
+        <div className="empty-state">
+          <svg
+            width="64"
+            height="64"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <p>No community members found</p>
+        </div>
+      ) : (
+        <div className="community-grid">
+          {filteredMembers.map((member) => (
+            <Link
+              to={`/community/${member._id}`}
+              key={member._id}
+              className="member-link"
+            >
+              <div className="community-card">
+                <div className="community-image-container">
+                  <img
+                    src={
+                      member.imageUrls.length > 0
+                        ? member.imageUrls[member.imageUrls.length - 1]
+                        : "/images/default-avatar.jpg"
+                    }
+                    alt={member.name}
+                    className="community-image"
+                  />
+                </div>
+                <div className="community-profile">
+                  <h3 className="card-title">{member.name}</h3>
+                  <p className="card-text bio">
+                    {member.bio?.substring(0, 80) || "No bio available"}
+                    {member.bio?.length > 80 ? "..." : ""}
+                  </p>
+                  <div className="language-tags">
+                    <span className="native-tag">
+                      <span className="tag-label">Speaks:</span>{" "}
+                      {member.native_language}
+                    </span>
+                    <span className="learning-tag">
+                      <span className="tag-label">Learning:</span>{" "}
+                      {member.language_to_learn}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -28,7 +28,7 @@ const MainNavbar = () => {
 
   const logoutHandler = async () => {
     try {
-      dispatch(logout(userInfo)); // Corrected dispatch call without passing userInfo
+      dispatch(logout()); // Removed userInfo parameter as it seems to be incorrect
       navigate("/login");
       toast.success("User successfully logged out!");
     } catch (error: any) {
@@ -78,7 +78,9 @@ const MainNavbar = () => {
                     >
                       <img
                         src={
-                          userInfo.user.images && userInfo.user.images[0]
+                          userInfo.user &&
+                          userInfo.user.images &&
+                          userInfo.user.images[0]
                             ? userInfo.user.images[0]
                             : "/default-avatar.png"
                         }
