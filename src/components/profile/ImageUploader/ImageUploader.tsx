@@ -23,7 +23,7 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
     if (event.target.files) {
       const filesArray = Array.from(event.target.files);
       setSelectedImages((prevImages) => [...prevImages, ...filesArray]); // Append new files to selected images
-      setIsInputVisible(false); // Hide input after selecting files
+      setIsInputVisible(false); // Hide input after first upload
     }
   };
 
@@ -38,24 +38,8 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
     onClose();
   };
 
-  const handleDeleteImage = (index: number, isSelected: boolean) => {
-    console.log(selectedImages);
-    console.log(images);
-    console.log(isSelected);
-    if (isSelected) {
-      // Remove the image from the selected images list
-      setSelectedImages((prevImages) =>
-        prevImages.filter((_, i) => i !== index)
-      );
-    } else {
-      // Remove the image from the uploaded images list
-      const imageToDelete = images[index];
-      // Add logic to update the images state (if it's coming from the server)
-      // Example: onDeleteImage(imageToDelete);
-
-      // If the images array is local, use the setState approach:
-      // setImages(prevImages => prevImages.filter((_, i) => i !== index));
-    }
+  const handleAddImageClick = () => {
+    setIsInputVisible(true); // Show the input for adding more images
   };
 
   return (
@@ -67,19 +51,12 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
         <div className="uploaded-images">
           {images.length > 0 ? (
             images.map((item, index) => (
-              <div key={index} className="image-container">
-                <Image
-                  src={item}
-                  alt={`Uploaded image ${index + 1}`}
-                  className="img-thumbnail"
-                />
-                <button
-                  className="delete-button"
-                  onClick={() => handleDeleteImage(index, true)}
-                >
-                  X
-                </button>
-              </div>
+              <Image
+                key={index}
+                src={item}
+                alt={`Uploaded image ${index + 1}`}
+                className="img-thumbnail"
+              />
             ))
           ) : (
             <p>No images available</p>
@@ -94,16 +71,23 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
                   alt={`Selected preview ${index + 1}`}
                   className="preview-image"
                 />
-                <button
-                  className="delete-button"
-                  onClick={() => handleDeleteImage(index, true)}
-                >
-                  X
-                </button>
+                {/* Render "+" button only if more images can be added */}
               </div>
             ))
           ) : (
             <p>Please select new images</p>
+          )}
+
+          {images.length <= 10 ? (
+            <Button
+              className="add-image"
+              variant="outline-secondary"
+              onClick={handleAddImageClick}
+            >
+              +
+            </Button>
+          ) : (
+            <p>You can upload maximum 10 images</p>
           )}
         </div>
 
@@ -115,20 +99,26 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
               multiple
               accept="image/*"
               onChange={handleFileChange}
-              className="file-input"
             />
           </Form.Group>
         )}
       </Modal.Body>
-
-      <Modal.Footer className="d-flex justify-content-center">
-        {/* Only show the Upload button when images are selected */}
-        {selectedImages.length > 0 && (
-          <Button variant="primary" onClick={handleUpload}>
-            Upload
-          </Button>
-        )}
-        <Button variant="secondary" onClick={onClose}>
+      <Modal.Footer className="d-flex flex-row bd-highlight justify-content-center">
+        <Button
+          className="mb-4"
+          variant="primary"
+          size="lg"
+          onClick={handleUpload}
+        >
+          Apply
+        </Button>
+        <Button
+          className="mb-4"
+          variant="danger"
+          size="lg"
+          style={{ color: "white" }}
+          onClick={onClose}
+        >
           Close
         </Button>
       </Modal.Footer>

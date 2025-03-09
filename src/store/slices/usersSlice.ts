@@ -1,3 +1,4 @@
+import { UserType } from "../../components/moments/MomentDetail";
 import {
   //   USER_PROFILE_URL,
   LOGOUT_URL,
@@ -6,6 +7,7 @@ import {
   USER_PROFILE_URL,
   USERS_URL,
   COMMUNITY_URL,
+  USER_PROFILE_UPDATE,
 } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
@@ -50,6 +52,15 @@ export const usersApiSlice = apiSlice.injectEndpoints({
     getUserProfile: builder.query({
       query: () => ({
         url: `${USER_PROFILE_URL}`,
+      }),
+      keepUnusedDataFor: 5,
+      providesTags: ["User"],
+    }),
+    updateUserInfo: builder.mutation({
+      query: (data: UserType) => ({
+        url: `${USER_PROFILE_UPDATE}`,
+        method: "PUT",
+        body: data,
       }),
       keepUnusedDataFor: 5,
       providesTags: ["User"],
@@ -104,13 +115,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
       providesTags: ["User"],
     }),
-
-    // updateUser: builder.query({
-    //     query: (productId: string)=> ({
-    //         url:`${PRODUCTS_URL}/${productId}`
-    //     }),
-    //     keepUnusedDataFor: 5
-    // }),
   }),
 });
 export const {
@@ -123,4 +127,5 @@ export const {
   useFollowUserMutation,
   useUnFollowUserMutation,
   useUploadUserPhotoMutation,
+  useUpdateUserInfoMutation,
 } = usersApiSlice;

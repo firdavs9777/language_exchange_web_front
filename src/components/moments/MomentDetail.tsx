@@ -27,7 +27,7 @@ import {
 import { useSelector } from "react-redux";
 import Message from "../Message";
 import { toast } from "react-toastify";
-interface UserType {
+export interface UserType {
   _id: string;
   name: string;
   gender: string;

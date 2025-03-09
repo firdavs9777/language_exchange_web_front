@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useGetFollowersQuery,
   useGetFollowingsQuery,
   useGetUserProfileQuery,
   useUploadUserPhotoMutation,
+  useUpdateUserInfoMutation,
 } from "../../store/slices/usersSlice";
 import {
   Button,
@@ -33,39 +34,28 @@ import { FollowerInterface, UserProfileData } from "./ProfileTypes/types";
 import ImageViewerModal from "./ImageViewer/ImageModal";
 import ImageUploaderModal from "./ImageUploader/ImageUploader";
 import { toast } from "react-toastify";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface Moment {
   count: number;
   success: string;
   data: MomentType[];
 }
+
 const ProfileScreen: React.FC = () => {
-  const { data, isLoading, error } = useGetUserProfileQuery({});
+  const { data, isLoading, error, refetch } = useGetUserProfileQuery({});
+
   const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
-  const {
-    data: followers,
-    isLoading: isLoading_two,
-    error: ErrorMessage,
-  } = useGetFollowersQuery({ userId });
-  const {
-    data: followings,
-    isLoading: isLoading_three,
-    error: ErrorMessageCode,
-  } = useGetFollowingsQuery({ userId });
-  const {
-    data: moments,
-    isLoading: momentLoading,
-    error: MomentError,
-  } = useGetMyMomentsQuery({ userId });
+  const { data: followers } = useGetFollowersQuery({ userId });
+  const { data: followings } = useGetFollowingsQuery({ userId });
+  const { data: moments } = useGetMyMomentsQuery({ userId });
   const [uploadUserPhoto] = useUploadUserPhotoMutation();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [updateUserProfile] = useUpdateUserInfoMutation();
 
   const followersDataMain = followers as FollowerInterface;
-  const [followersData, setFollowersData] = useState({});
   const followingsDataMain = followings as FollowerInterface;
-  const [followingsData, setFollowingsData] = useState({});
   const momentsData = moments as Moment;
-  const [momentsMain, setMomentsMain] = useState({});
 
   const [formData, setFormData] = useState<UserProfileData>({
     _id: "",
@@ -83,67 +73,81 @@ const ProfileScreen: React.FC = () => {
     images: [],
     imageUrls: [],
   });
-  const [images, setImages] = useState<string[]>();
+  const [birthDate, setBirthDate] = useState<Date | null>(null);
+
   const [editMode, setEditMode] = useState<
     "personal" | "bio" | "languages" | null
   >(null);
 
   useEffect(() => {
-    if (data) {
+    if (data && data.data) {
       setFormData(data.data);
+      if (
+        data.data.birth_year &&
+        data.data.birth_month &&
+        data.data.birth_day
+      ) {
+        const year = parseInt(data.data.birth_year);
+        const month = parseInt(data.data.birth_month) - 1; // Month is 0-indexed
+        const day = parseInt(data.data.birth_day);
+
+        if (
+          !isNaN(year) &&
+          !isNaN(month) &&
+          !isNaN(day) &&
+          month >= 0 &&
+          month <= 11 &&
+          day >= 1 &&
+          day <= 31
+        ) {
+          setBirthDate(new Date(year, month, day));
+        } else {
+          console.error("Invalid date components:", data.data);
+          setBirthDate(null); // Set to null if invalid
+        }
+      } else {
+        setBirthDate(null);
+      }
     }
-    if (followers) {
-      setFollowersData(followersDataMain);
-    }
-    if (followings) {
-      setFollowingsData(followingsDataMain);
-    }
-    if (moments) {
-      setMomentsMain(momentsData);
-    }
-    if (formData) {
-      setImages(formData.imageUrls);
-    }
-  }, [
-    data,
-    followers,
-    followersDataMain,
-    followings,
-    followingsDataMain,
-    moments,
-    formData,
-  ]);
+  }, [data]);
 
   const [showModal, setShowModal] = useState(false);
   const [showImageViewer, setShowImageViewer] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handleUploadImages = async (newFiles: File[]) => {
-    // Convert File objects to URLs or any method you prefer for displaying
-
     try {
-      const newImageUrls = newFiles.map((file) => URL.createObjectURL(file));
-      setImages((prevImages) => [...prevImages, ...newImageUrls]);
-
       const formData = new FormData();
       newFiles.forEach((file) => {
-        formData.append("file", file); // Append the actual File objects
+        formData.append("file", file);
       });
 
-      // Check if userId is available before making the upload call
       if (newFiles.length > 0 && userId) {
         await uploadUserPhoto({
           userId: userId,
           imageFiles: formData,
         }).unwrap();
+        refetch();
       }
       toast.success("Profile Image updated successfully");
     } catch (error) {
       toast.error(
-        `Error Occured, Please upload a file properly ${error?.error}`
+        `Error Occurred, Please upload a file properly ${error?.error}`
       );
     }
-    // Update the images state
+  };
+
+  const handleProfileUpdate = async () => {
+    try {
+      console.log(formData.name);
+      const response = await updateUserProfile(formData).unwrap();
+      console.log(response);
+      toast.success("Profile updated successfully");
+      setEditMode(null);
+      refetch();
+    } catch (error) {
+      toast.error(`Error updating profile: ${error?.error}`);
+    }
   };
 
   const handleOpenUploadModal = () => {
@@ -159,20 +163,68 @@ const ProfileScreen: React.FC = () => {
     setShowImageViewer(true);
   };
   if (isLoading) return <div>Loading...</div>;
-  if (isLoading_two) return <div>Loading..</div>;
   if (error) return <div>Error loading user profile</div>;
   if (!data) return <div>No user profile data available</div>;
 
-  const handleSaveChanges = () => {
-    setEditMode(null);
-    // Implement save logic, e.g., API call to update profile data
+  const handleSaveChanges = async () => {
+    await handleProfileUpdate();
   };
 
   const handleCancelChanges = () => {
     setEditMode(null);
-    // Optionally, reset formData to original values if needed
+    if (data) {
+      setFormData(data.data);
+    }
+  };
+  const handleBirthDateChange = (date: Date | null) => {
+    if (date) {
+      setBirthDate(date);
+      setFormData((prev) => ({
+        ...prev,
+        birth_year: String(date.getFullYear()),
+        birth_month: String(date.getMonth() + 1),
+        birth_day: String(date.getDate()),
+      }));
+    } else {
+      setBirthDate(null);
+      setFormData((prev) => ({
+        ...prev,
+        birth_year: "",
+        birth_month: "",
+        birth_day: "",
+      }));
+    }
   };
 
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const getOrdinalSuffix = (day: string): string => {
+    const n = parseInt(day);
+    if (isNaN(n)) return day; // Return original if not a number
+
+    if (n >= 11 && n <= 13) {
+      return `${n}th`;
+    }
+    switch (n % 10) {
+      case 1:
+        return `${n}st`;
+      case 2:
+        return `${n}nd`;
+      case 3:
+        return `${n}rd`;
+      default:
+        return `${n}th`;
+    }
+  };
   return (
     <Container fluid className="profile-section">
       {/* Banner Section */}
@@ -191,8 +243,8 @@ const ProfileScreen: React.FC = () => {
             alt="User Image"
             roundedCircle
             className="profile-avatar-image"
-            onClick={() => handleImageClick(0)} // Open viewer starting from the first image
-            style={{ cursor: "pointer" }} // Indicate it's clickable
+            onClick={() => handleImageClick(0)}
+            style={{ cursor: "pointer" }}
           />
           <Button
             variant="primary"
@@ -303,38 +355,26 @@ const ProfileScreen: React.FC = () => {
                     <Form.Label>Name</Form.Label>
                     <Form.Control
                       type="text"
+                      name="name"
                       value={formData.name}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          name: e.target.value,
-                        }))
-                      }
+                      onChange={handleInputChange}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Email</Form.Label>
                     <Form.Control
                       type="email"
+                      name="email"
                       value={formData.email}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          email: e.target.value,
-                        }))
-                      }
+                      onChange={handleInputChange}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Gender</Form.Label>
                     <Form.Select
+                      name="gender"
                       value={formData.gender}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          gender: e.target.value,
-                        }))
-                      }
+                      onChange={handleInputChange}
                     >
                       <option value="">Select Gender</option>
                       <option value="Male">Male</option>
@@ -342,21 +382,17 @@ const ProfileScreen: React.FC = () => {
                     </Form.Select>
                   </Form.Group>
                   <Form.Group className="mb-3">
-                    <Form.Label>Birthday</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={`${formData.birth_day}-${formData.birth_month}-${formData.birth_year}`}
-                      onChange={(e) => {
-                        const [birth_day, birth_month, birth_year] =
-                          e.target.value.split("-");
-                        setFormData((prev) => ({
-                          ...prev,
-                          birth_day,
-                          birth_month,
-                          birth_year,
-                        }));
-                      }}
-                    />
+                    <Form.Group className="mb-3">
+                      <Form.Label>Birthday</Form.Label>
+                      <DatePicker
+                        selected={birthDate}
+                        onChange={handleBirthDateChange}
+                        dateFormat="dd/MM/yyyy"
+                        placeholderText="Select Date"
+                        className="custom-datepicker" // Add Bootstrap styling
+                        aria-label="Birthday date picker" // Add accessibility label
+                      />
+                    </Form.Group>
                   </Form.Group>
                 </>
               ) : (
@@ -372,7 +408,12 @@ const ProfileScreen: React.FC = () => {
                   </Card.Text>
                   <Card.Text>
                     <strong>Birthday:</strong>{" "}
-                    {`${formData.birth_day}-${formData.birth_month}-${formData.birth_year}`}
+                    {`${getOrdinalSuffix(formData.birth_day)} of ${new Date(
+                      formData.birth_year,
+                      formData.birth_month - 1
+                    ).toLocaleString("en-US", { month: "long" })}, ${
+                      formData.birth_year
+                    }`}
                   </Card.Text>
                 </>
               )}
@@ -417,10 +458,9 @@ const ProfileScreen: React.FC = () => {
                   <Form.Control
                     as="textarea"
                     rows={3}
+                    name="bio"
                     value={formData.bio}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, bio: e.target.value }))
-                    }
+                    onChange={handleInputChange}
                   />
                 </Form.Group>
               ) : (
@@ -467,26 +507,18 @@ const ProfileScreen: React.FC = () => {
                     <Form.Label>Native Language</Form.Label>
                     <Form.Control
                       type="text"
+                      name="native_language"
                       value={formData.native_language}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          native_language: e.target.value,
-                        }))
-                      }
+                      onChange={handleInputChange}
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Language to Learn</Form.Label>
                     <Form.Control
                       type="text"
+                      name="language_to_learn"
                       value={formData.language_to_learn}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          language_to_learn: e.target.value,
-                        }))
-                      }
+                      onChange={handleInputChange}
                     />
                   </Form.Group>
                 </>

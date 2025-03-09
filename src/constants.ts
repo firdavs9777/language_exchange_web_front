@@ -9,3 +9,4 @@ export const REGISTER_URL = "/api/v1/auth/register";
 export const LOGOUT_URL = "/api/v1/auth/logout";
 export const COMMENTS = "comments";
 export const USER_PROFILE_URL = "/api/v1/auth/me";
+export const USER_PROFILE_UPDATE = "/api/v1/auth/updatedetails";

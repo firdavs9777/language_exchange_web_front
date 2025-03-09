@@ -144,4 +144,15 @@
     cursor: pointer;
     margin-top: 20px;
   }
-  
+  .custom-datepicker {
+    margin: 10px;
+    border-radius: 5px;
+    padding: 8px 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  .custom-datepicker:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
