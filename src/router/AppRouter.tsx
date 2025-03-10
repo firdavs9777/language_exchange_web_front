@@ -18,7 +18,7 @@ import CoursesMain from "../components/courses/CoursesMain";
 import CommunityDetail from "../components/community/CommunityDetail";
 import UserFollowersList from "../components/profile/UserFollowers";
 import UserFollowingList from "../components/profile/UserFollowing";
-import MyMoments from "../components/moments/MyMoments";
+import MyMoments from "../components/profile/MyMoments";
 import MainChat from "../components/chat/MainChat";
 
 const AppRouter = createBrowserRouter(

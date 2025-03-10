@@ -37,7 +37,7 @@ import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ISO6391 from "iso-639-1"; // No need to instantiate the class
-interface Moment {
+export interface Moment {
   count: number;
   success: string;
   data: MomentType[];
@@ -56,7 +56,7 @@ const ProfileScreen: React.FC = () => {
   const followersDataMain = followers as FollowerInterface;
   const followingsDataMain = followings as FollowerInterface;
   const momentsData = moments as Moment;
-
+  console.log(momentsData);
   const [formData, setFormData] = useState<UserProfileData>({
     _id: "",
     name: "",
@@ -305,7 +305,7 @@ const ProfileScreen: React.FC = () => {
             <Card className="p-3 shadow-sm profile-stat-card">
               <FaCameraRetro className="stat-icon mb-2" />
               <Card.Title className="stat-number">
-                {momentsData?.count}
+                {momentsData?.count} 
               </Card.Title>
               <Card.Text className="stat-text">Moments</Card.Text>
             </Card>

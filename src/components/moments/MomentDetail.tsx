@@ -17,7 +17,7 @@ import {
   Button,
 } from "react-bootstrap";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
-import { FaRegComment } from "react-icons/fa";
+import { FaComments, FaRegComment, FaRegComments } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
 import "./MomentDetails.css";
 import {
@@ -214,16 +214,20 @@ const MomentDetail = () => {
                     onClick={toggleLike}
                   >
                     {momentDetails.likedUsers.includes(userId) ? (
-                      <AiFillLike className="icon" />
+                      <AiFillLike className="icon" size={24}/>
                     ) : (
-                      <AiOutlineLike className="icon" />
+                      <AiOutlineLike className="icon" size={24} />
                     )}
                     <span className="likeCount">{momentDetails.likeCount}</span>
                   </Button>
                 </Col>
                 <Col>
-                  <FaRegComment className="icon" />
-                  <span className="commentCount">{commentsList.length}</span>
+                 
+                  {commentsList.length > 0 ? (
+                    <FaComments className="comment-icon" size={24} />
+                  ) : (
+                    <FaRegComments className="comment-icon-empty" size={24} />
+                  )}   <span className="commentCount">{commentsList.length}</span>
                 </Col>
                 <Col>
                   <IoMdShare className="icon" />

@@ -71,6 +71,7 @@ const MainMoments = () => {
                 description={moment.description}
                 images={[]}
                 likeCount={moment.likeCount}
+                commentCount={moment.commentCount}
                 user={moment.user}
                 likedUsers={moment.likedUsers}
                 imageUrls={moment.imageUrls}

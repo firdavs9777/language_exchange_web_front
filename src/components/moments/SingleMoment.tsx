@@ -3,7 +3,7 @@ import { Button, Card, ListGroup, ListGroupItem, Image } from "react-bootstrap";
 
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
-import { FaRegComment } from "react-icons/fa";
+import { FaComments, FaRegComment, FaRegComments } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
 import "./SingleMoment.css";
 import {
@@ -23,6 +23,7 @@ const SingleMoment: React.FC<MomentType> = ({
   likedUsers,
   createdAt,
   user,
+  commentCount,
   imageUrls,
   refetch,
 }) => {
@@ -58,10 +59,15 @@ const SingleMoment: React.FC<MomentType> = ({
             <Card className="card-header">
               <ListGroupItem className="d-flex align-items-center">
                 <Image
-                  src={user.imageUrls[0] || "https://via.placeholder.com/50"}
+                  src={
+                    user?.imageUrls?.length > 0
+                      ? user.imageUrls[0]
+                      : "https://via.placeholder.com/50"
+                  }
                   roundedCircle
                   className="profile-pic"
                 />
+
                 <div className="ms-3">
                   <h6 className="mb-0">{user.name}</h6>
                   <small className="text-muted">
@@ -86,15 +92,23 @@ const SingleMoment: React.FC<MomentType> = ({
           <ListGroupItem className="d-flex justify-content-between">
             <Button variant="link" className="text-dark" onClick={toggleLike}>
               {likedUsers.includes(userId) ? (
-                <AiFillLike className="icon" />
+                <AiFillLike className="icon" size={24} />
               ) : (
-                <AiOutlineLike className="icon" />
+                <AiOutlineLike className="icon" size={24} />
               )}{" "}
               {likeCount}
             </Button>
             <Button variant="link" className="text-dark">
-              <FaRegComment className="icon" />
-              22
+              <span className="commentCount" style={{ padding: '5px' }}> {commentCount.toString()}</span>
+              {commentCount !== 0 ? (
+                <>
+                  <FaComments className="comment-icon" size={24} />
+                </>
+              ) : (
+                <>
+                  <FaRegComments className="comment-icon-empty" size={24} />
+                </>
+              )}
             </Button>
             <Button variant="link" className="text-dark">
               <IoMdShare className="icon" />
