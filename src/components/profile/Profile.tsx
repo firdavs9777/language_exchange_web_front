@@ -36,7 +36,7 @@ import ImageUploaderModal from "./ImageUploader/ImageUploader";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import ISO6391 from "iso-639-1"; // No need to instantiate the class
 interface Moment {
   count: number;
   success: string;
@@ -176,6 +176,11 @@ const ProfileScreen: React.FC = () => {
       setFormData(data.data);
     }
   };
+  
+  const languageOptions = ISO6391.getAllCodes().map((code) => ({
+    value: code,
+    label: ISO6391.getName(code),
+  }));
   const handleBirthDateChange = (date: Date | null) => {
     if (date) {
       setBirthDate(date);
@@ -366,6 +371,7 @@ const ProfileScreen: React.FC = () => {
                       type="email"
                       name="email"
                       value={formData.email}
+                      disabled={true}
                       onChange={handleInputChange}
                     />
                   </Form.Group>
@@ -384,6 +390,7 @@ const ProfileScreen: React.FC = () => {
                   <Form.Group className="mb-3">
                     <Form.Group className="mb-3">
                       <Form.Label>Birthday</Form.Label>
+                      <br/>
                       <DatePicker
                         selected={birthDate}
                         onChange={handleBirthDateChange}
@@ -505,21 +512,35 @@ const ProfileScreen: React.FC = () => {
                 <>
                   <Form.Group className="mb-3">
                     <Form.Label>Native Language</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="native_language"
-                      value={formData.native_language}
-                      onChange={handleInputChange}
-                    />
+                    <Form.Select
+                                   name="native_language"  
+                                  value={formData.native_language}
+                                  onChange={handleInputChange}
+                                  required
+                                >
+                                  <option value="">Select Native Language</option>
+                                  {languageOptions.map((lang) => (
+                                    <option key={lang.value} value={lang.label}>
+                                      {lang.label}
+                                    </option>
+                                  ))}
+                                </Form.Select>
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Language to Learn</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="language_to_learn"
-                      value={formData.language_to_learn}
-                      onChange={handleInputChange}
-                    />
+                    <Form.Select
+                       name="language_to_learn"  
+                                  value={formData.language_to_learn}
+                                  onChange={handleInputChange}
+                                  required
+                                >
+                                  <option value="">Select Language to learn</option>
+                                  {languageOptions.map((lang) => (
+                                    <option key={lang.value} value={lang.label}>
+                                      {lang.label}
+                                    </option>
+                                  ))}
+                                </Form.Select>
                   </Form.Group>
                 </>
               ) : (
