@@ -19,10 +19,14 @@ import { useSelector } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
 import { LinkContainer } from "react-router-bootstrap";
 import { toast } from "react-toastify";
+import { useGetUserProfileQuery } from "../../store/slices/usersSlice";
 
 const MainNavbar = () => {
   const userInfo = useSelector((state: any) => state.auth.userInfo);
 
+  const { data, isLoading, error, refetch } = useGetUserProfileQuery({});
+
+  console.log(data);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

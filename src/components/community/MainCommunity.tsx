@@ -60,7 +60,7 @@ const MainCommunity = () => {
   return (
     <div className="community-container">
       <div className="community-header">
-        <h2>Language Exchange Community</h2>
+        <h2>Community</h2>
       </div>
 
       {filteredMembers.length === 0 ? (

@@ -37,6 +37,8 @@ import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ISO6391 from "iso-639-1"; // No need to instantiate the class
+import { setCredentials } from "../../store/slices/authSlice";
+import { useDispatch } from "react-redux";
 export interface Moment {
   count: number;
   success: string;
@@ -52,11 +54,12 @@ const ProfileScreen: React.FC = () => {
   const { data: moments } = useGetMyMomentsQuery({ userId });
   const [uploadUserPhoto] = useUploadUserPhotoMutation();
   const [updateUserProfile] = useUpdateUserInfoMutation();
+    const dispatch = useDispatch();
 
   const followersDataMain = followers as FollowerInterface;
   const followingsDataMain = followings as FollowerInterface;
   const momentsData = moments as Moment;
-  console.log(momentsData);
+
   const [formData, setFormData] = useState<UserProfileData>({
     _id: "",
     name: "",
@@ -141,7 +144,8 @@ const ProfileScreen: React.FC = () => {
     try {
       console.log(formData.name);
       const response = await updateUserProfile(formData).unwrap();
-      console.log(response);
+      const ActionPayload: Response | any = response.data;
+      dispatch(setCredentials({ ...ActionPayload }));
       toast.success("Profile updated successfully");
       setEditMode(null);
       refetch();

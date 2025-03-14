@@ -3,17 +3,20 @@ import { useGetMyMomentsQuery } from "../../store/slices/momentsSlice";
 import { useSelector } from "react-redux";
 import { MomentType } from "../moments/types";
 import { Col, Row, Card, ListGroup, ListGroupItem, Button, Image } from "react-bootstrap";
-import { AiFillLike, AiOutlineLike } from "react-icons/ai";
-import { FaComments, FaRegComments } from "react-icons/fa";
+import { AiFillEdit, AiFillLike, AiOutlineLike } from "react-icons/ai";
+import { FaComments, FaPlus, FaRegComments } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Moment } from "./Profile";
-
+import { FiEdit, FiTrash2 } from 'react-icons/fi'
 const MyMoments = () => {
   const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
   const { data: moments, refetch } = useGetMyMomentsQuery({ userId });
   const momentsData = moments as Moment;
-
+    const navigate = useNavigate();
+  const handleAddMoment = () => {
+    navigate("/add-moment"); // Navigate to the desired route
+  };
   return (
     <div>
       <Row>
@@ -59,11 +62,11 @@ const MyMoments = () => {
                   </Card.Body>
 
                   <ListGroupItem className="d-flex justify-content-between">
-                    <Button variant="link" className="text-dark" onClick={() => {}}>
+                    <Button variant="link" className="text-dark" onClick={() => { }}>
                       {moment.likedUsers.includes(userId) ? (
                         <AiFillLike className="icon" size={24} />
                       ) : (
-                        <AiOutlineLike className="icon" size={24} />
+                          <AiOutlineLike className="icon" size={24} color="blue" />
                       )}
                       {moment.likeCount}
                     </Button>
@@ -74,7 +77,7 @@ const MyMoments = () => {
                       </span>
                       {moment.commentCount !== 0 ? (
                         <>
-                          <FaComments className="comment-icon" size={24} />
+                          <FaComments className="comment-icon" size={24} color="blue" />
                         </>
                       ) : (
                         <>
@@ -84,7 +87,15 @@ const MyMoments = () => {
                     </Button>
 
                     <Button variant="link" className="text-dark">
-                      <IoMdShare className="icon" />
+                      <IoMdShare className="icon" size={24} color="blue"/>
+                    </Button>
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <Button variant="link" className="text-dark me-2">
+                      <FiEdit className="icon" size={24} />
+                    </Button>
+                    <Button variant="link" className="text-danger">
+                      <FiTrash2 className="icon" size={24} />
                     </Button>
                   </ListGroupItem>
                 </ListGroup>
@@ -93,6 +104,22 @@ const MyMoments = () => {
           </Col>
         ))}
       </Row>
+              <Button
+                className="add-button fixed-bottom-right d-flex justify-content-center align-items-center"
+                variant="success"
+                onClick={handleAddMoment}
+                style={{
+                  position: "fixed",
+                  bottom: "20px", // Adjust to desired spacing from the bottom
+                  right: "20px", // Adjust to desired spacing from the right
+                  borderRadius: "50%",
+                  width: "60px", // Button size
+                  height: "60px", // Button size
+                  padding: "0",
+                }}
+              >
+                <FaPlus style={{ fontSize: "30px", color: "white" }} />
+              </Button>
     </div>
   );
 };
