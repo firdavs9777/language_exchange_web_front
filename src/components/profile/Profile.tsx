@@ -145,7 +145,9 @@ const ProfileScreen: React.FC = () => {
       console.log(formData.name);
       const response = await updateUserProfile(formData).unwrap();
       const ActionPayload: Response | any = response.data;
-      dispatch(setCredentials({ ...ActionPayload }));
+      // console.log(response)
+      // console.log("Check hereeeeeee")
+      // dispatch(setCredentials({ ...ActionPayload }));
       toast.success("Profile updated successfully");
       setEditMode(null);
       refetch();

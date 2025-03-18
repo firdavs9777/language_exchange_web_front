@@ -22,7 +22,7 @@ const UserFollowingList = () => {
   return (
     <Container className="followers-container my-4">
       <h1 className="mb-4 text-center">
-        Followings({followingsDataMain.count})
+        Followings({followingsDataMain?.count})
       </h1>
       <Row className="g-4">
         {followingsDataMain?.following?.map((follower) => (
