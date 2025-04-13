@@ -44,9 +44,21 @@ const Login = () => {
       navigate(redirect);
     } catch (error: any) {
       if (error instanceof Error) {
-        toast(error.message);
+        toast(error.message, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
       } else {
-        toast("Invalid credentials");
+        toast("Invalid credentials", {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
       }
     }
   };
