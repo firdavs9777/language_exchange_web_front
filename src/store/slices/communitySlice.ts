@@ -4,8 +4,8 @@ import { apiSlice } from "./apiSlice";
 export const communityApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder: any) => ({
     getCommunityMembers: builder.query({
-      query: () => ({
-        url: COMMUNITY_URL,
+      query: ({ page = 1, limit = 10 }) => ({
+        url: `${COMMUNITY_URL}?page=${page}&limit=${limit}`,
       }),
       keepUnusedDataFor: 5,
       providesTags: ["Community"],

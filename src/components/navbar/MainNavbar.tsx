@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
 import { LinkContainer } from "react-router-bootstrap";
 import { toast } from "react-toastify";
+import { NavLink } from "react-router-dom";
 
 const MainNavbar = () => {
   const userInfo = useSelector((state: any) => state.auth.userInfo);
@@ -46,20 +47,25 @@ const MainNavbar = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="w-100 justify-content-center justify-content-md-end">
-              <Nav.Link href="/communities" className="custom-nav-link">
-                <FaUsers /> Community
-              </Nav.Link>
+              <NavLink
+                to="/communities"
+                className={({ isActive }) =>
+                  isActive ? "custom-nav-link active" : "custom-nav-link"
+                }
+              >
+                <FaUsers size={20} className="icon-style" /> Community
+              </NavLink>
 
               {userInfo && (
                 <>
                   <Nav.Link href="/chat" className="custom-nav-link">
-                    <FaComment /> Chat
+                    <FaComment size={20} className="icon-style" /> Chat
                   </Nav.Link>
                   <Nav.Link href="/notifications" className="custom-nav-link">
-                    <FaBell /> Notifications
+                    <FaBell size={20} className="icon-style" /> Notifications
                   </Nav.Link>
                   <Nav.Link href="/moments" className="custom-nav-link">
-                    <FaGlobe /> Moments
+                    <FaGlobe size={20} className="icon-style" /> Moments
                   </Nav.Link>
                 </>
               )}
@@ -72,7 +78,7 @@ const MainNavbar = () => {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        width: "100px",
+                        width: "110px",
                         gap: "10px", // Space between image and name
                       }}
                     >
@@ -86,8 +92,8 @@ const MainNavbar = () => {
                         }
                         alt="Profile"
                         style={{
-                          width: "30px",
-                          height: "30px",
+                          width: "40px",
+                          height: "40px",
                           borderRadius: "50%",
                           objectFit: "cover",
                         }}
