@@ -5,12 +5,13 @@ import {
   FaUsers,
   FaComment,
   FaGlobe,
-  FaBook,
   FaCaretDown,
-  FaRegUser, // Fallback icon for profile
-  FaRegComments,
-  FaBell, // Fallback icon for chat
+  FaRegUser,
+  FaBell,
+  FaLanguage,
 } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+
 import logo from "../../assets/logo.png";
 import "./MainNavbar.css";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +27,15 @@ const MainNavbar = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+    // You can also store the language preference in localStorage if needed
+    localStorage.setItem("preferredLanguage", lng);
+    // Optional: show toast notification
+    toast.info(`Language changed to ${lng === "en" ? "English" : "한국어"}`);
+  };
 
   const logoutHandler = async () => {
     try {
@@ -53,22 +63,63 @@ const MainNavbar = () => {
                   isActive ? "custom-nav-link active" : "custom-nav-link"
                 }
               >
-                <FaUsers size={20} className="icon-style" /> Community
+                <FaUsers size={20} className="icon-style" /> {t("community")}
               </NavLink>
 
               {userInfo && (
                 <>
-                  <Nav.Link href="/chat" className="custom-nav-link">
-                    <FaComment size={20} className="icon-style" /> Chat
-                  </Nav.Link>
-                  <Nav.Link href="/notifications" className="custom-nav-link">
-                    <FaBell size={20} className="icon-style" /> Notifications
-                  </Nav.Link>
-                  <Nav.Link href="/moments" className="custom-nav-link">
-                    <FaGlobe size={20} className="icon-style" /> Moments
-                  </Nav.Link>
+                  <NavLink
+                    to="/chat"
+                    className={({ isActive }) =>
+                      isActive ? "custom-nav-link active" : "custom-nav-link"
+                    }
+                  >
+                    <FaComment size={20} className="icon-style" /> {t("chat")}
+                  </NavLink>
+                  <NavLink
+                    to="/notifications"
+                    className={({ isActive }) =>
+                      isActive ? "custom-nav-link active" : "custom-nav-link"
+                    }
+                  >
+                    <FaBell size={20} className="icon-style" />{" "}
+                    {t("notifications")}
+                  </NavLink>
+                  <NavLink
+                    to="/moments"
+                    className={({ isActive }) =>
+                      isActive ? "custom-nav-link active" : "custom-nav-link"
+                    }
+                  >
+                    <FaGlobe size={20} className="icon-style" /> {t("moments")}
+                  </NavLink>
                 </>
               )}
+
+              {/* Language Dropdown */}
+              <NavDropdown
+                title={
+                  <div className="language-dropdown-title">
+                    <FaLanguage size={20} className="me-1" />
+                    <span className="d-none d-md-inline">{t("language")}</span>
+                  </div>
+                }
+                id="language-dropdown"
+                className="ms-2"
+              >
+                <NavDropdown.Item
+                  onClick={() => changeLanguage("en")}
+                  active={i18n.language === "en"}
+                >
+                  🇺🇸 {t("english")}
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => changeLanguage("ko")}
+                  active={i18n.language === "ko"}
+                >
+                  🇰🇷 {t("korean")}
+                </NavDropdown.Item>
+              </NavDropdown>
 
               {userInfo ? (
                 <NavDropdown
@@ -114,34 +165,34 @@ const MainNavbar = () => {
                 >
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>
-                      <FaRegUser /> Profile
+                      <FaRegUser /> {t("profile")}
                     </NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/followersList">
                     <NavDropdown.Item>
-                      <FaUsers /> Followers
+                      <FaUsers /> {t("followers")}
                     </NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/followingsList">
                     <NavDropdown.Item>
-                      <FaUsers /> Followings
+                      <FaUsers /> {t("followings")}
                     </NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/my-moments">
                     <NavDropdown.Item>
-                      <FaGlobe /> My Moments
+                      <FaGlobe /> {t("my_moments")}
                     </NavDropdown.Item>
                   </LinkContainer>
 
                   <Dropdown.Divider />
 
                   <NavDropdown.Item onClick={logoutHandler}>
-                    <FaUser /> Logout
+                    <FaUser /> {t("logout")}
                   </NavDropdown.Item>
                 </NavDropdown>
               ) : (
                 <Nav.Link href="/login" className="custom-nav-link">
-                  <FaRegUser /> Sign In
+                  <FaRegUser /> {t("sign_in")}
                 </Nav.Link>
               )}
             </Nav>
