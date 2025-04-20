@@ -1,17 +1,22 @@
 import React, { useState } from "react";
-import { Button, Card, ListGroup, ListGroupItem, Image } from "react-bootstrap";
-
+import {
+  Button,
+  Card,
+  ListGroup,
+  ListGroupItem,
+  Image,
+  Row,
+  Col,
+} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
-import { FaComments, FaRegComment, FaRegComments } from "react-icons/fa";
+import { FaComments, FaRegComments } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
-import "./SingleMoment.css";
 import {
   useDislikeMomentMutation,
   useLikeMomentMutation,
 } from "../../store/slices/momentsSlice";
 import { useSelector } from "react-redux";
-import { useGetCommentsQuery } from "../../store/slices/comments";
 import { toast } from "react-toastify";
 import { MomentType } from "./types";
 
@@ -40,24 +45,23 @@ const SingleMoment: React.FC<MomentType> = ({
       navigate("/login");
       return;
     }
-    e.preventDefault(); // Prevents the Link from triggering on button click
+    e.preventDefault();
     if (liked) {
       await dislikeMoment({ momentId: _id, userId });
-      // Call the dislike mutation
     } else {
-      await likeMoment({ momentId: _id, userId }); // Call the like mutation
+      await likeMoment({ momentId: _id, userId });
     }
-    setLiked(!liked); // Toggle the liked state
-    refetch && refetch(); // Call refetch to update the moments list
+    setLiked(!liked);
+    refetch && refetch();
   };
 
   return (
-    <Link to={`/moment/${_id}`}>
-      <Card className="my-3 p-4 rounded shadow-sm post-card">
+    <Link to={`/moment/${_id}`} className="text-decoration-none">
+      <Card className="my-3 rounded shadow-sm overflow-hidden">
         <ListGroup variant="flush">
-          <Link to={`/community/${user._id}`}>
-            <Card className="card-header">
-              <ListGroupItem className="d-flex align-items-center">
+          <Link to={`/community/${user._id}`} className="text-decoration-none">
+            <Card className="border-0 bg-transparent">
+              <ListGroupItem className="d-flex align-items-center border-0 px-3 pt-3 pb-1 bg-transparent">
                 <Image
                   src={
                     user?.imageUrls?.length > 0
@@ -65,11 +69,11 @@ const SingleMoment: React.FC<MomentType> = ({
                       : "https://via.placeholder.com/50"
                   }
                   roundedCircle
-                  className="profile-pic"
+                  className="me-3"
+                  style={{ width: "40px", height: "40px", objectFit: "cover" }}
                 />
-
-                <div className="ms-3">
-                  <h6 className="mb-0">{user.name}</h6>
+                <div>
+                  <h6 className="mb-0 text-dark fw-semibold">{user.name}</h6>
                   <small className="text-muted">
                     {new Date(createdAt).toLocaleString()}
                   </small>
@@ -77,41 +81,57 @@ const SingleMoment: React.FC<MomentType> = ({
               </ListGroupItem>
             </Card>
           </Link>
-          {imageUrls.length > 0 && (
-            <Card.Img
-              variant="top"
-              src={imageUrls[0]}
-              alt={title}
-              className="post-image"
-            />
-          )}
-          <Card.Body>
-            <Card.Title>{title}</Card.Title>
-            <Card.Text>{description}</Card.Text>
+
+          <Card.Body className="px-3 py-2">
+            <Card.Title className="text-dark mb-2">{title}</Card.Title>
+            <Card.Text className="text-dark mb-2">{description}</Card.Text>
           </Card.Body>
-          <ListGroupItem className="d-flex justify-content-between">
-            <Button variant="link" className="text-dark" onClick={toggleLike}>
+
+          {/* Image container that maintains consistent presence */}
+          <div
+            className="media-container px-3 pb-2"
+            style={{ minHeight: "30px" }}
+          >
+            {imageUrls && imageUrls.length > 0 ? (
+              <Image
+                src={imageUrls[0]}
+                alt={title}
+                fluid
+                className="rounded w-100"
+                style={{ objectFit: "cover", maxHeight: "400px" }}
+              />
+            ) : null}
+          </div>
+
+          <ListGroupItem className="d-flex justify-content-between border-0 px-3 pb-3 pt-2">
+            <Button
+              variant="link"
+              className="text-dark text-decoration-none p-0"
+              onClick={toggleLike}
+            >
               {likedUsers.includes(userId) ? (
-                <AiFillLike className="icon" size={24} />
+                <AiFillLike className="text-primary me-1" size={20} />
               ) : (
-                <AiOutlineLike className="icon" size={24} />
-              )}{" "}
+                <AiOutlineLike className="me-1" size={20} />
+              )}
               {likeCount}
             </Button>
-            <Button variant="link" className="text-dark">
-              <span className="commentCount" style={{ padding: '5px' }}> {commentCount.toString()}</span>
+            <Button
+              variant="link"
+              className="text-dark text-decoration-none p-0"
+            >
               {commentCount !== 0 ? (
-                <>
-                  <FaComments className="comment-icon" size={24} />
-                </>
+                <FaComments className="me-1" size={20} />
               ) : (
-                <>
-                  <FaRegComments className="comment-icon-empty" size={24} />
-                </>
+                <FaRegComments className="me-1" size={20} />
               )}
+              {commentCount}
             </Button>
-            <Button variant="link" className="text-dark">
-              <IoMdShare className="icon" />
+            <Button
+              variant="link"
+              className="text-dark text-decoration-none p-0"
+            >
+              <IoMdShare size={20} />
             </Button>
           </ListGroupItem>
         </ListGroup>
