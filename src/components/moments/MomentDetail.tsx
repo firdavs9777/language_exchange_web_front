@@ -17,9 +17,8 @@ import {
   Button,
 } from "react-bootstrap";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
-import { FaComments, FaRegComment, FaRegComments } from "react-icons/fa";
+import { FaComments, FaRegComments } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
-import "./MomentDetails.css";
 import {
   useAddCommentMutation,
   useGetCommentsQuery,
@@ -27,53 +26,6 @@ import {
 import { useSelector } from "react-redux";
 import Message from "../Message";
 import { toast } from "react-toastify";
-export interface UserType {
-  _id: string;
-  name: string;
-  gender: string;
-  email: string;
-  bio: string;
-  birth_year: string;
-  birth_month: string;
-  birth_day: string;
-  images: string[];
-  native_language: string;
-  language_to_learn: string;
-  createdAt: string;
-  __v: number;
-  imageUrls: string[];
-}
-
-interface MomentType {
-  _id: string;
-  title: string;
-  description: string;
-  images: string[];
-  likeCount: number;
-  likedUsers: string[];
-  user: UserType;
-  createdAt: string;
-  __v: number;
-  imageUrls: string[];
-}
-
-interface Response {
-  success: boolean;
-  data: MomentType;
-}
-
-interface CommentType {
-  _id: string;
-  text: string;
-  user: UserType;
-  createdAt: string;
-}
-
-interface CommentResponse {
-  success: boolean;
-  count: number;
-  data: CommentType[];
-}
 
 const MomentDetail = () => {
   const { id: momentId } = useParams();
@@ -81,191 +33,181 @@ const MomentDetail = () => {
     data,
     isLoading,
     refetch: refetchMomentDetails,
-    error,
   } = useGetMomentDetailsQuery(momentId);
-  const [newComment, setNewComment] = useState<string>("");
   const { userInfo } = useSelector((state: any) => state.auth);
-  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
-  const [likeMoment] = useLikeMomentMutation();
-  const [dislikeMoment] = useDislikeMomentMutation();
+  const userId = userInfo?.user?._id;
 
   const [liked, setLiked] = useState(false);
-  const [addComment, { isLoading: isAddingComment, error: addCommentError }] =
-    useAddCommentMutation();
+  const [newComment, setNewComment] = useState("");
+
+  const [likeMoment] = useLikeMomentMutation();
+  const [dislikeMoment] = useDislikeMomentMutation();
+  const [addComment, { isLoading: isAddingComment }] = useAddCommentMutation();
 
   const {
     data: commentsData,
     isLoading: isLoadingComments,
     refetch,
-    error: commentError,
   } = useGetCommentsQuery(momentId);
 
-  if (!momentId) {
-    return <div>Invalid moment ID</div>;
-  }
+  if (!momentId)
+    return <div className="text-center my-5">Invalid moment ID</div>;
+  if (isLoading) return <div className="text-center my-5">Loading...</div>;
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const momentDetails = (data as any)?.data;
+  const commentsList = (commentsData as any)?.data || [];
 
-  // if (error) {
-  //   return <div>Error fetching moment details: {error.message}</div>;
-  // }
+  if (!momentDetails)
+    return <div className="text-center my-5">No details found</div>;
 
-  // Make sure to check if data is defined
-  const moment = data as Response;
-
-  // Optional chaining to avoid errors if data is undefined
-  const momentDetails = moment?.data;
-
-  if (!momentDetails) {
-    return <div>No details found</div>;
-  }
-  // Handling comments data
-  const comments = commentsData as CommentResponse;
-  const commentsList = comments?.data || [];
-  const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewComment(event.target.value);
-  };
-
-  const handleCommentSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (newComment.trim() === "") {
-      toast.error("Please add comment text");
-      return;
-    }
-
-    try {
-      await addComment({ momentId, newComment }).unwrap();
-      toast.success("Comment created successfully");
-      refetch();
-      setNewComment("");
-    } catch (error) {
-      console.error("Error adding comment:", error);
-    }
-  };
-
-  const toggleLike = async (e: React.MouseEvent) => {
+  const handleLikeToggle = async (e: React.MouseEvent) => {
+    e.preventDefault();
     if (!userId) {
       toast.error("Please login first");
       return;
     }
-    e.preventDefault(); // Prevents the Link from triggering on button click
     if (momentDetails.likedUsers.includes(userId)) {
       await dislikeMoment({ momentId: momentDetails._id, userId });
-      // Call the dislike mutation
     } else {
-      await likeMoment({ momentId: momentDetails._id, userId }); // Call the like mutation
+      await likeMoment({ momentId: momentDetails._id, userId });
     }
+    setLiked(!liked);
+    refetchMomentDetails();
+  };
 
-    setLiked(momentDetails.likedUsers.includes(userId));
-    refetchMomentDetails(); // Call refetch to update the moments list
+  const handleCommentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim()) {
+      toast.error("Please add a comment");
+      return;
+    }
+    try {
+      await addComment({ momentId, newComment }).unwrap();
+      toast.success("Comment added");
+      refetch();
+      setNewComment("");
+    } catch (error) {
+      toast.error("Failed to add comment");
+    }
   };
 
   return (
-    <Container className="my-4">
+    <Container className="py-4">
       <Row className="justify-content-center">
         <Col md={8}>
-          <Card className="post-card shadow-sm">
+          <Card className="shadow-sm border-0">
             <Card.Body>
-              <Row className="align-items-center">
-                <Col xs={2}>
+              {/* User info */}
+              <Row className="align-items-center mb-3">
+                <Col xs="auto">
                   <Image
                     src={
                       momentDetails.user.imageUrls[0] ||
                       "https://via.placeholder.com/50"
                     }
                     roundedCircle
-                    fluid
-                    className="profile-pic"
+                    width={50}
+                    height={50}
                   />
                 </Col>
-                <Col xs={3}>
+                <Col>
                   <h6 className="mb-0">{momentDetails.user.name}</h6>
                   <small className="text-muted">
                     {new Date(momentDetails.createdAt).toLocaleString()}
                   </small>
                 </Col>
               </Row>
-              <hr />
-              <Card.Text>
-                <strong>{momentDetails.title}</strong>
-              </Card.Text>
-              <Card.Text>{momentDetails.description}</Card.Text>
+
+              {/* Title and Description */}
+              <h5 className="fw-bold">{momentDetails.title}</h5>
+              <p className="text-muted">{momentDetails.description}</p>
+
+              {/* Images Carousel */}
               {momentDetails.imageUrls.length > 0 && (
-                <Carousel className="post-image-carousel">
-                  {momentDetails.imageUrls.map((url, index) => (
-                    <Carousel.Item key={index}>
+                <Carousel variant="dark" className="mb-4">
+                  {momentDetails.imageUrls.map((url: string, idx: number) => (
+                    <Carousel.Item key={idx}>
                       <img
-                        className="d-block w-100 post-image"
+                        className="d-block w-100"
                         src={url}
-                        alt={`${momentDetails.title} - ${index + 1}`}
+                        alt={`${momentDetails.title} - ${idx + 1}`}
+                        style={{
+                          height: "300px",
+                          objectFit: "contain", // or 'contain' if you prefer no cropping
+                          borderRadius: "10px",
+                        }}
                       />
                     </Carousel.Item>
                   ))}
                 </Carousel>
               )}
-              <hr />
-              <Row className="text-center">
+
+              {/* Buttons */}
+              <Row className="text-center mb-3">
                 <Col>
                   <Button
-                    variant="link"
-                    className="text-dark"
-                    onClick={toggleLike}
+                    variant="light"
+                    onClick={handleLikeToggle}
+                    className="w-100"
                   >
                     {momentDetails.likedUsers.includes(userId) ? (
-                      <AiFillLike className="icon" size={24}/>
+                      <AiFillLike size={24} className="me-2 text-primary" />
                     ) : (
-                      <AiOutlineLike className="icon" size={24} />
+                      <AiOutlineLike size={24} className="me-2" />
                     )}
-                    <span className="likeCount">{momentDetails.likeCount}</span>
+                    {momentDetails.likeCount}
                   </Button>
                 </Col>
                 <Col>
-                 
-                  {commentsList.length > 0 ? (
-                    <FaComments className="comment-icon" size={24} />
-                  ) : (
-                    <FaRegComments className="comment-icon-empty" size={24} />
-                  )}   <span className="commentCount">{commentsList.length}</span>
+                  <Button variant="light" className="w-100">
+                    {commentsList.length > 0 ? (
+                      <FaComments size={24} className="me-2 text-success" />
+                    ) : (
+                      <FaRegComments size={24} className="me-2" />
+                    )}
+                    {commentsList.length}
+                  </Button>
                 </Col>
                 <Col>
-                  <IoMdShare className="icon" />
+                  <Button variant="light" className="w-100">
+                    <IoMdShare size={24} />
+                  </Button>
                 </Col>
               </Row>
 
-              <hr />
-              <h5>Comments</h5>
+              {/* Comments Section */}
+              <h6 className="fw-bold mb-3">Comments</h6>
               {isLoadingComments ? (
-                <div>Loading comments...</div>
-              ) : commentError ? (
-                <div>Error loading comments</div>
+                <div className="text-center">Loading comments...</div>
               ) : commentsList.length > 0 ? (
-                <ListGroup variant="flush">
-                  {commentsList.map((comment: CommentType) => (
-                    <ListGroup.Item key={comment._id}>
-                      <div className="d-flex align-items-start">
-                        <Image
-                          src={
-                            comment.user.imageUrls[0] ||
-                            "https://via.placeholder.com/50"
-                          }
-                          roundedCircle
-                          fluid
-                          className="profile-pic"
-                          style={{ width: "40px", height: "40px" }}
-                        />
-                        <div className="ms-3">
+                <ListGroup variant="flush" className="mb-4">
+                  {commentsList.map((comment: any) => (
+                    <ListGroup.Item key={comment._id} className="border-0 ps-0">
+                      <Row className="align-items-start">
+                        <Col xs="auto">
+                          <Image
+                            src={
+                              comment.user.imageUrls[0] ||
+                              "https://via.placeholder.com/40"
+                            }
+                            roundedCircle
+                            width={40}
+                            height={40}
+                          />
+                        </Col>
+                        <Col>
                           <strong>{comment.user.name}</strong>
-                          <div>{comment.text}</div>
-                        </div>
-                      </div>
+                          <p className="mb-0">{comment.text}</p>
+                        </Col>
+                      </Row>
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
               ) : (
-                <div>No comments yet.</div>
+                <div className="text-muted mb-4">No comments yet.</div>
               )}
+
+              {/* Add Comment Form */}
               {userInfo ? (
                 <Form onSubmit={handleCommentSubmit}>
                   <Form.Group controlId="commentInput">
@@ -273,25 +215,26 @@ const MomentDetail = () => {
                       type="text"
                       placeholder="Add a comment..."
                       value={newComment}
-                      onChange={handleCommentChange}
+                      onChange={(e) => setNewComment(e.target.value)}
                       disabled={isAddingComment}
                     />
                   </Form.Group>
                   <Button
-                    variant="primary"
                     type="submit"
-                    className="mt-2"
+                    variant="primary"
+                    className="mt-2 w-100"
                     disabled={isAddingComment}
                   >
-                    {isAddingComment ? "Adding..." : "Add Comment"}
+                    {isAddingComment ? "Adding..." : "Post Comment"}
                   </Button>
                 </Form>
               ) : (
                 <Message>
                   Please{" "}
-                  <Link to="/login" style={{ textDecoration: "underline" }}>
-                    sign in to write a review
-                  </Link>
+                  <Link to="/login" className="text-decoration-underline">
+                    sign in
+                  </Link>{" "}
+                  to add a comment
                 </Message>
               )}
             </Card.Body>

@@ -15,7 +15,6 @@ import SingleMoment from "./SingleMoment";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MomentType } from "./types";
-import "./MainMoments.scss";
 
 const MainMoments = () => {
   const { data, isLoading, error, refetch } = useGetMomentsQuery({});
