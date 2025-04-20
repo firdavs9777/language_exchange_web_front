@@ -5,9 +5,8 @@ import { useGetCommunityMembersQuery } from "../../store/slices/communitySlice";
 import Message from "../Message";
 import Loader from "../Loader";
 import "./MainCommunity.css";
-
-// 디바운스 훅 (입력 지연 처리)
-const useDebounce = (value: string, delay: number) => {
+// Debounce hook
+const useDebounce = (value, delay) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
@@ -21,6 +20,89 @@ const useDebounce = (value: string, delay: number) => {
   }, [value, delay]);
 
   return debouncedValue;
+};
+
+export const LanguageFlag = ({ code }) => {
+  // Map common language codes to flag emojis (simplified version)
+  const flagMap = {
+    en: "🇺🇸", // English
+    es: "🇪🇸", // Spanish
+    fr: "🇫🇷", // French
+    de: "🇩🇪", // German
+    it: "🇮🇹", // Italian
+    pt: "🇵🇹", // Portuguese
+    ru: "🇷🇺", // Russian
+    ja: "🇯🇵", // Japanese
+    ko: "🇰🇷", // Korean
+    zh: "🇨🇳", // Chinese
+  };
+
+  return <span className="language-flag">{flagMap[code] || code}</span>;
+};
+
+export const MemberCard = ({ member }) => {
+  // Function to extract language code from full language name
+  const getLanguageCode = (language) => {
+    const languageMap = {
+      English: "en",
+      Spanish: "es",
+      French: "fr",
+      German: "de",
+      Italian: "it",
+      Portuguese: "pt",
+      Russian: "ru",
+      Japanese: "ja",
+      Korean: "ko",
+      Chinese: "zh",
+      // Add more mappings as needed
+    };
+
+    // Try to find the language code, default to first two characters lowercase
+    return languageMap[language] || language.slice(0, 2).toLowerCase();
+  };
+
+  const nativeCode = getLanguageCode(member.native_language);
+  const learningCode = getLanguageCode(member.language_to_learn);
+
+  return (
+    <Link to={`/community/${member._id}`} className="member-card">
+      <div className="member-image-container">
+        <img
+          src={
+            member.imageUrls?.length > 0
+              ? member.imageUrls[member.imageUrls.length - 1]
+              : "/images/default-avatar.jpg"
+          }
+          alt={member.name}
+          className="member-image"
+          onError={(e) => {
+            e.target.src = "/images/default-avatar.jpg";
+          }}
+        />
+        <div className="language-badges">
+          <div className="language-badge native">
+            <LanguageFlag code={nativeCode} />
+          </div>
+          <div className="language-badge arrow">→</div>
+          <div className="language-badge learning">
+            <LanguageFlag code={learningCode} />
+          </div>
+        </div>
+      </div>
+      <div className="member-info">
+        <h3 className="member-name">{member.name}</h3>
+        <div className="member-languages">
+          <span className="speaks">{member.native_language}</span>
+          <span className="language-separator">→</span>
+          <span className="learns">{member.language_to_learn}</span>
+        </div>
+        <p className="member-bio">
+          {member.bio?.substring(0, 60) || "No bio available"}
+          {member.bio?.length > 60 ? "..." : ""}
+        </p>
+      </div>
+    </Link>
+  );
 };
 
 export interface CommunityMember {
@@ -39,18 +121,29 @@ export interface CommunityResponse {
 }
 
 const MainCommunity = () => {
-  // 상태 관리
+  // State management
   const [filter, setFilter] = useState("");
+  const [languageFilter, setLanguageFilter] = useState("");
   const [page, setPage] = useState(1);
-  const limit = 10; // 한 번에 불러올 멤버 수
-  const [allMembers, setAllMembers] = useState<CommunityMember[]>([]);
+  const limit = 20; // Show more members per page, like Tandem
+  const [allMembers, setAllMembers] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [activeTab, setActiveTab] = useState("all"); // Tabs: all, popular, new
 
-  // 디바운스 적용된 필터 값
+  // Debounced filter value
   const debouncedFilter = useDebounce(filter, 300);
 
-  // RTK Query를 이용한 멤버 데이터 가져오기
+  // Get current user ID from Redux store
+  const userId = useSelector((state) => state.auth.userInfo?.user._id);
+  const userNativeLanguage = useSelector(
+    (state) => state.auth.userInfo?.user.native_language
+  );
+  const userLearningLanguage = useSelector(
+    (state) => state.auth.userInfo?.user.language_to_learn
+  );
+
+  // RTK Query to fetch community members
   const {
     data: communityData,
     isLoading,
@@ -60,20 +153,18 @@ const MainCommunity = () => {
   } = useGetCommunityMembersQuery({
     page,
     limit,
-    filter: debouncedFilter, // 백엔드 필터링 지원 가정
+    filter: debouncedFilter,
+    language: languageFilter,
+    sort:
+      activeTab === "popular" ? "popular" : activeTab === "new" ? "newest" : "",
   });
 
-  // 현재 사용자 ID
-  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
-
-  // 데이터 업데이트 처리
+  // Update all members when data changes
   useEffect(() => {
     if (communityData) {
       if (page === 1) {
-        // 첫 페이지면 전체 교체
         setAllMembers(communityData.data);
       } else {
-        // 다음 페이지면 추가
         setAllMembers((prev) => {
           const existingIds = new Set(prev.map((member) => member._id));
           const newMembers = communityData.data.filter(
@@ -83,24 +174,37 @@ const MainCommunity = () => {
         });
       }
 
-      // 더 불러올 데이터가 있는지 확인
       setHasMore(communityData.data.length >= limit);
       setIsLoadingMore(false);
     }
   }, [communityData, page, limit]);
 
-  // 필터 입력 처리
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Reset page when filter changes
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedFilter, languageFilter, activeTab]);
+
+  // Filter change handler
+  const handleFilterChange = (e) => {
     setFilter(e.target.value);
-    setPage(1); // 필터 변경 시 페이지 초기화
   };
 
-  // 무한 스크롤 처리
+  // Language filter change handler
+  const handleLanguageFilterChange = (language) => {
+    setLanguageFilter(language === languageFilter ? "" : language);
+  };
+
+  // Tab change handler
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+
+  // Infinite scroll handler
   const handleScroll = useCallback(() => {
     if (isLoading || isFetching || isLoadingMore || !hasMore) return;
 
     const scrollPosition = window.innerHeight + window.scrollY;
-    const threshold = document.documentElement.offsetHeight - 500;
+    const threshold = document.documentElement.offsetHeight - 200;
 
     if (scrollPosition >= threshold) {
       setIsLoadingMore(true);
@@ -108,16 +212,16 @@ const MainCommunity = () => {
     }
   }, [isLoading, isFetching, isLoadingMore, hasMore]);
 
-  // 스크롤 이벤트 리스너 등록
+  // Register scroll event listener
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // 클라이언트 측 필터링 (백엔드 필터링 미지원 시)
+  // Client-side filtering
   const filteredMembers = useMemo(() => {
     return allMembers
-      .filter((member) => member._id !== userId) // 현재 사용자 제외
+      .filter((member) => member._id !== userId) // Exclude current user
       .filter(
         (member) =>
           debouncedFilter === "" ||
@@ -128,131 +232,180 @@ const MainCommunity = () => {
           member.language_to_learn
             .toLowerCase()
             .includes(debouncedFilter.toLowerCase())
+      )
+      .filter(
+        (member) =>
+          languageFilter === "" ||
+          member.native_language === languageFilter ||
+          member.language_to_learn === languageFilter
       );
-  }, [allMembers, userId, debouncedFilter]);
+  }, [allMembers, userId, debouncedFilter, languageFilter]);
 
-  // 로딩 상태
+  // Loading state
   if (isLoading && page === 1) {
     return (
-      <div className="loader-container">
+      <div className="community-loader">
         <Loader />
       </div>
     );
   }
 
-  // 에러 상태
+  // Error state
   if (error) {
     return (
-      <div className="error-container">
+      <div className="community-error">
         <Message variant="danger">
-          멤버 목록을 불러오는 중 오류가 발생했습니다: {(error as any).message}
+          Error loading community members: {error.message}
           <button onClick={refetch} className="retry-button">
-            다시 시도
+            Try Again
           </button>
         </Message>
       </div>
     );
   }
 
+  // Common languages to show in quick filters
+  const commonLanguages = [
+    "English",
+    "Spanish",
+    "French",
+    "German",
+    "Korean",
+    "Japanese",
+    "Chinese",
+  ];
+
   return (
-    <div className="community-container">
+    <div className="tandem-community">
       <div className="community-header">
-        <h2>언어 교환 커뮤니티</h2>
-        <div className="search-container">
+        <h1>Language Exchange Community</h1>
+        <p className="community-subtitle">
+          Connect with language learners worldwide
+        </p>
+      </div>
+
+      <div className="community-filters">
+        <div className="search-box">
           <input
             type="text"
-            placeholder="이름 또는 언어로 검색..."
+            placeholder="Search by name or language..."
             value={filter}
             onChange={handleFilterChange}
             className="search-input"
           />
+          <span className="search-icon">🔍</span>
+        </div>
+
+        <div className="quick-language-filters">
+          <div
+            className={`language-pill ${
+              languageFilter === userNativeLanguage ? "active" : ""
+            }`}
+            onClick={() => handleLanguageFilterChange(userNativeLanguage)}
+          >
+            Speaks {userNativeLanguage}
+          </div>
+          <div
+            className={`language-pill ${
+              languageFilter === userLearningLanguage ? "active" : ""
+            }`}
+            onClick={() => handleLanguageFilterChange(userLearningLanguage)}
+          >
+            Learns {userLearningLanguage}
+          </div>
+          {commonLanguages
+            .filter(
+              (lang) =>
+                lang !== userNativeLanguage && lang !== userLearningLanguage
+            )
+            .slice(0, 3)
+            .map((language) => (
+              <div
+                key={language}
+                className={`language-pill ${
+                  languageFilter === language ? "active" : ""
+                }`}
+                onClick={() => handleLanguageFilterChange(language)}
+              >
+                {language}
+              </div>
+            ))}
+        </div>
+
+        <div className="community-tabs">
+          <button
+            className={`tab-button ${activeTab === "all" ? "active" : ""}`}
+            onClick={() => handleTabChange("all")}
+          >
+            All Members
+          </button>
+          <button
+            className={`tab-button ${activeTab === "popular" ? "active" : ""}`}
+            onClick={() => handleTabChange("popular")}
+          >
+            Popular
+          </button>
+          <button
+            className={`tab-button ${activeTab === "new" ? "active" : ""}`}
+            onClick={() => handleTabChange("new")}
+          >
+            New
+          </button>
         </div>
       </div>
 
       {filteredMembers.length === 0 ? (
-        <div className="empty-state">
-          <svg
-            width="64"
-            height="64"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-          <p>조건에 맞는 커뮤니티 멤버가 없습니다</p>
-          {debouncedFilter && (
+        <div className="empty-community">
+          <div className="empty-icon">👥</div>
+          <h3>No members found</h3>
+          <p>Try adjusting your search filters</p>
+          {(debouncedFilter || languageFilter) && (
             <button
-              onClick={() => setFilter("")}
-              className="clear-filter-button"
+              onClick={() => {
+                setFilter("");
+                setLanguageFilter("");
+              }}
+              className="reset-filters-button"
             >
-              검색 필터 초기화
+              Reset All Filters
             </button>
           )}
         </div>
       ) : (
         <>
-          <div className="community-grid">
-            {filteredMembers.map((member) => (
-              <Link
-                to={`/community/${member._id}`}
-                key={member._id}
-                className="member-link"
+          <div className="members-count">
+            <span>Showing {filteredMembers.length} members</span>
+            {(debouncedFilter || languageFilter) && (
+              <button
+                onClick={() => {
+                  setFilter("");
+                  setLanguageFilter("");
+                }}
+                className="clear-filters"
               >
-                <div className="community-card">
-                  <div className="community-image-container">
-                    <img
-                      src={
-                        member.imageUrls?.length > 0
-                          ? member.imageUrls[member.imageUrls.length - 1]
-                          : "/images/default-avatar.jpg"
-                      }
-                      alt={member.name}
-                      className="community-image"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          "/images/default-avatar.jpg";
-                      }}
-                    />
-                  </div>
-                  <div className="community-profile">
-                    <h3 className="card-title">{member.name}</h3>
-                    <p className="card-text bio">
-                      {member.bio?.substring(0, 80) || "소개가 없습니다"}
-                      {member.bio?.length > 80 ? "..." : ""}
-                    </p>
-                    <div className="language-tags">
-                      <span className="native-tag">
-                        <span className="tag-label">모국어:</span>{" "}
-                        {member.native_language}
-                      </span>
-                      <span className="learning-tag">
-                        <span className="tag-label">배우는 중:</span>{" "}
-                        {member.language_to_learn}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
+                Clear filters
+              </button>
+            )}
+          </div>
+
+          <div className="members-grid">
+            {filteredMembers.map((member) => (
+              <MemberCard key={member._id} member={member} />
             ))}
           </div>
 
-          {/* 추가 데이터 로딩 중 표시 */}
+          {/* Loading indicator for infinite scroll */}
           {(isLoadingMore || isFetching) && (
-            <div className="loader-container-bottom">
+            <div className="loading-more">
               <Loader />
-              <p>더 많은 멤버를 불러오는 중...</p>
+              <p>Loading more members...</p>
             </div>
           )}
 
-          {/* 모든 데이터 로드 완료 표시 */}
+          {/* End of list message */}
           {!hasMore && filteredMembers.length > 0 && (
-            <div className="end-message">
-              <p>모든 멤버를 불러왔습니다</p>
+            <div className="end-of-list">
+              <p>You've seen all matching members</p>
             </div>
           )}
         </>
