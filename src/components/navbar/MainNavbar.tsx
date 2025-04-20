@@ -76,7 +76,7 @@ const MainNavbar = () => {
                   >
                     <FaComment size={20} className="icon-style" /> {t("chat")}
                   </NavLink>
-                  <NavLink
+                  {/* <NavLink
                     to="/notifications"
                     className={({ isActive }) =>
                       isActive ? "custom-nav-link active" : "custom-nav-link"
@@ -84,7 +84,7 @@ const MainNavbar = () => {
                   >
                     <FaBell size={20} className="icon-style" />{" "}
                     {t("notifications")}
-                  </NavLink>
+                  </NavLink> */}
                   <NavLink
                     to="/moments"
                     className={({ isActive }) =>
