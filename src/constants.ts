@@ -1,5 +1,7 @@
-export const BASE_URL =
-  process.env.NODE_ENV === "development" ? "http://localhost:5003" : "";
+export const BASE_URL = "http://64.23.181.246:5003";
+// process.env.NODE_ENV === "development"
+//   ? "http://64.23.181.246:5003"
+//   : "http://64.23.181.246:5003";
 export const MOMENTS_URL = "/api/v1/moments";
 export const USERS_URL = "/api/v1/users";
 export const COMMUNITY_URL = "/api/v1/auth/users";

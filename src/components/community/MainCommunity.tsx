@@ -6,7 +6,7 @@ import Message from "../Message";
 import Loader from "../Loader";
 import "./MainCommunity.css";
 // Debounce hook
-const useDebounce = (value, delay) => {
+const useDebounce = (value: any, delay: any) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
