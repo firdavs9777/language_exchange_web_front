@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Card, ListGroup, ListGroupItem, Image } from "react-bootstrap";
-
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
-import { FaComments, FaRegComment, FaRegComments } from "react-icons/fa";
+import { FaComments, FaRegComments } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
-import "./SingleMoment.css";
 import {
   useDislikeMomentMutation,
   useLikeMomentMutation,
 } from "../../store/slices/momentsSlice";
 import { useSelector } from "react-redux";
-import { useGetCommentsQuery } from "../../store/slices/comments";
 import { toast } from "react-toastify";
 import { MomentType } from "./types";
 
@@ -34,89 +31,118 @@ const SingleMoment: React.FC<MomentType> = ({
   const [likeMoment] = useLikeMomentMutation();
   const [dislikeMoment] = useDislikeMomentMutation();
 
+  useEffect(() => {
+    if (likedUsers.includes(userId)) {
+      setLiked(true);
+    }
+  }, [likedUsers, userId]);
+
   const toggleLike = async (e: React.MouseEvent) => {
+    e.preventDefault();
     if (!userId) {
       toast.error("Please login first");
       navigate("/login");
       return;
     }
-    e.preventDefault(); // Prevents the Link from triggering on button click
+
     if (liked) {
       await dislikeMoment({ momentId: _id, userId });
-      // Call the dislike mutation
     } else {
-      await likeMoment({ momentId: _id, userId }); // Call the like mutation
+      await likeMoment({ momentId: _id, userId });
     }
-    setLiked(!liked); // Toggle the liked state
-    refetch && refetch(); // Call refetch to update the moments list
+    setLiked(!liked);
+    refetch && refetch();
   };
 
   return (
-    <Link to={`/moment/${_id}`}>
-      <Card className="my-3 p-4 rounded shadow-sm post-card">
-        <ListGroup variant="flush">
-          <Link to={`/community/${user._id}`}>
-            <Card className="card-header">
-              <ListGroupItem className="d-flex align-items-center">
-                <Image
-                  src={
-                    user?.imageUrls?.length > 0
-                      ? user.imageUrls[0]
-                      : "https://via.placeholder.com/50"
-                  }
-                  roundedCircle
-                  className="profile-pic"
-                />
-
-                <div className="ms-3">
-                  <h6 className="mb-0">{user.name}</h6>
-                  <small className="text-muted">
-                    {new Date(createdAt).toLocaleString()}
-                  </small>
-                </div>
-              </ListGroupItem>
-            </Card>
-          </Link>
-          {imageUrls.length > 0 && (
-            <Card.Img
-              variant="top"
-              src={imageUrls[0]}
-              alt={title}
-              className="post-image"
+    <Card className="my-3 rounded shadow-sm overflow-hidden border-0">
+      <ListGroup variant="flush">
+        {/* User Info */}
+        <ListGroupItem className="d-flex align-items-center bg-white border-0 p-3">
+          <Link
+            to={`/community/${user._id}`}
+            className="d-flex align-items-center text-decoration-none text-dark"
+          >
+            <Image
+              src={user?.imageUrls?.[0] || "https://via.placeholder.com/50"}
+              roundedCircle
+              style={{ width: "45px", height: "45px", objectFit: "cover" }}
+              className="me-2"
             />
-          )}
-          <Card.Body>
-            <Card.Title>{title}</Card.Title>
-            <Card.Text>{description}</Card.Text>
-          </Card.Body>
-          <ListGroupItem className="d-flex justify-content-between">
-            <Button variant="link" className="text-dark" onClick={toggleLike}>
-              {likedUsers.includes(userId) ? (
-                <AiFillLike className="icon" size={24} />
-              ) : (
-                <AiOutlineLike className="icon" size={24} />
-              )}{" "}
-              {likeCount}
-            </Button>
-            <Button variant="link" className="text-dark">
-              <span className="commentCount" style={{ padding: '5px' }}> {commentCount.toString()}</span>
-              {commentCount !== 0 ? (
-                <>
-                  <FaComments className="comment-icon" size={24} />
-                </>
-              ) : (
-                <>
-                  <FaRegComments className="comment-icon-empty" size={24} />
-                </>
-              )}
-            </Button>
-            <Button variant="link" className="text-dark">
-              <IoMdShare className="icon" />
-            </Button>
-          </ListGroupItem>
-        </ListGroup>
-      </Card>
-    </Link>
+            <div>
+              <div className="fw-semibold">{user.name}</div>
+              <small className="text-muted">
+                {new Date(createdAt).toLocaleString()}
+              </small>
+            </div>
+          </Link>
+        </ListGroupItem>
+
+        {/* Moment Content */}
+        <ListGroupItem className="bg-white border-0 p-3 pt-0">
+          <Link
+            to={`/moment/${_id}`}
+            className="text-decoration-none text-dark"
+          >
+            <div className="mb-2">
+              <h5 className="mb-1 fw-bold">{title}</h5>
+              <p className="mb-0">{description}</p>
+            </div>
+
+            {/* Moment Image if exists */}
+            {imageUrls && imageUrls.length > 0 && (
+              <div className="mt-2">
+                <Image
+                  src={imageUrls[0]}
+                  alt={title}
+                  fluid
+                  rounded
+                  style={{
+                    width: "100%",
+                    height: "250px",
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
+            )}
+          </Link>
+        </ListGroupItem>
+
+        {/* Interaction Buttons */}
+        <ListGroupItem className="d-flex justify-content-around align-items-center bg-white border-0 p-2 pt-0">
+          <Button
+            variant="link"
+            className="text-dark text-decoration-none d-flex align-items-center gap-1 p-0"
+            onClick={toggleLike}
+          >
+            {liked ? (
+              <AiFillLike className="text-primary" size={22} />
+            ) : (
+              <AiOutlineLike size={22} />
+            )}
+            <small>{likeCount}</small>
+          </Button>
+          <Link
+            to={`/moment/${_id}`}
+            className="text-dark text-decoration-none d-flex align-items-center gap-1"
+          >
+            {commentCount !== 0 ? (
+              <FaComments size={22} />
+            ) : (
+              <FaRegComments size={22} />
+            )}
+            <small>{commentCount}</small>
+          </Link>
+          <Button
+            variant="link"
+            className="text-dark text-decoration-none d-flex align-items-center gap-1 p-0"
+          >
+            <IoMdShare size={22} />
+            <small>Share</small>
+          </Button>
+        </ListGroupItem>
+      </ListGroup>
+    </Card>
   );
 };
 

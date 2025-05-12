@@ -1,0 +1,16 @@
+{
+    "greeting": "hello",
+    "community": "Community",
+    "chat":"Chat",
+    "notifications": "Notifications",
+    "moments": "Moments",
+    "language":"Language",
+    "english":"English",
+    "korean": "Korean",
+    "profile": "Profile",
+    "followers":"Followers",
+    "followings":"Followings",
+    "my_moments" : "My Moments",
+    "logout": "Logout",  
+    "sign_in": "Sign In"
+}

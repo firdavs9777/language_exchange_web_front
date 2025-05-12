@@ -1,14 +1,109 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useGetCommunityMembersQuery } from "../../store/slices/communitySlice";
-
-// Components
 import Message from "../Message";
 import Loader from "../Loader";
-
-// Styles
 import "./MainCommunity.css";
+// Debounce hook
+const useDebounce = (value: any, delay: any) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
+export const LanguageFlag = ({ code }) => {
+  // Map common language codes to flag emojis (simplified version)
+  const flagMap = {
+    en: "🇺🇸", // English
+    es: "🇪🇸", // Spanish
+    fr: "🇫🇷", // French
+    de: "🇩🇪", // German
+    it: "🇮🇹", // Italian
+    pt: "🇵🇹", // Portuguese
+    ru: "🇷🇺", // Russian
+    ja: "🇯🇵", // Japanese
+    ko: "🇰🇷", // Korean
+    zh: "🇨🇳", // Chinese
+  };
+
+  return <span className="language-flag">{flagMap[code] || code}</span>;
+};
+
+export const MemberCard = ({ member }) => {
+  // Function to extract language code from full language name
+  const getLanguageCode = (language) => {
+    const languageMap = {
+      English: "en",
+      Spanish: "es",
+      French: "fr",
+      German: "de",
+      Italian: "it",
+      Portuguese: "pt",
+      Russian: "ru",
+      Japanese: "ja",
+      Korean: "ko",
+      Chinese: "zh",
+      // Add more mappings as needed
+    };
+
+    // Try to find the language code, default to first two characters lowercase
+    return languageMap[language] || language.slice(0, 2).toLowerCase();
+  };
+
+  const nativeCode = getLanguageCode(member.native_language);
+  const learningCode = getLanguageCode(member.language_to_learn);
+
+  return (
+    <Link to={`/community/${member._id}`} className="member-card">
+      <div className="member-image-container">
+        <img
+          src={
+            member.imageUrls?.length > 0
+              ? member.imageUrls[member.imageUrls.length - 1]
+              : "/images/default-avatar.jpg"
+          }
+          alt={member.name}
+          className="member-image"
+          onError={(e) => {
+            e.target.src = "/images/default-avatar.jpg";
+          }}
+        />
+        <div className="language-badges">
+          <div className="language-badge native">
+            <LanguageFlag code={nativeCode} />
+          </div>
+          <div className="language-badge arrow">→</div>
+          <div className="language-badge learning">
+            <LanguageFlag code={learningCode} />
+          </div>
+        </div>
+      </div>
+      <div className="member-info">
+        <h3 className="member-name">{member.name}</h3>
+        <div className="member-languages">
+          <span className="speaks">{member.native_language}</span>
+          <span className="language-separator">→</span>
+          <span className="learns">{member.language_to_learn}</span>
+        </div>
+        <p className="member-bio">
+          {member.bio?.substring(0, 60) || "No bio available"}
+          {member.bio?.length > 60 ? "..." : ""}
+        </p>
+      </div>
+    </Link>
+  );
+};
 
 export interface CommunityMember {
   _id: string;
@@ -26,101 +121,294 @@ export interface CommunityResponse {
 }
 
 const MainCommunity = () => {
+  // State management
   const [filter, setFilter] = useState("");
-  const { data, isLoading, error } = useGetCommunityMembersQuery({});
-  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
+  const [languageFilter, setLanguageFilter] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 20; // Show more members per page, like Tandem
+  const [allMembers, setAllMembers] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [activeTab, setActiveTab] = useState("all"); // Tabs: all, popular, new
 
+  // Debounced filter value
+  const debouncedFilter = useDebounce(filter, 300);
+
+  // Get current user ID from Redux store
+  const userId = useSelector((state) => state.auth.userInfo?.user._id);
+  const userNativeLanguage = useSelector(
+    (state) => state.auth.userInfo?.user.native_language
+  );
+  const userLearningLanguage = useSelector(
+    (state) => state.auth.userInfo?.user.language_to_learn
+  );
+
+  // RTK Query to fetch community members
+  const {
+    data: communityData,
+    isLoading,
+    isFetching,
+    error,
+    refetch,
+  } = useGetCommunityMembersQuery({
+    page,
+    limit,
+    filter: debouncedFilter,
+    language: languageFilter,
+    sort:
+      activeTab === "popular" ? "popular" : activeTab === "new" ? "newest" : "",
+  });
+
+  // Update all members when data changes
+  useEffect(() => {
+    if (communityData) {
+      if (page === 1) {
+        setAllMembers(communityData.data);
+      } else {
+        setAllMembers((prev) => {
+          const existingIds = new Set(prev.map((member) => member._id));
+          const newMembers = communityData.data.filter(
+            (member) => !existingIds.has(member._id)
+          );
+          return [...prev, ...newMembers];
+        });
+      }
+
+      setHasMore(communityData.data.length >= limit);
+      setIsLoadingMore(false);
+    }
+  }, [communityData, page, limit]);
+
+  // Reset page when filter changes
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedFilter, languageFilter, activeTab]);
+
+  // Filter change handler
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
+
+  // Language filter change handler
+  const handleLanguageFilterChange = (language) => {
+    setLanguageFilter(language === languageFilter ? "" : language);
+  };
+
+  // Tab change handler
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+
+  // Infinite scroll handler
+  const handleScroll = useCallback(() => {
+    if (isLoading || isFetching || isLoadingMore || !hasMore) return;
+
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const threshold = document.documentElement.offsetHeight - 200;
+
+    if (scrollPosition >= threshold) {
+      setIsLoadingMore(true);
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, [isLoading, isFetching, isLoadingMore, hasMore]);
+
+  // Register scroll event listener
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
+  // Client-side filtering
   const filteredMembers = useMemo(() => {
-    if (!data?.data) return [];
-
-    return data.data
-      .filter((member: any) => member._id !== userId)
+    return allMembers
+      .filter((member) => member._id !== userId) // Exclude current user
       .filter(
-        (member: any) =>
-          filter === "" ||
-          member.name.toLowerCase().includes(filter.toLowerCase()) ||
-          member.native_language.toLowerCase().includes(filter.toLowerCase()) ||
-          member.language_to_learn.toLowerCase().includes(filter.toLowerCase())
+        (member) =>
+          debouncedFilter === "" ||
+          member.name.toLowerCase().includes(debouncedFilter.toLowerCase()) ||
+          member.native_language
+            .toLowerCase()
+            .includes(debouncedFilter.toLowerCase()) ||
+          member.language_to_learn
+            .toLowerCase()
+            .includes(debouncedFilter.toLowerCase())
+      )
+      .filter(
+        (member) =>
+          languageFilter === "" ||
+          member.native_language === languageFilter ||
+          member.language_to_learn === languageFilter
       );
-  }, [data, userId, filter]);
+  }, [allMembers, userId, debouncedFilter, languageFilter]);
 
-  if (isLoading)
+  // Loading state
+  if (isLoading && page === 1) {
     return (
-      <div className="loader-container">
+      <div className="community-loader">
         <Loader />
       </div>
     );
-  if (error)
+  }
+
+  // Error state
+  if (error) {
     return (
-      <div className="error-container">
-        <Message variant="danger">Error loading community members</Message>
+      <div className="community-error">
+        <Message variant="danger">
+          Error loading community members: {error.message}
+          <button onClick={refetch} className="retry-button">
+            Try Again
+          </button>
+        </Message>
       </div>
     );
+  }
+
+  // Common languages to show in quick filters
+  const commonLanguages = [
+    "English",
+    "Spanish",
+    "French",
+    "German",
+    "Korean",
+    "Japanese",
+    "Chinese",
+  ];
 
   return (
-    <div className="community-container">
+    <div className="tandem-community">
       <div className="community-header">
-        <h2>Community</h2>
+        <h1>Language Exchange Community</h1>
+        <p className="community-subtitle">
+          Connect with language learners worldwide
+        </p>
+      </div>
+
+      <div className="community-filters">
+        <div className="search-box">
+          <input
+            type="text"
+            placeholder="Search by name or language..."
+            value={filter}
+            onChange={handleFilterChange}
+            className="search-input"
+          />
+          <span className="search-icon">🔍</span>
+        </div>
+
+        <div className="quick-language-filters">
+          <div
+            className={`language-pill ${
+              languageFilter === userNativeLanguage ? "active" : ""
+            }`}
+            onClick={() => handleLanguageFilterChange(userNativeLanguage)}
+          >
+            Speaks {userNativeLanguage}
+          </div>
+          <div
+            className={`language-pill ${
+              languageFilter === userLearningLanguage ? "active" : ""
+            }`}
+            onClick={() => handleLanguageFilterChange(userLearningLanguage)}
+          >
+            Learns {userLearningLanguage}
+          </div>
+          {commonLanguages
+            .filter(
+              (lang) =>
+                lang !== userNativeLanguage && lang !== userLearningLanguage
+            )
+            .slice(0, 3)
+            .map((language) => (
+              <div
+                key={language}
+                className={`language-pill ${
+                  languageFilter === language ? "active" : ""
+                }`}
+                onClick={() => handleLanguageFilterChange(language)}
+              >
+                {language}
+              </div>
+            ))}
+        </div>
+
+        <div className="community-tabs">
+          <button
+            className={`tab-button ${activeTab === "all" ? "active" : ""}`}
+            onClick={() => handleTabChange("all")}
+          >
+            All Members
+          </button>
+          <button
+            className={`tab-button ${activeTab === "popular" ? "active" : ""}`}
+            onClick={() => handleTabChange("popular")}
+          >
+            Popular
+          </button>
+          <button
+            className={`tab-button ${activeTab === "new" ? "active" : ""}`}
+            onClick={() => handleTabChange("new")}
+          >
+            New
+          </button>
+        </div>
       </div>
 
       {filteredMembers.length === 0 ? (
-        <div className="empty-state">
-          <svg
-            width="64"
-            height="64"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-          <p>No community members found</p>
+        <div className="empty-community">
+          <div className="empty-icon">👥</div>
+          <h3>No members found</h3>
+          <p>Try adjusting your search filters</p>
+          {(debouncedFilter || languageFilter) && (
+            <button
+              onClick={() => {
+                setFilter("");
+                setLanguageFilter("");
+              }}
+              className="reset-filters-button"
+            >
+              Reset All Filters
+            </button>
+          )}
         </div>
       ) : (
-        <div className="community-grid">
-          {filteredMembers.map((member) => (
-            <Link
-              to={`/community/${member._id}`}
-              key={member._id}
-              className="member-link"
-            >
-              <div className="community-card">
-                <div className="community-image-container">
-                  <img
-                    src={
-                      member.imageUrls.length > 0
-                        ? member.imageUrls[member.imageUrls.length - 1]
-                        : "/images/default-avatar.jpg"
-                    }
-                    alt={member.name}
-                    className="community-image"
-                  />
-                </div>
-                <div className="community-profile">
-                  <h3 className="card-title">{member.name}</h3>
-                  <p className="card-text bio">
-                    {member.bio?.substring(0, 80) || "No bio available"}
-                    {member.bio?.length > 80 ? "..." : ""}
-                  </p>
-                  <div className="language-tags">
-                    <span className="native-tag">
-                      <span className="tag-label">Speaks:</span>{" "}
-                      {member.native_language}
-                    </span>
-                    <span className="learning-tag">
-                      <span className="tag-label">Learning:</span>{" "}
-                      {member.language_to_learn}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <>
+          <div className="members-count">
+            <span>Showing {filteredMembers.length} members</span>
+            {(debouncedFilter || languageFilter) && (
+              <button
+                onClick={() => {
+                  setFilter("");
+                  setLanguageFilter("");
+                }}
+                className="clear-filters"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
+
+          <div className="members-grid">
+            {filteredMembers.map((member) => (
+              <MemberCard key={member._id} member={member} />
+            ))}
+          </div>
+
+          {/* Loading indicator for infinite scroll */}
+          {(isLoadingMore || isFetching) && (
+            <div className="loading-more">
+              <Loader />
+              <p>Loading more members...</p>
+            </div>
+          )}
+
+          {/* End of list message */}
+          {!hasMore && filteredMembers.length > 0 && (
+            <div className="end-of-list">
+              <p>You've seen all matching members</p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

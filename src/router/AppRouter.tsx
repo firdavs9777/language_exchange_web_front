@@ -20,6 +20,7 @@ import UserFollowersList from "../components/profile/UserFollowers";
 import UserFollowingList from "../components/profile/UserFollowing";
 import MyMoments from "../components/profile/MyMoments";
 import MainChat from "../components/chat/MainChat";
+import ForgetPassword from "../components/auth/ForgetPassword";
 
 const AppRouter = createBrowserRouter(
   createRoutesFromElements(
@@ -44,6 +45,11 @@ const AppRouter = createBrowserRouter(
       <Route index={true} path="/chat" element={<MainChat />} />
       <Route index={true} path="/register" element={<Register />} />
       <Route index={true} path="/profile" element={<ProfileScreen />} />
+      <Route
+        index={true}
+        path="/forgot-password"
+        element={<ForgetPassword />}
+      />
       <Route index={true} path="/my-moments" element={<MyMoments />} />
       <Route index={true} path="/courses" element={<CoursesMain />} />
     </Route>

@@ -14,6 +14,7 @@ import {
   Image,
   Row,
   Form,
+  Badge,
 } from "react-bootstrap";
 import backgroundImage from "../../assets/profile_background.png";
 import {
@@ -25,7 +26,6 @@ import {
   FaUserCheck,
   FaUserFriends,
 } from "react-icons/fa";
-import "./Profile.css";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useGetMyMomentsQuery } from "../../store/slices/momentsSlice";
@@ -36,9 +36,8 @@ import ImageUploaderModal from "./ImageUploader/ImageUploader";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import ISO6391 from "iso-639-1"; // No need to instantiate the class
-import { setCredentials } from "../../store/slices/authSlice";
-import { useDispatch } from "react-redux";
+import ISO6391 from "iso-639-1";
+
 export interface Moment {
   count: number;
   success: string;
@@ -142,7 +141,6 @@ const ProfileScreen: React.FC = () => {
 
   const handleProfileUpdate = async () => {
     try {
-      console.log(formData.name);
       const response = await updateUserProfile(formData).unwrap();
       const ActionPayload: Response | any = response.data;
       // console.log(response)
@@ -168,9 +166,25 @@ const ProfileScreen: React.FC = () => {
     setCurrentImageIndex(index);
     setShowImageViewer(true);
   };
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading user profile</div>;
-  if (!data) return <div>No user profile data available</div>;
+
+  if (isLoading)
+    return (
+      <div className="text-center my-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  if (error)
+    return (
+      <div className="alert alert-danger m-3">Error loading user profile</div>
+    );
+  if (!data)
+    return (
+      <div className="alert alert-warning m-3">
+        No user profile data available
+      </div>
+    );
 
   const handleSaveChanges = async () => {
     await handleProfileUpdate();
@@ -182,11 +196,12 @@ const ProfileScreen: React.FC = () => {
       setFormData(data.data);
     }
   };
-  
+
   const languageOptions = ISO6391.getAllCodes().map((code) => ({
     value: code,
     label: ISO6391.getName(code),
   }));
+
   const handleBirthDateChange = (date: Date | null) => {
     if (date) {
       setBirthDate(date);
@@ -218,6 +233,7 @@ const ProfileScreen: React.FC = () => {
       [name]: value,
     }));
   };
+
   const getOrdinalSuffix = (day: string): string => {
     const n = parseInt(day);
     if (isNaN(n)) return day; // Return original if not a number
@@ -236,34 +252,83 @@ const ProfileScreen: React.FC = () => {
         return `${n}th`;
     }
   };
+
   return (
-    <Container fluid className="profile-section">
+    <Container fluid>
       {/* Banner Section */}
       <Row className="justify-content-center my-1">
-        <Image src={backgroundImage} className="banner" />
-        <Col xs="auto" className="d-flex align-items-center">
-          <h1 className="profile-heading">My Profile</h1>
+        <Col xs={12} className="p-0 mb-5">
+          <div
+            style={{
+              position: "relative",
+              height: "180px",
+              overflow: "hidden",
+            }}
+          >
+            <Image
+              src={backgroundImage}
+              style={{ width: "100%", height: "180px", objectFit: "cover" }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 10,
+              }}
+            >
+              <h1 className="text-white fw-bold text-center">My Profile</h1>
+            </div>
+          </div>
         </Col>
       </Row>
 
       {/* Avatar and Edit Button */}
-      <Row className="justify-content-center profile-avatar-section">
-        <Col xs="auto" className="text-center">
-          <Image
-            src={formData.imageUrls[0]}
-            alt="User Image"
-            roundedCircle
-            className="profile-avatar-image"
-            onClick={() => handleImageClick(0)}
-            style={{ cursor: "pointer" }}
-          />
-          <Button
-            variant="primary"
-            className="profile-avatar-edit"
-            onClick={handleOpenUploadModal}
-          >
-            <FaEdit /> Edit
-          </Button>
+      <Row className="justify-content-center" style={{ marginTop: "-60px" }}>
+        <Col xs="auto" className="text-center mb-4">
+          <div style={{ position: "relative" }}>
+            <Image
+              src={
+                formData.imageUrls && formData.imageUrls.length > 0
+                  ? formData.imageUrls[0]
+                  : "https://via.placeholder.com/150"
+              }
+              alt="User Profile"
+              roundedCircle
+              style={{
+                width: "120px",
+                height: "120px",
+                objectFit: "cover",
+                border: "4px solid white",
+                boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+                cursor: "pointer",
+              }}
+              onClick={() => handleImageClick(0)}
+            />
+            <Button
+              variant="primary"
+              size="sm"
+              style={{
+                position: "absolute",
+                bottom: "0",
+                right: "0",
+                borderRadius: "50%",
+                width: "36px",
+                height: "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onClick={handleOpenUploadModal}
+            >
+              <FaEdit />
+            </Button>
+          </div>
+          <h4 className="mt-2 mb-0 fw-bold">{formData.name}</h4>
+          <p className="text-muted small">
+            @{formData.name.toLowerCase().replace(/\s+/g, "")}
+          </p>
         </Col>
       </Row>
 
@@ -282,86 +347,109 @@ const ProfileScreen: React.FC = () => {
         onUploadImages={handleUploadImages}
       />
 
-      <Row className="justify-content-center my-4 profile-stats-section">
-        <Col md={3} className="text-center">
-          <Link to={`/followersList`}>
-            <Card className="p-3 shadow-sm profile-stat-card">
-              <FaUserFriends className="stat-icon mb-2" />
-              <Card.Title className="stat-number">
-                {followersDataMain?.count}
-              </Card.Title>
-              <Card.Text className="stat-text">Followers</Card.Text>
-            </Card>
-          </Link>
-        </Col>
+      {/* Stats Section */}
+      <Row className="justify-content-center mb-4">
+        <Col md={8} lg={6}>
+          <Row className="g-3">
+            <Col xs={6} sm={3}>
+              <Link to={`/followersList`} className="text-decoration-none">
+                <Card className="text-center h-100 border-0 shadow-sm hover-shadow">
+                  <Card.Body className="d-flex flex-column align-items-center">
+                    <div className="rounded-circle bg-light p-3 mb-2">
+                      <FaUserFriends className="text-primary" size={24} />
+                    </div>
+                    <h5 className="fw-bold mb-0">
+                      {followersDataMain?.count || 0}
+                    </h5>
+                    <p className="text-muted mb-0">Followers</p>
+                  </Card.Body>
+                </Card>
+              </Link>
+            </Col>
 
-        <Col md={3} className="text-center">
-          <Link to={`/followingsList`}>
-            <Card className="p-3 shadow-sm profile-stat-card">
-              <FaUserCheck className="stat-icon mb-2" />
-              <Card.Title className="stat-number">
-                {followingsDataMain?.count}
-              </Card.Title>
-              <Card.Text className="stat-text">Following</Card.Text>
-            </Card>
-          </Link>
-        </Col>
-        <Col md={3} className="text-center">
-          <Link to={`/my-moments`}>
-            <Card className="p-3 shadow-sm profile-stat-card">
-              <FaCameraRetro className="stat-icon mb-2" />
-              <Card.Title className="stat-number">
-                {momentsData?.count} 
-              </Card.Title>
-              <Card.Text className="stat-text">Moments</Card.Text>
-            </Card>
-          </Link>
-        </Col>
-        <Col md={3} className="text-center">
-          <Card className="p-3 shadow-sm profile-stat-card">
-            <FaEye className="stat-icon mb-2" />
-            <Card.Title className="stat-number">320</Card.Title>
-            <Card.Text className="stat-text">Visitors</Card.Text>
-          </Card>
+            <Col xs={6} sm={3}>
+              <Link to={`/followingsList`} className="text-decoration-none">
+                <Card className="text-center h-100 border-0 shadow-sm hover-shadow">
+                  <Card.Body className="d-flex flex-column align-items-center">
+                    <div className="rounded-circle bg-light p-3 mb-2">
+                      <FaUserCheck className="text-success" size={24} />
+                    </div>
+                    <h5 className="fw-bold mb-0">
+                      {followingsDataMain?.count || 0}
+                    </h5>
+                    <p className="text-muted mb-0">Following</p>
+                  </Card.Body>
+                </Card>
+              </Link>
+            </Col>
+
+            <Col xs={6} sm={3}>
+              <Link to={`/my-moments`} className="text-decoration-none">
+                <Card className="text-center h-100 border-0 shadow-sm hover-shadow">
+                  <Card.Body className="d-flex flex-column align-items-center">
+                    <div className="rounded-circle bg-light p-3 mb-2">
+                      <FaCameraRetro className="text-danger" size={24} />
+                    </div>
+                    <h5 className="fw-bold mb-0">{momentsData?.count || 0}</h5>
+                    <p className="text-muted mb-0">Moments</p>
+                  </Card.Body>
+                </Card>
+              </Link>
+            </Col>
+
+            <Col xs={6} sm={3}>
+              <Card className="text-center h-100 border-0 shadow-sm hover-shadow">
+                <Card.Body className="d-flex flex-column align-items-center">
+                  <div className="rounded-circle bg-light p-3 mb-2">
+                    <FaEye className="text-info" size={24} />
+                  </div>
+                  <h5 className="fw-bold mb-0">320</h5>
+                  <p className="text-muted mb-0">Visitors</p>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
         </Col>
       </Row>
 
       {/* Profile Information */}
-      <Row className="justify-content-center profile-info-section mt-4">
-        <Col md={6}>
-          <Card className="mb-4">
-            <Card.Body>
-              <Card.Title className="mb-4">
-                <span className="info-heading">Personal Information</span>
-                {editMode === "personal" ? (
-                  <>
-                    <Button
-                      variant="link"
-                      className="float-end"
-                      onClick={handleSaveChanges}
-                    >
-                      <FaSave /> Save
-                    </Button>
-                    <Button
-                      variant="link"
-                      className="float-end me-2"
-                      onClick={handleCancelChanges}
-                    >
-                      <FaTimes /> Cancel
-                    </Button>
-                  </>
-                ) : (
-                  <Button
-                    variant="link"
-                    className="float-end"
-                    onClick={() => setEditMode("personal")}
-                  >
-                    <FaEdit /> Edit
-                  </Button>
-                )}
-              </Card.Title>
+      <Row className="justify-content-center">
+        <Col md={8} lg={6}>
+          {/* Personal Information Card */}
+          <Card className="mb-4 border-0 shadow-sm">
+            <Card.Header className="bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+              <h5 className="mb-0 fw-bold">Personal Information</h5>
               {editMode === "personal" ? (
-                <>
+                <div>
+                  <Button
+                    variant="success"
+                    size="sm"
+                    className="me-2"
+                    onClick={handleSaveChanges}
+                  >
+                    <FaSave className="me-1" /> Save
+                  </Button>
+                  <Button
+                    variant="outline-secondary"
+                    size="sm"
+                    onClick={handleCancelChanges}
+                  >
+                    <FaTimes className="me-1" /> Cancel
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  onClick={() => setEditMode("personal")}
+                >
+                  <FaEdit className="me-1" /> Edit
+                </Button>
+              )}
+            </Card.Header>
+            <Card.Body>
+              {editMode === "personal" ? (
+                <Form>
                   <Form.Group className="mb-3">
                     <Form.Label>Name</Form.Label>
                     <Form.Control
@@ -394,170 +482,237 @@ const ProfileScreen: React.FC = () => {
                     </Form.Select>
                   </Form.Group>
                   <Form.Group className="mb-3">
-                    <Form.Group className="mb-3">
-                      <Form.Label>Birthday</Form.Label>
-                      <br/>
-                      <DatePicker
-                        selected={birthDate}
-                        onChange={handleBirthDateChange}
-                        dateFormat="dd/MM/yyyy"
-                        placeholderText="Select Date"
-                        className="custom-datepicker" // Add Bootstrap styling
-                        aria-label="Birthday date picker" // Add accessibility label
-                      />
-                    </Form.Group>
+                    <Form.Label>Birthday</Form.Label>
+                    <DatePicker
+                      selected={birthDate}
+                      onChange={handleBirthDateChange}
+                      dateFormat="dd/MM/yyyy"
+                      placeholderText="Select Date"
+                      className="form-control"
+                      aria-label="Birthday date picker"
+                    />
                   </Form.Group>
-                </>
+                </Form>
               ) : (
-                <>
-                  <Card.Text>
-                    <strong>Name:</strong> {formData.name}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Email:</strong> {formData.email}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Gender:</strong> {formData.gender}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Birthday:</strong>{" "}
-                    {`${getOrdinalSuffix(formData.birth_day)} of ${new Date(
-                      formData.birth_year,
-                      formData.birth_month - 1
-                    ).toLocaleString("en-US", { month: "long" })}, ${
+                <div className="py-2">
+                  <Row className="mb-3">
+                    <Col xs={4} className="text-muted">
+                      Name:
+                    </Col>
+                    <Col xs={8} className="fw-medium">
+                      {formData.name}
+                    </Col>
+                  </Row>
+                  <Row className="mb-3">
+                    <Col xs={4} className="text-muted">
+                      Email:
+                    </Col>
+                    <Col xs={8} className="fw-medium">
+                      {formData.email}
+                    </Col>
+                  </Row>
+                  <Row className="mb-3">
+                    <Col xs={4} className="text-muted">
+                      Gender:
+                    </Col>
+                    <Col xs={8}>
+                      {formData.gender ? (
+                        <Badge
+                          bg={formData.gender === "Male" ? "primary" : "danger"}
+                          className="fw-normal"
+                        >
+                          {formData.gender}
+                        </Badge>
+                      ) : (
+                        "Not specified"
+                      )}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={4} className="text-muted">
+                      Birthday:
+                    </Col>
+                    <Col xs={8}>
+                      {formData.birth_day &&
+                      formData.birth_month &&
                       formData.birth_year
-                    }`}
-                  </Card.Text>
-                </>
+                        ? `${getOrdinalSuffix(
+                            formData.birth_day
+                          )} of ${new Date(
+                            Number(formData.birth_year),
+                            Number(formData.birth_month) - 1
+                          ).toLocaleString("en-US", { month: "long" })}, ${
+                            formData.birth_year
+                          }`
+                        : "Not specified"}
+                    </Col>
+                  </Row>
+                </div>
               )}
             </Card.Body>
           </Card>
 
           {/* Bio Section */}
-          <Card className="mb-4">
-            <Card.Body>
-              <Card.Title className="mb-4">
-                <span className="info-heading">Bio</span>
-                {editMode === "bio" ? (
-                  <>
-                    <Button
-                      variant="link"
-                      className="float-end"
-                      onClick={handleSaveChanges}
-                    >
-                      <FaSave /> Save
-                    </Button>
-                    <Button
-                      variant="link"
-                      className="float-end me-2"
-                      onClick={handleCancelChanges}
-                    >
-                      <FaTimes /> Cancel
-                    </Button>
-                  </>
-                ) : (
-                  <Button
-                    variant="link"
-                    className="float-end"
-                    onClick={() => setEditMode("bio")}
-                  >
-                    <FaEdit /> Edit
-                  </Button>
-                )}
-              </Card.Title>
+          <Card className="mb-4 border-0 shadow-sm">
+            <Card.Header className="bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+              <h5 className="mb-0 fw-bold">Bio</h5>
               {editMode === "bio" ? (
-                <Form.Group className="mb-3">
-                  <Form.Label>Bio</Form.Label>
+                <div>
+                  <Button
+                    variant="success"
+                    size="sm"
+                    className="me-2"
+                    onClick={handleSaveChanges}
+                  >
+                    <FaSave className="me-1" /> Save
+                  </Button>
+                  <Button
+                    variant="outline-secondary"
+                    size="sm"
+                    onClick={handleCancelChanges}
+                  >
+                    <FaTimes className="me-1" /> Cancel
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  onClick={() => setEditMode("bio")}
+                >
+                  <FaEdit className="me-1" /> Edit
+                </Button>
+              )}
+            </Card.Header>
+            <Card.Body>
+              {editMode === "bio" ? (
+                <Form.Group>
                   <Form.Control
                     as="textarea"
-                    rows={3}
+                    rows={4}
                     name="bio"
                     value={formData.bio}
                     onChange={handleInputChange}
+                    placeholder="Write something about yourself"
                   />
                 </Form.Group>
               ) : (
-                <Card.Text>{formData.bio}</Card.Text>
+                <p className="mb-0">
+                  {formData.bio ? (
+                    formData.bio
+                  ) : (
+                    <span className="text-muted fst-italic">
+                      No bio information provided
+                    </span>
+                  )}
+                </p>
               )}
             </Card.Body>
           </Card>
 
           {/* Language Section */}
-          <Card>
-            <Card.Body>
-              <Card.Title className="mb-4">
-                <span className="info-heading">Languages</span>
-                {editMode === "languages" ? (
-                  <>
-                    <Button
-                      variant="link"
-                      className="float-end"
-                      onClick={handleSaveChanges}
-                    >
-                      <FaSave /> Save
-                    </Button>
-                    <Button
-                      variant="link"
-                      className="float-end me-2"
-                      onClick={handleCancelChanges}
-                    >
-                      <FaTimes /> Cancel
-                    </Button>
-                  </>
-                ) : (
-                  <Button
-                    variant="link"
-                    className="float-end"
-                    onClick={() => setEditMode("languages")}
-                  >
-                    <FaEdit /> Edit
-                  </Button>
-                )}
-              </Card.Title>
+          <Card className="mb-4 border-0 shadow-sm">
+            <Card.Header className="bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+              <h5 className="mb-0 fw-bold">Languages</h5>
               {editMode === "languages" ? (
-                <>
+                <div>
+                  <Button
+                    variant="success"
+                    size="sm"
+                    className="me-2"
+                    onClick={handleSaveChanges}
+                  >
+                    <FaSave className="me-1" /> Save
+                  </Button>
+                  <Button
+                    variant="outline-secondary"
+                    size="sm"
+                    onClick={handleCancelChanges}
+                  >
+                    <FaTimes className="me-1" /> Cancel
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  onClick={() => setEditMode("languages")}
+                >
+                  <FaEdit className="me-1" /> Edit
+                </Button>
+              )}
+            </Card.Header>
+            <Card.Body>
+              {editMode === "languages" ? (
+                <Form>
                   <Form.Group className="mb-3">
                     <Form.Label>Native Language</Form.Label>
                     <Form.Select
-                                   name="native_language"  
-                                  value={formData.native_language}
-                                  onChange={handleInputChange}
-                                  required
-                                >
-                                  <option value="">Select Native Language</option>
-                                  {languageOptions.map((lang) => (
-                                    <option key={lang.value} value={lang.label}>
-                                      {lang.label}
-                                    </option>
-                                  ))}
-                                </Form.Select>
+                      name="native_language"
+                      value={formData.native_language}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="">Select Native Language</option>
+                      {languageOptions.map((lang) => (
+                        <option key={lang.value} value={lang.label}>
+                          {lang.label}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </Form.Group>
-                  <Form.Group className="mb-3">
+                  <Form.Group>
                     <Form.Label>Language to Learn</Form.Label>
                     <Form.Select
-                       name="language_to_learn"  
-                                  value={formData.language_to_learn}
-                                  onChange={handleInputChange}
-                                  required
-                                >
-                                  <option value="">Select Language to learn</option>
-                                  {languageOptions.map((lang) => (
-                                    <option key={lang.value} value={lang.label}>
-                                      {lang.label}
-                                    </option>
-                                  ))}
-                                </Form.Select>
+                      name="language_to_learn"
+                      value={formData.language_to_learn}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="">Select Language to Learn</option>
+                      {languageOptions.map((lang) => (
+                        <option key={lang.value} value={lang.label}>
+                          {lang.label}
+                        </option>
+                      ))}
+                    </Form.Select>
                   </Form.Group>
-                </>
+                </Form>
               ) : (
-                <>
-                  <Card.Text>
-                    <strong>Native Language:</strong> {formData.native_language}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Learning:</strong> {formData.language_to_learn}
-                  </Card.Text>
-                </>
+                <div className="py-2">
+                  <Row className="mb-3">
+                    <Col xs={5} className="text-muted">
+                      Native Language:
+                    </Col>
+                    <Col xs={7}>
+                      {formData.native_language ? (
+                        <Badge bg="primary" className="py-2 px-3 fw-normal">
+                          {formData.native_language}
+                        </Badge>
+                      ) : (
+                        <span className="text-muted fst-italic">
+                          Not specified
+                        </span>
+                      )}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={5} className="text-muted">
+                      Learning:
+                    </Col>
+                    <Col xs={7}>
+                      {formData.language_to_learn ? (
+                        <Badge bg="success" className="py-2 px-3 fw-normal">
+                          {formData.language_to_learn}
+                        </Badge>
+                      ) : (
+                        <span className="text-muted fst-italic">
+                          Not specified
+                        </span>
+                      )}
+                    </Col>
+                  </Row>
+                </div>
               )}
             </Card.Body>
           </Card>

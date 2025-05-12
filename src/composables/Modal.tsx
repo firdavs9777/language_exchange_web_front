@@ -1,26 +1,26 @@
 import React from "react";
-import { Modal, Button } from "react-bootstrap";
+import "./Modal.css";
+import { IoClose } from "react-icons/io5";
 
-interface GlobalModalProps {
-  show: boolean;
-  title?: string;
-  children: React.ReactNode;
+interface ModalProps {
+  isOpen: boolean;
   onClose: () => void;
-  footerButtons?: React.ReactNode;
+  children: React.ReactNode;
 }
 
-const GlobalModal: React.FC<GlobalModalProps> = ({ show, title, children, onClose, footerButtons }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null; // Do not render modal if not open
+
   return (
-    <Modal show={show} onHide={onClose} centered>
-      {title && (
-        <Modal.Header closeButton>
-          <Modal.Title>{title}</Modal.Title>
-        </Modal.Header>
-      )}
-      <Modal.Body>{children}</Modal.Body>
-      {footerButtons && <Modal.Footer>{footerButtons}</Modal.Footer>}
-    </Modal>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="close-modal" onClick={onClose}>
+          <IoClose size={24} />
+        </button>
+        {children}
+      </div>
+    </div>
   );
 };
 
-export default GlobalModal;
+export default Modal;

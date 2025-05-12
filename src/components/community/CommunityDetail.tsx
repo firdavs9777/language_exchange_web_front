@@ -1,14 +1,14 @@
-import { Button, Card, Container, Row, Col, Spinner } from "react-bootstrap";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetCommunityDetailsQuery } from "../../store/slices/communitySlice";
-import "./CommunityDetail.css"; // Make sure to create this CSS file
 import { useSelector } from "react-redux";
 import {
   useFollowUserMutation,
   useUnFollowUserMutation,
 } from "../../store/slices/usersSlice";
 import { toast } from "react-toastify";
-
+import Loader from "../Loader";
+import "./CommunityDetail.css";
 export interface SingleMember {
   data: {
     _id: string;
@@ -30,76 +30,213 @@ export interface SingleMember {
   };
 }
 
+// Helper component for language display
+const LanguagePair = ({ nativeLanguage, learningLanguage }) => {
+  // Map common language codes to flag emojis
+  const getLanguageFlag = (language) => {
+    const flagMap = {
+      English: "🇺🇸",
+      Spanish: "🇪🇸",
+      French: "🇫🇷",
+      German: "🇩🇪",
+      Italian: "🇮🇹",
+      Portuguese: "🇵🇹",
+      Russian: "🇷🇺",
+      Japanese: "🇯🇵",
+      Korean: "🇰🇷",
+      Chinese: "🇨🇳",
+      // Add more as needed
+    };
+
+    return flagMap[language] || "🌐";
+  };
+
+  return (
+    <div className="language-exchange-pair">
+      <div className="language native">
+        <span className="language-flag">{getLanguageFlag(nativeLanguage)}</span>
+        <span className="language-name">{nativeLanguage}</span>
+      </div>
+      <div className="language-arrow">→</div>
+      <div className="language learning">
+        <span className="language-flag">
+          {getLanguageFlag(learningLanguage)}
+        </span>
+        <span className="language-name">{learningLanguage}</span>
+      </div>
+    </div>
+  );
+};
+
+// Gallery component for user images
+const ImageGallery = ({ images }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  if (!images || images.length === 0) {
+    return (
+      <div className="profile-image-container empty">
+        <div className="profile-image-placeholder">
+          <span>No image available</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="profile-gallery">
+      <div className="main-image-container">
+        <img
+          src={images[activeIndex] || "/images/default-avatar.jpg"}
+          alt="Profile"
+          className="main-profile-image"
+          onError={(e) => {
+            e.target.src = "/images/default-avatar.jpg";
+          }}
+        />
+      </div>
+
+      {images.length > 1 && (
+        <div className="thumbnail-gallery">
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className={`thumbnail ${activeIndex === index ? "active" : ""}`}
+              onClick={() => setActiveIndex(index)}
+            >
+              <img
+                src={image}
+                alt={`Thumbnail ${index + 1}`}
+                onError={(e) => {
+                  e.target.src = "/images/default-avatar.jpg";
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Action button component
+const ActionButton = ({
+  icon,
+  label,
+  onClick,
+  variant = "primary",
+  isLoading = false,
+  disabled = false,
+}) => {
+  return (
+    <button
+      className={`action-button ${variant} ${disabled ? "disabled" : ""}`}
+      onClick={onClick}
+      disabled={disabled || isLoading}
+    >
+      <span className="button-icon">{icon}</span>
+      <span className="button-label">{isLoading ? `${label}...` : label}</span>
+    </button>
+  );
+};
+
 const CommunityDetail = () => {
   const { id: communityId } = useParams();
   const { data, isLoading, error, refetch } =
     useGetCommunityDetailsQuery(communityId);
+
   const navigate = useNavigate();
-  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
-  const [followUser, { isLoading: isFollowing, error: followError }] =
-    useFollowUserMutation({});
-  const [unFollowUser, { isLoading: isUnfollowing, error: unfollowError }] =
+  const userId = useSelector((state) => state.auth.userInfo?.user._id);
+
+  const [followUser, { isLoading: isFollowing }] = useFollowUserMutation({});
+  const [unFollowUser, { isLoading: isUnfollowing }] =
     useUnFollowUserMutation();
 
   if (!communityId) {
-    return <div className="error-message">Invalid community ID</div>;
+    return (
+      <div className="error-container">
+        <div className="error-message">Invalid profile ID</div>
+        <button className="back-button" onClick={() => navigate("/community")}>
+          Back to Community
+        </button>
+      </div>
+    );
   }
 
-  const handleFollow = async (targetUser: string) => {
+  const handleFollow = async (targetUser) => {
     try {
       if (!userId) {
-        console.error("User ID is not available");
+        toast.error("You need to be logged in to follow users");
         return;
       }
+
       const response = await followUser({ userId, targetUserId: targetUser });
+
       if (response.error) {
-        console.error("Error following user:", response.error);
+        toast.error("Failed to follow user. Please try again.");
       } else {
-        toast.success("Successfully followed");
+        toast.success("Successfully followed!");
         await refetch();
-        // Update UI or state as necessary
       }
     } catch (error) {
-      console.error("Error following user:", error);
+      toast.error("An error occurred. Please try again.");
     }
   };
 
-  const handleUnfollow = async (targetUser: string) => {
+  const handleUnfollow = async (targetUser) => {
     if (window.confirm("Are you sure you want to unfollow this user?")) {
       try {
         if (!userId) {
-          console.error("User ID is not available");
+          toast.error("You need to be logged in to unfollow users");
           return;
         }
+
         const response = await unFollowUser({
           userId,
           targetUserId: targetUser,
         });
+
         if (response.error) {
-          console.error("Error unfollowing user:", response.error);
+          toast.error("Failed to unfollow user. Please try again.");
         } else {
           toast.success("Successfully unfollowed");
-          await refetch(); // Refresh data
+          await refetch();
         }
       } catch (error) {
-        console.error("Error unfollowing user:", error);
+        toast.error("An error occurred. Please try again.");
       }
     }
+  };
+
+  const handleStartChat = (memberId) => {
+    navigate(`/chat/${memberId}`);
+  };
+
+  const handleCallUser = (memberName) => {
+    toast.info(`Initiating call with ${memberName}...`);
+    // Implement call functionality here
   };
 
   if (isLoading) {
     return (
       <div className="loading-container">
-        <Spinner animation="border" />
-        <p>Loading...</p>
+        <Loader />
+        <p>Loading profile...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="error-message">
-        An error occurred. Please try again later.
+      <div className="error-container">
+        <div className="error-icon">⚠️</div>
+        <h3>Oops! Something went wrong</h3>
+        <p>We couldn't load this profile. Please try again later.</p>
+        <button className="retry-button" onClick={refetch}>
+          Try Again
+        </button>
+        <button className="back-button" onClick={() => navigate("/community")}>
+          Back to Community
+        </button>
       </div>
     );
   }
@@ -109,86 +246,139 @@ const CommunityDetail = () => {
   const memberDetails = member?.data;
 
   if (!memberDetails) {
-    return <div className="error-message">Member details not found</div>;
+    return (
+      <div className="error-container">
+        <div className="error-icon">🔍</div>
+        <h3>Profile Not Found</h3>
+        <p>This user profile doesn't exist or has been removed.</p>
+        <button className="back-button" onClick={() => navigate("/community")}>
+          Back to Community
+        </button>
+      </div>
+    );
   }
 
-  const isFollower = memberDetails.followers.includes(userId);
+  const userAge = memberDetails.birth_year
+    ? new Date().getFullYear() - parseInt(memberDetails.birth_year)
+    : null;
+
+  // Calculate member since date
+  const memberSince = new Date(memberDetails.createdAt).toLocaleDateString(
+    "en-US",
+    {
+      year: "numeric",
+      month: "long",
+    }
+  );
 
   return (
-    <Container fluid className="community-detail-container">
-      <Row className="justify-content-center">
-        <Col md={8}>
-          <Card className="shadow-lg">
-            <Card.Img
-              variant="top"
-              src={memberDetails.imageUrls[0] || "/placeholder.jpg"}
-              alt={memberDetails.name}
-              className="community-image"
-            />
-            <Card.Body>
-              <Card.Title className="text-center">
-                {memberDetails.name}
-              </Card.Title>
-              <Card.Text className="text-center">
-                <strong>Bio:</strong> {memberDetails.bio || "No bio available"}
-              </Card.Text>
-              <Card.Text className="text-center">
-                <strong>Native Language:</strong>{" "}
-                {memberDetails.native_language || "Not specified"}
-              </Card.Text>
-              <Card.Text className="text-center">
-                <strong>Learning:</strong>{" "}
-                {memberDetails.language_to_learn || "Not specified"}
-              </Card.Text>
-              <div className="d-flex justify-content-center mt-3">
-                {isFollower ? (
-                  <div>
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      className="mx-2"
-                      disabled={isUnfollowing}
-                      onClick={() => handleUnfollow(memberDetails._id)}
-                    >
-                      {isUnfollowing ? "Unfollowing..." : "Following"}
-                    </Button>
-                  </div>
-                ) : (
-                  <div>
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      className="mx-2"
-                      disabled={isFollowing}
-                      onClick={() => handleFollow(memberDetails._id)}
-                    >
-                      {isFollowing ? "Following..." : "Follow"}
-                    </Button>
-                  </div>
-                )}
+    <div className="tandem-profile-detail">
+      <div className="profile-header">
+        <button
+          className="back-button"
+          onClick={() => navigate("/communities")}
+        >
+          ← Back to Community
+        </button>
+      </div>
 
-                <Button
-                  variant="success"
-                  size="lg"
-                  className="mx-2"
-                  onClick={() => navigate(`/chat/${memberDetails._id}`)}
-                >
-                  Chat
-                </Button>
-                <Button
-                  variant="warning"
-                  size="lg"
-                  className="mx-2"
-                  onClick={() => alert("Calling")}
-                >
-                  Call
-                </Button>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+      <div className="profile-content">
+        <div className="profile-left">
+          <ImageGallery images={memberDetails.imageUrls} />
+
+          <div className="profile-stats">
+            <div className="stat-item">
+              <span className="stat-value">
+                {memberDetails.followers.length}
+              </span>
+              <span className="stat-label">Followers</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-value">
+                {memberDetails.following.length}
+              </span>
+              <span className="stat-label">Following</span>
+            </div>
+          </div>
+
+          <div className="profile-actions">
+            {isFollowing ? (
+              <ActionButton
+                icon="👥"
+                label="Following"
+                variant="following"
+                onClick={() => handleUnfollow(memberDetails._id)}
+                isLoading={isUnfollowing}
+              />
+            ) : (
+              <ActionButton
+                icon="➕"
+                label="Follow"
+                variant="primary"
+                onClick={() => handleFollow(memberDetails._id)}
+                isLoading={isFollowing}
+              />
+            )}
+
+            <ActionButton
+              icon="💬"
+              label="Message"
+              variant="message"
+              onClick={() => handleStartChat(memberDetails._id)}
+            />
+
+            <ActionButton
+              icon="📞"
+              label="Call"
+              variant="call"
+              onClick={() => handleCallUser(memberDetails.name)}
+            />
+          </div>
+        </div>
+
+        <div className="profile-right">
+          <div className="profile-header-info">
+            <h1 className="profile-name">{memberDetails.name}</h1>
+            {userAge && <span className="profile-age">{userAge}</span>}
+            {memberDetails.gender && (
+              <span className="profile-gender">• {memberDetails.gender}</span>
+            )}
+          </div>
+
+          <LanguagePair
+            nativeLanguage={memberDetails.native_language || "Not specified"}
+            learningLanguage={
+              memberDetails.language_to_learn || "Not specified"
+            }
+          />
+
+          <div className="profile-bio">
+            <h2>About Me</h2>
+            <p>{memberDetails.bio || "This user hasn't added a bio yet."}</p>
+          </div>
+
+          <div className="profile-meta">
+            <div className="meta-item">
+              <span className="meta-label">Member since:</span>
+              <span className="meta-value">{memberSince}</span>
+            </div>
+          </div>
+
+          <div className="profile-cta">
+            <p>
+              Want to practice languages with {memberDetails.name.split(" ")[0]}
+              ?
+            </p>
+            <ActionButton
+              icon="💬"
+              label="Start Conversation"
+              variant="large-primary"
+              onClick={() => handleStartChat(memberDetails._id)}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

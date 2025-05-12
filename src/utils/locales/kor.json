@@ -1,0 +1,16 @@
+{
+    "greeting": "안녕하세요",
+    "community": "커뮤니티",
+    "chat": "채팅",
+    "notifications": "알림",
+    "moments": "모멘트",
+    "language": "언어",
+    "english": "영어",
+    "korean": "한국어",
+    "profile": "프로필",
+    "followers": "팔로워",
+    "followings": "팔로잉",
+    "my_moments": "내 모멘트",
+    "logout": "로그아웃",
+    "sign_in": "로그인"
+}
