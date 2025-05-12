@@ -1,18 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Modal, Button, Form, Image, Row, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
 import "./ImageUploader.css";
-// Make sure you have bootstrap icons included in your project
-// If not, add this to your HTML head or import in index.js:
-// import "bootstrap-icons/font/bootstrap-icons.css";
 
 export interface ImageViewerModalProps {
   images: string[];
   show: boolean;
   onClose: () => void;
   onUploadImages: (files: File[]) => void;
-  onDeleteImage?: (index: number) => void; // Function to handle deletion of existing images
-  onUpdateImage?: (index: number, newFile: File) => void; // Function to handle updating an existing image
+  onDeleteImage?: (index: number) => void;
+  onUpdateImage?: (index: number, newFile: File) => void;
 }
 
 const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
@@ -25,23 +22,32 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
 }) => {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [dragOver, setDragOver] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const MAX_IMAGES = 10;
   
-  // Calculate remaining slots for new images
   const remainingSlots = MAX_IMAGES - (images.length + selectedImages.length);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
+    if (event.target.files && event.target.files.length > 0) {
       const filesArray = Array.from(event.target.files);
       
-      // Check if adding these files would exceed the limit
-      if (filesArray.length + images.length + selectedImages.length > MAX_IMAGES) {
-        toast.warning(`You can only upload a maximum of ${MAX_IMAGES} images. Adding ${MAX_IMAGES - images.length - selectedImages.length} images.`);
-        const allowedFiles = filesArray.slice(0, MAX_IMAGES - images.length - selectedImages.length);
-        setSelectedImages((prevImages) => [...prevImages, ...allowedFiles]);
+      if (filesArray.length > remainingSlots) {
+        toast.warning(`You can only upload ${remainingSlots} more image(s).`);
+        const allowedFiles = filesArray.slice(0, remainingSlots);
+        setSelectedImages(prev => [...prev, ...allowedFiles]);
       } else {
-        setSelectedImages((prevImages) => [...prevImages, ...filesArray]);
+        setSelectedImages(prev => [...prev, ...filesArray]);
       }
+    }
+    // Reset input value to allow selecting same files again
+    if (event.target) {
+      event.target.value = '';
+    }
+  };
+
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
 
@@ -69,43 +75,48 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
         return;
       }
       
-      // Check if adding these files would exceed the limit
-      if (filesArray.length + images.length + selectedImages.length > MAX_IMAGES) {
-        toast.warning(`You can only upload a maximum of ${MAX_IMAGES} images. Adding ${MAX_IMAGES - images.length - selectedImages.length} images.`);
-        const allowedFiles = filesArray.slice(0, MAX_IMAGES - images.length - selectedImages.length);
-        setSelectedImages((prevImages) => [...prevImages, ...allowedFiles]);
+      if (filesArray.length > remainingSlots) {
+        toast.warning(`You can only upload ${remainingSlots} more image(s).`);
+        const allowedFiles = filesArray.slice(0, remainingSlots);
+        setSelectedImages(prev => [...prev, ...allowedFiles]);
       } else {
-        setSelectedImages((prevImages) => [...prevImages, ...filesArray]);
+        setSelectedImages(prev => [...prev, ...filesArray]);
       }
     }
   };
 
-  const handleUpload = () => {
+  const handleUpload = async() => {
     if (selectedImages.length === 0 && images.length === 0) {
       toast.error("Please upload at least one image");
       return;
     }
-    onUploadImages(selectedImages);
+
+      onUploadImages(selectedImages);
+    
+    
     setSelectedImages([]);
     onClose();
   };
 
   const handleDeleteSelected = (index: number) => {
-    alert("Here")
-    setSelectedImages(prevSelected => 
-      prevSelected.filter((_, i) => i !== index)
+    setSelectedImages(prev => 
+      prev.filter((_, i) => i !== index)
     );
+    toast.success("Image removed from selection");
   };
 
   const handleDeleteExisting = (index: number) => {
     if (onDeleteImage) {
       onDeleteImage(index);
+      toast.success("Image deleted successfully");
     }
   };
 
   const handleUpdateExisting = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0] && onUpdateImage) {
       onUpdateImage(index, e.target.files[0]);
+      toast.success("Image replaced successfully");
+      e.target.value = ''; // Reset input
     }
   };
 
@@ -147,7 +158,7 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
                         onClick={() => handleDeleteExisting(index)}
                         title="Delete image"
                       >
-                        <i className="bi bi-x"></i>
+                        <i className="bi bi-trash"></i>
                       </Button>
                     </div>
                   </div>
@@ -204,16 +215,20 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
           >
             <i className="bi bi-plus-lg upload-icon fs-1"></i>
             <p>Drop images here or</p>
-            <label className="upload-btn">
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleFileChange}
-                className="d-none"
-              />
-              <Button variant="outline-primary">Select Files</Button>
-            </label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleFileChange}
+              className="d-none"
+            />
+            <Button 
+              variant="outline-primary"
+              onClick={triggerFileInput}
+            >
+              Select Files
+            </Button>
             <p className="text-muted mt-2">
               You can add {remainingSlots} more {remainingSlots === 1 ? 'image' : 'images'}
             </p>

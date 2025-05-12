@@ -40,6 +40,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ISO6391 from "iso-639-1";
 import { useTranslation } from "react-i18next";
+import LanguagesView from "./LanguageView";
+import InfoRow from "./InfoRow";
 
 interface Moment {
   count: number;
@@ -129,6 +131,8 @@ const ProfileScreen: React.FC = () => {
 
   // Handlers
   const handleUploadImages = useCallback(async (newFiles: File[]) => {
+    alert("Here")
+    console.log(newFiles)
     try {
       const formData = new FormData();
       newFiles.forEach((file) => formData.append("file", file));
@@ -195,8 +199,12 @@ const ProfileScreen: React.FC = () => {
       setFormData(data.data);
     }
   }, [data]);
-  const handleDeleteHandler = () => {
-    alert("Working here")
+  const handleDeleteHandler = (index: number) => {
+    setFormData(prevData => ({
+        ...prevData,
+        imageUrls: prevData.imageUrls.filter((_, i) => i !== index)
+      }));
+
   }
 
   const getOrdinalSuffix = useCallback((day: string): string => {
@@ -626,52 +634,7 @@ const LanguagesForm: React.FC<{
   );
 }
 
-const LanguagesView: React.FC<{ formData: UserProfileData }> = ({ formData }) => {
-    const { t } = useTranslation();
 
-  return (
-    <div className="py-2">
-      <InfoRow
-        label={t("profile.labels.native_language")}
-        value={
-          formData.native_language ? (
-            <Badge bg="primary" className="py-2 px-3 fw-normal">
-              {formData.native_language}
-            </Badge>
-          ) : (
-            <span className="text-muted fst-italic">
-              {t("profile.messages.not_specified")}
-            </span>
-          )
-        }
-      />
-      <InfoRow
-        label={t("profile.labels.learning")}
-        value={
-          formData.language_to_learn ? (
-            <Badge bg="success" className="py-2 px-3 fw-normal">
-              {formData.language_to_learn}
-            </Badge>
-          ) : (
-            <span className="text-muted fst-italic">
-              {t("profile.messages.not_specified")}
-            </span>
-          )
-        }
-      />
-    </div>
-  );
-}
 
-const InfoRow: React.FC<{ label: string; value: React.ReactNode }> = ({ label, value }) => {
 
-  return (
-  <Row className="mb-3">
-    <Col xs={4} className="text-muted">
-      {label}
-    </Col>
-    <Col xs={8}>{value}</Col>
-  </Row>
-);
-}
 export default ProfileScreen;
