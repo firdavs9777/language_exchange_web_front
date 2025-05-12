@@ -1,16 +1,71 @@
 {
-    "greeting": "안녕하세요",
-    "community": "커뮤니티",
-    "chat": "채팅",
-    "notifications": "알림",
-    "moments": "모멘트",
-    "language": "언어",
-    "english": "영어",
-    "korean": "한국어",
-    "profile": "프로필",
-    "followers": "팔로워",
-    "followings": "팔로잉",
-    "my_moments": "내 모멘트",
-    "logout": "로그아웃",
-    "sign_in": "로그인"
+  "greeting": "안녕하세요",
+  "community": "커뮤니티",
+  "chat": "채팅",
+  "notifications": "알림",
+  "moments": "모멘트",
+  "language": "언어",
+  "english": "영어",
+  "korean": "한국어",
+  "followers": "팔로워",
+  "followings": "팔로잉",
+  "my_moments": "내 모멘트",
+  "logout": "로그아웃",
+  "sign_in": "로그인",
+  "profile": {
+    "title": "내 프로필",
+    "messages": {
+      "image_update_success": "프로필 사진이 성공적으로 업데이트되었습니다",
+      "image_update_failure": "프로필 사진 업데이트 실패",
+      "profile_update_success": "프로필이 성공적으로 업데이트되었습니다",
+      "profile_update_failure": "프로필 업데이트 실패",
+      "error_loading_profile": "프로필을 불러오는 중 오류 발생",
+      "no_profile_data": "사용자 프로필 데이터가 없습니다",
+      "unknown_error": "알 수 없는 오류가 발생했습니다",
+      "no_bio": "소개 정보가 없습니다",
+      "not_specified": "지정되지 않음"
+    },
+    "stats": {
+      "followers": "팔로워",
+      "following": "팔로잉",
+      "moments": "모멘트",
+      "visitors": "방문자"
+    },
+    "sections": {
+      "personal_info": "개인 정보",
+      "bio": "소개",
+      "languages": "언어"
+    },
+    "labels": {
+      "name": "이름",
+      "email": "이메일",
+      "gender": "성별",
+      "birthday": "생일",
+      "native_language": "모국어",
+      "learning": "배우는 중",
+      "of": "의"
+    },
+    "placeholders": {
+      "bio": "자신에 대해 간단히 소개해주세요",
+      "select_gender": "성별 선택",
+      "select_date": "날짜 선택",
+      "select_native_language": "모국어 선택",
+      "select_learning_language": "배울 언어 선택"
+    },
+    "options": {
+      "male": "남성",
+      "female": "여성"
+    },
+    "actions": {
+      "edit": "수정",
+      "save": "저장",
+      "cancel": "취소",
+      "edit_photo": "사진 편집"
+    },
+    "buttons": {
+      "edit": "수정",
+      "save": "저장",
+      "cancel": "취소"
+    }
+  }
 }

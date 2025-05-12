@@ -1,16 +1,71 @@
 {
-    "greeting": "hello",
-    "community": "Community",
-    "chat":"Chat",
-    "notifications": "Notifications",
-    "moments": "Moments",
-    "language":"Language",
-    "english":"English",
-    "korean": "Korean",
-    "profile": "Profile",
-    "followers":"Followers",
-    "followings":"Followings",
-    "my_moments" : "My Moments",
-    "logout": "Logout",  
-    "sign_in": "Sign In"
+  "greeting": "hello",
+  "community": "Community",
+  "chat": "Chat",
+  "notifications": "Notifications",
+  "moments": "Moments",
+  "language": "Language",
+  "english": "English",
+  "korean": "Korean",
+  "followers": "Followers",
+  "followings": "Followings",
+  "my_moments": "My Moments",
+  "logout": "Logout",
+  "sign_in": "Sign In",
+  "profile": {
+    "title": "My Profile",
+    "messages": {
+      "image_update_success": "Profile image updated successfully",
+      "image_update_failure": "Failed to update profile image",
+      "profile_update_success": "Profile updated successfully",
+      "profile_update_failure": "Failed to update profile",
+      "error_loading_profile": "Error loading user profile",
+      "no_profile_data": "No user profile data available",
+      "unknown_error": "An unknown error occurred",
+      "no_bio": "No bio information provided",
+      "not_specified": "Not specified"
+    },
+    "stats": {
+      "followers": "Followers",
+      "following": "Following",
+      "moments": "Moments",
+      "visitors": "Visitors"
+    },
+    "sections": {
+      "personal_info": "Personal Information",
+      "bio": "Bio",
+      "languages": "Languages"
+    },
+    "labels": {
+      "name": "Name",
+      "email": "Email",
+      "gender": "Gender",
+      "birthday": "Birthday",
+      "native_language": "Native Language",
+      "learning": "Learning",
+      "of": "of"
+    },
+    "placeholders": {
+      "bio": "Write something about yourself",
+      "select_gender": "Select Gender",
+      "select_date": "Select Date",
+      "select_native_language": "Select Native Language",
+      "select_learning_language": "Select Language to Learn"
+    },
+    "options": {
+      "male": "Male",
+      "female": "Female"
+    },
+    "actions": {
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit_photo": "Edit Photo"
+    },
+    "buttons": {
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  }
 }

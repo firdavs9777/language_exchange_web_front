@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   useGetFollowersQuery,
   useGetFollowingsQuery,
@@ -15,6 +15,8 @@ import {
   Row,
   Form,
   Badge,
+  Spinner,
+  Alert,
 } from "react-bootstrap";
 import backgroundImage from "../../assets/profile_background.png";
 import {
@@ -29,7 +31,7 @@ import {
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useGetMyMomentsQuery } from "../../store/slices/momentsSlice";
-import { MomentType } from "../moments/MainMoments";
+import { MomentType } from "../moments/types";
 import { FollowerInterface, UserProfileData } from "./ProfileTypes/types";
 import ImageViewerModal from "./ImageViewer/ImageModal";
 import ImageUploaderModal from "./ImageUploader/ImageUploader";
@@ -37,27 +39,28 @@ import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ISO6391 from "iso-639-1";
+import { useTranslation } from "react-i18next";
 
-export interface Moment {
+interface Moment {
   count: number;
   success: string;
   data: MomentType[];
 }
 
-const ProfileScreen: React.FC = () => {
-  const { data, isLoading, error, refetch } = useGetUserProfileQuery({});
 
+const ProfileScreen: React.FC = () => {
+  const { t } = useTranslation();
   const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
+  
+  // API Queries
+  const { data, isLoading, error, refetch } = useGetUserProfileQuery({});
   const { data: followers } = useGetFollowersQuery({ userId });
   const { data: followings } = useGetFollowingsQuery({ userId });
   const { data: moments } = useGetMyMomentsQuery({ userId });
   const [uploadUserPhoto] = useUploadUserPhotoMutation();
   const [updateUserProfile] = useUpdateUserInfoMutation();
 
-  const followersDataMain = followers as FollowerInterface;
-  const followingsDataMain = followings as FollowerInterface;
-  const momentsData = moments as Moment;
-
+  // State
   const [formData, setFormData] = useState<UserProfileData>({
     _id: "",
     name: "",
@@ -74,20 +77,33 @@ const ProfileScreen: React.FC = () => {
     images: [],
     imageUrls: [],
   });
+  
   const [birthDate, setBirthDate] = useState<Date | null>(null);
+  const [editMode, setEditMode] = useState<"personal" | "bio" | "languages" | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showImageViewer, setShowImageViewer] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const [editMode, setEditMode] = useState<
-    "personal" | "bio" | "languages" | null
-  >(null);
+  // Derived data
+  const followersData = followers as FollowerInterface;
+  const followingsData = followings as FollowerInterface;
+  const momentsData = moments as Moment;
 
+  // Memoized language options
+  const languageOptions = React.useMemo(() => {
+    return ISO6391.getAllCodes().map((code) => ({
+      value: code,
+      label: ISO6391.getName(code),
+    }));
+  }, []);
+
+  // Initialize form data
   useEffect(() => {
-    if (data && data.data) {
+    if (data?.data) {
       setFormData(data.data);
-      if (
-        data.data.birth_year &&
-        data.data.birth_month &&
-        data.data.birth_day
-      ) {
+      
+      // Set birth date if available
+      if (data.data.birth_year && data.data.birth_month && data.data.birth_day) {
         const year = parseInt(data.data.birth_year);
         const month = parseInt(data.data.birth_month) - 1; // Month is 0-indexed
         const day = parseInt(data.data.birth_day);
@@ -103,8 +119,7 @@ const ProfileScreen: React.FC = () => {
         ) {
           setBirthDate(new Date(year, month, day));
         } else {
-          console.error("Invalid date components:", data.data);
-          setBirthDate(null); // Set to null if invalid
+          setBirthDate(null);
         }
       } else {
         setBirthDate(null);
@@ -112,92 +127,41 @@ const ProfileScreen: React.FC = () => {
     }
   }, [data]);
 
-  const [showModal, setShowModal] = useState(false);
-  const [showImageViewer, setShowImageViewer] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const handleUploadImages = async (newFiles: File[]) => {
+  // Handlers
+  const handleUploadImages = useCallback(async (newFiles: File[]) => {
     try {
       const formData = new FormData();
-      newFiles.forEach((file) => {
-        formData.append("file", file);
-      });
+      newFiles.forEach((file) => formData.append("file", file));
 
       if (newFiles.length > 0 && userId) {
         await uploadUserPhoto({
-          userId: userId,
+          userId,
           imageFiles: formData,
         }).unwrap();
         refetch();
+        toast.success(t("profile.messages.image_update_success"));
       }
-      toast.success("Profile Image updated successfully");
-    } catch (error) {
+    } catch (error: any) {
       toast.error(
-        `Error Occurred, Please upload a file properly ${error?.error}`
+        `${t("profile.messages.image_update_failure")}: ${error?.error || t("profile.messages.unknown_error")}`
       );
     }
-  };
+  }, [uploadUserPhoto, userId, refetch, t]);
 
-  const handleProfileUpdate = async () => {
+  const handleProfileUpdate = useCallback(async () => {
     try {
-      const response = await updateUserProfile(formData).unwrap();
-      toast.success("Profile updated successfully");
+      await updateUserProfile(formData).unwrap();
+      toast.success(t("profile.messages.profile_update_success"));
       setEditMode(null);
       refetch();
-    } catch (error) {
-      toast.error(`Error updating profile: ${error?.error}`);
+    } catch (error: any) {
+      toast.error(
+        `${t("profile.messages.profile_update_failure")}: ${error?.error || t("profile.messages.unknown_error")}`
+      );
     }
-  };
+  }, [formData, updateUserProfile, refetch, t]);
 
-  const handleOpenUploadModal = () => {
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-  const handleCloseViewer = () => setShowImageViewer(false);
-  const handleImageClick = (index: number) => {
-    setCurrentImageIndex(index);
-    setShowImageViewer(true);
-  };
-
-  if (isLoading)
-    return (
-      <div className="text-center my-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
-  if (error)
-    return (
-      <div className="alert alert-danger m-3">Error loading user profile</div>
-    );
-  if (!data)
-    return (
-      <div className="alert alert-warning m-3">
-        No user profile data available
-      </div>
-    );
-
-  const handleSaveChanges = async () => {
-    await handleProfileUpdate();
-  };
-
-  const handleCancelChanges = () => {
-    setEditMode(null);
-    if (data) {
-      setFormData(data.data);
-    }
-  };
-
-  const languageOptions = ISO6391.getAllCodes().map((code) => ({
-    value: code,
-    label: ISO6391.getName(code),
-  }));
-
-  const handleBirthDateChange = (date: Date | null) => {
+  const handleBirthDateChange = useCallback((date: Date | null) => {
     if (date) {
       setBirthDate(date);
       setFormData((prev) => ({
@@ -215,506 +179,495 @@ const ProfileScreen: React.FC = () => {
         birth_day: "",
       }));
     }
-  };
+  }, []);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    },
+    []
+  );
 
-  const getOrdinalSuffix = (day: string): string => {
+  const handleCancelChanges = useCallback(() => {
+    setEditMode(null);
+    if (data) {
+      setFormData(data.data);
+    }
+  }, [data]);
+
+  const getOrdinalSuffix = useCallback((day: string): string => {
     const n = parseInt(day);
-    if (isNaN(n)) return day; // Return original if not a number
+    if (isNaN(n)) return day;
 
-    if (n >= 11 && n <= 13) {
-      return `${n}th`;
-    }
+    if (n >= 11 && n <= 13) return `${n}th`;
+    
     switch (n % 10) {
-      case 1:
-        return `${n}st`;
-      case 2:
-        return `${n}nd`;
-      case 3:
-        return `${n}rd`;
-      default:
-        return `${n}th`;
+      case 1: return `${n}st`;
+      case 2: return `${n}nd`;
+      case 3: return `${n}rd`;
+      default: return `${n}th`;
     }
-  };
+  }, []);
+
+  // Loading and error states
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center min-vh-100">
+        <Spinner animation="border" variant="primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert variant="danger" className="m-3">
+        {t("profile.messages.error_loading_profile")}
+      </Alert>
+    );
+  }
+
+  if (!data) {
+    return (
+      <Alert variant="warning" className="m-3">
+        {t("profile.messages.no_profile_data")}
+      </Alert>
+    );
+  }
 
   return (
-    <Container fluid>
+    <Container fluid className="px-0">
       {/* Banner Section */}
-      <Row className="justify-content-center my-1">
-        <Col xs={12} className="p-0 mb-5">
-          <div
+      <div className="position-relative mb-5" style={{ height: "180px" }}>
+        <Image
+          src={backgroundImage}
+          fluid
+          className="w-100 h-100 object-fit-cover"
+          alt="Profile background"
+        />
+        <div className="position-absolute top-50 start-50 translate-middle text-center">
+          <h1 className="text-white fw-bold">{t("profile.title")}</h1>
+        </div>
+      </div>
+
+      {/* Avatar Section */}
+      <div className="text-center mb-4" style={{ marginTop: "-60px" }}>
+        <div className="position-relative d-inline-block">
+          <Image
+            src={
+              formData.imageUrls?.[0] || 
+              "https://via.placeholder.com/150"
+            }
+            alt="Profile"
+            roundedCircle
+            className="border border-4 border-white shadow"
             style={{
-              position: "relative",
-              height: "180px",
-              overflow: "hidden",
+              width: "120px",
+              height: "120px",
+              objectFit: "cover",
+              cursor: "pointer",
             }}
+            onClick={() => handleImageClick(0)}
+          />
+          <Button
+            variant="primary"
+            size="sm"
+            className="position-absolute bottom-0 end-0 rounded-circle d-flex align-items-center justify-content-center"
+            style={{ width: "36px", height: "36px" }}
+            onClick={() => setShowModal(true)}
+            aria-label={t("profile.actions.edit_photo")}
           >
-            <Image
-              src={backgroundImage}
-              style={{ width: "100%", height: "180px", objectFit: "cover" }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                zIndex: 10,
-              }}
-            >
-              <h1 className="text-white fw-bold text-center">My Profile</h1>
-            </div>
-          </div>
-        </Col>
-      </Row>
+            <FaEdit />
+          </Button>
+        </div>
+        <h4 className="mt-2 mb-0 fw-bold">{formData.name}</h4>
+        <p className="text-muted small">
+          @{formData.name.toLowerCase().replace(/\s+/g, "")}
+        </p>
+      </div>
 
-      {/* Avatar and Edit Button */}
-      <Row className="justify-content-center" style={{ marginTop: "-60px" }}>
-        <Col xs="auto" className="text-center mb-4">
-          <div style={{ position: "relative" }}>
-            <Image
-              src={
-                formData.imageUrls && formData.imageUrls.length > 0
-                  ? formData.imageUrls[0]
-                  : "https://via.placeholder.com/150"
-              }
-              alt="User Profile"
-              roundedCircle
-              style={{
-                width: "120px",
-                height: "120px",
-                objectFit: "cover",
-                border: "4px solid white",
-                boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                cursor: "pointer",
-              }}
-              onClick={() => handleImageClick(0)}
-            />
-            <Button
-              variant="primary"
-              size="sm"
-              style={{
-                position: "absolute",
-                bottom: "0",
-                right: "0",
-                borderRadius: "50%",
-                width: "36px",
-                height: "36px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onClick={handleOpenUploadModal}
-            >
-              <FaEdit />
-            </Button>
-          </div>
-          <h4 className="mt-2 mb-0 fw-bold">{formData.name}</h4>
-          <p className="text-muted small">
-            @{formData.name.toLowerCase().replace(/\s+/g, "")}
-          </p>
-        </Col>
-      </Row>
-
+      {/* Modals */}
       <ImageViewerModal
         show={showImageViewer}
-        images={formData.imageUrls}
+        images={formData.imageUrls || []}
         currentIndex={currentImageIndex}
-        onClose={handleCloseViewer}
-        onSelectImage={handleImageClick}
+        onClose={() => setShowImageViewer(false)}
+        onSelectImage={setCurrentImageIndex}
       />
 
       <ImageUploaderModal
-        images={formData.imageUrls}
+        images={formData.imageUrls || []}
         show={showModal}
-        onClose={handleCloseModal}
+        onClose={() => setShowModal(false)}
         onUploadImages={handleUploadImages}
       />
 
       {/* Stats Section */}
-      <Row className="justify-content-center mb-4">
-        <Col md={8} lg={6}>
-          <Row className="g-3">
-            <Col xs={6} sm={3}>
-              <Link to={`/followersList`} className="text-decoration-none">
-                <Card className="text-center h-100 border-0 shadow-sm hover-shadow">
-                  <Card.Body className="d-flex flex-column align-items-center">
-                    <div className="rounded-circle bg-light p-3 mb-2">
-                      <FaUserFriends className="text-primary" size={24} />
-                    </div>
-                    <h5 className="fw-bold mb-0">
-                      {followersDataMain?.count || 0}
-                    </h5>
-                    <p className="text-muted mb-0">Followers</p>
-                  </Card.Body>
-                </Card>
-              </Link>
-            </Col>
+      <Container className="mb-4">
+        <Row className="g-3">
+          <Col xs={6} sm={3}>
+            <Link to="/followersList" className="text-decoration-none">
+              <StatsCard
+                icon={<FaUserFriends className="text-primary" size={24} />}
+                value={followersData?.count || 0}
+                label={t("profile.stats.followers")}
+              />
+            </Link>
+          </Col>
 
-            <Col xs={6} sm={3}>
-              <Link to={`/followingsList`} className="text-decoration-none">
-                <Card className="text-center h-100 border-0 shadow-sm hover-shadow">
-                  <Card.Body className="d-flex flex-column align-items-center">
-                    <div className="rounded-circle bg-light p-3 mb-2">
-                      <FaUserCheck className="text-success" size={24} />
-                    </div>
-                    <h5 className="fw-bold mb-0">
-                      {followingsDataMain?.count || 0}
-                    </h5>
-                    <p className="text-muted mb-0">Following</p>
-                  </Card.Body>
-                </Card>
-              </Link>
-            </Col>
+          <Col xs={6} sm={3}>
+            <Link to="/followingsList" className="text-decoration-none">
+              <StatsCard
+                icon={<FaUserCheck className="text-success" size={24} />}
+                value={followingsData?.count || 0}
+                label={t("profile.stats.following")}
+              />
+            </Link>
+          </Col>
 
-            <Col xs={6} sm={3}>
-              <Link to={`/my-moments`} className="text-decoration-none">
-                <Card className="text-center h-100 border-0 shadow-sm hover-shadow">
-                  <Card.Body className="d-flex flex-column align-items-center">
-                    <div className="rounded-circle bg-light p-3 mb-2">
-                      <FaCameraRetro className="text-danger" size={24} />
-                    </div>
-                    <h5 className="fw-bold mb-0">{momentsData?.count || 0}</h5>
-                    <p className="text-muted mb-0">Moments</p>
-                  </Card.Body>
-                </Card>
-              </Link>
-            </Col>
+          <Col xs={6} sm={3}>
+            <Link to="/my-moments" className="text-decoration-none">
+              <StatsCard
+                icon={<FaCameraRetro className="text-danger" size={24} />}
+                value={momentsData?.count || 0}
+                label={t("profile.stats.moments")}
+              />
+            </Link>
+          </Col>
 
-            <Col xs={6} sm={3}>
-              <Card className="text-center h-100 border-0 shadow-sm hover-shadow">
-                <Card.Body className="d-flex flex-column align-items-center">
-                  <div className="rounded-circle bg-light p-3 mb-2">
-                    <FaEye className="text-info" size={24} />
-                  </div>
-                  <h5 className="fw-bold mb-0">320</h5>
-                  <p className="text-muted mb-0">Visitors</p>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+          <Col xs={6} sm={3}>
+            <StatsCard
+              icon={<FaEye className="text-info" size={24} />}
+              value={320} // Replace with actual data if available
+              label={t("profile.stats.visitors")}
+            />
+          </Col>
+        </Row>
+      </Container>
 
-      {/* Profile Information */}
-      <Row className="justify-content-center">
-        <Col md={8} lg={6}>
-          {/* Personal Information Card */}
-          <Card className="mb-4 border-0 shadow-sm">
-            <Card.Header className="bg-white border-bottom d-flex justify-content-between align-items-center py-3">
-              <h5 className="mb-0 fw-bold">Personal Information</h5>
-              {editMode === "personal" ? (
-                <div>
-                  <Button
-                    variant="success"
-                    size="sm"
-                    className="me-2"
-                    onClick={handleSaveChanges}
-                  >
-                    <FaSave className="me-1" /> Save
-                  </Button>
-                  <Button
-                    variant="outline-secondary"
-                    size="sm"
-                    onClick={handleCancelChanges}
-                  >
-                    <FaTimes className="me-1" /> Cancel
-                  </Button>
-                </div>
-              ) : (
-                <Button
-                  variant="outline-primary"
-                  size="sm"
-                  onClick={() => setEditMode("personal")}
-                >
-                  <FaEdit className="me-1" /> Edit
-                </Button>
-              )}
-            </Card.Header>
-            <Card.Body>
-              {editMode === "personal" ? (
-                <Form>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      disabled={true}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Gender</Form.Label>
-                    <Form.Select
-                      name="gender"
-                      value={formData.gender}
-                      onChange={handleInputChange}
-                    >
-                      <option value="">Select Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                    </Form.Select>
-                  </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Birthday</Form.Label>
-                    <DatePicker
-                      selected={birthDate}
-                      onChange={handleBirthDateChange}
-                      dateFormat="dd/MM/yyyy"
-                      placeholderText="Select Date"
-                      className="form-control"
-                      aria-label="Birthday date picker"
-                    />
-                  </Form.Group>
-                </Form>
-              ) : (
-                <div className="py-2">
-                  <Row className="mb-3">
-                    <Col xs={4} className="text-muted">
-                      Name:
-                    </Col>
-                    <Col xs={8} className="fw-medium">
-                      {formData.name}
-                    </Col>
-                  </Row>
-                  <Row className="mb-3">
-                    <Col xs={4} className="text-muted">
-                      Email:
-                    </Col>
-                    <Col xs={8} className="fw-medium">
-                      {formData.email}
-                    </Col>
-                  </Row>
-                  <Row className="mb-3">
-                    <Col xs={4} className="text-muted">
-                      Gender:
-                    </Col>
-                    <Col xs={8}>
-                      {formData.gender ? (
-                        <Badge
-                          bg={formData.gender === "Male" ? "primary" : "danger"}
-                          className="fw-normal"
-                        >
-                          {formData.gender}
-                        </Badge>
-                      ) : (
-                        "Not specified"
-                      )}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col xs={4} className="text-muted">
-                      Birthday:
-                    </Col>
-                    <Col xs={8}>
-                      {formData.birth_day &&
-                      formData.birth_month &&
-                      formData.birth_year
-                        ? `${getOrdinalSuffix(
-                            formData.birth_day
-                          )} of ${new Date(
-                            Number(formData.birth_year),
-                            Number(formData.birth_month) - 1
-                          ).toLocaleString("en-US", { month: "long" })}, ${
-                            formData.birth_year
-                          }`
-                        : "Not specified"}
-                    </Col>
-                  </Row>
-                </div>
-              )}
-            </Card.Body>
-          </Card>
+      {/* Profile Sections */}
+      <Container>
+        {/* Personal Information */}
+        <ProfileSection
+          title={t("profile.sections.personal_info")}
+          editMode={editMode === "personal"}
+          onEdit={() => setEditMode("personal")}
+          onSave={handleProfileUpdate}
+          onCancel={handleCancelChanges}
+        >
+          {editMode === "personal" ? (
+            <PersonalInfoForm
+              formData={formData}
+              onInputChange={handleInputChange}
+              birthDate={birthDate}
+              onDateChange={handleBirthDateChange}
+            />
+          ) : (
+            <PersonalInfoView
+              formData={formData}
+              getOrdinalSuffix={getOrdinalSuffix}
+            />
+          )}
+        </ProfileSection>
 
-          {/* Bio Section */}
-          <Card className="mb-4 border-0 shadow-sm">
-            <Card.Header className="bg-white border-bottom d-flex justify-content-between align-items-center py-3">
-              <h5 className="mb-0 fw-bold">Bio</h5>
-              {editMode === "bio" ? (
-                <div>
-                  <Button
-                    variant="success"
-                    size="sm"
-                    className="me-2"
-                    onClick={handleSaveChanges}
-                  >
-                    <FaSave className="me-1" /> Save
-                  </Button>
-                  <Button
-                    variant="outline-secondary"
-                    size="sm"
-                    onClick={handleCancelChanges}
-                  >
-                    <FaTimes className="me-1" /> Cancel
-                  </Button>
-                </div>
-              ) : (
-                <Button
-                  variant="outline-primary"
-                  size="sm"
-                  onClick={() => setEditMode("bio")}
-                >
-                  <FaEdit className="me-1" /> Edit
-                </Button>
+        {/* Bio Section */}
+        <ProfileSection
+          title={t("profile.sections.bio")}
+          editMode={editMode === "bio"}
+          onEdit={() => setEditMode("bio")}
+          onSave={handleProfileUpdate}
+          onCancel={handleCancelChanges}
+        >
+          {editMode === "bio" ? (
+            <Form.Control
+              as="textarea"
+              rows={4}
+              name="bio"
+              value={formData.bio}
+              onChange={handleInputChange}
+              placeholder={t("profile.placeholders.bio")}
+            />
+          ) : (
+            <p className="mb-0">
+              {formData.bio || (
+                <span className="text-muted fst-italic">
+                  {t("profile.messages.no_bio")}
+                </span>
               )}
-            </Card.Header>
-            <Card.Body>
-              {editMode === "bio" ? (
-                <Form.Group>
-                  <Form.Control
-                    as="textarea"
-                    rows={4}
-                    name="bio"
-                    value={formData.bio}
-                    onChange={handleInputChange}
-                    placeholder="Write something about yourself"
-                  />
-                </Form.Group>
-              ) : (
-                <p className="mb-0">
-                  {formData.bio ? (
-                    formData.bio
-                  ) : (
-                    <span className="text-muted fst-italic">
-                      No bio information provided
-                    </span>
-                  )}
-                </p>
-              )}
-            </Card.Body>
-          </Card>
+            </p>
+          )}
+        </ProfileSection>
 
-          {/* Language Section */}
-          <Card className="mb-4 border-0 shadow-sm">
-            <Card.Header className="bg-white border-bottom d-flex justify-content-between align-items-center py-3">
-              <h5 className="mb-0 fw-bold">Languages</h5>
-              {editMode === "languages" ? (
-                <div>
-                  <Button
-                    variant="success"
-                    size="sm"
-                    className="me-2"
-                    onClick={handleSaveChanges}
-                  >
-                    <FaSave className="me-1" /> Save
-                  </Button>
-                  <Button
-                    variant="outline-secondary"
-                    size="sm"
-                    onClick={handleCancelChanges}
-                  >
-                    <FaTimes className="me-1" /> Cancel
-                  </Button>
-                </div>
-              ) : (
-                <Button
-                  variant="outline-primary"
-                  size="sm"
-                  onClick={() => setEditMode("languages")}
-                >
-                  <FaEdit className="me-1" /> Edit
-                </Button>
-              )}
-            </Card.Header>
-            <Card.Body>
-              {editMode === "languages" ? (
-                <Form>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Native Language</Form.Label>
-                    <Form.Select
-                      name="native_language"
-                      value={formData.native_language}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="">Select Native Language</option>
-                      {languageOptions.map((lang) => (
-                        <option key={lang.value} value={lang.label}>
-                          {lang.label}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label>Language to Learn</Form.Label>
-                    <Form.Select
-                      name="language_to_learn"
-                      value={formData.language_to_learn}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="">Select Language to Learn</option>
-                      {languageOptions.map((lang) => (
-                        <option key={lang.value} value={lang.label}>
-                          {lang.label}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Form.Group>
-                </Form>
-              ) : (
-                <div className="py-2">
-                  <Row className="mb-3">
-                    <Col xs={5} className="text-muted">
-                      Native Language:
-                    </Col>
-                    <Col xs={7}>
-                      {formData.native_language ? (
-                        <Badge bg="primary" className="py-2 px-3 fw-normal">
-                          {formData.native_language}
-                        </Badge>
-                      ) : (
-                        <span className="text-muted fst-italic">
-                          Not specified
-                        </span>
-                      )}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col xs={5} className="text-muted">
-                      Learning:
-                    </Col>
-                    <Col xs={7}>
-                      {formData.language_to_learn ? (
-                        <Badge bg="success" className="py-2 px-3 fw-normal">
-                          {formData.language_to_learn}
-                        </Badge>
-                      ) : (
-                        <span className="text-muted fst-italic">
-                          Not specified
-                        </span>
-                      )}
-                    </Col>
-                  </Row>
-                </div>
-              )}
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+        {/* Languages Section */}
+        <ProfileSection
+          title={t("profile.sections.languages")}
+          editMode={editMode === "languages"}
+          onEdit={() => setEditMode("languages")}
+          onSave={handleProfileUpdate}
+          onCancel={handleCancelChanges}
+        >
+          {editMode === "languages" ? (
+            <LanguagesForm
+              formData={formData}
+              onInputChange={handleInputChange}
+              languageOptions={languageOptions}
+            />
+          ) : (
+            <LanguagesView formData={formData} />
+          )}
+        </ProfileSection>
+      </Container>
     </Container>
   );
 };
 
+// Sub-components for better organization
+const StatsCard: React.FC<{
+  icon: React.ReactNode;
+  value: number;
+  label: string;
+}> = ({ icon, value, label }) => (
+  <Card className="h-100 border-0 shadow-sm hover-shadow transition-all">
+    <Card.Body className="d-flex flex-column align-items-center">
+      <div className="rounded-circle bg-light p-3 mb-2">{icon}</div>
+      <h5 className="fw-bold mb-0">{value}</h5>
+      <p className="text-muted mb-0">{label}</p>
+    </Card.Body>
+  </Card>
+);
+
+const ProfileSection: React.FC<{
+  title: string;
+  editMode: boolean;
+  onEdit: () => void;
+  onSave: () => void;
+  onCancel: () => void;
+  children: React.ReactNode;
+}> = ({ title, editMode, onEdit, onSave, onCancel, children }) => {
+  const { t } = useTranslation();
+
+
+  return (<Card className="mb-4 border-0 shadow-sm">
+    <Card.Header className="bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+      <h5 className="mb-0 fw-bold">{title}</h5>
+      {editMode ? (
+        <div>
+          <Button
+            variant="success"
+            size="sm"
+            className="me-2"
+            onClick={onSave}
+          >
+            <FaSave className="me-1" /> {t("profile.actions.save")}
+          </Button>
+          <Button
+            variant="outline-secondary"
+            size="sm"
+            onClick={onCancel}
+          >
+            <FaTimes className="me-1" /> {t("profile.actions.cancel")}
+          </Button>
+        </div>
+      ) : (
+        <Button
+          variant="outline-primary"
+          size="sm"
+          onClick={onEdit}
+        >
+          <FaEdit className="me-1" /> {t("profile.actions.edit")}
+        </Button>
+      )}
+    </Card.Header>
+    <Card.Body>{children}</Card.Body>
+  </Card>
+  );
+}
+
+const PersonalInfoForm: React.FC<{
+  formData: UserProfileData;
+  onInputChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
+  birthDate: Date | null;
+  onDateChange: (date: Date | null) => void;
+}> = ({ formData, onInputChange, birthDate, onDateChange }) => {
+  const { t } = useTranslation();
+
+  return (<Form>
+    <Form.Group className="mb-3">
+      <Form.Label>{t("profile.labels.name")}</Form.Label>
+      <Form.Control
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={onInputChange}
+      />
+    </Form.Group>
+    <Form.Group className="mb-3">
+      <Form.Label>{t("profile.labels.email")}</Form.Label>
+      <Form.Control
+        type="email"
+        name="email"
+        value={formData.email}
+        disabled
+        onChange={onInputChange}
+      />
+    </Form.Group>
+    <Form.Group className="mb-3">
+      <Form.Label>{t("profile.labels.gender")}</Form.Label>
+      <Form.Select
+        name="gender"
+        value={formData.gender}
+        onChange={onInputChange}
+      >
+        <option value="">{t("profile.placeholders.select_gender")}</option>
+        <option value="Male">{t("profile.options.male")}</option>
+        <option value="Female">{t("profile.options.female")}</option>
+      </Form.Select>
+    </Form.Group>
+    <Form.Group className="mb-3">
+      <Form.Label>{t("profile.labels.birthday")}</Form.Label>
+      <DatePicker
+        selected={birthDate}
+        onChange={onDateChange}
+        dateFormat="dd/MM/yyyy"
+        placeholderText={t("profile.placeholders.select_date")}
+        className="form-control"
+        aria-label={t("profile.labels.birthday")}
+      />
+    </Form.Group>
+  </Form>
+  )
+}
+
+const PersonalInfoView: React.FC<{
+  formData: UserProfileData;
+  getOrdinalSuffix: (day: string) => string;
+}> = ({ formData, getOrdinalSuffix }) => {
+    const { t } = useTranslation();
+
+  return (
+    <div className="py-2">
+      <InfoRow label={t("profile.labels.name")} value={formData.name} />
+      <InfoRow label={t("profile.labels.email")} value={formData.email} />
+      <InfoRow
+        label={t("profile.labels.gender")}
+        value={formData.gender ? (
+          <Badge
+            bg={formData.gender === "Male" ? "primary" : "danger"}
+            className="fw-normal"
+          >
+            {formData.gender}
+          </Badge>
+        ) : (
+          t("profile.messages.not_specified")
+        )}
+      />
+      <InfoRow
+        label={t("profile.labels.birthday")}
+        value={
+          formData.birth_day && formData.birth_month && formData.birth_year
+            ? `${getOrdinalSuffix(formData.birth_day)} ${t("profile.labels.of")} ${new Date(
+              Number(formData.birth_year),
+              Number(formData.birth_month) - 1
+            ).toLocaleString("en-US", { month: "long" })}, ${formData.birth_year
+            }`
+            : t("profile.messages.not_specified")
+        }
+      />
+    </div>
+  );
+}
+
+const LanguagesForm: React.FC<{
+  formData: UserProfileData;
+  onInputChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
+  languageOptions: { value: string; label: string }[];
+}> = ({ formData, onInputChange, languageOptions }) => {
+    const { t } = useTranslation();
+
+  return (
+    <Form>
+      <Form.Group className="mb-3">
+        <Form.Label>{t("profile.labels.native_language")}</Form.Label>
+        <Form.Select
+          name="native_language"
+          value={formData.native_language}
+          onChange={onInputChange}
+          required
+        >
+          <option value="">{t("profile.placeholders.select_native_language")}</option>
+          {languageOptions.map((lang) => (
+            <option key={lang.value} value={lang.label}>
+              {lang.label}
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>{t("profile.labels.learning")}</Form.Label>
+        <Form.Select
+          name="language_to_learn"
+          value={formData.language_to_learn}
+          onChange={onInputChange}
+          required
+        >
+          <option value="">{t("profile.placeholders.select_learning_language")}</option>
+          {languageOptions.map((lang) => (
+            <option key={lang.value} value={lang.label}>
+              {lang.label}
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
+    </Form>
+  );
+}
+
+const LanguagesView: React.FC<{ formData: UserProfileData }> = ({ formData }) => {
+    const { t } = useTranslation();
+
+  return (
+    <div className="py-2">
+      <InfoRow
+        label={t("profile.labels.native_language")}
+        value={
+          formData.native_language ? (
+            <Badge bg="primary" className="py-2 px-3 fw-normal">
+              {formData.native_language}
+            </Badge>
+          ) : (
+            <span className="text-muted fst-italic">
+              {t("profile.messages.not_specified")}
+            </span>
+          )
+        }
+      />
+      <InfoRow
+        label={t("profile.labels.learning")}
+        value={
+          formData.language_to_learn ? (
+            <Badge bg="success" className="py-2 px-3 fw-normal">
+              {formData.language_to_learn}
+            </Badge>
+          ) : (
+            <span className="text-muted fst-italic">
+              {t("profile.messages.not_specified")}
+            </span>
+          )
+        }
+      />
+    </div>
+  );
+}
+
+const InfoRow: React.FC<{ label: string; value: React.ReactNode }> = ({ label, value }) => {
+
+  return (
+  <Row className="mb-3">
+    <Col xs={4} className="text-muted">
+      {label}
+    </Col>
+    <Col xs={8}>{value}</Col>
+  </Row>
+);
+}
 export default ProfileScreen;
