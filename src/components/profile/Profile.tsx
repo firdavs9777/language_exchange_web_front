@@ -5,6 +5,7 @@ import {
   useGetUserProfileQuery,
   useUploadUserPhotoMutation,
   useUpdateUserInfoMutation,
+  useDeleteUserPhotoMutation,
 } from "../../store/slices/usersSlice";
 import {
   Button,
@@ -61,6 +62,7 @@ const ProfileScreen: React.FC = () => {
   const { data: moments } = useGetMyMomentsQuery({ userId });
   const [uploadUserPhoto] = useUploadUserPhotoMutation();
   const [updateUserProfile] = useUpdateUserInfoMutation();
+  const [deleteUserPhoto] = useDeleteUserPhotoMutation();
 
   // State
   const [formData, setFormData] = useState<UserProfileData>({
@@ -131,8 +133,6 @@ const ProfileScreen: React.FC = () => {
 
   // Handlers
   const handleUploadImages = useCallback(async (newFiles: File[]) => {
-    alert("Here")
-    console.log(newFiles)
     try {
       const formData = new FormData();
       newFiles.forEach((file) => formData.append("file", file));
@@ -199,13 +199,25 @@ const ProfileScreen: React.FC = () => {
       setFormData(data.data);
     }
   }, [data]);
-  const handleDeleteHandler = (index: number) => {
-    setFormData(prevData => ({
-        ...prevData,
-        imageUrls: prevData.imageUrls.filter((_, i) => i !== index)
-      }));
 
-  }
+  const handleDeletePhoto = useCallback(async (index: number) => {
+    if (!userId) return;
+    
+    try {
+      await deleteUserPhoto({ userId, index }).unwrap();
+      toast.success(t("profile.messages.image_delete_success"));
+      refetch();
+    } catch (error: any) {
+      toast.error(
+        `${t("profile.messages.image_delete_failure")}: ${error?.error || t("profile.messages.unknown_error")}`
+      );
+    }
+  }, [deleteUserPhoto, userId, refetch, t]);
+
+  const handleImageClick = useCallback((index: number) => {
+    setCurrentImageIndex(index);
+    setShowImageViewer(true);
+  }, []);
 
   const getOrdinalSuffix = useCallback((day: string): string => {
     const n = parseInt(day);
@@ -307,7 +319,7 @@ const ProfileScreen: React.FC = () => {
       />
 
       <ImageUploaderModal
-        onDeleteImage={handleDeleteHandler}
+        onDeleteImage={handleDeletePhoto}
         images={formData.imageUrls || []}
         show={showModal}
         onClose={() => setShowModal(false)}

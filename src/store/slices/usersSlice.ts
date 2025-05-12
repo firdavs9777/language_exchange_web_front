@@ -92,6 +92,19 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
       providesTags: ["User"],
     }),
+    deleteUserPhoto: builder.mutation({
+      query: ({
+        userId,
+        index,
+      }: {
+        userId: string;
+        index: number;
+      }) => ({
+        url: `${COMMUNITY_URL}/${userId}/photo/${index}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["User"],
+    }),
 
     logoutUser: builder.mutation({
       query: () => ({
@@ -158,4 +171,5 @@ export const {
   useUnFollowUserMutation,
   useUploadUserPhotoMutation,
   useUpdateUserInfoMutation,
+  useDeleteUserPhotoMutation
 } = usersApiSlice;

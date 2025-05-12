@@ -70,14 +70,12 @@ export const MemberCard = ({ member }) => {
         <img
           src={
             member.imageUrls?.length > 0
-              ? member.imageUrls[member.imageUrls.length - 1]
+              ? member.imageUrls[0]
               : "/images/default-avatar.jpg"
           }
           alt={member.name}
           className="member-image"
-          onError={(e) => {
-            e.target.src = "/images/default-avatar.jpg";
-          }}
+        
         />
         <div className="language-badges">
           <div className="language-badge native">
