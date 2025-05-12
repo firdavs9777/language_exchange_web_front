@@ -148,27 +148,27 @@ const SingleMoment: React.FC<MomentProps> = ({
             ) : (
               <AiOutlineLike className="me-2" size={18} />
             )}
-            <span className={liked ? "text-primary fw-medium" : ""}>{t('moment_like') }</span>
+            <span className={liked ? "text-primary fw-medium" : ""}>{t('moments_section.moment_like') }</span>
           </Button>
         </OverlayTrigger>
 
-        <OverlayTrigger placement="top" overlay={<Tooltip>{t('moment_comment') }</Tooltip>}>
+        <OverlayTrigger placement="top" overlay={<Tooltip>{t('moments_section.moment_comment') }</Tooltip>}>
           <Link
             to={`/moment/${_id}`}
             className="btn btn-light flex-grow-1 d-flex justify-content-center align-items-center border-0 py-2 text-decoration-none text-dark bg-hover-light"
           >
             <AiOutlineComment className="me-2" size={18} />
-            <span>{t('moment_comment') }</span>
+            <span>{t('moments_section.moment_comment') }</span>
           </Link>
         </OverlayTrigger>
 
-        <OverlayTrigger placement="top" overlay={<Tooltip>{t('moment_share') }</Tooltip>}>
+        <OverlayTrigger placement="top" overlay={<Tooltip>{t('moments_section.moment_share') }</Tooltip>}>
           <Button
             variant="light"
             className="flex-grow-1 d-flex justify-content-center align-items-center border-0 py-2 bg-hover-light"
           >
             <AiOutlineShareAlt className="me-2" size={18} />
-            <span>{t('moment_share') }</span>
+            <span>{t('moments_section.moment_share') }</span>
           </Button>
         </OverlayTrigger>
       </div>

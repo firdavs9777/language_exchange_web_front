@@ -78,6 +78,12 @@
   "retry_btn": "다시 시도",
   "no_moments": "모멘트 없음",
   "first_to_moment": "가장 먼저 특별한 순간을 커뮤니티와 공유해보세요",
-  "share_momnent": "모멘트 공유하기"
+  "share_moment": "모멘트 공유하기",
+  "moment_login_error": "모멘트를 좋아요하려면 로그인해주세요",
+"moment_like_error": "좋아요 상태를 업데이트하지 못했습니다",
+"moment_like": "좋아요",
+"moment_comment": "댓글",
+"moment_share": "공유"
+
 }
 }
