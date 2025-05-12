@@ -101,7 +101,14 @@ const MainNavbar = () => {
                 title={
                   <div className="language-dropdown-title">
                     <FaLanguage size={20} className="me-1" />
-                    <span className="d-none d-md-inline">{t("language")}</span>
+                    <span className="d-none d-md-inline">{i18n.language === 'en' ? (<>
+                      {t('english')}
+                    </>) : (
+
+                      <>
+                        {t('korean')}
+                      </>
+                    )}</span>
                   </div>
                 }
                 id="language-dropdown"
@@ -136,8 +143,8 @@ const MainNavbar = () => {
                       <img
                         src={
                           userInfo.user &&
-                          userInfo.user.images &&
-                          userInfo.user.images[0]
+                            userInfo.user.images &&
+                            userInfo.user.images[0]
                             ? userInfo.user.images[0]
                             : "/default-avatar.png"
                         }

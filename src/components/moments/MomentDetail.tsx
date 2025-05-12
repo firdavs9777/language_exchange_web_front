@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import {
   useDislikeMomentMutation,
   useGetMomentDetailsQuery,
@@ -19,7 +20,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
-import { FaComments, FaRegComments, FaArrowLeft } from "react-icons/fa";
+import { FaComments, FaRegComments, FaArrowLeft, FaPaperPlane } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
 import {
   useAddCommentMutation,
@@ -64,19 +65,21 @@ interface MomentResponse {
 
 // Comment component for better organization
 const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
+  const { t } = useTranslation();
+
   const timeAgo = (date: string) => {
     const now = new Date();
     const past = new Date(date);
     const diff = now.getTime() - past.getTime();
-    
+
     const minutes = Math.floor(diff / (1000 * 60));
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-    
-    if (minutes < 1) return 'just now';
-    if (minutes < 60) return `${minutes}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    if (days < 7) return `${days}d ago`;
+
+    if (minutes < 1) return t('moments_section.timeAgo.justNow');
+    if (minutes < 60) return t('moments_section.timeAgo.minutesAgo', { minutes });
+    if (hours < 24) return t('moments_section.timeAgo.hoursAgo', { hours });
+    if (days < 7) return t('moments_section.timeAgo.daysAgo', { days });
     return new Date(date).toLocaleDateString();
   };
 
@@ -103,6 +106,7 @@ const CommentItem: React.FC<{ comment: Comment }> = ({ comment }) => {
 };
 
 const MomentDetail: React.FC = () => {
+  const { t } = useTranslation();
   const { id: momentId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const {
@@ -110,7 +114,7 @@ const MomentDetail: React.FC = () => {
     isLoading,
     refetch: refetchMomentDetails,
   } = useGetMomentDetailsQuery(momentId || '');
-  
+
   const { userInfo } = useSelector((state: any) => state.auth);
   const userId = userInfo?.user?._id;
 
@@ -137,7 +141,7 @@ const MomentDetail: React.FC = () => {
   const handleLikeToggle = useCallback(async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!userId) {
-      toast.error("Please login first");
+      toast.error(t('moments_section.pleaseLoginFirst'));
       return;
     }
     if (!momentId) return;
@@ -148,39 +152,39 @@ const MomentDetail: React.FC = () => {
     try {
       if (momentDetails.likedUsers.includes(userId)) {
         await dislikeMoment({ momentId: momentDetails._id, userId }).unwrap();
-        toast.info("Removed like");
+        toast.info(t('moments_section.removedLike'));
       } else {
         await likeMoment({ momentId: momentDetails._id, userId }).unwrap();
-        toast.success("Liked moment");
+        toast.success(t('moments_section.likedMoment'));
       }
       refetchMomentDetails();
     } catch (error) {
-      toast.error("Failed to update like status");
+      toast.error(t('moments_section.failedToUpdateLike'));
     }
-  }, [data, userId, momentId, likeMoment, dislikeMoment, refetchMomentDetails]);
+  }, [data, userId, momentId, likeMoment, dislikeMoment, refetchMomentDetails, t]);
 
   const handleCommentSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim()) {
-      toast.error("Please add a comment");
+      toast.error(t('moments_section.emptyCommentError'));
       return;
     }
     if (!momentId) return;
 
     try {
       await addComment({ momentId, newComment }).unwrap();
-      toast.success("Comment added");
+      toast.success(t('moments_section.commentAdded'));
       refetchComments();
       setNewComment("");
     } catch (error) {
-      toast.error("Failed to add comment");
+      toast.error(t('moments_section.failedToAddComment'));
     }
-  }, [newComment, momentId, addComment, refetchComments]);
+  }, [newComment, momentId, addComment, refetchComments, t]);
 
   if (!momentId) {
     return (
       <Container className="py-5 text-center">
-        <div className="alert alert-danger">Invalid moment ID</div>
+        <div className="alert alert-danger">{t('moments_section.invalidMomentId')}</div>
       </Container>
     );
   }
@@ -189,7 +193,7 @@ const MomentDetail: React.FC = () => {
     return (
       <Container className="py-5 text-center">
         <Spinner animation="border" variant="primary" />
-        <p className="mt-3">Loading moment details...</p>
+        <p className="mt-3">{t('moments_section.loadingMoment')}</p>
       </Container>
     );
   }
@@ -200,9 +204,9 @@ const MomentDetail: React.FC = () => {
   if (!momentDetails) {
     return (
       <Container className="py-5 text-center">
-        <div className="alert alert-warning">No details found</div>
+        <div className="alert alert-warning">{t('moments_section.noDetailsFound')}</div>
         <Button variant="outline-primary" onClick={handleGoBack} className="mt-3">
-          <FaArrowLeft className="me-2" /> Go Back
+          <FaArrowLeft className="me-2" /> {t('moments_section.goBack')}
         </Button>
       </Container>
     );
@@ -212,15 +216,15 @@ const MomentDetail: React.FC = () => {
   const formattedDate = new Date(momentDetails.createdAt).toLocaleString();
 
   return (
-    <Container fluid className="py-3 px-0 bg-light min-vh-100">
+    <Container fluid className=" px-0 bg-light min-vh-100">
       {/* Top navigation bar */}
-      <div className="sticky-top bg-white shadow-sm mb-3 p-2">
+      <div className="bg-white shadow-sm mb-3 p-2 ">
         <Container>
           <div className="d-flex align-items-center">
             <Button variant="light" className="me-3 rounded-circle p-2" onClick={handleGoBack}>
               <FaArrowLeft />
             </Button>
-            <h5 className="mb-0 flex-grow-1">Moment Details</h5>
+            <h5 className="mb-0 flex-grow-1">{t('moments_section.momentDetails')}</h5>
           </div>
         </Container>
       </div>
@@ -257,8 +261,8 @@ const MomentDetail: React.FC = () => {
 
                 {/* Images Carousel */}
                 {momentDetails.imageUrls.length > 0 && (
-                  <Carousel 
-                    variant="dark" 
+                  <Carousel
+                    variant="dark"
                     interval={null}
                     indicators={momentDetails.imageUrls.length > 1}
                     controls={momentDetails.imageUrls.length > 1}
@@ -270,7 +274,7 @@ const MomentDetail: React.FC = () => {
                           <img
                             className="d-block w-100"
                             src={url}
-                            alt={`${momentDetails.title || 'Moment'} - ${idx + 1}`}
+                            alt={`${momentDetails.title || t('moments_section.title')} - ${idx + 1}`}
                             style={{
                               maxHeight: "400px",
                               objectFit: "contain",
@@ -292,7 +296,7 @@ const MomentDetail: React.FC = () => {
                   </div>
                   <div className="text-muted">
                     {commentsList.length > 0 && (
-                      <span>{commentsList.length} comments</span>
+                      <span>{t('moments_section.commentsCount', { count: commentsList.length })}</span>
                     )}
                   </div>
                 </div>
@@ -305,9 +309,9 @@ const MomentDetail: React.FC = () => {
                     className="flex-grow-1 py-2 rounded-0 border-0"
                   >
                     {isLiked ? (
-                      <><AiFillLike size={20} className="me-2 text-primary" /> <span className="text-primary">Like</span></>
+                      <><AiFillLike size={20} className="me-2 text-primary" /> <span className="text-primary">{t('moments_section.likeButton')}</span></>
                     ) : (
-                      <><AiOutlineLike size={20} className="me-2" /> Like</>
+                      <><AiOutlineLike size={20} className="me-2" /> {t('moments_section.likeButton')}</>
                     )}
                   </Button>
                   <Button
@@ -316,16 +320,16 @@ const MomentDetail: React.FC = () => {
                     onClick={() => document.getElementById('commentInput')?.focus()}
                   >
                     {commentsList.length > 0 ? (
-                      <><FaComments size={20} className="me-2 text-success" /> Comment</>
+                      <><FaComments size={20} className="me-2 text-success" /> {t('moments_section.commentButton')}</>
                     ) : (
-                      <><FaRegComments size={20} className="me-2" /> Comment</>
+                      <><FaRegComments size={20} className="me-2" /> {t('moments_section.commentButton')}</>
                     )}
                   </Button>
                   <Button
                     variant="light"
                     className="flex-grow-1 py-2 rounded-0 border-0"
                   >
-                    <IoMdShare size={20} className="me-2" /> Share
+                    <IoMdShare size={20} className="me-2" /> {t('moments_section.shareButton')}
                   </Button>
                 </div>
 
@@ -334,25 +338,19 @@ const MomentDetail: React.FC = () => {
                   {isLoadingComments ? (
                     <div className="text-center py-3">
                       <Spinner animation="border" size="sm" />
-                      <p className="text-muted mt-2 mb-0">Loading comments...</p>
+                      <p className="text-muted mt-2 mb-0">{t('moments_section.loadingComments')}</p>
                     </div>
                   ) : (
                     <>
-                      {/* Add Comment Form */}
+
                       {userInfo ? (
                         <Form onSubmit={handleCommentSubmit} className="mb-3 position-relative">
                           <div className="d-flex">
-                            <Image
-                              src={userInfo.user.imageUrls?.[0] || "https://via.placeholder.com/40"}
-                              roundedCircle
-                              width={36}
-                              height={36}
-                              className="me-2"
-                            />
+
                             <Form.Group controlId="commentInput" className="flex-grow-1">
                               <Form.Control
                                 type="text"
-                                placeholder="Write a comment..."
+                                placeholder={t('moments_section.writeCommentPlaceholder')}
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
                                 disabled={isAddingComment}
@@ -370,20 +368,20 @@ const MomentDetail: React.FC = () => {
                                   {isAddingComment ? (
                                     <Spinner animation="border" size="sm" />
                                   ) : (
-                                    "↵"
+                                    <FaPaperPlane size={12} />
                                   )}
                                 </Button>
                               )}
+
                             </Form.Group>
                           </div>
                         </Form>
                       ) : (
                         <div className="alert alert-light border my-3">
-                          Please{" "}
+                          {t('moments_section.signInToComment')}{" "}
                           <Link to="/login" className="text-decoration-none fw-bold">
-                            sign in
-                          </Link>{" "}
-                          to add a comment
+                            {t('moments_section.signIn')}
+                          </Link>
                         </div>
                       )}
 
@@ -391,7 +389,7 @@ const MomentDetail: React.FC = () => {
                       {commentsList.length > 0 ? (
                         <div className="mt-2">
                           <Badge bg="primary" className="mb-3">
-                            {commentsList.length} Comments
+                            {t('moments_section.commentsCount', { count: commentsList.length })}
                           </Badge>
                           <ListGroup variant="flush" className="comment-list">
                             {commentsList.map((comment: Comment) => (
@@ -402,7 +400,7 @@ const MomentDetail: React.FC = () => {
                       ) : (
                         <div className="text-center text-muted py-4">
                           <FaRegComments size={30} className="mb-2" />
-                          <p>No comments yet. Be the first to comment!</p>
+                          <p>{t('moments_section.noCommentsYet')}</p>
                         </div>
                       )}
                     </>
@@ -413,19 +411,7 @@ const MomentDetail: React.FC = () => {
           </Col>
         </Row>
       </Container>
-      
-      {/* Custom CSS */}
-      <style jsx>{`
-        .carousel-image-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .comment-list {
-          max-height: 400px;
-          overflow-y: auto;
-        }
-      `}</style>
+
     </Container>
   );
 };

@@ -83,7 +83,34 @@
     "moment_like_error": "Failed to update like status", 
     "moment_like": "Like",
     "moment_comment": "Comment",
-    "moment_share": "Share"
-    
+    "moment_share": "Share",
+    "no_comments":"No comments yet. Be the first to comment!",
+     "invalidMomentId": "Invalid moment ID",
+    "loadingMoment": "Loading moment details...",
+    "noDetailsFound": "No details found",
+    "goBack": "Go Back",
+    "momentDetails": "Moment Details",
+    "pleaseLoginFirst": "Please login first",
+    "removedLike": "Removed like",
+    "likedMoment": "Liked moment",
+    "failedToUpdateLike": "Failed to update like status",
+    "emptyCommentError": "Please add a comment",
+    "commentAdded": "Comment added",
+    "failedToAddComment": "Failed to add comment",
+    "loadingComments": "Loading comments...",
+    "writeCommentPlaceholder": "Write a comment...",
+    "signInToComment": "Please sign in to add a comment",
+    "signIn": "sign in",
+    "noCommentsYet": "No comments yet. Be the first to comment!",
+    "commentsCount": "{{count}} Comments",
+    "likeButton": "Like",
+    "commentButton": "Comment",
+    "shareButton": "Share",
+    "timeAgo": {
+      "justNow": "just now",
+      "minutesAgo": "{{minutes}}m ago",
+      "hoursAgo": "{{hours}}h ago",
+      "daysAgo": "{{days}}d ago"
+    }
   }
 }
