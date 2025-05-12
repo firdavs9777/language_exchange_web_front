@@ -43,6 +43,8 @@ import ISO6391 from "iso-639-1";
 import { useTranslation } from "react-i18next";
 import LanguagesView from "./LanguageView";
 import InfoRow from "./InfoRow";
+import { setCredentials } from "../../store/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 interface Moment {
   count: number;
@@ -63,6 +65,8 @@ const ProfileScreen: React.FC = () => {
   const [uploadUserPhoto] = useUploadUserPhotoMutation();
   const [updateUserProfile] = useUpdateUserInfoMutation();
   const [deleteUserPhoto] = useDeleteUserPhotoMutation();
+    const dispatch = useDispatch();
+  
 
   // State
   const [formData, setFormData] = useState<UserProfileData>({
@@ -138,10 +142,12 @@ const ProfileScreen: React.FC = () => {
       newFiles.forEach((file) => formData.append("file", file));
 
       if (newFiles.length > 0 && userId) {
-        await uploadUserPhoto({
+       const userInfo =  await uploadUserPhoto({
           userId,
           imageFiles: formData,
-        }).unwrap();
+       }).unwrap();
+        const ActionPayload: Response | any = userInfo;
+        dispatch(setCredentials({ ...ActionPayload }));
         refetch();
         toast.success(t("profile.messages.image_update_success"));
       }
@@ -154,7 +160,10 @@ const ProfileScreen: React.FC = () => {
 
   const handleProfileUpdate = useCallback(async () => {
     try {
-      await updateUserProfile(formData).unwrap();
+      const userInfo = await updateUserProfile(formData).unwrap();
+
+      const ActionPayload: Response | any = userInfo;
+      dispatch(setCredentials({ ...ActionPayload }));
       toast.success(t("profile.messages.profile_update_success"));
       setEditMode(null);
       refetch();
@@ -204,7 +213,10 @@ const ProfileScreen: React.FC = () => {
     if (!userId) return;
     
     try {
-      await deleteUserPhoto({ userId, index }).unwrap();
+      const userInfo = await deleteUserPhoto({ userId, index }).unwrap();
+      console.log(userInfo)
+      const ActionPayload: Response | any = userInfo;
+      dispatch(setCredentials({ ...ActionPayload }));
       toast.success(t("profile.messages.image_delete_success"));
       refetch();
     } catch (error: any) {
