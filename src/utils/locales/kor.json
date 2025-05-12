@@ -67,5 +67,17 @@
       "save": "저장",
       "cancel": "취소"
     }
-  }
+  },
+  "moments_section": {
+  "title": "모멘트",
+  "question": "무슨 생각을 하고 계신가요,",
+  "loading": "불러오는 중",
+  "loading_moments": "모멘트를 불러오는 중...",
+  "error_loading": "모멘트를 불러오는 중 오류 발생",
+  "error_info": "모멘트를 불러올 수 없습니다. 나중에 다시 시도해주세요.",
+  "retry_btn": "다시 시도",
+  "no_moments": "모멘트 없음",
+  "first_to_moment": "가장 먼저 특별한 순간을 커뮤니티와 공유해보세요",
+  "share_momnent": "모멘트 공유하기"
+}
 }

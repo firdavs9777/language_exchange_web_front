@@ -67,5 +67,17 @@
       "save": "Save",
       "cancel": "Cancel"
     }
+  },
+  "moments_section": {
+    "title": "Moments",
+    "question": "What's on your mind,",
+    "loading": "Loading",
+    "loading_moments": "Loading Moments...", 
+    "error_loading": "Error loading moments",
+    "error_info": "  We couldn't load the moments. Please try again later.",
+    "retry_btn":"Retry",
+    "no_moments": "No moments",
+    "first_to_moment": "Be the first to share your special moments with the community",
+    "share_momnent": "Share a Moment"
   }
 }

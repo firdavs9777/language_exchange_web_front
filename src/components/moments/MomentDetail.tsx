@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   useDislikeMomentMutation,
@@ -49,6 +49,10 @@ const MomentDetail = () => {
     isLoading: isLoadingComments,
     refetch,
   } = useGetCommentsQuery(momentId);
+
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [momentId]);
 
   if (!momentId)
     return <div className="text-center my-5">Invalid moment ID</div>;
