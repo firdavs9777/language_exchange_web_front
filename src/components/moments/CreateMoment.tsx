@@ -6,6 +6,7 @@ import React, {
   FormEvent,
 } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import {
   Button,
   Form,
@@ -24,7 +25,26 @@ import Loader from "../Loader";
 import { useSelector } from "react-redux";
 import { FaTimes, FaPlus } from "react-icons/fa";
 
+interface Moment {
+  success: string;
+  data: {
+    _id: string;
+    title: string;
+    description: string;
+    user: string;
+    comments: string[];
+    likeCount: number;
+    likedUsers: string[];
+    slug: string;
+    location: { location: string };
+    images: string[];
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
 const CreateMoment: React.FC = () => {
+  const { t } = useTranslation();
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -37,6 +57,7 @@ const CreateMoment: React.FC = () => {
     useUploadMomentPhotosMutation();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const user = useSelector((state: any) => state.auth.userInfo?.user._id);
 
   useEffect(() => {
     setIsButtonEnabled(title !== "" && description !== "");
@@ -45,7 +66,7 @@ const CreateMoment: React.FC = () => {
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     if (files.length + selectedImages.length > 10) {
-      toast.error("You can upload a maximum of 10 images");
+      toast.error(t('createMoment.toast.maxImagesError'));
       return;
     }
     setSelectedImages((prevImages) => [...prevImages, ...files]);
@@ -56,7 +77,7 @@ const CreateMoment: React.FC = () => {
 
   const handleAddMoreImages = () => {
     if (selectedImages.length >= 10) {
-      toast.error("Maximum 10 images allowed");
+      toast.error(t('createMoment.toast.maxImagesError'));
       return;
     }
     fileInputRef.current?.click();
@@ -70,32 +91,11 @@ const CreateMoment: React.FC = () => {
     URL.revokeObjectURL(imagePreviews[index]);
   };
 
-  const user = useSelector((state: any) => state.auth.userInfo?.user._id);
-
-  interface Moment {
-    success: string;
-    data: {
-      _id: string;
-      title: string;
-      description: string;
-      user: string;
-      comments: string[];
-      likeCount: number;
-      likedUsers: string[];
-      slug: string;
-      location: { location: string };
-      images: string[];
-      createdAt: string;
-      updatedAt: string;
-    };
-  }
-
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (!isButtonEnabled) return;
 
     try {
-      // Create the moment
       const response = await createMoment({
         title,
         description,
@@ -113,14 +113,13 @@ const CreateMoment: React.FC = () => {
           imageFiles: formData,
         }).unwrap();
       }
-      toast.success("Moment created successfully!");
+      toast.success(t('createMoment.toast.createSuccess'));
       navigate("/moments");
     } catch (error) {
-      toast.error("Failed to create moment.");
+      toast.error(t('createMoment.toast.createError'));
     }
   };
 
-  // Clean up object URLs to avoid memory leaks
   useEffect(() => {
     return () => {
       imagePreviews.forEach((preview) => URL.revokeObjectURL(preview));
@@ -131,16 +130,18 @@ const CreateMoment: React.FC = () => {
     <Container>
       <Row className="justify-content-center my-3">
         <Col xs="auto" className="d-flex">
-          <h1>Create Moment</h1>
+          <h1>{t('createMoment.title')}</h1>
         </Col>
       </Row>
       <Form onSubmit={handleSubmit}>
         <Card className="p-4 shadow-sm mb-4">
           <Form.Group controlId="title" className="mb-4">
-            <Form.Label className="fw-bold">Title</Form.Label>
+            <Form.Label className="fw-bold">
+              {t('createMoment.form.titleLabel')}
+            </Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter title"
+              placeholder={t('createMoment.form.titlePlaceholder')}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="border-1"
@@ -148,11 +149,13 @@ const CreateMoment: React.FC = () => {
             />
           </Form.Group>
           <Form.Group controlId="description" className="mb-4">
-            <Form.Label className="fw-bold">Description</Form.Label>
+            <Form.Label className="fw-bold">
+              {t('createMoment.form.descriptionLabel')}
+            </Form.Label>
             <Form.Control
               as="textarea"
               rows={5}
-              placeholder="Enter description"
+              placeholder={t('createMoment.form.descriptionPlaceholder')}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="border-1"
@@ -160,12 +163,13 @@ const CreateMoment: React.FC = () => {
             />
           </Form.Group>
           <Form.Group controlId="images" className="mb-4">
-            <Form.Label className="fw-bold">Upload Images</Form.Label>
+            <Form.Label className="fw-bold">
+              {t('createMoment.form.imagesLabel')}
+            </Form.Label>
             <Form.Text className="d-block mb-3 text-muted">
-              Maximum 10 images allowed
+              {t('createMoment.form.maxImagesText')}
             </Form.Text>
 
-            {/* Image preview grid */}
             {imagePreviews.length > 0 && (
               <Row className="g-3 mb-3">
                 {imagePreviews.map((preview, index) => (
@@ -198,7 +202,6 @@ const CreateMoment: React.FC = () => {
                   </Col>
                 ))}
 
-                {/* Add more button - only show if we haven't reached max */}
                 {imagePreviews.length < 10 && (
                   <Col xs={6} md={4} lg={3}>
                     <div
@@ -216,7 +219,7 @@ const CreateMoment: React.FC = () => {
                         <div className="mb-2">
                           <FaPlus size={24} />
                         </div>
-                        <div>Add More</div>
+                        <div>{t('createMoment.form.addMoreText')}</div>
                       </div>
                     </div>
                   </Col>
@@ -224,7 +227,6 @@ const CreateMoment: React.FC = () => {
               </Row>
             )}
 
-            {/* Initial file input */}
             {selectedImages.length === 0 && (
               <div className="mb-3">
                 <Form.Control
@@ -237,7 +239,6 @@ const CreateMoment: React.FC = () => {
               </div>
             )}
 
-            {/* Hidden file input for adding more images */}
             <Form.Control
               type="file"
               multiple
@@ -261,7 +262,9 @@ const CreateMoment: React.FC = () => {
               variant="primary"
               className="px-4 py-2"
             >
-              {isCreating || isUploading ? "Posting..." : "Post"}
+              {isCreating || isUploading 
+                ? t('createMoment.form.submittingButton') 
+                : t('createMoment.form.submitButton')}
             </Button>
 
             <Button
@@ -270,7 +273,7 @@ const CreateMoment: React.FC = () => {
               className="px-4 py-2"
               onClick={() => navigate(-1)}
             >
-              Cancel
+              {t('createMoment.form.cancelButton')}
             </Button>
           </Col>
         </Row>

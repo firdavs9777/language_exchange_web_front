@@ -112,5 +112,25 @@
             "hoursAgo": "{{hours}}시간 전",
             "daysAgo": "{{days}}일 전"
         }
+    },
+    "createMoment": {
+        "title": "모멘트 생성",
+        "form": {
+            "titleLabel": "제목",
+            "titlePlaceholder": "제목을 입력하세요",
+            "descriptionLabel": "설명",
+            "descriptionPlaceholder": "설명을 입력하세요",
+            "imagesLabel": "이미지 업로드",
+            "maxImagesText": "최대 10개 이미지 업로드 가능",
+            "addMoreText": "더 추가하기",
+            "submitButton": "게시하기",
+            "submittingButton": "게시 중...",
+            "cancelButton": "취소"
+        },
+        "toast": {
+            "maxImagesError": "최대 10개 이미지만 업로드 가능합니다",
+            "createSuccess": "모멘트가 성공적으로 생성되었습니다!",
+            "createError": "모멘트 생성에 실패했습니다."
+        }
     }
 }

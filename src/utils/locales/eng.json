@@ -112,5 +112,25 @@
       "hoursAgo": "{{hours}}h ago",
       "daysAgo": "{{days}}d ago"
     }
+  },
+      "createMoment": {
+    "title": "Create Moment",
+    "form": {
+      "titleLabel": "Title",
+      "titlePlaceholder": "Enter title",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Enter description",
+      "imagesLabel": "Upload Images",
+      "maxImagesText": "Maximum 10 images allowed",
+      "addMoreText": "Add More",
+      "submitButton": "Post",
+      "submittingButton": "Posting...",
+      "cancelButton": "Cancel"
+    },
+    "toast": {
+      "maxImagesError": "You can upload a maximum of 10 images",
+      "createSuccess": "Moment created successfully!",
+      "createError": "Failed to create moment."
+    }
   }
 }
