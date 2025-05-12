@@ -78,6 +78,12 @@
     "retry_btn":"Retry",
     "no_moments": "No moments",
     "first_to_moment": "Be the first to share your special moments with the community",
-    "share_momnent": "Share a Moment"
+    "share_momnent": "Share a Moment", 
+    "moment_login_error": "Please login to like moments",
+    "moment_like_error": "Failed to update like status", 
+    "moment_like": "Like",
+    "moment_comment": "Comment",
+    "moment_share": "Share"
+    
   }
 }

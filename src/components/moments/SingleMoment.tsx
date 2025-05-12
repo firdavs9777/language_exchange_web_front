@@ -10,6 +10,7 @@ import {
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import moment from 'moment'
+import { useTranslation } from "react-i18next";
 
 interface User {
   _id: string;
@@ -46,7 +47,7 @@ const SingleMoment: React.FC<MomentProps> = ({
   const [liked, setLiked] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
-
+  const {t} = useTranslation()
   useEffect(() => {
     setLiked(userId ? likedUsers.includes(userId) : false);
   }, [likedUsers, userId]);
@@ -54,7 +55,7 @@ const SingleMoment: React.FC<MomentProps> = ({
   const handleLikeToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!userId) {
-      toast.error("Please login to like moments");
+      toast.error(t("moment_login_error"));
       navigate("/login");
       return;
     }
@@ -65,7 +66,7 @@ const SingleMoment: React.FC<MomentProps> = ({
       setLiked(!liked);
       if (refetch) refetch();
     } catch (error) {
-      toast.error("Failed to update like status");
+      toast.error(t("moment_like_error"));
     }
   };
 
@@ -129,21 +130,7 @@ const SingleMoment: React.FC<MomentProps> = ({
         </div>
       </Link>
 
-      {/* Stats */}
-      <div className="px-3 py-2 border-top d-flex justify-content-between align-items-center">
-        <div>
-          {likeCount > 0 && (
-            <Badge pill bg="light" text="primary" className="me-2">
-              <AiFillLike className="me-1" /> {likeCount}
-            </Badge>
-          )}
-          {commentCount > 0 && (
-            <Badge pill bg="light" text="dark">
-              {commentCount} comments
-            </Badge>
-          )}
-        </div>
-      </div>
+    
 
       {/* Action Buttons */}
       <div className="d-flex border-top">
@@ -161,27 +148,27 @@ const SingleMoment: React.FC<MomentProps> = ({
             ) : (
               <AiOutlineLike className="me-2" size={18} />
             )}
-            <span className={liked ? "text-primary fw-medium" : ""}>Like</span>
+            <span className={liked ? "text-primary fw-medium" : ""}>{t('moment_like') }</span>
           </Button>
         </OverlayTrigger>
 
-        <OverlayTrigger placement="top" overlay={<Tooltip>Comment</Tooltip>}>
+        <OverlayTrigger placement="top" overlay={<Tooltip>{t('moment_comment') }</Tooltip>}>
           <Link
             to={`/moment/${_id}`}
             className="btn btn-light flex-grow-1 d-flex justify-content-center align-items-center border-0 py-2 text-decoration-none text-dark bg-hover-light"
           >
             <AiOutlineComment className="me-2" size={18} />
-            <span>Comment</span>
+            <span>{t('moment_comment') }</span>
           </Link>
         </OverlayTrigger>
 
-        <OverlayTrigger placement="top" overlay={<Tooltip>Share</Tooltip>}>
+        <OverlayTrigger placement="top" overlay={<Tooltip>{t('moment_share') }</Tooltip>}>
           <Button
             variant="light"
             className="flex-grow-1 d-flex justify-content-center align-items-center border-0 py-2 bg-hover-light"
           >
             <AiOutlineShareAlt className="me-2" size={18} />
-            <span>Share</span>
+            <span>{t('moment_share') }</span>
           </Button>
         </OverlayTrigger>
       </div>
