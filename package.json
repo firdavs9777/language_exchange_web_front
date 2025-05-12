@@ -13,6 +13,7 @@
     "@types/redux": "^3.6.0",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.13.1",
     "i18next": "23.7.18",
     "i18next-browser-languagedetector": "7.1.0",
     "i18next-http-backend": "2.4.1",

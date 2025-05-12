@@ -165,7 +165,7 @@ const MainNavbar = () => {
                 >
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>
-                      <FaRegUser /> {t("profile")}
+                      <FaRegUser /> {t("profile.title")}
                     </NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/followersList">

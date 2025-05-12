@@ -195,6 +195,9 @@ const ProfileScreen: React.FC = () => {
       setFormData(data.data);
     }
   }, [data]);
+  const handleDeleteHandler = () => {
+    alert("Working here")
+  }
 
   const getOrdinalSuffix = useCallback((day: string): string => {
     const n = parseInt(day);
@@ -296,6 +299,7 @@ const ProfileScreen: React.FC = () => {
       />
 
       <ImageUploaderModal
+        onDeleteImage={handleDeleteHandler}
         images={formData.imageUrls || []}
         show={showModal}
         onClose={() => setShowModal(false)}

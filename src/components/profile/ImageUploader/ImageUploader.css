@@ -1,105 +1,119 @@
-.image-uploader-section {
-    background-color: azure;
-    width: 100%;
+/* ImageUploader.css */
+.image-uploader-section .modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
-.image-main {
-    display: flex;
-    flex-direction: column; /* Changed to column for better layout */
-    gap: 20px; /* Add some spacing between sections */
+.image-gallery {
+  margin: 0 -10px;
 }
 
-.uploaded-images {
-    display: flex;
-    flex-wrap: wrap; /* Allow wrapping of images */
-    gap: 20px; /* Add space between uploaded images */
+.image-container {
+  position: relative;
+  transition: transform 0.2s ease;
+  height: 150px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.img-thumbnail {
-    height: 150px; /* Adjust height for better fit */
-    width: 150px; /* Adjust width for better fit */
-    object-fit: cover; /* Ensure images cover the area */
+.image-container:hover {
+  transform: translateY(-3px);
 }
 
-.selected-images-preview {
-    display: flex;
-    flex-direction: column; /* Keep images in a column */
-    gap: 10px; /* Space between selected image previews */
+.gallery-image {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
-.image-preview {
-    display: flex;
-    justify-content: space-between; /* Align the image and button properly */
-    gap: 10px; /* Space between image and button */
-    align-items: center; /* Center items vertically */
+.image-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: none;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 0 0 0 8px;
+  display: flex;
+  gap: 5px;
 }
 
-.preview-image {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
+.image-container:hover .image-actions {
+  display: flex;
 }
 
-.add-image {
-    display: inline-flex; /* Changed to inline-flex for proper button sizing */
-    justify-content: center; /* Ensure "+" button is centered */
-    align-items: center; /* Center the content inside */
-    width: 50px; /* Adjust width for the button */
-    height: 50px; /* Adjust height for the button */
-    font-size: 28px;
-    border-radius: 50%; /* Make the button circular */
-    background-color: #f0f0f0; /* Background color */
-    border: 1px solid #ccc; /* Add border for visibility */
-    cursor: pointer; /* Change cursor to pointer for better UX */
+.image-name-tag {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 5px;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.add-image:hover {
-    background-color: #ddd; /* Slight hover effect */
+.upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background-color: #f8f9fa;
 }
 
-.add-image:active {
-    background-color: #ccc; /* Active state effect */
+.upload-area.drag-over {
+  border-color: #007bff;
+  background-color: rgba(0, 123, 255, 0.1);
 }
-/* Add margin to the Form Group to ensure proper spacing */
-.image-main .form-group {
-    margin-top: 20px; /* Space above the input field */
+
+.upload-icon {
+  color: #6c757d;
+  margin-bottom: 15px;
+}
+
+.upload-btn {
+  cursor: pointer;
+  margin: 10px 0;
+  display: inline-block;
+}
+
+/* Modal header styling */
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Modal footer styling */
+.modal-footer {
+  border-top: 1px solid #e9ecef;
+  padding: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .image-container {
+    height: 120px;
   }
   
-  /* Adjust the input style for a better appearance */
-  .file-input {
-    margin-top: 10px; /* Space between the label and the input */
-    border-radius: 5px; /* Rounded corners for a cleaner look */
-    padding: 10px; /* Ensure enough padding inside the input */
-    width: 100%; /* Make sure the input takes full width */
-    box-sizing: border-box; /* Ensures padding doesn't affect width */
+  .upload-area {
+    padding: 15px;
   }
-  
-  .image-container,
-  .image-preview {
-    position: relative;
-    display: inline-block;
-    margin-right: 10px;
-  }
-  
-  .delete-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    padding: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    opacity: 0.7;
-  }
-  
-  .delete-button:hover {
-    opacity: 1;
-  }
-  
-  .delete-button:focus {
-    outline: none;
-  }
-  
+}
