@@ -2,12 +2,13 @@ import React from "react";
 import "./UserFollowers.css";
 import { useGetFollowersQuery } from "../../store/slices/usersSlice";
 import { useSelector } from "react-redux";
-import { FollowerInterface } from "./Profile";
+
 import { Card, Col, Row, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { FollowerInterface } from "./ProfileTypes/types";
 
 const UserFollowersList = () => {
-  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
+  const userId = useSelector((state: any) => state.auth.userInfo?.user?._id);
   const {
     data: followers,
     isLoading: isLoading_two,
@@ -16,11 +17,12 @@ const UserFollowersList = () => {
 
   const followersDataMain = followers as FollowerInterface;
 
+  console.log(followersDataMain)
   return (
     <Container className="followers-container my-4">
-      <h1 className="mb-4 text-center">Followers({followersDataMain.count})</h1>
+      <h1 className="mb-4 text-center">Followers({followersDataMain?.count})</h1>
       <Row className="g-4">
-        {followersDataMain?.followers?.map((follower) => (
+        {followersDataMain?.data?.map((follower) => (
           <Col xs={12} sm={6} md={4} lg={3} key={follower._id}>
             <Link to={`/community/${follower._id}`}>
               <Card className="shadow-sm community-card hover-card h-100">

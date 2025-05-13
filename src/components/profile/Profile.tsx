@@ -55,7 +55,7 @@ interface Moment {
 
 const ProfileScreen: React.FC = () => {
   const { t } = useTranslation();
-  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
+  const userId = useSelector((state: any) => state.auth.userInfo?.user?._id);
   
   // API Queries
   const { data, isLoading, error, refetch } = useGetUserProfileQuery({});

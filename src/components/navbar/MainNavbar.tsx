@@ -142,10 +142,8 @@ const MainNavbar = () => {
                     >
                       <img
                         src={
-                          userInfo.user &&
-                            userInfo.user.images &&
-                            userInfo.user.images[0]
-                            ? userInfo.user.images[0]
+                          Array.isArray(userInfo?.user?.images) && userInfo.user?.images?.length > 0
+                            ? userInfo.user.images?.[0]
                             : "/default-avatar.png"
                         }
                         alt="Profile"
@@ -156,6 +154,7 @@ const MainNavbar = () => {
                           objectFit: "cover",
                         }}
                       />
+
                       <span>
                         {userInfo.user ? (
                           <>

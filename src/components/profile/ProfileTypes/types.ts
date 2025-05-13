@@ -15,6 +15,8 @@ export interface UserProfileData {
   imageUrls: string[];
 }
 export interface FollowerInterface {
+  success?: boolean;
+  data?: UserProfileData;
   count: string;
   message: string;
   followers?: UserProfileData[];
