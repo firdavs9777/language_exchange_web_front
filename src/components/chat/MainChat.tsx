@@ -7,15 +7,17 @@ const MainChat: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
   return (
-    <Row className="h-100">
-      <Col md={3}>
+    <Row className="g-0" style={{ height: "100vh" }}>
+      <Col md={3} className="h-100">
         <UsersList onSelectUser={(userId: string) => setSelectedUser(userId)} />
       </Col>
-      <Col md={9}>
+      <Col md={9} className="h-100">
         {selectedUser ? (
           <ChatContent selectedUser={selectedUser} />
         ) : (
-          <div>Select a user to start chatting</div>
+          <div className="d-flex align-items-center justify-content-center h-100">
+            Select a user to start chatting
+          </div>
         )}
       </Col>
     </Row>
