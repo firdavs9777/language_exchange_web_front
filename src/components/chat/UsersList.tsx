@@ -15,21 +15,31 @@ const UsersList: React.FC<UsersListProps> = ({ onSelectUser }) => {
   if (isLoading) return <div>Loading users...</div>;
   if (error) return <div>Error loading users</div>;
 
+
+  const uniqueSendersMap = new Map();
+
+data?.data.forEach((message: any) => {
+  const sender = message.sender;
+  if (sender._id !== userId && !uniqueSendersMap.has(sender._id)) {
+    uniqueSendersMap.set(sender._id, sender);
+  }
+});
+
+const uniqueSenders = Array.from(uniqueSendersMap.values());
   return (
-    <ListGroup style={{ overflowY: "scroll" }}>
-      {data?.data
-        .filter((message: any) => message.sender._id !== userId) // Exclude the current user from the list
-        .map((message: any) => (
-          <ListGroup.Item
-            key={message.sender._id}
-            action
-            onClick={() => onSelectUser(message.sender._id)}
-            className="d-flex justify-content-between align-items-center"
-          >
-            {message.sender.name}
-          </ListGroup.Item>
-        ))}
-    </ListGroup>
+  <ListGroup style={{ overflowY: "scroll" }}>
+  {uniqueSenders.map((sender: any) => (
+    <ListGroup.Item
+      key={sender._id}
+      action
+      onClick={() => onSelectUser(sender._id)}
+      className="d-flex justify-content-between align-items-center"
+    >
+      {sender.name}
+    </ListGroup.Item>
+  ))}
+</ListGroup>
+
   );
 };
 

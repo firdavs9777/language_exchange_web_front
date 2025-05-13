@@ -1,53 +1,133 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./UserFollowing.css";
-import {
-  useGetFollowersQuery,
-  useGetFollowingsQuery,
-} from "../../store/slices/usersSlice";
+import { useGetFollowingsQuery } from "../../store/slices/usersSlice";
 import { useSelector } from "react-redux";
-import { FollowerInterface } from "./Profile";
-import { Card, Col, Row, Container } from "react-bootstrap";
+import { Card, Col, Row, Container, Badge, Spinner, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const UserFollowingList = () => {
-  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
-  const {
-    data: followers,
-    isLoading: isLoading_two,
-    error: ErrorMessage,
-  } = useGetFollowingsQuery({ userId });
+// Define proper TypeScript interfaces for your data
+interface Location {
+  type: string;
+  coordinates: number[];
+  formattedAddress: string;
+  street: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  country: string;
+}
 
-  const followingsDataMain = followers as FollowerInterface;
+interface Following {
+  _id: string;
+  name: string;
+  gender: string;
+  mbti: string;
+  bio: string;
+  images: string[];
+  native_language: string;
+  language_to_learn: string;
+  imageUrls: string[];
+  location?: Location;
+}
+
+interface FollowingResponse {
+  success: boolean;
+  count: number;
+  data: Following[]; // Notice the difference here: "following" instead of "data"
+}
+
+interface RootState {
+  auth: {
+    userInfo?: {
+      user: {
+        _id: string;
+      };
+    };
+  };
+}
+
+const UserFollowingList: React.FC = () => {
+  // Type the useSelector properly
+  const userId = useSelector((state: RootState) => state.auth.userInfo?.user._id);
+ useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [userId]);
+  const {
+    data: followingsData,
+    isLoading,
+    error,
+  } = useGetFollowingsQuery({ userId }, { skip: !userId });
+
+  // Type cast the followings data
+  const followings = followingsData as FollowingResponse | undefined;
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: "200px" }}>
+        <Spinner animation="border" variant="primary" />
+      </Container>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <Container className="my-4">
+        <Alert variant="danger">
+          Error loading following list. Please try again later.
+        </Alert>
+      </Container>
+    );
+  }
+
+  // No followings state
+  if (!followings || followings.count === 0) {
+    return (
+      <Container className="my-4 text-center">
+        <h1 className="mb-4">Following (0)</h1>
+        <Alert variant="info">
+          You aren't following anyone yet.
+        </Alert>
+      </Container>
+    );
+  }
 
   return (
-    <Container className="followers-container my-4">
+    <Container className="following-container my-4">
       <h1 className="mb-4 text-center">
-        Followings({followingsDataMain?.count})
+        Following <Badge bg="primary" pill>{followings.count}</Badge>
       </h1>
       <Row className="g-4">
-        {followingsDataMain?.following?.map((follower) => (
-          <Col xs={12} sm={6} md={4} lg={3} key={follower._id}>
-            <Link to={`/community/${follower._id}`}>
-              <Card className="shadow-sm community-card hover-card h-100">
-                <div className="image-wrapper">
+        {followings?.data.map((following: Following) => (
+          <Col xs={12} sm={6} md={4} lg={3} key={following._id}>
+            <Link to={`/community/${following._id}`} className="text-decoration-none">
+              <Card className="shadow-sm h-100 border-0 hover-card">
+                <div className="position-relative">
                   <Card.Img
                     variant="top"
-                    src={follower.imageUrls[0] || "/placeholder.jpg"}
-                    alt={follower.name}
-                    className="community-image"
+                    src={following.imageUrls[0] || "/placeholder.jpg"}
+                    alt={following.name}
+                    className="img-fluid rounded-top"
+                    style={{ height: "180px", objectFit: "cover" }}
                   />
+                  <div className="position-absolute bottom-0 start-0 w-100 bg-dark bg-opacity-50 text-white p-2">
+                    <h5 className="mb-0">{following.name}</h5>
+                  </div>
                 </div>
-                <Card.Body className="community-profile">
-                  <Card.Title>{follower.name}</Card.Title>
-                  <Card.Text className="bio">
-                    <strong>Bio:</strong> {follower.bio || "No bio available"}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Native Language:</strong> {follower.native_language}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Learning:</strong> {follower.language_to_learn}
-                  </Card.Text>
+                <Card.Body>
+                  <p className="mb-2 text-truncate">
+                    <small className="text-muted">{following.bio || "No bio available"}</small>
+                  </p>
+                  <div className="d-flex justify-content-between">
+                    <Badge bg="secondary">{following.native_language}</Badge>
+                    <Badge bg="info">Learning: {following.language_to_learn}</Badge>
+                  </div>
+                  {following.location && (
+                    <small className="d-block mt-2 text-muted">
+                      <i className="bi bi-geo-alt"></i> {following.location.city}, {following.location.country}
+                    </small>
+                  )}
                 </Card.Body>
               </Card>
             </Link>

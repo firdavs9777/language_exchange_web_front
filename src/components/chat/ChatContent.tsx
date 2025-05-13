@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, Form, ListGroup } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import {
   useCreateMessageMutation,
   useGetConversationQuery,
 } from "../../store/slices/chatSlice";
-import "./ChatContent.css"; // Ensure you create this CSS file
+import "./ChatContent.css";
 
 interface ChatContentProps {
   selectedUser: string;
@@ -20,6 +20,15 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser }) => {
 
   const [createMessage] = useCreateMessageMutation();
   const [newMessage, setNewMessage] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [data]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +45,11 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser }) => {
   if (isLoading) return <div>Loading conversation...</div>;
   if (error) return <div>Error loading conversation</div>;
 
+  // Sort messages by timestamp
+  const sortedMessages = [...(data?.data || [])].sort((a, b) => {
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+  });
+
   return (
     <div className="chat-content">
       <h4 className="text-center mb-4">Chat with {selectedUser}</h4>
@@ -43,7 +57,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser }) => {
         className="mb-3 chat-messages"
         style={{ height: "400px", overflowY: "scroll" }}
       >
-        {data?.data.map((msg: any) => (
+        {sortedMessages.map((msg: any) => (
           <ListGroup.Item
             key={msg._id}
             className={`message-item ${
@@ -66,7 +80,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser }) => {
                       msg.sender.imageUrls && msg.sender.imageUrls.length > 0
                         ? msg.sender.imageUrls[0]
                         : "/default-avatar.png"
-                    } // Use a default avatar if the image doesn't exist
+                    }
                     alt={msg.sender.name}
                     className="avatar"
                   />
@@ -76,6 +90,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser }) => {
             </div>
           </ListGroup.Item>
         ))}
+        <div ref={messagesEndRef} />
       </ListGroup>
       <Form onSubmit={handleSendMessage} className="d-flex align-items-center">
         <Form.Group controlId="messageInput" className="flex-grow-1 me-2">
