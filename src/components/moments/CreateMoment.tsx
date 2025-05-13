@@ -16,7 +16,7 @@ import {
   Image,
   Card,
 } from "react-bootstrap";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import {
   useCreateMomentMutation,
   useUploadMomentPhotosMutation,
@@ -66,7 +66,12 @@ const CreateMoment: React.FC = () => {
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     if (files.length + selectedImages.length > 10) {
-      toast.error(t('createMoment.toast.maxImagesError'));
+      toast.error(t('createMoment.toast.maxImagesError'), {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
       return;
     }
     setSelectedImages((prevImages) => [...prevImages, ...files]);
@@ -77,7 +82,12 @@ const CreateMoment: React.FC = () => {
 
   const handleAddMoreImages = () => {
     if (selectedImages.length >= 10) {
-      toast.error(t('createMoment.toast.maxImagesError'));
+      toast.error(t('createMoment.toast.maxImagesError'), {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
       return;
     }
     fileInputRef.current?.click();
@@ -113,10 +123,20 @@ const CreateMoment: React.FC = () => {
           imageFiles: formData,
         }).unwrap();
       }
-      toast.success(t('createMoment.toast.createSuccess'));
+      toast.success(t('createMoment.toast.createSuccess'), {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
       navigate("/moments");
     } catch (error) {
-      toast.error(t('createMoment.toast.createError'));
+      toast.error(t('createMoment.toast.createError'), {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
     }
   };
 

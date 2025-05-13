@@ -28,7 +28,7 @@ import {
 } from "../../store/slices/comments";
 import { useSelector } from "react-redux";
 import Message from "../Message";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 
 // TypeScript interfaces
 interface User {
@@ -141,7 +141,12 @@ const MomentDetail: React.FC = () => {
   const handleLikeToggle = useCallback(async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!userId) {
-      toast.error(t('moments_section.pleaseLoginFirst'));
+      toast.error(t('moments_section.pleaseLoginFirst'), {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
       return;
     }
     if (!momentId) return;
@@ -152,32 +157,62 @@ const MomentDetail: React.FC = () => {
     try {
       if (momentDetails.likedUsers.includes(userId)) {
         await dislikeMoment({ momentId: momentDetails._id, userId }).unwrap();
-        toast.info(t('moments_section.removedLike'));
+        toast.info(t('moments_section.removedLike'), {
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  theme: "dark",
+                  transition: Bounce,
+                });
       } else {
         await likeMoment({ momentId: momentDetails._id, userId }).unwrap();
-        toast.success(t('moments_section.likedMoment'));
+        toast.success(t('moments_section.likedMoment'), {
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  theme: "dark",
+                  transition: Bounce,
+                });
       }
       refetchMomentDetails();
     } catch (error) {
-      toast.error(t('moments_section.failedToUpdateLike'));
+      toast.error(t('moments_section.failedToUpdateLike'), {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
     }
   }, [data, userId, momentId, likeMoment, dislikeMoment, refetchMomentDetails, t]);
 
   const handleCommentSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim()) {
-      toast.error(t('moments_section.emptyCommentError'));
+      toast.error(t('moments_section.emptyCommentError'), {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
       return;
     }
     if (!momentId) return;
 
     try {
       await addComment({ momentId, newComment }).unwrap();
-      toast.success(t('moments_section.commentAdded'));
+      toast.success(t('moments_section.commentAdded'), {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
       refetchComments();
       setNewComment("");
     } catch (error) {
-      toast.error(t('moments_section.failedToAddComment'));
+      toast.error(t('moments_section.failedToAddComment'), {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
     }
   }, [newComment, momentId, addComment, refetchComments, t]);
 

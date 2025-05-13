@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Modal, Button, Form, Image, Row, Col } from "react-bootstrap";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import "./ImageUploader.css";
 
 export interface ImageViewerModalProps {
@@ -32,7 +32,12 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
       const filesArray = Array.from(event.target.files);
       
       if (filesArray.length > remainingSlots) {
-        toast.warning(`You can only upload ${remainingSlots} more image(s).`);
+        toast.warning(`You can only upload ${remainingSlots} more image(s).`, {
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  theme: "dark",
+                  transition: Bounce,
+                });
         const allowedFiles = filesArray.slice(0, remainingSlots);
         setSelectedImages(prev => [...prev, ...allowedFiles]);
       } else {
@@ -71,12 +76,22 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
       );
       
       if (filesArray.length === 0) {
-        toast.error("Please drop only image files");
+        toast.error("Please drop only image files", {
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  theme: "dark",
+                  transition: Bounce,
+                });
         return;
       }
       
       if (filesArray.length > remainingSlots) {
-        toast.warning(`You can only upload ${remainingSlots} more image(s).`);
+        toast.warning(`You can only upload ${remainingSlots} more image(s).`,{
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  theme: "dark",
+                  transition: Bounce,
+                });
         const allowedFiles = filesArray.slice(0, remainingSlots);
         setSelectedImages(prev => [...prev, ...allowedFiles]);
       } else {
@@ -87,7 +102,12 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
 
   const handleUpload = async() => {
     if (selectedImages.length === 0 && images.length === 0) {
-      toast.error("Please upload at least one image");
+      toast.error("Please upload at least one image", {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
       return;
     }
 
@@ -102,20 +122,35 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
     setSelectedImages(prev => 
       prev.filter((_, i) => i !== index)
     );
-    toast.success("Image removed from selection");
+    toast.success("Image removed from selection",{
+              autoClose: 3000,
+              hideProgressBar: false,
+              theme: "dark",
+              transition: Bounce,
+            });
   };
 
   const handleDeleteExisting = (index: number) => {
     if (onDeleteImage) {
       onDeleteImage(index);
-      toast.success("Image deleted successfully");
+      toast.success("Image deleted successfully",{
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
     }
   };
 
   const handleUpdateExisting = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0] && onUpdateImage) {
       onUpdateImage(index, e.target.files[0]);
-      toast.success("Image replaced successfully");
+      toast.success("Image replaced successfully", {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
       e.target.value = ''; // Reset input
     }
   };

@@ -6,7 +6,7 @@ import {
   useFollowUserMutation,
   useUnFollowUserMutation,
 } from "../../store/slices/usersSlice";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import Loader from "../Loader";
 // No need to import custom CSS as we're using Bootstrap
 
@@ -212,20 +212,40 @@ const CommunityDetail: React.FC = () => {
   const handleFollow = async (targetUser: string) => {
     try {
       if (!userId) {
-        toast.error("You need to be logged in to follow users");
+        toast.error("You need to be logged in to follow users", {
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  theme: "dark",
+                  transition: Bounce,
+                });
         return;
       }
 
       const response = await followUser({ userId, targetUserId: targetUser });
 
       if ('error' in response) {
-        toast.error("Failed to follow user. Please try again.");
+        toast.error("Failed to follow user. Please try again.",{
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  theme: "dark",
+                  transition: Bounce,
+                });
       } else {
-        toast.success("Successfully followed!");
+        toast.success("Successfully followed!",{
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  theme: "dark",
+                  transition: Bounce,
+                });
         await refetch();
       }
     } catch (error) {
-      toast.error("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.", {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
     }
   };
 
@@ -233,7 +253,12 @@ const CommunityDetail: React.FC = () => {
     if (window.confirm("Are you sure you want to unfollow this user?")) {
       try {
         if (!userId) {
-          toast.error("You need to be logged in to unfollow users");
+          toast.error("You need to be logged in to unfollow users", {
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    theme: "dark",
+                    transition: Bounce,
+                  });
           return;
         }
 
@@ -243,13 +268,28 @@ const CommunityDetail: React.FC = () => {
         });
 
         if ('error' in response) {
-          toast.error("Failed to unfollow user. Please try again.");
+          toast.error("Failed to unfollow user. Please try again.", {
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    theme: "dark",
+                    transition: Bounce,
+                  });
         } else {
-          toast.success("Successfully unfollowed");
+          toast.success("Successfully unfollowed", {
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    theme: "dark",
+                    transition: Bounce,
+                  });
           await refetch();
         }
       } catch (error) {
-        toast.error("An error occurred. Please try again.");
+        toast.error("An error occurred. Please try again.", {
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  theme: "dark",
+                  transition: Bounce,
+                });
       }
     }
   };
@@ -259,7 +299,12 @@ const CommunityDetail: React.FC = () => {
   };
 
   const handleCallUser = (memberName: string) => {
-    toast.info(`Initiating call with ${memberName}...`);
+    toast.info(`Initiating call with ${memberName}...`,{
+              autoClose: 3000,
+              hideProgressBar: false,
+              theme: "dark",
+              transition: Bounce,
+            });
     // Implement call functionality here
   };
 

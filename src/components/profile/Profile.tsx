@@ -36,7 +36,7 @@ import { MomentType } from "../moments/types";
 import { FollowerInterface, UserProfileData } from "./ProfileTypes/types";
 import ImageViewerModal from "./ImageViewer/ImageModal";
 import ImageUploaderModal from "./ImageUploader/ImageUploader";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ISO6391 from "iso-639-1";
@@ -154,7 +154,12 @@ const ProfileScreen: React.FC = () => {
     } catch (error: any) {
       toast.error(
         `${t("profile.messages.image_update_failure")}: ${error?.error || t("profile.messages.unknown_error")}`
-      );
+      ,{
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
     }
   }, [uploadUserPhoto, userId, refetch, t]);
 
@@ -164,13 +169,23 @@ const ProfileScreen: React.FC = () => {
 
       const ActionPayload: Response | any = userInfo;
       dispatch(setCredentials({ ...ActionPayload }));
-      toast.success(t("profile.messages.profile_update_success"));
+      toast.success(t("profile.messages.profile_update_success"), {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
       setEditMode(null);
       refetch();
     } catch (error: any) {
       toast.error(
         `${t("profile.messages.profile_update_failure")}: ${error?.error || t("profile.messages.unknown_error")}`
-      );
+      ,{
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
     }
   }, [formData, updateUserProfile, refetch, t]);
 
@@ -217,7 +232,12 @@ const ProfileScreen: React.FC = () => {
       console.log(userInfo)
       const ActionPayload: Response | any = userInfo;
       dispatch(setCredentials({ ...ActionPayload }));
-      toast.success(t("profile.messages.image_delete_success"));
+      toast.success(t("profile.messages.image_delete_success"), {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
       refetch();
     } catch (error: any) {
       toast.error(

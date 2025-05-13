@@ -10,7 +10,7 @@ import {
   useUploadUserPhotoMutation,
 } from "../../store/slices/usersSlice";
 import Loader from "../Loader";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 
 export interface User {
   _id: string;
@@ -92,7 +92,12 @@ const Register = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error("Passwords do not match", {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
       return;
     }
     const [year, month, day] = birthDate.split("-");
@@ -131,11 +136,21 @@ const Register = () => {
           imageFiles: uploadFormData, // Pass FormData directly
         }).unwrap();
 
-        toast.success("Registration successful!");
+        toast.success("Registration successful!",{
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  theme: "dark",
+                  transition: Bounce,
+                });
         navigate("/login"); // Redirect to another page
       }
     } catch (error) {
-      toast.error("Error during registration");
+      toast.error("Error during registration",{
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
     }
   };
 

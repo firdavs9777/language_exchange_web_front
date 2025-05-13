@@ -19,7 +19,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
 import { LinkContainer } from "react-router-bootstrap";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
 
 const MainNavbar = () => {
@@ -34,14 +34,24 @@ const MainNavbar = () => {
     // You can also store the language preference in localStorage if needed
     localStorage.setItem("preferredLanguage", lng);
     // Optional: show toast notification
-    toast.info(`Language changed to ${lng === "en" ? "English" : "한국어"}`);
+    toast.info(`Language changed to ${lng === "en" ? "English" : "한국어"}`, {
+              autoClose: 3000,
+              hideProgressBar: false,
+              theme: "dark",
+              transition: Bounce,
+            });
   };
 
   const logoutHandler = async () => {
     try {
       dispatch(logout()); // Removed userInfo parameter as it seems to be incorrect
       navigate("/login");
-      toast.success("User successfully logged out!");
+      toast.success("User successfully logged out!", {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
     } catch (error: any) {
       alert(error.message);
     }

@@ -8,7 +8,7 @@ import {
   AiOutlineShareAlt 
 } from "react-icons/ai";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
 import moment from 'moment'
 import { useTranslation } from "react-i18next";
 
@@ -55,7 +55,12 @@ const SingleMoment: React.FC<MomentProps> = ({
   const handleLikeToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!userId) {
-      toast.error(t("moment_login_error"));
+      toast.error(t("moment_login_error"), {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
       navigate("/login");
       return;
     }
@@ -66,7 +71,12 @@ const SingleMoment: React.FC<MomentProps> = ({
       setLiked(!liked);
       if (refetch) refetch();
     } catch (error) {
-      toast.error(t("moment_like_error"));
+      toast.error(t("moment_like_error"), {
+                autoClose: 3000,
+                hideProgressBar: false,
+                theme: "dark",
+                transition: Bounce,
+              });
     }
   };
 
