@@ -136,5 +136,30 @@
       "createSuccess": "Moment created successfully!",
       "createError": "Failed to create moment."
     }
+  },
+  
+  "editMoment": {
+    "title": "Edit Moment",
+    "toast": {
+      "maxImagesError": "You can upload a maximum of 10 images",
+      "updateSuccess": "Moment updated successfully!",
+      "updateError": "Failed to update moment. Please try again.",
+      "notAuthorized": "You are not authorized to edit this moment"
+    },
+    "form": {
+      "titleLabel": "Title",
+      "titlePlaceholder": "Enter a title for your moment",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Tell us about your moment...",
+      "imagesLabel": "Images",
+      "maxImagesText": "You can upload up to 10 images (Max 5MB each)",
+      "existingImagesLabel": "Current Images",
+      "newImagesLabel": "New Images",
+      "addMoreText": "Add more",
+      "updateButton": "Update Moment",
+      "updatingButton": "Updating...",
+      "cancelButton": "Cancel"
+    }
   }
+
 }
