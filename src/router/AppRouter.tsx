@@ -21,6 +21,7 @@ import UserFollowingList from "../components/profile/UserFollowing";
 import MyMoments from "../components/profile/MyMoments";
 import MainChat from "../components/chat/MainChat";
 import ForgetPassword from "../components/auth/ForgetPassword";
+import EditMyMoment from "../components/profile/EditMyMoment";
 
 const AppRouter = createBrowserRouter(
   createRoutesFromElements(
@@ -33,6 +34,11 @@ const AppRouter = createBrowserRouter(
         index={true}
         path="/followersList"
         element={<UserFollowersList />}
+      />
+      <Route
+        index={true}
+        path="/edit-moment/:id"
+        element={<EditMyMoment />}
       />
       <Route
         index={true}
@@ -51,6 +57,7 @@ const AppRouter = createBrowserRouter(
         element={<ForgetPassword />}
       />
       <Route index={true} path="/my-moments" element={<MyMoments />} />
+
       <Route index={true} path="/courses" element={<CoursesMain />} />
     </Route>
   )
