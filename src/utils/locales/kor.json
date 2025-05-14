@@ -27,8 +27,12 @@
         },
         "stats": {
             "followers": "팔로워",
+            "no_followers": "아직 팔로워가 없습니다.",
+            "follower_error": "팔로워를 불러오는 중 오류가 발생했습니다. 나중에 다시 시도해주세요.",
             "following": "팔로잉",
-            "moments": "모멘트",
+            "no_following": "아직 아무도 팔로우하지 않았습니다.",
+            "following_error": "팔로잉 목록을 불러오는 중 오류가 발생했습니다. 나중에 다시 시도해주세요.",
+            "moments": "모먼트",
             "visitors": "방문자"
         },
         "sections": {

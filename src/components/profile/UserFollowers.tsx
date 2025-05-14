@@ -4,7 +4,7 @@ import { useGetFollowersQuery } from "../../store/slices/usersSlice";
 import { useSelector } from "react-redux";
 import { Card, Col, Row, Container, Badge, Spinner, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
+import { useTranslation } from "react-i18next";
 // Define proper TypeScript interfaces for your data
 interface Location {
   type: string;
@@ -61,6 +61,7 @@ const UserFollowersList: React.FC = () => {
   // Type cast the followers data
   const followersData = followers as FollowersResponse | undefined;
 
+  const { t } = useTranslation();
   // Loading state
   if (isLoading) {
     return (
@@ -75,7 +76,7 @@ const UserFollowersList: React.FC = () => {
     return (
       <Container className="my-4">
         <Alert variant="danger">
-          Error loading followers. Please try again later.
+          {t('profile.stats.follower_error')}
         </Alert>
       </Container>
     );
@@ -85,9 +86,9 @@ const UserFollowersList: React.FC = () => {
   if (!followersData || followersData.count === 0) {
     return (
       <Container className="my-4 text-center">
-        <h1 className="mb-4">Followers (0)</h1>
+        <h1 className="mb-4">{t('profile.stats.followers')} (0)</h1>
         <Alert variant="info">
-          You don't have any followers yet.
+          {t('profile.stats.no_followers')}
         </Alert>
       </Container>
     );
@@ -96,7 +97,7 @@ const UserFollowersList: React.FC = () => {
   return (
     <Container className="followers-container my-4">
       <h1 className="mb-4 text-center">
-        Followers <Badge bg="primary" pill>{followersData.count}</Badge>
+        {t('profile.stats.followers')}  <Badge bg="primary" pill>{followersData.count}</Badge>
       </h1>
       <Row className="g-4">
         {followersData.data.map((follower: Follower) => (
@@ -120,8 +121,8 @@ const UserFollowersList: React.FC = () => {
                     <small className="text-muted">{follower.bio || "No bio available"}</small>
                   </p>
                   <div className="d-flex justify-content-between">
-                    <Badge bg="secondary">Native: {follower.native_language}</Badge>
-                    <Badge bg="info">Learning: {follower.language_to_learn}</Badge>
+                    <Badge bg="secondary">{t("profile.labels.native_language")}: {follower.native_language}</Badge>
+                    <Badge bg="info">{t("profile.labels.learning")}: {follower.language_to_learn}</Badge>
                   </div>
                   {follower.location && (
                     <small className="d-block mt-2 text-muted">

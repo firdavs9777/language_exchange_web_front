@@ -27,7 +27,11 @@
     },
     "stats": {
       "followers": "Followers",
-      "following": "Following",
+       "no_followers": "You don't have any followers yet.",
+       "follower_error": "Error loading followers. Please try again later.",
+         "following": "Following",
+  "no_following": "You're not following anyone yet.",
+  "following_error": "Error loading following list. Please try again later.",
       "moments": "Moments",
       "visitors": "Visitors"
     },
@@ -41,7 +45,7 @@
       "email": "Email",
       "gender": "Gender",
       "birthday": "Birthday",
-      "native_language": "Native Language",
+      "native_language": "Native",
       "learning": "Learning",
       "of": "of"
     },
