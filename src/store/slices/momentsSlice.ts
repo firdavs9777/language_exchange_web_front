@@ -24,6 +24,14 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Moment"],
     }),
+    updateMoment: builder.mutation({
+  query: ({ id, momentData }: { id: string; momentData: any }) => ({
+           url: `${MOMENTS_URL}/${id}`,
+        method: "PUT",
+        body: momentData,
+      }),
+      invalidatesTags: ["Moment"],
+    }),
     uploadMomentPhotos: builder.mutation({
       query: ({
         momentId,
@@ -71,6 +79,7 @@ export const {
   useLikeMomentMutation,
   useDislikeMomentMutation,
   useGetMyMomentsQuery,
+  useUpdateMomentMutation
 } = momentsApiSlice;
 
 export default momentsApiSlice.reducer;
