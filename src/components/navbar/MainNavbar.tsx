@@ -7,7 +7,6 @@ import {
   FaGlobe,
   FaCaretDown,
   FaRegUser,
-  FaBell,
   FaLanguage,
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
@@ -21,6 +20,7 @@ import { logout } from "../../store/slices/authSlice";
 import { LinkContainer } from "react-router-bootstrap";
 import { Bounce, toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
+import { BASE_URL } from "../../constants";
 
 const MainNavbar = () => {
   const userInfo = useSelector((state: any) => state.auth.userInfo);
@@ -35,11 +35,11 @@ const MainNavbar = () => {
     localStorage.setItem("preferredLanguage", lng);
     // Optional: show toast notification
     toast.info(`Language changed to ${lng === "en" ? "English" : "한국어"}`, {
-              autoClose: 3000,
-              hideProgressBar: false,
-              theme: "dark",
-              transition: Bounce,
-            });
+      autoClose: 3000,
+      hideProgressBar: false,
+      theme: "dark",
+      transition: Bounce,
+    });
   };
 
   const logoutHandler = async () => {
@@ -47,11 +47,11 @@ const MainNavbar = () => {
       dispatch(logout()); // Removed userInfo parameter as it seems to be incorrect
       navigate("/login");
       toast.success("User successfully logged out!", {
-                autoClose: 3000,
-                hideProgressBar: false,
-                theme: "dark",
-                transition: Bounce,
-              });
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
     } catch (error: any) {
       alert(error.message);
     }
@@ -152,9 +152,13 @@ const MainNavbar = () => {
                     >
                       <img
                         src={
-                          Array.isArray(userInfo?.user?.images) && userInfo.user?.images?.length > 0
-                            ? userInfo.user.images?.[0]
-                            : "/default-avatar.png"
+                          Array.isArray(userInfo?.user?.imageUrls) && userInfo.user.imageUrls[0]?.startsWith("http")
+                            ? userInfo.user.imageUrls[0]
+                            : Array.isArray(userInfo?.user?.images) && userInfo.user.images[0]
+                              ? userInfo.user.images[0].startsWith("http")
+                                ? userInfo.user.images[0]
+                                : `http://localhost:5003/uploads/${userInfo.user.images[0]}`
+                              : "/default-avatar.png"
                         }
                         alt="Profile"
                         style={{
@@ -164,6 +168,8 @@ const MainNavbar = () => {
                           objectFit: "cover",
                         }}
                       />
+
+
 
                       <span>
                         {userInfo.user ? (
