@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import ISO6391 from "iso-639-1"; // No need to instantiate the class
+import ISO6391 from "iso-639-1";
 
 import FormContainer from "../../composables/FormContainer";
-import { Button, Col, Form, Image, InputGroup, Row } from "react-bootstrap";
-import { FaEye, FaEyeSlash, FaPlus, FaTimes } from "react-icons/fa";
+import { Button, Col, Form, Image, InputGroup, Row, Container } from "react-bootstrap";
+import { FaEye, FaEyeSlash, FaPlus, FaTimes, FaArrowLeft, FaArrowRight, FaUserPlus } from "react-icons/fa";
 import {
   useRegisterUserMutation,
   useUploadUserPhotoMutation,
+  useSendCodeEmailMutation,
+  useVerifyCodeEmailMutation
 } from "../../store/slices/usersSlice";
 import Loader from "../Loader";
 import { Bounce, toast } from "react-toastify";
@@ -39,6 +41,12 @@ export interface responseType {
   user: User;
 }
 
+interface VerifyCodeResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+}
+
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,15 +57,20 @@ const Register = () => {
   const [nativeLanguage, setNativeLanguage] = useState("");
   const [languageToLearn, setLanguageToLearn] = useState("");
   const [birthDate, setBirthDate] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [showPass, setShowPass] = useState(false);
   const [showPassTwo, setShowPassTwo] = useState(false);
   const [step, setStep] = useState(1); // State to track current step
+  const [isCodeVerified, setIsCodeVerified] = useState(false);
   const navigate = useNavigate();
-  const [registerUser, { isLoading }] = useRegisterUserMutation();
 
-  const [uploadUserPhoto] = useUploadUserPhotoMutation();
+  const [registerUser, { isLoading: isRegistering }] = useRegisterUserMutation();
+  const [uploadUserPhoto, { isLoading: isUploading }] = useUploadUserPhotoMutation();
+  const [sendCodeEmail, { isLoading: isSendingCode }] = useSendCodeEmailMutation();
+  const [verifyCode, { isLoading: isVerifying }] = useVerifyCodeEmailMutation();
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { search } = useLocation();
@@ -67,40 +80,93 @@ const Register = () => {
   // First step handler (collecting name and email)
   const handleFirstStep = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setStep(2); // Move to the second step
-  };
-  // Handle file selection for image upload
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // const files = e.target.files;
-    const files = Array.from(e.target.files || []);
-    console.log(files);
-    setSelectedImages((prevImages) => [...prevImages, ...files]);
-
-    const newPreviews = files.map((file) => URL.createObjectURL(file));
-    setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
-  };
-  const handleRemoveImage = (index: number) => {
-    setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
-    setImagePreviews((prevPreviews) =>
-      prevPreviews.filter((_, i) => i !== index)
-    );
-  };
-  const handleAddMoreImages = () => {
-    fileInputRef.current?.click();
-  };
-  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
     if (password !== confirmPassword) {
       toast.error("Passwords do not match", {
-                autoClose: 3000,
-                hideProgressBar: false,
-                theme: "dark",
-                transition: Bounce,
-              });
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
       return;
     }
+    setStep(2); // Move to the second step
+  };
+
+  // Second step handler
+  const handleSecondStep = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Send verification code to the email
+    handleSendVerificationCode();
+  };
+
+  // Function to send verification code
+  const handleSendVerificationCode = async () => {
+    try {
+      const response = await sendCodeEmail({ email }).unwrap();
+
+      if (response.success) {
+        toast.success("Verification code sent successfully!", {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
+        setStep(3); // Move to verification step
+      }
+    } catch (error: any) {
+      toast.error(`${error?.data?.error || "Failed to send verification code"}`, {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
+    }
+  };
+
+  // Handle code verification only
+  const handleVerifyCode = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      // First verify the code
+      const verificationResponse = await verifyCode({
+        email,
+        code: verificationCode
+      }).unwrap() as VerifyCodeResponse;
+
+      if (verificationResponse.success) {
+        setIsCodeVerified(true);
+        toast.success("Email verified successfully!", {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
+      }
+    } catch (error: any) {
+      toast.error(`${error?.data?.error || "Invalid verification code"}`, {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
+    }
+  };
+
+  // Handle the final registration after verification
+  const handleFinalRegistration = async () => {
+    if (!isCodeVerified) {
+      toast.error("Please verify your email first", {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
+      return;
+    }
+
     const [year, month, day] = birthDate.split("-");
+
     // Prepare formData for submission
     const formData = new FormData();
     formData.append("name", name);
@@ -113,19 +179,13 @@ const Register = () => {
     formData.append("birth_day", day);
     formData.append("birth_month", month);
     formData.append("birth_year", year);
-    // // Append images
-    // selectedImages.forEach((image) => {
-    //   formData.append("images", image);
-    // });
 
     try {
       // Send formData to your server using the registerUser mutation
-      const response = await registerUser(formData).unwrap(); // Unwrap the response
-
+      const response = await registerUser(formData).unwrap();
       const user_id = response as responseType;
 
       // If images are selected, upload them
-
       if (selectedImages && selectedImages.length > 0) {
         const uploadFormData = new FormData();
         selectedImages.forEach((file) => {
@@ -135,23 +195,43 @@ const Register = () => {
           userId: user_id.user._id, // Use `_id` from the response
           imageFiles: uploadFormData, // Pass FormData directly
         }).unwrap();
-
-        toast.success("Registration successful!",{
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  theme: "dark",
-                  transition: Bounce,
-                });
-        navigate("/login"); // Redirect to another page
       }
-    } catch (error) {
-      toast.error("Error during registration",{
-                autoClose: 3000,
-                hideProgressBar: false,
-                theme: "dark",
-                transition: Bounce,
-              });
+
+      toast.success("Registration successful!", {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
+      navigate("/login"); // Redirect to login page
+    } catch (error: any) {
+      toast.error(`${error?.data?.error || "Error during registration"}`, {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
     }
+  };
+
+  // Handle file selection for image upload
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setSelectedImages((prevImages) => [...prevImages, ...files]);
+
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setSelectedImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImagePreviews((prevPreviews) =>
+      prevPreviews.filter((_, i) => i !== index)
+    );
+  };
+
+  const handleAddMoreImages = () => {
+    fileInputRef.current?.click();
   };
 
   const clickHandler = () => {
@@ -166,291 +246,434 @@ const Register = () => {
     value: code,
     label: ISO6391.getName(code),
   }));
+
   // Clean up object URLs to avoid memory leaks
   useEffect(() => {
     return () => {
       imagePreviews.forEach((preview) => URL.revokeObjectURL(preview));
     };
   }, [imagePreviews]);
+
+  // Progress bar calculation
+  const calculateProgress = () => {
+    if (step === 1) return 33;
+    if (step === 2) return 66;
+    return 100;
+  };
+
+  // Render different forms based on the current step
   return (
-    <FormContainer>
-      {step === 1 ? (
-        <Form onSubmit={handleFirstStep} className="p-4 m-4 shadow-lg rounded">
-          <h1 className="text-center">Step 1: Basic Information</h1>
-          <Form.Group controlId="name" className="my-4">
-            <Form.Label className="p-1">
-              Name <span style={{ color: "red" }}>*</span>
-            </Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group controlId="email" className="my-4">
-            <Form.Label>
-              Email Address <span style={{ color: "red" }}>*</span>
-            </Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter your email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group controlId="password" className="my-4">
-            <Form.Label>
-              Password <span style={{ color: "red" }}>*</span>
-            </Form.Label>
-            <InputGroup>
-              <Form.Control
-                type={showPass ? "text" : "password"}
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <InputGroup.Text onClick={clickHandler}>
-                {showPass ? <FaEyeSlash /> : <FaEye />}
-              </InputGroup.Text>
-            </InputGroup>
-          </Form.Group>
-
-          <Form.Group controlId="confirmPassword" className="my-4">
-            <Form.Label>
-              Confirm Password <span style={{ color: "red" }}>*</span>{" "}
-            </Form.Label>
-            <InputGroup>
-              <Form.Control
-                type={showPassTwo ? "text" : "password"}
-                placeholder="Confirm your password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-              <InputGroup.Text onClick={clickHandlerConfirm}>
-                {showPassTwo ? <FaEyeSlash /> : <FaEye />}
-              </InputGroup.Text>
-            </InputGroup>
-          </Form.Group>
-
-          <Button type="submit" variant="primary" className="w-100">
-            Continue to Step 2
-          </Button>
-
-          <Row className="py-3">
-            <Col>
-              Already have an account?{" "}
-              <Link to={redirect ? `/login?redirect=${redirect}` : `/login`}>
-                Login
-              </Link>
-            </Col>
-          </Row>
-        </Form>
-      ) : (
-        <Form onSubmit={submitHandler} className="p-4 m-4 shadow-lg rounded">
-          <h1 className="text-center">Step 2: Personal Information</h1>
-
-          <Form.Group controlId="bio" className="my-4">
-            <Form.Label>Bio(optional)</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={2}
-              placeholder="Tell us something about you"
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group controlId="gender" className="my-4">
-            <Form.Label>
-              Gender <span style={{ color: "red" }}>*</span>
-            </Form.Label>
-            <Form.Control
-              as="select"
-              value={selectedGender}
-              onChange={(e) => setSelectedGender(e.target.value)}
-              required
-            >
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </Form.Control>
-          </Form.Group>
-
-          <Form.Group controlId="nativeLanguage" className="my-4">
-            <Form.Label>
-              Native Language <span style={{ color: "red" }}>*</span>
-            </Form.Label>
-            <Form.Control
-              as="select"
-              value={nativeLanguage}
-              onChange={(e) => setNativeLanguage(e.target.value)}
-              required
-            >
-              <option value="">Select Language</option>
-              {languageOptions.map((lang) => (
-                <option key={lang.value} value={lang.label}>
-                  {lang.label}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-
-          <Form.Group controlId="languageToLearn" className="my-4">
-            <Form.Label>
-              Language to Learn <span style={{ color: "red" }}>*</span>
-            </Form.Label>
-            <Form.Control
-              as="select"
-              value={languageToLearn}
-              onChange={(e) => setLanguageToLearn(e.target.value)}
-              required
-            >
-              <option value="">Select Language</option>
-              {languageOptions.map((lang) => (
-                <option key={lang.value} value={lang.label}>
-                  {lang.label}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-
-          <Form.Group controlId="birthDate" className="my-4">
-            <Form.Label>
-              Birth Date <span style={{ color: "red" }}>*</span>
-            </Form.Label>
-            <Form.Control
-              type="date"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group controlId="imageUpload" className="my-4">
-            <Form.Label>
-              Profile Images <span style={{ color: "red" }}>*</span>
-            </Form.Label>
-
-            {/* <Form.Control
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleImageUpload}
-            /> */}
-            <div className="mb-2">
-              <Row>
-                {imagePreviews.map((preview, index) => (
-                  <Col key={index} xs={4} className="my-2 position-relative">
-                    <Image src={preview} thumbnail />
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={() => handleRemoveImage(index)}
-                      style={{
-                        position: "absolute",
-                        right: "1px",
-                        height: "40px",
-                        width: "40px",
-                        borderRadius: "90%",
-                        padding: "2px 5px",
-                      }}
-                    >
-                      <FaTimes />
-                    </Button>
-                  </Col>
-                ))}
-                {selectedImages.length > 0 && (
-                  <Col
-                    xs={4}
-                    className="my-1 d-flex align-items-center justify-content-center"
-                  >
-                    <Button variant="light" onClick={handleAddMoreImages}>
-                      <FaPlus size={24} color="black" />
-                    </Button>
-                  </Col>
-                )}
-              </Row>
+    <Container className="py-5">
+      <Row className="justify-content-center">
+        <Col md={8} lg={6}>
+          <div className="bg-white rounded-lg shadow-lg p-4">
+            {/* Progress Bar */}
+            <div className="mb-4">
+              <div className="progress" style={{ height: "8px" }}>
+                <div
+                  className="progress-bar bg-primary"
+                  role="progressbar"
+                  style={{ width: `${calculateProgress()}%` }}
+                  aria-valuenow={calculateProgress()}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                ></div>
+              </div>
+              <div className="d-flex justify-content-between mt-2">
+                <span className={`step-indicator ${step >= 1 ? 'text-primary fw-bold' : ''}`}>Account</span>
+                <span className={`step-indicator ${step >= 2 ? 'text-primary fw-bold' : ''}`}>Profile</span>
+                <span className={`step-indicator ${step >= 3 ? 'text-primary fw-bold' : ''}`}>Verify</span>
+              </div>
             </div>
-            {selectedImages.length === 0 && (
-              <Form.Control type="file" multiple onChange={handleImageUpload} />
-            )}
-            {/* Hidden file input for adding more images */}
-            <Form.Control
-              type="file"
-              multiple
-              onChange={handleImageUpload}
-              ref={fileInputRef}
-              style={{ display: "none" }}
-            />
-            {/* {selectedImages.length > 0 && (
-              <div
-                className="image-preview"
-                style={{ display: "flex", flexWrap: "wrap", marginTop: "10px" }}
-              >
-                {selectedImages.map((image, index) => (
-                  <img
-                    key={index}
-                    src={URL.createObjectURL(image)}
-                    alt={`Preview ${index}`}
-                    style={{
-                      width: 100,
-                      height: 100,
-                      margin: "5px",
-                      borderRadius: "5px",
-                      objectFit: "cover",
-                      border: "1px solid #ddd",
-                    }}
+
+            {step === 1 ? (
+              <Form onSubmit={handleFirstStep}>
+                <h2 className="text-center mb-4">Create Your Account</h2>
+
+                <Form.Group controlId="name" className="mb-3">
+                  <Form.Label className="fw-medium">
+                    Name <span className="text-danger">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    className="py-2"
                   />
-                ))}
-              </div> */}
-            {/* )} */}
-          </Form.Group>
+                </Form.Group>
 
-          <Row>
-            <Col>
-              <Button
-                type="button"
-                variant="secondary"
-                className="w-100 mb-3"
-                onClick={() => setStep(1)} // Go back to step 1
-              >
-                Previous
-              </Button>
-            </Col>
-            <Col>
-              <Button
-                disabled={isLoading}
-                type="submit"
-                variant="success"
-                className="w-100"
-              >
-                {isLoading ? "Registering..." : "Register"}
-              </Button>
-            </Col>
-          </Row>
+                <Form.Group controlId="email" className="mb-3">
+                  <Form.Label className="fw-medium">
+                    Email Address <span className="text-danger">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter your email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="py-2"
+                  />
+                </Form.Group>
 
-          {isLoading && <Loader />}
+                <Form.Group controlId="password" className="mb-3">
+                  <Form.Label className="fw-medium">
+                    Password <span className="text-danger">*</span>
+                  </Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type={showPass ? "text" : "password"}
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="py-2"
+                    />
+                    <Button 
+                      variant="outline-secondary" 
+                      onClick={clickHandler}
+                      className="d-flex align-items-center"
+                    >
+                      {showPass ? <FaEyeSlash /> : <FaEye />}
+                    </Button>
+                  </InputGroup>
+                  <Form.Text className="text-muted">
+                    Password must be at least 8 characters long
+                  </Form.Text>
+                </Form.Group>
 
-          <Row className="py-3">
-            <Col>
-              Already have an account?{" "}
-              <Link to={redirect ? `/login?redirect=${redirect}` : `/login`}>
-                Login
-              </Link>
-            </Col>
-          </Row>
-        </Form>
-      )}
-    </FormContainer>
+                <Form.Group controlId="confirmPassword" className="mb-4">
+                  <Form.Label className="fw-medium">
+                    Confirm Password <span className="text-danger">*</span>
+                  </Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type={showPassTwo ? "text" : "password"}
+                      placeholder="Confirm your password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                      className="py-2"
+                    />
+                    <Button 
+                      variant="outline-secondary" 
+                      onClick={clickHandlerConfirm}
+                      className="d-flex align-items-center"
+                    >
+                      {showPassTwo ? <FaEyeSlash /> : <FaEye />}
+                    </Button>
+                  </InputGroup>
+                </Form.Group>
+
+                <Button 
+                  type="submit" 
+                  variant="primary" 
+                  className="w-100 py-2 mb-3 d-flex align-items-center justify-content-center"
+                >
+                  Continue <FaArrowRight className="ms-2" />
+                </Button>
+
+                <div className="text-center mt-3">
+                  Already have an account?{" "}
+                  <Link 
+                    to={redirect ? `/login?redirect=${redirect}` : `/login`}
+                    className="text-decoration-none"
+                  >
+                    Login
+                  </Link>
+                </div>
+              </Form>
+            ) : step === 2 ? (
+              <Form onSubmit={handleSecondStep}>
+                <h2 className="text-center mb-4">Profile Information</h2>
+
+                <Form.Group controlId="bio" className="mb-3">
+                  <Form.Label className="fw-medium">Bio (optional)</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={2}
+                    placeholder="Tell us something about you"
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    className="py-2"
+                  />
+                </Form.Group>
+
+                <Row>
+                  <Col md={6}>
+                    <Form.Group controlId="gender" className="mb-3">
+                      <Form.Label className="fw-medium">
+                        Gender <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Select
+                        value={selectedGender}
+                        onChange={(e) => setSelectedGender(e.target.value)}
+                        required
+                        className="py-2"
+                      >
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group controlId="birthDate" className="mb-3">
+                      <Form.Label className="fw-medium">
+                        Birth Date <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Control
+                        type="date"
+                        value={birthDate}
+                        onChange={(e) => setBirthDate(e.target.value)}
+                        required
+                        className="py-2"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col md={6}>
+                    <Form.Group controlId="nativeLanguage" className="mb-3">
+                      <Form.Label className="fw-medium">
+                        Native Language <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Select
+                        value={nativeLanguage}
+                        onChange={(e) => setNativeLanguage(e.target.value)}
+                        required
+                        className="py-2"
+                      >
+                        <option value="">Select Language</option>
+                        {languageOptions.map((lang) => (
+                          <option key={lang.value} value={lang.label}>
+                            {lang.label}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group controlId="languageToLearn" className="mb-3">
+                      <Form.Label className="fw-medium">
+                        Language to Learn <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Select
+                        value={languageToLearn}
+                        onChange={(e) => setLanguageToLearn(e.target.value)}
+                        required
+                        className="py-2"
+                      >
+                        <option value="">Select Language</option>
+                        {languageOptions.map((lang) => (
+                          <option key={lang.value} value={lang.label}>
+                            {lang.label}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <Form.Group controlId="imageUpload" className="mb-4">
+                  <Form.Label className="fw-medium">
+                    Profile Images <span className="text-danger">*</span>
+                  </Form.Label>
+
+                  {imagePreviews.length > 0 ? (
+                    <div className="mb-3">
+                      <Row className="g-2">
+                        {imagePreviews.map((preview, index) => (
+                          <Col key={index} xs={4} sm={3} className="position-relative">
+                            <div className="image-container rounded overflow-hidden" style={{ height: "100px" }}>
+                              <Image 
+                                src={preview} 
+                                style={{ 
+                                  objectFit: "cover", 
+                                  width: "100%", 
+                                  height: "100%" 
+                                }} 
+                              />
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => handleRemoveImage(index)}
+                                className="position-absolute top-0 end-0 rounded-circle p-1"
+                                style={{ width: "28px", height: "28px" }}
+                              >
+                                <FaTimes />
+                              </Button>
+                            </div>
+                          </Col>
+                        ))}
+                        {selectedImages.length > 0 && (
+                          <Col xs={4} sm={3}>
+                            <Button 
+                              variant="light" 
+                              onClick={handleAddMoreImages}
+                              className="add-image-btn border h-100 w-100 d-flex align-items-center justify-content-center"
+                              style={{ height: "100px" }}
+                            >
+                              <FaPlus size={24} />
+                            </Button>
+                          </Col>
+                        )}
+                      </Row>
+                    </div>
+                  ) : (
+                    <div className="upload-container border rounded p-4 text-center mb-3">
+                      <FaPlus size={24} className="mb-2 text-muted" />
+                      <p className="mb-2">Click to upload profile images</p>
+                      <Form.Control
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        required
+                        className="d-none"
+                        id="formFileUpload"
+                      />
+                      <label htmlFor="formFileUpload" className="btn btn-outline-primary">
+                        Select Images
+                      </label>
+                    </div>
+                  )}
+                  
+                  <Form.Control
+                    type="file"
+                    multiple
+                    onChange={handleImageUpload}
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                  />
+                </Form.Group>
+
+                <Row className="mb-3">
+                  <Col>
+                    <Button
+                      type="button"
+                      variant="outline-secondary"
+                      className="w-100 py-2 d-flex align-items-center justify-content-center"
+                      onClick={() => setStep(1)}
+                    >
+                      <FaArrowLeft className="me-2" /> Back
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button
+                      disabled={isSendingCode}
+                      type="submit"
+                      variant="primary"
+                      className="w-100 py-2 d-flex align-items-center justify-content-center"
+                    >
+                      {isSendingCode ? (
+                        <>Processing...</>
+                      ) : (
+                        <>Continue <FaArrowRight className="ms-2" /></>
+                      )}
+                    </Button>
+                  </Col>
+                </Row>
+
+                {isSendingCode && <Loader />}
+              </Form>
+            ) : (
+              // Step 3: Email Verification
+              <div>
+                <h2 className="text-center mb-4">Email Verification</h2>
+                <div className="text-center mb-4">
+                  <div className="verification-icon bg-light p-3 rounded-circle d-inline-flex mb-3">
+                    <FaUserPlus size={32} className="text-primary" />
+                  </div>
+                  <p>
+                    We've sent a verification code to your email:<br />
+                    <strong>{email}</strong>
+                  </p>
+                </div>
+                
+                {!isCodeVerified ? (
+                  <Form onSubmit={handleVerifyCode}>
+                    <Form.Group controlId="verificationCode" className="mb-4">
+                      <Form.Label className="fw-medium">Verification Code</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter the 6-digit code"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
+                        required
+                        className="py-2 text-center form-control-lg"
+                      />
+                    </Form.Group>
+                    
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      className="w-100 py-2 mb-3"
+                      disabled={isVerifying}
+                    >
+                      {isVerifying ? "Verifying..." : "Verify Email"}
+                    </Button>
+                    
+                    <div className="text-center mb-4">
+                      <Button
+                        variant="link"
+                        onClick={handleSendVerificationCode}
+                        disabled={isSendingCode}
+                        className="text-decoration-none"
+                      >
+                        {isSendingCode ? "Sending..." : "Resend verification code"}
+                      </Button>
+                    </div>
+                    
+                    <Button
+                      type="button"
+                      variant="outline-secondary"
+                      className="w-100 py-2 d-flex align-items-center justify-content-center"
+                      onClick={() => setStep(2)}
+                    >
+                      <FaArrowLeft className="me-2" /> Back to Profile
+                    </Button>
+                    
+                    {isVerifying && <Loader />}
+                  </Form>
+                ) : (
+                  <div>
+                    <div className="alert alert-success">
+                      <p className="mb-0 text-center">
+                        <strong>Email verified successfully!</strong><br />
+                        Complete your registration by clicking the button below.
+                      </p>
+                    </div>
+                    
+                    <Button
+                      onClick={handleFinalRegistration}
+                      variant="success"
+                      className="w-100 py-2 mb-3"
+                      disabled={isRegistering || isUploading}
+                    >
+                      {isRegistering || isUploading ? "Processing..." : "Complete Registration"}
+                    </Button>
+                    
+                    {(isRegistering || isUploading) && <Loader />}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </Col>
+      </Row>
+      
+      <style jsx>{`
+        .step-indicator {
+          font-size: 0.875rem;
+          color: #6c757d;
+        }
+      `}</style>
+    </Container>
   );
 };
 

@@ -56,7 +56,9 @@ interface Moment {
 const ProfileScreen: React.FC = () => {
   const { t } = useTranslation();
   const userId = useSelector((state: any) => state.auth.userInfo?.user?._id);
-  
+   useEffect(() => {
+      window.scrollTo(0, 1);
+    }, [userId]);
   // API Queries
   const { data, isLoading, error, refetch } = useGetUserProfileQuery({});
   const { data: followers } = useGetFollowersQuery({ userId });
