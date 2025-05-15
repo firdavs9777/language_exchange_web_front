@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useGetMyMomentsQuery } from "../../store/slices/momentsSlice";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import { formatDistanceToNow } from "date-fns";
 import { AiFillHeart, AiOutlineHeart, AiFillEdit, AiOutlineDelete } from "react-icons/ai";
 import { FaRegCommentDots, FaCommentDots } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
+import { useTranslation } from "react-i18next";
 
 // Types
 interface User {
@@ -35,6 +36,11 @@ interface MomentsResponse {
 
 const MyMoments: React.FC = () => {
   const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
+
+  const { t } = useTranslation();
+   useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [userId]);
   const { data: moments, refetch } = useGetMyMomentsQuery({ userId });
   const momentsData = moments as MomentsResponse;
   const navigate = useNavigate();
@@ -61,12 +67,12 @@ const MyMoments: React.FC = () => {
     return (
       <div className="d-flex flex-column align-items-center justify-content-center p-5 text-center">
         <div className="display-1 mb-4">✨</div>
-        <h3 className="h2 fw-semibold text-gray-800 mb-3">No moments yet</h3>
-        <p className="text-muted mb-4">Create your first moment to share with the community</p>
+        <h3 className="h2 fw-semibold text-gray-800 mb-3">{ t("moments_section.no_moments")}</h3>
+        <p className="text-muted mb-4">{ t('first_to_moment')}</p>
         <button 
           onClick={() => navigate('/create-moment')}
           className="btn btn-primary btn-lg px-4 py-2 rounded-pill fw-medium">
-          Create Moment
+         {t('moments_section.share_moment')}
         </button>
       </div>
     );

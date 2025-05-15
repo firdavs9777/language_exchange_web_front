@@ -176,7 +176,7 @@ const ProfileScreen: React.FC = () => {
                 transition: Bounce,
               });
       setEditMode(null);
-      refetch();
+      
     } catch (error: any) {
       toast.error(
         `${t("profile.messages.profile_update_failure")}: ${error?.error || t("profile.messages.unknown_error")}`
