@@ -11,6 +11,7 @@ interface User {
   lastMessage?: string;
   unreadCount?: number;
   lastMessageTime?: Date;
+  imageUrls: string[]
 }
 
 interface Message {
@@ -23,7 +24,7 @@ interface Message {
 }
 
 interface UsersListProps {
-  onSelectUser: (userId: string) => void;
+  onSelectUser: (userId: string, userName: string, profilePicture: string) => void;
   activeUserId?: string | null;
 }
 
@@ -114,7 +115,7 @@ const UsersList: React.FC<UsersListProps> = ({ onSelectUser, activeUserId }) => 
                 key={user._id}
                 action
                 active={activeUserId === user._id}
-                onClick={() => onSelectUser(user._id)}
+                onClick={() => onSelectUser(user._id, user.name, user.imageUrls[0])}
                 className="d-flex justify-content-between align-items-center px-3 py-3 border-0 border-bottom"
                 aria-current={activeUserId === user._id ? "true" : undefined}
               >
@@ -156,7 +157,7 @@ const UsersList: React.FC<UsersListProps> = ({ onSelectUser, activeUserId }) => 
                 </div>
                 {user.unreadCount > 0 && (
                   <Badge pill bg="danger" className="ms-2">
-                    {user.unreadCount} sssssss
+                    {user.unreadCount} 
                   </Badge>
                 )}
               </ListGroup.Item>

@@ -1,53 +1,240 @@
+/* ChatContent.css */
+
+/* Main container */
 .chat-content {
-    padding: 10px;
-  /* Light background for the chat area */
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+  overflow: hidden;
+}
+
+/* Chat header */
+.chat-header {
+  background-color: #fff;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.user-avatar {
+  position: relative;
+  margin-right: 10px;
+}
+
+.user-avatar img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #28a745;
+  border: 2px solid #fff;
+}
+
+/* Chat messages container */
+.chat-messages {
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+/* Date divider */
+.date-divider {
+  text-align: center;
+  margin: 1rem 0;
+  position: relative;
+}
+
+.date-divider::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background-color: #dee2e6;
+  top: 50%;
+  left: 0;
+  z-index: 1;
+}
+
+.date-divider span {
+  background-color: #f8f9fa;
+  padding: 0 10px;
+  position: relative;
+  z-index: 2;
+  font-size: 0.8rem;
+  color: #6c757d;
+  border-radius: 15px;
+  border: 1px solid #dee2e6;
+  padding: 2px 10px;
+}
+
+/* Message items */
+.message-item {
+  display: flex;
+  margin-bottom: 15px;
+  position: relative;
+  max-width: 80%;
+}
+
+.my-message {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+.other-message {
+  margin-right: auto;
+}
+
+.message-avatar {
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
+  object-fit: cover;
+  border: 1px solid #fff;
+}
+
+.my-message .message-avatar {
+  margin-right: 0;
+  margin-left: 10px;
+}
+
+.message-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.my-message .message-content {
+  align-items: flex-end;
+}
+
+.message-bubble {
+  padding: 10px 15px;
+  border-radius: 18px;
+  position: relative;
+  word-wrap: break-word;
+  max-width: 100%;
+  background-color: #f0f2f5;
+  color: #212529;
+  margin-bottom: 2px;
+}
+
+.my-message .message-bubble {
+  background-color: #0d6efd;
+  color: white;
+  border-bottom-right-radius: 5px;
+}
+
+.other-message .message-bubble {
+  background-color: white;
+  border-bottom-left-radius: 5px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.message-info {
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem;
+  color: #6c757d;
+}
+
+/* Chat input */
+.chat-input {
+  background-color: #fff;
+  padding: 0.75rem;
+}
+
+.chat-input .form-control {
+  background-color: #f0f2f5;
+}
+
+.chat-input .form-control:focus {
+  box-shadow: none;
+  border-color: #dee2e6;
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Loading and Error states */
+.chat-loading,
+.chat-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+.chat-loading .spinner-border {
+  margin-bottom: 1rem;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .message-item {
+    max-width: 90%;
   }
   
+  .chat-header .user-avatar img {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .chat-header h5 {
+    font-size: 1rem;
+  }
+  
+  .btn-icon {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 576px) {
   .chat-messages {
-    margin-bottom: 1rem;
+    padding: 0.5rem;
+  }
+  
+  .chat-input {
+    padding: 0.5rem;
+  }
+  
+  .message-bubble {
+    padding: 8px 12px;
+  }
+  
+  .message-avatar {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* For very small screens */
+@media (max-width: 400px) {
+  .chat-header .col-auto:last-child {
+    display: none; /* Hide call buttons on very small screens */
   }
   
   .message-item {
-    display: flex;
-    margin-bottom: 10px; /* Space between messages */
+    max-width: 95%;
   }
-  
-  .my-message {
-    justify-content: flex-end; /* Align to the left */
-  }
-  
-  .other-message {
-    justify-content: flex-start; /* Align to the right */
-  }
-  
-  .message-sender {
-    background-color: #2cc1d7; /* Light green for user's messages */
-    padding: 10px;
-    color: #fff;
-    border-radius: 10px;
-    max-width: 50%; /* Limit width */
-    word-wrap: break-word; /* Wrap long words */
-  }
-  
-  .message-receiver {
-    background-color: #e9e6e3; /* Light yellow for other user's messages */
-    padding: 8px 12px;
-    color: #333;
-    border-radius: 20px;
-    max-width: 70%; /* Limit width */
-    word-wrap: break-word; /* Wrap long words */
-  }
-  .avatar {
-    width: 40px; /* Adjust the width as needed */
-    height: 40px; /* Adjust the height as needed */
-    border-radius: 50%; /* Makes the image circular */
-    object-fit: cover; /* Ensures the image covers the entire area */
-    margin-right: 10px; /* Adds space between the avatar and text */
-  }
-  .send-button {
-    /* Customize the send button */
-    width: 100px; /* Set a fixed width */
-  }
-  
+}
