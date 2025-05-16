@@ -8,6 +8,7 @@ import {
 } from "../../store/slices/usersSlice";
 import { Bounce, toast } from "react-toastify";
 import Loader from "../Loader";
+import { useCreateChatRoomMutation } from "../../store/slices/chatSlice";
 // No need to import custom CSS as we're using Bootstrap
 
 // Improved TypeScript interfaces
@@ -100,6 +101,7 @@ const LanguagePair: React.FC<LanguagePairProps> = ({ nativeLanguage, learningLan
   );
 };
 
+
 // Gallery component for user images using Bootstrap
 const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -186,6 +188,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
 const CommunityDetail: React.FC = () => {
   const { id: communityId } = useParams<{ id: string }>();
   const { data, isLoading, error, refetch } = useGetCommunityDetailsQuery(communityId);
+const [createChatRoom, { isLoading: isCreatingChat }] = useCreateChatRoomMutation();
 
   const navigate = useNavigate();
   const userId = useSelector((state: RootState) => state.auth.userInfo?.user._id);
@@ -294,9 +297,45 @@ const CommunityDetail: React.FC = () => {
     }
   };
 
-  const handleStartChat = (memberId: string) => {
+const handleStartChat = async (memberId: string) => {
+  try {
+    if (!userId) {
+      toast.error("You need to be logged in to start a chat", {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
+      return;
+    }
+
+    const response = await createChatRoom(memberId).unwrap();
+    
+    if (response) {
+      toast.success("Chat started successfully!", {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
+      navigate(`/chat/${memberId}`);
+    } else {
+      // If the backend doesn't return a conversationId but still succeeds
+      navigate(`/chat/${memberId}`);
+    }
+  } catch (error) {
+    toast.error("Failed to start chat. Please try again.", {
+      autoClose: 3000,
+      hideProgressBar: false,
+      theme: "dark",
+      transition: Bounce,
+    });
+    console.error("Chat creation error:", error);
+    
+    // Fallback - navigate anyway if the error might be just a notification issue
     navigate(`/chat/${memberId}`);
-  };
+  }
+};
 
   const handleCallUser = (memberName: string) => {
     toast.info(`Initiating call with ${memberName}...`,{

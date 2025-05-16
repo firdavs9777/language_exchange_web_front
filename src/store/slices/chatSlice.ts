@@ -11,6 +11,14 @@ export interface MessageData {
 export const chatApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder: any) => ({
     // Fetch all messages
+    createChatRoom: builder.mutation({
+      query: (userId: string) => ({
+        url: `${MESSAGES_URL}/conversations`,
+        method: "POST",
+        body: {userId}
+      }),
+        providesTags: ["Messages"],
+    }),
     getMessages: builder.query({
       query: () => ({
         url: `${MESSAGES_URL}`,
@@ -63,6 +71,7 @@ export const {
   useGetUserMessagesQuery,
   useGetConversationQuery,
   useCreateMessageMutation,
+  useCreateChatRoomMutation
 } = chatApiSlice;
 
 export default chatApiSlice.reducer;

@@ -49,6 +49,7 @@ const AppRouter = createBrowserRouter(
       <Route index={true} path="/add-moment" element={<CreateMoment />} />
       <Route index={true} path="/moments" element={<MainMoments />} />
       <Route index={true} path="/chat" element={<MainChat />} />
+      <Route index={true} path="/chat/:userId" element={<MainChat />} />
       <Route index={true} path="/register" element={<Register />} />
       <Route index={true} path="/profile" element={<ProfileScreen />} />
       <Route
