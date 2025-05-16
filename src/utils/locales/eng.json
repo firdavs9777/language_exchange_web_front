@@ -27,11 +27,11 @@
     },
     "stats": {
       "followers": "Followers",
-       "no_followers": "You don't have any followers yet.",
-       "follower_error": "Error loading followers. Please try again later.",
-         "following": "Following",
-  "no_following": "You're not following anyone yet.",
-  "following_error": "Error loading following list. Please try again later.",
+      "no_followers": "You don't have any followers yet.",
+      "follower_error": "Error loading followers. Please try again later.",
+      "following": "Following",
+      "no_following": "You're not following anyone yet.",
+      "following_error": "Error loading following list. Please try again later.",
       "moments": "Moments",
       "visitors": "Visitors"
     },
@@ -76,20 +76,20 @@
     "title": "Moments",
     "question": "What's on your mind,",
     "loading": "Loading",
-    "loading_moments": "Loading Moments...", 
+    "loading_moments": "Loading Moments...",
     "error_loading": "Error loading moments",
     "error_info": "  We couldn't load the moments. Please try again later.",
-    "retry_btn":"Retry",
+    "retry_btn": "Retry",
     "no_moments": "No moments",
     "first_to_moment": "Be the first to share your special moments with the community",
-    "share_moment": "Share a Moment", 
+    "share_moment": "Share a Moment",
     "moment_login_error": "Please login to like moments",
-    "moment_like_error": "Failed to update like status", 
+    "moment_like_error": "Failed to update like status",
     "moment_like": "Like",
     "moment_comment": "Comment",
     "moment_share": "Share",
-    "no_comments":"No comments yet. Be the first to comment!",
-     "invalidMomentId": "Invalid moment ID",
+    "no_comments": "No comments yet. Be the first to comment!",
+    "invalidMomentId": "Invalid moment ID",
     "loadingMoment": "Loading moment details...",
     "noDetailsFound": "No details found",
     "goBack": "Go Back",
@@ -117,7 +117,7 @@
       "daysAgo": "{{days}}d ago"
     }
   },
-      "createMoment": {
+  "createMoment": {
     "title": "Create Moment",
     "form": {
       "titleLabel": "Title",
@@ -137,7 +137,6 @@
       "createError": "Failed to create moment."
     }
   },
-  
   "editMoment": {
     "title": "Edit Moment",
     "toast": {
@@ -160,6 +159,94 @@
       "updatingButton": "Updating...",
       "cancelButton": "Cancel"
     }
+  },
+  "authentication": {
+    "enterEmail": {
+      "title": "Enter your email",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter email",
+      "sendButton": "Send Code",
+      "sendingButton": "Sending...",
+      "successMessage": "Verification code sent successfully!",
+      "errorPrefix": "Error: "
+    },
+    "passwordReset": {
+      "successMessage": "Password reset successfully, please login!"
+    },
+    "login": {
+      "title": "Sign In",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter password",
+      "forgotPassword": "Forgot Password?",
+      "signInButton": "Sign In",
+      "signingInButton": "Signing In...",
+      "newUserText": "New User?",
+      "registerLink": "Register",
+      "successMessage": "Successfully logged in",
+      "invalidCredentialsError": "Invalid credentials"
+    },
+    "account": {
+      "title": "Create Your Account",
+      "name": "Name",
+      "email": "Email Address",
+      "password": "Password",
+      "passwordRequirement": "Password must be at least 8 characters long",
+      "confirmPassword": "Confirm Password",
+      "continue": "Continue",
+      "alreadyHaveAccount": "Already have an account?",
+      "login": "Login"
+    },
+    "profile": {
+      "title": "Profile Information",
+      "bio": "Bio (optional)",
+      "bioPlaceholder": "Tell us something about you",
+      "gender": "Gender",
+      "genderOptions": {
+        "select": "Select Gender",
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
+      },
+      "birthDate": "Birth Date",
+      "nativeLanguage": "Native Language",
+      "selectLanguage": "Select Language",
+      "languageToLearn": "Language to Learn",
+      "profileImages": "Profile Images",
+      "uploadPrompt": "Click to upload profile images",
+      "selectImages": "Select Images",
+      "back": "Back",
+      "processing": "Processing..."
+    },
+    "verification": {
+      "title": "Email Verification",
+      "sentMessage": "We've sent a verification code to your email:",
+      "verificationCode": "Verification Code",
+      "codePlaceholder": "Enter the 6-digit code",
+      "verifyButton": "Verify Email",
+      "verifying": "Verifying...",
+      "resendCode": "Resend verification code",
+      "sending": "Sending...",
+      "backToProfile": "Back to Profile",
+      "successMessage": "Email verified successfully!",
+      "completePrompt": "Complete your registration by clicking the button below.",
+      "completeRegistration": "Complete Registration"
+    },
+    "progressBar": {
+      "account": "Account",
+      "profile": "Profile",
+      "verify": "Verify"
+    },
+    "toasts": {
+      "passwordMismatch": "Passwords do not match",
+      "verificationSent": "Verification code sent successfully!",
+      "sendCodeFailed": "Failed to send verification code",
+      "emailVerified": "Email verified successfully!",
+      "invalidCode": "Invalid verification code",
+      "verifyFirst": "Please verify your email first",
+      "registrationSuccess": "Registration successful!",
+      "registrationError": "Error during registration"
+    }
   }
-
 }

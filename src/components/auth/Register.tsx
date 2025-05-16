@@ -13,6 +13,7 @@ import {
 } from "../../store/slices/usersSlice";
 import Loader from "../Loader";
 import { Bounce, toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export interface User {
   _id: string;
@@ -65,6 +66,7 @@ const Register = () => {
   const [step, setStep] = useState(1); // State to track current step
   const [isCodeVerified, setIsCodeVerified] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [registerUser, { isLoading: isRegistering }] = useRegisterUserMutation();
   const [uploadUserPhoto, { isLoading: isUploading }] = useUploadUserPhotoMutation();
@@ -280,23 +282,23 @@ const Register = () => {
                 ></div>
               </div>
               <div className="d-flex justify-content-between mt-2">
-                <span className={`step-indicator ${step >= 1 ? 'text-primary fw-bold' : ''}`}>Account</span>
-                <span className={`step-indicator ${step >= 2 ? 'text-primary fw-bold' : ''}`}>Profile</span>
-                <span className={`step-indicator ${step >= 3 ? 'text-primary fw-bold' : ''}`}>Verify</span>
+                <span className={`step-indicator ${step >= 1 ? 'text-primary fw-bold' : ''}`}> {t("authentication.progressBar.account")}</span>
+                <span className={`step-indicator ${step >= 2 ? 'text-primary fw-bold' : ''}`}>{t("authentication.progressBar.profile")}</span>
+                <span className={`step-indicator ${step >= 3 ? 'text-primary fw-bold' : ''}`}>{t("authentication.progressBar.verify")}</span>
               </div>
             </div>
 
             {step === 1 ? (
               <Form onSubmit={handleFirstStep}>
-                <h2 className="text-center mb-4">Create Your Account</h2>
+                <h2 className="text-center mb-4">{t("authentication.account.title")}</h2>
 
                 <Form.Group controlId="name" className="mb-3">
                   <Form.Label className="fw-medium">
-                    Name <span className="text-danger">*</span>
+                    {t("authentication.account.name")} <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter your name"
+                    placeholder= {t("authentication.account.name")}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -306,11 +308,11 @@ const Register = () => {
 
                 <Form.Group controlId="email" className="mb-3">
                   <Form.Label className="fw-medium">
-                    Email Address <span className="text-danger">*</span>
+                     {t("authentication.account.email")}<span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="email"
-                    placeholder="Enter your email address"
+                    placeholder={t("authentication.account.email")}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -320,12 +322,12 @@ const Register = () => {
 
                 <Form.Group controlId="password" className="mb-3">
                   <Form.Label className="fw-medium">
-                    Password <span className="text-danger">*</span>
+                  {t("authentication.account.password")} <span className="text-danger">*</span>
                   </Form.Label>
                   <InputGroup>
                     <Form.Control
                       type={showPass ? "text" : "password"}
-                      placeholder="Enter your password"
+                      placeholder={t("authentication.account.password")}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
@@ -340,18 +342,18 @@ const Register = () => {
                     </Button>
                   </InputGroup>
                   <Form.Text className="text-muted">
-                    Password must be at least 8 characters long
+                    {t("authentication.account.passwordRequirement")}
                   </Form.Text>
                 </Form.Group>
 
                 <Form.Group controlId="confirmPassword" className="mb-4">
                   <Form.Label className="fw-medium">
-                    Confirm Password <span className="text-danger">*</span>
+                    {t("authentication.account.confirmPassword")} <span className="text-danger">*</span>
                   </Form.Label>
                   <InputGroup>
                     <Form.Control
                       type={showPassTwo ? "text" : "password"}
-                      placeholder="Confirm your password"
+                      placeholder={t("authentication.account.confirmPassword")}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
@@ -372,29 +374,29 @@ const Register = () => {
                   variant="primary" 
                   className="w-100 py-2 mb-3 d-flex align-items-center justify-content-center"
                 >
-                  Continue <FaArrowRight className="ms-2" />
+                  {t("authentication.account.continue")} <FaArrowRight className="ms-2" />
                 </Button>
 
                 <div className="text-center mt-3">
-                  Already have an account?{" "}
+                  {t("authentication.account.alreadyHaveAccount")}{" "}
                   <Link 
                     to={redirect ? `/login?redirect=${redirect}` : `/login`}
                     className="text-decoration-none"
                   >
-                    Login
+                    {t("authentication.account.login")}
                   </Link>
                 </div>
               </Form>
             ) : step === 2 ? (
               <Form onSubmit={handleSecondStep}>
-                <h2 className="text-center mb-4">Profile Information</h2>
+                <h2 className="text-center mb-4">{t("authentication.profile.title")}</h2>
 
                 <Form.Group controlId="bio" className="mb-3">
-                  <Form.Label className="fw-medium">Bio (optional)</Form.Label>
+                  <Form.Label className="fw-medium">{t("authentication.profile.bio")}</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={2}
-                    placeholder="Tell us something about you"
+                      placeholder={t("authentication.profile.bioPlaceholder")}
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
                     className="py-2"
@@ -405,7 +407,7 @@ const Register = () => {
                   <Col md={6}>
                     <Form.Group controlId="gender" className="mb-3">
                       <Form.Label className="fw-medium">
-                        Gender <span className="text-danger">*</span>
+                          {t("authentication.profile.gender")} <span className="text-danger">*</span>
                       </Form.Label>
                       <Form.Select
                         value={selectedGender}

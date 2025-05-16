@@ -9,8 +9,10 @@ import { Bounce, toast } from "react-toastify";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Loader from "../Loader";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -34,7 +36,7 @@ const Login = () => {
       const userInfo = await loginUser({ email, password }).unwrap();
       const ActionPayload: Response | any = userInfo;
       dispatch(setCredentials({ ...ActionPayload }));
-      toast.success("Successfully logged in", {
+      toast.success(t("authentication.login.successMessage"), {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -52,7 +54,7 @@ const Login = () => {
           transition: Bounce,
         });
       } else {
-        toast("Invalid credentials", {
+        toast(t("authentication.login.invalidCredentialsError"), {
           position: "top-right",
           autoClose: 4000,
           hideProgressBar: false,
@@ -70,12 +72,12 @@ const Login = () => {
   return (
     <FormContainer>
       <Form onSubmit={submitHandler} className="p-4 m-4 shadow-lg rounded">
-        <h1 className="mb-4 text-center">Sign In</h1>
+        <h1 className="mb-4 text-center">{t("authentication.login.title")}</h1>
         <Form.Group controlId="email" className="mb-3">
-          <Form.Label>Email Address</Form.Label>
+          <Form.Label>{t("authentication.login.emailLabel")}</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Enter email"
+            placeholder={t("authentication.login.emailPlaceholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -83,11 +85,11 @@ const Login = () => {
         </Form.Group>
 
         <Form.Group controlId="password" className="mb-3">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>{t("authentication.login.passwordLabel")}</Form.Label>
           <InputGroup>
             <Form.Control
               type={showPass ? "text" : "password"}
-              placeholder="Enter password"
+              placeholder={t("authentication.login.passwordPlaceholder")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -101,7 +103,7 @@ const Login = () => {
         <Row className="mb-3">
           <Col className="text-end">
             <Link to="/forgot-password" className="text-muted">
-              Forgot Password?
+              {t("authentication.login.forgotPassword")}
             </Link>
           </Col>
         </Row>
@@ -112,18 +114,20 @@ const Login = () => {
           variant="primary"
           className="w-100"
         >
-          {isLoading ? "Signing In..." : "Sign In"}
+          {isLoading 
+            ? t("authentication.login.signingInButton") 
+            : t("authentication.login.signInButton")}
         </Button>
 
         {isLoading && <Loader />}
 
         <Row className="py-3 text-center">
           <Col>
-            New User?{" "}
+            {t("authentication.login.newUserText")}{" "}
             <Link
               to={redirect ? `/register?redirect=${redirect}` : `/register`}
             >
-              Register
+              {t("authentication.login.registerLink")}
             </Link>
           </Col>
         </Row>

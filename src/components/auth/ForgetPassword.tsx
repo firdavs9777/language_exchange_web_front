@@ -5,6 +5,7 @@ import SetNewPassword from "./SetNewPassword";
 import { useResetPasswordUserMutation } from "../../store/slices/usersSlice";
 import { Bounce, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface SendCodeEmailResponse {
   success: boolean;
@@ -17,9 +18,10 @@ const ForgetPassword: React.FC = () => {
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [resetPassword, { isLoading, error }] = useResetPasswordUserMutation(
+  const [resetPassword] = useResetPasswordUserMutation(
     {}
   );
+  const {t} = useTranslation()
   const handleNext = () => setStep((prev) => prev + 1);
   const handlePrevious = () => setStep((prev) => prev - 1);
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ const ForgetPassword: React.FC = () => {
       }).unwrap();
       const typedResponse = response as SendCodeEmailResponse;
       if (typedResponse.success) {
-        toast.success("Password successfully reset, please login!", {
+        toast.success(t("authentication.passwordReset.successMessage"), {
           autoClose: 3000,
           hideProgressBar: false,
           theme: "dark",

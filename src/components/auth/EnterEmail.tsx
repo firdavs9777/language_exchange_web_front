@@ -3,7 +3,7 @@ import { Button, Form, Container } from "react-bootstrap";
 import { useSendCodeEmailMutation } from "../../store/slices/usersSlice";
 
 import { Bounce, toast } from "react-toastify";
-
+import { useTranslation } from "react-i18next";
 interface EnterEmailProps {
   email: string;
   setEmail: (email: string) => void;
@@ -15,7 +15,8 @@ interface SendCodeEmailResponse {
   message: string; // Adjust based on actual response
 }
 const EnterEmail: React.FC<EnterEmailProps> = ({ email, setEmail, onNext }) => {
-  const [sendCodeEmail, { isLoading, error }] = useSendCodeEmailMutation({});
+  const [sendCodeEmail, { isLoading }] = useSendCodeEmailMutation({});
+  const {t} = useTranslation()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -24,7 +25,7 @@ const EnterEmail: React.FC<EnterEmailProps> = ({ email, setEmail, onNext }) => {
       const typedResponse = response as SendCodeEmailResponse;
 
       if (typedResponse.success) {
-        toast.success("Verification code sent successfully!", {
+        toast.success(t("authentication.enterEmail.successMessage"), {
           autoClose: 3000,
           hideProgressBar: false,
           theme: "dark",
@@ -41,8 +42,8 @@ const EnterEmail: React.FC<EnterEmailProps> = ({ email, setEmail, onNext }) => {
         transition: Bounce,
       });
     }
-    // onNext();
   };
+
 
   return (
     <Container
@@ -53,13 +54,13 @@ const EnterEmail: React.FC<EnterEmailProps> = ({ email, setEmail, onNext }) => {
         className="card p-4 shadow-sm"
         style={{ maxWidth: "400px", width: "100%" }}
       >
-        <h2 className="mb-4 text-center">Enter your email</h2>
+        <h2 className="mb-4 text-center">{ t("authentication.enterEmail.title")}</h2>
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="email">
-            <Form.Label>Email Address</Form.Label>
+            <Form.Label>{ t("authentication.enterEmail.emailLabel")}</Form.Label>
             <Form.Control
               type="email"
-              placeholder="Enter email"
+              placeholder={ t("authentication.enterEmail.emailLabel")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -71,7 +72,7 @@ const EnterEmail: React.FC<EnterEmailProps> = ({ email, setEmail, onNext }) => {
             className="w-100 mt-2 text-white"
             disabled={isLoading}
           >
-            {isLoading ? "Sending..." : "Send Code"} {/* Button text */}
+            {isLoading ? t("authentication.enterEmail.sendingButton") : t("authentication.enterEmail.sendButton")} 
           </Button>
         </Form>
       </div>
