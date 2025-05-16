@@ -5,12 +5,12 @@ import {
   useCreateMessageMutation,
   useGetConversationQuery,
 } from "../../store/slices/chatSlice";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 import "./ChatContent.css";
 import { BASE_URL } from "../../constants";
 
-// Define the Socket.IO instance outside the component to prevent reconnections on re-renders
-let socket: any;
+// Define the Socket.IO instance
+let socket: Socket | null = null;
 
 interface ChatContentProps {
   selectedUser: string;
@@ -30,8 +30,14 @@ interface Message {
   createdAt: string;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ selectedUser, userName, profilePicture}) => {
+const ChatContent: React.FC<ChatContentProps> = ({
+  selectedUser,
+  userName,
+  profilePicture,
+}) => {
   const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
+  const token = useSelector((state: any) => state.auth.userInfo?.token);
+
   const { data, error, isLoading } = useGetConversationQuery({
     senderId: userId,
     receiverId: selectedUser,
@@ -43,54 +49,67 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser, userName, profi
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  // Initialize Socket.IO connection
+  // Initialize Socket.IO connection when token changes
   useEffect(() => {
-    // Connect to the Socket.IO server with auth token if available
-    const token = localStorage.getItem('token');
+    if (!token) return;
+
     const SOCKET_URL = BASE_URL;
-    
+
+    // Disconnect existing socket if any
+    if (socket) {
+      socket.disconnect();
+    }
+
     socket = io(SOCKET_URL, {
       auth: {
-        token: token
-      }
+        token: token,
+      },
+      transports: ["websocket"],
     });
 
-    // Listen for connection events
-    socket.on('connect', () => {
-      console.log('Connected to socket server');
+    socket.on("connect", () => {
+      console.log("Connected to socket server");
     });
 
-    socket.on('connect_error', (error) => {
-      console.error('Socket connection error:', error);
+    socket.on("connect_error", (error: any) => {
+      console.error("Socket connection error:", error);
     });
 
-    // Clean up on component unmount
     return () => {
-      socket.disconnect();
+      if (socket) {
+        socket.off();
+        socket.disconnect();
+        socket = null;
+      }
     };
-  }, []);
+  }, [token]);
 
-  // Load initial messages and subscribe to new ones
+  // Load initial messages
   useEffect(() => {
     if (data?.data) {
       setMessages(data.data);
     }
+  }, [data]);
 
-    // Listen for new messages from socket
-    socket.on('message', (newMsg: Message) => {
-      // Only add message if it's part of current conversation
-      if (
-        (newMsg.sender._id === userId && newMsg.receiver === selectedUser) ||
-        (newMsg.sender._id === selectedUser && newMsg.receiver === userId)
-      ) {
-        setMessages((prevMessages) => [...prevMessages, newMsg]);
-      }
+useEffect(() => {
+  if (!socket) return;
+
+  const handleMessage = (newMsg: Message) => {
+    setMessages(prevMessages => {
+      // Check if message already exists to prevent duplicates
+      const exists = prevMessages.some(msg => msg._id === newMsg._id);
+      if (exists) return prevMessages;
+      
+      return [...prevMessages, newMsg];
     });
+  };
 
-    return () => {
-      socket.off('message');
-    };
-  }, [data, userId, selectedUser]);
+  socket.on("message", handleMessage);
+
+  return () => {
+    socket?.off("message", handleMessage);
+  };
+}, [userId, selectedUser]);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -101,30 +120,50 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser, userName, profi
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newMessage.trim()) {
-      // Send message to socket server
-      socket.emit('sendMessage', {
-        sender: userId,
-        receiver: selectedUser,
-        message: newMessage
-      });
+const handleSendMessage = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!newMessage.trim()) return;
 
-      // Also send through API for backup/persistence
-      await createMessage({
+  try {
+    // Optimistically update UI
+    const tempId = Date.now().toString(); // Temporary ID for optimistic update
+    const optimisticMessage = {
+      _id: tempId,
+      message: newMessage,
+      sender: { _id: userId, name: userName },
+      receiver: selectedUser,
+      createdAt: new Date().toISOString(),
+    };
+
+    setMessages(prev => [...prev, optimisticMessage]);
+    setNewMessage("");
+
+    // Send via socket
+    if (socket) {
+      socket.emit("sendMessage", {
         sender: userId,
         receiver: selectedUser,
         message: newMessage,
       });
-      
-      setNewMessage("");
     }
-  };
+
+    // Save to database (but don't need to handle response since socket will give us the saved message)
+    await createMessage({
+      sender: userId,
+      receiver: selectedUser,
+      message: newMessage,
+    });
+
+  } catch (error) {
+    console.error("Error sending message:", error);
+    // Optionally remove the optimistic message if sending fails
+    setMessages(prev => prev.filter(msg => msg._id !== tempId));
+  }
+};
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
   const formatDate = (dateString: string) => {
@@ -135,33 +174,35 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser, userName, profi
   // Group messages by date
   const groupMessagesByDate = (messages: Message[]) => {
     const groups: { [date: string]: Message[] } = {};
-    
-    messages.forEach(msg => {
+
+    messages.forEach((msg) => {
       const dateStr = formatDate(msg.createdAt);
       if (!groups[dateStr]) {
         groups[dateStr] = [];
       }
       groups[dateStr].push(msg);
     });
-    
+
     return groups;
   };
 
-  if (isLoading) return (
-    <div className="chat-loading">
-      <div className="spinner-border text-primary" role="status">
-        <span className="visually-hidden">Loading...</span>
+  if (isLoading)
+    return (
+      <div className="chat-loading">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p>Loading conversation...</p>
       </div>
-      <p>Loading conversation...</p>
-    </div>
-  );
-  
-  if (error) return (
-    <div className="chat-error alert alert-danger">
-      <i className="bi bi-exclamation-triangle-fill me-2"></i>
-      Error loading conversation
-    </div>
-  );
+    );
+
+  if (error)
+    return (
+      <div className="chat-error alert alert-danger">
+        <i className="bi bi-exclamation-triangle-fill me-2"></i>
+        Error loading conversation
+      </div>
+    );
 
   // Sort messages by timestamp
   const sortedMessages = [...messages].sort((a, b) => {
@@ -179,9 +220,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser, userName, profi
             <div className="user-avatar">
               <img
                 src={
-                  profilePicture !== '' 
-                    ? profilePicture
-                    : "/default-avatar.png"
+                  profilePicture !== "" ? profilePicture : "/default-avatar.png"
                 }
                 alt={userName}
                 className="rounded-circle"
@@ -197,13 +236,25 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser, userName, profi
             </small>
           </Col>
           <Col xs="auto">
-            <Button variant="outline-secondary" size="sm" className="rounded-circle">
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              className="rounded-circle"
+            >
               <i className="bi bi-telephone"></i>
             </Button>
-            <Button variant="outline-secondary" size="sm" className="rounded-circle ms-2">
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              className="rounded-circle ms-2"
+            >
               <i className="bi bi-camera-video"></i>
             </Button>
-            <Button variant="outline-secondary" size="sm" className="rounded-circle ms-2">
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              className="rounded-circle ms-2"
+            >
               <i className="bi bi-info-circle"></i>
             </Button>
           </Col>
@@ -211,7 +262,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser, userName, profi
       </div>
 
       {/* Chat Messages */}
-      <div 
+      <div
         className="chat-messages p-3 flex-grow-1 overflow-auto"
         ref={chatContainerRef}
       >
@@ -220,7 +271,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser, userName, profi
             <div className="date-divider">
               <span>{date}</span>
             </div>
-            
+
             {msgs.map((msg: Message) => (
               <div
                 key={msg._id}
@@ -240,9 +291,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ selectedUser, userName, profi
                   />
                 )}
                 <div className="message-content">
-                  <div className="message-bubble">
-                    {msg.message}
-                  </div>
+                  <div className="message-bubble">{msg.message}</div>
                   <div className="message-info">
                     <small className="message-time">
                       {formatTime(msg.createdAt)}
