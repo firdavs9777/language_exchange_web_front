@@ -28,6 +28,10 @@ interface Message {
   };
   receiver: string;
   createdAt: string;
+  // Add flag for tracking optimistic messages
+  isOptimistic?: boolean;
+  // Add flag for tracking message status
+  status?: 'sent' | 'delivered' | 'error';
 }
 
 const ChatContent: React.FC<ChatContentProps> = ({
@@ -46,8 +50,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const [createMessage] = useCreateMessageMutation();
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Initialize Socket.IO connection when token changes
   useEffect(() => {
@@ -91,75 +97,152 @@ const ChatContent: React.FC<ChatContentProps> = ({
     }
   }, [data]);
 
-useEffect(() => {
-  if (!socket) return;
+  useEffect(() => {
+    if (!socket || !selectedUser) return;
 
-  const handleMessage = (newMsg: Message) => {
-    setMessages(prevMessages => {
-      // Check if message already exists to prevent duplicates
-      const exists = prevMessages.some(msg => msg._id === newMsg._id);
-      if (exists) return prevMessages;
-      
-      return [...prevMessages, newMsg];
-    });
+    // Handler for new messages
+    const handleMessage = (newMsg: Message) => {
+      setMessages(prevMessages => {
+        // Simple ID check for incoming messages from others
+        if (prevMessages.some(msg => msg._id === newMsg._id)) {
+          return prevMessages;
+        }
+        return [...prevMessages, newMsg];
+      });
+    };
+
+    // Handler for sent message confirmations
+    const handleMessageSent = (confirmedMsg: Message) => {
+      setMessages(prevMessages => {
+        // Find and replace the optimistic message
+        return prevMessages.map(msg => {
+          // Match based on content since server-side ID is different
+          if (msg.isOptimistic && msg.message === confirmedMsg.message) {
+            return { ...confirmedMsg, status: 'delivered' };
+          }
+          return msg;
+        });
+      });
+    };
+
+    // Handler for message errors
+    const handleMessageError = (errorData: { message: string, originalMessage: string }) => {
+      setMessages(prevMessages => {
+        return prevMessages.map(msg => {
+          if (msg.isOptimistic && msg.message === errorData.originalMessage) {
+            return { ...msg, status: 'error' };
+          }
+          return msg;
+        });
+      });
+    };
+
+    // Handler for typing indicators from other users
+    const handleUserTyping = (data: { user: string }) => {
+      if (data.user === selectedUser) {
+        setIsTyping(true);
+      }
+    };
+
+    // Handler for when other users stop typing
+    const handleUserStopTyping = (data: { user: string }) => {
+      if (data.user === selectedUser) {
+        setIsTyping(false);
+      }
+    };
+
+    socket.on("message", handleMessage);
+    socket.on("messageSent", handleMessageSent);
+    socket.on("messageError", handleMessageError);
+    socket.on("userTyping", handleUserTyping);
+    socket.on("userStopTyping", handleUserStopTyping);
+
+    return () => {
+      socket?.off("message", handleMessage);
+      socket?.off("messageSent", handleMessageSent);
+      socket?.off("messageError", handleMessageError);
+      socket?.off("userTyping", handleUserTyping);
+      socket?.off("userStopTyping", handleUserStopTyping);
+    };
+  }, [userId, selectedUser]);
+
+  // Handle typing indicator
+  const handleTyping = () => {
+    if (!socket || !selectedUser) return;
+    
+    // Clear existing timeout
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    
+    // Send typing event
+    socket.emit("typing", { sender: userId, receiver: selectedUser });
+    
+    // Set timeout to stop typing indicator after 2 seconds of inactivity
+    typingTimeoutRef.current = setTimeout(() => {
+      socket.emit("stopTyping", { sender: userId, receiver: selectedUser });
+    }, 2000);
   };
-
-  socket.on("message", handleMessage);
-
-  return () => {
-    socket?.off("message", handleMessage);
-  };
-}, [userId, selectedUser]);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isTyping]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-const handleSendMessage = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!newMessage.trim()) return;
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newMessage.trim() || !socket) return;
 
-  try {
-    // Optimistically update UI
-    const tempId = Date.now().toString(); // Temporary ID for optimistic update
-    const optimisticMessage = {
-      _id: tempId,
-      message: newMessage,
-      sender: { _id: userId, name: userName },
-      receiver: selectedUser,
-      createdAt: new Date().toISOString(),
-    };
+    try {
+      // Clear typing indicator
+      clearTimeout(typingTimeoutRef.current);
+      socket.emit("stopTyping", { sender: userId, receiver: selectedUser });
 
-    setMessages(prev => [...prev, optimisticMessage]);
-    setNewMessage("");
+      // Optimistically update UI
+      const tempId = `temp-${Date.now()}`;
+      const optimisticMessage: Message = {
+        _id: tempId,
+        message: newMessage,
+        sender: { _id: userId, name: userName },
+        receiver: selectedUser,
+        createdAt: new Date().toISOString(),
+        isOptimistic: true,
+        status: 'sent'
+      };
 
-    // Send via socket
-    if (socket) {
+      setMessages(prev => [...prev, optimisticMessage]);
+      setNewMessage("");
+
+      // Send via socket
       socket.emit("sendMessage", {
         sender: userId,
         receiver: selectedUser,
         message: newMessage,
       });
+
+      // Still call API for redundancy
+      await createMessage({
+        sender: userId,
+        receiver: selectedUser,
+        message: newMessage,
+      });
+
+    } catch (error) {
+      console.error("Error sending message:", error);
+      // Update the optimistic message to show error state
+      setMessages(prev => 
+        prev.map(msg => 
+          msg._id === tempId 
+            ? { ...msg, status: 'error' as const } 
+            : msg
+        )
+      );
     }
-
-    // Save to database (but don't need to handle response since socket will give us the saved message)
-    await createMessage({
-      sender: userId,
-      receiver: selectedUser,
-      message: newMessage,
-    });
-
-  } catch (error) {
-    console.error("Error sending message:", error);
-    // Optionally remove the optimistic message if sending fails
-    setMessages(prev => prev.filter(msg => msg._id !== tempId));
-  }
-};
+  };
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -277,7 +360,7 @@ const handleSendMessage = async (e: React.FormEvent) => {
                 key={msg._id}
                 className={`message-item ${
                   msg.sender._id === userId ? "my-message" : "other-message"
-                }`}
+                } ${msg.status === 'error' ? 'message-error' : ''}`}
               >
                 {msg.sender._id !== userId && (
                   <img
@@ -297,7 +380,15 @@ const handleSendMessage = async (e: React.FormEvent) => {
                       {formatTime(msg.createdAt)}
                     </small>
                     {msg.sender._id === userId && (
-                      <i className="bi bi-check2-all text-primary ms-1"></i>
+                      <>
+                        {msg.status === 'error' ? (
+                          <i className="bi bi-exclamation-triangle text-danger ms-1"></i>
+                        ) : msg.isOptimistic ? (
+                          <i className="bi bi-check text-secondary ms-1"></i>
+                        ) : (
+                          <i className="bi bi-check2-all text-primary ms-1"></i>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
@@ -305,6 +396,16 @@ const handleSendMessage = async (e: React.FormEvent) => {
             ))}
           </div>
         ))}
+        
+        {/* Typing indicator */}
+        {isTyping && (
+          <div className="typing-indicator">
+            <span className="typing-dot"></span>
+            <span className="typing-dot"></span>
+            <span className="typing-dot"></span>
+          </div>
+        )}
+        
         <div ref={messagesEndRef} />
       </div>
 
@@ -322,7 +423,10 @@ const handleSendMessage = async (e: React.FormEvent) => {
                 type="text"
                 placeholder="Type your message..."
                 value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
+                onChange={(e) => {
+                  setNewMessage(e.target.value);
+                  handleTyping();
+                }}
                 className="rounded-pill border-0 shadow-sm"
               />
             </Col>
