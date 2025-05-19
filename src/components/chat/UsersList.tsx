@@ -18,7 +18,7 @@ interface Message {
   _id: string;
   sender: User;
   receiver: User;
-  content: string;
+  message: string;
   createdAt: string;
   read: boolean;
 }
@@ -33,6 +33,7 @@ const UsersList: React.FC<UsersListProps> = ({ onSelectUser, activeUserId, searc
   const currentUser = useSelector((state: RootState) => state.auth.userInfo?.user);
   const { data, error, isLoading, isError } = useGetUserMessagesQuery(currentUser?._id);
 
+  console.log(data)
   // Extract conversation partners with last message and unread count
   const chatPartners = React.useMemo(() => {
     if (!data?.data || !currentUser) return [];
@@ -44,6 +45,7 @@ const UsersList: React.FC<UsersListProps> = ({ onSelectUser, activeUserId, searc
     }>();
 
     data.data.forEach((message: Message) => {
+      console.log(message)
       // Determine the other user in the conversation
       const otherUser = message.sender._id === currentUser._id 
         ? message.receiver 
@@ -53,19 +55,20 @@ const UsersList: React.FC<UsersListProps> = ({ onSelectUser, activeUserId, searc
       const isUnread = isIncoming && !message.read;
 
       const existingPartner = partnersMap.get(otherUser._id);
+      console.log(existingPartner)
       const messageDate = new Date(message.createdAt);
 
       if (!existingPartner) {
         partnersMap.set(otherUser._id, {
           ...otherUser,
-          lastMessage: message.content,
+          lastMessage: message.message,
           unreadCount: isUnread ? 1 : 0,
           lastMessageTime: messageDate
         });
       } else {
         // Update if this message is newer
         if (existingPartner.lastMessageTime && messageDate > existingPartner.lastMessageTime) {
-          existingPartner.lastMessage = message.content;
+          existingPartner.lastMessage = message.message;
           existingPartner.lastMessageTime = messageDate;
         }
         if (isUnread) {
