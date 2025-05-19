@@ -2,7 +2,7 @@ import React from "react";
 import { ListGroup, Spinner, Alert, Badge } from "react-bootstrap";
 import { useGetUserMessagesQuery } from "../../store/slices/chatSlice";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+import { RootState } from "../../store/index";
 
 interface User {
   _id: string;
@@ -26,9 +26,10 @@ interface Message {
 interface UsersListProps {
   onSelectUser: (userId: string, userName: string, profilePicture: string) => void;
   activeUserId?: string | null;
+  searchQuery?: string;
 }
 
-const UsersList: React.FC<UsersListProps> = ({ onSelectUser, activeUserId }) => {
+const UsersList: React.FC<UsersListProps> = ({ onSelectUser, activeUserId, searchQuery = "" }) => {
   const currentUser = useSelector((state: RootState) => state.auth.userInfo?.user);
   const { data, error, isLoading, isError } = useGetUserMessagesQuery(currentUser?._id);
 
@@ -81,6 +82,23 @@ const UsersList: React.FC<UsersListProps> = ({ onSelectUser, activeUserId }) => 
     });
   }, [data, currentUser]);
 
+  // Filter conversations based on search query
+  const filteredChatPartners = React.useMemo(() => {
+    if (!searchQuery.trim()) return chatPartners;
+    
+    const normalizedQuery = searchQuery.toLowerCase().trim();
+    
+    return chatPartners.filter(user => {
+      // Search by name
+      if (user.name.toLowerCase().includes(normalizedQuery)) return true;
+      
+      // Search by message content
+      if (user.lastMessage?.toLowerCase().includes(normalizedQuery)) return true;
+      
+      return false;
+    });
+  }, [chatPartners, searchQuery]);
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center py-4" aria-busy="true">
@@ -103,13 +121,22 @@ const UsersList: React.FC<UsersListProps> = ({ onSelectUser, activeUserId }) => 
     );
   }
 
+  // If we're searching and nothing was found
+  if (searchQuery && filteredChatPartners.length === 0) {
+    return (
+      <div className="text-center py-4 text-muted">
+        <i className="bi bi-search fs-4 d-block mb-2"></i>
+        No matching conversations found
+      </div>
+    );
+  }
+
   return (
     <div className="h-100 d-flex flex-column">
-      <h5 className="p-3 border-bottom mb-0">Conversations</h5>
       <div className="flex-grow-1 overflow-auto">
         <ListGroup variant="flush" as="ul">
-          {chatPartners.length > 0 ? (
-            chatPartners.map((user) => (
+          {filteredChatPartners.length > 0 ? (
+            filteredChatPartners.map((user) => (
               <ListGroup.Item
                 as="li"
                 key={user._id}

@@ -3,19 +3,22 @@ import { Col, Row, Container, Card } from "react-bootstrap";
 import UsersList from "./UsersList";
 import ChatContent from "./ChatContent";
 import { useNavigate, useParams } from "react-router-dom";
-import { profile } from "console";
 
 const MainChat: React.FC = () => {
   const { userId } = useParams<{ userId?: string }>();
   const [userName, setUserName] = useState<string>("");
-   const [profilePicture, setProfilePicture] = useState<string>("");
+  const [profilePicture, setProfilePicture] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const navigate = useNavigate();
 
   const handleSelectUser = (userId: string, userName: string, profilePicture: string) => {
     navigate(`/chat/${userId}`);
     setUserName(userName);
-    setProfilePicture(profilePicture)
+    setProfilePicture(profilePicture);
+  };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
@@ -30,13 +33,42 @@ const MainChat: React.FC = () => {
                 Messages
               </h5>
             </div>
-            <div className="flex-grow-1 overflow-auto">
-              <UsersList onSelectUser={handleSelectUser} activeUserId={userId} />
+            
+            <div className="px-3 py-2 mx-1 border-bottom">
+              <div className="input-group input-group-sm">
+                <span className="input-group-text bg-light border-end-0">
+                  <i className="bi bi-search"></i>
+                </span>
+                <input
+                  type="text"
+                  className="form-control form-control-sm bg-light border-start-0"
+                  placeholder="Search messages..."
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  aria-label="Search messages"
+                />
+                {searchQuery && (
+                  <button 
+                    className="btn btn-sm btn-outline-secondary border-start-0"
+                    onClick={() => setSearchQuery("")}
+                    aria-label="Clear search"
+                  >
+                    <i className="bi bi-x"></i>
+                  </button>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex-grow-1 overflow-auto" style={{ maxHeight: "calc(100vh - 130px)" }}>
+              <UsersList 
+                onSelectUser={handleSelectUser} 
+                activeUserId={userId} 
+                searchQuery={searchQuery}
+              />
             </div>
           </div>
         </Col>
         
-        {/* Right side - Chat content */}
         <Col md={9} lg={9} xl={10} className="bg-light">
           {userId ? (
             <ChatContent selectedUser={userId} userName={userName} profilePicture={profilePicture} />
