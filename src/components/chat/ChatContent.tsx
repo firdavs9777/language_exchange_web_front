@@ -9,6 +9,18 @@ import io, { Socket } from "socket.io-client";
 import "./ChatContent.css";
 import { BASE_URL } from "../../constants";
 
+// Define types for Redux state
+interface RootState {
+  auth: {
+    userInfo: {
+      user: {
+        _id: string;
+      };
+      token: string;
+    };
+  };
+}
+
 // Define the Socket.IO instance
 let socket: Socket | null = null;
 
@@ -28,9 +40,7 @@ interface Message {
   };
   receiver: string;
   createdAt: string;
-  // Add flag for tracking optimistic messages
   isOptimistic?: boolean;
-  // Add flag for tracking message status
   status?: 'sent' | 'delivered' | 'error';
 }
 
@@ -39,21 +49,23 @@ const ChatContent: React.FC<ChatContentProps> = ({
   userName,
   profilePicture,
 }) => {
-  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
-  const token = useSelector((state: any) => state.auth.userInfo?.token);
+  const userId = useSelector((state: RootState) => state.auth.userInfo?.user._id);
+  const token = useSelector((state: RootState) => state.auth.userInfo?.token);
 
   const { data, error, isLoading } = useGetConversationQuery({
     senderId: userId,
     receiverId: selectedUser,
   });
 
-  const [createMessage] = useCreateMessageMutation();
+  // const [createMessage] = useCreateMessageMutation();
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
+  const tempIdRef = useRef<string>();
+  const lastMessageId = useRef<string>();
 
   // Initialize Socket.IO connection when token changes
   useEffect(() => {
@@ -77,7 +89,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       console.log("Connected to socket server");
     });
 
-    socket.on("connect_error", (error: any) => {
+    socket.on("connect_error", (error: Error) => {
       console.error("Socket connection error:", error);
     });
 
@@ -103,7 +115,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     // Handler for new messages
     const handleMessage = (newMsg: Message) => {
       setMessages(prevMessages => {
-        // Simple ID check for incoming messages from others
+        console.log(prevMessages)
         if (prevMessages.some(msg => msg._id === newMsg._id)) {
           return prevMessages;
         }
@@ -113,10 +125,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
     // Handler for sent message confirmations
     const handleMessageSent = (confirmedMsg: Message) => {
+      console.log(confirmedMsg);
       setMessages(prevMessages => {
-        // Find and replace the optimistic message
         return prevMessages.map(msg => {
-          // Match based on content since server-side ID is different
           if (msg.isOptimistic && msg.message === confirmedMsg.message) {
             return { ...confirmedMsg, status: 'delivered' };
           }
@@ -170,24 +181,27 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const handleTyping = () => {
     if (!socket || !selectedUser) return;
     
-    // Clear existing timeout
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
     
-    // Send typing event
     socket.emit("typing", { sender: userId, receiver: selectedUser });
     
-    // Set timeout to stop typing indicator after 2 seconds of inactivity
     typingTimeoutRef.current = setTimeout(() => {
-      socket.emit("stopTyping", { sender: userId, receiver: selectedUser });
+      socket?.emit("stopTyping", { sender: userId, receiver: selectedUser });
     }, 2000);
   };
 
-  // Auto-scroll to bottom when messages change
+  // Auto-scroll to bottom only when new messages arrive
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isTyping]);
+    if (messages.length > 0) {
+      const currentLastId = messages[messages.length - 1]._id;
+      if (lastMessageId.current !== currentLastId) {
+        scrollToBottom();
+        lastMessageId.current = currentLastId;
+      }
+    }
+  }, [messages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -204,6 +218,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
       // Optimistically update UI
       const tempId = `temp-${Date.now()}`;
+      tempIdRef.current = tempId;
       const optimisticMessage: Message = {
         _id: tempId,
         message: newMessage,
@@ -225,19 +240,18 @@ const ChatContent: React.FC<ChatContentProps> = ({
       });
 
       // Still call API for redundancy
-      await createMessage({
-        sender: userId,
-        receiver: selectedUser,
-        message: newMessage,
-      });
+      // await createMessage({
+      //   sender: userId,
+      //   receiver: selectedUser,
+      //   message: newMessage,
+      // });
 
     } catch (error) {
       console.error("Error sending message:", error);
-      // Update the optimistic message to show error state
       setMessages(prev => 
         prev.map(msg => 
-          msg._id === tempId 
-            ? { ...msg, status: 'error' as const } 
+          msg._id === tempIdRef.current 
+            ? { ...msg, status: 'error' } 
             : msg
         )
       );
@@ -269,67 +283,65 @@ const ChatContent: React.FC<ChatContentProps> = ({
     return groups;
   };
 
-  if (isLoading)
-    return (
-      <div className="chat-loading">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-        <p>Loading conversation...</p>
+  if (isLoading) return (
+    <div className="chat-loading">
+      <div className="spinner-border text-primary" role="status">
+        <span className="visually-hidden">Loading...</span>
       </div>
-    );
+      <p>Loading conversation...</p>
+    </div>
+  );
 
-  if (error)
-    return (
-      <div className="chat-error alert alert-danger">
-        <i className="bi bi-exclamation-triangle-fill me-2"></i>
-        Error loading conversation
-      </div>
-    );
+  if (error) return (
+    <div className="chat-error alert alert-danger">
+      <i className="bi bi-exclamation-triangle-fill me-2"></i>
+      Error loading conversation
+    </div>
+  );
 
   // Sort messages by timestamp
   const sortedMessages = [...messages].sort((a, b) => {
+    
     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
   });
 
   const messagesByDate = groupMessagesByDate(sortedMessages);
 
   return (
-    <Container fluid className="chat-content p-0 d-flex flex-column">
+    <Container fluid className="chat-content p-0 d-flex flex-column vh-100">
       {/* Chat Header */}
       <div className="chat-header p-3 shadow-sm">
-        <Row className="align-items-center">
-          <Col xs="auto">
+        <Row className="align-items-center g-0">
+          <Col xs="auto" className="pe-3">
             <div className="user-avatar">
               <img
-                src={
-                  profilePicture !== "" ? profilePicture : "/default-avatar.png"
-                }
+                src={profilePicture || "/default-avatar.png"}
                 alt={userName}
                 className="rounded-circle"
+                style={{ width: '40px', height: '40px', objectFit: 'cover' }}
               />
               <span className="status-indicator online"></span>
             </div>
           </Col>
-          <Col>
-            <h5 className="mb-0">{userName}</h5>
+          <Col className="d-flex flex-column">
+            <h5 className="mb-0 text-truncate">{userName}</h5>
             <small className="text-muted">
               <i className="bi bi-circle-fill text-success me-1"></i>
               Online
             </small>
           </Col>
-          <Col xs="auto">
+          <Col xs="auto" className="d-flex">
             <Button
               variant="outline-secondary"
               size="sm"
-              className="rounded-circle"
+              className="rounded-circle d-none d-sm-inline-block"
             >
               <i className="bi bi-telephone"></i>
             </Button>
             <Button
               variant="outline-secondary"
               size="sm"
-              className="rounded-circle ms-2"
+              className="rounded-circle ms-2 d-none d-sm-inline-block"
             >
               <i className="bi bi-camera-video"></i>
             </Button>
@@ -348,6 +360,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       <div
         className="chat-messages p-3 flex-grow-1 overflow-auto"
         ref={chatContainerRef}
+        style={{ minHeight: 0 }}
       >
         {Object.entries(messagesByDate).map(([date, msgs]) => (
           <div key={date} className="message-date-group">
@@ -364,18 +377,15 @@ const ChatContent: React.FC<ChatContentProps> = ({
               >
                 {msg.sender._id !== userId && (
                   <img
-                    src={
-                      msg.sender.imageUrls && msg.sender.imageUrls.length > 0
-                        ? msg.sender.imageUrls[0]
-                        : "/default-avatar.png"
-                    }
+                    src={msg.sender.imageUrls?.[0] || "/default-avatar.png"}
                     alt={msg.sender.name}
-                    className="message-avatar rounded-circle"
+                    className="message-avatar rounded-circle d-none d-sm-block"
+                    style={{ width: '32px', height: '32px', objectFit: 'cover' }}
                   />
                 )}
                 <div className="message-content">
                   <div className="message-bubble">{msg.message}</div>
-                  <div className="message-info">
+                  <div className="message-info d-flex align-items-center">
                     <small className="message-time">
                       {formatTime(msg.createdAt)}
                     </small>
@@ -413,7 +423,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       <div className="chat-input p-3 border-top">
         <Form onSubmit={handleSendMessage}>
           <Row className="g-2 align-items-center">
-            <Col xs="auto">
+            <Col xs="auto" className="d-none d-sm-block">
               <Button variant="light" className="btn-icon rounded-circle">
                 <i className="bi bi-plus"></i>
               </Button>
@@ -430,8 +440,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 className="rounded-pill border-0 shadow-sm"
               />
             </Col>
-            <Col xs="auto">
-              <Button variant="light" className="btn-icon rounded-circle me-2">
+            <Col xs="auto" className="d-flex">
+              <Button variant="light" className="btn-icon rounded-circle me-2 d-none d-sm-block">
                 <i className="bi bi-emoji-smile"></i>
               </Button>
               <Button
