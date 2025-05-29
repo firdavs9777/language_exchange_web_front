@@ -99,7 +99,11 @@ export const MemberCard: React.FC<MemberCardProps> = ({ member, index, onMemberC
       Korean: "ko",
       Chinese: "zh",
     };
-    return languageMap[language] || language.slice(0, 2).toLowerCase();
+    if (typeof language === 'string' && language.trim() !== '') {
+      return languageMap[language] || language.slice(0, 2).toLowerCase();
+    }
+    
+
   };
 
   const nativeCode = getLanguageCode(member.native_language);
@@ -310,13 +314,15 @@ const ModernCommunity: React.FC = () => {
     let filteredList = members.filter(member => member._id !== currentUser._id);
     
     // Apply text filter
-    if (debouncedFilter) {
+    if (debouncedFilter?.trim()) {
+      const lowerCaseFilter = debouncedFilter.toLowerCase();
+
       filteredList = filteredList.filter(
         (member) =>
-          member.name.toLowerCase().includes(debouncedFilter.toLowerCase()) ||
-          member.native_language.toLowerCase().includes(debouncedFilter.toLowerCase()) ||
-          member.language_to_learn.toLowerCase().includes(debouncedFilter.toLowerCase()) ||
-          member.bio.toLowerCase().includes(debouncedFilter.toLowerCase())
+          member.name?.toLowerCase().includes(lowerCaseFilter) ||
+          member.native_language?.toLowerCase().includes(lowerCaseFilter) ||
+          member.language_to_learn?.toLowerCase().includes(lowerCaseFilter) ||
+          member.bio?.toLowerCase().includes(lowerCaseFilter)
       );
     }
     
