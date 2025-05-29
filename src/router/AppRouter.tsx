@@ -2,6 +2,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
+  useParams,
 } from "react-router-dom";
 import App from "../App";
 import HomeScreen from "../components/home/HomeMain";
@@ -22,6 +23,12 @@ import MyMoments from "../components/profile/MyMoments";
 import MainChat from "../components/chat/MainChat";
 import ForgetPassword from "../components/auth/ForgetPassword";
 import EditMyMoment from "../components/profile/EditMyMoment";
+
+const MainChatWrapper = () => {
+  const { userId } = useParams();
+  return <MainChat key={userId || "default"} />;
+};
+
 
 const AppRouter = createBrowserRouter(
   createRoutesFromElements(
@@ -48,8 +55,8 @@ const AppRouter = createBrowserRouter(
       <Route index={true} path="/moment/:id" element={<MomentDetail />} />
       <Route index={true} path="/add-moment" element={<CreateMoment />} />
       <Route index={true} path="/moments" element={<MainMoments />} />
-      <Route index={true} path="/chat" element={<MainChat />} />
-      <Route index={true} path="/chat/:userId" element={<MainChat />} />
+      <Route index={true} path="/chat" element={<MainChatWrapper />} />
+      <Route index={true} path="/chat/:userId" element={<MainChatWrapper />} />
       <Route index={true} path="/register" element={<Register />} />
       <Route index={true} path="/profile" element={<ProfileScreen />} />
       <Route

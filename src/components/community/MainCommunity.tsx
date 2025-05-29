@@ -142,12 +142,12 @@ export const MemberCard: React.FC<MemberCardProps> = ({ member, index, onMemberC
         <div className="relative mb-4">
           <div className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4">
             <img
-              src={member.imageUrls?.length > 0 ? member.imageUrls[0] : "/images/default-avatar.jpg"}
+              src={member.imageUrls?.length > 0 ? member.imageUrls[0] : ""}
               alt={member.name}
               className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-white border-opacity-20 group-hover:border-opacity-40 transition-all duration-300"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
-                target.src = "/images/default-avatar.jpg";
+                target.src = "";
               }}
             />
             <div className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
