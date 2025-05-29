@@ -1,9 +1,8 @@
 import React from "react";
 
 import "./index.css";
-import App from "./App";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter as Router, RouterProvider } from "react-router-dom";
+import {  RouterProvider } from "react-router-dom";
 import { Provider } from "react-redux";
 import "./assets/styles/bootstrap.custom.css";
 import "bootstrap-icons/font/bootstrap-icons.css";

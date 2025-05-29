@@ -9,9 +9,8 @@ import {
 import { Bounce, toast } from "react-toastify";
 import Loader from "../Loader";
 import { useCreateChatRoomMutation } from "../../store/slices/chatSlice";
-// No need to import custom CSS as we're using Bootstrap
 
-// Improved TypeScript interfaces
+// Enhanced TypeScript interfaces
 interface UserData {
   _id: string;
   name: string;
@@ -52,20 +51,26 @@ interface LanguagePairProps {
 
 interface ImageGalleryProps {
   images: string[];
+  userName: string;
 }
 
 interface ActionButtonProps {
   icon: string;
   label: string;
   onClick: () => void;
-  variant?: string;
+  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'following' | 'outline';
   isLoading?: boolean;
   disabled?: boolean;
+  size?: 'sm' | 'md' | 'lg';
 }
 
-// Helper component for language display using Bootstrap classes
+interface StatsCardProps {
+  value: number;
+  label: string;
+}
+
+// Modern Language Display Component
 const LanguagePair: React.FC<LanguagePairProps> = ({ nativeLanguage, learningLanguage }) => {
-  // Map common language codes to flag emojis
   const getLanguageFlag = (language: string): string => {
     const flagMap: Record<string, string> = {
       English: "🇺🇸",
@@ -78,71 +83,102 @@ const LanguagePair: React.FC<LanguagePairProps> = ({ nativeLanguage, learningLan
       Japanese: "🇯🇵",
       Korean: "🇰🇷",
       Chinese: "🇨🇳",
-      // Add more as needed
     };
-
     return flagMap[language] || "🌐";
   };
 
   return (
-    <div className="bg-light p-3 rounded mb-3 border-start border-4 border-primary">
-      <div className="d-flex align-items-center">
-        <div className="me-3">
-          <span className="fs-5 me-2">{getLanguageFlag(nativeLanguage)}</span>
-          <span>{nativeLanguage}</span>
-        </div>
-        <div className="mx-3 text-muted">→</div>
-        <div>
-          <span className="fs-5 me-2">{getLanguageFlag(learningLanguage)}</span>
-          <span>{learningLanguage}</span>
-        </div>
+    <div className="d-flex align-items-center justify-content-center gap-4 p-4 bg-light rounded-4 mb-4">
+      <div className="text-center">
+        <div className="fs-2 mb-2">{getLanguageFlag(nativeLanguage)}</div>
+        <div className="fw-medium text-dark">{nativeLanguage}</div>
+        <div className="small text-muted">Speaks</div>
+      </div>
+      <div className="text-primary fs-4">⟷</div>
+      <div className="text-center">
+        <div className="fs-2 mb-2">{getLanguageFlag(learningLanguage)}</div>
+        <div className="fw-medium text-dark">{learningLanguage}</div>
+        <div className="small text-muted">Learning</div>
       </div>
     </div>
   );
 };
 
-
-// Gallery component for user images using Bootstrap
-const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
+// Modern Image Gallery Component
+const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   if (!images || images.length === 0) {
     return (
-      <div className="bg-light rounded d-flex align-items-center justify-content-center" style={{ height: "350px" }}>
-        <div className="text-muted">No image available</div>
+      <div 
+        className="bg-gradient rounded-4 d-flex align-items-center justify-content-center position-relative overflow-hidden"
+        style={{ 
+          height: "400px",
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+        }}
+      >
+        <div className="text-white text-center">
+          <div className="fs-1 mb-2">👤</div>
+          <div className="fw-medium">No photos yet</div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div>
-      <div className="rounded overflow-hidden mb-3 shadow-sm" style={{ height: "350px" }}>
+    <div className="position-relative">
+      <div 
+        className="rounded-4 overflow-hidden shadow-lg position-relative"
+        style={{ height: "400px" }}
+      >
         <img
           src={images[activeIndex] || "/images/default-avatar.jpg"}
-          alt="Profile"
+          alt={`${userName}'s photo`}
           className="w-100 h-100 object-fit-cover"
           style={{ objectFit: "cover" }}
-         
         />
+        
+        {images.length > 1 && (
+          <div className="position-absolute bottom-0 start-0 end-0 p-3 bg-gradient-dark">
+            <div className="d-flex justify-content-center gap-1">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  className={`btn btn-sm rounded-circle p-0 ${
+                    activeIndex === index ? 'btn-light' : 'btn-outline-light'
+                  }`}
+                  style={{ width: "8px", height: "8px" }}
+                  onClick={() => setActiveIndex(index)}
+                  aria-label={`View photo ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {images.length > 1 && (
-        <div className="d-flex gap-2 overflow-auto pb-2">
+        <div className="d-flex gap-2 mt-3 overflow-auto pb-2">
           {images.map((image, index) => (
-            <div
+            <button
               key={index}
-              className={`rounded overflow-hidden cursor-pointer ${activeIndex === index ? 'border border-2 border-primary' : 'opacity-75'}`}
-              style={{ width: "60px", height: "60px", cursor: "pointer" }}
+              className={`border-0 rounded-3 overflow-hidden p-0 ${
+                activeIndex === index ? 'ring ring-primary' : 'opacity-75'
+              }`}
+              style={{ 
+                width: "60px", 
+                height: "60px",
+                boxShadow: activeIndex === index ? '0 0 0 2px var(--bs-primary)' : 'none'
+              }}
               onClick={() => setActiveIndex(index)}
             >
               <img
                 src={image}
-                alt={`Thumbnail ${index + 1}`}
-                className="w-100 h-100"
+                alt={`${userName}'s photo ${index + 1}`}
+                className="w-100 h-100 object-fit-cover"
                 style={{ objectFit: "cover" }}
-               
               />
-            </div>
+            </button>
           ))}
         </div>
       )}
@@ -150,7 +186,15 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
   );
 };
 
-// Action button component using Bootstrap
+// Modern Stats Card Component
+const StatsCard: React.FC<StatsCardProps> = ({ value, label }) => (
+  <div className="text-center p-3 bg-white rounded-3 shadow-sm">
+    <div className="fs-4 fw-bold text-primary mb-1">{value}</div>
+    <div className="small text-muted fw-medium">{label}</div>
+  </div>
+);
+
+// Modern Action Button Component
 const ActionButton: React.FC<ActionButtonProps> = ({
   icon,
   label,
@@ -158,28 +202,37 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   variant = "primary",
   isLoading = false,
   disabled = false,
+  size = "md"
 }) => {
-  // Map variant to Bootstrap button classes
-  const getButtonClass = (variant: string): string => {
-    const variantMap: Record<string, string> = {
-      primary: "btn-primary",
-      following: "btn-outline-secondary",
-      message: "btn-success",
-      call: "btn-warning text-white",
-      "large-primary": "btn-primary btn-lg",
+  const getButtonClasses = (): string => {
+    const baseClasses = "btn d-flex align-items-center justify-content-center gap-2 fw-medium rounded-3";
+    const sizeClasses = {
+      sm: "btn-sm",
+      md: "",
+      lg: "btn-lg"
+    };
+    
+    const variantClasses = {
+      primary: "btn-primary shadow-sm",
+      secondary: "btn-secondary",
+      success: "btn-success shadow-sm",
+      warning: "btn-warning text-white shadow-sm",
+      following: "btn-outline-primary",
+      outline: "btn-outline-secondary"
     };
 
-    return variantMap[variant] || "btn-primary";
+    return `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]}`;
   };
 
   return (
     <button
-      className={`btn ${getButtonClass(variant)} d-flex align-items-center justify-content-center gap-2 w-100`}
+      className={`${getButtonClasses()} ${disabled || isLoading ? 'disabled' : ''}`}
       onClick={onClick}
       disabled={disabled || isLoading}
       aria-label={label}
+      style={{ minHeight: "44px" }}
     >
-      <span>{icon}</span>
+      <span className="fs-5">{icon}</span>
       <span>{isLoading ? `${label}...` : label}</span>
     </button>
   );
@@ -188,7 +241,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
 const CommunityDetail: React.FC = () => {
   const { id: communityId } = useParams<{ id: string }>();
   const { data, isLoading, error, refetch } = useGetCommunityDetailsQuery(communityId);
-const [createChatRoom, { isLoading: isCreatingChat }] = useCreateChatRoomMutation();
+  const [createChatRoom, { isLoading: isCreatingChat }] = useCreateChatRoomMutation();
 
   const navigate = useNavigate();
   const userId = useSelector((state: RootState) => state.auth.userInfo?.user._id);
@@ -196,7 +249,6 @@ const [createChatRoom, { isLoading: isCreatingChat }] = useCreateChatRoomMutatio
   const [followUser, { isLoading: isFollowing }] = useFollowUserMutation();
   const [unFollowUser, { isLoading: isUnfollowing }] = useUnFollowUserMutation();
 
-  // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [communityId]);
@@ -204,64 +256,67 @@ const [createChatRoom, { isLoading: isCreatingChat }] = useCreateChatRoomMutatio
   if (!communityId) {
     return (
       <div className="container py-5 text-center">
-        <div className="alert alert-danger">Invalid profile ID</div>
-        <button className="btn btn-outline-primary" onClick={() => navigate("/community")}>
+        <div className="alert alert-danger rounded-4">Invalid profile ID</div>
+        <button 
+          className="btn btn-outline-primary rounded-3" 
+          onClick={() => navigate("/community")}
+        >
           Back to Community
         </button>
       </div>
     );
   }
 
-  const handleFollow = async (targetUser: string) => {
+  const handleFollow = async (targetUser: string): Promise<void> => {
     try {
       if (!userId) {
         toast.error("You need to be logged in to follow users", {
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  theme: "dark",
-                  transition: Bounce,
-                });
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
         return;
       }
 
       const response = await followUser({ userId, targetUserId: targetUser });
 
       if ('error' in response) {
-        toast.error("Failed to follow user. Please try again.",{
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  theme: "dark",
-                  transition: Bounce,
-                });
+        toast.error("Failed to follow user. Please try again.", {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
       } else {
-        toast.success("Successfully followed!",{
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  theme: "dark",
-                  transition: Bounce,
-                });
+        toast.success("Successfully followed!", {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
         await refetch();
       }
     } catch (error) {
       toast.error("An error occurred. Please try again.", {
-                autoClose: 3000,
-                hideProgressBar: false,
-                theme: "dark",
-                transition: Bounce,
-              });
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
     }
   };
 
-  const handleUnfollow = async (targetUser: string) => {
+  const handleUnfollow = async (targetUser: string): Promise<void> => {
     if (window.confirm("Are you sure you want to unfollow this user?")) {
       try {
         if (!userId) {
           toast.error("You need to be logged in to unfollow users", {
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    theme: "dark",
-                    transition: Bounce,
-                  });
+            autoClose: 3000,
+            hideProgressBar: false,
+            theme: "dark",
+            transition: Bounce,
+          });
           return;
         }
 
@@ -272,86 +327,82 @@ const [createChatRoom, { isLoading: isCreatingChat }] = useCreateChatRoomMutatio
 
         if ('error' in response) {
           toast.error("Failed to unfollow user. Please try again.", {
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    theme: "dark",
-                    transition: Bounce,
-                  });
+            autoClose: 3000,
+            hideProgressBar: false,
+            theme: "dark",
+            transition: Bounce,
+          });
         } else {
           toast.success("Successfully unfollowed", {
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    theme: "dark",
-                    transition: Bounce,
-                  });
+            autoClose: 3000,
+            hideProgressBar: false,
+            theme: "dark",
+            transition: Bounce,
+          });
           await refetch();
         }
       } catch (error) {
         toast.error("An error occurred. Please try again.", {
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  theme: "dark",
-                  transition: Bounce,
-                });
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
       }
     }
   };
 
-const handleStartChat = async (memberId: string) => {
-  try {
-    if (!userId) {
-      toast.error("You need to be logged in to start a chat", {
-        autoClose: 3000,
-        hideProgressBar: false,
-        theme: "dark",
-        transition: Bounce,
-      });
-      return;
-    }
+  const handleStartChat = async (memberId: string): Promise<void> => {
+    try {
+      if (!userId) {
+        toast.error("You need to be logged in to start a chat", {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
+        return;
+      }
 
-    const response = await createChatRoom(memberId).unwrap();
-    
-    if (response) {
-      toast.success("Chat started successfully!", {
+      const response = await createChatRoom(memberId).unwrap();
+      
+      if (response) {
+        toast.success("Chat started successfully!", {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
+        navigate(`/chat/${memberId}`);
+      } else {
+        navigate(`/chat/${memberId}`);
+      }
+    } catch (error) {
+      toast.error("Failed to start chat. Please try again.", {
         autoClose: 3000,
         hideProgressBar: false,
         theme: "dark",
         transition: Bounce,
       });
-      navigate(`/chat/${memberId}`);
-    } else {
-      // If the backend doesn't return a conversationId but still succeeds
+      console.error("Chat creation error:", error);
       navigate(`/chat/${memberId}`);
     }
-  } catch (error) {
-    toast.error("Failed to start chat. Please try again.", {
+  };
+
+  const handleCallUser = (memberName: string): void => {
+    toast.info(`Initiating call with ${memberName}...`, {
       autoClose: 3000,
       hideProgressBar: false,
       theme: "dark",
       transition: Bounce,
     });
-    console.error("Chat creation error:", error);
-    
-    // Fallback - navigate anyway if the error might be just a notification issue
-    navigate(`/chat/${memberId}`);
-  }
-};
-
-  const handleCallUser = (memberName: string) => {
-    toast.info(`Initiating call with ${memberName}...`,{
-              autoClose: 3000,
-              hideProgressBar: false,
-              theme: "dark",
-              transition: Bounce,
-            });
-    // Implement call functionality here
   };
 
   if (isLoading) {
     return (
       <div className="container py-5 text-center">
         <Loader />
-        <p className="mt-3">Loading profile...</p>
+        <p className="mt-3 text-muted">Loading profile...</p>
       </div>
     );
   }
@@ -360,19 +411,23 @@ const handleStartChat = async (memberId: string) => {
     return (
       <div className="container py-5 text-center">
         <div className="display-1 mb-3">⚠️</div>
-        <h3>Oops! Something went wrong</h3>
+        <h3 className="fw-bold">Oops! Something went wrong</h3>
         <p className="text-muted mb-4">We couldn't load this profile. Please try again later.</p>
-        <button className="btn btn-primary me-2" onClick={() => refetch()}>
-          Try Again
-        </button>
-        <button className="btn btn-outline-secondary" onClick={() => navigate("/community")}>
-          Back to Community
-        </button>
+        <div className="d-flex gap-3 justify-content-center">
+          <button className="btn btn-primary rounded-3" onClick={() => refetch()}>
+            Try Again
+          </button>
+          <button 
+            className="btn btn-outline-secondary rounded-3" 
+            onClick={() => navigate("/community")}
+          >
+            Back to Community
+          </button>
+        </div>
       </div>
     );
   }
 
-  // Ensure data is defined
   const member = data as SingleMember;
   const memberDetails = member?.data;
 
@@ -380,137 +435,168 @@ const handleStartChat = async (memberId: string) => {
     return (
       <div className="container py-5 text-center">
         <div className="display-1 mb-3">🔍</div>
-        <h3>Profile Not Found</h3>
+        <h3 className="fw-bold">Profile Not Found</h3>
         <p className="text-muted mb-4">This user profile doesn't exist or has been removed.</p>
-        <button className="btn btn-outline-primary" onClick={() => navigate("/community")}>
+        <button 
+          className="btn btn-outline-primary rounded-3" 
+          onClick={() => navigate("/community")}
+        >
           Back to Community
         </button>
       </div>
     );
   }
 
-  const userAge = memberDetails.birth_year
+  const userAge: number | null = memberDetails.birth_year
     ? new Date().getFullYear() - parseInt(memberDetails.birth_year)
     : null;
 
-  // Calculate member since date
-  const memberSince = new Date(memberDetails.createdAt).toLocaleDateString(
-    "en-US",
-    {
-      year: "numeric",
-      month: "long",
-    }
-  );
+  const memberSince: string = new Date(memberDetails.createdAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+  });
 
-  // Check if current user is following this member
-  const isUserFollowing = memberDetails.followers.includes(userId || '');
+  const isUserFollowing: boolean = memberDetails.followers.includes(userId || '');
 
   return (
-    <div className="container py-4">
-      <div className="mb-4">
-        <button
-          className="btn btn-link text-decoration-none p-0 fs-5"
-          onClick={() => navigate("/communities")}
-        >
-          ← Back to Community
-        </button>
+    <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
+      {/* Header */}
+      <div className="bg-white border-bottom sticky-top">
+        <div className="container py-3">
+          <button
+            className="btn btn-link text-decoration-none p-0 d-flex align-items-center gap-2"
+            onClick={() => navigate("/communities")}
+          >
+            <span className="fs-5">←</span>
+            <span className="fw-medium">Back to Community</span>
+          </button>
+        </div>
       </div>
 
-      <div className="card shadow-sm">
-        <div className="row g-0">
-          {/* Left column - Photos and actions */}
-          <div className="col-md-4 border-end">
-            <div className="p-4">
-              <ImageGallery images={memberDetails.imageUrls} />
-
-              <div className="d-flex justify-content-around py-3 border-top border-bottom my-3">
-                <div className="text-center">
-                  <div className="fw-bold fs-4">{memberDetails.followers.length}</div>
-                  <div className="text-muted small">Followers</div>
+      <div className="container py-4">
+        <div className="row g-4">
+          {/* Left Column - Photos and Quick Actions */}
+          <div className="col-lg-4">
+            <div className="bg-white rounded-4 p-4 shadow-sm h-100">
+              <ImageGallery images={memberDetails.imageUrls} userName={memberDetails.name} />
+              
+              {/* Stats */}
+              <div className="row g-2 my-4">
+                <div className="col-6">
+                  <StatsCard value={memberDetails.followers.length} label="Followers" />
                 </div>
-                <div className="text-center">
-                  <div className="fw-bold fs-4">{memberDetails.following.length}</div>
-                  <div className="text-muted small">Following</div>
+                <div className="col-6">
+                  <StatsCard value={memberDetails.following.length} label="Following" />
                 </div>
               </div>
 
-              <div className="d-flex flex-column gap-2">
-                {isUserFollowing ? (
-                  <ActionButton
-                    icon="👥"
-                    label="Following"
-                    variant="following"
-                    onClick={() => handleUnfollow(memberDetails._id)}
-                    isLoading={isUnfollowing}
-                  />
-                ) : (
-                  <ActionButton
-                    icon="➕"
-                    label="Follow"
-                    variant="primary"
-                    onClick={() => handleFollow(memberDetails._id)}
-                    isLoading={isFollowing}
-                  />
+              {/* Action Buttons */}
+              <div className="d-grid gap-2">
+                {userId !== memberDetails._id && (
+                  <>
+                    {isUserFollowing ? (
+                      <ActionButton
+                        icon="✓"
+                        label="Following"
+                        variant="following"
+                        onClick={() => handleUnfollow(memberDetails._id)}
+                        isLoading={isUnfollowing}
+                      />
+                    ) : (
+                      <ActionButton
+                        icon="+"
+                        label="Follow"
+                        variant="primary"
+                        onClick={() => handleFollow(memberDetails._id)}
+                        isLoading={isFollowing}
+                      />
+                    )}
+
+                    <ActionButton
+                      icon="💬"
+                      label="Start Chat"
+                      variant="success"
+                      onClick={() => handleStartChat(memberDetails._id)}
+                      isLoading={isCreatingChat}
+                    />
+
+                    <ActionButton
+                      icon="📞"
+                      label="Video Call"
+                      variant="warning"
+                      onClick={() => handleCallUser(memberDetails.name)}
+                    />
+                  </>
                 )}
-
-                <ActionButton
-                  icon="💬"
-                  label="Message"
-                  variant="message"
-                  onClick={() => handleStartChat(memberDetails._id)}
-                />
-
-                <ActionButton
-                  icon="📞"
-                  label="Call"
-                  variant="call"
-                  onClick={() => handleCallUser(memberDetails.name)}
-                />
               </div>
             </div>
           </div>
 
-          {/* Right column - User details */}
-          <div className="col-md-8">
-            <div className="p-4">
-              <div className="mb-2 d-flex align-items-baseline flex-wrap">
-                <h1 className="fs-2 fw-bold me-3 mb-0">{memberDetails.name}</h1>
-                {userAge && <span className="text-muted me-2">{userAge}</span>}
-                {memberDetails.gender && (
-                  <span className="text-muted">• {memberDetails.gender}</span>
-                )}
-              </div>
-
-              <LanguagePair
-                nativeLanguage={memberDetails.native_language || "Not specified"}
-                learningLanguage={
-                  memberDetails.language_to_learn || "Not specified"
-                }
-              />
-
+          {/* Right Column - Profile Details */}
+          <div className="col-lg-8">
+            <div className="bg-white rounded-4 p-4 shadow-sm">
+              {/* Header */}
               <div className="mb-4">
-                <h2 className="fs-5 fw-semibold mb-2">About Me</h2>
-                <p className="text-muted">{memberDetails.bio || "This user hasn't added a bio yet."}</p>
-              </div>
-
-              <div className="border-top pt-3 text-muted small mb-4">
-                <div>
-                  <span className="fw-medium">Member since:</span>
-                  <span className="ms-2">{memberSince}</span>
+                <div className="d-flex align-items-baseline flex-wrap gap-3 mb-3">
+                  <h1 className="display-6 fw-bold mb-0">{memberDetails.name}</h1>
+                  {userAge && (
+                    <span className="badge bg-light text-dark fs-6 fw-normal">{userAge} years old</span>
+                  )}
+                  {memberDetails.gender && (
+                    <span className="badge bg-light text-dark fs-6 fw-normal">{memberDetails.gender}</span>
+                  )}
+                </div>
+                
+                <div className="small text-muted d-flex align-items-center gap-2">
+                  <span>📅</span>
+                  <span>Member since {memberSince}</span>
                 </div>
               </div>
 
-              <div className="bg-light p-4 rounded text-center mt-4">
-                <p className="mb-3">
-                  Want to practice languages with {memberDetails.name.split(" ")[0]}?
-                </p>
-                <ActionButton
-                  icon="💬"
-                  label="Start Conversation"
-                  variant="large-primary"
-                  onClick={() => handleStartChat(memberDetails._id)}
-                />
+              {/* Languages */}
+              <LanguagePair
+                nativeLanguage={memberDetails.native_language || "Not specified"}
+                learningLanguage={memberDetails.language_to_learn || "Not specified"}
+              />
+
+              {/* About Section */}
+              <div className="mb-4">
+                <h2 className="h5 fw-bold mb-3 d-flex align-items-center gap-2">
+                  <span>💭</span>
+                  About {memberDetails.name.split(" ")[0]}
+                </h2>
+                <div className="bg-light rounded-3 p-4">
+                  <p className="mb-0 lh-lg">
+                    {memberDetails.bio && memberDetails.bio.trim() 
+                      ? memberDetails.bio 
+                      : `${memberDetails.name.split(" ")[0]} hasn't added a bio yet. Start a conversation to learn more about them!`
+                    }
+                  </p>
+                </div>
               </div>
+
+              {/* Call to Action */}
+              {userId !== memberDetails._id && (
+                <div className="bg-primary bg-opacity-10 rounded-4 p-4 text-center border border-primary border-opacity-25">
+                  <div className="mb-3">
+                    <span className="fs-2">🌟</span>
+                  </div>
+                  <h3 className="h5 fw-bold text-primary mb-2">
+                    Ready to practice with {memberDetails.name.split(" ")[0]}?
+                  </h3>
+                  <p className="text-muted mb-3">
+                    Start chatting and improve your language skills together!
+                  </p>
+                  <ActionButton
+                    icon="💬"
+                    label="Start Conversation"
+                    variant="primary"
+                    size="lg"
+                    onClick={() => handleStartChat(memberDetails._id)}
+                    isLoading={isCreatingChat}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
