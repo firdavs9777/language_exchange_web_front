@@ -74,6 +74,7 @@
     },
     "moments_section": {
         "title": "모멘트",
+        "comments": "댓글",
         "question": "무슨 생각을 하고 계신가요,",
         "loading": "불러오는 중",
         "loading_moments": "모멘트를 불러오는 중...",

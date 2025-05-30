@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card, Image, Button, Badge, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { 
@@ -7,11 +7,13 @@ import {
   AiOutlineComment, 
   AiOutlineShareAlt 
 } from "react-icons/ai";
+import { HiDotsHorizontal } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Bounce, toast } from "react-toastify";
-import moment from 'moment'
+import moment from 'moment';
 import { useTranslation } from "react-i18next";
 
+// TypeScript interfaces
 interface User {
   _id: string;
   name: string;
@@ -31,6 +33,18 @@ interface MomentProps {
   refetch?: () => void;
 }
 
+interface AuthState {
+  userInfo?: {
+    user: {
+      _id: string;
+    };
+  };
+}
+
+interface RootState {
+  auth: AuthState;
+}
+
 const SingleMoment: React.FC<MomentProps> = ({
   _id,
   title,
@@ -43,147 +57,313 @@ const SingleMoment: React.FC<MomentProps> = ({
   imageUrls,
   refetch,
 }) => {
-  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
+  const userId = useSelector((state: RootState) => state.auth.userInfo?.user._id);
   const [liked, setLiked] = useState<boolean>(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [currentLikeCount, setCurrentLikeCount] = useState<number>(likeCount);
+  const [isLiking, setIsLiking] = useState<boolean>(false);
   const navigate = useNavigate();
-  const {t} = useTranslation()
+  const { t } = useTranslation();
+
   useEffect(() => {
     setLiked(userId ? likedUsers.includes(userId) : false);
-  }, [likedUsers, userId]);
+    setCurrentLikeCount(likeCount);
+  }, [likedUsers, userId, likeCount]);
 
-  const handleLikeToggle = async (e: React.MouseEvent) => {
+  const handleLikeToggle = useCallback(async (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    
     if (!userId) {
       toast.error(t("moment_login_error"), {
-                autoClose: 3000,
-                hideProgressBar: false,
-                theme: "dark",
-                transition: Bounce,
-              });
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "colored",
+        transition: Bounce,
+      });
       navigate("/login");
       return;
     }
 
+    if (isLiking) return; // Prevent double clicks
+
+    setIsLiking(true);
+    const previousLiked = liked;
+    const previousCount = currentLikeCount;
+
+    // Optimistic update
+    setLiked(!liked);
+    setCurrentLikeCount(prev => liked ? prev - 1 : prev + 1);
+
     try {
-      // Simulate API call
+      // Simulate API call - replace with actual API call
       await new Promise(resolve => setTimeout(resolve, 300));
-      setLiked(!liked);
       if (refetch) refetch();
     } catch (error) {
+      // Revert optimistic update on error
+      setLiked(previousLiked);
+      setCurrentLikeCount(previousCount);
+      
       toast.error(t("moment_like_error"), {
-                autoClose: 3000,
-                hideProgressBar: false,
-                theme: "dark",
-                transition: Bounce,
-              });
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "colored",
+        transition: Bounce,
+      });
+    } finally {
+      setIsLiking(false);
     }
-  };
+  }, [userId, liked, currentLikeCount, isLiking, t, navigate, refetch]);
+
+  const handleShare = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (navigator.share) {
+      navigator.share({
+        title: title,
+        text: description,
+        url: `${window.location.origin}/moment/${_id}`,
+      });
+    } else {
+      // Fallback to clipboard
+      navigator.clipboard.writeText(`${window.location.origin}/moment/${_id}`);
+      toast.success("Link copied to clipboard!", {
+        autoClose: 2000,
+        hideProgressBar: true,
+        theme: "colored",
+      });
+    }
+  }, [title, description, _id]);
 
   const formatDate = (dateString: string): string => {
     return moment(dateString).fromNow();
   };
 
-  const defaultProfileImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+  const defaultProfileImage = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face";
 
   return (
-    <Card 
-      className="mb-4 border-0 shadow-sm rounded-lg overflow-hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{
-        transition: "transform 0.2s ease, box-shadow 0.2s ease",
-        transform: isHovered ? "translateY(-2px)" : "none",
-        boxShadow: isHovered ? "0 10px 20px rgba(0,0,0,0.1)" : "0 2px 8px rgba(0,0,0,0.05)"
-      }}
-    >
-      {/* Header with user info */}
-      <div className="d-flex align-items-center p-3 border-bottom">
-        <Link to={`/community/${user._id}`} className="d-flex align-items-center text-decoration-none">
-          <Image
-            src={user?.imageUrls?.[0] || defaultProfileImage}
-            roundedCircle
-            width={40}
-            height={40}
-            className="border object-cover me-3"
-            style={{ objectFit: "cover" }}
-          />
-          <div>
-            <h6 className="mb-0 fw-bold text-dark">{user.name}</h6>
-            <small className="text-muted">{formatDate(createdAt)}</small>
-          </div>
-        </Link>
-      </div>
+    <>
+      {/* Custom CSS for modern effects */}
+      <style>
+        {`
+          .moment-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0,0,0,0.06);
+          }
+          .moment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+            border-color: rgba(0,0,0,0.1);
+          }
+          .moment-image {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          }
+          .moment-card:hover .moment-image {
+            transform: scale(1.02);
+          }
+          .action-btn {
+            transition: all 0.2s ease;
+            border: none !important;
+            position: relative;
+            overflow: hidden;
+          }
+          .action-btn:hover {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+            transform: translateY(-1px);
+          }
+          .action-btn.liked {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+            color: #1976d2 !important;
+          }
+          .like-animation {
+            animation: likeScale 0.3s ease;
+          }
+          @keyframes likeScale {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+          }
+          .profile-ring {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2px;
+            border-radius: 50%;
+          }
+          .content-fade {
+            background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.8) 100%);
+          }
+        `}
+      </style>
 
-      {/* Content */}
-      <Link to={`/moment/${_id}`} className="text-decoration-none text-dark">
-        <div className="p-3">
-          <h5 className="fw-bold mb-2">{title}</h5>
-          <p className="text-muted mb-3">{description}</p>
+      <Card 
+        className="moment-card border-0 rounded-4 overflow-hidden bg-white"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{
+          boxShadow: isHovered 
+            ? "0 20px 40px rgba(0,0,0,0.1)" 
+            : "0 4px 20px rgba(0,0,0,0.08)"
+        }}
+      >
+        {/* Header with user info */}
+        <div className="d-flex align-items-center justify-content-between p-4 border-bottom border-light">
+          <Link 
+            to={`/community/${user._id}`} 
+            className="d-flex align-items-center text-decoration-none flex-grow-1"
+          >
+            <div className="profile-ring me-3">
+              <Image
+                src={user?.imageUrls?.[0] || defaultProfileImage}
+                roundedCircle
+                width={44}
+                height={44}
+                className="bg-white"
+                style={{ objectFit: "cover" }}
+              />
+            </div>
+            <div className="flex-grow-1">
+              <h6 className="mb-0 fw-bold text-dark">{user.name}</h6>
+              <small className="text-muted d-flex align-items-center gap-1">
+                <i className="fas fa-clock" style={{ fontSize: '10px' }}></i>
+                {formatDate(createdAt)}
+              </small>
+            </div>
+          </Link>
+          
+          <Button
+            variant="light"
+            size="sm"
+            className="rounded-circle border-0 p-2"
+            style={{ width: '36px', height: '36px' }}
+          >
+            <HiDotsHorizontal size={16} className="text-muted" />
+          </Button>
+        </div>
+
+        {/* Content */}
+        <Link to={`/moment/${_id}`} className="text-decoration-none text-dark">
+          <div className="p-4 pb-3">
+            <h5 className="fw-bold mb-3 lh-base" style={{ color: '#1a1a1a' }}>
+              {title}
+            </h5>
+            <p className="text-muted mb-0 lh-base" style={{ fontSize: '0.95rem' }}>
+              {description.length > 150 
+                ? `${description.substring(0, 150)}...` 
+                : description
+              }
+            </p>
+          </div>
 
           {imageUrls && imageUrls.length > 0 && (
-            <div className="rounded-lg overflow-hidden mb-3">
+            <div className="position-relative overflow-hidden">
               <Image
                 src={imageUrls[0]}
                 alt={title}
                 fluid
-                className="w-100"
+                className="w-100 moment-image"
                 style={{
-                  height: "300px",
+                  height: "320px",
                   objectFit: "cover",
-                  transition: "transform 0.3s ease",
-                  transform: isHovered ? "scale(1.02)" : "scale(1)"
                 }}
               />
+              {imageUrls.length > 1 && (
+                <Badge 
+                  bg="dark" 
+                  className="position-absolute top-0 end-0 m-3 px-2 py-1 rounded-pill"
+                  style={{ fontSize: '0.75rem' }}
+                >
+                  +{imageUrls.length - 1}
+                </Badge>
+              )}
             </div>
           )}
+        </Link>
+
+        {/* Stats Bar */}
+        <div className="px-4 py-2 border-bottom border-light bg-light bg-opacity-50">
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center gap-3">
+              {currentLikeCount > 0 && (
+                <small className="text-muted d-flex align-items-center gap-1">
+                  <AiFillLike className="text-primary" size={14} />
+                  {currentLikeCount} {currentLikeCount === 1 ? 'like' : 'likes'}
+                </small>
+              )}
+              {commentCount > 0 && (
+                <small className="text-muted">
+                  {commentCount} {commentCount === 1 ? 'comment' : 'comments'}
+                </small>
+              )}
+            </div>
+          </div>
         </div>
-      </Link>
 
-    
-
-      {/* Action Buttons */}
-      <div className="d-flex border-top">
-        <OverlayTrigger
-          placement="top"
-          overlay={<Tooltip>{liked ? "Unlike" : "Like"}</Tooltip>}
-        >
-          <Button
-            variant="light"
-            className="flex-grow-1 d-flex justify-content-center align-items-center border-0 py-2 bg-hover-light"
-            onClick={handleLikeToggle}
+        {/* Action Buttons */}
+        <div className="d-flex border-0">
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip>{liked ? "Unlike" : "Like"}</Tooltip>}
           >
-            {liked ? (
-              <AiFillLike className="text-primary me-2" size={18} />
-            ) : (
-              <AiOutlineLike className="me-2" size={18} />
-            )}
-            <span className={liked ? "text-primary fw-medium" : ""}>{t('moments_section.moment_like') }</span>
-          </Button>
-        </OverlayTrigger>
+            <Button
+              className={`action-btn flex-grow-1 d-flex justify-content-center align-items-center py-3 ${liked ? 'liked' : ''}`}
+              onClick={handleLikeToggle}
+              disabled={isLiking}
+              style={{ 
+                backgroundColor: liked ? '#e3f2fd' : 'transparent',
+                color: liked ? '#1976d2' : '#6c757d'
+              }}
+            >
+              <div className={liked && !isLiking ? 'like-animation' : ''}>
+                {liked ? (
+                  <AiFillLike className="me-2" size={18} />
+                ) : (
+                  <AiOutlineLike className="me-2" size={18} />
+                )}
+              </div>
+              <span className="fw-medium" style={{ fontSize: '0.9rem' }}>
+                {t('moments_section.moment_like')}
+              </span>
+            </Button>
+          </OverlayTrigger>
 
-        <OverlayTrigger placement="top" overlay={<Tooltip>{t('moments_section.moment_comment') }</Tooltip>}>
-          <Link
-            to={`/moment/${_id}`}
-            className="btn btn-light flex-grow-1 d-flex justify-content-center align-items-center border-0 py-2 text-decoration-none text-dark bg-hover-light"
+          <OverlayTrigger 
+            placement="top" 
+            overlay={<Tooltip>{t('moments_section.moment_comment')}</Tooltip>}
           >
-            <AiOutlineComment className="me-2" size={18} />
-            <span>{t('moments_section.moment_comment') }</span>
-          </Link>
-        </OverlayTrigger>
+            <Link
+              to={`/moment/${_id}`}
+              className="action-btn btn flex-grow-1 d-flex justify-content-center align-items-center py-3 text-decoration-none"
+              style={{ color: '#6c757d' }}
+            >
+              <AiOutlineComment className="me-2" size={18} />
+              <span className="fw-medium" style={{ fontSize: '0.9rem' }}>
+                {t('moments_section.moment_comment')}
+              </span>
+            </Link>
+          </OverlayTrigger>
 
-        <OverlayTrigger placement="top" overlay={<Tooltip>{t('moments_section.moment_share') }</Tooltip>}>
-          <Button
-            variant="light"
-            className="flex-grow-1 d-flex justify-content-center align-items-center border-0 py-2 bg-hover-light"
+          <OverlayTrigger 
+            placement="top" 
+            overlay={<Tooltip>{t('moments_section.moment_share')}</Tooltip>}
           >
-            <AiOutlineShareAlt className="me-2" size={18} />
-            <span>{t('moments_section.moment_share') }</span>
-          </Button>
-        </OverlayTrigger>
-      </div>
-    </Card>
+            <Button
+              className="action-btn flex-grow-1 d-flex justify-content-center align-items-center py-3"
+              onClick={handleShare}
+              style={{ 
+                backgroundColor: 'transparent',
+                color: '#6c757d'
+              }}
+            >
+              <AiOutlineShareAlt className="me-2" size={18} />
+              <span className="fw-medium" style={{ fontSize: '0.9rem' }}>
+                {t('moments_section.moment_share')}
+              </span>
+            </Button>
+          </OverlayTrigger>
+        </div>
+      </Card>
+    </>
   );
 };
 
-export default SingleMoment;
+export default React.memo(SingleMoment);
