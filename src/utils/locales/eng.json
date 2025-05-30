@@ -276,7 +276,7 @@
         "new": "New"
       },
       "results": {
-        "showing": "Showing {count} amazing language partner{plural}",
+        "showing": "Showing {{count}} amazing language partner{{plural}}",
         "noneFound": {
           "title": "No language partners found",
           "message": "Try adjusting your search filters to discover more learners",

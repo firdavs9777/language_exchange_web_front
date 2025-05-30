@@ -373,7 +373,7 @@ const ModernCommunity: React.FC = () => {
     "English", "Spanish", "French", "German", "Korean", 
     "Japanese", "Chinese", "Portuguese", "Russian", "Italian"
   ];
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
@@ -390,6 +390,8 @@ const ModernCommunity: React.FC = () => {
       </div>
     );
   }
+  const count = filteredMembers.length;
+  const plural = count !== 1 ? (i18n.language === 'ko' ? '들' : 's') : '';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
@@ -526,8 +528,8 @@ const ModernCommunity: React.FC = () => {
               <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-white text-opacity-70" />
               <span className="text-white text-opacity-90 text-sm sm:text-base">
 
-                {t('communityMain.results.showing', {count:filteredMembers.length , plural: filteredMembers.length !== 1 ? 's' : ''})}
-             
+                {t('communityMain.results.showing', { count, plural })}
+            
               </span>
             </div>
           </div>
@@ -537,14 +539,14 @@ const ModernCommunity: React.FC = () => {
         {!isLoading && filteredMembers.length === 0 ? (
           <div className="text-center py-12 sm:py-20">
             <div className="text-5xl sm:text-6xl mb-4">🌍</div>
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-4">No language partners found</h3>
-            <p className="text-white text-opacity-70 mb-6 sm:mb-8 px-4">Try adjusting your search filters to discover more learners</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-4">{t("communityMain.results.noneFound.title")}</h3>
+            <p className="text-white text-opacity-70 mb-6 sm:mb-8 px-4">{t("communityMain.results.noneFound.message")}</p>
             {(filter || languageFilter) && (
               <button
                 onClick={clearFilters}
                 className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-full font-medium hover:scale-105 transition-transform shadow-lg text-sm sm:text-base"
               >
-                Reset All Filters
+                {t("communityMain.results.noneFound.resetFilters")}
               </button>
             )}
           </div>
@@ -568,7 +570,7 @@ const ModernCommunity: React.FC = () => {
               onClick={clearFilters}
               className="bg-white bg-opacity-10 backdrop-blur-sm text-white px-6 sm:px-8 py-2 sm:py-3 rounded-full font-medium hover:bg-opacity-20 transition-all duration-300 hover:scale-105 text-sm sm:text-base"
             >
-              Clear all filters
+              {t("communityMain.buttons.clearFilters")}
             </button>
           </div>
         )}
