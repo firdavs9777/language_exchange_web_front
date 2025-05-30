@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useGetCommunityMembersQuery } from "../../store/slices/communitySlice";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 // TypeScript interfaces
 interface CommunityMember {
@@ -27,11 +28,11 @@ interface CommunityMember {
   imageUrls: string[];
 }
 
-interface CommunityResponse {
-  success: boolean;
-  count: number;
-  data: CommunityMember[];
-}
+// interface CommunityResponse {
+//   success: boolean;
+//   count: number;
+//   data: CommunityMember[];
+// }
 
 interface LanguageFlagProps {
   code: string;
@@ -372,18 +373,18 @@ const ModernCommunity: React.FC = () => {
     "English", "Spanish", "French", "German", "Korean", 
     "Japanese", "Chinese", "Portuguese", "Russian", "Italian"
   ];
-
+  const { t } = useTranslation();
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center text-white">
-          <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
+          <h2 className="text-2xl font-bold mb-4">{ t("communityMain.errors.generic")}</h2>
           <p className="mb-4">{error}</p>
           <button 
             onClick={fetchMembers}
             className="bg-gradient-to-r from-pink-500 to-purple-500 px-6 py-3 rounded-full font-medium hover:scale-105 transition-transform"
           >
-            Try Again
+            { t("communityMain.errors.tryAgain")}
           </button>
         </div>
       </div>
@@ -419,23 +420,23 @@ const ModernCommunity: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
-            Language Exchange
+              { t("communityMain.title")}
           </h1>
-          <p className="text-lg sm:text-xl text-white text-opacity-80 mb-6 sm:mb-8">Connect with language learners worldwide</p>
+          <p className="text-lg sm:text-xl text-white text-opacity-80 mb-6 sm:mb-8">{ t("communityMain.subtitle")}</p>
           
           {/* Stats */}
           <div className="flex justify-center space-x-4 sm:space-x-8 mb-6 sm:mb-8">
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold text-white">{members.length}+</div>
-              <div className="text-xs sm:text-sm text-white text-opacity-70">Active Learners</div>
+              <div className="text-xs sm:text-sm text-white text-opacity-70">{ t("communityMain.stats.activeLearners")}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold text-white">50+</div>
-              <div className="text-xs sm:text-sm text-white text-opacity-70">Languages</div>
+              <div className="text-xs sm:text-sm text-white text-opacity-70">{t("communityMain.stats.languages")}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold text-white">180+</div>
-              <div className="text-xs sm:text-sm text-white text-opacity-70">Countries</div>
+              <div className="text-xs sm:text-sm text-white text-opacity-70">{t("communityMain.stats.countries")}</div>
             </div>
           </div>
         </div>
@@ -450,7 +451,7 @@ const ModernCommunity: React.FC = () => {
                 <Search className="w-5 h-5 sm:w-6 sm:h-6  text-opacity-60 mr-3 sm:mr-4" />
                 <input
                   type="text"
-                  placeholder="Search by name or language..."
+                  placeholder={t("communityMain.search.placeholder")}
                   value={filter}
                   onChange={handleFilterChange}
                   className="flex-1 text-[#333] placeholder-white placeholder-opacity-60 outline-none text-base sm:text-lg"
@@ -514,7 +515,7 @@ const ModernCommunity: React.FC = () => {
         {isLoading && (
           <div className="flex justify-center items-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-white" />
-            <span className="ml-2 text-white">Loading amazing language partners...</span>
+            <span className="ml-2 text-white">{t("communityMain.search.loading")}</span>
           </div>
         )}
 
@@ -524,7 +525,9 @@ const ModernCommunity: React.FC = () => {
             <div className="inline-flex items-center space-x-2 bg-white bg-opacity-10 backdrop-blur-sm rounded-full px-4 sm:px-6 py-2 sm:py-3">
               <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-white text-opacity-70" />
               <span className="text-white text-opacity-90 text-sm sm:text-base">
-                Showing {filteredMembers.length} amazing language partner{filteredMembers.length !== 1 ? 's' : ''}
+
+                {t('communityMain.results.showing', {count:filteredMembers.length , plural: filteredMembers.length !== 1 ? 's' : ''})}
+             
               </span>
             </div>
           </div>

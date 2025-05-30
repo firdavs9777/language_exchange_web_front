@@ -248,5 +248,100 @@
       "registrationSuccess": "Registration successful!",
       "registrationError": "Error during registration"
     }
-  }
+  },
+    "communityMain": {
+      "title": "Language Exchange",
+      "subtitle": "Connect with language learners worldwide",
+      "stats": {
+        "activeLearners": "Active Learners",
+        "languages": "Languages",
+        "countries": "Countries"
+      },
+      "search": {
+        "placeholder": "Search by name or language...",
+        "loading": "Loading amazing language partners..."
+      },
+      "memberCard": {
+        "native": "Native",
+        "learning": "Learning",
+        "defaultBio": "Passionate language learner ready to connect!",
+        "actions": {
+          "like": "Like",
+          "message": "Message"
+        }
+      },
+      "tabs": {
+        "all": "All",
+        "popular": "Popular",
+        "new": "New"
+      },
+      "results": {
+        "showing": "Showing {count} amazing language partner{plural}",
+        "noneFound": {
+          "title": "No language partners found",
+          "message": "Try adjusting your search filters to discover more learners",
+          "resetFilters": "Reset All Filters"
+        }
+      },
+      "errors": {
+        "generic": "Something went wrong",
+        "tryAgain": "Try Again"
+      },
+      "buttons": {
+        "clearFilters": "Clear all filters"
+      }
+    },
+    "communityDetail": {
+      "errors": {
+        "invalidProfileId": "Invalid profile ID",
+        "profileNotFound": "Profile Not Found",
+        "profileNotFoundDesc": "This user profile doesn't exist or has been removed.",
+        "somethingWentWrong": "Oops! Something went wrong",
+        "tryAgainLater": "We couldn't load this profile. Please try again later."
+      },
+      "buttons": {
+        "backToCommunity": "Back to Community",
+        "tryAgain": "Try Again",
+        "follow": "Follow",
+        "following": "Following",
+        "startChat": "Start Chat",
+        "videoCall": "Video Call",
+        "startConversation": "Start Conversation"
+      },
+      "loading": {
+        "loadingProfile": "Loading profile...",
+        "initiatingCall": "Initiating call with {{name}}..."
+      },
+      "notifications": {
+        "loginToFollow": "You need to be logged in to follow users",
+        "followSuccess": "Successfully followed!",
+        "followFailed": "Failed to follow user. Please try again.",
+        "loginToUnfollow": "You need to be logged in to unfollow users",
+        "unfollowSuccess": "Successfully unfollowed",
+        "unfollowFailed": "Failed to unfollow user. Please try again.",
+        "confirmUnfollow": "Are you sure you want to unfollow this user?",
+        "loginToChat": "You need to be logged in to start a chat",
+        "chatStarted": "Chat started successfully!",
+        "chatFailed": "Failed to start chat. Please try again.",
+        "errorOccurred": "An error occurred. Please try again."
+      },
+      "profile": {
+        "memberSince": "Member since {{date}}",
+        "yearsOld": "{{age}} years old",
+        "noPhotos": "No photos yet",
+        "aboutUser": "About {{name}}",
+        "noBio": "{{name}} hasn't added a bio yet. Start a conversation to learn more about them!",
+        "readyToPractice": "Ready to practice with {{name}}?",
+        "practiceDescription": "Start chatting and improve your language skills together!"
+      },
+      "stats": {
+        "followers": "Followers",
+        "following": "Following"
+      },
+      "language": {
+        "speaks": "Speaks",
+        "learning": "Learning",
+        "notSpecified": "Not specified"
+      }
+    }
 }

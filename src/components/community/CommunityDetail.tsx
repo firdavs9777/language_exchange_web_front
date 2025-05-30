@@ -9,7 +9,8 @@ import {
 import { Bounce, toast } from "react-toastify";
 import Loader from "../Loader";
 import { useCreateChatRoomMutation } from "../../store/slices/chatSlice";
-
+import { useTranslation } from "react-i18next";
+import { AiFillProfile } from "react-icons/ai";
 // Enhanced TypeScript interfaces
 interface UserData {
   _id: string;
@@ -107,7 +108,7 @@ const LanguagePair: React.FC<LanguagePairProps> = ({ nativeLanguage, learningLan
 // Modern Image Gallery Component
 const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-
+  const { t } = useTranslation();
   if (!images || images.length === 0) {
     return (
       <div 
@@ -118,8 +119,8 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
         }}
       >
         <div className="text-white text-center">
-          <div className="fs-1 mb-2">👤</div>
-          <div className="fw-medium">No photos yet</div>
+          <div className="fs-1 mb-2"><AiFillProfile/></div>
+          <div className="fw-medium">{ t("communityDetail.profile.noPhotos") }</div>
         </div>
       </div>
     );
