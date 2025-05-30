@@ -458,6 +458,15 @@ const CommunityDetail: React.FC = () => {
 
   const isUserFollowing: boolean = memberDetails.followers.includes(userId || '');
 
+  // Helper function to get first name safely
+  const getFirstName = (fullName: string | undefined): string => {
+    if (!fullName || typeof fullName !== 'string') return 'User';
+    const parts = fullName.trim().split(' ');
+    return parts[0] || 'User';
+  };
+
+  const firstName = getFirstName(memberDetails.name);
+
   return (
     <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
       {/* Header */}
@@ -478,15 +487,24 @@ const CommunityDetail: React.FC = () => {
           {/* Left Column - Photos and Quick Actions */}
           <div className="col-lg-4">
             <div className="bg-white rounded-4 p-4 shadow-sm h-100">
-              <ImageGallery images={memberDetails.imageUrls} userName={memberDetails.name} />
+              <ImageGallery 
+                images={memberDetails.imageUrls || []} 
+                userName={memberDetails.name || 'User'} 
+              />
               
               {/* Stats */}
               <div className="row g-2 my-4">
                 <div className="col-6">
-                  <StatsCard value={memberDetails.followers.length} label="Followers" />
+                  <StatsCard 
+                    value={memberDetails.followers?.length || 0} 
+                    label="Followers" 
+                  />
                 </div>
                 <div className="col-6">
-                  <StatsCard value={memberDetails.following.length} label="Following" />
+                  <StatsCard 
+                    value={memberDetails.following?.length || 0} 
+                    label="Following" 
+                  />
                 </div>
               </div>
 
@@ -524,7 +542,7 @@ const CommunityDetail: React.FC = () => {
                       icon="📞"
                       label="Video Call"
                       variant="warning"
-                      onClick={() => handleCallUser(memberDetails.name)}
+                      onClick={() => handleCallUser(memberDetails.name || 'User')}
                     />
                   </>
                 )}
@@ -538,12 +556,18 @@ const CommunityDetail: React.FC = () => {
               {/* Header */}
               <div className="mb-4">
                 <div className="d-flex align-items-baseline flex-wrap gap-3 mb-3">
-                  <h1 className="display-6 fw-bold mb-0">{memberDetails.name}</h1>
+                  <h1 className="display-6 fw-bold mb-0">
+                    {memberDetails.name || 'User'}
+                  </h1>
                   {userAge && (
-                    <span className="badge bg-light text-dark fs-6 fw-normal">{userAge} years old</span>
+                    <span className="badge bg-light text-dark fs-6 fw-normal">
+                      {userAge} years old
+                    </span>
                   )}
                   {memberDetails.gender && (
-                    <span className="badge bg-light text-dark fs-6 fw-normal">{memberDetails.gender}</span>
+                    <span className="badge bg-light text-dark fs-6 fw-normal">
+                      {memberDetails.gender}
+                    </span>
                   )}
                 </div>
                 
@@ -563,13 +587,13 @@ const CommunityDetail: React.FC = () => {
               <div className="mb-4">
                 <h2 className="h5 fw-bold mb-3 d-flex align-items-center gap-2">
                   <span>💭</span>
-                  About {memberDetails.name.split(" ")[0]}
+                  About {firstName}
                 </h2>
                 <div className="bg-light rounded-3 p-4">
                   <p className="mb-0 lh-lg">
                     {memberDetails.bio && memberDetails.bio.trim() 
                       ? memberDetails.bio 
-                      : `${memberDetails.name.split(" ")[0]} hasn't added a bio yet. Start a conversation to learn more about them!`
+                      : `${firstName} hasn't added a bio yet. Start a conversation to learn more about them!`
                     }
                   </p>
                 </div>
@@ -582,7 +606,7 @@ const CommunityDetail: React.FC = () => {
                     <span className="fs-2">🌟</span>
                   </div>
                   <h3 className="h5 fw-bold text-primary mb-2">
-                    Ready to practice with {memberDetails.name.split(" ")[0]}?
+                    Ready to practice with {firstName}?
                   </h3>
                   <p className="text-muted mb-3">
                     Start chatting and improve your language skills together!
