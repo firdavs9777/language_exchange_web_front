@@ -97,7 +97,6 @@ const MainChat: React.FC = () => {
                 />
                 {searchQuery && (
                   <button
-                  <button
                     className="btn btn-sm btn-outline-secondary border-start-0"
                     onClick={() => setSearchQuery("")}
                     aria-label="Clear search"
@@ -107,18 +106,18 @@ const MainChat: React.FC = () => {
                 )}
               </div>
             </div>
-
+            
             <div className="flex-grow-1 overflow-auto" style={{ maxHeight: "calc(100vh - 130px)" }}>
-              <UsersList
-                onSelectUser={handleSelectUser}
-                activeUserId={userId}
+              <UsersList 
+                onSelectUser={handleSelectUser} 
+                activeUserId={userId} 
                 searchQuery={searchQuery}
               />
             </div>
           </div>
         </Col>
-
-        <Col md={9} lg={9} xl={10} className="bg-light">
+        
+        <Col md={9} lg={8} xl={9} className="bg-light">
           {userId ? (
             <ChatContent
               selectedUser={userId}
@@ -150,11 +149,9 @@ const MainChat: React.FC = () => {
                     search for a user to begin a new conversation.
                   </p>
                   <div className="d-grid">
-                    <button className="bg-white text-gray-800 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-200 px-6 py-2 rounded-full shadow-sm">
-                      <NavLink to="/communities" className="text-gray-800 hover:text-gray-900 no-underline">
-                        <i className="bi bi-plus-circle me-2"></i>
-                        Start New Chat
-                      </NavLink>
+                    <button className="btn btn-primary rounded-pill">
+                      <i className="bi bi-plus-circle me-2"></i>
+                      Start New Chat
                     </button>
                   </div>
                 </Card.Body>
