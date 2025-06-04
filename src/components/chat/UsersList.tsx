@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useCallback } from "react";
-import { ListGroup, Spinner, Alert, Badge } from "react-bootstrap";
+import React, { useEffect, useRef, useCallback, useState } from "react";
+import { ListGroup, Spinner, Alert, Badge, Modal, Button } from "react-bootstrap";
 import { useGetUserMessagesQuery } from "../../store/slices/chatSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/index";
@@ -55,6 +55,14 @@ const UsersList: React.FC<UsersListProps> = ({
   const [userStatuses, setUserStatuses] = React.useState<
     Record<string, { status: string; lastSeen?: Date }>
   >({});
+
+  // Delete confirmation modal state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  
+  // Dropdown menu state
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Initialize socket connection
   const initializeSocket = useCallback(() => {
@@ -238,7 +246,6 @@ const UsersList: React.FC<UsersListProps> = ({
     });
   }, [chatPartners, searchQuery]);
 
-  // Manual reload function that can be called externally
   const handleReload = React.useCallback(() => {
     console.log("🔄 Manually reloading user messages...");
     refetch();
@@ -272,28 +279,126 @@ const UsersList: React.FC<UsersListProps> = ({
   const getStatusColor = (status?: string) => {
     switch (status) {
       case "online":
-        return "#10B981"; // green
+        return "bg-emerald-500"; // green
       case "away":
-        return "#F59E0B"; // yellow
+        return "bg-amber-500"; // yellow
       case "offline":
       default:
-        return "#6B7280"; // gray
+        return "bg-gray-400"; // gray
     }
   };
 
+  const getStatusIcon = (status?: string) => {
+    switch (status) {
+      case "online":
+        return "bi-circle-fill text-emerald-500";
+      case "away":
+        return "bi-clock-fill text-amber-500";
+      case "offline":
+      default:
+        return "bi-circle text-gray-400";
+    }
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent, user: User) => {
+    e.stopPropagation(); // Prevent triggering the user selection
+    setUserToDelete(user);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!userToDelete) return;
+    
+    try {
+      // Here you would typically call an API to delete the conversation
+      // For now, we'll just simulate the action
+      console.log(`Deleting conversation with user: ${userToDelete.name}`);
+      
+      // You can add your delete API call here
+      // await deleteConversation(userToDelete._id);
+      
+      // Refresh the data after deletion
+      refetch();
+      
+      // Close modal and reset state
+      setShowDeleteModal(false);
+      setUserToDelete(null);
+      
+      // Show success message (you can implement toast notification)
+      console.log("Conversation deleted successfully");
+    } catch (error) {
+      console.error("Error deleting conversation:", error);
+      // You can show error toast here
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setUserToDelete(null);
+  };
+
+  const toggleDropdown = (userId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setActiveDropdown(activeDropdown === userId ? null : userId);
+  };
+
+  const handleDropdownAction = (action: string, user: User, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setActiveDropdown(null);
+    
+    switch (action) {
+      case 'delete':
+        setUserToDelete(user);
+        setShowDeleteModal(true);
+        break;
+      case 'archive':
+        console.log(`Archive conversation with ${user.name}`);
+        // Add your archive logic here
+        break;
+      case 'mute':
+        console.log(`Mute conversation with ${user.name}`);
+        // Add your mute logic here
+        break;
+      case 'block':
+        console.log(`Block user ${user.name}`);
+        // Add your block logic here
+        break;
+      case 'markUnread':
+        console.log(`Mark conversation with ${user.name} as unread`);
+        // Add your mark unread logic here
+        break;
+      case 'pin':
+        console.log(`Pin conversation with ${user.name}`);
+        // Add your pin logic here
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setActiveDropdown(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   if (isLoading) {
     return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: "200px" }}
-      >
+      <div className="flex justify-center items-center h-48">
         <div className="text-center">
-          <Spinner
-            animation="border"
-            variant="primary"
-            style={{ width: "2rem", height: "2rem" }}
-          />
-          <div className="mt-2 text-muted small">Loading conversations...</div>
+          <div className="inline-flex items-center justify-center w-8 h-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+          <div className="mt-3 text-gray-500 text-sm flex items-center justify-center">
+            <i className="bi bi-chat-dots mr-2"></i>
+            Loading conversations...
+          </div>
         </div>
       </div>
     );
@@ -302,24 +407,24 @@ const UsersList: React.FC<UsersListProps> = ({
   if (isError) {
     return (
       <div className="p-4">
-        <Alert variant="danger" className="border-0 shadow-sm">
-          <Alert.Heading className="h6 mb-2">
-            <i className="bi bi-exclamation-triangle me-2"></i>
-            Connection Error
-          </Alert.Heading>
-          <p className="mb-3 small">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="flex items-center mb-3">
+            <i className="bi bi-exclamation-triangle-fill text-red-500 text-lg mr-2"></i>
+            <h6 className="text-red-800 font-semibold mb-0">Connection Error</h6>
+          </div>
+          <p className="mb-3 text-sm text-red-700">
             {error
               ? (error as any)?.data?.message || "Error loading conversations"
               : "An unexpected error occurred"}
           </p>
           <button
-            className="btn btn-sm btn-outline-danger rounded-pill px-3"
+            className="inline-flex items-center px-3 py-1.5 text-sm border border-red-300 text-red-700 bg-white rounded-full hover:bg-red-50 transition-colors"
             onClick={handleReload}
           >
-            <i className="bi bi-arrow-clockwise me-1"></i>
+            <i className="bi bi-arrow-clockwise mr-1"></i>
             Try Again
           </button>
-        </Alert>
+        </div>
       </div>
     );
   }
@@ -327,212 +432,279 @@ const UsersList: React.FC<UsersListProps> = ({
   // If we're searching and nothing was found
   if (searchQuery && filteredChatPartners.length === 0) {
     return (
-      <div className="d-flex flex-column align-items-center justify-content-center text-center py-5">
-        <div
-          className="rounded-circle bg-light d-flex align-items-center justify-content-center mb-3"
-          style={{ width: "64px", height: "64px" }}
-        >
-          <i
-            className="bi bi-search text-muted"
-            style={{ fontSize: "24px" }}
-          ></i>
+      <div className="flex flex-col items-center justify-center text-center py-12">
+        <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+          <i className="bi bi-search text-gray-400 text-2xl"></i>
         </div>
-        <h6 className="text-muted mb-1">No matching conversations</h6>
-        <p className="text-muted small mb-0">Try adjusting your search terms</p>
+        <h6 className="text-gray-500 mb-1 font-medium flex items-center">
+          <i className="bi bi-chat-square-x mr-2"></i>
+          No matching conversations
+        </h6>
+        <p className="text-gray-400 text-sm mb-0">Try adjusting your search terms</p>
       </div>
     );
   }
 
   return (
-    <div className="h-100 d-flex flex-column">
-      <div className="flex-grow-1 overflow-auto">
+    <div className="h-full flex flex-col">
+      <div className="flex-grow overflow-auto">
         {filteredChatPartners.length > 0 ? (
           <div className="list-group list-group-flush">
             {filteredChatPartners.map((user, index) => (
               <div
                 key={user._id}
-                className={`list-group-item list-group-item-action border-0 px-0 py-0 ${
-                  activeUserId === user._id ? "active" : ""
-                }`}
+                className={`
+                  cursor-pointer transition-all duration-200 border-0 px-0 py-0
+                  ${activeUserId === user._id 
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white' 
+                    : 'hover:bg-gray-50'
+                  }
+                  ${index !== filteredChatPartners.length - 1 ? 'border-b border-gray-100' : ''}
+                `}
                 onClick={() =>
                   onSelectUser(user._id, user.name, user.imageUrls[0])
                 }
-                style={{
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  borderBottom:
-                    index === filteredChatPartners.length - 1
-                      ? "none"
-                      : "1px solid #f0f0f0",
-                }}
               >
-                <div className="d-flex align-items-center p-3 position-relative">
+                <div className="flex items-center p-3 sm:p-4 relative">
                   {/* Avatar with status indicator */}
-                  <div className="position-relative me-3 flex-shrink-0">
+                  <div className="relative mr-3 flex-shrink-0">
                     <div
-                      className="rounded-circle d-flex align-items-center justify-content-center overflow-hidden"
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        background: user.avatar
-                          ? "transparent"
-                          : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                      }}
+                      className={`
+                        w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center overflow-hidden
+                        ${user.avatar || user.imageUrls[0] 
+                          ? 'bg-transparent' 
+                          : 'bg-gradient-to-br from-indigo-500 to-purple-600'
+                        }
+                      `}
                     >
                       {user.avatar || user.imageUrls[0] ? (
                         <img
                           src={user.avatar || user.imageUrls[0]}
                           alt={user.name}
-                          className="w-100 h-100"
-                          style={{ objectFit: "cover" }}
+                          className="w-full h-full object-cover"
                         />
                       ) : (
-                        <span
-                          className="text-white fw-bold"
-                          style={{ fontSize: "18px" }}
-                        >
+                        <span className="text-white font-bold text-base sm:text-lg">
                           {user.name?.charAt(0).toUpperCase()}
                         </span>
                       )}
                     </div>
-                    {/* Status indicator */}
                     <div
-                      className="position-absolute rounded-circle border border-2 border-white"
-                      style={{
-                        width: "14px",
-                        height: "14px",
-                        bottom: "2px",
-                        right: "2px",
-                        backgroundColor: getStatusColor(user.status),
-                      }}
-                    ></div>
+                      className={`
+                        absolute w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border-2 border-white
+                        bottom-0.5 right-0.5 ${getStatusColor(user.status)} flex items-center justify-center
+                      `}
+                    >
+                      <i className={`${getStatusIcon(user.status)} text-xs`}></i>
+                    </div>
                   </div>
-
-                  {/* Content */}
-                  <div className="flex-grow-1 min-width-0">
-                    <div className="d-flex justify-content-between align-items-start mb-1">
-                      <h6
-                        className="mb-0 text-truncate fw-semibold"
-                        style={{ fontSize: "15px" }}
-                      >
-                        {user.name}
-                      </h6>
-                      <div className="d-flex align-items-center ms-2">
+                  <div className="flex-grow min-w-0">
+                    <div className="flex justify-content-between items-start mb-1">
+                      <div className="flex-grow min-w-0">
+                        <h6 className="mb-0 truncate font-semibold text-sm sm:text-base flex items-center">
+    
+                          {user.name}
+                          {user.status === 'online' && (
+                            <span className="ml-2 inline-flex items-center">
+                              <i className="bi bi-lightning-charge-fill text-green-500 text-xs"></i>
+                            </span>
+                          )}
+                        </h6>
+                        <p
+                          className={`
+                            mb-0 truncate text-xs sm:text-sm leading-tight flex items-center mt-1
+                            ${activeUserId === user._id 
+                              ? 'text-white/80' 
+                              : 'text-gray-500'
+                            }
+                            ${user.unreadCount > 0 ? 'font-medium' : 'font-normal'}
+                          `}
+                        >
+  
+                          {user.lastMessage || "No messages yet"}
+                        </p>
+                      </div>
+                      
+                     
+                      <div className="flex items-center space-x-2 ml-3 flex-shrink-0">
+                        {/* Time */}
                         {user.lastMessageTime && (
-                          <small
-                            className="text-muted me-2"
-                            style={{
-                              whiteSpace: "nowrap",
-                              fontSize: "12px",
-                              fontWeight: "500",
-                            }}
-                          >
-                            {formatTime(user.lastMessageTime)}
-                          </small>
+                          <div className="flex flex-col items-end">
+                            <small
+                              className={`
+                                whitespace-nowrap text-xs font-medium flex items-center
+                                ${activeUserId === user._id ? 'text-white/80' : 'text-gray-500'}
+                              `}
+                            >
+                              <i className="bi bi-clock mr-1"></i>
+                              {formatTime(user.lastMessageTime)}
+                            </small>
+                          </div>
                         )}
+                        
+                        {/* Unread count */}
                         {user.unreadCount > 0 && (
                           <Badge
                             pill
                             bg="primary"
-                            style={{
-                              fontSize: "11px",
-                              fontWeight: "600",
-                              minWidth: "20px",
-                              height: "20px",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
+                            className="text-xs font-semibold min-w-5 h-5 flex items-center justify-center"
                           >
                             {user.unreadCount > 99 ? "99+" : user.unreadCount}
                           </Badge>
                         )}
+                        
+                        {/* Status icons */}
+                        <div className="flex items-center space-x-1">
+                          {user.status === 'online' && (
+                            <i className="bi bi-circle-fill text-green-500 text-xs" title="Online"></i>
+                          )}
+                         
+                        </div>
+                        
+                        {/* More actions dropdown */}
+                        <div className="relative" ref={dropdownRef}>
+                          <button
+                            onClick={(e) => toggleDropdown(user._id, e)}
+                            className={`
+                              w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200
+                              ${activeUserId === user._id 
+                                ? 'hover:bg-white/20 text-white/80' 
+                                : 'hover:bg-gray-200 text-gray-500'
+                              }
+                              ${activeDropdown === user._id ? 'bg-gray-200 text-gray-700' : ''}
+                            `}
+                            title="More options"
+                          >
+                            <i className="bi bi-three-dots-vertical text-sm"></i>
+                          </button>
+                          
+                          {/* Dropdown menu */}
+                          {activeDropdown === user._id && (
+                            <div className="absolute right-0 top-8 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                              <button
+                                onClick={(e) => handleDropdownAction('pin', user, e)}
+                                className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                              >
+                                <i className="bi bi-pin-angle mr-3 text-gray-500"></i>
+                                Pin conversation
+                              </button>
+                              <button
+                                onClick={(e) => handleDropdownAction('markUnread', user, e)}
+                                className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                              >
+                                <i className="bi bi-envelope mr-3 text-blue-500"></i>
+                                Mark as unread
+                              </button>
+                              <button
+                                onClick={(e) => handleDropdownAction('mute', user, e)}
+                                className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                              >
+                                <i className="bi bi-volume-mute mr-3 text-amber-500"></i>
+                                Mute notifications
+                              </button>
+                              <button
+                                onClick={(e) => handleDropdownAction('archive', user, e)}
+                                className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                              >
+                                <i className="bi bi-archive mr-3 text-gray-500"></i>
+                                Archive conversation
+                              </button>
+                              <hr className="my-1 border-gray-200" />
+                              <button
+                                onClick={(e) => handleDropdownAction('block', user, e)}
+                                className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                              >
+                                <i className="bi bi-person-slash mr-3 text-orange-500"></i>
+                                Block user
+                              </button>
+                              <button
+                                onClick={(e) => handleDropdownAction('delete', user, e)}
+                                className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center"
+                              >
+                                <i className="bi bi-trash3 mr-3 text-red-500"></i>
+                                Delete conversation
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                    <p
-                      className="mb-0 text-muted text-truncate small"
-                      style={{
-                        fontSize: "13px",
-                        lineHeight: "1.3",
-                        fontWeight: user.unreadCount > 0 ? "500" : "400",
-                      }}
-                    >
-                      {user.lastMessage || "No messages yet"}
-                    </p>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="d-flex flex-column align-items-center justify-content-center text-center py-5">
-            <div
-              className="rounded-circle d-flex align-items-center justify-content-center mb-3"
-              style={{
-                width: "80px",
-                height: "80px",
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                opacity: "0.1",
-              }}
-            >
-              <i
-                className="bi bi-chat-square-text"
-                style={{ fontSize: "32px", color: "#667eea" }}
-              ></i>
+          <div className="flex flex-col items-center justify-center text-center py-12">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-3 bg-gradient-to-br from-indigo-500/10 to-purple-600/10">
+              <i className="bi bi-chat-square-text text-2xl sm:text-4xl text-indigo-500"></i>
             </div>
-            <h6 className="text-muted mb-2">No conversations yet</h6>
-            <p className="text-muted small mb-0 px-3">
+            <h6 className="text-gray-500 mb-2 font-medium flex items-center">
+              <i className="bi bi-inbox mr-2"></i>
+              No conversations yet
+            </h6>
+            <p className="text-gray-400 text-sm mb-0 px-3 flex items-center justify-center">
+              <i className="bi bi-plus-circle mr-1"></i>
               Start a conversation to see it appear here
             </p>
           </div>
         )}
       </div>
-
-      <style jsx>{`
-        .list-group-item.active {
-          background: linear-gradient(
-            135deg,
-            #667eea 0%,
-            #764ba2 100%
-          ) !important;
-          border-color: transparent !important;
-          color: white !important;
-        }
-
-        .list-group-item.active .text-muted {
-          color: rgba(255, 255, 255, 0.8) !important;
-        }
-
-        .list-group-item:hover:not(.active) {
-          background-color: #f8f9fa !important;
-        }
-
-        @media (max-width: 768px) {
-          .list-group-item .d-flex {
-            padding: 0.75rem !important;
-          }
-
-          .position-relative.me-3 > div {
-            width: 40px !important;
-            height: 40px !important;
-          }
-
-          .position-relative.me-3 span {
-            font-size: 16px !important;
-          }
-
-          .position-absolute.rounded-circle {
-            width: 12px !important;
-            height: 12px !important;
-          }
-        }
-
-        @media (max-width: 576px) {
-          .d-flex.align-items-center.p-3 {
-            padding: 0.5rem !important;
-          }
-        }
-      `}</style>
+      <Modal 
+        show={showDeleteModal} 
+        onHide={handleDeleteCancel}
+        centered
+        backdrop="static"
+      >
+        <Modal.Header closeButton className="border-0 pb-2">
+          <Modal.Title className="text-lg font-semibold flex items-center">
+            <i className="bi bi-exclamation-triangle-fill text-red-500 mr-2"></i>
+            Delete Conversation
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="pt-0">
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0">
+              <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                <i className="bi bi-trash3 text-red-600 text-lg"></i>
+              </div>
+            </div>
+            <div className="flex-grow">
+              <p className="text-gray-700 mb-2">
+                Are you sure you want to delete your conversation with{" "}
+                <span className="font-semibold text-gray-900">
+                  {userToDelete?.name}
+                </span>
+                ?
+              </p>
+              <p className="text-sm text-gray-500 mb-0">
+                <i className="bi bi-info-circle mr-1"></i>
+                This action cannot be undone. All messages will be permanently deleted.
+              </p>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-0 pt-0">
+          <div className="flex justify-end space-x-2 w-full">
+            <Button
+              variant="outline-secondary"
+              onClick={handleDeleteCancel}
+              className="px-4 py-2 text-sm font-medium"
+            >
+              <i className="bi bi-x-lg mr-1"></i>
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleDeleteConfirm}
+              className="px-4 py-2 text-sm font-medium"
+            >
+              <i className="bi bi-trash3 mr-1"></i>
+              Delete
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

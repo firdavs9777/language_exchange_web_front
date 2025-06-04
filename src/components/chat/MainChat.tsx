@@ -72,7 +72,7 @@ const MainChat: React.FC = () => {
     <Container fluid className="p-0">
       <Row className="g-0 vh-100">
         {/* Left sidebar - Users list */}
-        <Col md={3} lg={4} xl={3} className="border-end shadow-sm bg-white">
+        <Col md={3} lg={5} xl={3} className="border-end shadow-sm bg-white">
           <div className="d-flex flex-column h-100">
             <div className="p-3 border-bottom bg-light">
               <h5 className="mb-0 fw-bold text-primary">
@@ -117,7 +117,7 @@ const MainChat: React.FC = () => {
           </div>
         </Col>
         
-        <Col md={9} lg={8} xl={9} className="bg-light">
+        <Col md={9} lg={7} xl={9} className="bg-light">
           {userId ? (
             <ChatContent
               selectedUser={userId}
