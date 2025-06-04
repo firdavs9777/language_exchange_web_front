@@ -41,7 +41,7 @@ interface Message {
   receiver: string;
   createdAt: string;
   isOptimistic?: boolean;
-  status?: 'sent' | 'delivered' | 'error';
+  status?: "sent" | "delivered" | "error";
 }
 
 const ChatContent: React.FC<ChatContentProps> = ({
@@ -49,7 +49,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
   userName,
   profilePicture,
 }) => {
-  const userId = useSelector((state: RootState) => state.auth.userInfo?.user._id);
+  const userId = useSelector(
+    (state: RootState) => state.auth.userInfo?.user._id
+  );
   const token = useSelector((state: RootState) => state.auth.userInfo?.token);
 
   const { data, error, isLoading } = useGetConversationQuery({
@@ -57,12 +59,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
     receiverId: selectedUser,
   });
 
-  // const [createMessage] = useCreateMessageMutation();
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [isOnline, setIsOnline] = useState(true); // Enhanced online status
-  const [lastSeen, setLastSeen] = useState<string>(""); // Last seen indicator
+  const [isOnline, setIsOnline] = useState(true);
+  const [lastSeen, setLastSeen] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
@@ -103,7 +104,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       }
     });
 
-    socket.on("userOffline", (data: { userId: string, lastSeen: string }) => {
+    socket.on("userOffline", (data: { userId: string; lastSeen: string }) => {
       if (data.userId === selectedUser) {
         setIsOnline(false);
         setLastSeen(data.lastSeen);
@@ -129,83 +130,71 @@ const ChatContent: React.FC<ChatContentProps> = ({
   useEffect(() => {
     if (!socket || !selectedUser) return;
 
-    // Handler for new messages
-    const handleMessage = (newMsg: Message) => {
-      setMessages(prevMessages => {
-        console.log(prevMessages)
-        if (prevMessages.some(msg => msg._id === newMsg._id)) {
+    // Handler for new messages - Updated to match server event name
+    const handleNewMessage = (notificationData: {
+      message: Message;
+      unreadCount: number;
+      isNewConversation: boolean;
+    }) => {
+      const newMsg = notificationData.message;
+      console.log("Received new message:", newMsg);
+
+      setMessages((prevMessages) => {
+        if (prevMessages.some((msg) => msg._id === newMsg._id)) {
           return prevMessages;
         }
         return [...prevMessages, newMsg];
       });
     };
 
-    // Handler for sent message confirmations
-    const handleMessageSent = (confirmedMsg: Message) => {
-      console.log(confirmedMsg);
-      setMessages(prevMessages => {
-        return prevMessages.map(msg => {
-          if (msg.isOptimistic && msg.message === confirmedMsg.message) {
-            return { ...confirmedMsg, status: 'delivered' };
-          }
-          return msg;
-        });
-      });
-    };
-
     // Handler for message errors
-    const handleMessageError = (errorData: { message: string, originalMessage: string }) => {
-      setMessages(prevMessages => {
-        return prevMessages.map(msg => {
-          if (msg.isOptimistic && msg.message === errorData.originalMessage) {
-            return { ...msg, status: 'error' };
+    const handleMessageError = (errorData: {
+      message: string;
+      error: string;
+    }) => {
+      console.error("Message error:", errorData);
+      setMessages((prevMessages) => {
+        return prevMessages.map((msg) => {
+          if (msg.isOptimistic && msg._id === tempIdRef.current) {
+            return { ...msg, status: "error" };
           }
           return msg;
         });
       });
     };
 
-    // Handler for typing indicators from other users
-    const handleUserTyping = (data: { user: string }) => {
-      if (data.user === selectedUser) {
-        setIsTyping(true);
+    // Handler for typing indicators - Updated to match server event
+    const handleUserTyping = (data: { userId: string; isTyping: boolean }) => {
+      if (data.userId === selectedUser) {
+        setIsTyping(data.isTyping);
       }
     };
 
-    // Handler for when other users stop typing
-    const handleUserStopTyping = (data: { user: string }) => {
-      if (data.user === selectedUser) {
-        setIsTyping(false);
-      }
-    };
-
-    socket.on("message", handleMessage);
-    socket.on("messageSent", handleMessageSent);
+    // Register event listeners with correct event names
+    socket.on("newMessage", handleNewMessage);
     socket.on("messageError", handleMessageError);
     socket.on("userTyping", handleUserTyping);
-    socket.on("userStopTyping", handleUserStopTyping);
 
     return () => {
-      socket?.off("message", handleMessage);
-      socket?.off("messageSent", handleMessageSent);
+      socket?.off("newMessage", handleNewMessage);
       socket?.off("messageError", handleMessageError);
       socket?.off("userTyping", handleUserTyping);
-      socket?.off("userStopTyping", handleUserStopTyping);
     };
   }, [userId, selectedUser]);
 
   // Handle typing indicator
   const handleTyping = () => {
     if (!socket || !selectedUser) return;
-    
+
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
-    
-    socket.emit("typing", { sender: userId, receiver: selectedUser });
-    
+
+    // Send typing event with correct format
+    socket.emit("typing", { receiver: selectedUser });
+
     typingTimeoutRef.current = setTimeout(() => {
-      socket?.emit("stopTyping", { sender: userId, receiver: selectedUser });
+      socket?.emit("stopTyping", { receiver: selectedUser });
     }, 2000);
   };
 
@@ -230,10 +219,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
     try {
       // Clear typing indicator
-      clearTimeout(typingTimeoutRef.current);
-      socket.emit("stopTyping", { sender: userId, receiver: selectedUser });
+      socket.emit("stopTyping", { receiver: selectedUser });
 
-      // Optimistically update UI
+      // Create optimistic message
       const tempId = `temp-${Date.now()}`;
       tempIdRef.current = tempId;
       const optimisticMessage: Message = {
@@ -243,33 +231,51 @@ const ChatContent: React.FC<ChatContentProps> = ({
         receiver: selectedUser,
         createdAt: new Date().toISOString(),
         isOptimistic: true,
-        status: 'sent'
+        status: "sent",
       };
 
-      setMessages(prev => [...prev, optimisticMessage]);
+      setMessages((prev) => [...prev, optimisticMessage]);
+      const messageToSend = newMessage;
       setNewMessage("");
 
-      // Send via socket
-      socket.emit("sendMessage", {
-        sender: userId,
-        receiver: selectedUser,
-        message: newMessage,
-      });
-
-      // Still call API for redundancy
-      // await createMessage({
-      //   sender: userId,
-      //   receiver: selectedUser,
-      //   message: newMessage,
-      // });
-
+      // Send message via socket with callback for acknowledgment
+      socket.emit(
+        "sendMessage",
+        {
+          receiver: selectedUser,
+          message: messageToSend,
+        },
+        (response: any) => {
+          if (response.status === "success") {
+            console.log("Message sent successfully:", response);
+            // Update the optimistic message with the real one
+            setMessages((prevMessages) => {
+              return prevMessages.map((msg) => {
+                if (msg._id === tempId) {
+                  return { ...response.message, status: "delivered" };
+                }
+                return msg;
+              });
+            });
+          } else {
+            console.error("Message send failed:", response);
+            // Mark message as error
+            setMessages((prevMessages) => {
+              return prevMessages.map((msg) => {
+                if (msg._id === tempId) {
+                  return { ...msg, status: "error" };
+                }
+                return msg;
+              });
+            });
+          }
+        }
+      );
     } catch (error) {
       console.error("Error sending message:", error);
-      setMessages(prev => 
-        prev.map(msg => 
-          msg._id === tempIdRef.current 
-            ? { ...msg, status: 'error' } 
-            : msg
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === tempIdRef.current ? { ...msg, status: "error" } : msg
         )
       );
     }
@@ -289,8 +295,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
     if (!dateString) return "";
     const date = new Date(dateString);
     const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    
+    const diffInMinutes = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60)
+    );
+
     if (diffInMinutes < 1) return "Just now";
     if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
@@ -312,21 +320,23 @@ const ChatContent: React.FC<ChatContentProps> = ({
     return groups;
   };
 
-  if (isLoading) return (
-    <div className="chat-loading">
-      <div className="loading-spinner">
-        <div className="spinner"></div>
+  if (isLoading)
+    return (
+      <div className="chat-loading">
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+        </div>
+        <p className="loading-text">Loading conversation...</p>
       </div>
-      <p className="loading-text">Loading conversation...</p>
-    </div>
-  );
+    );
 
-  if (error) return (
-    <div className="chat-error">
-      <div className="error-icon">⚠️</div>
-      <p>Error loading conversation</p>
-    </div>
-  );
+  if (error)
+    return (
+      <div className="chat-error">
+        <div className="error-icon">⚠️</div>
+        <p>Error loading conversation</p>
+      </div>
+    );
 
   // Sort messages by timestamp
   const sortedMessages = [...messages].sort((a, b) => {
@@ -347,7 +357,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 alt={userName}
                 className="profile-avatar"
               />
-              <div className={`status-pulse ${isOnline ? 'online' : 'offline'}`}>
+              <div
+                className={`status-pulse ${isOnline ? "online" : "offline"}`}
+              >
                 <div className="pulse-ring"></div>
                 <div className="pulse-dot"></div>
               </div>
@@ -363,30 +375,47 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 ) : (
                   <span className="offline-status">
                     <span className="status-dot offline"></span>
-                    {lastSeen ? `Last seen ${formatLastSeen(lastSeen)}` : 'Offline'}
+                    {lastSeen
+                      ? `Last seen ${formatLastSeen(lastSeen)}`
+                      : "Offline"}
                   </span>
                 )}
               </div>
             </div>
           </div>
-          
+
           <div className="header-actions">
             <button className="action-btn call-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
               </svg>
             </button>
             <button className="action-btn video-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polygon points="23 7 16 12 23 17 23 7"/>
-                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <polygon points="23 7 16 12 23 17 23 7" />
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
               </svg>
             </button>
             <button className="action-btn info-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="16" x2="12" y2="12"/>
-                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
               </svg>
             </button>
           </div>
@@ -406,7 +435,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 key={msg._id}
                 className={`modern-message ${
                   msg.sender._id === userId ? "sent" : "received"
-                } ${msg.status === 'error' ? 'error' : ''}`}
+                } ${msg.status === "error" ? "error" : ""}`}
               >
                 {msg.sender._id !== userId && (
                   <div className="message-avatar">
@@ -416,25 +445,39 @@ const ChatContent: React.FC<ChatContentProps> = ({
                     />
                   </div>
                 )}
-                
+
                 <div className="message-wrapper">
                   <div className="message-bubble">
                     <p className="message-text">{msg.message}</p>
                     <div className="message-meta">
-                      <span className="message-time">{formatTime(msg.createdAt)}</span>
+                      <span className="message-time">
+                        {formatTime(msg.createdAt)}
+                      </span>
                       {msg.sender._id === userId && (
                         <div className="message-status">
-                          {msg.status === 'error' ? (
-                            <svg className="status-icon error" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                          {msg.status === "error" ? (
+                            <svg
+                              className="status-icon error"
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                            >
+                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                             </svg>
                           ) : msg.isOptimistic ? (
-                            <svg className="status-icon sent" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                            <svg
+                              className="status-icon sent"
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                            >
+                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                             </svg>
                           ) : (
-                            <svg className="status-icon delivered" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/>
+                            <svg
+                              className="status-icon delivered"
+                              viewBox="0 0 24 24"
+                              fill="currentColor"
+                            >
+                              <path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z" />
                             </svg>
                           )}
                         </div>
@@ -446,7 +489,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             ))}
           </div>
         ))}
-        
+
         {/* Enhanced Typing Indicator */}
         {isTyping && (
           <div className="modern-message received">
@@ -468,7 +511,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             </div>
           </div>
         )}
-        
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -477,13 +520,18 @@ const ChatContent: React.FC<ChatContentProps> = ({
         <Form onSubmit={handleSendMessage} className="input-form">
           <div className="input-container">
             <button type="button" className="attachment-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="8" x2="12" y2="16"/>
-                <line x1="8" y1="12" x2="16" y2="12"/>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
               </svg>
             </button>
-            
+
             <div className="text-input-wrapper">
               <Form.Control
                 type="text"
@@ -493,26 +541,36 @@ const ChatContent: React.FC<ChatContentProps> = ({
                   setNewMessage(e.target.value);
                   handleTyping();
                 }}
-                className="modern-text-input"
+                className="modern-text-input "
               />
               <button type="button" className="emoji-btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-                  <line x1="9" y1="9" x2="9.01" y2="9"/>
-                  <line x1="15" y1="9" x2="15.01" y2="9"/>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                  <line x1="9" y1="9" x2="9.01" y2="9" />
+                  <line x1="15" y1="9" x2="15.01" y2="9" />
                 </svg>
               </button>
             </div>
-            
+
             <button
               type="submit"
-              className={`send-btn ${newMessage.trim() ? 'active' : ''}`}
+              className={`send-btn ${newMessage.trim() ? "active" : ""}`}
               disabled={!newMessage.trim()}
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="22" y1="2" x2="11" y2="13"/>
-                <polygon points="22,2 15,22 11,13 2,9 22,2"/>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22,2 15,22 11,13 2,9 22,2" />
               </svg>
             </button>
           </div>
@@ -530,7 +588,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
         }
 
         .modern-chat-container::before {
-          content: '';
+          content: "";
           position: absolute;
           top: 0;
           left: 0;
@@ -588,7 +646,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
           height: 16px;
           width: 16px;
           position: absolute;
-          animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+          animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1)
+            infinite;
         }
 
         .status-pulse.online .pulse-dot {
@@ -615,7 +674,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
           0% {
             transform: scale(0.33);
           }
-          80%, 100% {
+          80%,
+          100% {
             opacity: 0;
           }
         }
@@ -638,7 +698,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
           margin-top: 0.25rem;
         }
 
-        .online-status, .offline-status {
+        .online-status,
+        .offline-status {
           display: flex;
           align-items: center;
           gap: 0.5rem;
@@ -771,7 +832,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
         }
 
         .modern-message.sent .message-bubble {
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15));
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.25),
+            rgba(255, 255, 255, 0.15)
+          );
           color: white;
           margin-left: auto;
         }
@@ -846,11 +911,17 @@ const ChatContent: React.FC<ChatContentProps> = ({
           animation: typing-bounce 1.4s infinite ease-in-out;
         }
 
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        .typing-dot:nth-child(1) {
+          animation-delay: -0.32s;
+        }
+        .typing-dot:nth-child(2) {
+          animation-delay: -0.16s;
+        }
 
         @keyframes typing-bounce {
-          0%, 80%, 100% {
+          0%,
+          80%,
+          100% {
             transform: scale(0.7);
             opacity: 0.5;
           }
@@ -890,7 +961,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
           border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .attachment-btn, .emoji-btn {
+        .attachment-btn,
+        .emoji-btn {
           width: 36px;
           height: 36px;
           border-radius: 50%;
@@ -904,12 +976,14 @@ const ChatContent: React.FC<ChatContentProps> = ({
           transition: all 0.2s ease;
         }
 
-        .attachment-btn:hover, .emoji-btn:hover {
+        .attachment-btn:hover,
+        .emoji-btn:hover {
           background: rgba(255, 255, 255, 0.1);
           transform: scale(1.1);
         }
 
-        .attachment-btn svg, .emoji-btn svg {
+        .attachment-btn svg,
+        .emoji-btn svg {
           width: 20px;
           height: 20px;
         }
@@ -1001,8 +1075,12 @@ const ChatContent: React.FC<ChatContentProps> = ({
         }
 
         @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
 
         .loading-text {
@@ -1097,7 +1175,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
         /* Message Error State */
         .modern-message.error .message-bubble {
           border: 1px solid rgba(255, 107, 107, 0.5);
-          background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(255, 107, 107, 0.05));
+          background: linear-gradient(
+            135deg,
+            rgba(255, 107, 107, 0.15),
+            rgba(255, 107, 107, 0.05)
+          );
         }
 
         /* Message Animation on Send */
@@ -1132,7 +1214,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
             transform: scale(0.33);
             opacity: 1;
           }
-          80%, 100% {
+          80%,
+          100% {
             opacity: 0;
             transform: scale(2.33);
           }

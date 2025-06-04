@@ -59,10 +59,16 @@ interface ActionButtonProps {
   icon: string;
   label: string;
   onClick: () => void;
-  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'following' | 'outline';
+  variant?:
+    | "primary"
+    | "secondary"
+    | "success"
+    | "warning"
+    | "following"
+    | "outline";
   isLoading?: boolean;
   disabled?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
 }
 
 interface StatsCardProps {
@@ -71,7 +77,10 @@ interface StatsCardProps {
 }
 
 // Modern Language Display Component
-const LanguagePair: React.FC<LanguagePairProps> = ({ nativeLanguage, learningLanguage }) => {
+const LanguagePair: React.FC<LanguagePairProps> = ({
+  nativeLanguage,
+  learningLanguage,
+}) => {
   const getLanguageFlag = (language: string): string => {
     const flagMap: Record<string, string> = {
       English: "🇺🇸",
@@ -111,16 +120,20 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
   const { t } = useTranslation();
   if (!images || images.length === 0) {
     return (
-      <div 
+      <div
         className="bg-gradient rounded-4 d-flex align-items-center justify-content-center position-relative overflow-hidden"
-        style={{ 
+        style={{
           height: "400px",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
         }}
       >
         <div className="text-white text-center">
-          <div className="fs-1 mb-2"><AiFillProfile/></div>
-          <div className="fw-medium">{ t("communityDetail.profile.noPhotos") }</div>
+          <div className="fs-1 mb-2">
+            <AiFillProfile />
+          </div>
+          <div className="fw-medium">
+            {t("communityDetail.profile.noPhotos")}
+          </div>
         </div>
       </div>
     );
@@ -128,7 +141,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
 
   return (
     <div className="position-relative">
-      <div 
+      <div
         className="rounded-4 overflow-hidden shadow-lg position-relative"
         style={{ height: "400px" }}
       >
@@ -138,7 +151,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
           className="w-100 h-100 object-fit-cover"
           style={{ objectFit: "cover" }}
         />
-        
+
         {images.length > 1 && (
           <div className="position-absolute bottom-0 start-0 end-0 p-3 bg-gradient-dark">
             <div className="d-flex justify-content-center gap-1">
@@ -146,7 +159,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
                 <button
                   key={index}
                   className={`btn btn-sm rounded-circle p-0 ${
-                    activeIndex === index ? 'btn-light' : 'btn-outline-light'
+                    activeIndex === index ? "btn-light" : "btn-outline-light"
                   }`}
                   style={{ width: "8px", height: "8px" }}
                   onClick={() => setActiveIndex(index)}
@@ -164,12 +177,15 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
             <button
               key={index}
               className={`border-0 rounded-3 overflow-hidden p-0 ${
-                activeIndex === index ? 'ring ring-primary' : 'opacity-75'
+                activeIndex === index ? "ring ring-primary" : "opacity-75"
               }`}
-              style={{ 
-                width: "60px", 
+              style={{
+                width: "60px",
                 height: "60px",
-                boxShadow: activeIndex === index ? '0 0 0 2px var(--bs-primary)' : 'none'
+                boxShadow:
+                  activeIndex === index
+                    ? "0 0 0 2px var(--bs-primary)"
+                    : "none",
               }}
               onClick={() => setActiveIndex(index)}
             >
@@ -203,23 +219,24 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   variant = "primary",
   isLoading = false,
   disabled = false,
-  size = "md"
+  size = "md",
 }) => {
   const getButtonClasses = (): string => {
-    const baseClasses = "btn d-flex align-items-center justify-content-center gap-2 fw-medium rounded-3";
+    const baseClasses =
+      "btn d-flex align-items-center justify-content-center gap-2 fw-medium rounded-3";
     const sizeClasses = {
       sm: "btn-sm",
       md: "",
-      lg: "btn-lg"
+      lg: "btn-lg",
     };
-    
+
     const variantClasses = {
       primary: "btn-primary shadow-sm",
       secondary: "btn-secondary",
       success: "btn-success shadow-sm",
       warning: "btn-warning text-white shadow-sm",
       following: "btn-outline-primary",
-      outline: "btn-outline-secondary"
+      outline: "btn-outline-secondary",
     };
 
     return `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]}`;
@@ -227,7 +244,9 @@ const ActionButton: React.FC<ActionButtonProps> = ({
 
   return (
     <button
-      className={`${getButtonClasses()} ${disabled || isLoading ? 'disabled' : ''}`}
+      className={`${getButtonClasses()} ${
+        disabled || isLoading ? "disabled" : ""
+      }`}
       onClick={onClick}
       disabled={disabled || isLoading}
       aria-label={label}
@@ -241,14 +260,19 @@ const ActionButton: React.FC<ActionButtonProps> = ({
 
 const CommunityDetail: React.FC = () => {
   const { id: communityId } = useParams<{ id: string }>();
-  const { data, isLoading, error, refetch } = useGetCommunityDetailsQuery(communityId);
-  const [createChatRoom, { isLoading: isCreatingChat }] = useCreateChatRoomMutation();
+  const { data, isLoading, error, refetch } =
+    useGetCommunityDetailsQuery(communityId);
+  const [createChatRoom, { isLoading: isCreatingChat }] =
+    useCreateChatRoomMutation();
 
   const navigate = useNavigate();
-  const userId = useSelector((state: RootState) => state.auth.userInfo?.user._id);
+  const userId = useSelector(
+    (state: RootState) => state.auth.userInfo?.user._id
+  );
 
   const [followUser, { isLoading: isFollowing }] = useFollowUserMutation();
-  const [unFollowUser, { isLoading: isUnfollowing }] = useUnFollowUserMutation();
+  const [unFollowUser, { isLoading: isUnfollowing }] =
+    useUnFollowUserMutation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -258,8 +282,8 @@ const CommunityDetail: React.FC = () => {
     return (
       <div className="container py-5 text-center">
         <div className="alert alert-danger rounded-4">Invalid profile ID</div>
-        <button 
-          className="btn btn-outline-primary rounded-3" 
+        <button
+          className="btn btn-outline-primary rounded-3"
           onClick={() => navigate("/community")}
         >
           Back to Community
@@ -282,7 +306,7 @@ const CommunityDetail: React.FC = () => {
 
       const response = await followUser({ userId, targetUserId: targetUser });
 
-      if ('error' in response) {
+      if ("error" in response) {
         toast.error("Failed to follow user. Please try again.", {
           autoClose: 3000,
           hideProgressBar: false,
@@ -326,7 +350,7 @@ const CommunityDetail: React.FC = () => {
           targetUserId: targetUser,
         });
 
-        if ('error' in response) {
+        if ("error" in response) {
           toast.error("Failed to unfollow user. Please try again.", {
             autoClose: 3000,
             hideProgressBar: false,
@@ -366,17 +390,11 @@ const CommunityDetail: React.FC = () => {
       }
 
       const response = await createChatRoom(memberId).unwrap();
-      
+
       if (response) {
-        toast.success("Chat started successfully!", {
-          autoClose: 3000,
-          hideProgressBar: false,
-          theme: "dark",
-          transition: Bounce,
-        });
         navigate(`/chat/${memberId}`);
       } else {
-        navigate(`/chat/${memberId}`);
+        navigate(`/chat`);
       }
     } catch (error) {
       toast.error("Failed to start chat. Please try again.", {
@@ -413,13 +431,18 @@ const CommunityDetail: React.FC = () => {
       <div className="container py-5 text-center">
         <div className="display-1 mb-3">⚠️</div>
         <h3 className="fw-bold">Oops! Something went wrong</h3>
-        <p className="text-muted mb-4">We couldn't load this profile. Please try again later.</p>
+        <p className="text-muted mb-4">
+          We couldn't load this profile. Please try again later.
+        </p>
         <div className="d-flex gap-3 justify-content-center">
-          <button className="btn btn-primary rounded-3" onClick={() => refetch()}>
+          <button
+            className="btn btn-primary rounded-3"
+            onClick={() => refetch()}
+          >
             Try Again
           </button>
-          <button 
-            className="btn btn-outline-secondary rounded-3" 
+          <button
+            className="btn btn-outline-secondary rounded-3"
             onClick={() => navigate("/community")}
           >
             Back to Community
@@ -437,9 +460,11 @@ const CommunityDetail: React.FC = () => {
       <div className="container py-5 text-center">
         <div className="display-1 mb-3">🔍</div>
         <h3 className="fw-bold">Profile Not Found</h3>
-        <p className="text-muted mb-4">This user profile doesn't exist or has been removed.</p>
-        <button 
-          className="btn btn-outline-primary rounded-3" 
+        <p className="text-muted mb-4">
+          This user profile doesn't exist or has been removed.
+        </p>
+        <button
+          className="btn btn-outline-primary rounded-3"
           onClick={() => navigate("/community")}
         >
           Back to Community
@@ -452,18 +477,22 @@ const CommunityDetail: React.FC = () => {
     ? new Date().getFullYear() - parseInt(memberDetails.birth_year)
     : null;
 
-  const memberSince: string = new Date(memberDetails.createdAt).toLocaleDateString("en-US", {
+  const memberSince: string = new Date(
+    memberDetails.createdAt
+  ).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
   });
 
-  const isUserFollowing: boolean = memberDetails.followers.includes(userId || '');
+  const isUserFollowing: boolean = memberDetails.followers.includes(
+    userId || ""
+  );
 
   // Helper function to get first name safely
   const getFirstName = (fullName: string | undefined): string => {
-    if (!fullName || typeof fullName !== 'string') return 'User';
-    const parts = fullName.trim().split(' ');
-    return parts[0] || 'User';
+    if (!fullName || typeof fullName !== "string") return "User";
+    const parts = fullName.trim().split(" ");
+    return parts[0] || "User";
   };
 
   const firstName = getFirstName(memberDetails.name);
@@ -488,23 +517,23 @@ const CommunityDetail: React.FC = () => {
           {/* Left Column - Photos and Quick Actions */}
           <div className="col-lg-4">
             <div className="bg-white rounded-4 p-4 shadow-sm h-100">
-              <ImageGallery 
-                images={memberDetails.imageUrls || []} 
-                userName={memberDetails.name || 'User'} 
+              <ImageGallery
+                images={memberDetails.imageUrls || []}
+                userName={memberDetails.name || "User"}
               />
-              
+
               {/* Stats */}
               <div className="row g-2 my-4">
                 <div className="col-6">
-                  <StatsCard 
-                    value={memberDetails.followers?.length || 0} 
-                    label="Followers" 
+                  <StatsCard
+                    value={memberDetails.followers?.length || 0}
+                    label="Followers"
                   />
                 </div>
                 <div className="col-6">
-                  <StatsCard 
-                    value={memberDetails.following?.length || 0} 
-                    label="Following" 
+                  <StatsCard
+                    value={memberDetails.following?.length || 0}
+                    label="Following"
                   />
                 </div>
               </div>
@@ -543,7 +572,9 @@ const CommunityDetail: React.FC = () => {
                       icon="📞"
                       label="Video Call"
                       variant="warning"
-                      onClick={() => handleCallUser(memberDetails.name || 'User')}
+                      onClick={() =>
+                        handleCallUser(memberDetails.name || "User")
+                      }
                     />
                   </>
                 )}
@@ -558,7 +589,7 @@ const CommunityDetail: React.FC = () => {
               <div className="mb-4">
                 <div className="d-flex align-items-baseline flex-wrap gap-3 mb-3">
                   <h1 className="display-6 fw-bold mb-0">
-                    {memberDetails.name || 'User'}
+                    {memberDetails.name || "User"}
                   </h1>
                   {userAge && (
                     <span className="badge bg-light text-dark fs-6 fw-normal">
@@ -571,7 +602,7 @@ const CommunityDetail: React.FC = () => {
                     </span>
                   )}
                 </div>
-                
+
                 <div className="small text-muted d-flex align-items-center gap-2">
                   <span>📅</span>
                   <span>Member since {memberSince}</span>
@@ -580,8 +611,12 @@ const CommunityDetail: React.FC = () => {
 
               {/* Languages */}
               <LanguagePair
-                nativeLanguage={memberDetails.native_language || "Not specified"}
-                learningLanguage={memberDetails.language_to_learn || "Not specified"}
+                nativeLanguage={
+                  memberDetails.native_language || "Not specified"
+                }
+                learningLanguage={
+                  memberDetails.language_to_learn || "Not specified"
+                }
               />
 
               {/* About Section */}
@@ -592,10 +627,9 @@ const CommunityDetail: React.FC = () => {
                 </h2>
                 <div className="bg-light rounded-3 p-4">
                   <p className="mb-0 lh-lg">
-                    {memberDetails.bio && memberDetails.bio.trim() 
-                      ? memberDetails.bio 
-                      : `${firstName} hasn't added a bio yet. Start a conversation to learn more about them!`
-                    }
+                    {memberDetails.bio && memberDetails.bio.trim()
+                      ? memberDetails.bio
+                      : `${firstName} hasn't added a bio yet. Start a conversation to learn more about them!`}
                   </p>
                 </div>
               </div>
