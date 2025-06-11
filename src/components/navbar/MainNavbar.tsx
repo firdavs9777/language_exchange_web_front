@@ -171,8 +171,6 @@ const MainNavbar = () => {
                 </CustomNavLink>
               </>
             )}
-
-            {/* Language Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}

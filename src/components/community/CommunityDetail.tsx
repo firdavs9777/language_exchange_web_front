@@ -11,91 +11,16 @@ import Loader from "../Loader";
 import { useCreateChatRoomMutation } from "../../store/slices/chatSlice";
 import { useTranslation } from "react-i18next";
 import { AiFillProfile } from "react-icons/ai";
+import { ActionButtonProps, ImageGalleryProps, LanguagePairProps, StatsCardProps } from "./type";
+import { getLanguageFlag } from "./utils";
 // Enhanced TypeScript interfaces
-interface UserData {
-  _id: string;
-  name: string;
-  gender: string;
-  email: string;
-  bio: string;
-  birth_year: string;
-  birth_month: string;
-  birth_day: string;
-  images: string[];
-  native_language: string;
-  language_to_learn: string;
-  createdAt: string;
-  followers: string[];
-  following: string[];
-  imageUrls: string[];
-  __v: number;
-}
-
-interface SingleMember {
-  data: UserData;
-}
-
-interface RootState {
-  auth: {
-    userInfo?: {
-      user: {
-        _id: string;
-      };
-    };
-  };
-}
-
-interface LanguagePairProps {
-  nativeLanguage: string;
-  learningLanguage: string;
-}
-
-interface ImageGalleryProps {
-  images: string[];
-  userName: string;
-}
-
-interface ActionButtonProps {
-  icon: string;
-  label: string;
-  onClick: () => void;
-  variant?:
-    | "primary"
-    | "secondary"
-    | "success"
-    | "warning"
-    | "following"
-    | "outline";
-  isLoading?: boolean;
-  disabled?: boolean;
-  size?: "sm" | "md" | "lg";
-}
-
-interface StatsCardProps {
-  value: number;
-  label: string;
-}
 
 // Modern Language Display Component
 const LanguagePair: React.FC<LanguagePairProps> = ({
   nativeLanguage,
   learningLanguage,
 }) => {
-  const getLanguageFlag = (language: string): string => {
-    const flagMap: Record<string, string> = {
-      English: "🇺🇸",
-      Spanish: "🇪🇸",
-      French: "🇫🇷",
-      German: "🇩🇪",
-      Italian: "🇮🇹",
-      Portuguese: "🇵🇹",
-      Russian: "🇷🇺",
-      Japanese: "🇯🇵",
-      Korean: "🇰🇷",
-      Chinese: "🇨🇳",
-    };
-    return flagMap[language] || "🌐";
-  };
+
 
   return (
     <div className="d-flex align-items-center justify-content-center gap-4 p-4 bg-light rounded-4 mb-4">
@@ -203,7 +128,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
   );
 };
 
-// Modern Stats Card Component
+
 const StatsCard: React.FC<StatsCardProps> = ({ value, label }) => (
   <div className="text-center p-3 bg-white rounded-3 shadow-sm">
     <div className="fs-4 fw-bold text-primary mb-1">{value}</div>
@@ -211,7 +136,6 @@ const StatsCard: React.FC<StatsCardProps> = ({ value, label }) => (
   </div>
 );
 
-// Modern Action Button Component
 const ActionButton: React.FC<ActionButtonProps> = ({
   icon,
   label,

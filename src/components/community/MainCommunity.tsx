@@ -1,395 +1,136 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { 
-  Search, 
-  Globe, 
-  Sparkles, 
-  TrendingUp, 
-  Clock, 
-  Users, 
-  X,
-  ArrowRight,
-  Heart,
-  MessageCircle,
-  Star,
-  Zap,
-  Loader2
+  Search, Globe, Sparkles, X, Loader2
 } from "lucide-react";
 import { useGetCommunityMembersQuery } from "../../store/slices/communitySlice";
-import { Link } from "react-router-dom";
+
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { COMMON_LANGUAGES, LANGUAGE_FLAGS, LanguageFlagProps, TABS } from "./type";
+import {  useDebounce } from "./utils";
+import { MemberCard } from "./MemberCard";
 
-// TypeScript interfaces
-interface CommunityMember {
-  _id: string;
-  name: string;
-  bio: string;
-  native_language: string;
-  language_to_learn: string;
-  imageUrls: string[];
-}
+export const LanguageFlag: React.FC<LanguageFlagProps> = ({ code }) => (
+  <span className="text-2xl">{LANGUAGE_FLAGS[code] || code}</span>
+);
 
-// interface CommunityResponse {
-//   success: boolean;
-//   count: number;
-//   data: CommunityMember[];
-// }
-
-interface LanguageFlagProps {
-  code: string;
-}
-
-interface MemberCardProps {
-  member: CommunityMember;
-  index: number;
-  onMemberClick: (memberId: string) => void;
-}
-
-interface UseDebounceReturn<T> {
-  debouncedValue: T;
-}
-
-type TabType = "all" | "popular" | "new";
-
-// Debounce hook with proper typing
-const useDebounce = <T,>(value: T, delay: number): T => {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
-
-export const LanguageFlag: React.FC<LanguageFlagProps> = ({ code }) => {
-  const flagMap: Record<string, string> = {
-    en: "🇺🇸",
-    es: "🇪🇸", 
-    fr: "🇫🇷",
-    de: "🇩🇪",
-    it: "🇮🇹",
-    pt: "🇵🇹",
-    ru: "🇷🇺",
-    ja: "🇯🇵",
-    ko: "🇰🇷",
-    zh: "🇨🇳",
-  };
-  return <span className="text-2xl">{flagMap[code] || code}</span>;
-};
-
-export const MemberCard: React.FC<MemberCardProps> = ({ member, index, onMemberClick }) => {
-  const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [isHovered, setIsHovered] = useState<boolean>(false);
-
-  const getLanguageCode = (language: string): string => {
-    const languageMap: Record<string, string> = {
-      English: "en",
-      Spanish: "es",
-      French: "fr",
-      German: "de",
-      Italian: "it",
-      Portuguese: "pt",
-      Russian: "ru",
-      Japanese: "ja",
-      Korean: "ko",
-      Chinese: "zh",
-    };
-    if (typeof language === 'string' && language.trim() !== '') {
-      return languageMap[language] || language.slice(0, 2).toLowerCase();
-    }
-    
-
-  };
-
-  const nativeCode = getLanguageCode(member.native_language);
-  const learningCode = getLanguageCode(member.language_to_learn);
-
-  const handleCardClick = () => {
-    onMemberClick(member._id);
-  };
-
-  const handleLikeClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsLiked(!isLiked);
-  };
-
-  const handleMessageClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Handle message action
-    console.log(`Message ${member.name}`);
-  };
-
-  return (
-    <Link to={`/community/${member._id}`} className="member-card">
-    <div 
-      className="group relative bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl overflow-hidden hover:bg-opacity-15 transition-all duration-500 hover:scale-105 hover:-translate-y-2 shadow-xl hover:shadow-2xl cursor-pointer border border-white border-opacity-20"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={handleCardClick}
-    >
-      {/* Gradient border effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 rounded-3xl opacity-0 group-hover:opacity-75 transition-opacity duration-300 p-px">
-        <div className="w-full h-full bg-gray-900 bg-opacity-90 rounded-3xl"></div>
-      </div>
-      
-      <div className="relative z-10 p-4 sm:p-6">
-        {/* Header with image and status */}
-        <div className="relative mb-4">
-          <div className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4">
-            <img
-              src={member.imageUrls?.length > 0 ? member.imageUrls[0] : ""}
-              alt={member.name}
-              className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-white border-opacity-20 group-hover:border-opacity-40 transition-all duration-300"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = "";
-              }}
-            />
-            <div className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
-          </div>
-          
-          {/* Action buttons */}
-          <div className={`absolute top-2 right-2 flex space-x-2 transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}`}>
-            <button 
-              onClick={handleLikeClick}
-              className={`p-2 rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-110 ${isLiked ? 'bg-red-500 bg-opacity-20 text-red-400' : 'bg-white bg-opacity-10 text-white hover:bg-opacity-20'}`}
-            >
-              <Heart className={`w-3 h-3 sm:w-4 sm:h-4 ${isLiked ? 'fill-current' : ''}`} />
-            </button>
-            <button 
-              onClick={handleMessageClick}
-              className="p-2 bg-white bg-opacity-10 backdrop-blur-sm rounded-full hover:bg-opacity-20 transition-all duration-300 hover:scale-110"
-            >
-              <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-            </button>
-          </div>
-        </div>
-
-        {/* Language exchange visual */}
-        <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-4 bg-white bg-opacity-5 rounded-2xl p-2 sm:p-3">
-          <div className="flex items-center space-x-1 sm:space-x-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg sm:rounded-xl px-2 sm:px-3 py-1 sm:py-2">
-            <LanguageFlag code={nativeCode} />
-            <span className="text-white text-xs sm:text-sm font-medium hidden sm:inline">Native</span>
-          </div>
-          <ArrowRight className="text-white text-opacity-60 w-3 h-3 sm:w-4 sm:h-4" />
-          <div className="flex items-center space-x-1 sm:space-x-2 bg-gradient-to-r from-pink-500 to-orange-500 rounded-lg sm:rounded-xl px-2 sm:px-3 py-1 sm:py-2">
-            <LanguageFlag code={learningCode} />
-            <span className="text-white text-xs sm:text-sm font-medium hidden sm:inline">Learning</span>
-          </div>
-        </div>
-
-        {/* Member info */}
-        <div className="text-center">
-          <h3 className="text-lg sm:text-xl font-bold text-white mb-2 bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-            {member.name}
-          </h3>
-          
-          <div className="flex items-center justify-center space-x-3 sm:space-x-4 mb-3 text-white text-opacity-80">
-            <div className="flex items-center space-x-1">
-              <Star className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400 fill-current" />
-              <span className="text-xs sm:text-sm">{(Math.random() * 2 + 3).toFixed(1)}</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
-              <span className="text-xs sm:text-sm">{Math.floor(Math.random() * 100) + 1}</span>
-            </div>
-          </div>
-
-          <p className="text-white text-opacity-90 text-xs sm:text-sm leading-relaxed">
-            {member.bio?.substring(0, 60) || "Passionate language learner ready to connect!"}
-            {member.bio && member.bio.length > 60 ? "..." : ""}
-          </p>
-        </div>
-
-        {/* Hover overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-t from-purple-600 from-opacity-20 to-transparent rounded-3xl transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}></div>
-      </div>
-      </div>
-      </Link>
-  );
-};
-
+// ============= MAIN COMPONENT =============
 const ModernCommunity: React.FC = () => {
-  // State with proper typing
-  const [filter, setFilter] = useState<string>("");
-  const [languageFilter, setLanguageFilter] = useState<string>("");
+  // State
+  const [filter, setFilter] = useState("");
+  const [languageFilter, setLanguageFilter] = useState("");
   const [activeTab, setActiveTab] = useState<TabType>("all");
-  const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [members, setMembers] = useState<CommunityMember[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [page] = useState(1);
+  
   const debouncedFilter = useDebounce(filter, 300);
+  const { t, i18n } = useTranslation();
 
-  // Mock current user data - replace with your actual user data
-  const currentUser = {
-    _id: "current-user-id",
-    native_language: "English",
-    language_to_learn: "Japanese"
-  };
-  const [page, setPage] = useState(1);
-  const limit = 20; 
+  // Selectors
+  const currentUser = useSelector((state: RootState) => ({
+    _id: state.auth.userInfo?.user._id,
+    native_language: state.auth.userInfo?.user.native_language,
+    language_to_learn: state.auth.userInfo?.user.language_to_learn
+  }));
+
+  // API Query
   const {
     data: communityData,
-    isLoading: isLoadin2,
-    isFetching,
-    error:errorInfo,
+    isLoading,
+    error: errorInfo,
     refetch,
   } = useGetCommunityMembersQuery({
     page,
-    limit,
+    limit: 20,
     filter: debouncedFilter,
     language: languageFilter,
-    sort:
-      activeTab === "popular" ? "popular" : activeTab === "new" ? "newest" : "",
+    sort: activeTab === "popular" ? "popular" : activeTab === "new" ? "newest" : "",
   });
 
-  // Simulated API call - replace with your actual API integration
-  const fetchMembers = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      // Replace this mock data with your actual API call
-      // const response = await useGetCommunityMembersQuery({...});
-      
-      // Mock data for demonstration
-      // const mockMembers: CommunityMember[] = [
-      //   {
-      //     _id: "1",
-      //     name: "Sofia Martinez",
-      //     bio: "Passionate about Spanish culture and flamenco dancing. Love sharing stories about Barcelona!",
-      //     native_language: "Spanish",
-      //     language_to_learn: "English",
-      //     imageUrls: ["https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face"]
-      //   },
-      //   {
-      //     _id: "2", 
-      //     name: "Hiroshi Tanaka",
-      //     bio: "Software engineer from Tokyo. Interested in anime, ramen, and exploring different cultures through language.",
-      //     native_language: "Japanese",
-      //     language_to_learn: "English",
-      //     imageUrls: ["https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face"]
-      //   },
-      //   {
-      //     _id: "3",
-      //     name: "Emma Thompson",
-      //     bio: "Teacher from London who loves literature, tea, and helping others learn English.",
-      //     native_language: "English", 
-      //     language_to_learn: "French",
-      //     imageUrls: ["https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face"]
-      //   },
-      //   {
-      //     _id: "4",
-      //     name: "Marco Rossi",
-      //     bio: "Chef from Rome passionate about Italian cuisine and sharing the beauty of Italian language.",
-      //     native_language: "Italian",
-      //     language_to_learn: "English", 
-      //     imageUrls: ["https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face"]
-      //   }
-      // ];
+  const members = communityData?.data || [];
 
-      if (communityData)
-      {
-        setMembers(communityData?.data);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch members');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [communityData]);
-
+  // Effects
   useEffect(() => {
     setIsLoaded(true);
-    fetchMembers();
-  }, [fetchMembers]);
+  }, []);
 
+  // Memoized filtered members
   const filteredMembers = useMemo(() => {
-    let filteredList = members.filter(member => member._id !== currentUser._id);
+    if (!currentUser._id) return [];
+    
+    let filteredList = members.filter(member => {
+      // Exclude current user
+      return member._id !== currentUser._id;
+    });
     
     // Apply text filter
     if (debouncedFilter?.trim()) {
-      const lowerCaseFilter = debouncedFilter.toLowerCase();
-
-      filteredList = filteredList.filter(
-        (member) =>
-          member.name?.toLowerCase().includes(lowerCaseFilter) ||
-          member.native_language?.toLowerCase().includes(lowerCaseFilter) ||
-          member.language_to_learn?.toLowerCase().includes(lowerCaseFilter) ||
-          member.bio?.toLowerCase().includes(lowerCaseFilter)
+      const searchTerm = debouncedFilter.toLowerCase();
+      filteredList = filteredList.filter(member =>
+        [member.name, member.native_language, member.language_to_learn, member.bio]
+          .some(field => field?.toLowerCase().includes(searchTerm))
       );
     }
     
     // Apply language filter
     if (languageFilter) {
-      filteredList = filteredList.filter(
-        (member) =>
-          member.native_language === languageFilter ||
-          member.language_to_learn === languageFilter
+      filteredList = filteredList.filter(member =>
+        member.native_language === languageFilter || 
+        member.language_to_learn === languageFilter
       );
     }
     
-    // Apply tab filter
-    if (activeTab === "popular") {
-      filteredList = filteredList.sort(() => Math.random() - 0.5).slice(0, 6);
-    } else if (activeTab === "new") {
-      filteredList = filteredList.slice(-4);
+    // Apply tab sorting
+    switch (activeTab) {
+      case "popular":
+        return filteredList.sort(() => Math.random() - 0.5).slice(0, 6);
+      case "new":
+        return filteredList.slice(-4);
+      default:
+        return filteredList;
     }
-    
-    return filteredList;
-  }, [members, currentUser._id, debouncedFilter, languageFilter, activeTab]);
-
-  const handleMemberClick = (memberId: string) => {
-    // Handle navigation to member profile
+  }, [members, currentUser, debouncedFilter, languageFilter, activeTab]);
+  // Event handlers
+  const handleMemberClick = useCallback((memberId: string) => {
     console.log(`Navigate to member: ${memberId}`);
-    // You can implement navigation here: navigate(`/community/${memberId}`)
-  };
+  }, []);
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilterChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(e.target.value);
-  };
+  }, []);
 
-  const handleLanguageFilterChange = (language: string) => {
-    setLanguageFilter(language === languageFilter ? "" : language);
-  };
+  const handleLanguageFilterChange = useCallback((language: string) => {
+    setLanguageFilter(prev => prev === language ? "" : language);
+  }, []);
 
-  const handleTabChange = (tab: TabType) => {
+  const handleTabChange = useCallback((tab: TabType) => {
     setActiveTab(tab);
-  };
+  }, []);
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setFilter("");
     setLanguageFilter("");
-  };
+  }, []);
 
-  const commonLanguages: string[] = [
-    "English", "Spanish", "French", "German", "Korean", 
-    "Japanese", "Chinese", "Portuguese", "Russian", "Italian"
-  ];
-  const { t, i18n } = useTranslation();
-  if (error) {
+  // Error handling
+  if (errorInfo) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
         <div className="text-center text-white">
-          <h2 className="text-2xl font-bold mb-4">{ t("communityMain.errors.generic")}</h2>
-          <p className="mb-4">{error}</p>
+          <h2 className="text-2xl font-bold mb-4">{t("communityMain.errors.generic")}</h2>
+          <p className="mb-4">{String(errorInfo)}</p>
           <button 
-            onClick={fetchMembers}
+            onClick={refetch}
             className="bg-gradient-to-r from-pink-500 to-purple-500 px-6 py-3 rounded-full font-medium hover:scale-105 transition-transform"
           >
-            { t("communityMain.errors.tryAgain")}
+            {t("communityMain.errors.tryAgain")}
           </button>
         </div>
       </div>
     );
   }
+
   const count = filteredMembers.length;
   const plural = count !== 1 ? (i18n.language === 'ko' ? '들' : 's') : '';
 
@@ -402,8 +143,8 @@ const ModernCommunity: React.FC = () => {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-green-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
       </div>
 
-      {/* Floating particles */}
-      {[...Array(15)].map((_, i) => (
+      {/* Floating sparkles */}
+      {Array.from({ length: 15 }, (_, i) => (
         <div
           key={i}
           className="absolute opacity-20 animate-bounce"
@@ -420,28 +161,28 @@ const ModernCommunity: React.FC = () => {
 
       <div className={`relative z-10 container mx-auto px-4 py-6 sm:py-8 transition-all duration-1000 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
         {/* Header */}
-        <div className="text-center mb-8 sm:mb-12">
+        <header className="text-center mb-8 sm:mb-12">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
-              { t("communityMain.title")}
+            {t("communityMain.title")}
           </h1>
-          <p className="text-lg sm:text-xl text-white text-opacity-80 mb-6 sm:mb-8">{ t("communityMain.subtitle")}</p>
+          <p className="text-lg sm:text-xl text-white text-opacity-80 mb-6 sm:mb-8">
+            {t("communityMain.subtitle")}
+          </p>
           
           {/* Stats */}
           <div className="flex justify-center space-x-4 sm:space-x-8 mb-6 sm:mb-8">
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-white">{members.length}+</div>
-              <div className="text-xs sm:text-sm text-white text-opacity-70">{ t("communityMain.stats.activeLearners")}</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-white">50+</div>
-              <div className="text-xs sm:text-sm text-white text-opacity-70">{t("communityMain.stats.languages")}</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-white">180+</div>
-              <div className="text-xs sm:text-sm text-white text-opacity-70">{t("communityMain.stats.countries")}</div>
-            </div>
+            {[
+              { value: `${members.length}+`, label: t("communityMain.stats.activeLearners") },
+              { value: "50+", label: t("communityMain.stats.languages") },
+              { value: "180+", label: t("communityMain.stats.countries") }
+            ].map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-white">{stat.value}</div>
+                <div className="text-xs sm:text-sm text-white text-opacity-70">{stat.label}</div>
+              </div>
+            ))}
           </div>
-        </div>
+        </header>
 
         {/* Search and Filters */}
         <div className="max-w-4xl mx-auto mb-8 sm:mb-12 space-y-4 sm:space-y-6">
@@ -450,20 +191,21 @@ const ModernCommunity: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl opacity-75 blur"></div>
             <div className="relative bg-white bg-opacity-10 backdrop-blur-md rounded-2xl p-1">
               <div className="flex items-center bg-white bg-opacity-5 rounded-xl px-4 sm:px-6 py-3 sm:py-4">
-                <Search className="w-5 h-5 sm:w-6 sm:h-6  text-opacity-60 mr-3 sm:mr-4" />
+                <Search className="w-5 h-5 sm:w-6 sm:h-6 text-white text-opacity-60 mr-3 sm:mr-4" />
                 <input
                   type="text"
                   placeholder={t("communityMain.search.placeholder")}
                   value={filter}
                   onChange={handleFilterChange}
-                  className="flex-1 text-[#333] placeholder-white placeholder-opacity-60 outline-none text-base sm:text-lg"
+                  className="flex-1 bg-transparent text-white placeholder-white placeholder-opacity-60 outline-none text-base sm:text-lg"
                 />
                 {filter && (
                   <button
                     onClick={() => setFilter("")}
-                    className="ml-4 p-2 hover:bg-[#333]  rounded-full transition-colors"
+                    className="ml-4 p-2 hover:bg-white hover:bg-opacity-10 rounded-full transition-colors"
+                    aria-label="Clear search"
                   >
-                    <X className="w-4 h-4 sm:w-5 sm:h-5 " />
+                    <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </button>
                 )}
               </div>
@@ -472,7 +214,7 @@ const ModernCommunity: React.FC = () => {
 
           {/* Language Filter Pills */}
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-            {commonLanguages.map((language) => (
+            {COMMON_LANGUAGES.map((language) => (
               <button
                 key={language}
                 onClick={() => handleLanguageFilterChange(language)}
@@ -490,11 +232,7 @@ const ModernCommunity: React.FC = () => {
           {/* Tabs */}
           <div className="flex justify-center">
             <div className="bg-white bg-opacity-10 backdrop-blur-md rounded-2xl p-1">
-              {[
-                { id: "all" as TabType, label: "All", icon: Users },
-                { id: "popular" as TabType, label: "Popular", icon: TrendingUp },
-                { id: "new" as TabType, label: "New", icon: Clock }
-              ].map(({ id, label, icon: Icon }) => (
+              {TABS.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => handleTabChange(id)}
@@ -512,8 +250,6 @@ const ModernCommunity: React.FC = () => {
             </div>
           </div>
         </div>
-
-        {/* Loading State */}
         {isLoading && (
           <div className="flex justify-center items-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-white" />
@@ -527,9 +263,7 @@ const ModernCommunity: React.FC = () => {
             <div className="inline-flex items-center space-x-2 bg-white bg-opacity-10 backdrop-blur-sm rounded-full px-4 sm:px-6 py-2 sm:py-3">
               <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-white text-opacity-70" />
               <span className="text-white text-opacity-90 text-sm sm:text-base">
-
                 {t('communityMain.results.showing', { count, plural })}
-            
               </span>
             </div>
           </div>
@@ -539,8 +273,12 @@ const ModernCommunity: React.FC = () => {
         {!isLoading && filteredMembers.length === 0 ? (
           <div className="text-center py-12 sm:py-20">
             <div className="text-5xl sm:text-6xl mb-4">🌍</div>
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-4">{t("communityMain.results.noneFound.title")}</h3>
-            <p className="text-white text-opacity-70 mb-6 sm:mb-8 px-4">{t("communityMain.results.noneFound.message")}</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-4">
+              {t("communityMain.results.noneFound.title")}
+            </h3>
+            <p className="text-white text-opacity-70 mb-6 sm:mb-8 px-4">
+              {t("communityMain.results.noneFound.message")}
+            </p>
             {(filter || languageFilter) && (
               <button
                 onClick={clearFilters}
@@ -552,18 +290,15 @@ const ModernCommunity: React.FC = () => {
           </div>
         ) : !isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {filteredMembers.map((member, index) => (
+            {filteredMembers.map((member:any ) => (
               <MemberCard 
                 key={member._id} 
                 member={member} 
-                index={index} 
                 onMemberClick={handleMemberClick}
               />
             ))}
           </div>
         )}
-
-        {/* Clear filters button */}
         {!isLoading && (filter || languageFilter) && filteredMembers.length > 0 && (
           <div className="text-center mt-8 sm:mt-12">
             <button

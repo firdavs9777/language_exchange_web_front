@@ -344,5 +344,81 @@
         "learning": "Learning",
         "notSpecified": "Not specified"
       }
-    }
+    },
+       
+    "communityDetailSection": {
+          "profile": {
+            "noPhotos": "No photos available"
+          },
+          "navigation": {
+            "backToCommunity": "Back to Community"
+          },
+          "errors": {
+            "invalidProfileId": "Invalid profile ID",
+            "somethingWentWrong": "Oops! Something went wrong",
+            "couldNotLoadProfile": "We couldn't load this profile. Please try again later.",
+            "profileNotFound": "Profile Not Found",
+            "profileDoesNotExist": "This user profile doesn't exist or has been removed.",
+            "loadingProfile": "Loading profile..."
+          },
+          "buttons": {
+            "tryAgain": "Try Again",
+            "backToCommunity": "Back to Community"
+          },
+          "stats": {
+            "followers": "Followers",
+            "following": "Following"
+          },
+          "actions": {
+            "following": "Following",
+            "follow": "Follow",
+            "startChat": "Start Chat",
+            "videoCall": "Video Call",
+            "startConversation": "Start Conversation"
+          },
+          "languages": {
+            "speaks": "Speaks",
+            "learning": "Learning",
+            "notSpecified": "Not specified"
+          },
+          "memberInfo": {
+            "yearsOld": "years old",
+            "memberSince": "Member since"
+          },
+          "about": {
+            "aboutTitle": "About",
+            "noBioMessage": "hasn't added a bio yet. Start a conversation to learn more about them!"
+          },
+          "callToAction": {
+            "title": "Ready to practice with",
+            "subtitle": "Start chatting and improve your language skills together!"
+          },
+          "toasts": {
+            "needLogin": "You need to be logged in to",
+            "followUsers": "follow users",
+            "unfollowUsers": "unfollow users",
+            "startChat": "start a chat",
+            "failedToFollow": "Failed to follow user. Please try again.",
+            "successfullyFollowed": "Successfully followed!",
+            "successfullyUnfollowed": "Successfully unfollowed",
+            "failedToUnfollow": "Failed to unfollow user. Please try again.",
+            "failedToStartChat": "Failed to start chat. Please try again.",
+            "initiatingCall": "Initiating call with",
+            "errorOccurred": "An error occurred. Please try again."
+          },
+          "confirmations": {
+            "unfollowConfirm": "Are you sure you want to unfollow this user?"
+          },
+          "accessibility": {
+            "viewPhoto": "View photo",
+            "userPhoto": "'s photo"
+          },
+          "fallbacks": {
+            "defaultUser": "User"
+          }
+        }
+      
+     
+
+
 }
