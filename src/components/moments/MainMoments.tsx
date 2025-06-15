@@ -244,7 +244,7 @@ const MainMoments: React.FC = () => {
                         title={moment.title}
                         description={moment.description}
                         likeCount={moment.likeCount}
-                        commentCount={moment.commentCount}
+                        commentCount={moment.comments}
                         user={moment.user}
                         likedUsers={moment.likedUsers}
                         imageUrls={moment.imageUrls}

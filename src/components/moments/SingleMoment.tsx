@@ -25,7 +25,7 @@ interface MomentProps {
   description: string;
   likeCount: number;
   likedUsers: string[];
-  commentCount: number;
+  commentCount: string[];
   createdAt: string;
   user: User;
   imageUrls?: string[];
@@ -244,7 +244,7 @@ const SingleMoment: React.FC<MomentProps> = ({
         </Link>
 
         {/* Stats Bar */}
-        {(currentLikeCount > 0 || commentCount > 0) && (
+        {(currentLikeCount > 0 || commentCount.length > 0) && (
           <div className="px-4 sm:px-6 py-3 bg-gray-50/80 border-t border-gray-100/80">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4 text-sm text-gray-500">
@@ -257,9 +257,10 @@ const SingleMoment: React.FC<MomentProps> = ({
                     </span>
                   </div>
                 )}
-                {commentCount > 0 && (
+                {commentCount.length > 0 && (
                   <span className="font-medium">
-                    {commentCount} {commentCount === 1 ? "comment" : "comments"}
+                    {commentCount.length}{" "}
+                    {commentCount.length === 1 ? "comment" : "comments"}
                   </span>
                 )}
               </div>

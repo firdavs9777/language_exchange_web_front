@@ -1,11 +1,9 @@
-import { UserType } from "../../components/moments/MomentDetail";
 import {
   //   USER_PROFILE_URL,
   LOGOUT_URL,
   REGISTER_URL,
   LOGIN_URL,
   USER_PROFILE_URL,
-  USERS_URL,
   COMMUNITY_URL,
   USER_PROFILE_UPDATE,
   SEND_EMAIL_CODE,
@@ -84,7 +82,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       providesTags: ["User"],
     }),
     updateUserInfo: builder.mutation({
-      query: (data: UserType) => ({
+      query: (data: any) => ({
         url: `${USER_PROFILE_UPDATE}`,
         method: "PUT",
         body: data,
@@ -93,13 +91,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       providesTags: ["User"],
     }),
     deleteUserPhoto: builder.mutation({
-      query: ({
-        userId,
-        index,
-      }: {
-        userId: string;
-        index: number;
-      }) => ({
+      query: ({ userId, index }: { userId: string; index: number }) => ({
         url: `${COMMUNITY_URL}/${userId}/photo/${index}`,
         method: "DELETE",
       }),
@@ -171,5 +163,5 @@ export const {
   useUnFollowUserMutation,
   useUploadUserPhotoMutation,
   useUpdateUserInfoMutation,
-  useDeleteUserPhotoMutation
+  useDeleteUserPhotoMutation,
 } = usersApiSlice;

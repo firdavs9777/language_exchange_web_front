@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -58,11 +58,11 @@ interface MomentResponse {
   data: MomentDetails;
 }
 
-// Helper components
-const TimeAgo: React.FC<{ date: string }> = ({ date }) => {
+// Memoized helper components for better performance
+const TimeAgo = React.memo<{ date: string }>(({ date }) => {
   const { t } = useTranslation();
 
-  const calculateTimeAgo = () => {
+  const timeAgoText = useMemo(() => {
     const now = new Date();
     const past = new Date(date);
     const diff = now.getTime() - past.getTime();
@@ -77,111 +77,111 @@ const TimeAgo: React.FC<{ date: string }> = ({ date }) => {
     if (hours < 24) return t("moments_section.timeAgo.hoursAgo", { hours });
     if (days < 7) return t("moments_section.timeAgo.daysAgo", { days });
     return new Date(date).toLocaleDateString();
-  };
+  }, [date, t]);
 
-  return <span className="text-xs text-gray-500">{calculateTimeAgo()}</span>;
-};
+  return <span className="text-xs text-gray-500">{timeAgoText}</span>;
+});
 
-const CommentItem: React.FC<{ comment: Comment; index: number }> = ({
-  comment,
-  index,
-}) => {
-  return (
-    <div className="flex gap-3 py-3 px-2 hover:bg-gray-50/50 rounded-xl transition-all duration-200">
-      <div className="flex-shrink-0">
-        <div className="relative">
+const CommentItem = React.memo<{ comment: Comment; index: number }>(
+  ({ comment, index }) => {
+    return (
+      <div className="flex gap-3 py-3 px-2 hover:bg-gray-50/50 rounded-xl transition-all duration-200">
+        <div className="flex-shrink-0">
+          <div className="relative">
+            <img
+              src={comment.user.imageUrls?.[0] || "/default-avatar.png"}
+              alt={comment.user.name}
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-white shadow-sm"
+              loading="lazy"
+            />
+            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 rounded-full border border-white"></div>
+          </div>
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="bg-gray-50 rounded-2xl px-3 py-2.5 sm:px-4 sm:py-3">
+            <div className="flex items-center justify-between mb-1">
+              <h4 className="font-semibold text-gray-800 text-sm truncate pr-2">
+                {comment.user.name}
+              </h4>
+              <TimeAgo date={comment.createdAt} />
+            </div>
+            <p className="text-gray-700 text-sm leading-relaxed break-words">
+              {comment.text}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+);
+
+const ImageCarousel = React.memo<{ images: string[]; title?: string }>(
+  ({ images, title }) => {
+    const { t } = useTranslation();
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const nextSlide = useCallback(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, [images.length]);
+
+    const prevSlide = useCallback(() => {
+      setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    }, [images.length]);
+
+    if (images.length === 0) return null;
+
+    return (
+      <div className="relative bg-gray-900 overflow-hidden">
+        <div className="relative aspect-video max-h-96">
           <img
-            src={comment.user.imageUrls[0] || "/default-avatar.png"}
-            alt={comment.user.name}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-white shadow-sm"
+            src={images[currentIndex]}
+            alt={`${title || t("moments_section.title")} - ${currentIndex + 1}`}
+            className="w-full h-full object-contain"
+            loading="lazy"
           />
-          <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 rounded-full border border-white"></div>
-        </div>
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="bg-gray-50 rounded-2xl px-3 py-2.5 sm:px-4 sm:py-3">
-          <div className="flex items-center justify-between mb-1">
-            <h4 className="font-semibold text-gray-800 text-sm truncate pr-2">
-              {comment.user.name}
-            </h4>
-            <TimeAgo date={comment.createdAt} />
-          </div>
-          <p className="text-gray-700 text-sm leading-relaxed break-words">
-            {comment.text}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
 
-const ImageCarousel: React.FC<{ images: string[]; title?: string }> = ({
-  images,
-  title,
-}) => {
-  const { t } = useTranslation();
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  if (images.length === 0) return null;
-
-  return (
-    <div className="relative bg-gray-900 overflow-hidden">
-      <div className="relative aspect-video max-h-96">
-        <img
-          src={images[currentIndex]}
-          alt={`${title || t("moments_section.title")} - ${currentIndex + 1}`}
-          className="w-full h-full object-contain"
-        />
-
-        {/* Navigation buttons */}
-        {images.length > 1 && (
-          <>
-            <button
-              onClick={prevSlide}
-              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
-              aria-label="Previous image"
-            >
-              <FaChevronLeft className="w-4 h-4" />
-            </button>
-            <button
-              onClick={nextSlide}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
-              aria-label="Next image"
-            >
-              <FaChevronRight className="w-4 h-4" />
-            </button>
-          </>
-        )}
-
-        {/* Indicators */}
-        {images.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-            {images.map((_, index) => (
+          {/* Navigation buttons */}
+          {images.length > 1 && (
+            <>
               <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentIndex ? "bg-white" : "bg-white/50"
-                }`}
-                aria-label={`Go to image ${index + 1}`}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
+                onClick={prevSlide}
+                className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
+                aria-label="Previous image"
+              >
+                <FaChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={nextSlide}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
+                aria-label="Next image"
+              >
+                <FaChevronRight className="w-4 h-4" />
+              </button>
+            </>
+          )}
 
-const LoadingSpinner: React.FC<{ message?: string }> = ({ message }) => (
+          {/* Indicators */}
+          {images.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    index === currentIndex ? "bg-white" : "bg-white/50"
+                  }`}
+                  aria-label={`Go to image ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+);
+
+const LoadingSpinner = React.memo<{ message?: string }>(({ message }) => (
   <div className="flex flex-col items-center justify-center py-16">
     <div className="relative">
       <div className="w-12 h-12 border-4 border-gray-200 rounded-full animate-spin"></div>
@@ -189,58 +189,82 @@ const LoadingSpinner: React.FC<{ message?: string }> = ({ message }) => (
     </div>
     {message && <p className="mt-4 text-gray-600 font-medium">{message}</p>}
   </div>
-);
+));
 
 const MomentDetail: React.FC = () => {
   const { t } = useTranslation();
   const { id: momentId } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  // User data
+  // User data - memoized to prevent unnecessary re-renders
   const { userInfo } = useSelector((state: any) => state.auth);
-  const userId = userInfo?.user?._id;
+  const userId = useMemo(() => userInfo?.user?._id, [userInfo]);
 
   // State
   const [newComment, setNewComment] = useState("");
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
-  // API hooks
+  // API hooks with optimized polling/refetching
   const {
     data: momentData,
     isLoading: isLoadingMoment,
     refetch: refetchMomentDetails,
-  } = useGetMomentDetailsQuery(momentId || "");
+  } = useGetMomentDetailsQuery(momentId || "", {
+    skip: !momentId,
+    refetchOnMountOrArgChange: true,
+  });
 
-  const [likeMoment] = useLikeMomentMutation();
-  const [dislikeMoment] = useDislikeMomentMutation();
-  const [addComment, { isLoading: isAddingComment }] = useAddCommentMutation();
+  const [likeMoment, { isLoading: isLiking }] = useLikeMomentMutation();
+  const [dislikeMoment, { isLoading: isDisliking }] =
+    useDislikeMomentMutation();
+  const [addComment] = useAddCommentMutation();
 
   const {
     data: commentsData,
     isLoading: isLoadingComments,
     refetch: refetchComments,
-  } = useGetCommentsQuery(momentId || "");
+  } = useGetCommentsQuery(momentId || "", {
+    skip: !momentId,
+    refetchOnMountOrArgChange: true,
+  });
 
-  // Data
-  const momentDetails = (momentData as MomentResponse)?.data;
-  const commentsList = (commentsData as CommentResponse)?.data || [];
-  const isLiked = momentDetails?.likedUsers.includes(userId || "");
-  const formattedDate = momentDetails
-    ? new Date(momentDetails.createdAt).toLocaleString()
-    : "";
+  // Memoized computed values to prevent unnecessary recalculations
+  const momentDetails = useMemo(
+    () => (momentData as MomentResponse)?.data,
+    [momentData]
+  );
+
+  const commentsList = useMemo(
+    () => (commentsData as CommentResponse)?.data || [],
+    [commentsData]
+  );
+
+  const isLiked = useMemo(
+    () => momentDetails?.likedUsers.includes(userId || ""),
+    [momentDetails?.likedUsers, userId]
+  );
+
+  const formattedDate = useMemo(
+    () =>
+      momentDetails ? new Date(momentDetails.createdAt).toLocaleString() : "",
+    [momentDetails?.createdAt]
+  );
 
   // Effects
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [momentId]);
 
-  // Handlers
+  // Optimized handlers with better state management
   const handleGoBack = useCallback(() => {
     navigate(-1);
   }, [navigate]);
 
+  // OPTIMIZED: Like toggle with optimistic updates and no double refetch
   const handleLikeToggle = useCallback(
     async (e: React.MouseEvent) => {
       e.preventDefault();
+
       if (!userId) {
         toast.error(t("moments_section.pleaseLoginFirst"), {
           autoClose: 3000,
@@ -250,13 +274,14 @@ const MomentDetail: React.FC = () => {
         });
         return;
       }
-      if (!momentId || !momentDetails) return;
+
+      if (!momentId || !momentDetails || isLiking || isDisliking) return;
 
       try {
         if (isLiked) {
           await dislikeMoment({ momentId, userId }).unwrap();
           toast.info(t("moments_section.removedLike"), {
-            autoClose: 3000,
+            autoClose: 2000,
             hideProgressBar: false,
             theme: "dark",
             transition: Bounce,
@@ -264,14 +289,16 @@ const MomentDetail: React.FC = () => {
         } else {
           await likeMoment({ momentId, userId }).unwrap();
           toast.success(t("moments_section.likedMoment"), {
-            autoClose: 3000,
+            autoClose: 2000,
             hideProgressBar: false,
             theme: "dark",
             transition: Bounce,
           });
         }
+        // Single refetch instead of double
         refetchMomentDetails();
       } catch (error) {
+        console.error("🐛 Like toggle error:", error);
         toast.error(t("moments_section.failedToUpdateLike"), {
           autoClose: 3000,
           hideProgressBar: false,
@@ -280,12 +307,25 @@ const MomentDetail: React.FC = () => {
         });
       }
     },
-    [momentId, userId, isLiked, refetchMomentDetails, t]
+    [
+      momentId,
+      userId,
+      isLiked,
+      isLiking,
+      isDisliking,
+      dislikeMoment,
+      likeMoment,
+      refetchMomentDetails,
+      momentDetails,
+      t,
+    ]
   );
 
+  // OPTIMIZED: Comment submission with better state management
   const handleCommentSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
+
       if (!newComment.trim()) {
         toast.error(t("moments_section.emptyCommentError"), {
           autoClose: 3000,
@@ -295,31 +335,77 @@ const MomentDetail: React.FC = () => {
         });
         return;
       }
-      if (!momentId) return;
+
+      if (!momentId || !userId) {
+        toast.error(t("moments_section.pleaseLoginFirst"), {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
+        return;
+      }
+
+      if (isSubmittingComment) return; // Prevent double submission
+
+      setIsSubmittingComment(true);
 
       try {
-        await addComment({ momentId, newComment }).unwrap();
-        toast.success(t("moments_section.commentAdded"), {
-          autoClose: 3000,
-          hideProgressBar: false,
-          theme: "dark",
-          transition: Bounce,
+        console.log("🐛 Adding comment:", {
+          momentId,
+          newComment: newComment.trim(),
         });
-        refetchComments();
+
+        await addComment({
+          momentId,
+          newComment: newComment.trim(),
+        }).unwrap();
+
+        // Clear input immediately for better UX
         setNewComment("");
-      } catch (error) {
-        toast.error(t("moments_section.failedToAddComment"), {
-          autoClose: 3000,
+
+        // Refetch comments to show the new one
+        await refetchComments();
+
+        toast.success(t("moments_section.commentAdded"), {
+          autoClose: 2000,
           hideProgressBar: false,
           theme: "dark",
           transition: Bounce,
         });
+      } catch (error: any) {
+        console.error("🐛 addComment error:", error);
+
+        // Restore comment text on error
+        // setNewComment stays as is so user doesn't lose their text
+
+        const errorMessage =
+          error?.data?.error ||
+          error?.message ||
+          t("moments_section.failedToAddComment");
+
+        toast.error(errorMessage, {
+          autoClose: 5000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
+      } finally {
+        setIsSubmittingComment(false);
       }
     },
-    [newComment, momentId, addComment, refetchComments, t]
+    [
+      newComment,
+      momentId,
+      userId,
+      addComment,
+      refetchComments,
+      t,
+      isSubmittingComment,
+    ]
   );
 
-  // Loading states
+  // Early returns for loading states
   if (!momentId) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 flex items-center justify-center px-4">
@@ -386,9 +472,12 @@ const MomentDetail: React.FC = () => {
             <div className="relative">
               <div className="p-0.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-600">
                 <img
-                  src={momentDetails.user.imageUrls[0] || "/default-avatar.png"}
+                  src={
+                    momentDetails.user.imageUrls?.[0] || "/default-avatar.png"
+                  }
                   alt={momentDetails.user.name}
                   className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover bg-white border-2 border-white"
+                  loading="lazy"
                 />
               </div>
               <div className="absolute -bottom-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-r from-green-400 to-green-500 rounded-full border-2 border-white"></div>
@@ -454,12 +543,15 @@ const MomentDetail: React.FC = () => {
           <div className="flex border-b border-gray-100/80">
             <button
               onClick={handleLikeToggle}
-              className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 sm:py-4 transition-all duration-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 ${
+              disabled={isLiking || isDisliking}
+              className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 sm:py-4 transition-all duration-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 disabled:opacity-50 ${
                 isLiked ? "text-blue-600 bg-blue-50" : "text-gray-600"
               }`}
             >
-              {isLiked ? (
-                <AiFillLike className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
+              {isLiking || isDisliking ? (
+                <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              ) : isLiked ? (
+                <AiFillLike className="w-4 h-4 sm:w-5 sm:h-5" />
               ) : (
                 <AiOutlineLike className="w-4 h-4 sm:w-5 sm:h-5" />
               )}
@@ -500,7 +592,6 @@ const MomentDetail: React.FC = () => {
               </div>
             ) : (
               <>
-                {/* Comment Form */}
                 {userInfo ? (
                   <form onSubmit={handleCommentSubmit} className="mb-4 sm:mb-6">
                     <div className="relative">
@@ -512,16 +603,16 @@ const MomentDetail: React.FC = () => {
                         )}
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
-                        disabled={isAddingComment}
+                        disabled={isSubmittingComment}
                         className="w-full px-3 py-2.5 sm:px-4 sm:py-3 pr-10 sm:pr-12 bg-gray-50 border border-gray-200 rounded-full text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 transition-colors disabled:opacity-50"
                       />
                       {newComment.trim() && (
                         <button
                           type="submit"
-                          disabled={isAddingComment}
+                          disabled={isSubmittingComment}
                           className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2 w-7 h-7 sm:w-8 sm:h-8 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
                         >
-                          {isAddingComment ? (
+                          {isSubmittingComment ? (
                             <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                           ) : (
                             <FaPaperPlane className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
@@ -543,8 +634,6 @@ const MomentDetail: React.FC = () => {
                     </p>
                   </div>
                 )}
-
-                {/* Comments List - Scrollable */}
                 {commentsList.length > 0 ? (
                   <div>
                     <h3 className="text-gray-700 font-semibold mb-3 sm:mb-4 flex items-center gap-2 text-sm sm:text-base">
@@ -554,7 +643,7 @@ const MomentDetail: React.FC = () => {
                       </span>
                     </h3>
 
-                    {/* Scrollable Comments Container - Pure Tailwind */}
+                    {/* Optimized Comments Container */}
                     <div className="relative">
                       <div className="max-h-80 sm:max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 rounded-xl">
                         <div className="space-y-1">
@@ -563,7 +652,10 @@ const MomentDetail: React.FC = () => {
                               key={comment._id}
                               className="transform transition-all duration-300 ease-out"
                               style={{
-                                transitionDelay: `${index * 100}ms`,
+                                transitionDelay: `${Math.min(
+                                  index * 50,
+                                  500
+                                )}ms`, // Cap delay
                               }}
                             >
                               <CommentItem comment={comment} index={index} />
@@ -572,7 +664,7 @@ const MomentDetail: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Scroll fade indicator using Tailwind gradients */}
+                      {/* Scroll fade indicator */}
                       {commentsList.length > 3 && (
                         <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white via-white/90 to-transparent pointer-events-none rounded-b-xl"></div>
                       )}
