@@ -16,15 +16,21 @@ export const commentsApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     addComment: builder.mutation({
-      query: (data: any) => ({
+      query: ({
+        momentId,
+        newComment,
+      }: {
+        momentId: string;
+        newComment: string;
+      }) => ({
         // Access token from Redux state
-        url: `${MOMENTS_URL}/${data.momentId}/${COMMENTS}`,
+        url: `${MOMENTS_URL}/${momentId}/${COMMENTS}`,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: {
-          text: data.newComment,
+          text: newComment,
         },
       }),
       invalidatesTags: ["Comment"], // Fixed invalidatesTags for correct tag name

@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Card, Image, Button, Badge, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { 
-  AiFillLike, 
-  AiOutlineLike, 
-  AiOutlineComment, 
-  AiOutlineShareAlt 
+import {
+  AiFillLike,
+  AiOutlineLike,
+  AiOutlineComment,
+  AiOutlineShareAlt,
 } from "react-icons/ai";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Bounce, toast } from "react-toastify";
-import moment from 'moment';
+import moment from "moment";
 import { useTranslation } from "react-i18next";
 
 // TypeScript interfaces
@@ -26,7 +25,7 @@ interface MomentProps {
   description: string;
   likeCount: number;
   likedUsers: string[];
-  commentCount: number;
+  commentCount: string[];
   createdAt: string;
   user: User;
   imageUrls?: string[];
@@ -57,7 +56,9 @@ const SingleMoment: React.FC<MomentProps> = ({
   imageUrls,
   refetch,
 }) => {
-  const userId = useSelector((state: RootState) => state.auth.userInfo?.user._id);
+  const userId = useSelector(
+    (state: RootState) => state.auth.userInfo?.user._id
+  );
   const [liked, setLiked] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [currentLikeCount, setCurrentLikeCount] = useState<number>(likeCount);
@@ -70,299 +71,262 @@ const SingleMoment: React.FC<MomentProps> = ({
     setCurrentLikeCount(likeCount);
   }, [likedUsers, userId, likeCount]);
 
-  const handleLikeToggle = useCallback(async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (!userId) {
-      toast.error(t("moment_login_error"), {
-        autoClose: 3000,
-        hideProgressBar: false,
-        theme: "colored",
-        transition: Bounce,
-      });
-      navigate("/login");
-      return;
-    }
+  const handleLikeToggle = useCallback(
+    async (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-    if (isLiking) return; // Prevent double clicks
+      if (!userId) {
+        toast.error(t("moment_login_error"), {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "colored",
+          transition: Bounce,
+        });
+        navigate("/login");
+        return;
+      }
 
-    setIsLiking(true);
-    const previousLiked = liked;
-    const previousCount = currentLikeCount;
+      if (isLiking) return; // Prevent double clicks
 
-    // Optimistic update
-    setLiked(!liked);
-    setCurrentLikeCount(prev => liked ? prev - 1 : prev + 1);
+      setIsLiking(true);
+      const previousLiked = liked;
+      const previousCount = currentLikeCount;
 
-    try {
-      // Simulate API call - replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 300));
-      if (refetch) refetch();
-    } catch (error) {
-      // Revert optimistic update on error
-      setLiked(previousLiked);
-      setCurrentLikeCount(previousCount);
-      
-      toast.error(t("moment_like_error"), {
-        autoClose: 3000,
-        hideProgressBar: false,
-        theme: "colored",
-        transition: Bounce,
-      });
-    } finally {
-      setIsLiking(false);
-    }
-  }, [userId, liked, currentLikeCount, isLiking, t, navigate, refetch]);
+      // Optimistic update
+      setLiked(!liked);
+      setCurrentLikeCount((prev) => (liked ? prev - 1 : prev + 1));
 
-  const handleShare = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (navigator.share) {
-      navigator.share({
-        title: title,
-        text: description,
-        url: `${window.location.origin}/moment/${_id}`,
-      });
-    } else {
-      // Fallback to clipboard
-      navigator.clipboard.writeText(`${window.location.origin}/moment/${_id}`);
-      toast.success("Link copied to clipboard!", {
-        autoClose: 2000,
-        hideProgressBar: true,
-        theme: "colored",
-      });
-    }
-  }, [title, description, _id]);
+      try {
+        // Simulate API call - replace with actual API call
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        if (refetch) refetch();
+      } catch (error) {
+        // Revert optimistic update on error
+        setLiked(previousLiked);
+        setCurrentLikeCount(previousCount);
+
+        toast.error(t("moment_like_error"), {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "colored",
+          transition: Bounce,
+        });
+      } finally {
+        setIsLiking(false);
+      }
+    },
+    [userId, liked, currentLikeCount, isLiking, t, navigate, refetch]
+  );
+
+  const handleShare = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (navigator.share) {
+        navigator.share({
+          title: title,
+          text: description,
+          url: `${window.location.origin}/moment/${_id}`,
+        });
+      } else {
+        // Fallback to clipboard
+        navigator.clipboard.writeText(
+          `${window.location.origin}/moment/${_id}`
+        );
+        toast.success("Link copied to clipboard!", {
+          autoClose: 2000,
+          hideProgressBar: true,
+          theme: "colored",
+        });
+      }
+    },
+    [title, description, _id]
+  );
 
   const formatDate = (dateString: string): string => {
     return moment(dateString).fromNow();
   };
 
-  const defaultProfileImage = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face";
+  const defaultProfileImage =
+    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face";
 
   return (
-    <>
-      {/* Custom CSS for modern effects */}
-      <style>
-        {`
-          .moment-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(0,0,0,0.06);
-          }
-          .moment-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
-            border-color: rgba(0,0,0,0.1);
-          }
-          .moment-image {
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          }
-          .moment-card:hover .moment-image {
-            transform: scale(1.02);
-          }
-          .action-btn {
-            transition: all 0.2s ease;
-            border: none !important;
-            position: relative;
-            overflow: hidden;
-          }
-          .action-btn:hover {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
-            transform: translateY(-1px);
-          }
-          .action-btn.liked {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
-            color: #1976d2 !important;
-          }
-          .like-animation {
-            animation: likeScale 0.3s ease;
-          }
-          @keyframes likeScale {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-          }
-          .profile-ring {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 2px;
-            border-radius: 50%;
-          }
-          .content-fade {
-            background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.8) 100%);
-          }
-        `}
-      </style>
+    <div
+      className={`group relative overflow-hidden rounded-2xl bg-white/90 backdrop-blur-sm border border-white/30 shadow-lg transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/95 ${
+        isHovered ? "shadow-2xl -translate-y-1" : ""
+      }`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Subtle gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-      <Card 
-        className="moment-card border-0 rounded-4 overflow-hidden bg-white"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        style={{
-          boxShadow: isHovered 
-            ? "0 20px 40px rgba(0,0,0,0.1)" 
-            : "0 4px 20px rgba(0,0,0,0.08)"
-        }}
-      >
+      <div className="relative">
         {/* Header with user info */}
-        <div className="d-flex align-items-center justify-content-between p-4 border-bottom border-light">
-          <Link 
-            to={`/community/${user._id}`} 
-            className="d-flex align-items-center text-decoration-none flex-grow-1"
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100/80">
+          <Link
+            to={`/community/${user._id}`}
+            className="flex items-center flex-1 group/user hover:opacity-80 transition-opacity duration-200"
           >
-            <div className="profile-ring me-3">
-              <Image
-                src={user?.imageUrls?.[0] || defaultProfileImage}
-                roundedCircle
-                width={44}
-                height={44}
-                className="bg-white"
-                style={{ objectFit: "cover" }}
-              />
+            <div className="relative">
+              {/* Profile image with gradient ring */}
+              <div className="relative p-0.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg group-hover/user:shadow-xl transition-shadow duration-300">
+                <img
+                  src={user?.imageUrls?.[0] || defaultProfileImage}
+                  alt={user.name}
+                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover bg-white border-2 border-white transition-transform duration-300 group-hover/user:scale-105"
+                />
+              </div>
+              {/* Online indicator */}
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-gradient-to-r from-green-400 to-green-500 rounded-full border-2 border-white shadow-sm"></div>
             </div>
-            <div className="flex-grow-1">
-              <h6 className="mb-0 fw-bold text-dark">{user.name}</h6>
-              <small className="text-muted d-flex align-items-center gap-1">
-                <i className="fas fa-clock" style={{ fontSize: '10px' }}></i>
-                {formatDate(createdAt)}
-              </small>
+            <div className="ml-3 flex-1 min-w-0">
+              <h3 className="font-bold text-gray-800 text-sm sm:text-base truncate group-hover/user:text-blue-600 transition-colors duration-200">
+                {user.name}
+              </h3>
+              <div className="flex items-center gap-1 text-xs text-gray-500">
+                <svg
+                  className="w-3 h-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span>{formatDate(createdAt)}</span>
+              </div>
             </div>
           </Link>
-          
-          <Button
-            variant="light"
-            size="sm"
-            className="rounded-circle border-0 p-2"
-            style={{ width: '36px', height: '36px' }}
-          >
-            <HiDotsHorizontal size={16} className="text-muted" />
-          </Button>
+
+          <button className="group/more p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400/50">
+            <HiDotsHorizontal className="w-4 h-4 text-gray-400 group-hover/more:text-gray-600 transition-colors" />
+          </button>
         </div>
 
         {/* Content */}
-        <Link to={`/moment/${_id}`} className="text-decoration-none text-dark">
-          <div className="p-4 pb-3">
-            <h5 className="fw-bold mb-3 lh-base" style={{ color: '#1a1a1a' }}>
+        <Link to={`/moment/${_id}`} className="block group/content">
+          <div className="px-4 sm:px-6 py-4">
+            <h2 className="font-bold text-gray-900 text-lg sm:text-xl leading-tight mb-3 group-hover/content:text-blue-600 transition-colors duration-200">
               {title}
-            </h5>
-            <p className="text-muted mb-0 lh-base" style={{ fontSize: '0.95rem' }}>
-              {description.length > 150 
-                ? `${description.substring(0, 150)}...` 
-                : description
-              }
+            </h2>
+            <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
+              {description.length > 150
+                ? `${description.substring(0, 150)}...`
+                : description}
             </p>
           </div>
 
+          {/* Image section */}
           {imageUrls && imageUrls.length > 0 && (
-            <div className="position-relative overflow-hidden">
-              <Image
-                src={imageUrls[0]}
-                alt={title}
-                fluid
-                className="w-100 moment-image"
-                style={{
-                  height: "320px",
-                  objectFit: "cover",
-                }}
-              />
-              {imageUrls.length > 1 && (
-                <Badge 
-                  bg="dark" 
-                  className="position-absolute top-0 end-0 m-3 px-2 py-1 rounded-pill"
-                  style={{ fontSize: '0.75rem' }}
-                >
-                  +{imageUrls.length - 1}
-                </Badge>
-              )}
+            <div className="relative overflow-hidden">
+              <div className="relative">
+                <img
+                  src={imageUrls[0]}
+                  alt={title}
+                  className="w-full h-64 sm:h-80 object-cover transition-transform duration-700 group-hover/content:scale-105"
+                />
+                {/* Image overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover/content:opacity-100 transition-opacity duration-500"></div>
+
+                {imageUrls.length > 1 && (
+                  <div className="absolute top-3 right-3 px-3 py-1 bg-black/70 backdrop-blur-sm text-white text-xs font-medium rounded-full">
+                    +{imageUrls.length - 1}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </Link>
 
         {/* Stats Bar */}
-        <div className="px-4 py-2 border-bottom border-light bg-light bg-opacity-50">
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="d-flex align-items-center gap-3">
-              {currentLikeCount > 0 && (
-                <small className="text-muted d-flex align-items-center gap-1">
-                  <AiFillLike className="text-primary" size={14} />
-                  {currentLikeCount} {currentLikeCount === 1 ? 'like' : 'likes'}
-                </small>
-              )}
-              {commentCount > 0 && (
-                <small className="text-muted">
-                  {commentCount} {commentCount === 1 ? 'comment' : 'comments'}
-                </small>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="d-flex border-0">
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip>{liked ? "Unlike" : "Like"}</Tooltip>}
-          >
-            <Button
-              className={`action-btn flex-grow-1 d-flex justify-content-center align-items-center py-3 ${liked ? 'liked' : ''}`}
-              onClick={handleLikeToggle}
-              disabled={isLiking}
-              style={{ 
-                backgroundColor: liked ? '#e3f2fd' : 'transparent',
-                color: liked ? '#1976d2' : '#6c757d'
-              }}
-            >
-              <div className={liked && !isLiking ? 'like-animation' : ''}>
-                {liked ? (
-                  <AiFillLike className="me-2" size={18} />
-                ) : (
-                  <AiOutlineLike className="me-2" size={18} />
+        {(currentLikeCount > 0 || commentCount.length > 0) && (
+          <div className="px-4 sm:px-6 py-3 bg-gray-50/80 border-t border-gray-100/80">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                {currentLikeCount > 0 && (
+                  <div className="flex items-center gap-1">
+                    <AiFillLike className="w-4 h-4 text-blue-500" />
+                    <span className="font-medium">
+                      {currentLikeCount}{" "}
+                      {currentLikeCount === 1 ? "like" : "likes"}
+                    </span>
+                  </div>
+                )}
+                {commentCount.length > 0 && (
+                  <span className="font-medium">
+                    {commentCount.length}{" "}
+                    {commentCount.length === 1 ? "comment" : "comments"}
+                  </span>
                 )}
               </div>
-              <span className="fw-medium" style={{ fontSize: '0.9rem' }}>
-                {t('moments_section.moment_like')}
-              </span>
-            </Button>
-          </OverlayTrigger>
+            </div>
+          </div>
+        )}
 
-          <OverlayTrigger 
-            placement="top" 
-            overlay={<Tooltip>{t('moments_section.moment_comment')}</Tooltip>}
+        {/* Action Buttons */}
+        <div className="flex border-t border-gray-100/80">
+          {/* Like Button */}
+          <button
+            onClick={handleLikeToggle}
+            disabled={isLiking}
+            className={`group/like flex-1 flex items-center justify-center py-3 sm:py-4 transition-all duration-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 disabled:opacity-50 ${
+              liked
+                ? "bg-blue-50 text-blue-600"
+                : "text-gray-600 hover:text-blue-600"
+            }`}
+            title={liked ? "Unlike" : "Like"}
           >
-            <Link
-              to={`/moment/${_id}`}
-              className="action-btn btn flex-grow-1 d-flex justify-content-center align-items-center py-3 text-decoration-none"
-              style={{ color: '#6c757d' }}
+            <div
+              className={`flex items-center gap-2 ${
+                liked && !isLiking ? "animate-pulse" : ""
+              }`}
             >
-              <AiOutlineComment className="me-2" size={18} />
-              <span className="fw-medium" style={{ fontSize: '0.9rem' }}>
-                {t('moments_section.moment_comment')}
+              {liked ? (
+                <AiFillLike className="w-5 h-5 transition-transform group-hover/like:scale-110" />
+              ) : (
+                <AiOutlineLike className="w-5 h-5 transition-transform group-hover/like:scale-110" />
+              )}
+              <span className="font-medium text-sm hidden sm:inline">
+                {t("moments_section.moment_like")}
               </span>
-            </Link>
-          </OverlayTrigger>
+            </div>
+          </button>
 
-          <OverlayTrigger 
-            placement="top" 
-            overlay={<Tooltip>{t('moments_section.moment_share')}</Tooltip>}
+          {/* Comment Button */}
+          <Link
+            to={`/moment/${_id}`}
+            className="group/comment flex-1 flex items-center justify-center py-3 sm:py-4 text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
+            title={t("moments_section.moment_comment")}
           >
-            <Button
-              className="action-btn flex-grow-1 d-flex justify-content-center align-items-center py-3"
-              onClick={handleShare}
-              style={{ 
-                backgroundColor: 'transparent',
-                color: '#6c757d'
-              }}
-            >
-              <AiOutlineShareAlt className="me-2" size={18} />
-              <span className="fw-medium" style={{ fontSize: '0.9rem' }}>
-                {t('moments_section.moment_share')}
+            <div className="flex items-center gap-2">
+              <AiOutlineComment className="w-5 h-5 transition-transform group-hover/comment:scale-110" />
+              <span className="font-medium text-sm hidden sm:inline">
+                {t("moments_section.moment_comment")}
               </span>
-            </Button>
-          </OverlayTrigger>
+            </div>
+          </Link>
+
+          {/* Share Button */}
+          <button
+            onClick={handleShare}
+            className="group/share flex-1 flex items-center justify-center py-3 sm:py-4 text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
+            title={t("moments_section.moment_share")}
+          >
+            <div className="flex items-center gap-2">
+              <AiOutlineShareAlt className="w-5 h-5 transition-transform group-hover/share:scale-110" />
+              <span className="font-medium text-sm hidden sm:inline">
+                {t("moments_section.moment_share")}
+              </span>
+            </div>
+          </button>
         </div>
-      </Card>
-    </>
+      </div>
+    </div>
   );
 };
 

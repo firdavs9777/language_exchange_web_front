@@ -2,6 +2,7 @@ export interface MomentType {
   _id: string;
   title: string;
   description: string;
+  comments: [];
   commentCount: number;
   images: string[];
   likeCount: number;

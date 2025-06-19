@@ -5,21 +5,14 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import SingleMoment from "./SingleMoment";
 import { MomentType } from "./types";
-import { 
-  Container,
-  Card,
-  Image,
-  Button,
-  Spinner,
-  Alert
-} from "react-bootstrap";
-import { FaEdit, FaPlus } from "react-icons/fa";
+import { FaEdit, FaPlus, FaExclamationTriangle, FaRedo } from "react-icons/fa";
 
 // TypeScript interfaces
 interface User {
   _id: string;
   name: string;
   images?: string[];
+  imageUrls?: string[];
 }
 
 interface UserInfo {
@@ -59,280 +52,219 @@ interface FloatingActionButtonProps {
   onClick: () => void;
 }
 
-// Component for the Create Post card with modern design
-const CreatePostCard: React.FC<CreatePostCardProps> = ({ 
-  userImage, 
-  userName, 
-  handleAddMoment, 
-  t 
+// Component for the Create Post card with modern glassmorphism design
+const CreatePostCard: React.FC<CreatePostCardProps> = ({
+  userImage,
+  userName,
+  handleAddMoment,
+  t,
 }) => (
-  <Card className="shadow-sm mb-4 border-0 rounded-4 overflow-hidden bg-gradient-subtle">
-    <Card.Body className="p-4">
-      <div className="d-flex align-items-center gap-3">
-        <div className="position-relative">
-          <Image
-            src={userImage}
-            roundedCircle
-            width={48}
-            height={48}
-            className="border border-2 border-light shadow-sm"
-            style={{ objectFit: "cover" }}
-          />
-          <div 
-            className="position-absolute bottom-0 end-0 bg-success rounded-circle border border-2 border-white"
-            style={{ width: '12px', height: '12px' }}
-          />
+  <div className="relative mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-white/80 to-gray-50/50 backdrop-blur-xl border border-white/20 shadow-xl">
+    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5"></div>
+    <div className="relative p-6">
+      <div className="flex items-center gap-4">
+        <div className="relative">
+          <div className="relative overflow-hidden rounded-full ring-2 ring-white/50 shadow-lg">
+            <img
+              src={userImage}
+              alt="User"
+              className="h-12 w-12 object-cover transition-transform duration-300 hover:scale-110"
+            />
+          </div>
+          <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-gradient-to-r from-green-400 to-green-500 ring-2 ring-white shadow-sm"></div>
         </div>
-        <Button
-          variant="light"
-          className="flex-grow-1 py-3 px-4 rounded-pill text-start border-0 shadow-sm hover-lift"
+        <button
           onClick={handleAddMoment}
-          style={{ 
-            backgroundColor: '#f8f9fa',
-            transition: 'all 0.2s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#e9ecef';
-            e.currentTarget.style.transform = 'translateY(-1px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#f8f9fa';
-            e.currentTarget.style.transform = 'translateY(0)';
-          }}
+          className="group flex-1 rounded-full bg-white/60 backdrop-blur-sm border border-white/30 px-6 py-3 text-left shadow-lg transition-all duration-300 hover:bg-white/80 hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
         >
-          <span className="text-muted fw-medium">
-            {t('moments_section.question')} {userName.split(' ')[0]}?
+          <span className="text-gray-600 font-medium group-hover:text-gray-700 transition-colors">
+            {t("moments_section.question")} {userName.split(" ")[0]}?
           </span>
-        </Button>
-        <Button
-          variant="primary"
-          className="rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+        </button>
+        <button
           onClick={handleAddMoment}
-          style={{ width: '40px', height: '40px', padding: 0 }}
+          className="group flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-110 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
         >
-          <FaPlus size={16} />
-        </Button>
-      </div>
-    </Card.Body>
-  </Card>
-);
-
-// Modern loading state component
-const LoadingState: React.FC<LoadingStateProps> = ({ t }) => (
-  <div className="text-center py-5">
-    <div className="d-flex flex-column align-items-center gap-3">
-      <div className="position-relative">
-        <Spinner 
-          animation="border" 
-          variant="primary" 
-          style={{ width: '3rem', height: '3rem' }}
-        />
-        <div 
-          className="position-absolute top-50 start-50 translate-middle bg-primary rounded-circle"
-          style={{ width: '8px', height: '8px' }}
-        />
-      </div>
-      <div>
-        <h6 className="mb-1 text-dark">{t('moments_section.loading_moments')}</h6>
-        <p className="mb-0 text-muted small">Fetching latest updates...</p>
+          <FaPlus className="h-4 w-4 text-white transition-transform group-hover:rotate-90" />
+        </button>
       </div>
     </div>
   </div>
 );
 
-// Enhanced error state component
-const ErrorState: React.FC<ErrorStateProps> = ({ t, refetch }) => (
-  <Alert variant="light" className="my-4 border-0 rounded-4 shadow-sm">
-    <div className="d-flex align-items-center gap-3">
-      <div className="flex-shrink-0">
-        <div 
-          className="bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center"
-          style={{ width: '40px', height: '40px' }}
-        >
-          <i className="fas fa-exclamation-triangle"></i>
-        </div>
-      </div>
-      <div className="flex-grow-1">
-        <h6 className="mb-1 text-dark">Something went wrong</h6>
-        <p className="mb-2 text-muted small">
-          {t('moments_section.error_info')}
-        </p>
-      </div>
-      <Button 
-        variant="outline-primary" 
-        onClick={refetch} 
-        size="sm"
-        className="rounded-pill px-3"
-      >
-        {t('moments_section.rety_btn')}
-      </Button>
+// Modern loading state with animated spinner
+const LoadingState: React.FC<LoadingStateProps> = ({ t }) => (
+  <div className="flex flex-col items-center justify-center py-16">
+    <div className="relative">
+      <div className="h-16 w-16 animate-spin rounded-full border-4 border-gray-200"></div>
+      <div className="absolute top-0 left-0 h-16 w-16 animate-spin rounded-full border-4 border-transparent border-t-blue-500 border-r-purple-500"></div>
+      <div className="absolute top-1/2 left-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600"></div>
     </div>
-  </Alert>
+    <div className="mt-6 text-center">
+      <h3 className="text-lg font-semibold text-gray-800">
+        {t("moments_section.loading_moments")}
+      </h3>
+      <p className="mt-1 text-sm text-gray-500">Fetching latest updates...</p>
+    </div>
+  </div>
 );
 
-// Modern empty state component
-const EmptyState: React.FC<EmptyStateProps> = ({ t, handleAddMoment }) => (
-  <Card className="text-center py-5 my-4 border-0 bg-gradient-subtle rounded-4">
-    <Card.Body>
-      <div className="py-4">
-        <div 
-          className="bg-primary-subtle text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-4"
-          style={{ width: '80px', height: '80px' }}
-        >
-          <FaPlus size={32} />
-        </div>
-        <h5 className="text-dark mb-3 fw-bold">{t('moments_section.no_moments')}</h5>
-        <p className="text-muted mb-4 px-3">
-          {t('moments_section.first_to_moment')}
-        </p>
-        <Button
-          variant="primary"
-          onClick={handleAddMoment}
-          className="px-5 py-2 rounded-pill shadow-sm"
-          style={{ fontSize: '0.95rem' }}
-        >
-          <FaPlus className="me-2" size={14} />
-          {t('moments_section.share_moment')} 
-        </Button>
+// Enhanced error state with glassmorphism
+const ErrorState: React.FC<ErrorStateProps> = ({ t, refetch }) => (
+  <div className="mx-4 my-6 overflow-hidden rounded-2xl bg-gradient-to-br from-red-50/80 to-pink-50/50 backdrop-blur-xl border border-red-200/30 shadow-lg">
+    <div className="flex items-center gap-4 p-6">
+      <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-red-400 to-pink-500 shadow-lg">
+        <FaExclamationTriangle className="h-5 w-5 text-white" />
       </div>
-    </Card.Body>
-  </Card>
+      <div className="flex-1 min-w-0">
+        <h3 className="font-semibold text-gray-800">Something went wrong</h3>
+        <p className="mt-1 text-sm text-gray-600 truncate">
+          {t("moments_section.error_info")}
+        </p>
+      </div>
+      <button
+        onClick={refetch}
+        className="group flex items-center gap-2 rounded-full bg-white/60 backdrop-blur-sm border border-white/30 px-4 py-2 text-sm font-medium text-gray-700 shadow-lg transition-all duration-300 hover:bg-white/80 hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-400/50"
+      >
+        <FaRedo className="h-3 w-3 transition-transform group-hover:rotate-180" />
+        <span className="hidden sm:inline">
+          {t("moments_section.rety_btn")}
+        </span>
+      </button>
+    </div>
+  </div>
 );
 
-// Enhanced mobile floating action button
-const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onClick }) => (
-  <div className="d-lg-none position-fixed" style={{ bottom: '24px', right: '24px', zIndex: 1050 }}>
-    <Button
-      className="d-flex justify-content-center align-items-center shadow-lg border-0"
-      variant="primary"
+// Modern empty state with animated elements
+const EmptyState: React.FC<EmptyStateProps> = ({ t, handleAddMoment }) => (
+  <div className="mx-4 my-8 text-center">
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-50/80 to-purple-50/50 backdrop-blur-xl border border-white/30 shadow-xl py-16 px-8">
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5"></div>
+      <div className="relative">
+        <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg animate-pulse">
+          <FaPlus className="h-8 w-8 text-white" />
+        </div>
+        <h3 className="text-xl font-bold text-gray-800 mb-3">
+          {t("moments_section.no_moments")}
+        </h3>
+        <p className="text-gray-600 mb-8 max-w-sm mx-auto leading-relaxed">
+          {t("moments_section.first_to_moment")}
+        </p>
+        <button
+          onClick={handleAddMoment}
+          className="group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
+        >
+          <FaPlus className="h-4 w-4 transition-transform group-hover:rotate-90" />
+          <span>{t("moments_section.share_moment")}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+// Enhanced mobile floating action button with modern design
+const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
+  onClick,
+}) => (
+  <div className="fixed bottom-6 right-6 z-50 lg:hidden">
+    <button
       onClick={onClick}
-      style={{
-        borderRadius: "50%",
-        width: "56px",
-        height: "56px",
-        padding: "0",
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        transition: 'all 0.3s ease',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'scale(1.1) translateY(-2px)';
-        e.currentTarget.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.4)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'scale(1) translateY(0)';
-        e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-      }}
+      className="group flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-2xl transition-all duration-300 hover:shadow-3xl hover:scale-110 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-400/50 active:scale-95"
       aria-label="Add new moment"
     >
-      <FaPlus size={20} />
-    </Button>
+      <FaPlus className="h-5 w-5 text-white transition-transform group-hover:rotate-90" />
+    </button>
   </div>
 );
 
 const MainMoments: React.FC = () => {
   const { data, isLoading, error, refetch } = useGetMomentsQuery({});
-  const userId = useSelector((state: RootState) => state.auth.userInfo?.user._id);
+  const userId = useSelector(
+    (state: RootState) => state.auth.userInfo?.user._id
+  );
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
   const { t } = useTranslation();
   const navigate = useNavigate();
-  
+
   // Memoize user data with proper typing
-  const { userName, userImage } = useMemo(() => ({
-    userName: userInfo?.user.name || "User",
-    userImage: userInfo?.user.images?.[0] || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face"
-  }), [userInfo]);
-  
+  const { userName, userImage } = useMemo(
+    () => ({
+      userName: userInfo?.user.name || "User",
+      userImage:
+        userInfo?.user.imageUrls?.[0] ||
+        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face",
+    }),
+    [userInfo]
+  );
+
   // Memoize moments data with proper typing
   const moments = useMemo(() => (data || []) as MomentType[], [data]);
-  
+
   // Callback for adding a new moment
   const handleAddMoment = useCallback(() => {
     navigate("/add-moment");
   }, [navigate]);
 
   return (
-    <>
-      {/* Custom CSS for modern effects */}
-      <style>
-        {`
-          .bg-gradient-subtle {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-          }
-          .hover-lift:hover {
-            transform: translateY(-1px);
-          }
-          .moments-feed {
-            animation: fadeInUp 0.6s ease-out;
-          }
-          @keyframes fadeInUp {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-          .moment-card {
-            transition: all 0.2s ease;
-          }
-          .moment-card:hover {
-            transform: translateY(-2px);
-          }
-        `}
-      </style>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30">
+      <div className="mx-auto max-w-2xl px-4 py-6 lg:px-6">
+        {/* Main container with glassmorphism effect */}
+        <div className="relative overflow-hidden rounded-3xl bg-white/60 backdrop-blur-xl border border-white/30 shadow-2xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
 
-      <Container className="py-4 px-lg-4 px-3" style={{ maxWidth: '680px' }}>
-        <div className="bg-white rounded-4 shadow-sm border-0 overflow-hidden">
-          {/* Create post area */}
-          <CreatePostCard 
-            userImage={userImage} 
-            userName={userName} 
-            handleAddMoment={handleAddMoment}
-            t={t}
-          />
-          
-          {/* Content states */}
-          {isLoading ? (
-            <LoadingState t={t} />
-          ) : error ? (
-            <ErrorState t={t} refetch={refetch} />
-          ) : moments.length > 0 ? (
-            <div className="moments-feed px-3 pb-3">
-              {moments.map((moment, index) => (
-                <div 
-                  key={moment._id} 
-                  className="mb-4 moment-card"
-                  style={{
-                    animationDelay: `${index * 0.1}s`,
-                    animation: 'fadeInUp 0.6s ease-out forwards'
-                  }}
-                >
-                  <SingleMoment
-                    _id={moment._id}
-                    title={moment.title}
-                    description={moment.description}
-                    likeCount={moment.likeCount}
-                    commentCount={moment.commentCount}
-                    user={moment.user}
-                    likedUsers={moment.likedUsers}
-                    imageUrls={moment.imageUrls}
-                    createdAt={moment.createdAt}
-                    refetch={refetch}
-                  />
-                </div>
-              ))}
+          <div className="relative">
+            {/* Create post area */}
+            <div className="p-4 sm:p-6">
+              <CreatePostCard
+                userImage={userImage}
+                userName={userName}
+                handleAddMoment={handleAddMoment}
+                t={t}
+              />
             </div>
-          ) : (
-            <EmptyState t={t} handleAddMoment={handleAddMoment} />
-          )}
+
+            {/* Content states */}
+            {isLoading ? (
+              <LoadingState t={t} />
+            ) : error ? (
+              <ErrorState t={t} refetch={refetch} />
+            ) : moments.length > 0 ? (
+              <div className="space-y-6 px-4 pb-6 sm:px-6">
+                {moments.map((moment, index) => (
+                  <div
+                    key={moment._id}
+                    className="group transform transition-all duration-500 hover:-translate-y-1 hover:shadow-xl"
+                    style={{
+                      animationDelay: `${index * 0.1}s`,
+                    }}
+                  >
+                    <div className="overflow-hidden rounded-2xl bg-white/80 backdrop-blur-sm border border-white/30 shadow-lg transition-all duration-300 group-hover:bg-white/90 group-hover:shadow-2xl">
+                      <SingleMoment
+                        _id={moment._id}
+                        title={moment.title}
+                        description={moment.description}
+                        likeCount={moment.likeCount}
+                        commentCount={moment.comments}
+                        user={moment.user}
+                        likedUsers={moment.likedUsers}
+                        imageUrls={moment.imageUrls}
+                        createdAt={moment.createdAt}
+                        refetch={refetch}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <EmptyState t={t} handleAddMoment={handleAddMoment} />
+            )}
+          </div>
         </div>
-        
+
         {/* Mobile floating action button */}
         {userId && <FloatingActionButton onClick={handleAddMoment} />}
-      </Container>
-    </>
+      </div>
+    </div>
   );
 };
 
