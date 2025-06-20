@@ -13,27 +13,27 @@ import { useTranslation } from "react-i18next";
 import { AiFillProfile } from "react-icons/ai";
 import { ActionButtonProps, ImageGalleryProps, LanguagePairProps, StatsCardProps } from "./type";
 import { getLanguageFlag } from "./utils";
-// Enhanced TypeScript interfaces
+import { RootState } from "../../store";
 
 // Modern Language Display Component
 const LanguagePair: React.FC<LanguagePairProps> = ({
   nativeLanguage,
   learningLanguage,
 }) => {
-
+  const { t } = useTranslation();
 
   return (
     <div className="d-flex align-items-center justify-content-center gap-4 p-4 bg-light rounded-4 mb-4">
       <div className="text-center">
         <div className="fs-2 mb-2">{getLanguageFlag(nativeLanguage)}</div>
         <div className="fw-medium text-dark">{nativeLanguage}</div>
-        <div className="small text-muted">Speaks</div>
+        <div className="small text-muted">{t("communityDetail.language.speaks")}</div>
       </div>
       <div className="text-primary fs-4">⟷</div>
       <div className="text-center">
         <div className="fs-2 mb-2">{getLanguageFlag(learningLanguage)}</div>
         <div className="fw-medium text-dark">{learningLanguage}</div>
-        <div className="small text-muted">Learning</div>
+        <div className="small text-muted">{t("communityDetail.language.learning")}</div>
       </div>
     </div>
   );
@@ -43,6 +43,7 @@ const LanguagePair: React.FC<LanguagePairProps> = ({
 const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const { t } = useTranslation();
+  
   if (!images || images.length === 0) {
     return (
       <div
@@ -128,7 +129,6 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
   );
 };
 
-
 const StatsCard: React.FC<StatsCardProps> = ({ value, label }) => (
   <div className="text-center p-3 bg-white rounded-3 shadow-sm">
     <div className="fs-4 fw-bold text-primary mb-1">{value}</div>
@@ -193,6 +193,7 @@ const CommunityDetail: React.FC = () => {
   const userId = useSelector(
     (state: RootState) => state.auth.userInfo?.user._id
   );
+  const { t } = useTranslation();
 
   const [followUser, { isLoading: isFollowing }] = useFollowUserMutation();
   const [unFollowUser, { isLoading: isUnfollowing }] =
@@ -205,12 +206,14 @@ const CommunityDetail: React.FC = () => {
   if (!communityId) {
     return (
       <div className="container py-5 text-center">
-        <div className="alert alert-danger rounded-4">Invalid profile ID</div>
+        <div className="alert alert-danger rounded-4">
+          {t("communityDetail.errors.invalidProfileId")}
+        </div>
         <button
           className="btn btn-outline-primary rounded-3"
           onClick={() => navigate("/community")}
         >
-          Back to Community
+          {t("communityDetail.buttons.backToCommunity")}
         </button>
       </div>
     );
@@ -219,7 +222,7 @@ const CommunityDetail: React.FC = () => {
   const handleFollow = async (targetUser: string): Promise<void> => {
     try {
       if (!userId) {
-        toast.error("You need to be logged in to follow users", {
+        toast.error(t("communityDetail.notifications.loginToFollow"), {
           autoClose: 3000,
           hideProgressBar: false,
           theme: "dark",
@@ -229,16 +232,15 @@ const CommunityDetail: React.FC = () => {
       }
 
       const response = await followUser({ userId, targetUserId: targetUser });
-
       if ("error" in response) {
-        toast.error("Failed to follow user. Please try again.", {
+        toast.error(t("communityDetail.notifications.followFailed"), {
           autoClose: 3000,
           hideProgressBar: false,
           theme: "dark",
           transition: Bounce,
         });
       } else {
-        toast.success("Successfully followed!", {
+        toast.success(t("communityDetail.notifications.followSuccess"), {
           autoClose: 3000,
           hideProgressBar: false,
           theme: "dark",
@@ -247,7 +249,7 @@ const CommunityDetail: React.FC = () => {
         await refetch();
       }
     } catch (error) {
-      toast.error("An error occurred. Please try again.", {
+      toast.error(t("communityDetail.notifications.errorOccurred"), {
         autoClose: 3000,
         hideProgressBar: false,
         theme: "dark",
@@ -257,10 +259,10 @@ const CommunityDetail: React.FC = () => {
   };
 
   const handleUnfollow = async (targetUser: string): Promise<void> => {
-    if (window.confirm("Are you sure you want to unfollow this user?")) {
+    if (window.confirm(t("communityDetail.notifications.confirmUnfollow"))) {
       try {
         if (!userId) {
-          toast.error("You need to be logged in to unfollow users", {
+          toast.error(t("communityDetail.notifications.loginToUnfollow"), {
             autoClose: 3000,
             hideProgressBar: false,
             theme: "dark",
@@ -275,14 +277,14 @@ const CommunityDetail: React.FC = () => {
         });
 
         if ("error" in response) {
-          toast.error("Failed to unfollow user. Please try again.", {
+          toast.error(t("communityDetail.notifications.unfollowFailed"), {
             autoClose: 3000,
             hideProgressBar: false,
             theme: "dark",
             transition: Bounce,
           });
         } else {
-          toast.success("Successfully unfollowed", {
+          toast.success(t("communityDetail.notifications.unfollowSuccess"), {
             autoClose: 3000,
             hideProgressBar: false,
             theme: "dark",
@@ -291,7 +293,7 @@ const CommunityDetail: React.FC = () => {
           await refetch();
         }
       } catch (error) {
-        toast.error("An error occurred. Please try again.", {
+        toast.error(t("communityDetail.notifications.errorOccurred"), {
           autoClose: 3000,
           hideProgressBar: false,
           theme: "dark",
@@ -304,7 +306,7 @@ const CommunityDetail: React.FC = () => {
   const handleStartChat = async (memberId: string): Promise<void> => {
     try {
       if (!userId) {
-        toast.error("You need to be logged in to start a chat", {
+        toast.error(t("communityDetail.notifications.loginToChat"), {
           autoClose: 3000,
           hideProgressBar: false,
           theme: "dark",
@@ -321,19 +323,19 @@ const CommunityDetail: React.FC = () => {
         navigate(`/chat`);
       }
     } catch (error) {
-      toast.error("Failed to start chat. Please try again.", {
+      toast.error(t("communityDetail.notifications.chatFailed"), {
         autoClose: 3000,
         hideProgressBar: false,
         theme: "dark",
         transition: Bounce,
       });
-      console.error("Chat creation error:", error);
+      console.error(t("communityDetail.notifications.chatFailed"), error);
       navigate(`/chat/${memberId}`);
     }
   };
 
   const handleCallUser = (memberName: string): void => {
-    toast.info(`Initiating call with ${memberName}...`, {
+    toast.info(t("communityDetail.loading.initiatingCall", { name: memberName }), {
       autoClose: 3000,
       hideProgressBar: false,
       theme: "dark",
@@ -345,7 +347,7 @@ const CommunityDetail: React.FC = () => {
     return (
       <div className="container py-5 text-center">
         <Loader />
-        <p className="mt-3 text-muted">Loading profile...</p>
+        <p className="mt-3 text-muted">{t("communityDetail.loading.loadingProfile")}</p>
       </div>
     );
   }
@@ -354,22 +356,22 @@ const CommunityDetail: React.FC = () => {
     return (
       <div className="container py-5 text-center">
         <div className="display-1 mb-3">⚠️</div>
-        <h3 className="fw-bold">Oops! Something went wrong</h3>
+        <h3 className="fw-bold">{t("communityDetail.errors.somethingWentWrong")}</h3>
         <p className="text-muted mb-4">
-          We couldn't load this profile. Please try again later.
+          {t("communityDetail.errors.tryAgainLater")}
         </p>
         <div className="d-flex gap-3 justify-content-center">
           <button
             className="btn btn-primary rounded-3"
             onClick={() => refetch()}
           >
-            Try Again
+            {t("communityDetail.buttons.tryAgain")}
           </button>
           <button
             className="btn btn-outline-secondary rounded-3"
             onClick={() => navigate("/community")}
           >
-            Back to Community
+            {t("communityDetail.buttons.backToCommunity")}
           </button>
         </div>
       </div>
@@ -383,15 +385,15 @@ const CommunityDetail: React.FC = () => {
     return (
       <div className="container py-5 text-center">
         <div className="display-1 mb-3">🔍</div>
-        <h3 className="fw-bold">Profile Not Found</h3>
+        <h3 className="fw-bold">{t("communityDetail.errors.profileNotFound")}</h3>
         <p className="text-muted mb-4">
-          This user profile doesn't exist or has been removed.
+          {t("communityDetail.errors.profileNotFoundDesc")}
         </p>
         <button
           className="btn btn-outline-primary rounded-3"
           onClick={() => navigate("/community")}
         >
-          Back to Community
+          {t("communityDetail.buttons.backToCommunity")}
         </button>
       </div>
     );
@@ -423,41 +425,37 @@ const CommunityDetail: React.FC = () => {
 
   return (
     <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
-      {/* Header */}
-      <div className="bg-white border-bottom sticky-top">
+      <div className="bg-white border-bottom ">
         <div className="container py-3">
           <button
             className="btn btn-link text-decoration-none p-0 d-flex align-items-center gap-2"
             onClick={() => navigate("/communities")}
           >
             <span className="fs-5">←</span>
-            <span className="fw-medium">Back to Community</span>
+            <span className="">{t("communityDetail.buttons.backToCommunity")}</span>
           </button>
         </div>
       </div>
 
       <div className="container py-4">
         <div className="row g-4">
-          {/* Left Column - Photos and Quick Actions */}
           <div className="col-lg-4">
             <div className="bg-white rounded-4 p-4 shadow-sm h-100">
               <ImageGallery
                 images={memberDetails.imageUrls || []}
                 userName={memberDetails.name || "User"}
               />
-
-              {/* Stats */}
               <div className="row g-2 my-4">
                 <div className="col-6">
                   <StatsCard
                     value={memberDetails.followers?.length || 0}
-                    label="Followers"
+                    label={t("communityDetail.stats.followers")}
                   />
                 </div>
                 <div className="col-6">
                   <StatsCard
                     value={memberDetails.following?.length || 0}
-                    label="Following"
+                    label={t("communityDetail.stats.following")}
                   />
                 </div>
               </div>
@@ -469,7 +467,7 @@ const CommunityDetail: React.FC = () => {
                     {isUserFollowing ? (
                       <ActionButton
                         icon="✓"
-                        label="Following"
+                        label={t("communityDetail.buttons.following")}
                         variant="following"
                         onClick={() => handleUnfollow(memberDetails._id)}
                         isLoading={isUnfollowing}
@@ -477,7 +475,7 @@ const CommunityDetail: React.FC = () => {
                     ) : (
                       <ActionButton
                         icon="+"
-                        label="Follow"
+                        label={t("communityDetail.buttons.follow")}
                         variant="primary"
                         onClick={() => handleFollow(memberDetails._id)}
                         isLoading={isFollowing}
@@ -486,7 +484,7 @@ const CommunityDetail: React.FC = () => {
 
                     <ActionButton
                       icon="💬"
-                      label="Start Chat"
+                      label={t("communityDetail.buttons.startChat")}
                       variant="success"
                       onClick={() => handleStartChat(memberDetails._id)}
                       isLoading={isCreatingChat}
@@ -494,7 +492,7 @@ const CommunityDetail: React.FC = () => {
 
                     <ActionButton
                       icon="📞"
-                      label="Video Call"
+                      label={t("communityDetail.buttons.videoCall")}
                       variant="warning"
                       onClick={() =>
                         handleCallUser(memberDetails.name || "User")
@@ -517,7 +515,7 @@ const CommunityDetail: React.FC = () => {
                   </h1>
                   {userAge && (
                     <span className="badge bg-light text-dark fs-6 fw-normal">
-                      {userAge} years old
+                      {t("communityDetail.profile.yearsOld", { age: userAge })}
                     </span>
                   )}
                   {memberDetails.gender && (
@@ -529,17 +527,17 @@ const CommunityDetail: React.FC = () => {
 
                 <div className="small text-muted d-flex align-items-center gap-2">
                   <span>📅</span>
-                  <span>Member since {memberSince}</span>
+                  <span>{t("communityDetail.profile.memberSince", { date: memberSince })}</span>
                 </div>
               </div>
 
               {/* Languages */}
               <LanguagePair
                 nativeLanguage={
-                  memberDetails.native_language || "Not specified"
+                  memberDetails.native_language || t("communityDetail.language.notSpecified")
                 }
                 learningLanguage={
-                  memberDetails.language_to_learn || "Not specified"
+                  memberDetails.language_to_learn || t("communityDetail.language.notSpecified")
                 }
               />
 
@@ -547,13 +545,13 @@ const CommunityDetail: React.FC = () => {
               <div className="mb-4">
                 <h2 className="h5 fw-bold mb-3 d-flex align-items-center gap-2">
                   <span>💭</span>
-                  About {firstName}
+                  {t("communityDetail.profile.aboutUser", { name: firstName })}
                 </h2>
                 <div className="bg-light rounded-3 p-4">
                   <p className="mb-0 lh-lg">
                     {memberDetails.bio && memberDetails.bio.trim()
                       ? memberDetails.bio
-                      : `${firstName} hasn't added a bio yet. Start a conversation to learn more about them!`}
+                      : t("communityDetail.profile.noBio", { name: firstName })}
                   </p>
                 </div>
               </div>
@@ -565,14 +563,14 @@ const CommunityDetail: React.FC = () => {
                     <span className="fs-2">🌟</span>
                   </div>
                   <h3 className="h5 fw-bold text-primary mb-2">
-                    Ready to practice with {firstName}?
+                    {t("communityDetail.profile.readyToPractice", { name: firstName })}
                   </h3>
                   <p className="text-muted mb-3">
-                    Start chatting and improve your language skills together!
+                    {t("communityDetail.profile.practiceDescription")}
                   </p>
                   <ActionButton
                     icon="💬"
-                    label="Start Conversation"
+                    label={t("communityDetail.buttons.startConversation")}
                     variant="primary"
                     size="lg"
                     onClick={() => handleStartChat(memberDetails._id)}

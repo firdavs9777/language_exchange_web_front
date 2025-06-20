@@ -89,18 +89,7 @@ const MainNavbar = () => {
         {children}
       </span>
       
-      {/* Underline effect - now handled with CSS */}
-      <style jsx>{`
-        .group:hover .underline-effect,
-        .group.active .underline-effect {
-          width: 66.666667%;
-          transform: translateX(-50%);
-        }
-        .group.active .underline-effect {
-          width: 80%;
-          box-shadow: 0 1px 3px rgba(251, 191, 36, 0.5);
-        }
-      `}</style>
+ 
     </NavLink>
   );
 
