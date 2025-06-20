@@ -14,8 +14,14 @@ interface User {
   unreadCount?: number;
   lastMessageTime?: Date;
   imageUrls: string[];
-  status?: "online" | "offline" | "away";
+  status?: "online" | "offline" | "away" | "busy";
   lastSeen?: Date;
+}
+
+interface OnlineUser {
+  userId: string;
+  status: 'online' | 'offline' | 'away' | 'busy';
+  lastSeen: string | null;
 }
 
 interface Message {
@@ -37,6 +43,50 @@ interface UsersListProps {
   searchQuery?: string;
 }
 
+// Debug component for development
+const DebugMessageRead: React.FC<{
+  activeUserId: string | null;
+  unreadCounts: Record<string, number>;
+  onManualMarkAsRead: (userId: string) => void;
+}> = ({ activeUserId, unreadCounts, onManualMarkAsRead }) => {
+  if (process.env.NODE_ENV !== 'development') return null;
+
+  return (
+    <div className="debug-panel bg-yellow-50 border border-yellow-200 p-3 m-2 rounded text-xs">
+      <h6 className="font-bold text-yellow-800 mb-2">🐛 Debug: Message Read Status</h6>
+      
+      <div className="space-y-2">
+        <div>
+          <strong>Active User ID:</strong> {activeUserId || 'None'}
+        </div>
+        
+        <div>
+          <strong>Unread Counts:</strong>
+          {Object.keys(unreadCounts).length === 0 ? (
+            <span className="text-gray-500"> None</span>
+          ) : (
+            <ul className="ml-4 mt-1">
+              {Object.entries(unreadCounts).map(([userId, count]) => (
+                <li key={userId} className="flex justify-between items-center">
+                  <span>User {userId}: {count}</span>
+                  {count > 0 && (
+                    <button
+                      onClick={() => onManualMarkAsRead(userId)}
+                      className="ml-2 px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+                    >
+                      Mark Read
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const UsersList: React.FC<UsersListProps> = ({
   onSelectUser,
   activeUserId,
@@ -50,11 +100,13 @@ const UsersList: React.FC<UsersListProps> = ({
   );
   const token = useSelector((state: RootState) => state.auth.userInfo?.token);
 
-  // Use useRef to maintain socket instance across renders
+  // Socket and status management
   const socketRef = useRef<Socket | null>(null);
-  const [userStatuses, setUserStatuses] = React.useState<
-    Record<string, { status: string; lastSeen?: Date }>
-  >({});
+  const [userStatuses, setUserStatuses] = useState<Record<string, { status: string; lastSeen?: Date }>>({});
+  const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
+  const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
+  const [isSocketConnected, setIsSocketConnected] = useState(false);
+  const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
 
   // Delete confirmation modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -64,78 +116,167 @@ const UsersList: React.FC<UsersListProps> = ({
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Initialize socket connection
+  // Initialize socket connection with proper event handlers
   const initializeSocket = useCallback(() => {
-    if (!token || !currentUser?._id) return;
+    if (!token || !currentUser?._id) {
+      console.warn("⚠️ Missing token or user ID for socket connection");
+      return;
+    }
 
     const SOCKET_URL = BASE_URL;
 
     // Disconnect existing socket if any
     if (socketRef.current) {
+      console.log("🔌 Disconnecting existing socket...");
+      socketRef.current.off(); // Remove all listeners
       socketRef.current.disconnect();
     }
 
+    console.log("🔗 Initializing socket connection...");
     socketRef.current = io(SOCKET_URL, {
       auth: { token },
-      transports: ["websocket"],
+      transports: ["websocket", "polling"],
+      timeout: 20000,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
 
     const socket = socketRef.current;
 
+    // Connection events
     socket.on("connect", () => {
       console.log("✅ Connected to socket server");
-    });
-
-    socket.on(
-      "newMessage",
-      (data: { message: Message; unreadCount: number }) => {
-        console.log("📨 Received new message:", data);
-        refetch(); // Refresh the message list
-      }
-    );
-
-    socket.on(
-      "messageSent",
-      (data: { message: Message; unreadCount: number }) => {
-        console.log("📤 Message sent confirmation:", data);
-        refetch(); // Refresh to show the sent message
-      }
-    );
-
-    socket.on("messagesRead", (data: { readBy: string; count: number }) => {
-      console.log("📖 Messages marked as read:", data);
-      refetch(); // Refresh to update read status
-    });
-
-    socket.on(
-      "userStatusUpdate",
-      (data: { userId: string; status: string; lastSeen?: Date }) => {
-        console.log("🟢 User status update:", data);
-        setUserStatuses((prev) => ({
-          ...prev,
-          [data.userId]: {
-            status: data.status,
-            lastSeen: data.lastSeen ? new Date(data.lastSeen) : undefined,
-          },
-        }));
-      }
-    );
-
-    socket.on("userTyping", (data: { userId: string; isTyping: boolean }) => {
-      console.log("⌨️ User typing:", data);
-      // You can implement typing indicators here
+      setIsSocketConnected(true);
     });
 
     socket.on("disconnect", (reason) => {
       console.log("❌ Disconnected from socket server:", reason);
+      setIsSocketConnected(false);
+      setOnlineUsers([]);
+      setTypingUsers(new Set());
     });
 
+    socket.on("connect_error", (error) => {
+      console.error("❌ Socket connection error:", error);
+      setIsSocketConnected(false);
+    });
+
+    // Handle initial online users list
+    socket.on("onlineUsers", (users: OnlineUser[]) => {
+      console.log("📋 Received online users:", users);
+      setOnlineUsers(users);
+      
+      // Update user statuses from online users
+      const statusMap: Record<string, { status: string; lastSeen?: Date }> = {};
+      users.forEach(user => {
+        statusMap[user.userId] = {
+          status: user.status,
+          lastSeen: user.lastSeen ? new Date(user.lastSeen) : undefined,
+        };
+      });
+      setUserStatuses(prev => ({ ...prev, ...statusMap }));
+    });
+
+    // Handle real-time user status updates
+    socket.on("userStatusUpdate", (data: OnlineUser) => {
+      console.log("📡 User status update:", data);
+      
+      // Update online users list
+      setOnlineUsers(prevUsers => {
+        if (data.status === 'offline') {
+          return prevUsers.filter(user => user.userId !== data.userId);
+        }
+        
+        const existingUserIndex = prevUsers.findIndex(user => user.userId === data.userId);
+        if (existingUserIndex >= 0) {
+          const updatedUsers = [...prevUsers];
+          updatedUsers[existingUserIndex] = data;
+          return updatedUsers;
+        } else {
+          return [...prevUsers, data];
+        }
+      });
+
+      // Update user statuses
+      setUserStatuses(prev => ({
+        ...prev,
+        [data.userId]: {
+          status: data.status,
+          lastSeen: data.lastSeen ? new Date(data.lastSeen) : undefined,
+        },
+      }));
+    });
+
+    // Message events with immediate UI updates
+    socket.on("newMessage", (data: { message: Message; unreadCount: number; senderId: string }) => {
+      console.log("📨 Received new message:", data);
+      
+      // Update unread count immediately if the message is not from the currently active user
+      if (data.senderId !== activeUserId) {
+        setUnreadCounts(prev => ({
+          ...prev,
+          [data.senderId]: data.unreadCount
+        }));
+      }
+      
+      refetch(); // Refresh the message list
+    });
+
+    socket.on("messageSent", (data: { message: Message; unreadCount: number; receiverId: string }) => {
+      console.log("📤 Message sent confirmation:", data);
+      refetch(); // Refresh to show the sent message
+    });
+
+    socket.on("messagesRead", (data: { readBy: string; count: number }) => {
+      console.log("📖 Messages marked as read:", data);
+      
+      // Clear unread count for the user who read the messages
+      setUnreadCounts(prev => ({
+        ...prev,
+        [data.readBy]: 0
+      }));
+      
+      refetch(); // Refresh to update read status
+    });
+
+    // Enhanced typing events
+    socket.on("userTyping", (data: { userId: string; isTyping: boolean }) => {
+      console.log("⌨️ User typing:", data);
+      
+      setTypingUsers(prevTyping => {
+        const newTyping = new Set(prevTyping);
+        if (data.isTyping) {
+          newTyping.add(data.userId);
+        } else {
+          newTyping.delete(data.userId);
+        }
+        return newTyping;
+      });
+      
+      // Auto-clear typing indicator after 3 seconds of inactivity
+      if (data.isTyping) {
+        setTimeout(() => {
+          setTypingUsers(prev => {
+            const updated = new Set(prev);
+            updated.delete(data.userId);
+            return updated;
+          });
+        }, 3000);
+      }
+    });
+
+    // Error handling
     socket.on("error", (error) => {
       console.error("❌ Socket error:", error);
     });
 
+    socket.on("messageError", (error) => {
+      console.error("❌ Message error:", error);
+    });
+
     return socket;
-  }, [token, currentUser?._id, refetch]);
+  }, [token, currentUser?._id, refetch, activeUserId]);
 
   // Initialize socket on mount and when dependencies change
   useEffect(() => {
@@ -143,6 +284,7 @@ const UsersList: React.FC<UsersListProps> = ({
 
     return () => {
       if (socketRef.current) {
+        console.log("🧹 Cleaning up socket connection...");
         socketRef.current.off();
         socketRef.current.disconnect();
         socketRef.current = null;
@@ -152,21 +294,87 @@ const UsersList: React.FC<UsersListProps> = ({
 
   // Mark messages as read when user is selected
   useEffect(() => {
-    if (activeUserId && socketRef.current) {
+    if (activeUserId && socketRef.current?.connected) {
+      console.log(`📖 Marking messages as read for user: ${activeUserId}`);
+      
+      // Immediately clear unread count for better UX
+      setUnreadCounts(prev => ({
+        ...prev,
+        [activeUserId]: 0
+      }));
+      
+      // Add a small delay to ensure the UI has updated first
+      const markAsReadTimer = setTimeout(() => {
+        socketRef.current?.emit(
+          "markAsRead",
+          { senderId: activeUserId },
+          (response) => {
+            if (response?.status === "success") {
+              console.log(`✅ Marked ${response.markedCount} messages as read from ${activeUserId}`);
+              
+              // Refetch to ensure consistency with backend
+              refetch();
+            } else {
+              console.error("❌ Failed to mark messages as read:", response?.error);
+              // Revert the optimistic update on error
+              setUnreadCounts(prev => {
+                const { [activeUserId]: removed, ...rest } = prev;
+                return rest;
+              });
+            }
+          }
+        );
+      }, 100);
+
+      return () => clearTimeout(markAsReadTimer);
+    }
+  }, [activeUserId, refetch]);
+
+  // Helper function to check if user is online
+  const isUserOnline = useCallback((userId: string) => {
+    return onlineUsers.some(user => user.userId === userId && user.status !== 'offline');
+  }, [onlineUsers]);
+
+  // Helper function to get user's current status
+  const getUserCurrentStatus = useCallback((userId: string) => {
+    const onlineUser = onlineUsers.find(user => user.userId === userId);
+    if (onlineUser) return onlineUser.status;
+    
+    const statusInfo = userStatuses[userId];
+    return statusInfo?.status || 'offline';
+  }, [onlineUsers, userStatuses]);
+
+  // Helper function to check if user is typing
+  const isUserTyping = useCallback((userId: string) => {
+    return typingUsers.has(userId);
+  }, [typingUsers]);
+
+  // Manual mark as read function for debugging
+  const handleManualMarkAsRead = useCallback((userId: string) => {
+    if (socketRef.current?.connected) {
+      console.log(`🔧 Manual mark as read for user: ${userId}`);
+      
+      setUnreadCounts(prev => ({
+        ...prev,
+        [userId]: 0
+      }));
+      
       socketRef.current.emit(
         "markAsRead",
-        { senderId: activeUserId },
+        { senderId: userId },
         (response) => {
           if (response?.status === "success") {
-            console.log(`📖 Marked ${response.markedCount} messages as read`);
-            refetch(); // Refresh to update unread counts
+            console.log(`✅ Manual mark read successful: ${response.markedCount} messages`);
+            refetch();
+          } else {
+            console.error("❌ Manual mark read failed:", response?.error);
           }
         }
       );
     }
-  }, [activeUserId, refetch]);
+  }, [refetch]);
 
-  // Extract conversation partners with last message and unread count
+  // Extract conversation partners with enhanced status info
   const chatPartners = React.useMemo(() => {
     if (!data?.data || !currentUser) return [];
 
@@ -180,17 +388,12 @@ const UsersList: React.FC<UsersListProps> = ({
     >();
 
     data.data.forEach((message: Message) => {
-      // Determine the other user in the conversation
-      const otherUser =
-        message.sender._id === currentUser._id
-          ? message.receiver
-          : message.sender;
-
+      const otherUser = message.sender._id === currentUser._id ? message.receiver : message.sender;
       const isIncoming = message.sender._id !== currentUser._id;
       const isUnread = isIncoming && !message.read;
+      const messageDate = new Date(message.createdAt);
 
       const existingPartner = partnersMap.get(otherUser._id);
-      const messageDate = new Date(message.createdAt);
 
       if (!existingPartner) {
         partnersMap.set(otherUser._id, {
@@ -198,35 +401,46 @@ const UsersList: React.FC<UsersListProps> = ({
           lastMessage: message.message,
           unreadCount: isUnread ? 1 : 0,
           lastMessageTime: messageDate,
-          status: (userStatuses[otherUser._id]?.status as any) || "offline",
+          status: getUserCurrentStatus(otherUser._id) as any,
           lastSeen: userStatuses[otherUser._id]?.lastSeen,
         });
       } else {
-        // Update if this message is newer
-        if (
-          !existingPartner.lastMessageTime ||
-          messageDate > existingPartner.lastMessageTime
-        ) {
+        if (!existingPartner.lastMessageTime || messageDate > existingPartner.lastMessageTime) {
           existingPartner.lastMessage = message.message;
           existingPartner.lastMessageTime = messageDate;
         }
         if (isUnread) {
           existingPartner.unreadCount += 1;
         }
-        // Update status
-        existingPartner.status =
-          (userStatuses[otherUser._id]?.status as any) || "offline";
+        existingPartner.status = getUserCurrentStatus(otherUser._id) as any;
         existingPartner.lastSeen = userStatuses[otherUser._id]?.lastSeen;
       }
     });
 
-    return Array.from(partnersMap.values()).sort((a, b) => {
-      // Sort by most recent message time
+    // Override unread count with real-time data if available and user is not currently active
+    const partners = Array.from(partnersMap.values()).map(partner => {
+      if (unreadCounts[partner._id] !== undefined && partner._id !== activeUserId) {
+        partner.unreadCount = unreadCounts[partner._id];
+      } else if (partner._id === activeUserId) {
+        // If this is the active user, unread count should be 0
+        partner.unreadCount = 0;
+      }
+      return partner;
+    });
+
+    return partners.sort((a, b) => {
+      // Sort by online status first, then by recent message time
+      const aOnline = isUserOnline(a._id);
+      const bOnline = isUserOnline(b._id);
+      
+      if (aOnline && !bOnline) return -1;
+      if (!aOnline && bOnline) return 1;
+      
       const aTime = a.lastMessageTime?.getTime() || 0;
       const bTime = b.lastMessageTime?.getTime() || 0;
       return bTime - aTime;
     });
-  }, [data, currentUser, userStatuses]);
+  }, [data, currentUser, userStatuses, onlineUsers, getUserCurrentStatus, isUserOnline, unreadCounts, activeUserId]);
 
   // Filter conversations based on search query
   const filteredChatPartners = React.useMemo(() => {
@@ -235,20 +449,26 @@ const UsersList: React.FC<UsersListProps> = ({
     const normalizedQuery = searchQuery.toLowerCase().trim();
 
     return chatPartners.filter((user) => {
-      // Search by name
       if (user.name.toLowerCase().includes(normalizedQuery)) return true;
-
-      // Search by message content
-      if (user.lastMessage?.toLowerCase().includes(normalizedQuery))
-        return true;
-
+      if (user.lastMessage?.toLowerCase().includes(normalizedQuery)) return true;
       return false;
     });
   }, [chatPartners, searchQuery]);
 
+  // Manual refresh function
   const handleReload = React.useCallback(() => {
     console.log("🔄 Manually reloading user messages...");
     refetch();
+    
+    // Also request fresh online users if socket is connected
+    if (socketRef.current?.connected) {
+      socketRef.current.emit('getOnlineUsers', (response: { users: OnlineUser[] }) => {
+        if (response?.users) {
+          console.log("🔄 Refreshed online users:", response.users);
+          setOnlineUsers(response.users);
+        }
+      });
+    }
   }, [refetch]);
 
   // Expose reload function via ref (optional)
@@ -269,7 +489,6 @@ const UsersList: React.FC<UsersListProps> = ({
         minute: "2-digit",
       });
     } else if (diffInHours < 168) {
-      // 7 days
       return date.toLocaleDateString([], { weekday: "short" });
     } else {
       return date.toLocaleDateString([], { month: "short", day: "numeric" });
@@ -279,21 +498,25 @@ const UsersList: React.FC<UsersListProps> = ({
   const getStatusColor = (status?: string) => {
     switch (status) {
       case "online":
-        return "bg-emerald-500"; // green
+        return "bg-green-500";
       case "away":
-        return "bg-amber-500"; // yellow
+        return "bg-yellow-500";
+      case "busy":
+        return "bg-red-500";
       case "offline":
       default:
-        return "bg-gray-400"; // gray
+        return "bg-gray-400";
     }
   };
 
   const getStatusIcon = (status?: string) => {
     switch (status) {
       case "online":
-        return "bi-circle-fill text-emerald-500";
+        return "bi-circle-fill text-green-500";
       case "away":
-        return "bi-clock-fill text-amber-500";
+        return "bi-clock-fill text-yellow-500";
+      case "busy":
+        return "bi-do-not-disturb-fill text-red-500";
       case "offline":
       default:
         return "bi-circle text-gray-400";
@@ -301,7 +524,7 @@ const UsersList: React.FC<UsersListProps> = ({
   };
 
   const handleDeleteClick = (e: React.MouseEvent, user: User) => {
-    e.stopPropagation(); // Prevent triggering the user selection
+    e.stopPropagation();
     setUserToDelete(user);
     setShowDeleteModal(true);
   };
@@ -310,25 +533,13 @@ const UsersList: React.FC<UsersListProps> = ({
     if (!userToDelete) return;
     
     try {
-      // Here you would typically call an API to delete the conversation
-      // For now, we'll just simulate the action
-      console.log(`Deleting conversation with user: ${userToDelete.name}`);
-      
-      // You can add your delete API call here
-      // await deleteConversation(userToDelete._id);
-      
-      // Refresh the data after deletion
+      console.log(`🗑️ Deleting conversation with user: ${userToDelete.name}`);
       refetch();
-      
-      // Close modal and reset state
       setShowDeleteModal(false);
       setUserToDelete(null);
-      
-      // Show success message (you can implement toast notification)
-      console.log("Conversation deleted successfully");
+      console.log("✅ Conversation deleted successfully");
     } catch (error) {
-      console.error("Error deleting conversation:", error);
-      // You can show error toast here
+      console.error("❌ Error deleting conversation:", error);
     }
   };
 
@@ -352,24 +563,19 @@ const UsersList: React.FC<UsersListProps> = ({
         setShowDeleteModal(true);
         break;
       case 'archive':
-        console.log(`Archive conversation with ${user.name}`);
-        // Add your archive logic here
+        console.log(`📦 Archive conversation with ${user.name}`);
         break;
       case 'mute':
-        console.log(`Mute conversation with ${user.name}`);
-        // Add your mute logic here
+        console.log(`🔇 Mute conversation with ${user.name}`);
         break;
       case 'block':
-        console.log(`Block user ${user.name}`);
-        // Add your block logic here
+        console.log(`🚫 Block user ${user.name}`);
         break;
       case 'markUnread':
-        console.log(`Mark conversation with ${user.name} as unread`);
-        // Add your mark unread logic here
+        console.log(`📧 Mark conversation with ${user.name} as unread`);
         break;
       case 'pin':
-        console.log(`Pin conversation with ${user.name}`);
-        // Add your pin logic here
+        console.log(`📌 Pin conversation with ${user.name}`);
         break;
       default:
         break;
@@ -429,7 +635,6 @@ const UsersList: React.FC<UsersListProps> = ({
     );
   }
 
-  // If we're searching and nothing was found
   if (searchQuery && filteredChatPartners.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center text-center py-12">
@@ -447,6 +652,38 @@ const UsersList: React.FC<UsersListProps> = ({
 
   return (
     <div className="h-full flex flex-col">
+      {/* Connection Status Bar */}
+      <div className={`px-3 py-2 text-xs font-medium flex items-center justify-between ${
+        isSocketConnected ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+      }`}>
+        <div className="flex items-center">
+          <div className={`w-2 h-2 rounded-full mr-2 ${
+            isSocketConnected ? 'bg-green-500' : 'bg-red-500'
+          }`}></div>
+          {isSocketConnected ? 'Connected' : 'Disconnected'}
+          {onlineUsers.length > 0 && (
+            <span className="ml-2 text-green-600">
+              • {onlineUsers.length} online
+            </span>
+          )}
+        </div>
+        <button
+          onClick={handleReload}
+          className="text-xs hover:underline flex items-center"
+          disabled={!isSocketConnected}
+        >
+          <i className="bi bi-arrow-clockwise mr-1"></i>
+          Refresh
+        </button>
+      </div>
+
+      {/* Debug Component (only in development) */}
+      <DebugMessageRead
+        activeUserId={activeUserId}
+        unreadCounts={unreadCounts}
+        onManualMarkAsRead={handleManualMarkAsRead}
+      />
+
       <div className="flex-grow overflow-auto">
         {filteredChatPartners.length > 0 ? (
           <div className="list-group list-group-flush">
@@ -466,7 +703,7 @@ const UsersList: React.FC<UsersListProps> = ({
                 }
               >
                 <div className="flex items-center p-3 sm:p-4 relative">
-                  {/* Avatar with status indicator */}
+                  {/* Avatar with enhanced status indicator */}
                   <div className="relative mr-3 flex-shrink-0">
                     <div
                       className={`
@@ -489,24 +726,33 @@ const UsersList: React.FC<UsersListProps> = ({
                         </span>
                       )}
                     </div>
+                    {/* Enhanced status indicator */}
                     <div
                       className={`
                         absolute w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border-2 border-white
                         bottom-0.5 right-0.5 ${getStatusColor(user.status)} flex items-center justify-center
                       `}
+                      title={`${user.status} ${user.status === 'offline' && user.lastSeen ? `• Last seen ${formatTime(user.lastSeen)}` : ''}`}
                     >
                       <i className={`${getStatusIcon(user.status)} text-xs`}></i>
                     </div>
                   </div>
+                  
                   <div className="flex-grow min-w-0">
                     <div className="flex justify-content-between items-start mb-1">
                       <div className="flex-grow min-w-0">
                         <h6 className="mb-0 truncate font-semibold text-sm sm:text-base flex items-center">
-    
                           {user.name}
-                          {user.status === 'online' && (
+                          {/* Online indicator */}
+                          {isUserOnline(user._id) && (
                             <span className="ml-2 inline-flex items-center">
                               <i className="bi bi-lightning-charge-fill text-green-500 text-xs"></i>
+                            </span>
+                          )}
+                          {/* Typing indicator */}
+                          {isUserTyping(user._id) && (
+                            <span className="ml-2 text-xs">
+                              <i className="bi bi-three-dots text-blue-500 animate-pulse"></i>
                             </span>
                           )}
                         </h6>
@@ -520,12 +766,18 @@ const UsersList: React.FC<UsersListProps> = ({
                             ${user.unreadCount > 0 ? 'font-medium' : 'font-normal'}
                           `}
                         >
-  
-                          {user.lastMessage || "No messages yet"}
+                          {/* Show typing indicator or last message */}
+                          {isUserTyping(user._id) ? (
+                            <span className="text-blue-500 italic flex items-center">
+                              <i className="bi bi-three-dots mr-1"></i>
+                              typing...
+                            </span>
+                          ) : (
+                            user.lastMessage || "No messages yet"
+                          )}
                         </p>
                       </div>
                       
-                     
                       <div className="flex items-center space-x-2 ml-3 flex-shrink-0">
                         {/* Time */}
                         {user.lastMessageTime && (
@@ -552,14 +804,6 @@ const UsersList: React.FC<UsersListProps> = ({
                             {user.unreadCount > 99 ? "99+" : user.unreadCount}
                           </Badge>
                         )}
-                        
-                        {/* Status icons */}
-                        <div className="flex items-center space-x-1">
-                          {user.status === 'online' && (
-                            <i className="bi bi-circle-fill text-green-500 text-xs" title="Online"></i>
-                          )}
-                         
-                        </div>
                         
                         {/* More actions dropdown */}
                         <div className="relative" ref={dropdownRef}>
@@ -650,6 +894,8 @@ const UsersList: React.FC<UsersListProps> = ({
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
       <Modal 
         show={showDeleteModal} 
         onHide={handleDeleteCancel}
