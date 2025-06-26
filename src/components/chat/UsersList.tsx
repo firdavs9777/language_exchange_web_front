@@ -99,20 +99,14 @@ const UsersList: React.FC<UsersListProps> = ({
     currentUser?._id
   );
   const token = useSelector((state: RootState) => state.auth.userInfo?.token);
-
-  // Socket and status management
   const socketRef = useRef<Socket | null>(null);
   const [userStatuses, setUserStatuses] = useState<Record<string, { status: string; lastSeen?: Date }>>({});
   const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
   const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
   const [isSocketConnected, setIsSocketConnected] = useState(false);
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
-
-  // Delete confirmation modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
-  
-  // Dropdown menu state
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -794,7 +788,6 @@ const UsersList: React.FC<UsersListProps> = ({
                           </div>
                         )}
                         
-                        {/* Unread count */}
                         {user.unreadCount > 0 && (
                           <Badge
                             pill
@@ -805,7 +798,6 @@ const UsersList: React.FC<UsersListProps> = ({
                           </Badge>
                         )}
                         
-                        {/* More actions dropdown */}
                         <div className="relative" ref={dropdownRef}>
                           <button
                             onClick={(e) => toggleDropdown(user._id, e)}
@@ -822,7 +814,6 @@ const UsersList: React.FC<UsersListProps> = ({
                             <i className="bi bi-three-dots-vertical text-sm"></i>
                           </button>
                           
-                          {/* Dropdown menu */}
                           {activeDropdown === user._id && (
                             <div className="absolute right-0 top-8 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                               <button
