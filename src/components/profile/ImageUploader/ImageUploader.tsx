@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
-import { Modal, Button, Form, Image, Row, Col } from "react-bootstrap";
+import { Modal, Button, Image, Row, Col } from "react-bootstrap";
 import { Bounce, toast } from "react-toastify";
 import "./ImageUploader.css";
+import { useTranslation } from "react-i18next";
 
 export interface ImageViewerModalProps {
   images: string[];
@@ -24,27 +25,28 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
   const [dragOver, setDragOver] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const MAX_IMAGES = 10;
-  
+  const { t } = useTranslation();
+
   const remainingSlots = MAX_IMAGES - (images.length + selectedImages.length);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const filesArray = Array.from(event.target.files);
-      
+
       if (filesArray.length > remainingSlots) {
-        toast.warning(`You can only upload ${remainingSlots} more image(s).`, {
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  theme: "dark",
-                  transition: Bounce,
-                });
+        toast.warning(t('image_upload.max_upload_warning', { count: remainingSlots }), {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
         const allowedFiles = filesArray.slice(0, remainingSlots);
         setSelectedImages(prev => [...prev, ...allowedFiles]);
       } else {
         setSelectedImages(prev => [...prev, ...filesArray]);
       }
     }
-    // Reset input value to allow selecting same files again
+
     if (event.target) {
       event.target.value = '';
     }
@@ -69,29 +71,29 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setDragOver(false);
-    
+
     if (e.dataTransfer.files) {
       const filesArray = Array.from(e.dataTransfer.files).filter(
         file => file.type.startsWith('image/')
       );
-      
+
       if (filesArray.length === 0) {
-        toast.error("Please drop only image files", {
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  theme: "dark",
-                  transition: Bounce,
-                });
+        toast.error(t('image_upload.image_drop'), {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
         return;
       }
-      
+
       if (filesArray.length > remainingSlots) {
-        toast.warning(`You can only upload ${remainingSlots} more image(s).`,{
-                  autoClose: 3000,
-                  hideProgressBar: false,
-                  theme: "dark",
-                  transition: Bounce,
-                });
+        toast.warning(t('image_upload.max_upload_warning', { count: remainingSlots }), {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
         const allowedFiles = filesArray.slice(0, remainingSlots);
         setSelectedImages(prev => [...prev, ...allowedFiles]);
       } else {
@@ -100,58 +102,56 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
     }
   };
 
-  const handleUpload = async() => {
+  const handleUpload = async () => {
     if (selectedImages.length === 0 && images.length === 0) {
-      toast.error("Please upload at least one image", {
-                autoClose: 3000,
-                hideProgressBar: false,
-                theme: "dark",
-                transition: Bounce,
-              });
+      toast.error(t("image_upload.no_images_error"), {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
       return;
     }
 
-      onUploadImages(selectedImages);
-    
-    
+    onUploadImages(selectedImages);
     setSelectedImages([]);
     onClose();
   };
 
   const handleDeleteSelected = (index: number) => {
-    setSelectedImages(prev => 
+    setSelectedImages(prev =>
       prev.filter((_, i) => i !== index)
     );
-    toast.success("Image removed from selection",{
-              autoClose: 3000,
-              hideProgressBar: false,
-              theme: "dark",
-              transition: Bounce,
-            });
+    toast.success(t("image_upload.removed_from_selection"), {
+      autoClose: 3000,
+      hideProgressBar: false,
+      theme: "dark",
+      transition: Bounce,
+    });
   };
 
   const handleDeleteExisting = (index: number) => {
     if (onDeleteImage) {
       onDeleteImage(index);
-      toast.success("Image deleted successfully",{
-                autoClose: 3000,
-                hideProgressBar: false,
-                theme: "dark",
-                transition: Bounce,
-              });
+      toast.success(t("image_upload.deleted_success"), {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
     }
   };
 
   const handleUpdateExisting = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0] && onUpdateImage) {
       onUpdateImage(index, e.target.files[0]);
-      toast.success("Image replaced successfully", {
-                autoClose: 3000,
-                hideProgressBar: false,
-                theme: "dark",
-                transition: Bounce,
-              });
-      e.target.value = ''; // Reset input
+      toast.success(t('image_upload.replaced_success'), {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
+      e.target.value = '';
     }
   };
 
@@ -160,13 +160,13 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
       <Modal.Header closeButton>
         <Modal.Title>
           <i className="bi bi-upload me-2"></i>
-          Image Gallery ({images.length + selectedImages.length}/{MAX_IMAGES})
+          {t('image_upload.image_gallery')} ({images.length + selectedImages.length}/{MAX_IMAGES})
         </Modal.Title>
       </Modal.Header>
-      
+
       <Modal.Body>
         <div className="mb-4">
-          <h5>Current Images</h5>
+          <h5>{t('image_upload.current_images')}</h5>
           {images.length > 0 ? (
             <Row className="image-gallery">
               {images.map((item, index) => (
@@ -174,24 +174,26 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
                   <div className="image-container">
                     <Image
                       src={item}
-                      alt={`Uploaded image ${index + 1}`}
+                      alt={t('image_upload.uploaded_image_alt', { index: index + 1 })}
                       className="img-thumbnail gallery-image"
                     />
                     <div className="image-actions">
-                      <label className="update-btn" title="Replace image">
+                      <label className="update-btn" title={t('image_upload.replace_image_title')}>
                         <input
                           type="file"
                           accept="image/*"
                           className="d-none"
                           onChange={(e) => handleUpdateExisting(index, e)}
                         />
-                        <Button variant="outline-info" size="sm">Replace</Button>
+                        <Button variant="outline-info" size="sm">
+                          {t('image_upload.replace_image')}
+                        </Button>
                       </label>
-                      <Button 
-                        variant="outline-danger" 
+                      <Button
+                        variant="outline-danger"
                         size="sm"
                         onClick={() => handleDeleteExisting(index)}
-                        title="Delete image"
+                        title={t('image_upload.delete_image_title')}
                       >
                         <i className="bi bi-trash"></i>
                       </Button>
@@ -201,12 +203,15 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
               ))}
             </Row>
           ) : (
-            <p className="text-muted">No images uploaded yet</p>
+            <p className="text-muted">{t('image_upload.no_images_uploaded')}</p>
           )}
         </div>
 
         <div className="mb-4">
-          <h5>New Images {selectedImages.length > 0 && `(${selectedImages.length})`}</h5>
+          <h5>
+            {t('image_upload.new_images')} 
+            {selectedImages.length > 0 && `(${selectedImages.length})`}
+          </h5>
           {selectedImages.length > 0 ? (
             <Row className="image-gallery">
               {selectedImages.map((file, index) => (
@@ -214,7 +219,7 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
                   <div className="image-container">
                     <Image
                       src={URL.createObjectURL(file)}
-                      alt={`Selected preview ${index + 1}`}
+                      alt={t('image_upload.selected_preview_alt', { index: index + 1 })}
                       className="img-thumbnail gallery-image"
                     />
                     <div className="image-actions">
@@ -222,14 +227,14 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
                         variant="outline-danger"
                         size="sm"
                         onClick={() => handleDeleteSelected(index)}
-                        title="Remove from selection"
+                        title={t('image_upload.remove_from_selection_title')}
                       >
                         <i className="bi bi-x-circle"></i>
                       </Button>
                     </div>
                     <div className="image-name-tag">
-                      {file.name.length > 15 
-                        ? file.name.substring(0, 12) + '...' 
+                      {file.name.length > 15
+                        ? file.name.substring(0, 12) + '...'
                         : file.name}
                     </div>
                   </div>
@@ -237,7 +242,7 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
               ))}
             </Row>
           ) : (
-            <p className="text-muted">No new images selected</p>
+            <p className="text-muted">{t('image_upload.no_new_images')}</p>
           )}
         </div>
 
@@ -249,7 +254,7 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
             onDrop={handleDrop}
           >
             <i className="bi bi-plus-lg upload-icon fs-1"></i>
-            <p>Drop images here or</p>
+            <p>{t('image_upload.drop_images_here')}</p>
             <input
               ref={fileInputRef}
               type="file"
@@ -258,32 +263,37 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
               onChange={handleFileChange}
               className="d-none"
             />
-            <Button 
+            <Button
               variant="outline-primary"
               onClick={triggerFileInput}
             >
-              Select Files
+              {t('image_upload.select_files')}
             </Button>
             <p className="text-muted mt-2">
-              You can add {remainingSlots} more {remainingSlots === 1 ? 'image' : 'images'}
+              {t('image_upload.remaining_slots', { 
+                count: remainingSlots,
+                item: remainingSlots === 1 
+                  ? t('image_upload.image') 
+                  : t('image_upload.images')
+              })}
             </p>
           </div>
         )}
       </Modal.Body>
-      
+
       <Modal.Footer>
         <Button
           variant="secondary"
           onClick={onClose}
         >
-          Cancel
+          {t('image_upload.cancel')}
         </Button>
         <Button
           variant="success"
           onClick={handleUpload}
           disabled={selectedImages.length === 0 && images.length === 0}
         >
-          Save Changes
+          {t('image_upload.save_changes')}
         </Button>
       </Modal.Footer>
     </Modal>

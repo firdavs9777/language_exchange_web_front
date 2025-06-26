@@ -1,4 +1,4 @@
-/* ImageUploader.css */
+
 .image-uploader-section .modal-body {
   max-height: 70vh;
   overflow-y: auto;
@@ -88,7 +88,7 @@
   display: inline-block;
 }
 
-/* Modal header styling */
+
 .modal-header {
   background-color: #f8f9fa;
   border-bottom: 1px solid #e9ecef;
@@ -101,13 +101,13 @@
   color: #495057;
 }
 
-/* Modal footer styling */
+
 .modal-footer {
   border-top: 1px solid #e9ecef;
   padding: 15px;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .image-container {
     height: 120px;

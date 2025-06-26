@@ -4,13 +4,12 @@ import { I18nextProvider } from "react-i18next";
 import i18n from "./utils/i18n";
 
 import MainNavbar from "./components/navbar/MainNavbar";
-import AppRouter from "./router/AppRouter";
 import { Container } from "react-bootstrap";
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FooterMain from "./components/footer/FooterMain";
-// import TodoList from './components/TodoList';
+
 
 const App = () => {
   return (
