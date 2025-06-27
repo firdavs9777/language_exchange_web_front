@@ -1,6 +1,6 @@
 // export const BASE_URL = "http://localhost:5003";
 // export const BASE_URL = "http://64.23.181.246:5003";
-export const BASE_URL = "http://api.banatalk.com";
+export const BASE_URL = "https://api.banatalk.com";
 // process.env.NODE_ENV === "development"
 //   ? "http://64.23.181.246:5003"
 //   : "http://64.23.181.246:5003";
