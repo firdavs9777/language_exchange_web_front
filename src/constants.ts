@@ -12,6 +12,7 @@ export const LOGIN_URL = "/api/v1/auth/login";
 export const REGISTER_URL = "/api/v1/auth/register";
 export const LOGOUT_URL = "/api/v1/auth/logout";
 export const SEND_EMAIL_CODE = "/api/v1/auth/sendCodeEmail";
+export const REGISTER_EMAIL_CODE = "/api/v1/auth/registerCodeEmail";
 export const CONFIRM_EMAIL_CODE = "/api/v1/auth/checkEmailCode";
 export const RESET_USER_PASSWORD = "/api/v1/auth/resetpassword";
 export const COMMENTS = "comments";

@@ -2,14 +2,30 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ISO6391 from "iso-639-1";
 
-import FormContainer from "../../composables/FormContainer";
-import { Button, Col, Form, Image, InputGroup, Row, Container } from "react-bootstrap";
-import { FaEye, FaEyeSlash, FaPlus, FaTimes, FaArrowLeft, FaArrowRight, FaUserPlus } from "react-icons/fa";
+import {
+  Button,
+  Col,
+  Form,
+  Image,
+  InputGroup,
+  Row,
+  Container,
+} from "react-bootstrap";
+import {
+  FaEye,
+  FaEyeSlash,
+  FaPlus,
+  FaTimes,
+  FaArrowLeft,
+  FaArrowRight,
+  FaUserPlus,
+} from "react-icons/fa";
 import {
   useRegisterUserMutation,
   useUploadUserPhotoMutation,
   useSendCodeEmailMutation,
-  useVerifyCodeEmailMutation
+  useVerifyCodeEmailMutation,
+  useRegisterCodeEmailMutation,
 } from "../../store/slices/usersSlice";
 import Loader from "../Loader";
 import { Bounce, toast } from "react-toastify";
@@ -68,9 +84,12 @@ const Register = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [registerUser, { isLoading: isRegistering }] = useRegisterUserMutation();
-  const [uploadUserPhoto, { isLoading: isUploading }] = useUploadUserPhotoMutation();
-  const [sendCodeEmail, { isLoading: isSendingCode }] = useSendCodeEmailMutation();
+  const [registerUser, { isLoading: isRegistering }] =
+    useRegisterUserMutation();
+  const [uploadUserPhoto, { isLoading: isUploading }] =
+    useUploadUserPhotoMutation();
+  const [sendCodeEmail, { isLoading: isSendingCode }] =
+    useRegisterCodeEmailMutation();
   const [verifyCode, { isLoading: isVerifying }] = useVerifyCodeEmailMutation();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -101,10 +120,17 @@ const Register = () => {
     handleSendVerificationCode();
   };
 
-  // Function to send verification code
-  const handleSendVerificationCode = async () => {
+  interface SendCodeEmailResponse {
+    success: boolean;
+    message: string;
+    expiresIn?: string;
+  }
+
+  const handleSendVerificationCode = async (): Promise<void> => {
     try {
-      const response = await sendCodeEmail({ email }).unwrap();
+      const response = (await sendCodeEmail({
+        email,
+      }).unwrap()) as SendCodeEmailResponse;
 
       if (response.success) {
         toast.success("Verification code sent successfully!", {
@@ -113,15 +139,16 @@ const Register = () => {
           theme: "dark",
           transition: Bounce,
         });
-        setStep(3); // Move to verification step
+        setStep(3);
       }
     } catch (error: any) {
-      toast.error(`${error?.data?.error || "Failed to send verification code"}`, {
+      toast.error(error?.data?.message || "Failed to send verification code", {
         autoClose: 3000,
         hideProgressBar: false,
         theme: "dark",
         transition: Bounce,
       });
+      console.error("Error sending verification code:", error);
     }
   };
 
@@ -131,10 +158,10 @@ const Register = () => {
 
     try {
       // First verify the code
-      const verificationResponse = await verifyCode({
+      const verificationResponse = (await verifyCode({
         email,
-        code: verificationCode
-      }).unwrap() as VerifyCodeResponse;
+        code: verificationCode,
+      }).unwrap()) as VerifyCodeResponse;
 
       if (verificationResponse.success) {
         setIsCodeVerified(true);
@@ -282,23 +309,45 @@ const Register = () => {
                 ></div>
               </div>
               <div className="d-flex justify-content-between mt-2">
-                <span className={`step-indicator ${step >= 1 ? 'text-primary fw-bold' : ''}`}> {t("authentication.progressBar.account")}</span>
-                <span className={`step-indicator ${step >= 2 ? 'text-primary fw-bold' : ''}`}>{t("authentication.progressBar.profile")}</span>
-                <span className={`step-indicator ${step >= 3 ? 'text-primary fw-bold' : ''}`}>{t("authentication.progressBar.verify")}</span>
+                <span
+                  className={`step-indicator ${
+                    step >= 1 ? "text-primary fw-bold" : ""
+                  }`}
+                >
+                  {" "}
+                  {t("authentication.progressBar.account")}
+                </span>
+                <span
+                  className={`step-indicator ${
+                    step >= 2 ? "text-primary fw-bold" : ""
+                  }`}
+                >
+                  {t("authentication.progressBar.profile")}
+                </span>
+                <span
+                  className={`step-indicator ${
+                    step >= 3 ? "text-primary fw-bold" : ""
+                  }`}
+                >
+                  {t("authentication.progressBar.verify")}
+                </span>
               </div>
             </div>
 
             {step === 1 ? (
               <Form onSubmit={handleFirstStep}>
-                <h2 className="text-center mb-4">{t("authentication.account.title")}</h2>
+                <h2 className="text-center mb-4">
+                  {t("authentication.account.title")}
+                </h2>
 
                 <Form.Group controlId="name" className="mb-3">
                   <Form.Label className="fw-medium">
-                    {t("authentication.account.name")} <span className="text-danger">*</span>
+                    {t("authentication.account.name")}{" "}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder= {t("authentication.account.name")}
+                    placeholder={t("authentication.account.name")}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -308,7 +357,8 @@ const Register = () => {
 
                 <Form.Group controlId="email" className="mb-3">
                   <Form.Label className="fw-medium">
-                     {t("authentication.account.email")}<span className="text-danger">*</span>
+                    {t("authentication.account.email")}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="email"
@@ -322,7 +372,8 @@ const Register = () => {
 
                 <Form.Group controlId="password" className="mb-3">
                   <Form.Label className="fw-medium">
-                  {t("authentication.account.password")} <span className="text-danger">*</span>
+                    {t("authentication.account.password")}{" "}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <InputGroup>
                     <Form.Control
@@ -333,8 +384,8 @@ const Register = () => {
                       required
                       className="py-2"
                     />
-                    <Button 
-                      variant="outline-secondary" 
+                    <Button
+                      variant="outline-secondary"
                       onClick={clickHandler}
                       className="d-flex align-items-center"
                     >
@@ -348,7 +399,8 @@ const Register = () => {
 
                 <Form.Group controlId="confirmPassword" className="mb-4">
                   <Form.Label className="fw-medium">
-                    {t("authentication.account.confirmPassword")} <span className="text-danger">*</span>
+                    {t("authentication.account.confirmPassword")}{" "}
+                    <span className="text-danger">*</span>
                   </Form.Label>
                   <InputGroup>
                     <Form.Control
@@ -359,8 +411,8 @@ const Register = () => {
                       required
                       className="py-2"
                     />
-                    <Button 
-                      variant="outline-secondary" 
+                    <Button
+                      variant="outline-secondary"
                       onClick={clickHandlerConfirm}
                       className="d-flex align-items-center"
                     >
@@ -369,17 +421,18 @@ const Register = () => {
                   </InputGroup>
                 </Form.Group>
 
-                <Button 
-                  type="submit" 
-                  variant="primary" 
+                <Button
+                  type="submit"
+                  variant="primary"
                   className="w-100 py-2 mb-3 d-flex align-items-center justify-content-center"
                 >
-                  {t("authentication.account.continue")} <FaArrowRight className="ms-2" />
+                  {t("authentication.account.continue")}{" "}
+                  <FaArrowRight className="ms-2" />
                 </Button>
 
                 <div className="text-center mt-3">
                   {t("authentication.account.alreadyHaveAccount")}{" "}
-                  <Link 
+                  <Link
                     to={redirect ? `/login?redirect=${redirect}` : `/login`}
                     className="text-decoration-none"
                   >
@@ -389,14 +442,18 @@ const Register = () => {
               </Form>
             ) : step === 2 ? (
               <Form onSubmit={handleSecondStep}>
-                <h2 className="text-center mb-4">{t("authentication.profile.title")}</h2>
+                <h2 className="text-center mb-4">
+                  {t("authentication.profile.title")}
+                </h2>
 
                 <Form.Group controlId="bio" className="mb-3">
-                  <Form.Label className="fw-medium">{t("authentication.profile.bio")}</Form.Label>
+                  <Form.Label className="fw-medium">
+                    {t("authentication.profile.bio")}
+                  </Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={2}
-                      placeholder={t("authentication.profile.bioPlaceholder")}
+                    placeholder={t("authentication.profile.bioPlaceholder")}
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
                     className="py-2"
@@ -407,7 +464,8 @@ const Register = () => {
                   <Col md={6}>
                     <Form.Group controlId="gender" className="mb-3">
                       <Form.Label className="fw-medium">
-                          {t("authentication.profile.gender")} <span className="text-danger">*</span>
+                        {t("authentication.profile.gender")}{" "}
+                        <span className="text-danger">*</span>
                       </Form.Label>
                       <Form.Select
                         value={selectedGender}
@@ -490,15 +548,23 @@ const Register = () => {
                     <div className="mb-3">
                       <Row className="g-2">
                         {imagePreviews.map((preview, index) => (
-                          <Col key={index} xs={4} sm={3} className="position-relative">
-                            <div className="image-container rounded overflow-hidden" style={{ height: "100px" }}>
-                              <Image 
-                                src={preview} 
-                                style={{ 
-                                  objectFit: "cover", 
-                                  width: "100%", 
-                                  height: "100%" 
-                                }} 
+                          <Col
+                            key={index}
+                            xs={4}
+                            sm={3}
+                            className="position-relative"
+                          >
+                            <div
+                              className="image-container rounded overflow-hidden"
+                              style={{ height: "100px" }}
+                            >
+                              <Image
+                                src={preview}
+                                style={{
+                                  objectFit: "cover",
+                                  width: "100%",
+                                  height: "100%",
+                                }}
                               />
                               <Button
                                 variant="danger"
@@ -514,8 +580,8 @@ const Register = () => {
                         ))}
                         {selectedImages.length > 0 && (
                           <Col xs={4} sm={3}>
-                            <Button 
-                              variant="light" 
+                            <Button
+                              variant="light"
                               onClick={handleAddMoreImages}
                               className="add-image-btn border h-100 w-100 d-flex align-items-center justify-content-center"
                               style={{ height: "100px" }}
@@ -539,12 +605,15 @@ const Register = () => {
                         className="d-none"
                         id="formFileUpload"
                       />
-                      <label htmlFor="formFileUpload" className="btn btn-outline-primary">
+                      <label
+                        htmlFor="formFileUpload"
+                        className="btn btn-outline-primary"
+                      >
                         Select Images
                       </label>
                     </div>
                   )}
-                  
+
                   <Form.Control
                     type="file"
                     multiple
@@ -575,7 +644,9 @@ const Register = () => {
                       {isSendingCode ? (
                         <>Processing...</>
                       ) : (
-                        <>Continue <FaArrowRight className="ms-2" /></>
+                        <>
+                          Continue <FaArrowRight className="ms-2" />
+                        </>
                       )}
                     </Button>
                   </Col>
@@ -592,15 +663,18 @@ const Register = () => {
                     <FaUserPlus size={32} className="text-primary" />
                   </div>
                   <p>
-                    We've sent a verification code to your email:<br />
+                    We've sent a verification code to your email:
+                    <br />
                     <strong>{email}</strong>
                   </p>
                 </div>
-                
+
                 {!isCodeVerified ? (
                   <Form onSubmit={handleVerifyCode}>
                     <Form.Group controlId="verificationCode" className="mb-4">
-                      <Form.Label className="fw-medium">Verification Code</Form.Label>
+                      <Form.Label className="fw-medium">
+                        Verification Code
+                      </Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Enter the 6-digit code"
@@ -610,7 +684,7 @@ const Register = () => {
                         className="py-2 text-center form-control-lg"
                       />
                     </Form.Group>
-                    
+
                     <Button
                       type="submit"
                       variant="primary"
@@ -619,7 +693,7 @@ const Register = () => {
                     >
                       {isVerifying ? "Verifying..." : "Verify Email"}
                     </Button>
-                    
+
                     <div className="text-center mb-4">
                       <Button
                         variant="link"
@@ -627,10 +701,12 @@ const Register = () => {
                         disabled={isSendingCode}
                         className="text-decoration-none"
                       >
-                        {isSendingCode ? "Sending..." : "Resend verification code"}
+                        {isSendingCode
+                          ? "Sending..."
+                          : "Resend verification code"}
                       </Button>
                     </div>
-                    
+
                     <Button
                       type="button"
                       variant="outline-secondary"
@@ -639,27 +715,30 @@ const Register = () => {
                     >
                       <FaArrowLeft className="me-2" /> Back to Profile
                     </Button>
-                    
+
                     {isVerifying && <Loader />}
                   </Form>
                 ) : (
                   <div>
                     <div className="alert alert-success">
                       <p className="mb-0 text-center">
-                        <strong>Email verified successfully!</strong><br />
+                        <strong>Email verified successfully!</strong>
+                        <br />
                         Complete your registration by clicking the button below.
                       </p>
                     </div>
-                    
+
                     <Button
                       onClick={handleFinalRegistration}
                       variant="success"
                       className="w-100 py-2 mb-3"
                       disabled={isRegistering || isUploading}
                     >
-                      {isRegistering || isUploading ? "Processing..." : "Complete Registration"}
+                      {isRegistering || isUploading
+                        ? "Processing..."
+                        : "Complete Registration"}
                     </Button>
-                    
+
                     {(isRegistering || isUploading) && <Loader />}
                   </div>
                 )}
@@ -668,7 +747,7 @@ const Register = () => {
           </div>
         </Col>
       </Row>
-      
+
       <style jsx>{`
         .step-indicator {
           font-size: 0.875rem;
