@@ -24,7 +24,7 @@ const MainNavbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  
+
   const userInfo = useSelector((state: any) => state.auth.userInfo);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -73,48 +73,51 @@ const MainNavbar = () => {
     onClick?: () => void;
   }
 
-  const NavLinkComponent: React.FC<NavLinkComponentProps> = ({ to, children, onClick }) => (
+  const NavLinkComponent: React.FC<NavLinkComponentProps> = ({
+    to,
+    children,
+    onClick,
+  }) => (
     <NavLink
       to={to}
       onClick={onClick}
       className={({ isActive }) =>
         `flex items-center px-4 py-2 mx-1 font-medium transition-all duration-300 rounded-lg relative group ${
-          isActive 
-            ? "text-yellow-400 font-bold bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 border border-yellow-400/30 shadow-lg shadow-yellow-400/20 scale-105" 
+          isActive
+            ? "text-yellow-400 font-bold bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 border border-yellow-400/30 shadow-lg shadow-yellow-400/20 scale-105"
             : "text-white hover:text-yellow-400 hover:bg-gray-800/50 hover:scale-105"
         }`
       }
     >
-      <span className="relative z-10 flex items-center">
-        {children}
-      </span>
-      
- 
+      <span className="relative z-10 flex items-center">{children}</span>
     </NavLink>
   );
 
-  // Alternative approach - Custom NavLink with proper active state handling
-  const CustomNavLink: React.FC<NavLinkComponentProps> = ({ to, children, onClick }) => {
+  const CustomNavLink: React.FC<NavLinkComponentProps> = ({
+    to,
+    children,
+    onClick,
+  }) => {
     return (
-      <NavLink
-        to={to}
-        onClick={onClick}
-      >
+      <NavLink to={to} onClick={onClick}>
         {({ isActive }) => (
-          <div className={`flex items-center px-4 py-2 mx-1 font-medium transition-all duration-300 rounded-lg relative group ${
-            isActive 
-              ? "text-yellow-400 font-bold bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 border border-yellow-400/30 shadow-lg shadow-yellow-400/20 scale-105" 
-              : "text-white hover:text-yellow-400 hover:bg-gray-800/50 hover:scale-105"
-          }`}>
+          <div
+            className={`flex items-center px-4 py-2 mx-1 font-medium transition-all duration-300 rounded-lg relative group ${
+              isActive
+                ? "text-yellow-400 font-bold bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 border border-yellow-400/30 shadow-lg shadow-yellow-400/20 scale-105"
+                : "text-white hover:text-yellow-400 hover:bg-gray-800/50 hover:scale-105"
+            }`}
+          >
             {children}
-            
-            {/* Active state underline */}
-            <span className={`absolute bottom-1 left-1/2 h-0.5 bg-gradient-to-r from-yellow-300 to-yellow-500 transition-all duration-300 ${
-              isActive 
-                ? "w-4/5 -translate-x-1/2 shadow-sm shadow-yellow-400/50" 
-                : "w-0 group-hover:w-2/3 group-hover:-translate-x-1/2"
-            }`}></span>
-            
+
+            <span
+              className={`absolute bottom-1 left-1/2 h-0.5 bg-gradient-to-r from-yellow-300 to-yellow-500 transition-all duration-300 ${
+                isActive
+                  ? "w-4/5 -translate-x-1/2 shadow-sm shadow-yellow-400/50"
+                  : "w-0 group-hover:w-2/3 group-hover:-translate-x-1/2"
+              }`}
+            ></span>
+
             {/* Active state glow effect */}
             {isActive && (
               <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-yellow-400/10 to-yellow-500/10 blur-sm"></span>
@@ -132,9 +135,9 @@ const MainNavbar = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <a href="/" className="flex items-center">
-              <img 
-                src={logo} 
-                alt="BananaTalk" 
+              <img
+                src={logo}
+                alt="BananaTalk"
                 className="h-16 w-auto hover:scale-105 transition-transform duration-300"
               />
             </a>
@@ -162,12 +165,14 @@ const MainNavbar = () => {
             )}
             <div className="relative">
               <button
-                onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
+                onClick={() =>
+                  setIsLanguageDropdownOpen(!isLanguageDropdownOpen)
+                }
                 className="flex items-center px-4 py-2 mx-1 text-white font-medium transition-all duration-300 rounded-lg hover:text-yellow-400 hover:bg-gray-600/50"
               >
                 <FaLanguage size={20} className="mr-2" />
                 <span className="hidden lg:inline">
-                  {i18n.language === 'en' ? t('english') : t('korean')}
+                  {i18n.language === "en" ? t("english") : t("korean")}
                 </span>
                 <FaCaretDown size={16} className="ml-1" />
               </button>
@@ -176,16 +181,20 @@ const MainNavbar = () => {
                 <div className="absolute right-0 mt-2 w-48 bg-gray-600 rounded-lg shadow-xl border border-gray-500 overflow-hidden z-50">
                   <button
                     onClick={() => changeLanguage("en")}
-                    className={`w-full text-left px-4 py-3 text-white hover:bg-gray-500 transition-colors duration-200 flex items-center ${
-                      i18n.language === "en" ? "bg-gray-500 text-yellow-400" : ""
+                    className={`w-full text-left px-4 py-3 flex items-center ${
+                      i18n.language === "en"
+                        ? "text-yellow-400 font-bold bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 border border-yellow-400/30 shadow-lg shadow-yellow-400/20 scale-105"
+                        : " text-white hover:bg-gray-500 transition-colors duration-200"
                     }`}
                   >
                     🇺🇸 <span className="ml-2">{t("english")}</span>
                   </button>
                   <button
                     onClick={() => changeLanguage("ko")}
-                    className={`w-full text-left px-4 py-3 text-white hover:bg-gray-500 transition-colors duration-200 flex items-center ${
-                      i18n.language === "ko" ? "bg-gray-500 text-yellow-400" : ""
+                    className={`w-full text-left px-4 py-3  hover:bg-gray-500 transition-colors duration-200 flex items-center ${
+                      i18n.language === "ko"
+                        ? "text-yellow-400 font-bold bg-gradient-to-r from-yellow-400/20 to-yellow-500/20 border border-yellow-400/30 shadow-lg shadow-yellow-400/20 scale-105"
+                        : "text-white"
                     }`}
                   >
                     🇰🇷 <span className="ml-2">{t("korean")}</span>
@@ -203,56 +212,57 @@ const MainNavbar = () => {
                 >
                   <img
                     src={
-                      Array.isArray(userInfo?.user?.imageUrls) && userInfo.user.imageUrls[0]?.startsWith("http")
+                      Array.isArray(userInfo?.user?.imageUrls) &&
+                      userInfo.user.imageUrls[0]?.startsWith("http")
                         ? userInfo.user.imageUrls[0]
-                        : Array.isArray(userInfo?.user?.images) && userInfo.user.images[0]
-                          ? userInfo.user.images[0].startsWith("http")
-                            ? userInfo.user.images[0]
-                            : `http://localhost:5003/uploads/${userInfo.user.images[0]}`
-                          : "/default-avatar.png"
+                        : Array.isArray(userInfo?.user?.images) &&
+                          userInfo.user.images[0]
+                        ? userInfo.user.images[0].startsWith("http")
+                          ? userInfo.user.images[0]
+                          : `http://localhost:5003/uploads/${userInfo.user.images[0]}`
+                        : "/default-avatar.png"
                     }
                     alt="Profile"
                     className="w-8 h-8 rounded-full object-cover mr-2 ring-2 ring-gray-600 hover:ring-yellow-400 transition-all duration-300"
                   />
-                  <span className="truncate text-sm">{userInfo.user?.name}</span>
+                  <span className="truncate text-sm">
+                    {userInfo.user?.name}
+                  </span>
                   <FaCaretDown size={16} className="ml-1 flex-shrink-0" />
                 </button>
 
                 {isUserDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-gray-600 rounded-lg shadow-xl border border-gray-500 overflow-hidden z-50">
-                    <NavLink
+                    <CustomNavLink
                       to="/profile"
                       onClick={() => setIsUserDropdownOpen(false)}
-                      className="block px-4 py-3 text-white hover:bg-gray-500 transition-colors duration-200"
                     >
                       <FaRegUser className="inline mr-3" />
                       {t("profile.title")}
-                    </NavLink>
-                    <NavLink
-                      to="/followersList"
+                    </CustomNavLink>
+                    <CustomNavLink
                       onClick={() => setIsUserDropdownOpen(false)}
-                      className="block px-4 py-3 text-white hover:bg-gray-500 transition-colors duration-200"
+                      to="/followersList"
                     >
                       <FaUsers className="inline mr-3" />
                       {t("followers")}
-                    </NavLink>
-                    <NavLink
+                    </CustomNavLink>
+
+                    <CustomNavLink
                       to="/followingsList"
                       onClick={() => setIsUserDropdownOpen(false)}
-                      className="block px-4 py-3 text-white hover:bg-gray-500 transition-colors duration-200"
                     >
                       <FaUsers className="inline mr-3" />
                       {t("followings")}
-                    </NavLink>
-                    <NavLink
+                    </CustomNavLink>
+                    <CustomNavLink
                       to="/my-moments"
                       onClick={() => setIsUserDropdownOpen(false)}
-                      className="block px-4 py-3 text-white hover:bg-gray-500 transition-colors duration-200"
                     >
                       <FaGlobe className="inline mr-3" />
                       {t("my_moments")}
-                    </NavLink>
-                    <hr className="border-gray-700" />
+                    </CustomNavLink>
+
                     <button
                       onClick={logoutHandler}
                       className="w-full text-left px-4 py-3 text-white hover:bg-gray-700 transition-colors duration-200"
@@ -264,13 +274,10 @@ const MainNavbar = () => {
                 )}
               </div>
             ) : (
-              <a
-                href="/login"
-                className="flex items-center px-4 py-2 mx-1 text-white font-medium transition-all duration-300 rounded-lg hover:text-yellow-400 hover:bg-gray-800/50"
-              >
+              <CustomNavLink to="/login">
                 <FaRegUser size={18} className="mr-2" />
                 {t("sign_in")}
-              </a>
+              </CustomNavLink>
             )}
           </div>
 
@@ -285,7 +292,6 @@ const MainNavbar = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden bg-gray-800/95 backdrop-blur-sm rounded-lg mt-2 mb-4 shadow-xl border border-gray-700">
             <div className="px-4 py-4 space-y-2">
@@ -324,7 +330,7 @@ const MainNavbar = () => {
                 <button
                   onClick={() => changeLanguage("ko")}
                   className={`w-full text-left px-4 py-2 text-white hover:bg-gray-700 rounded transition-colors duration-200 flex items-center ${
-                    i18n.language === "ko" ? "bg-gray-700 text-yellow-400" : ""
+                    i18n.language === "ko" ? "bg-gray-700 text-[]" : ""
                   }`}
                 >
                   🇰🇷 <span className="ml-2">{t("korean")}</span>
@@ -337,52 +343,40 @@ const MainNavbar = () => {
                   <div className="flex items-center px-4 py-2 mb-2">
                     <img
                       src={
-                        Array.isArray(userInfo?.user?.imageUrls) && userInfo.user.imageUrls[0]?.startsWith("http")
+                        Array.isArray(userInfo?.user?.imageUrls) &&
+                        userInfo.user.imageUrls[0]?.startsWith("http")
                           ? userInfo.user.imageUrls[0]
-                          : Array.isArray(userInfo?.user?.images) && userInfo.user.images[0]
-                            ? userInfo.user.images[0].startsWith("http")
-                              ? userInfo.user.images[0]
-                              : `http://localhost:5003/uploads/${userInfo.user.images[0]}`
-                            : "/default-avatar.png"
+                          : Array.isArray(userInfo?.user?.images) &&
+                            userInfo.user.images[0]
+                          ? userInfo.user.images[0].startsWith("http")
+                            ? userInfo.user.images[0]
+                            : `http://localhost:5003/uploads/${userInfo.user.images[0]}`
+                          : "/default-avatar.png"
                       }
                       alt="Profile"
                       className="w-10 h-10 rounded-full object-cover mr-3 ring-2 ring-gray-600"
                     />
-                    <span className="text-white font-medium">{userInfo.user?.name}</span>
+                    <span className="text-white font-medium">
+                      {userInfo.user?.name}
+                    </span>
                   </div>
-                  
-                  <NavLink
-                    to="/profile"
-                    onClick={closeMobileMenu}
-                    className="block px-4 py-2 text-white hover:bg-gray-700 rounded transition-colors duration-200"
-                  >
+
+                  <CustomNavLink to="/profile" onClick={closeMobileMenu}>
                     <FaRegUser className="inline mr-3" />
                     {t("profile.title")}
-                  </NavLink>
-                  <NavLink
-                    to="/followersList"
-                    onClick={closeMobileMenu}
-                    className="block px-4 py-2 text-white hover:bg-gray-700 rounded transition-colors duration-200"
-                  >
+                  </CustomNavLink>
+                  <CustomNavLink to="/followersList" onClick={closeMobileMenu}>
                     <FaUsers className="inline mr-3" />
                     {t("followers")}
-                  </NavLink>
-                  <NavLink
-                    to="/followingsList"
-                    onClick={closeMobileMenu}
-                    className="block px-4 py-2 text-white hover:bg-gray-700 rounded transition-colors duration-200"
-                  >
+                  </CustomNavLink>
+                  <CustomNavLink to="/followingsList" onClick={closeMobileMenu}>
                     <FaUsers className="inline mr-3" />
                     {t("followings")}
-                  </NavLink>
-                  <NavLink
-                    to="/my-moments"
-                    onClick={closeMobileMenu}
-                    className="block px-4 py-2 text-white hover:bg-gray-700 rounded transition-colors duration-200"
-                  >
+                  </CustomNavLink>
+                  <CustomNavLink to="/my-moments" onClick={closeMobileMenu}>
                     <FaGlobe className="inline mr-3" />
                     {t("my_moments")}
-                  </NavLink>
+                  </CustomNavLink>
                   <button
                     onClick={logoutHandler}
                     className="w-full text-left px-4 py-2 text-white hover:bg-gray-700 rounded transition-colors duration-200 mt-2 border-t border-gray-700 pt-2"
