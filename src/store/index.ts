@@ -4,6 +4,7 @@ import momentSliceReducer from "./slices/momentsSlice";
 import authSliceReducer from "./slices/authSlice";
 import commentsSliceReducer from "./slices/comments";
 import chatApiSliceReducer from "./slices/chatSlice";
+import storiesApiSliceReducer  from "./slices/stories";
 const rootReducer = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
@@ -11,6 +12,7 @@ const rootReducer = configureStore({
     auth: authSliceReducer,
     comments: commentsSliceReducer,
     chats: chatApiSliceReducer,
+    stories: storiesApiSliceReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

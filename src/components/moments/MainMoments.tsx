@@ -222,6 +222,9 @@ const MainMoments: React.FC = () => {
                 t={t}
               />
             </div>
+            <div>
+              <h1>Stories list</h1> 
+              </div>
 
             {/* Content states */}
             {isLoading ? (

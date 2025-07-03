@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { Bounce, toast } from "react-toastify";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
+import { useDislikeMomentMutation, useLikeMomentMutation } from "../../store/slices/momentsSlice";
 
 // TypeScript interfaces
 interface User {
@@ -59,12 +60,19 @@ const SingleMoment: React.FC<MomentProps> = ({
   const userId = useSelector(
     (state: RootState) => state.auth.userInfo?.user._id
   );
+  
+  const [likeMoment, { isLoading: isLiking }] = useLikeMomentMutation();
+  const [dislikeMoment, { isLoading: isDisliking }] = useDislikeMomentMutation();
+  
   const [liked, setLiked] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [currentLikeCount, setCurrentLikeCount] = useState<number>(likeCount);
-  const [isLiking, setIsLiking] = useState<boolean>(false);
+  
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  // Check if any like/dislike operation is in progress
+  const isLoadingLike = isLiking || isDisliking;
 
   useEffect(() => {
     setLiked(userId ? likedUsers.includes(userId) : false);
@@ -76,6 +84,7 @@ const SingleMoment: React.FC<MomentProps> = ({
       e.preventDefault();
       e.stopPropagation();
 
+      // Check if user is logged in
       if (!userId) {
         toast.error(t("moment_login_error"), {
           autoClose: 3000,
@@ -87,20 +96,41 @@ const SingleMoment: React.FC<MomentProps> = ({
         return;
       }
 
-      if (isLiking) return; // Prevent double clicks
+      // Prevent multiple simultaneous requests
+      if (isLoadingLike) return;
 
-      setIsLiking(true);
+      // Store previous state for rollback
       const previousLiked = liked;
       const previousCount = currentLikeCount;
 
       // Optimistic update
       setLiked(!liked);
-      setCurrentLikeCount((prev) => (liked ? prev - 1 : prev + 1));
+      setCurrentLikeCount(prev => liked ? prev - 1 : prev + 1);
 
       try {
-        // Simulate API call - replace with actual API call
-        await new Promise((resolve) => setTimeout(resolve, 300));
+        if (liked) {
+          // User wants to unlike the moment
+          await dislikeMoment({ momentId:_id, userId }).unwrap();
+          toast.info(t("moments_section.removedLike"), {
+            autoClose: 2000,
+            hideProgressBar: false,
+            theme: "dark",
+            transition: Bounce,
+          });
+        } else {
+          // User wants to like the moment
+          await likeMoment({ momentId: _id, userId }).unwrap();
+          toast.success(t("moments_section.likedMoment"), {
+            autoClose: 2000,
+            hideProgressBar: false,
+            theme: "dark",
+            transition: Bounce,
+          });
+        }
+        
+        // Refresh data if refetch function is provided
         if (refetch) refetch();
+        
       } catch (error) {
         // Revert optimistic update on error
         setLiked(previousLiked);
@@ -112,11 +142,11 @@ const SingleMoment: React.FC<MomentProps> = ({
           theme: "colored",
           transition: Bounce,
         });
-      } finally {
-        setIsLiking(false);
+        
+        console.error("Like/unlike error:", error);
       }
     },
-    [userId, liked, currentLikeCount, isLiking, t, navigate, refetch]
+    [userId, _id, liked, currentLikeCount, isLoadingLike, t, navigate, refetch, likeMoment, dislikeMoment]
   );
 
   const handleShare = useCallback(
@@ -169,7 +199,7 @@ const SingleMoment: React.FC<MomentProps> = ({
           <Link
             to={`/community/${user._id}`}
             className="flex items-center flex-1 group/user hover:opacity-80 transition-opacity duration-200"
-          >
+          > 
             <div className="relative">
               {/* Profile image with gradient ring */}
               <div className="relative p-0.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg group-hover/user:shadow-xl transition-shadow duration-300">
@@ -208,8 +238,8 @@ const SingleMoment: React.FC<MomentProps> = ({
           </button>
         </div>
 
-        {/* Content */}
-        <Link to={`/moment/${_id}`} className="block group/content">
+  
+        <Link to={`/moment/${_id}`} className="block group/content no-underline">
           <div className="px-4 sm:px-6 py-4">
             <h2 className="font-bold text-gray-900 text-lg sm:text-xl leading-tight mb-3 group-hover/content:text-blue-600 transition-colors duration-200">
               {title}
@@ -273,8 +303,8 @@ const SingleMoment: React.FC<MomentProps> = ({
           {/* Like Button */}
           <button
             onClick={handleLikeToggle}
-            disabled={isLiking}
-            className={`group/like flex-1 flex items-center justify-center py-3 sm:py-4 transition-all duration-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 disabled:opacity-50 ${
+            disabled={isLoadingLike}
+            className={`group/like flex-1 flex items-center justify-center py-3 sm:py-4 transition-all duration-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 disabled:opacity-50 disabled:cursor-not-allowed ${
               liked
                 ? "bg-blue-50 text-blue-600"
                 : "text-gray-600 hover:text-blue-600"
@@ -283,7 +313,7 @@ const SingleMoment: React.FC<MomentProps> = ({
           >
             <div
               className={`flex items-center gap-2 ${
-                liked && !isLiking ? "animate-pulse" : ""
+                isLoadingLike ? "animate-pulse" : ""
               }`}
             >
               {liked ? (
@@ -292,12 +322,14 @@ const SingleMoment: React.FC<MomentProps> = ({
                 <AiOutlineLike className="w-5 h-5 transition-transform group-hover/like:scale-110" />
               )}
               <span className="font-medium text-sm hidden sm:inline">
-                {t("moments_section.moment_like")}
+                {isLoadingLike 
+                  ? (liked ? "Unliking..." : "Liking...") 
+                  : t("moments_section.moment_like")
+                }
               </span>
             </div>
           </button>
-
-          {/* Comment Button */}
+          
           <Link
             to={`/moment/${_id}`}
             className="group/comment flex-1 flex items-center justify-center py-3 sm:py-4 text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
