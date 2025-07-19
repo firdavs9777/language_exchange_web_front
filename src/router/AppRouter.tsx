@@ -22,6 +22,7 @@ import MyMoments from "../components/profile/MyMoments";
 import MainChat from "../components/chat/MainChat";
 import ForgetPassword from "../components/auth/ForgetPassword";
 import EditMyMoment from "../components/profile/EditMyMoment";
+import MainStories from "../components/stories/MainStories";
 
 const MainChatWrapper = () => {
   const { userId } = useParams();
@@ -48,6 +49,7 @@ const AppRouter = createBrowserRouter(
       <Route path="followingsList" element={<UserFollowingList />} />
       <Route path="chat/:userId?" element={<MainChatWrapper />} />
       <Route path="courses" element={<CoursesMain />} />
+      <Route path="stories/" element={<MainStories />} />
     </Route>
   )
 );

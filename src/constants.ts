@@ -18,3 +18,7 @@ export const RESET_USER_PASSWORD = "/api/v1/auth/resetpassword";
 export const COMMENTS = "comments";
 export const USER_PROFILE_URL = "/api/v1/auth/me";
 export const USER_PROFILE_UPDATE = "/api/v1/auth/updatedetails";
+export const STORIES_FEED = "/api/v1/stories/feed";
+export const MY_STORIES = "/api/v1/stories/my-stories";
+export const MAIN_STORIES = "/api/v1/stories";
+export const USER_STORIES = "/api/v1/stories/user/";

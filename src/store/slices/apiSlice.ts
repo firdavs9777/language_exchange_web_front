@@ -29,7 +29,7 @@ const baseQuery = fetchBaseQuery({
 
 export const apiSlice = createApi({
   baseQuery,
-  tagTypes: ["Community", "Moments", "Chat", "User"],
+  tagTypes: ["Community", "Moments", "Chat", "User", "Stories"],
   refetchOnFocus: false,
   refetchOnReconnect: true,
   endpoints: (builder: any) => ({}),

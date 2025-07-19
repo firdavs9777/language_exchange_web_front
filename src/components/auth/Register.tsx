@@ -748,12 +748,12 @@ const Register = () => {
         </Col>
       </Row>
 
-      <style jsx>{`
+      {/* <style jsx>{`
         .step-indicator {
           font-size: 0.875rem;
           color: #6c757d;
         }
-      `}</style>
+      `}</style> */}
     </Container>
   );
 };
