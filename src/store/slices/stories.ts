@@ -1,15 +1,14 @@
-import { STORIES_URL, MY_STORY_URL, USER_STORY_URL, FEED_URL } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
 
 export const storiesApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder: any) => ({
     getFeeds: builder.query({
-      query: () => ({
-        url: FEED_URL
-      }),
-      keepUnusedDataFor: 5,
-      providesTags: ["Stories"],
+      // query: () => ({
+      //   url: FEED_URL
+      // }),
+      // keepUnusedDataFor: 5,
+      // providesTags: ["Stories"],
     }),
   }),
   // create: builder.mutation({

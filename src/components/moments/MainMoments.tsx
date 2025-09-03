@@ -1,11 +1,12 @@
-import React, { useCallback, useMemo } from "react";
-import { useGetMomentsQuery } from "../../store/slices/momentsSlice";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { FaExclamationTriangle, FaPlus, FaRedo } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Pagination from "../../composables/Pagination";
+import { useGetMomentsQuery } from "../../store/slices/momentsSlice";
 import SingleMoment from "./SingleMoment";
 import { MomentType } from "./types";
-import { FaEdit, FaPlus, FaExclamationTriangle, FaRedo } from "react-icons/fa";
 
 // TypeScript interfaces
 interface User {
@@ -25,6 +26,21 @@ interface AuthState {
 
 interface RootState {
   auth: AuthState;
+}
+
+// Updated interface to include pagination data
+interface MomentsResponse {
+  moments: MomentType[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalMoments: number;
+    limit: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    nextPage: number | null;
+    prevPage: number | null;
+  };
 }
 
 interface CreatePostCardProps {
@@ -51,6 +67,8 @@ interface EmptyStateProps {
 interface FloatingActionButtonProps {
   onClick: () => void;
 }
+
+
 
 // Component for the Create Post card with modern glassmorphism design
 const CreatePostCard: React.FC<CreatePostCardProps> = ({
@@ -177,8 +195,17 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   </div>
 );
 
+
 const MainMoments: React.FC = () => {
-  const { data, isLoading, error, refetch } = useGetMomentsQuery({});
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit] = useState(10); // You can make this configurable
+
+  const { data, isLoading, error, refetch } = useGetMomentsQuery({
+    page: currentPage,
+    limit: limit,
+  });
+
   const userId = useSelector(
     (state: RootState) => state.auth.userInfo?.user._id
   );
@@ -197,13 +224,76 @@ const MainMoments: React.FC = () => {
     [userInfo]
   );
 
-  // Memoize moments data with proper typing
-  const moments = useMemo(() => (data || []) as MomentType[], [data]);
+  // Extract moments and pagination from response
+  const { moments, pagination } = useMemo(() => {
+    if (!data) {
+      return {
+        moments: [] as MomentType[],
+        pagination: {
+          currentPage: 1,
+          totalPages: 0,
+          totalMoments: 0,
+          limit: 10,
+          hasNextPage: false,
+          hasPrevPage: false,
+          nextPage: null,
+          prevPage: null,
+        },
+      };
+    }
+
+    // Handle both old format (array) and new format (object with moments + pagination)
+    if (Array.isArray(data)) {
+      // Old format - just an array of moments
+      return {
+        moments: data as MomentType[],
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalMoments: data.length,
+          limit: data.length,
+          hasNextPage: false,
+          hasPrevPage: false,
+          nextPage: null,
+          prevPage: null,
+        },
+      };
+    } else {
+      // New format - object with moments and pagination
+      const response = data as MomentsResponse;
+      return {
+        moments: response.moments || [],
+        pagination: response.pagination || {
+          currentPage: 1,
+          totalPages: 0,
+          totalMoments: 0,
+          limit: 10,
+          hasNextPage: false,
+          hasPrevPage: false,
+          nextPage: null,
+          prevPage: null,
+        },
+      };
+    }
+  }, [data]);
 
   // Callback for adding a new moment
   const handleAddMoment = useCallback(() => {
     navigate("/add-moment");
   }, [navigate]);
+
+  // Handle page change
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+    // Scroll to top when changing pages
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  // Reset to page 1 when refetching
+  const handleRefetch = useCallback(() => {
+    setCurrentPage(1);
+    refetch();
+  }, [refetch]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30">
@@ -222,42 +312,56 @@ const MainMoments: React.FC = () => {
                 t={t}
               />
             </div>
-            <div>
-              <h1>Stories list</h1> 
-              </div>
+
+            <div className="px-4 sm:px-6">
+              <h1 className="text-2xl font-bold text-gray-800 mb-4">Stories list</h1>
+            </div>
 
             {/* Content states */}
             {isLoading ? (
               <LoadingState t={t} />
             ) : error ? (
-              <ErrorState t={t} refetch={refetch} />
+              <ErrorState t={t} refetch={handleRefetch} />
             ) : moments.length > 0 ? (
-              <div className="space-y-6 px-4 pb-6 sm:px-6">
-                {moments.map((moment, index) => (
-                  <div
-                    key={moment._id}
-                    className="group transform transition-all duration-500 hover:-translate-y-1 hover:shadow-xl"
-                    style={{
-                      animationDelay: `${index * 0.1}s`,
-                    }}
-                  >
-                    <div className="overflow-hidden rounded-2xl bg-white/80 backdrop-blur-sm border border-white/30 shadow-lg transition-all duration-300 group-hover:bg-white/90 group-hover:shadow-2xl">
-                      <SingleMoment
-                        _id={moment._id}
-                        title={moment.title}
-                        description={moment.description}
-                        likeCount={moment.likeCount}
-                        commentCount={moment.comments}
-                        user={moment.user}
-                        likedUsers={moment.likedUsers}
-                        imageUrls={moment.imageUrls}
-                        createdAt={moment.createdAt}
-                        refetch={refetch}
-                      />
+              <>
+                <div className="space-y-6 px-4 pb-6 sm:px-6">
+                  {moments.map((moment, index) => (
+                    <div
+                      key={moment._id}
+                      className="group transform transition-all duration-500 hover:-translate-y-1 hover:shadow-xl"
+                      style={{
+                        animationDelay: `${index * 0.1}s`,
+                      }}
+                    >
+                      <div className="overflow-hidden rounded-2xl bg-white/80 backdrop-blur-sm border border-white/30 shadow-lg transition-all duration-300 group-hover:bg-white/90 group-hover:shadow-2xl">
+                        <SingleMoment
+                          _id={moment._id}
+                          title={moment.title}
+                          description={moment.description}
+                          likeCount={moment.likeCount}
+                          commentCount={moment.comments}
+                          user={moment.user}
+                          likedUsers={moment.likedUsers}
+                          imageUrls={moment.imageUrls}
+                          createdAt={moment.createdAt}
+                          refetch={refetch}
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+
+
+                <Pagination
+                  currentPage={pagination.currentPage}
+                  totalPages={pagination.totalPages}
+                  onPageChange={handlePageChange}
+                  hasNextPage={pagination.hasNextPage}
+                  hasPrevPage={pagination.hasPrevPage}
+                  totalMoments={pagination.totalMoments}
+                  isLoading={isLoading}
+                />
+              </>
             ) : (
               <EmptyState t={t} handleAddMoment={handleAddMoment} />
             )}
