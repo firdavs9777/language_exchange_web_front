@@ -9,6 +9,7 @@ import {
   SEND_EMAIL_CODE,
   CONFIRM_EMAIL_CODE,
   RESET_USER_PASSWORD,
+  REGISTER_EMAIL_CODE,
 } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
@@ -39,6 +40,14 @@ export const usersApiSlice = apiSlice.injectEndpoints({
     sendCodeEmail: builder.mutation({
       query: (data: any) => ({
         url: `${SEND_EMAIL_CODE}`,
+        method: "POST",
+        body: data,
+      }),
+      keepUnusedDataFor: 5,
+    }),
+    registerCodeEmail: builder.mutation({
+      query: (data: any) => ({
+        url: `${REGISTER_EMAIL_CODE}`,
         method: "POST",
         body: data,
       }),
@@ -152,6 +161,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
 export const {
   useLoginUserMutation,
   useSendCodeEmailMutation,
+  useRegisterCodeEmailMutation,
   useVerifyCodeEmailMutation,
   useResetPasswordUserMutation,
   useLogoutUserMutation,
