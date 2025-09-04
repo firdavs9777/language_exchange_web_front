@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { FaExclamationTriangle, FaPlus, FaRedo } from "react-icons/fa";
+import { FaExclamationTriangle, FaPlus, FaRedo, FaFilter, FaTimes, FaSearch } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../../composables/Pagination";
@@ -9,7 +9,7 @@ import EmptyState from "./EmptyState";
 import SingleMoment from "./SingleMoment";
 import { MomentType } from "./types";
 
-// TypeScript interfaces (keeping existing interfaces)
+// TypeScript interfaces
 interface User {
   _id: string;
   name: string;
@@ -59,12 +59,226 @@ interface ErrorStateProps {
   refetch: () => void;
 }
 
-
-
 interface FloatingActionButtonProps {
   onClick: () => void;
 }
 
+interface FilterState {
+  category: string;
+  language: string;
+  mood: string;
+  tag: string;
+  user: string;
+  search: string;
+}
+
+interface FilterComponentProps {
+  filters: FilterState;
+  onFilterChange: (key: keyof FilterState, value: string) => void;
+  onClearFilters: () => void;
+  moments: MomentType[];
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+// Filter Component
+const FilterComponent: React.FC<FilterComponentProps> = ({
+  filters,
+  onFilterChange,
+  onClearFilters,
+  moments,
+  isOpen,
+  onToggle,
+}) => {
+  // Extract unique values from moments data
+  const filterOptions = useMemo(() => {
+    const categories = [...new Set(moments.map(m => m.category).filter(Boolean))];
+    const languages = [...new Set(moments.map(m => m.language).filter(Boolean))];
+    const moods = [...new Set(moments.map(m => m.mood).filter(Boolean))];
+    const tags = [...new Set(moments.flatMap(m => m.tags || []).filter(Boolean))];
+    const users = [...new Set(moments.map(m => m.user?.name).filter(Boolean))];
+
+    return { categories, languages, moods, tags, users };
+  }, [moments]);
+
+  const hasActiveFilters = Object.values(filters).some(value => value !== '');
+
+  return (
+    <div className="mb-4 sm:mb-6">
+      {/* Filter Toggle Button */}
+      <div className="flex items-center justify-between mb-3">
+        <button
+          onClick={onToggle}
+          className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-white/30 rounded-lg shadow-lg hover:bg-white/90 transition-all duration-200"
+        >
+          <FaFilter className="w-4 h-4 text-gray-600" />
+          <span className="text-sm font-medium text-gray-700">Filters</span>
+          {hasActiveFilters && (
+            <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
+              {Object.values(filters).filter(v => v !== '').length}
+            </span>
+          )}
+        </button>
+
+        {hasActiveFilters && (
+          <button
+            onClick={onClearFilters}
+            className="flex items-center gap-1 px-3 py-1.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors text-sm"
+          >
+            <FaTimes className="w-3 h-3" />
+            <span>Clear All</span>
+          </button>
+        )}
+      </div>
+
+      {/* Filter Panel */}
+      {isOpen && (
+        <div className="bg-white/80 backdrop-blur-sm border border-white/30 rounded-xl shadow-lg p-4 space-y-4 animate-in slide-in-from-top-2 duration-200">
+          {/* Search */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Search in title/description
+            </label>
+            <div className="relative">
+              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={filters.search}
+                onChange={(e) => onFilterChange('search', e.target.value)}
+                placeholder="Search moments..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+              />
+            </div>
+          </div>
+
+          {/* Filter Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Category Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Category
+              </label>
+              <select
+                value={filters.category}
+                onChange={(e) => onFilterChange('category', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+              >
+                <option value="">All Categories</option>
+                {filterOptions.categories.map(category => (
+                  <option key={category} value={category}>
+                    {category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Language Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Language
+              </label>
+              <select
+                value={filters.language}
+                onChange={(e) => onFilterChange('language', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+              >
+                <option value="">All Languages</option>
+                {filterOptions.languages.map(language => (
+                  <option key={language} value={language}>
+                    {language.charAt(0).toUpperCase() + language.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Mood Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Mood
+              </label>
+              <select
+                value={filters.mood}
+                onChange={(e) => onFilterChange('mood', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+              >
+                <option value="">All Moods</option>
+                {filterOptions.moods.map(mood => (
+                  <option key={mood} value={mood}>
+                    {mood}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Tag Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Tag
+              </label>
+              <select
+                value={filters.tag}
+                onChange={(e) => onFilterChange('tag', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+              >
+                <option value="">All Tags</option>
+                {filterOptions.tags.map(tag => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* User Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                User
+              </label>
+              <select
+                value={filters.user}
+                onChange={(e) => onFilterChange('user', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
+              >
+                <option value="">All Users</option>
+                {filterOptions.users.map(user => (
+                  <option key={user} value={user}>
+                    {user}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Active Filters Display */}
+          {hasActiveFilters && (
+            <div className="pt-3 border-t border-gray-200">
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(filters).map(([key, value]) => {
+                  if (!value) return null;
+                  return (
+                    <span
+                      key={key}
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                    >
+                      <span className="font-medium">{key}:</span>
+                      <span>{value}</span>
+                      <button
+                        onClick={() => onFilterChange(key as keyof FilterState, '')}
+                        className="ml-1 hover:bg-blue-200 rounded-full p-0.5"
+                      >
+                        <FaTimes className="w-3 h-3" />
+                      </button>
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
 
 // Mobile-optimized Create Post Card
 const CreatePostCard: React.FC<CreatePostCardProps> = ({
@@ -95,7 +309,6 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({
             {t("moments_section.question")} {userName.split(" ")[0]}?
           </span>
         </button>
-        {/* Hide the plus button on mobile since we have a floating action button */}
         <button
           onClick={handleAddMoment}
           className="hidden sm:group sm:flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-110 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
@@ -150,8 +363,6 @@ const ErrorState: React.FC<ErrorStateProps> = ({ t, refetch }) => (
   </div>
 );
 
-
-
 // Enhanced mobile floating action button
 const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   onClick,
@@ -167,12 +378,21 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   </div>
 );
 
-
-
 const MainMoments: React.FC = () => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(10);
+
+  // Filter states
+  const [filters, setFilters] = useState<FilterState>({
+    category: '',
+    language: '',
+    mood: '',
+    tag: '',
+    user: '',
+    search: '',
+  });
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const { data, isLoading, error, refetch } = useGetMomentsQuery({
     page: currentPage,
@@ -198,10 +418,10 @@ const MainMoments: React.FC = () => {
   );
 
   // Extract moments and pagination from response
-  const { moments, pagination } = useMemo(() => {
+  const { allMoments, pagination } = useMemo(() => {
     if (!data) {
       return {
-        moments: [] as MomentType[],
+        allMoments: [] as MomentType[],
         pagination: {
           currentPage: 1,
           totalPages: 0,
@@ -217,7 +437,7 @@ const MainMoments: React.FC = () => {
 
     if (Array.isArray(data)) {
       return {
-        moments: data as MomentType[],
+        allMoments: data as MomentType[],
         pagination: {
           currentPage: 1,
           totalPages: 1,
@@ -232,7 +452,7 @@ const MainMoments: React.FC = () => {
     } else {
       const response = data as MomentsResponse;
       return {
-        moments: response.moments || [],
+        allMoments: response.moments || [],
         pagination: response.pagination || {
           currentPage: 1,
           totalPages: 0,
@@ -247,6 +467,70 @@ const MainMoments: React.FC = () => {
     }
   }, [data]);
 
+  // Filter moments based on current filters
+  const filteredMoments = useMemo(() => {
+    return allMoments.filter(moment => {
+      // Search filter
+      if (filters.search) {
+        const searchTerm = filters.search.toLowerCase();
+        const titleMatch = moment.title?.toLowerCase().includes(searchTerm);
+        const descriptionMatch = moment.description?.toLowerCase().includes(searchTerm);
+        if (!titleMatch && !descriptionMatch) return false;
+      }
+
+      // Category filter
+      if (filters.category && moment.category !== filters.category) {
+        return false;
+      }
+
+      // Language filter
+      if (filters.language && moment.language !== filters.language) {
+        return false;
+      }
+
+      // Mood filter
+      if (filters.mood && moment.mood !== filters.mood) {
+        return false;
+      }
+
+      // Tag filter
+      if (filters.tag && (!moment.tags || !moment.tags.includes(filters.tag))) {
+        return false;
+      }
+
+      // User filter
+      if (filters.user && moment.user?.name !== filters.user) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [allMoments, filters]);
+
+  // Handle filter changes
+  const handleFilterChange = useCallback((key: keyof FilterState, value: string) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+    setCurrentPage(1); // Reset to first page when filter changes
+  }, []);
+
+  // Clear all filters
+  const handleClearFilters = useCallback(() => {
+    setFilters({
+      category: '',
+      language: '',
+      mood: '',
+      tag: '',
+      user: '',
+      search: '',
+    });
+    setCurrentPage(1);
+  }, []);
+
+  // Toggle filter panel
+  const toggleFilterPanel = useCallback(() => {
+    setIsFilterOpen(prev => !prev);
+  }, []);
+
   // Callback for adding a new moment
   const handleAddMoment = useCallback(() => {
     navigate("/add-moment");
@@ -255,7 +539,6 @@ const MainMoments: React.FC = () => {
   // Handle page change
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
-    // Scroll to top when changing pages
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
@@ -265,11 +548,37 @@ const MainMoments: React.FC = () => {
     refetch();
   }, [refetch]);
 
+  // Calculate pagination for filtered results
+  const paginatedMoments = useMemo(() => {
+    const startIndex = (currentPage - 1) * limit;
+    const endIndex = startIndex + limit;
+    return filteredMoments.slice(startIndex, endIndex);
+  }, [filteredMoments, currentPage, limit]);
+
+  const filteredPagination = useMemo(() => {
+    const totalFilteredMoments = filteredMoments.length;
+    const totalPages = Math.ceil(totalFilteredMoments / limit);
+
+    return {
+      currentPage,
+      totalPages,
+      totalMoments: totalFilteredMoments,
+      limit,
+      hasNextPage: currentPage < totalPages,
+      hasPrevPage: currentPage > 1,
+      nextPage: currentPage < totalPages ? currentPage + 1 : null,
+      prevPage: currentPage > 1 ? currentPage - 1 : null,
+    };
+  }, [filteredMoments.length, currentPage, limit]);
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30">
-      {/* Mobile-optimized container */}
       <div className="mx-auto max-w-2xl px-2 sm:px-4 py-3 sm:py-6 lg:px-6">
-        {/* Main container with glassmorphism effect */}
         <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-white/60 backdrop-blur-xl border border-white/30 shadow-2xl">
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
 
@@ -285,7 +594,26 @@ const MainMoments: React.FC = () => {
             </div>
 
             <div className="px-3 sm:px-4 lg:px-6">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">Stories list</h1>
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+                  Stories list
+                  {filteredMoments.length !== allMoments.length && (
+                    <span className="text-sm font-normal text-gray-500 ml-2">
+                      ({filteredMoments.length} of {allMoments.length})
+                    </span>
+                  )}
+                </h1>
+              </div>
+
+              {/* Filter Component */}
+              <FilterComponent
+                filters={filters}
+                onFilterChange={handleFilterChange}
+                onClearFilters={handleClearFilters}
+                moments={allMoments}
+                isOpen={isFilterOpen}
+                onToggle={toggleFilterPanel}
+              />
             </div>
 
             {/* Content states */}
@@ -293,10 +621,10 @@ const MainMoments: React.FC = () => {
               <LoadingState t={t} />
             ) : error ? (
               <ErrorState t={t} refetch={handleRefetch} />
-            ) : moments.length > 0 ? (
+            ) : paginatedMoments.length > 0 ? (
               <>
                 <div className="space-y-3 sm:space-y-6 px-2 sm:px-4 pb-4 sm:pb-6 lg:px-6">
-                  {moments.map((moment, index) => (
+                  {paginatedMoments.map((moment, index) => (
                     <div
                       key={moment._id}
                       className="group transform transition-all duration-500 hover:-translate-y-1 hover:shadow-xl"
@@ -310,7 +638,7 @@ const MainMoments: React.FC = () => {
                           title={moment.title}
                           description={moment.description}
                           likeCount={moment.likeCount}
-                          commentCount={moment.comments}
+                          commentCount={moment.commentCount || moment.comments || []}
                           user={moment.user}
                           likedUsers={moment.likedUsers}
                           imageUrls={moment.imageUrls}
@@ -324,15 +652,29 @@ const MainMoments: React.FC = () => {
 
                 {/* Pagination component */}
                 <Pagination
-                  currentPage={pagination.currentPage}
-                  totalPages={pagination.totalPages}
+                  currentPage={filteredPagination.currentPage}
+                  totalPages={filteredPagination.totalPages}
                   onPageChange={handlePageChange}
-                  hasNextPage={pagination.hasNextPage}
-                  hasPrevPage={pagination.hasPrevPage}
-                  totalMoments={pagination.totalMoments}
+                  hasNextPage={filteredPagination.hasNextPage}
+                  hasPrevPage={filteredPagination.hasPrevPage}
+                  totalMoments={filteredPagination.totalMoments}
                   isLoading={isLoading}
                 />
               </>
+            ) : filteredMoments.length === 0 && allMoments.length > 0 ? (
+              <div className="text-center py-8 sm:py-16 px-4">
+                <div className="text-gray-500 mb-4">
+                  <FaFilter className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <h3 className="text-lg font-semibold mb-2">No moments match your filters</h3>
+                  <p className="text-sm">Try adjusting or clearing your filters to see more results.</p>
+                </div>
+                <button
+                  onClick={handleClearFilters}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  Clear All Filters
+                </button>
+              </div>
             ) : (
               <EmptyState t={t} handleAddMoment={handleAddMoment} />
             )}

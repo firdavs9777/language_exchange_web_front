@@ -25,7 +25,7 @@ interface MomentProps {
   description: string;
   likeCount: number;
   likedUsers: string[];
-  commentCount: string[];
+  commentCount: any[] | number; // Updated to handle both array and number
   createdAt: string;
   user: User;
   imageUrls?: string[];
@@ -61,8 +61,8 @@ const SingleMoment: React.FC<MomentProps> = ({
   );
 
   // Mock mutation hooks - replace with your actual hooks
-  const [likeMoment] = [() => Promise.resolve()];
-  const [dislikeMoment] = [() => Promise.resolve()];
+  // const [likeMoment] = [() => Promise.resolve()];
+  // const [dislikeMoment] = [() => Promise.resolve()];
   const isLiking = false;
   const isDisliking = false;
 
@@ -76,6 +76,16 @@ const SingleMoment: React.FC<MomentProps> = ({
 
   // Check if any like/dislike operation is in progress
   const isLoadingLike = isLiking || isDisliking;
+
+  // Get comment count as number - handle both array and number formats
+  const getCommentCount = useCallback((): number => {
+    if (Array.isArray(commentCount)) {
+      return commentCount.length;
+    }
+    return typeof commentCount === 'number' ? commentCount : 0;
+  }, [commentCount]);
+
+  const commentCountNumber = getCommentCount();
 
   useEffect(() => {
     setLiked(userId ? likedUsers.includes(userId) : false);
@@ -124,7 +134,7 @@ const SingleMoment: React.FC<MomentProps> = ({
         console.error("Like/unlike error:", error);
       }
     },
-    [userId, _id, liked, currentLikeCount, isLoadingLike, navigate, refetch, likeMoment, dislikeMoment]
+    [userId, _id, currentLikeCount, isLoadingLike, navigate, refetch]
   );
 
   const handleShare = useCallback(
@@ -269,7 +279,7 @@ const SingleMoment: React.FC<MomentProps> = ({
       )}
 
       {/* Engagement Stats */}
-      {(currentLikeCount > 0 || commentCount.length > 0) && (
+      {(currentLikeCount > 0 || commentCountNumber > 0) && (
         <div className="px-3 sm:px-4 py-2 border-b border-gray-100">
           <div className="flex items-center justify-between text-sm text-gray-500">
             <div className="flex items-center gap-3">
@@ -286,12 +296,12 @@ const SingleMoment: React.FC<MomentProps> = ({
             </div>
 
             <div className="flex items-center gap-3">
-              {commentCount.length > 0 && (
+              {commentCountNumber > 0 && (
                 <Link
                   to={`/moment/${_id}`}
                   className="hover:text-blue-600 transition-colors font-medium"
                 >
-                  {commentCount.length.toLocaleString()} comment{commentCount.length !== 1 ? 's' : ''}
+                  {commentCountNumber.toLocaleString()} comment{commentCountNumber !== 1 ? 's' : ''}
                 </Link>
               )}
             </div>

@@ -1,35 +1,46 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { Bounce, toast } from "react-toastify";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import {
-  FaComments,
-  FaRegComments,
   FaArrowLeft,
-  FaPaperPlane,
   FaChevronLeft,
   FaChevronRight,
+  FaComments,
+  FaGlobe,
+  FaHeart,
+  FaMapMarkerAlt,
+  FaPaperPlane,
+  FaRegComments,
+  FaTag,
 } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
+import { useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Bounce, toast } from "react-toastify";
 
 // API hooks
+import {
+  useAddCommentMutation,
+  useGetCommentsQuery,
+} from "../../store/slices/comments";
 import {
   useDislikeMomentMutation,
   useGetMomentDetailsQuery,
   useLikeMomentMutation,
 } from "../../store/slices/momentsSlice";
-import {
-  useAddCommentMutation,
-  useGetCommentsQuery,
-} from "../../store/slices/comments";
 
-// Types
+// Types (updated to match the new MomentType interface)
 interface User {
   _id: string;
   name: string;
   imageUrls: string[];
+  gender?: string;
+  email?: string;
+  bio?: string;
+  mbti?: string;
+  bloodType?: string;
+  native_language?: string;
+  language_to_learn?: string;
 }
 
 interface MomentDetails {
@@ -41,6 +52,16 @@ interface MomentDetails {
   imageUrls: string[];
   createdAt: string;
   user: User;
+  category?: string;
+  language?: string;
+  mood?: string;
+  tags?: string[];
+  location?: {
+    type: string;
+    coordinates: [number, number];
+    formattedAddress: string;
+  };
+  privacy?: string;
 }
 
 interface Comment {
@@ -80,6 +101,81 @@ const TimeAgo = React.memo<{ date: string }>(({ date }) => {
   }, [date, t]);
 
   return <span className="text-xs text-gray-500">{timeAgoText}</span>;
+});
+
+const MomentMetadata = React.memo<{ moment: MomentDetails }>(({ moment }) => {
+  const metadata = [];
+
+  if (moment.category) {
+    metadata.push({
+      icon: FaTag,
+      label: moment.category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      color: 'text-blue-600'
+    });
+  }
+
+  if (moment.language) {
+    metadata.push({
+      icon: FaGlobe,
+      label: moment.language.charAt(0).toUpperCase() + moment.language.slice(1),
+      color: 'text-green-600'
+    });
+  }
+
+  if (moment.mood) {
+    metadata.push({
+      icon: FaHeart,
+      label: moment.mood.charAt(0).toUpperCase() + moment.mood.slice(1),
+      color: 'text-pink-600'
+    });
+  }
+
+  if (metadata.length === 0) return null;
+
+  return (
+    <div className="flex flex-wrap gap-3 mt-3 pt-3 border-t border-gray-100">
+      {metadata.map((item, index) => (
+        <div key={index} className={`flex items-center gap-1.5 ${item.color}`}>
+          <item.icon className="w-3.5 h-3.5" />
+          <span className="text-sm font-medium">{item.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+});
+
+const TagsList = React.memo<{ tags: string[] }>(({ tags }) => {
+  if (!tags || tags.length === 0) return null;
+
+  return (
+    <div className="mt-3 pt-3 border-t border-gray-100">
+      <div className="flex items-center gap-2 mb-2">
+        <FaTag className="w-3.5 h-3.5 text-gray-500" />
+        <span className="text-sm font-medium text-gray-600">Tags:</span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {tags.map((tag, index) => (
+          <span
+            key={index}
+            className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+          >
+            #{tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+});
+
+const LocationInfo = React.memo<{ location: MomentDetails['location'] }>(({ location }) => {
+  if (!location) return null;
+
+  return (
+    <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100 text-gray-600">
+      <FaMapMarkerAlt className="w-3.5 h-3.5 text-red-500" />
+      <span className="text-sm">{location.formattedAddress}</span>
+    </div>
+  );
 });
 
 const CommentItem = React.memo<{ comment: Comment; index: number }>(
@@ -131,7 +227,7 @@ const ImageCarousel = React.memo<{ images: string[]; title?: string }>(
     if (images.length === 0) return null;
 
     return (
-      <div className="relative bg-gray-900 overflow-hidden">
+      <div className="relative bg-gray-900 overflow-hidden rounded-lg">
         <div className="relative aspect-video max-h-96">
           <img
             src={images[currentIndex]}
@@ -259,6 +355,52 @@ const MomentDetail: React.FC = () => {
   const handleGoBack = useCallback(() => {
     navigate(-1);
   }, [navigate]);
+
+  // Share handler with native sharing support
+  const handleShare = useCallback(
+    async (e: React.MouseEvent) => {
+      e.preventDefault();
+
+      if (!momentDetails) return;
+
+      const shareData = {
+        title: momentDetails.title || "Check out this moment",
+        text: momentDetails.description,
+        url: `${window.location.origin}/moment/${momentId}`,
+      };
+
+      if (navigator.share && navigator.canShare?.(shareData)) {
+        try {
+          await navigator.share(shareData);
+          toast.success("Shared successfully!", {
+            autoClose: 2000,
+            theme: "colored",
+          });
+        } catch (error) {
+          // User cancelled sharing
+          if ((error as Error).name !== "AbortError") {
+            console.error("Error sharing:", error);
+          }
+        }
+      } else {
+        // Fallback to clipboard
+        try {
+          await navigator.clipboard.writeText(shareData.url);
+          toast.success("Link copied to clipboard!", {
+            autoClose: 2000,
+            theme: "colored",
+          });
+        } catch (error) {
+          console.error("Error copying to clipboard:", error);
+          toast.error("Failed to copy link", {
+            autoClose: 3000,
+            theme: "colored",
+          });
+        }
+      }
+    },
+    [momentDetails, momentId]
+  );
 
   // OPTIMIZED: Like toggle with optimistic updates and no double refetch
   const handleLikeToggle = useCallback(
@@ -504,14 +646,21 @@ const MomentDetail: React.FC = () => {
                 {momentDetails.description}
               </p>
             )}
+
+            {/* Enhanced metadata display */}
+            <MomentMetadata moment={momentDetails} />
+            <TagsList tags={momentDetails.tags || []} />
+            <LocationInfo location={momentDetails.location} />
           </div>
 
           {/* Images */}
           {momentDetails.imageUrls.length > 0 && (
-            <ImageCarousel
-              images={momentDetails.imageUrls}
-              title={momentDetails.title}
-            />
+            <div className="px-4 sm:px-6 pb-4">
+              <ImageCarousel
+                images={momentDetails.imageUrls}
+                title={momentDetails.title}
+              />
+            </div>
           )}
 
           {/* Stats */}
@@ -574,7 +723,10 @@ const MomentDetail: React.FC = () => {
               </span>
             </button>
 
-            <button className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 sm:py-4 text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400/50">
+            <button
+              onClick={handleShare}
+              className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 sm:py-4 text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
+            >
               <IoMdShare className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="font-medium text-xs sm:text-sm hidden sm:inline">
                 {t("moments_section.shareButton")}
