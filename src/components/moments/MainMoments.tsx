@@ -1,6 +1,7 @@
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import ISO6391 from 'iso-639-1';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaExclamationTriangle, FaPlus, FaRedo, FaFilter, FaTimes, FaSearch } from "react-icons/fa";
+import { FaExclamationTriangle, FaFilter, FaPlus, FaRedo, FaSearch, FaTimes } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../../composables/Pagination";
@@ -70,6 +71,7 @@ interface FilterState {
   tag: string;
   user: string;
   search: string;
+  searchInput: string;
 }
 
 interface FilterComponentProps {
@@ -81,7 +83,7 @@ interface FilterComponentProps {
   onToggle: () => void;
 }
 
-// Filter Component
+// Filter Component with ISO6391 and Search Button
 const FilterComponent: React.FC<FilterComponentProps> = ({
   filters,
   onFilterChange,
@@ -90,18 +92,51 @@ const FilterComponent: React.FC<FilterComponentProps> = ({
   isOpen,
   onToggle,
 }) => {
+  // Get all available language options from ISO6391
+  const allLanguageOptions = useMemo(() => {
+    return ISO6391.getAllCodes().map((code) => ({
+      value: code,
+      label: ISO6391.getName(code),
+    })).sort((a, b) => a.label.localeCompare(b.label));
+  }, []);
+
   // Extract unique values from moments data
   const filterOptions = useMemo(() => {
-    const categories = [...new Set(moments.map(m => m.category).filter(Boolean))];
-    const languages = [...new Set(moments.map(m => m.language).filter(Boolean))];
-    const moods = [...new Set(moments.map(m => m.mood).filter(Boolean))];
-    const tags = [...new Set(moments.flatMap(m => m.tags || []).filter(Boolean))];
+    const categories = [...new Set(moments.map(m => m.category || 'uncategorized').filter(Boolean))];
+    const usedLanguages = [...new Set(moments.map(m => m.language || 'unspecified').filter(Boolean))];
+    const moods = [...new Set(moments.map(m => m.mood || 'neutral').filter(Boolean))];
+    const tags = [...new Set(moments.flatMap(m => m.tags && m.tags.length > 0 ? m.tags : ['untagged']).filter(Boolean))];
     const users = [...new Set(moments.map(m => m.user?.name).filter(Boolean))];
 
-    return { categories, languages, moods, tags, users };
+    return { categories, usedLanguages, moods, tags, users };
   }, [moments]);
 
-  const hasActiveFilters = Object.values(filters).some(value => value !== '');
+  const hasActiveFilters = Object.entries(filters).some(([key, value]) =>
+    key !== 'searchInput' && value !== ''
+  );
+
+  // Handle search functionality
+  const handleSearchClick = useCallback(() => {
+    onFilterChange('search', filters.searchInput.trim());
+  }, [filters.searchInput, onFilterChange]);
+
+  const handleSearchInputChange = useCallback((value: string) => {
+    onFilterChange('searchInput', value);
+  }, [onFilterChange]);
+
+  const handleSearchKeyPress = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearchClick();
+    }
+  }, [handleSearchClick]);
+
+  // Get language display name
+  const getLanguageDisplayName = useCallback((languageCode: string) => {
+    if (languageCode === 'unspecified') return 'Unspecified';
+    const languageName = ISO6391.getName(languageCode);
+    return languageName || languageCode.charAt(0).toUpperCase() + languageCode.slice(1);
+  }, []);
 
   return (
     <div className="mb-4 sm:mb-6">
@@ -115,7 +150,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({
           <span className="text-sm font-medium text-gray-700">Filters</span>
           {hasActiveFilters && (
             <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
-              {Object.values(filters).filter(v => v !== '').length}
+              {Object.entries(filters).filter(([key, value]) => key !== 'searchInput' && value !== '').length}
             </span>
           )}
         </button>
@@ -133,22 +168,57 @@ const FilterComponent: React.FC<FilterComponentProps> = ({
 
       {/* Filter Panel */}
       {isOpen && (
-        <div className="bg-white/80 backdrop-blur-sm border border-white/30 rounded-xl shadow-lg p-4 space-y-4 animate-in slide-in-from-top-2 duration-200">
-          {/* Search */}
+        <div className="bg-white/80 backdrop-blur-sm border border-white/30 rounded-xl shadow-lg p-4 space-y-4">
+          {/* Enhanced Search with Button */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Search in title/description
             </label>
-            <div className="relative">
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                value={filters.search}
-                onChange={(e) => onFilterChange('search', e.target.value)}
-                placeholder="Search moments..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
-              />
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={filters.searchInput}
+                  onChange={(e) => handleSearchInputChange(e.target.value)}
+                  onKeyPress={handleSearchKeyPress}
+                  placeholder="Type your search term..."
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 transition-all"
+                />
+              </div>
+              <button
+                onClick={handleSearchClick}
+                disabled={!filters.searchInput.trim()}
+                className="px-4 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200 flex items-center gap-2 min-w-[100px] justify-center"
+              >
+                <FaSearch className="w-4 h-4" />
+                <span className="hidden sm:inline font-medium">Search</span>
+              </button>
             </div>
+
+            {/* Active Search Display */}
+            {filters.search && (
+              <div className="mt-3 p-2 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <FaSearch className="w-3 h-3 text-blue-600" />
+                    <span className="text-sm text-blue-800">
+                      Searching for: <strong>"{filters.search}"</strong>
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      onFilterChange('search', '');
+                      onFilterChange('searchInput', '');
+                    }}
+                    className="text-blue-600 hover:text-blue-800 p-1"
+                    title="Clear search"
+                  >
+                    <FaTimes className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Filter Grid */}
@@ -166,13 +236,16 @@ const FilterComponent: React.FC<FilterComponentProps> = ({
                 <option value="">All Categories</option>
                 {filterOptions.categories.map(category => (
                   <option key={category} value={category}>
-                    {category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    {category === 'uncategorized'
+                      ? 'Uncategorized'
+                      : category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+                    }
                   </option>
                 ))}
               </select>
             </div>
 
-            {/* Language Filter */}
+            {/* Enhanced Language Filter with ISO6391 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Language
@@ -183,32 +256,30 @@ const FilterComponent: React.FC<FilterComponentProps> = ({
                 className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
               >
                 <option value="">All Languages</option>
-                {filterOptions.languages.map(language => (
-                  <option key={language} value={language}>
-                    {language.charAt(0).toUpperCase() + language.slice(1)}
-                  </option>
-                ))}
+
+                {/* Languages used in moments */}
+                {filterOptions.usedLanguages.length > 0 && (
+                  <optgroup label="Languages in Posts">
+                    {filterOptions.usedLanguages.map(language => (
+                      <option key={`used-${language}`} value={language}>
+                        {getLanguageDisplayName(language)}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+
+                {/* All available languages */}
+                <optgroup label="All Available Languages">
+                  {allLanguageOptions.map(({ value, label }) => (
+                    <option key={`all-${value}`} value={value}>
+                      {label} ({value.toUpperCase()})
+                    </option>
+                  ))}
+                </optgroup>
               </select>
             </div>
 
-            {/* Mood Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Mood
-              </label>
-              <select
-                value={filters.mood}
-                onChange={(e) => onFilterChange('mood', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
-              >
-                <option value="">All Moods</option>
-                {filterOptions.moods.map(mood => (
-                  <option key={mood} value={mood}>
-                    {mood}
-                  </option>
-                ))}
-              </select>
-            </div>
+
 
             {/* Tag Filter */}
             <div>
@@ -223,26 +294,7 @@ const FilterComponent: React.FC<FilterComponentProps> = ({
                 <option value="">All Tags</option>
                 {filterOptions.tags.map(tag => (
                   <option key={tag} value={tag}>
-                    {tag}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* User Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                User
-              </label>
-              <select
-                value={filters.user}
-                onChange={(e) => onFilterChange('user', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80"
-              >
-                <option value="">All Users</option>
-                {filterOptions.users.map(user => (
-                  <option key={user} value={user}>
-                    {user}
+                    {tag === 'untagged' ? 'Untagged' : tag}
                   </option>
                 ))}
               </select>
@@ -252,19 +304,29 @@ const FilterComponent: React.FC<FilterComponentProps> = ({
           {/* Active Filters Display */}
           {hasActiveFilters && (
             <div className="pt-3 border-t border-gray-200">
+              <p className="text-xs text-gray-500 mb-2">Active filters:</p>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(filters).map(([key, value]) => {
-                  if (!value) return null;
+                  if (!value || key === 'searchInput') return null;
+
+                  // Format display value
+                  let displayValue = value;
+                  if (key === 'category' && value === 'uncategorized') displayValue = 'Uncategorized';
+                  if (key === 'language') displayValue = getLanguageDisplayName(value);
+                  if (key === 'mood' && value === 'neutral') displayValue = 'Neutral/None';
+                  if (key === 'tag' && value === 'untagged') displayValue = 'Untagged';
+
                   return (
                     <span
                       key={key}
                       className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
                     >
-                      <span className="font-medium">{key}:</span>
-                      <span>{value}</span>
+                      <span className="font-medium capitalize">{key}:</span>
+                      <span>{displayValue}</span>
                       <button
                         onClick={() => onFilterChange(key as keyof FilterState, '')}
-                        className="ml-1 hover:bg-blue-200 rounded-full p-0.5"
+                        className="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition-colors"
+                        aria-label={`Remove ${key} filter`}
                       >
                         <FaTimes className="w-3 h-3" />
                       </button>
@@ -383,7 +445,7 @@ const MainMoments: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(10);
 
-  // Filter states
+  // Filter states with searchInput for controlled search
   const [filters, setFilters] = useState<FilterState>({
     category: '',
     language: '',
@@ -391,6 +453,7 @@ const MainMoments: React.FC = () => {
     tag: '',
     user: '',
     search: '',
+    searchInput: '',
   });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
@@ -418,56 +481,26 @@ const MainMoments: React.FC = () => {
   );
 
   // Extract moments and pagination from response
-  const { allMoments, pagination } = useMemo(() => {
+  const { allMoments } = useMemo(() => {
     if (!data) {
       return {
         allMoments: [] as MomentType[],
-        pagination: {
-          currentPage: 1,
-          totalPages: 0,
-          totalMoments: 0,
-          limit: 10,
-          hasNextPage: false,
-          hasPrevPage: false,
-          nextPage: null,
-          prevPage: null,
-        },
       };
     }
 
     if (Array.isArray(data)) {
       return {
         allMoments: data as MomentType[],
-        pagination: {
-          currentPage: 1,
-          totalPages: 1,
-          totalMoments: data.length,
-          limit: data.length,
-          hasNextPage: false,
-          hasPrevPage: false,
-          nextPage: null,
-          prevPage: null,
-        },
       };
     } else {
       const response = data as MomentsResponse;
       return {
         allMoments: response.moments || [],
-        pagination: response.pagination || {
-          currentPage: 1,
-          totalPages: 0,
-          totalMoments: 0,
-          limit: 10,
-          hasNextPage: false,
-          hasPrevPage: false,
-          nextPage: null,
-          prevPage: null,
-        },
       };
     }
   }, [data]);
 
-  // Filter moments based on current filters
+  // Filter moments based on current filters - handle optional fields properly
   const filteredMoments = useMemo(() => {
     return allMoments.filter(moment => {
       // Search filter
@@ -478,24 +511,36 @@ const MainMoments: React.FC = () => {
         if (!titleMatch && !descriptionMatch) return false;
       }
 
-      // Category filter
-      if (filters.category && moment.category !== filters.category) {
-        return false;
+      // Category filter - handle empty/null categories
+      if (filters.category) {
+        const momentCategory = moment.category || 'uncategorized';
+        if (momentCategory !== filters.category) {
+          return false;
+        }
       }
 
-      // Language filter
-      if (filters.language && moment.language !== filters.language) {
-        return false;
+      // Language filter - handle empty/null languages
+      if (filters.language) {
+        const momentLanguage = moment.language || 'unspecified';
+        if (momentLanguage !== filters.language) {
+          return false;
+        }
       }
 
-      // Mood filter
-      if (filters.mood && moment.mood !== filters.mood) {
-        return false;
+      // Mood filter - handle empty/null moods
+      if (filters.mood) {
+        const momentMood = moment.mood || 'neutral';
+        if (momentMood !== filters.mood) {
+          return false;
+        }
       }
 
-      // Tag filter
-      if (filters.tag && (!moment.tags || !moment.tags.includes(filters.tag))) {
-        return false;
+      // Tag filter - handle empty/null tags
+      if (filters.tag) {
+        const momentTags = moment.tags && moment.tags.length > 0 ? moment.tags : ['untagged'];
+        if (!momentTags.includes(filters.tag)) {
+          return false;
+        }
       }
 
       // User filter
@@ -522,6 +567,7 @@ const MainMoments: React.FC = () => {
       tag: '',
       user: '',
       search: '',
+      searchInput: '',
     });
     setCurrentPage(1);
   }, []);
@@ -662,18 +708,49 @@ const MainMoments: React.FC = () => {
                 />
               </>
             ) : filteredMoments.length === 0 && allMoments.length > 0 ? (
-              <div className="text-center py-8 sm:py-16 px-4">
-                <div className="text-gray-500 mb-4">
-                  <FaFilter className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <h3 className="text-lg font-semibold mb-2">No moments match your filters</h3>
-                  <p className="text-sm">Try adjusting or clearing your filters to see more results.</p>
+              <div className="text-center py-12 sm:py-16 px-4">
+                <div className="max-w-md mx-auto">
+                  <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
+                    <FaFilter className="w-8 h-8 text-blue-500" />
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3">
+                    No moments match your filters
+                  </h3>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    We couldn't find any moments that match your current filter criteria.
+                    Try adjusting or removing some filters to see more results.
+                  </p>
+
+                  {/* Show current filter summary */}
+                  <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                    <p className="text-sm text-gray-600 mb-2">Current filters:</p>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {Object.entries(filters).map(([key, value]) => {
+                        if (!value || key === 'searchInput') return null;
+                        let displayValue = value;
+                        if (key === 'category' && value === 'uncategorized') displayValue = 'Uncategorized';
+                        if (key === 'language' && value === 'unspecified') displayValue = 'Unspecified';
+                        if (key === 'mood' && value === 'neutral') displayValue = 'Neutral/None';
+                        if (key === 'tag' && value === 'untagged') displayValue = 'Untagged';
+
+                        return (
+                          <span key={key} className="inline-flex items-center gap-1 px-2 py-1 bg-white border border-gray-200 rounded-md text-xs text-gray-700">
+                            <span className="font-medium capitalize">{key}:</span>
+                            <span>{displayValue}</span>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleClearFilters}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
+                  >
+                    <FaTimes className="w-4 h-4" />
+                    <span className="font-medium">Clear All Filters</span>
+                  </button>
                 </div>
-                <button
-                  onClick={handleClearFilters}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                >
-                  Clear All Filters
-                </button>
               </div>
             ) : (
               <EmptyState t={t} handleAddMoment={handleAddMoment} />
