@@ -353,7 +353,7 @@ const MomentDetail: React.FC = () => {
 
   // Optimized handlers with better state management
   const handleGoBack = useCallback(() => {
-    navigate(-1);
+    navigate('/moments');
   }, [navigate]);
 
   // Share handler with native sharing support

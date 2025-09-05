@@ -11,6 +11,7 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
+import { useDislikeMomentMutation, useLikeMomentMutation } from "../../store/slices/momentsSlice";
 
 // TypeScript interfaces
 interface User {
@@ -61,8 +62,9 @@ const SingleMoment: React.FC<MomentProps> = ({
   );
 
   // Mock mutation hooks - replace with your actual hooks
-  // const [likeMoment] = [() => Promise.resolve()];
-  // const [dislikeMoment] = [() => Promise.resolve()];
+    const [likeMoment] = useLikeMomentMutation();
+    const [dislikeMoment] =
+      useDislikeMomentMutation();
   const isLiking = false;
   const isDisliking = false;
 
@@ -92,6 +94,7 @@ const SingleMoment: React.FC<MomentProps> = ({
     setCurrentLikeCount(likeCount);
   }, [likedUsers, userId, likeCount]);
 
+
   const handleLikeToggle = useCallback(
     async (e: React.MouseEvent) => {
       e.preventDefault();
@@ -118,14 +121,12 @@ const SingleMoment: React.FC<MomentProps> = ({
 
       try {
         if (liked) {
-          // await dislikeMoment({ momentId: _id, userId }).unwrap();
-          toast.info("Removed like", { autoClose: 2000, theme: "dark", transition: Bounce });
+          await dislikeMoment({ momentId: _id, userId }).unwrap();
         } else {
-          // await likeMoment({ momentId: _id, userId }).unwrap();
-          toast.success("Liked post", { autoClose: 2000, theme: "dark", transition: Bounce });
+          await likeMoment({ momentId: _id, userId }).unwrap();
         }
 
-        if (refetch) refetch();
+        // if (refetch) refetch();
 
       } catch (error) {
         setLiked(previousLiked);
@@ -136,6 +137,7 @@ const SingleMoment: React.FC<MomentProps> = ({
     },
     [userId, _id, currentLikeCount, isLoadingLike, navigate, refetch]
   );
+
 
   const handleShare = useCallback(
     (e: React.MouseEvent) => {
@@ -176,7 +178,9 @@ const SingleMoment: React.FC<MomentProps> = ({
     ? description.substring(0, 200)
     : description;
 
+
   return (
+  <Link to={`/moment/${_id}`} className="block no-underline">
     <article
       className={`group relative w-full bg-white shadow-sm border border-gray-200 transition-all duration-300 hover:shadow-md ${
         isHovered ? "shadow-md" : ""
@@ -185,23 +189,23 @@ const SingleMoment: React.FC<MomentProps> = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Header */}
-      <header className="p-3 sm:p-4">
-        <div className="flex items-center justify-between">
+      <header className="p-2 xs:p-3 sm:p-4 md:p-5">
+        <div className="flex items-center justify-between gap-2">
           <Link
             to={`/community/${user._id}`}
-            className="flex items-center flex-1 min-w-0 group/user"
+            className="flex items-center flex-1 min-w-0 group/user no-underline"
           >
             <div className="relative flex-shrink-0">
               <img
                 src={user?.imageUrls?.[0] || defaultProfileImage}
                 alt={user.name}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-transparent group-hover/user:border-blue-100 transition-all duration-200"
+                className="w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full object-cover border-2 border-transparent group-hover/user:border-blue-100 transition-all duration-200"
               />
             </div>
 
-            <div className="ml-3 flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate group-hover/user:text-blue-600 transition-colors">
+            <div className="ml-2 xs:ml-3 flex-1 min-w-0">
+              <div className="flex items-center gap-1 xs:gap-2">
+                <h3 className="font-semibold text-gray-900 text-xs xs:text-sm sm:text-base md:text-lg truncate group-hover/user:text-blue-600 transition-colors no-underline">
                   {user.name}
                 </h3>
               </div>
@@ -209,8 +213,8 @@ const SingleMoment: React.FC<MomentProps> = ({
                 <time className="truncate">
                   {formatDate(createdAt)}
                 </time>
-                <span className="hidden sm:inline">•</span>
-                <svg className="w-3 h-3 text-gray-400 hidden sm:block" fill="currentColor" viewBox="0 0 20 20">
+                <span className="hidden xs:inline">•</span>
+                <svg className="w-3 h-3 text-gray-400 hidden xs:block" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM9 9V6h2v3h3v2H9z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -218,26 +222,26 @@ const SingleMoment: React.FC<MomentProps> = ({
           </Link>
 
           <button
-            className="flex-shrink-0 p-2 -mr-2 rounded-full hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-200"
+            className="flex-shrink-0 p-1 xs:p-2 -mr-1 xs:-mr-2 rounded-full hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-200"
             aria-label="More options"
           >
-            <HiDotsHorizontal className="w-5 h-5 text-gray-500" />
+            <HiDotsHorizontal className="w-4 h-4 xs:w-5 xs:h-5 text-gray-500" />
           </button>
         </div>
       </header>
 
       {/* Content */}
-      <div className="px-3 sm:px-4">
+      <div className="px-2 xs:px-3 sm:px-4 md:px-5">
         {/* Text Content */}
         {title && (
-          <h2 className="font-semibold text-gray-900 text-base sm:text-lg mb-2 leading-tight">
-            {title}
-          </h2>
+         <h2 className="font-semibold text-gray-900 text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl mb-1 xs:mb-2 leading-tight no-underline decoration-none">
+  {title}
+</h2>
         )}
 
         {description && (
-          <div className="text-gray-800 text-sm sm:text-base leading-normal">
-            <p className="whitespace-pre-wrap break-words">
+          <div className="text-gray-800 text-xs xs:text-sm sm:text-base md:text-lg leading-normal">
+            <p className="whitespace-pre-wrap break-words no-underline">
               {displayDescription}
               {shouldTruncateDescription && !showFullDescription && "..."}
             </p>
@@ -245,7 +249,7 @@ const SingleMoment: React.FC<MomentProps> = ({
             {shouldTruncateDescription && (
               <button
                 onClick={toggleDescription}
-                className="text-blue-600 hover:text-blue-700 font-medium text-sm mt-1 focus:outline-none focus:underline"
+                className="text-blue-600 hover:text-blue-700 font-medium text-xs xs:text-sm mt-1 focus:outline-none focus:underline"
               >
                 {showFullDescription ? "See less" : "See more"}
               </button>
@@ -256,19 +260,19 @@ const SingleMoment: React.FC<MomentProps> = ({
 
       {/* Images */}
       {imageUrls && imageUrls.length > 0 && (
-        <div className="mt-3">
-          <Link to={`/moment/${_id}`} className="block">
+        <div className="mt-2 xs:mt-3">
+          <Link to={`/moment/${_id}`} className="block no-underline">
             <div className="relative overflow-hidden bg-gray-100">
               <img
                 src={imageUrls[0]}
                 alt={title || "Post image"}
-                className="w-full h-auto max-h-96 sm:max-h-[500px] object-cover transition-transform duration-300 group-hover:scale-[1.01]"
+                className="w-full h-auto max-h-64 xs:max-h-80 sm:max-h-96 md:max-h-[450px] lg:max-h-[500px] xl:max-h-[600px] object-cover transition-transform duration-300 group-hover:scale-[1.01]"
                 loading="lazy"
               />
 
               {imageUrls.length > 1 && (
-                <div className="absolute top-3 right-3">
-                  <div className="bg-black/70 text-white px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm">
+                <div className="absolute top-2 xs:top-3 right-2 xs:right-3">
+                  <div className="bg-black/70 text-white px-1.5 xs:px-2 py-0.5 xs:py-1 rounded-full text-xs font-medium backdrop-blur-sm">
                     +{imageUrls.length - 1}
                   </div>
                 </div>
@@ -280,13 +284,13 @@ const SingleMoment: React.FC<MomentProps> = ({
 
       {/* Engagement Stats */}
       {(currentLikeCount > 0 || commentCountNumber > 0) && (
-        <div className="px-3 sm:px-4 py-2 border-b border-gray-100">
-          <div className="flex items-center justify-between text-sm text-gray-500">
-            <div className="flex items-center gap-3">
+        <div className="px-2 xs:px-3 sm:px-4 md:px-5 py-1.5 xs:py-2 border-b border-gray-100">
+          <div className="flex items-center justify-between text-xs xs:text-sm text-gray-500">
+            <div className="flex items-center gap-2 xs:gap-3">
               {currentLikeCount > 0 && (
-                <button className="flex items-center gap-1 hover:text-blue-600 transition-colors">
-                  <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                    <AiFillLike className="w-2.5 h-2.5 text-white" />
+                <button className="flex items-center gap-1 hover:text-blue-600 transition-colors no-underline">
+                  <div className="w-3 h-3 xs:w-4 xs:h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                    <AiFillLike className="w-2 h-2 xs:w-2.5 xs:h-2.5 text-white" />
                   </div>
                   <span className="font-medium">
                     {currentLikeCount.toLocaleString()}
@@ -295,11 +299,11 @@ const SingleMoment: React.FC<MomentProps> = ({
               )}
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 xs:gap-3">
               {commentCountNumber > 0 && (
                 <Link
                   to={`/moment/${_id}`}
-                  className="hover:text-blue-600 transition-colors font-medium"
+                  className="hover:text-blue-600 transition-colors font-medium no-underline"
                 >
                   {commentCountNumber.toLocaleString()} comment{commentCountNumber !== 1 ? 's' : ''}
                 </Link>
@@ -315,18 +319,18 @@ const SingleMoment: React.FC<MomentProps> = ({
         <button
           onClick={handleLikeToggle}
           disabled={isLoadingLike}
-          className={`flex items-center justify-center py-2 sm:py-3 transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`flex items-center justify-center py-2 xs:py-2.5 sm:py-3 transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed ${
             liked ? "text-blue-600" : "text-gray-600"
           }`}
           aria-label={liked ? "Unlike" : "Like"}
         >
-          <div className={`flex items-center gap-2 ${isLoadingLike ? "animate-pulse" : ""}`}>
+          <div className={`flex items-center gap-1 xs:gap-2 ${isLoadingLike ? "animate-pulse" : ""}`}>
             {liked ? (
-              <AiFillLike className="w-5 h-5 transition-transform hover:scale-110" />
+              <AiFillLike className="w-4 h-4 xs:w-5 xs:h-5 transition-transform hover:scale-110" />
             ) : (
-              <AiOutlineLike className="w-5 h-5 transition-transform hover:scale-110" />
+              <AiOutlineLike className="w-4 h-4 xs:w-5 xs:h-5 transition-transform hover:scale-110" />
             )}
-            <span className="font-medium text-sm hidden xs:inline">
+            <span className="font-medium text-xs xs:text-sm hidden sm:inline">
               {isLoadingLike
                 ? (liked ? "Unliking..." : "Liking...")
                 : "Like"
@@ -338,12 +342,12 @@ const SingleMoment: React.FC<MomentProps> = ({
         {/* Comment Button */}
         <Link
           to={`/moment/${_id}`}
-          className="flex items-center justify-center py-2 sm:py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:bg-gray-50"
+          className="flex items-center justify-center py-2 xs:py-2.5 sm:py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:bg-gray-50 no-underline"
           aria-label="Comment"
         >
-          <div className="flex items-center gap-2">
-            <AiOutlineComment className="w-5 h-5 transition-transform hover:scale-110" />
-            <span className="font-medium text-sm hidden xs:inline">
+          <div className="flex items-center gap-1 xs:gap-2">
+            <AiOutlineComment className="w-4 h-4 xs:w-5 xs:h-5 transition-transform hover:scale-110" />
+            <span className="font-medium text-xs xs:text-sm hidden sm:inline">
               Comment
             </span>
           </div>
@@ -352,18 +356,19 @@ const SingleMoment: React.FC<MomentProps> = ({
         {/* Share Button */}
         <button
           onClick={handleShare}
-          className="flex items-center justify-center py-2 sm:py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:bg-gray-50"
+          className="flex items-center justify-center py-2 xs:py-2.5 sm:py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:bg-gray-50"
           aria-label="Share"
         >
-          <div className="flex items-center gap-2">
-            <AiOutlineShareAlt className="w-5 h-5 transition-transform hover:scale-110" />
-            <span className="font-medium text-sm hidden xs:inline">
+          <div className="flex items-center gap-1 xs:gap-2">
+            <AiOutlineShareAlt className="w-4 h-4 xs:w-5 xs:h-5 transition-transform hover:scale-110" />
+            <span className="font-medium text-xs xs:text-sm hidden sm:inline">
               Share
             </span>
           </div>
         </button>
       </div>
     </article>
+    </Link>
   );
 };
 
