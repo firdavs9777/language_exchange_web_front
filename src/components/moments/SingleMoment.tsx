@@ -11,39 +11,7 @@ import { useSelector } from "react-redux";
 import { Bounce, toast } from "react-toastify";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-
-// TypeScript interfaces
-interface User {
-  _id: string;
-  name: string;
-  imageUrls?: string[];
-}
-
-interface MomentProps {
-  _id: string;
-  title: string;
-  description: string;
-  likeCount: number;
-  likedUsers: string[];
-  commentCount: string[];
-  createdAt: string;
-  user: User;
-  imageUrls?: string[];
-  refetch?: () => void;
-}
-
-interface AuthState {
-  userInfo?: {
-    user: {
-      _id: string;
-    };
-  };
-}
-
-interface RootState {
-  auth: AuthState;
-}
-
+import { MomentProps, RootState } from "./types";
 const SingleMoment: React.FC<MomentProps> = ({
   _id,
   title,
@@ -65,12 +33,10 @@ const SingleMoment: React.FC<MomentProps> = ({
   const [isLiking, setIsLiking] = useState<boolean>(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
-
   useEffect(() => {
     setLiked(userId ? likedUsers.includes(userId) : false);
     setCurrentLikeCount(likeCount);
   }, [likedUsers, userId, likeCount]);
-
   const handleLikeToggle = useCallback(
     async (e: React.MouseEvent) => {
       e.preventDefault();
@@ -86,26 +52,18 @@ const SingleMoment: React.FC<MomentProps> = ({
         navigate("/login");
         return;
       }
-
-      if (isLiking) return; // Prevent double clicks
-
+      if (isLiking) return;
       setIsLiking(true);
       const previousLiked = liked;
       const previousCount = currentLikeCount;
-
-      // Optimistic update
       setLiked(!liked);
       setCurrentLikeCount((prev) => (liked ? prev - 1 : prev + 1));
-
       try {
-        // Simulate API call - replace with actual API call
         await new Promise((resolve) => setTimeout(resolve, 300));
         if (refetch) refetch();
       } catch (error) {
-        // Revert optimistic update on error
         setLiked(previousLiked);
         setCurrentLikeCount(previousCount);
-
         toast.error(t("moment_like_error"), {
           autoClose: 3000,
           hideProgressBar: false,
@@ -118,12 +76,10 @@ const SingleMoment: React.FC<MomentProps> = ({
     },
     [userId, liked, currentLikeCount, isLiking, t, navigate, refetch]
   );
-
   const handleShare = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-
       if (navigator.share) {
         navigator.share({
           title: title,
@@ -131,7 +87,6 @@ const SingleMoment: React.FC<MomentProps> = ({
           url: `${window.location.origin}/moment/${_id}`,
         });
       } else {
-        // Fallback to clipboard
         navigator.clipboard.writeText(
           `${window.location.origin}/moment/${_id}`
         );
@@ -144,34 +99,27 @@ const SingleMoment: React.FC<MomentProps> = ({
     },
     [title, description, _id]
   );
-
   const formatDate = (dateString: string): string => {
     return moment(dateString).fromNow();
   };
-
   const defaultProfileImage =
     "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face";
-
   return (
     <div
-      className={`group relative overflow-hidden rounded-2xl bg-white/90 backdrop-blur-sm border border-white/30 shadow-lg transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:bg-white/95 ${
-        isHovered ? "shadow-2xl -translate-y-1" : ""
+      className={`group relative overflow-hidden rounded-2xl bg-white/90 backdrop-blur-sm border border-white/30 shadow-lg transition-all duration-500 ${
+        isHovered ? "shadow-1xl " : ""
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Subtle gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
       <div className="relative">
-        {/* Header with user info */}
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100/80">
           <Link
             to={`/community/${user._id}`}
             className="flex items-center flex-1 group/user hover:opacity-80 transition-opacity duration-200"
           >
             <div className="relative">
-              {/* Profile image with gradient ring */}
               <div className="relative p-0.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg group-hover/user:shadow-xl transition-shadow duration-300">
                 <img
                   src={user?.imageUrls?.[0] || defaultProfileImage}
@@ -179,7 +127,6 @@ const SingleMoment: React.FC<MomentProps> = ({
                   className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover bg-white border-2 border-white transition-transform duration-300 group-hover/user:scale-105"
                 />
               </div>
-              {/* Online indicator */}
               <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-gradient-to-r from-green-400 to-green-500 rounded-full border-2 border-white shadow-sm"></div>
             </div>
             <div className="ml-3 flex-1 min-w-0">
@@ -202,13 +149,10 @@ const SingleMoment: React.FC<MomentProps> = ({
               </div>
             </div>
           </Link>
-
           <button className="group/more p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400/50">
             <HiDotsHorizontal className="w-4 h-4 text-gray-400 group-hover/more:text-gray-600 transition-colors" />
           </button>
         </div>
-
-        {/* Content */}
         <Link to={`/moment/${_id}`} className="block group/content">
           <div className="px-4 sm:px-6 py-4">
             <h2 className="font-bold text-gray-900 text-lg sm:text-xl leading-tight mb-3 group-hover/content:text-blue-600 transition-colors duration-200">
@@ -220,8 +164,6 @@ const SingleMoment: React.FC<MomentProps> = ({
                 : description}
             </p>
           </div>
-
-          {/* Image section */}
           {imageUrls && imageUrls.length > 0 && (
             <div className="relative overflow-hidden">
               <div className="relative">
@@ -242,8 +184,6 @@ const SingleMoment: React.FC<MomentProps> = ({
             </div>
           )}
         </Link>
-
-        {/* Stats Bar */}
         {(currentLikeCount > 0 || commentCount.length > 0) && (
           <div className="px-4 sm:px-6 py-3 bg-gray-50/80 border-t border-gray-100/80">
             <div className="flex items-center justify-between">
@@ -267,10 +207,7 @@ const SingleMoment: React.FC<MomentProps> = ({
             </div>
           </div>
         )}
-
-        {/* Action Buttons */}
         <div className="flex border-t border-gray-100/80">
-          {/* Like Button */}
           <button
             onClick={handleLikeToggle}
             disabled={isLiking}
@@ -296,8 +233,6 @@ const SingleMoment: React.FC<MomentProps> = ({
               </span>
             </div>
           </button>
-
-          {/* Comment Button */}
           <Link
             to={`/moment/${_id}`}
             className="group/comment flex-1 flex items-center justify-center py-3 sm:py-4 text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
@@ -310,8 +245,6 @@ const SingleMoment: React.FC<MomentProps> = ({
               </span>
             </div>
           </Link>
-
-          {/* Share Button */}
           <button
             onClick={handleShare}
             className="group/share flex-1 flex items-center justify-center py-3 sm:py-4 text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400/50"

@@ -5,9 +5,8 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import SingleMoment from "./SingleMoment";
 import { MomentType } from "./types";
-import { FaEdit, FaPlus, FaExclamationTriangle, FaRedo } from "react-icons/fa";
+import { FaPlus, FaExclamationTriangle, FaRedo } from "react-icons/fa";
 
-// TypeScript interfaces
 interface User {
   _id: string;
   name: string;
@@ -92,7 +91,6 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({
   </div>
 );
 
-// Modern loading state with animated spinner
 const LoadingState: React.FC<LoadingStateProps> = ({ t }) => (
   <div className="flex flex-col items-center justify-center py-16">
     <div className="relative">

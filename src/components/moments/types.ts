@@ -28,3 +28,30 @@ export interface MomentType {
   imageUrls: string[];
   refetch?: () => {};
 }
+export interface User {
+  _id: string;
+  name: string;
+  imageUrls?: string[];
+}
+export interface MomentProps {
+  _id: string;
+  title: string;
+  description: string;
+  likeCount: number;
+  likedUsers: string[];
+  commentCount: string[];
+  createdAt: string;
+  user: User;
+  imageUrls?: string[];
+  refetch?: () => void;
+}
+export interface AuthState {
+  userInfo?: {
+    user: {
+      _id: string;
+    };
+  };
+}
+export interface RootState {
+  auth: AuthState;
+}

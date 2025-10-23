@@ -23,6 +23,7 @@ import MainChat from "../components/chat/MainChat";
 import ForgetPassword from "../components/auth/ForgetPassword";
 import EditMyMoment from "../components/profile/EditMyMoment";
 import MainStories from "../components/stories/MainStories";
+import PrivacyPolicy from "../components/navbar/PrivacyPolicy";
 
 const MainChatWrapper = () => {
   const { userId } = useParams();
@@ -50,6 +51,7 @@ const AppRouter = createBrowserRouter(
       <Route path="chat/:userId?" element={<MainChatWrapper />} />
       <Route path="courses" element={<CoursesMain />} />
       <Route path="stories/" element={<MainStories />} />
+      <Route path="privacy-policy/" element={<PrivacyPolicy />} />
     </Route>
   )
 );
