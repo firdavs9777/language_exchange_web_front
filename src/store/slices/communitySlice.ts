@@ -15,7 +15,7 @@ export const communityApiSlice = apiSlice.injectEndpoints({
         url: `${COMMUNITY_URL}/${userId}`,
       }),
       keepUnusedDataFor: 5,
-    }),
+    }), 
   }),
 });
 

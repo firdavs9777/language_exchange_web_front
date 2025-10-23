@@ -1,14 +1,14 @@
-import { MOMENTS_URL, USERS_URL } from "../../constants";
+import { MOMENTS_URL } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
 export const momentsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder: any) => ({
     getMoments: builder.query({
-      query: () => ({
-        url: MOMENTS_URL,
+      query: ({ page = 1, limit = 10 } = {}) => ({
+        url: `${MOMENTS_URL}?page=${page}&limit=${limit}`,
       }),
       keepUnusedDataFor: 5,
-      providesTags: ["Moments"],
+      providesTags: ['Moments'],
     }),
     getMomentDetails: builder.query({
       query: (momentId: string) => ({

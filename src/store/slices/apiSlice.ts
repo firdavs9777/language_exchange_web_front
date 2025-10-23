@@ -13,11 +13,7 @@ const baseQuery = fetchBaseQuery({
     }
 
     console.log(endpoint);
-
     // // Only set Content-Type if the body is not FormData
-    // if (endpoint.body && !(endpoint. instanceof FormData)) {
-    //   headers.set("Content-Type", "application/json");
-    // }
     return headers;
   },
   //   credentials: "include", // Ensure credentials are included with every request
