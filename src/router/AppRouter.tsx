@@ -24,6 +24,7 @@ import ForgetPassword from "../components/auth/ForgetPassword";
 import EditMyMoment from "../components/profile/EditMyMoment";
 import MainStories from "../components/stories/MainStories";
 import PrivacyPolicy from "../components/navbar/PrivacyPolicy";
+import DataDeletion from "../components/navbar/DataDeletion";
 
 const MainChatWrapper = () => {
   const { userId } = useParams();
@@ -36,6 +37,7 @@ const AppRouter = createBrowserRouter(
     <Route path="/" element={<App />}>
       <Route index element={<HomeScreen />} />
       <Route path="login" element={<Login />} />
+      <Route path="data-deletion/" element={<DataDeletion />} />
       <Route path="register" element={<Register />} />
       <Route path="forgot-password" element={<ForgetPassword />} />
       <Route path="communities" element={<MainCommnity />} />
