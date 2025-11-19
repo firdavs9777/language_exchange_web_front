@@ -42,7 +42,7 @@
     "webpack": "^4.41.0"
   },
   "scripts": {
-    "deploy": "NODE_OPTIONS='--max-old-space-size=2048' GENERATE_SOURCEMAP=false npm run build && sudo nginx -s reload && echo '✅ Deployed!'",
+    "deploy": "NODE_OPTIONS='--max-old-space-size=512' GENERATE_SOURCEMAP=false npm run build && sudo nginx -s reload && echo '✅ Deployed!'",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
