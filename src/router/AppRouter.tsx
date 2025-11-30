@@ -25,6 +25,7 @@ import EditMyMoment from "../components/profile/EditMyMoment";
 import MainStories from "../components/stories/MainStories";
 import PrivacyPolicy from "../components/navbar/PrivacyPolicy";
 import DataDeletion from "../components/navbar/DataDeletion";
+import SupportPage from "../components/support/SupportMain";
 
 const MainChatWrapper = () => {
   const { userId } = useParams();
@@ -37,6 +38,7 @@ const AppRouter = createBrowserRouter(
     <Route path="/" element={<App />}>
       <Route index element={<HomeScreen />} />
       <Route path="login" element={<Login />} />
+
       <Route path="data-deletion/" element={<DataDeletion />} />
       <Route path="register" element={<Register />} />
       <Route path="forgot-password" element={<ForgetPassword />} />
@@ -52,6 +54,7 @@ const AppRouter = createBrowserRouter(
       <Route path="followingsList" element={<UserFollowingList />} />
       <Route path="chat/:userId?" element={<MainChatWrapper />} />
       <Route path="courses" element={<CoursesMain />} />
+      <Route path="support/" element={<SupportPage />} />
       <Route path="stories/" element={<MainStories />} />
       <Route path="privacy-policy/" element={<PrivacyPolicy />} />
     </Route>

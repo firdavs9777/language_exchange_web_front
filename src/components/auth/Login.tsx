@@ -7,7 +7,7 @@ import { useLoginUserMutation } from "../../store/slices/usersSlice";
 import { setCredentials } from "../../store/slices/authSlice";
 import { Bounce, toast } from "react-toastify";
 import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import Loader from "../Loader";
 import { useTranslation } from "react-i18next";
 
@@ -65,6 +65,14 @@ const Login = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    // Redirect to backend Google OAuth endpoint (matching your backend routes)
+    const backendUrl = "https://api.banatalk.com";
+    // Store redirect in sessionStorage to retrieve after OAuth callback
+    sessionStorage.setItem("oauth_redirect", redirect);
+    window.location.href = `${backendUrl}/api/v1/auth/google`;
+  };
+
   const clickHandler = () => {
     setShowPass((prev) => !prev);
   };
@@ -73,6 +81,34 @@ const Login = () => {
     <FormContainer>
       <Form onSubmit={submitHandler} className="p-4 m-4 shadow-lg rounded">
         <h1 className="mb-4 text-center">{t("authentication.login.title")}</h1>
+
+        {/* Google Login Button */}
+        <Button
+          variant="outline-danger"
+          className="w-100 mb-3 d-flex align-items-center justify-content-center"
+          onClick={handleGoogleLogin}
+          type="button"
+          style={{
+            padding: "12px",
+            fontSize: "16px",
+            fontWeight: "500",
+            border: "2px solid #4285F4",
+            color: "#4285F4",
+          }}
+        >
+          <FaGoogle className="me-2" size={20} />
+          {t("authentication.login.signInWithGoogle") || "Sign in with Google"}
+        </Button>
+
+        {/* Divider */}
+        <div className="d-flex align-items-center mb-3">
+          <hr className="flex-grow-1" />
+          <span className="px-3 text-muted">
+            {t("authentication.login.orText") || "OR"}
+          </span>
+          <hr className="flex-grow-1" />
+        </div>
+
         <Form.Group controlId="email" className="mb-3">
           <Form.Label>{t("authentication.login.emailLabel")}</Form.Label>
           <Form.Control
@@ -114,8 +150,8 @@ const Login = () => {
           variant="primary"
           className="w-100"
         >
-          {isLoading 
-            ? t("authentication.login.signingInButton") 
+          {isLoading
+            ? t("authentication.login.signingInButton")
             : t("authentication.login.signInButton")}
         </Button>
 

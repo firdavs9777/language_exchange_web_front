@@ -198,6 +198,7 @@
       "successMessage": "Password reset successfully, please login!"
     },
     "login": {
+      "signInWithGoogle": "Sign In with Google",
       "title": "Sign In",
       "emailLabel": "Email Address",
       "emailPlaceholder": "Enter email",
