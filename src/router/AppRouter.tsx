@@ -26,6 +26,7 @@ import MainStories from "../components/stories/MainStories";
 import PrivacyPolicy from "../components/navbar/PrivacyPolicy";
 import DataDeletion from "../components/navbar/DataDeletion";
 import SupportPage from "../components/support/SupportMain";
+import TermsOfUse from "../components/navbar/TermsOfUse";
 
 const MainChatWrapper = () => {
   const { userId } = useParams();
@@ -57,6 +58,7 @@ const AppRouter = createBrowserRouter(
       <Route path="support/" element={<SupportPage />} />
       <Route path="stories/" element={<MainStories />} />
       <Route path="privacy-policy/" element={<PrivacyPolicy />} />
+      <Route path="terms-of-use/" element={<TermsOfUse />} />
     </Route>
   )
 );
