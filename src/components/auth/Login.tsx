@@ -10,6 +10,7 @@ import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
 import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import Loader from "../Loader";
 import { useTranslation } from "react-i18next";
+import "./Login.scss";
 
 const Login = () => {
   const { t } = useTranslation();
@@ -78,97 +79,104 @@ const Login = () => {
   };
 
   return (
-    <FormContainer>
-      <Form onSubmit={submitHandler} className="p-4 m-4 shadow-lg rounded">
-        <h1 className="mb-4 text-center">{t("authentication.login.title")}</h1>
+    <div className="login-page">
+      <FormContainer>
+        <Form onSubmit={submitHandler} className="login-form">
+          <h1 className="login-title">{t("authentication.login.title")}</h1>
 
-        {/* Google Login Button */}
-        <Button
-          variant="outline-danger"
-          className="w-100 mb-3 d-flex align-items-center justify-content-center"
-          onClick={handleGoogleLogin}
-          type="button"
-          style={{
-            padding: "12px",
-            fontSize: "16px",
-            fontWeight: "500",
-            border: "2px solid #4285F4",
-            color: "#4285F4",
-          }}
-        >
-          <FaGoogle className="me-2" size={20} />
-          {t("authentication.login.signInWithGoogle") || "Sign in with Google"}
-        </Button>
+          {/* Google Login Button */}
+          <Button
+            variant="outline-danger"
+            className="google-login-btn"
+            onClick={handleGoogleLogin}
+            type="button"
+          >
+            <FaGoogle className="google-icon" />
+            {t("authentication.login.signInWithGoogle")}
+          </Button>
 
-        {/* Divider */}
-        <div className="d-flex align-items-center mb-3">
-          <hr className="flex-grow-1" />
-          <span className="px-3 text-muted">
-            {t("authentication.login.orText") || "OR"}
-          </span>
-          <hr className="flex-grow-1" />
-        </div>
+          {/* Divider */}
+          <div className="divider">
+            <hr className="divider-line" />
+            <span className="divider-text">
+              {t("authentication.login.orText")}
+            </span>
+            <hr className="divider-line" />
+          </div>
 
-        <Form.Group controlId="email" className="mb-3">
-          <Form.Label>{t("authentication.login.emailLabel")}</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder={t("authentication.login.emailPlaceholder")}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </Form.Group>
-
-        <Form.Group controlId="password" className="mb-3">
-          <Form.Label>{t("authentication.login.passwordLabel")}</Form.Label>
-          <InputGroup>
+          <Form.Group controlId="email" className="form-group">
+            <Form.Label className="form-label">
+              {t("authentication.login.emailLabel")}
+            </Form.Label>
             <Form.Control
-              type={showPass ? "text" : "password"}
-              placeholder={t("authentication.login.passwordPlaceholder")}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type="email"
+              placeholder={t("authentication.login.emailPlaceholder")}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
+              className="form-control-custom"
             />
-            <InputGroup.Text onClick={clickHandler} className="password-toggle">
-              {showPass ? <FaEyeSlash /> : <FaEye />}
-            </InputGroup.Text>
-          </InputGroup>
-        </Form.Group>
+          </Form.Group>
 
-        <Row className="mb-3">
-          <Col className="text-end">
-            <Link to="/forgot-password" className="text-muted">
-              {t("authentication.login.forgotPassword")}
-            </Link>
-          </Col>
-        </Row>
+          <Form.Group controlId="password" className="form-group">
+            <Form.Label className="form-label">
+              {t("authentication.login.passwordLabel")}
+            </Form.Label>
+            <InputGroup className="password-input-group">
+              <Form.Control
+                type={showPass ? "text" : "password"}
+                placeholder={t("authentication.login.passwordPlaceholder")}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="form-control-custom"
+              />
+              <InputGroup.Text 
+                onClick={clickHandler} 
+                className="password-toggle"
+              >
+                {showPass ? <FaEyeSlash /> : <FaEye />}
+              </InputGroup.Text>
+            </InputGroup>
+          </Form.Group>
 
-        <Button
-          disabled={isLoading}
-          type="submit"
-          variant="primary"
-          className="w-100"
-        >
-          {isLoading
-            ? t("authentication.login.signingInButton")
-            : t("authentication.login.signInButton")}
-        </Button>
+          <Row className="forgot-password-row">
+            <Col className="text-end">
+              <Link to="/forgot-password" className="forgot-password-link">
+                {t("authentication.login.forgotPassword")}
+              </Link>
+            </Col>
+          </Row>
 
-        {isLoading && <Loader />}
+          <Button
+            disabled={isLoading}
+            type="submit"
+            variant="primary"
+            className="submit-btn"
+          >
+            {isLoading
+              ? t("authentication.login.signingInButton")
+              : t("authentication.login.signInButton")}
+          </Button>
 
-        <Row className="py-3 text-center">
-          <Col>
-            {t("authentication.login.newUserText")}{" "}
-            <Link
-              to={redirect ? `/register?redirect=${redirect}` : `/register`}
-            >
-              {t("authentication.login.registerLink")}
-            </Link>
-          </Col>
-        </Row>
-      </Form>
-    </FormContainer>
+          {isLoading && <Loader />}
+
+          <Row className="register-row">
+            <Col className="text-center">
+              <span className="register-text">
+                {t("authentication.login.newUserText")}{" "}
+                <Link
+                  to={redirect ? `/register?redirect=${redirect}` : `/register`}
+                  className="register-link"
+                >
+                  {t("authentication.login.registerLink")}
+                </Link>
+              </span>
+            </Col>
+          </Row>
+        </Form>
+      </FormContainer>
+    </div>
   );
 };
 

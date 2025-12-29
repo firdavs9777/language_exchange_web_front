@@ -43,7 +43,7 @@
   },
   "scripts": {
 "deploy": "NODE_OPTIONS='--max-old-space-size=512' NODE_NO_WARNINGS=1 GENERATE_SOURCEMAP=false npm run build && sudo nginx -s reload && echo '✅ Deployed!'",
-    "start": "react-scripts start",
+    "start": "GENERATE_SOURCEMAP=false react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

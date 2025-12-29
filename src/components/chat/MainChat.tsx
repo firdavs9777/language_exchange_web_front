@@ -3,7 +3,6 @@ import { Col, Row, Container, Card } from "react-bootstrap";
 import UsersList from "./UsersList";
 import ChatContent from "./ChatContent";
 import { useNavigate, useParams } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 const MainChat: React.FC = () => {
   const { userId } = useParams<{ userId?: string }>();
   const [userName, setUserName] = useState<string>("");
@@ -63,11 +62,6 @@ const MainChat: React.FC = () => {
     setSearchQuery(e.target.value);
   };
 
-  const handleStartNewChat = () => {
-    // You can implement logic to show a user search modal or navigate to user selection
-    console.log("Start new chat clicked");
-  };
-
   return (
     <Container fluid className="p-0">
       <Row className="g-0 vh-100">
@@ -80,7 +74,6 @@ const MainChat: React.FC = () => {
                 Messages
               </h5>
             </div>
-
 
             <div className="px-3 py-2 mx-1 border-bottom">
               <div className="input-group input-group-sm">
@@ -106,17 +99,20 @@ const MainChat: React.FC = () => {
                 )}
               </div>
             </div>
-            
-            <div className="flex-grow-1 overflow-auto" style={{ maxHeight: "calc(100vh - 130px)" }}>
-              <UsersList 
-                onSelectUser={handleSelectUser} 
-                activeUserId={userId} 
+
+            <div
+              className="flex-grow-1 overflow-auto"
+              style={{ maxHeight: "calc(100vh - 130px)" }}
+            >
+              <UsersList
+                onSelectUser={handleSelectUser}
+                activeUserId={userId}
                 searchQuery={searchQuery}
               />
             </div>
           </div>
         </Col>
-        
+
         <Col md={9} lg={7} xl={9} className="bg-light">
           {userId ? (
             <ChatContent

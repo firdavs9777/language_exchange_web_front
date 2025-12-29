@@ -35,7 +35,12 @@ interface MomentsResponse {
 }
 
 const MyMoments: React.FC = () => {
-  const userId = useSelector((state: any) => state.auth.userInfo?.user._id);
+  const userId = useSelector(
+    (state: any) => 
+      state.auth.userInfo?.user?._id || 
+      state.auth.userInfo?.data?._id ||
+      null
+  );
 
   const { t } = useTranslation();
    useEffect(() => {

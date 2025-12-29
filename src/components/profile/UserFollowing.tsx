@@ -48,8 +48,13 @@ interface RootState {
 }
 
 const UserFollowingList: React.FC = () => {
-  // Type the useSelector properly
-  const userId = useSelector((state: RootState) => state.auth.userInfo?.user._id);
+  // Type the useSelector properly - handle both userInfo.user and userInfo.data structures
+  const userId = useSelector(
+    (state: RootState) => 
+      state.auth.userInfo?.user?._id || 
+      state.auth.userInfo?.data?._id ||
+      null
+  );
  useEffect(() => {
     window.scrollTo(0, 0);
   }, [userId]);

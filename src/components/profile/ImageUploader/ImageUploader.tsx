@@ -131,6 +131,17 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
   };
 
   const handleDeleteExisting = (index: number) => {
+    // Prevent deleting if there's only one image left
+    if (images.length <= 1) {
+      toast.warning(t("image_upload.cannot_delete_last") || "You must keep at least one profile picture", {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
+      return;
+    }
+    
     if (onDeleteImage) {
       onDeleteImage(index);
       toast.success(t("image_upload.deleted_success"), {
@@ -194,6 +205,7 @@ const ImageUploadModal: React.FC<ImageViewerModalProps> = ({
                         size="sm"
                         onClick={() => handleDeleteExisting(index)}
                         title={t('image_upload.delete_image_title')}
+                        disabled={images.length <= 1}
                       >
                         <i className="bi bi-trash"></i>
                       </Button>

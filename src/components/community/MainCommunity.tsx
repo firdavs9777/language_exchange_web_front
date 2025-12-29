@@ -27,12 +27,15 @@ const ModernCommunity: React.FC = () => {
   const debouncedFilter = useDebounce(filter, 300);
   const { t, i18n } = useTranslation();
 
-  // Selectors
-  const currentUser = useSelector((state: RootState) => ({
-    _id: state.auth.userInfo?.user._id,
-    native_language: state.auth.userInfo?.user.native_language,
-    language_to_learn: state.auth.userInfo?.user.language_to_learn
-  }));
+  // Selectors - handle both userInfo.user and userInfo.data structures
+  const currentUser = useSelector((state: RootState) => {
+    const user = state.auth.userInfo?.user || state.auth.userInfo?.data;
+    return {
+      _id: user?._id || null,
+      native_language: user?.native_language || null,
+      language_to_learn: user?.language_to_learn || null
+    };
+  });
 
   // API Query
   const {

@@ -4,7 +4,7 @@ import { RootState } from "../index";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
-  prepareHeaders: (headers, { getState, endpoint }) => {
+  prepareHeaders: (headers, { getState, endpoint, extra }) => {
     // Retrieve the token from the state
     const token = (getState() as RootState).auth.userInfo?.token;
 
@@ -13,7 +13,7 @@ const baseQuery = fetchBaseQuery({
     }
 
     console.log(endpoint);
-    // // Only set Content-Type if the body is not FormData
+    // Don't set Content-Type for FormData - browser will set it automatically with boundary
     return headers;
   },
   //   credentials: "include", // Ensure credentials are included with every request

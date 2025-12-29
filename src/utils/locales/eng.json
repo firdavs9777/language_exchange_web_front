@@ -56,12 +56,32 @@
       "no_following": "You're not following anyone yet.",
       "following_error": "Error loading following list. Please try again later.",
       "moments": "Moments",
+      "stories": "Stories",
+      "visitors": "Visitors",
       "visitors": "Visitors"
+    },
+    "visitors": {
+      "title": "Profile Visitors",
+      "last_visit": "Last visit",
+      "visit_count": "Visits",
+      "via": "Via",
+      "via_moments": "Via Moments",
+      "via_search": "Via Search",
+      "via_chat": "Via Chat",
+      "via_direct": "Direct",
+      "via_followers": "Via Followers",
+      "no_visitors": "No visitors yet",
+      "error": "Error loading visitors",
+      "total_visits": "Total Visits",
+      "unique_visitors": "Unique Visitors",
+      "visits_today": "Today",
+      "visits_week": "This Week"
     },
     "sections": {
       "personal_info": "Personal Information",
       "bio": "Bio",
-      "languages": "Languages"
+      "languages": "Languages",
+      "photos": "Photos"
     },
     "labels": {
       "name": "Name",
@@ -210,7 +230,8 @@
       "newUserText": "New User?",
       "registerLink": "Register",
       "successMessage": "Successfully logged in",
-      "invalidCredentialsError": "Invalid credentials"
+      "invalidCredentialsError": "Invalid credentials",
+      "orText": "OR"
     },
     "account": {
       "title": "Create Your Account",
@@ -438,6 +459,92 @@
     },
     "fallbacks": {
       "defaultUser": "User"
+    }
+  },
+  "stories": {
+    "title": "Stories",
+    "your_story": "Your Story",
+    "create_story": "Create",
+    "create_first_story": "Create Story",
+    "no_stories": "No Stories Yet",
+    "no_stories_desc": "Create your first story to share with friends!",
+    "error_loading": "Error loading stories",
+    "view_story": "View Story",
+    "delete_story": "Delete Story",
+    "share_story": "Share Story",
+    "reply": "Reply",
+    "react": "React",
+    "viewers": "Viewers",
+    "reactions": "Reactions",
+    "replies": "Replies",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "send_reply": "Send Reply",
+    "reply_placeholder": "Send a message...",
+    "react_with_emoji": "React with emoji",
+    "vote": "Vote",
+    "view_results": "View Results",
+    "answer_question": "Answer Question",
+    "question_placeholder": "Ask a question...",
+    "submit_answer": "Submit Answer",
+    "anonymous": "Anonymous",
+    "highlights": "Highlights",
+    "create_highlight": "Create Highlight",
+    "edit_highlight": "Edit Highlight",
+    "delete_highlight": "Delete Highlight",
+    "add_to_highlight": "Add to Highlight",
+    "remove_from_highlight": "Remove from Highlight",
+    "highlight_title": "Highlight Title",
+    "archive": "Archive",
+    "archived_stories": "Archived Stories",
+    "archive_story": "Archive Story",
+    "close_friends": "Close Friends",
+    "add_close_friend": "Add to Close Friends",
+    "remove_close_friend": "Remove from Close Friends",
+    "manage_close_friends": "Manage Close Friends",
+    "privacy": {
+      "public": "Public",
+      "friends": "Friends",
+      "close_friends": "Close Friends"
+    },
+    "media": {
+      "upload_media": "Upload Media",
+      "take_photo": "Take Photo",
+      "choose_from_gallery": "Choose from Gallery",
+      "add_text": "Add Text",
+      "text_color": "Text Color",
+      "background_color": "Background Color",
+      "font_style": "Font Style"
+    },
+    "stickers": {
+      "poll": "Poll",
+      "question": "Question",
+      "location": "Location",
+      "mention": "Mention",
+      "link": "Link",
+      "music": "Music",
+      "hashtag": "Hashtag"
+    },
+    "poll": {
+      "question": "Question",
+      "options": "Options",
+      "add_option": "Add Option",
+      "remove_option": "Remove Option",
+      "anonymous_voting": "Anonymous Voting",
+      "your_vote": "Your Vote",
+      "total_votes": "Total Votes"
+    },
+    "question_box": {
+      "prompt": "Prompt",
+      "ask_me_anything": "Ask me anything!",
+      "responses": "Responses",
+      "no_responses": "No responses yet"
+    },
+    "sharing": {
+      "share_to_dm": "Share to DM",
+      "share_to_story": "Share to Story",
+      "share_externally": "Share Externally"
     }
   }
 }

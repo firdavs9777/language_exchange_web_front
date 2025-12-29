@@ -61,7 +61,10 @@ const SingleMoment: React.FC<MomentProps> = ({
   refetch,
 }) => {
   const userId = useSelector(
-    (state: RootState) => state.auth.userInfo?.user._id
+    (state: RootState) => 
+      state.auth.userInfo?.user?._id || 
+      state.auth.userInfo?.data?._id ||
+      null
   );
 
   // Mock mutation hooks - replace with your actual hooks

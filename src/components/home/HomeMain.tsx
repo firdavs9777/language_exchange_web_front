@@ -1,192 +1,250 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import homeImg from "../../assets/3.png";
 import "./HomeMain.scss";
 import FooterMain from "../footer/FooterMain";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import { 
+  FaUsers, 
+  FaComment, 
+  FaGlobe, 
+  FaCamera,
+  FaArrowRight,
+  FaLanguage,
+  FaHeart,
+  FaComments
+} from "react-icons/fa";
 
 const HomeMain: React.FC = () => {
+  const navigate = useNavigate();
+
+  const features = [
+    {
+      icon: <FaUsers className="feature-icon" />,
+      title: "Language Communities",
+      description: "Join vibrant language learning communities and connect with native speakers from around the world.",
+      link: "/communities",
+      color: "blue"
+    },
+    {
+      icon: <FaComment className="feature-icon" />,
+      title: "Real-time Chat",
+      description: "Practice your language skills through real-time conversations with language partners.",
+      link: "/chat",
+      color: "green"
+    },
+    {
+      icon: <FaGlobe className="feature-icon" />,
+      title: "Share Moments",
+      description: "Share your language learning journey and discover inspiring moments from other learners.",
+      link: "/moments",
+      color: "purple"
+    },
+    {
+      icon: <FaCamera className="feature-icon" />,
+      title: "Stories",
+      description: "Create and view engaging stories to practice and showcase your language progress.",
+      link: "/stories",
+      color: "orange"
+    }
+  ];
+
   return (
     <section className="home-main-section">
       {/* Hero Section */}
-      <div className="hero-section py-5">
+      <div className="hero-section">
         <Container>
           <Row className="align-items-center">
-            <Col md={6} className="text-center text-md-start">
-              <h1 className="slogan">
-                ONLINE <br />
-                <span className="language">LANGUAGE</span> <br />
-                <span className="learning">LEARNING</span>
+            <Col lg={6} className="hero-content">
+              <div className="hero-badge">
+                <span className="badge-text">100% Free Language Exchange</span>
+              </div>
+              <h1 className="hero-title">
+                Connect, Learn, and <span className="highlight">Grow</span> Together
               </h1>
-              <p className="description">
-                Expand your global network and language <br />
-                skills with <span className="bananatalk">BananaTalk.</span>
+              <p className="hero-description">
+                Join thousands of language learners worldwide. Practice with native speakers, 
+                share your journey, and build meaningful connections—all for free.
               </p>
-              <Button variant="primary" className="register-btn">
-                Get Started
-              </Button>
+              <div className="hero-buttons">
+                <Button 
+                  className="btn-primary-custom"
+                  onClick={() => navigate("/register")}
+                >
+                  Get Started Free
+                  <FaArrowRight className="ms-2" />
+                </Button>
+                <Button 
+                  className="btn-outline-custom"
+                  onClick={() => navigate("/communities")}
+                >
+                  Explore Communities
+                </Button>
+              </div>
+              <div className="hero-stats">
+                <div className="stat-item">
+                  <div className="stat-number">100%</div>
+                  <div className="stat-label">Free</div>
+                </div>
+                <div className="stat-item">
+                  <div className="stat-number">1000+</div>
+                  <div className="stat-label">Active Users</div>
+                </div>
+                <div className="stat-item">
+                  <div className="stat-number">50+</div>
+                  <div className="stat-label">Languages</div>
+                </div>
+              </div>
             </Col>
-            <Col md={6} className="text-center">
-              <img
-                src={homeImg}
-                alt="Language Learning"
-                className="home-img img-fluid"
-              />
+            <Col lg={6} className="hero-image-col">
+              <div className="hero-image-wrapper">
+                <img
+                  src={homeImg}
+                  alt="Language Learning"
+                  className="hero-image"
+                />
+                <div className="floating-card card-1">
+                  <FaLanguage className="card-icon" />
+                  <div className="card-text">Learn Languages</div>
+                </div>
+                <div className="floating-card card-2">
+                  <FaHeart className="card-icon" />
+                  <div className="card-text">Connect Globally</div>
+                </div>
+              </div>
             </Col>
           </Row>
         </Container>
       </div>
 
       {/* Features Section */}
-      <div className="features-section py-5">
+      <div className="features-section">
         <Container>
-          <h2 className="features-heading text-center mb-4">
-            Why Choose BananaTalk?
-          </h2>
-          <Row>
-            <Col md={4} className="mb-4">
-              <div className="feature text-center">
-                <h3>Interactive Lessons</h3>
-                <p>
-                  Engage in interactive lessons designed to enhance your
-                  language skills in a fun and effective way.
-                </p>
+          <div className="section-header">
+            <h2 className="section-title">Everything You Need to Learn Languages</h2>
+            <p className="section-subtitle">
+              All features are completely free. Start your language learning journey today!
+            </p>
+          </div>
+          <Row className="g-4">
+            {features.map((feature, index) => (
+              <Col md={6} lg={3} key={index}>
+                <div 
+                  className={`feature-card feature-${feature.color}`}
+                  onClick={() => navigate(feature.link)}
+                >
+                  <div className="feature-icon-wrapper">
+                    {feature.icon}
+                  </div>
+                  <h3 className="feature-title">{feature.title}</h3>
+                  <p className="feature-description">{feature.description}</p>
+                  <div className="feature-link">
+                    Explore <FaArrowRight className="ms-1" />
+                  </div>
+                </div>
+              </Col>
+            ))}
+          </Row>
+        </Container>
+      </div>
+
+      {/* Why Choose Section */}
+      <div className="why-choose-section">
+        <Container>
+          <Row className="align-items-center">
+            <Col lg={6} className="why-choose-content">
+              <h2 className="section-title">Why Choose BananaTalk?</h2>
+              <div className="benefits-list">
+                <div className="benefit-item">
+                  <div className="benefit-icon">
+                    <FaUsers />
+                  </div>
+                  <div className="benefit-content">
+                    <h4>Connect with Native Speakers</h4>
+                    <p>Practice with real native speakers and improve your pronunciation naturally.</p>
+                  </div>
+                </div>
+                <div className="benefit-item">
+                  <div className="benefit-icon">
+                    <FaGlobe />
+                  </div>
+                  <div className="benefit-content">
+                    <h4>Share Your Journey</h4>
+                    <p>Document your learning progress and get inspired by others' language journeys.</p>
+                  </div>
+                </div>
+                <div className="benefit-item">
+                  <div className="benefit-icon">
+                    <FaComments />
+                  </div>
+                  <div className="benefit-content">
+                    <h4>Real-time Practice</h4>
+                    <p>Chat with language partners in real-time and practice whenever you want.</p>
+                  </div>
+                </div>
+                <div className="benefit-item">
+                  <div className="benefit-icon">
+                    <FaLanguage />
+                  </div>
+                  <div className="benefit-content">
+                    <h4>50+ Languages</h4>
+                    <p>Learn any language you want with our diverse community of learners.</p>
+                  </div>
+                </div>
               </div>
             </Col>
-            <Col md={4} className="mb-4">
-              <div className="feature text-center">
-                <h3>Native Speakers</h3>
-                <p>
-                  Practice with native speakers and improve your pronunciation
-                  and fluency.
-                </p>
-              </div>
-            </Col>
-            <Col md={4} className="mb-4">
-              <div className="feature text-center">
-                <h3>Flexible Scheduling</h3>
-                <p>
-                  Choose a schedule that fits your lifestyle and learn at your
-                  own pace.
-                </p>
+            <Col lg={6} className="why-choose-image">
+              <div className="image-placeholder">
+                <div className="placeholder-content">
+                  <FaUsers className="placeholder-icon" />
+                  <p>Join Our Community</p>
+                </div>
               </div>
             </Col>
           </Row>
         </Container>
       </div>
 
-      {/* How It Works Section */}
-      <div className="how-it-works-section py-5">
+      {/* CTA Section */}
+      <div className="cta-section">
         <Container>
-          <h2 className="section-heading text-center mb-4">How It Works</h2>
-          <Row>
-            <Col md={4} className="mb-4">
-              <div className="step text-center">
-                <h3>Sign Up</h3>
-                <p>Create an account and choose a plan that suits you.</p>
-              </div>
-            </Col>
-            <Col md={4} className="mb-4">
-              <div className="step text-center">
-                <h3>Choose a Tutor</h3>
-                <p>
-                  Browse through our list of tutors and select one that matches
-                  your learning goals.
-                </p>
-              </div>
-            </Col>
-            <Col md={4} className="mb-4">
-              <div className="step text-center">
-                <h3>Start Learning</h3>
-                <p>
-                  Schedule your sessions and start learning with our interactive
-                  lessons.
-                </p>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-
-      {/* Pricing Section */}
-      <div className="pricing-section py-5">
-        <Container>
-          <h2 className="section-heading text-center mb-4">Pricing Plans</h2>
-          <Row>
-            <Col md={4} className="mb-4">
-              <div className="pricing-card text-center">
-                <h3>Basic Plan</h3>
-                <p>
-                  Perfect for beginners. Includes access to basic lessons & and
-                  chat features.
-                </p>
-                <span className="price">$19/month</span>
-                <Button variant="outline-primary" className="pricing-button">
-                  Choose Plan
-                </Button>
-              </div>
-            </Col>
-            <Col md={4} className="mb-4">
-              <div className="pricing-card text-center">
-                <h3>Standard Plan</h3>
-                <p>
-                  Includes all features of the Basic Plan plus additional
-                  interactive sessions an.
-                </p>
-                <span className="price">$39/month</span>
-                <Button variant="outline-primary" className="pricing-button">
-                  Choose Plan
-                </Button>
-              </div>
-            </Col>
-            <Col md={4} className="mb-4">
-              <div className="pricing-card text-center">
-                <h3>Premium Plan</h3>
-                <p>
-                  All features included, with unlimited access to all tutors and
-                  advanced lessons.
-                </p>
-                <span className="price">$59/month</span>
-                <Button variant="outline-primary" className="pricing-button">
-                  Choose Plan
-                </Button>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </div>
-      <div className="contact-section py-5 card ">
-        <Container>
-          <h2 className="section-heading text-center mb-4">Get in Touch</h2>
-          <p className="text-center">
-            If you have any questions or need assistance, feel free to reach out
-            to us!
-          </p>
-          <Form className="contact-form">
-            <Form.Group controlId="formName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control type="text" placeholder="Your name" required />
-            </Form.Group>
-            <Form.Group controlId="formEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="Your email" required />
-            </Form.Group>
-            <Form.Group controlId="formMessage">
-              <Form.Label>Message</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={4}
-                placeholder="Your message"
-                required
-              />
-            </Form.Group>
-            <Button type="submit" variant="primary" className="contact-button">
-              Send Message
+          <div className="cta-content">
+            <h2 className="cta-title">Ready to Start Learning?</h2>
+            <p className="cta-description">
+              Join thousands of language learners and start your free journey today. 
+              No credit card required, no hidden fees.
+            </p>
+            <Button 
+              className="btn-cta"
+              onClick={() => navigate("/register")}
+            >
+              Get Started for Free
+              <FaArrowRight className="ms-2" />
             </Button>
-          </Form>
+          </div>
+        </Container>
+      </div>
+
+      {/* Contact Section */}
+      <div className="contact-section">
+        <Container>
+          <div className="contact-content">
+            <h2 className="section-title">Get in Touch</h2>
+            <p className="contact-description">
+              Have questions or need help? We're here to assist you on your language learning journey.
+            </p>
+            <Button 
+              className="btn-contact"
+              onClick={() => navigate("/support")}
+            >
+              Contact Support
+            </Button>
+          </div>
         </Container>
       </div>
 
       {/* Footer */}
+      <FooterMain />
     </section>
   );
 };

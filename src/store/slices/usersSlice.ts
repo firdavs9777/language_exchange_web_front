@@ -75,10 +75,24 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         imageFiles,
       }: {
         userId: string;
-        imageFiles: File[];
+        imageFiles: FormData;
       }) => ({
         url: `${COMMUNITY_URL}/${userId}/photo`,
         method: "PUT",
+        body: imageFiles,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    uploadMultipleUserPhotos: builder.mutation({
+      query: ({
+        userId,
+        imageFiles,
+      }: {
+        userId: string;
+        imageFiles: FormData;
+      }) => ({
+        url: `${COMMUNITY_URL}/${userId}/photos`,
+        method: "POST",
         body: imageFiles,
       }),
       invalidatesTags: ["User"],
@@ -156,6 +170,13 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
       providesTags: ["User"],
     }),
+    getVisitors: builder.query({
+      query: ({ userId, page = 1, limit = 20 }: { userId: string; page?: number; limit?: number }) => ({
+        url: `${COMMUNITY_URL}/${userId}/visitors?page=${page}&limit=${limit}`,
+      }),
+      keepUnusedDataFor: 5,
+      providesTags: ["User"],
+    }),
   }),
 });
 export const {
@@ -169,9 +190,11 @@ export const {
   useGetUserProfileQuery,
   useGetFollowersQuery,
   useGetFollowingsQuery,
+  useGetVisitorsQuery,
   useFollowUserMutation,
   useUnFollowUserMutation,
   useUploadUserPhotoMutation,
+  useUploadMultipleUserPhotosMutation,
   useUpdateUserInfoMutation,
   useDeleteUserPhotoMutation,
 } = usersApiSlice;

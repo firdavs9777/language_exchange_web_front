@@ -18,15 +18,20 @@ import CoursesMain from "../components/courses/CoursesMain";
 import CommunityDetail from "../components/community/CommunityDetail";
 import UserFollowersList from "../components/profile/UserFollowers";
 import UserFollowingList from "../components/profile/UserFollowing";
+import UserVisitorsList from "../components/profile/UserVisitors";
 import MyMoments from "../components/profile/MyMoments";
+import MyStories from "../components/stories/MyStories";
 import MainChat from "../components/chat/MainChat";
 import ForgetPassword from "../components/auth/ForgetPassword";
 import EditMyMoment from "../components/profile/EditMyMoment";
 import MainStories from "../components/stories/MainStories";
+import StoryViewer from "../components/stories/StoryViewer";
+import CreateStory from "../components/stories/CreateStory";
 import PrivacyPolicy from "../components/navbar/PrivacyPolicy";
 import DataDeletion from "../components/navbar/DataDeletion";
 import SupportPage from "../components/support/SupportMain";
 import TermsOfUse from "../components/navbar/TermsOfUse";
+import OAuthCallback from "../components/auth/OAuthCallback";
 
 const MainChatWrapper = () => {
   const { userId } = useParams();
@@ -39,6 +44,7 @@ const AppRouter = createBrowserRouter(
     <Route path="/" element={<App />}>
       <Route index element={<HomeScreen />} />
       <Route path="login" element={<Login />} />
+      <Route path="auth/callback" element={<OAuthCallback />} />
 
       <Route path="data-deletion/" element={<DataDeletion />} />
       <Route path="register" element={<Register />} />
@@ -50,13 +56,20 @@ const AppRouter = createBrowserRouter(
       <Route path="add-moment" element={<CreateMoment />} />
       <Route path="edit-moment/:id" element={<EditMyMoment />} />
       <Route path="my-moments" element={<MyMoments />} />
+      <Route path="my-stories" element={<MyStories />} />
       <Route path="profile" element={<ProfileScreen />} />
       <Route path="followersList" element={<UserFollowersList />} />
       <Route path="followingsList" element={<UserFollowingList />} />
+      <Route path="visitorsList" element={<UserVisitorsList />} />
       <Route path="chat/:userId?" element={<MainChatWrapper />} />
       <Route path="courses" element={<CoursesMain />} />
       <Route path="support/" element={<SupportPage />} />
       <Route path="stories/" element={<MainStories />} />
+      <Route path="stories/:userId" element={<StoryViewer />} />
+      <Route path="create-story" element={<CreateStory />} />
+      <Route path="stories/archive" element={<MainStories />} />
+      <Route path="stories/highlights" element={<MainStories />} />
+      <Route path="stories/close-friends" element={<MainStories />} />
       <Route path="privacy-policy/" element={<PrivacyPolicy />} />
       <Route path="terms-of-use/" element={<TermsOfUse />} />
     </Route>

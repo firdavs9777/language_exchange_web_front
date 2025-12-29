@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../../composables/Pagination";
 import { useGetMomentsQuery } from "../../store/slices/momentsSlice";
+import StoriesFeed from "../stories/StoriesFeed";
 import EmptyState from "./EmptyState";
 import SingleMoment from "./SingleMoment";
 import { MomentType } from "./types";
@@ -511,7 +512,10 @@ const MainMoments: React.FC = () => {
   });
 
   const userId = useSelector(
-    (state: RootState) => state.auth.userInfo?.user._id
+    (state: RootState) => 
+      (state.auth.userInfo as any)?.user?._id || 
+      (state.auth.userInfo as any)?.data?._id ||
+      null
   );
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
   const { t } = useTranslation();
@@ -519,31 +523,66 @@ const MainMoments: React.FC = () => {
 
   // Memoize user data with proper typing
   const { userName, userImage } = useMemo(
-    () => ({
-      userName: userInfo?.user.name || "User",
-      userImage:
-        userInfo?.user.imageUrls?.[0] ||
-        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face",
-    }),
+    () => {
+      const user = (userInfo as any)?.user || (userInfo as any)?.data;
+      return {
+        userName: user?.name || "User",
+        userImage:
+          user?.imageUrls?.[0] ||
+          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face",
+      };
+    },
     [userInfo]
   );
 
   // Extract moments and pagination from response
-  const { allMoments } = useMemo(() => {
+  const { allMoments, pagination } = useMemo(() => {
     if (!data) {
       return {
         allMoments: [] as MomentType[],
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalMoments: 0,
+          limit: 10,
+          hasNextPage: false,
+          hasPrevPage: false,
+          nextPage: null,
+          prevPage: null,
+        },
       };
     }
 
     if (Array.isArray(data)) {
+      // Legacy format - array of moments
       return {
         allMoments: data as MomentType[],
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalMoments: data.length,
+          limit: 10,
+          hasNextPage: false,
+          hasPrevPage: false,
+          nextPage: null,
+          prevPage: null,
+        },
       };
     } else {
+      // New format with pagination
       const response = data as MomentsResponse;
       return {
         allMoments: response.moments || [],
+        pagination: response.pagination || {
+          currentPage: 1,
+          totalPages: 1,
+          totalMoments: response.moments?.length || 0,
+          limit: 10,
+          hasNextPage: false,
+          hasPrevPage: false,
+          nextPage: null,
+          prevPage: null,
+        },
       };
     }
   }, [data]);
@@ -639,6 +678,7 @@ const MainMoments: React.FC = () => {
   // Handle page change
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);
+    // Scroll to top smoothly when page changes
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
@@ -648,28 +688,53 @@ const MainMoments: React.FC = () => {
     refetch();
   }, [refetch]);
 
-  // Calculate pagination for filtered results
-  const paginatedMoments = useMemo(() => {
-    const startIndex = (currentPage - 1) * limit;
-    const endIndex = startIndex + limit;
-    return filteredMoments.slice(startIndex, endIndex);
-  }, [filteredMoments, currentPage, limit]);
+  // Use server pagination when no filters are active, otherwise calculate client-side
+  const displayPagination = useMemo(() => {
+    const hasActiveFilters =
+      filters.category ||
+      filters.language ||
+      filters.mood ||
+      filters.tag ||
+      filters.user ||
+      filters.search;
 
-  const filteredPagination = useMemo(() => {
-    const totalFilteredMoments = filteredMoments.length;
-    const totalPages = Math.ceil(totalFilteredMoments / limit);
+    if (hasActiveFilters) {
+      // Client-side pagination for filtered results
+      const totalFilteredMoments = filteredMoments.length;
+      const totalPages = Math.ceil(totalFilteredMoments / limit);
+      const paginatedMoments = filteredMoments.slice(
+        (currentPage - 1) * limit,
+        currentPage * limit
+      );
 
-    return {
-      currentPage,
-      totalPages,
-      totalMoments: totalFilteredMoments,
-      limit,
-      hasNextPage: currentPage < totalPages,
-      hasPrevPage: currentPage > 1,
-      nextPage: currentPage < totalPages ? currentPage + 1 : null,
-      prevPage: currentPage > 1 ? currentPage - 1 : null,
-    };
-  }, [filteredMoments.length, currentPage, limit]);
+      return {
+        moments: paginatedMoments,
+        pagination: {
+          currentPage,
+          totalPages,
+          totalMoments: totalFilteredMoments,
+          limit,
+          hasNextPage: currentPage < totalPages,
+          hasPrevPage: currentPage > 1,
+          nextPage: currentPage < totalPages ? currentPage + 1 : null,
+          prevPage: currentPage > 1 ? currentPage - 1 : null,
+        },
+      };
+    } else {
+      // Server-side pagination
+      return {
+        moments: allMoments,
+        pagination: pagination,
+      };
+    }
+  }, [
+    allMoments,
+    filteredMoments,
+    filters,
+    currentPage,
+    limit,
+    pagination,
+  ]);
 
   // Reset page when filters change
   useEffect(() => {
@@ -683,8 +748,13 @@ const MainMoments: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
 
           <div className="relative">
+            {/* Stories Feed */}
+            <div className="p-3 sm:p-4 lg:p-6 pb-2 sm:pb-3 border-b border-gray-200/50">
+              <StoriesFeed compact={true} />
+            </div>
+
             {/* Create post area */}
-            <div className="p-3 sm:p-4 lg:p-6">
+            <div className="p-3 sm:p-4 lg:p-6 pt-0 sm:pt-2">
               <CreatePostCard
                 userImage={userImage}
                 userName={userName}
@@ -696,7 +766,7 @@ const MainMoments: React.FC = () => {
             <div className="px-3 sm:px-4 lg:px-6">
               <div className="flex items-center justify-between mb-3 sm:mb-4">
                 <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-                  Stories list
+                  {t("moments_section.title") || "Moments"}
                   {filteredMoments.length !== allMoments.length && (
                     <span className="text-sm font-normal text-gray-500 ml-2">
                       ({filteredMoments.length} of {allMoments.length})
@@ -721,10 +791,10 @@ const MainMoments: React.FC = () => {
               <LoadingState t={t} />
             ) : error ? (
               <ErrorState t={t} refetch={handleRefetch} />
-            ) : paginatedMoments.length > 0 ? (
+            ) : displayPagination.moments.length > 0 ? (
               <>
                 <div className="space-y-3 sm:space-y-6 px-2 sm:px-4 pb-4 sm:pb-6 lg:px-6">
-                  {paginatedMoments.map((moment, index) => (
+                  {displayPagination.moments.map((moment, index) => (
                     <div
                       key={moment._id}
                       className="group transform transition-all duration-500 hover:-translate-y-1 hover:shadow-xl"
@@ -754,12 +824,12 @@ const MainMoments: React.FC = () => {
 
                 {/* Pagination component */}
                 <Pagination
-                  currentPage={filteredPagination.currentPage}
-                  totalPages={filteredPagination.totalPages}
+                  currentPage={displayPagination.pagination.currentPage}
+                  totalPages={displayPagination.pagination.totalPages}
                   onPageChange={handlePageChange}
-                  hasNextPage={filteredPagination.hasNextPage}
-                  hasPrevPage={filteredPagination.hasPrevPage}
-                  totalMoments={filteredPagination.totalMoments}
+                  hasNextPage={displayPagination.pagination.hasNextPage}
+                  hasPrevPage={displayPagination.pagination.hasPrevPage}
+                  totalMoments={displayPagination.pagination.totalMoments}
                   isLoading={isLoading}
                 />
               </>

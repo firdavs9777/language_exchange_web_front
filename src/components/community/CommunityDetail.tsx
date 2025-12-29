@@ -191,7 +191,10 @@ const CommunityDetail: React.FC = () => {
 
   const navigate = useNavigate();
   const userId = useSelector(
-    (state: RootState) => state.auth.userInfo?.user._id
+    (state: RootState) => 
+      state.auth.userInfo?.user?._id || 
+      state.auth.userInfo?.data?._id ||
+      null
   );
   const { t } = useTranslation();
 

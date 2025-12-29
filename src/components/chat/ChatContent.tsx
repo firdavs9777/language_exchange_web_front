@@ -50,7 +50,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
   profilePicture,
 }) => {
   const userId = useSelector(
-    (state: RootState) => state.auth.userInfo?.user._id
+    (state: RootState) => 
+      state.auth.userInfo?.user?._id || 
+      state.auth.userInfo?.data?._id ||
+      null
   );
   const token = useSelector((state: RootState) => state.auth.userInfo?.token);
 
