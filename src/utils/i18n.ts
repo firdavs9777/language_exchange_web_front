@@ -6,6 +6,7 @@ import { initReactI18next } from "react-i18next";
 
 import en from "./locales/eng.json";
 import ko from "./locales/kor.json";
+import zh from "./locales/zho.json";
 
 i18n
   .use(Backend)
@@ -15,6 +16,7 @@ i18n
     resources: {
       en: { translation: en },
       ko: { translation: ko },
+      zh: { translation: zh },
     },
     lng: "en",
     fallbackLng: "en",

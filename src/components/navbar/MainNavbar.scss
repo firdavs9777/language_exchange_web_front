@@ -1,6 +1,6 @@
 // Modern Navbar Styles
 .modern-navbar {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   position: sticky;
@@ -87,8 +87,8 @@
     }
     
     &.active {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+      background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
+      box-shadow: 0 4px 15px rgba(0, 191, 165, 0.3);
       
       &::after {
         content: '';
@@ -179,11 +179,11 @@
       
       svg {
         margin-right: 0.75rem;
-        color: #667eea;
+        color: #00BFA5;
       }
-      
+
       &.active {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
         color: white;
         
         svg {
@@ -277,7 +277,7 @@
       transition: all 0.2s ease;
       
       &:hover, &.active {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
         color: white;
         transform: translateX(5px);
       }
@@ -306,7 +306,7 @@
       display: flex;
       align-items: center;
       padding: 1rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
       border-radius: 12px;
       margin-bottom: 1rem;
       

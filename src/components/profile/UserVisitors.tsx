@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import "./UserVisitors.css";
-import { useGetVisitorsQuery } from "../../store/slices/usersSlice";
+import { useGetProfileVisitorsQuery, useGetVipStatusQuery } from "../../store/slices/usersSlice";
 import { useSelector } from "react-redux";
 import {
   Card,
@@ -10,8 +10,9 @@ import {
   Badge,
   Spinner,
   Alert,
+  Button,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   FaCrown,
@@ -22,6 +23,8 @@ import {
   FaCalendarWeek,
   FaChartBar,
   FaClock,
+  FaLock,
+  FaMobileAlt,
 } from "react-icons/fa";
 
 interface VisitorUser {
@@ -62,9 +65,11 @@ interface RootState {
     userInfo?: {
       user?: {
         _id: string;
+        userMode?: string;
       };
       data?: {
         _id: string;
+        userMode?: string;
       };
     };
   };
@@ -131,10 +136,22 @@ const SourceBadge: React.FC<{ source: string }> = ({ source }) => {
 };
 
 const UserVisitorsList: React.FC = () => {
+  const navigate = useNavigate();
   const userId = useSelector(
     (state: RootState) =>
       state.auth.userInfo?.user?._id || state.auth.userInfo?.data?._id || null
   );
+  const userMode = useSelector(
+    (state: RootState) =>
+      state.auth.userInfo?.user?.userMode || state.auth.userInfo?.data?.userMode || "free"
+  );
+
+  // Check VIP status
+  const { data: vipData } = useGetVipStatusQuery(userId || "", {
+    skip: !userId,
+  });
+
+  const isVip = userMode === "vip" || (vipData as any)?.data?.isActive;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -144,10 +161,75 @@ const UserVisitorsList: React.FC = () => {
     data: visitors,
     isLoading,
     error,
-  } = useGetVisitorsQuery({ userId: userId || "" }, { skip: !userId });
+  } = useGetProfileVisitorsQuery({ userId: userId || "", page: 1, limit: 50 }, { skip: !userId || !isVip });
 
   const visitorsData = visitors as VisitorsResponse | undefined;
   const { t } = useTranslation();
+
+  // VIP-only feature - show upgrade prompt for non-VIP users
+  if (!isVip) {
+    return (
+      <div className="visitors-page">
+        <div className="visitors-hero">
+          <Container>
+            <h1 className="hero-title">
+              <FaEye className="me-2" />
+              {t("profile.visitors.title") || "Profile Visitors"}
+            </h1>
+          </Container>
+        </div>
+        <Container className="visitors-content">
+          <Card className="text-center p-5 border-0 shadow-lg" style={{ borderRadius: "20px" }}>
+            <Card.Body>
+              <div className="mb-4">
+                <div
+                  className="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning bg-opacity-10"
+                  style={{ width: "80px", height: "80px" }}
+                >
+                  <FaLock className="text-warning" size={32} />
+                </div>
+              </div>
+              <h3 className="mb-3">{t("profile.visitors.vipOnly") || "VIP Feature"}</h3>
+              <p className="text-muted mb-4">
+                {t("profile.visitors.vipOnlyDesc") || "See who visited your profile by upgrading to VIP. This feature is available exclusively for VIP members."}
+              </p>
+              <div className="d-flex flex-column gap-3 align-items-center">
+                <div className="bg-light rounded-3 p-4 w-100" style={{ maxWidth: "400px" }}>
+                  <div className="d-flex align-items-center gap-3 mb-3">
+                    <FaCrown className="text-warning" size={24} />
+                    <div className="text-start">
+                      <strong>{t("profile.visitors.vipBenefits") || "VIP Benefits"}</strong>
+                    </div>
+                  </div>
+                  <ul className="text-start mb-0 ps-4">
+                    <li className="mb-2">{t("vip.features.seeProfileVisitors") || "See who visited your profile"}</li>
+                    <li className="mb-2">{t("vip.features.unlimitedMessages") || "Unlimited messages"}</li>
+                    <li className="mb-2">{t("vip.features.advancedFilters") || "Advanced search filters"}</li>
+                    <li>{t("vip.features.noAds") || "Ad-free experience"}</li>
+                  </ul>
+                </div>
+                <div className="bg-info bg-opacity-10 rounded-3 p-3 w-100" style={{ maxWidth: "400px" }}>
+                  <div className="d-flex align-items-center gap-2">
+                    <FaMobileAlt className="text-info" />
+                    <small className="text-muted">
+                      {t("vip.upgradeInAppDesc") || "VIP subscriptions can only be purchased through our mobile app"}
+                    </small>
+                  </div>
+                </div>
+                <Button
+                  variant="outline-primary"
+                  onClick={() => navigate("/settings/vip")}
+                  className="mt-2"
+                >
+                  {t("profile.visitors.learnMore") || "Learn More About VIP"}
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
+        </Container>
+      </div>
+    );
+  }
 
   // Helper to get user image
   const getUserImage = (user: VisitorUser) => {

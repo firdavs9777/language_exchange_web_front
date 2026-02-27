@@ -61,13 +61,13 @@
   }
 
   .share-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
     padding: 8px 16px;
     font-size: 14px;
     font-weight: 600;
 
     &:hover {
-      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+      background: linear-gradient(135deg, #008E76 0%, #00BFA5 100%);
     }
 
     &:disabled {
@@ -350,8 +350,8 @@
     }
 
     &.active {
-      background: rgba(102, 126, 234, 0.3);
-      border-color: #667eea;
+      background: rgba(0, 191, 165, 0.3);
+      border-color: #00BFA5;
     }
   }
 
@@ -436,8 +436,8 @@
       }
 
       &.active {
-        background: rgba(102, 126, 234, 0.3);
-        border-color: #667eea;
+        background: rgba(0, 191, 165, 0.3);
+        border-color: #00BFA5;
       }
     }
   }
@@ -470,15 +470,15 @@
 
       &:focus {
         outline: none;
-        border-color: #667eea;
+        border-color: #00BFA5;
         background: rgba(255, 255, 255, 0.15);
       }
     }
 
     button {
       padding: 10px 16px;
-      background: rgba(102, 126, 234, 0.3);
-      border: 1px solid #667eea;
+      background: rgba(0, 191, 165, 0.3);
+      border: 1px solid #00BFA5;
       border-radius: 8px;
       color: #fff;
       font-size: 14px;
@@ -488,7 +488,7 @@
       margin-bottom: 8px;
 
       &:hover {
-        background: rgba(102, 126, 234, 0.5);
+        background: rgba(0, 191, 165, 0.5);
       }
     }
 
@@ -530,8 +530,8 @@
       align-items: center;
       gap: 6px;
       padding: 6px 12px;
-      background: rgba(102, 126, 234, 0.3);
-      border: 1px solid #667eea;
+      background: rgba(0, 191, 165, 0.3);
+      border: 1px solid #00BFA5;
       border-radius: 20px;
       color: #fff;
       font-size: 14px;

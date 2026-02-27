@@ -7,7 +7,7 @@
 
 /* Hero Section */
 .visitors-hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
   padding: 3rem 0 2rem;
   position: relative;
   overflow: hidden;
@@ -123,11 +123,11 @@
       }
       
       &.total-visits {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
       }
       
       &.unique-visitors {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: linear-gradient(135deg, #FFD54F 0%, #C9A415 100%);
       }
       
       &.visits-today {
@@ -255,7 +255,7 @@
         gap: 0.5rem;
         
         .info-icon {
-          color: #667eea;
+          color: #00BFA5;
           font-size: 0.875rem;
         }
         
@@ -300,7 +300,7 @@
       border-top: 1px solid #f1f3f5;
       
       .location-icon {
-        color: #667eea;
+        color: #00BFA5;
         font-size: 0.875rem;
         flex-shrink: 0;
       }
@@ -416,5 +416,5 @@
 .visitors-content .spinner-border {
   width: 3rem;
   height: 3rem;
-  color: #667eea;
+  color: #00BFA5;
 }

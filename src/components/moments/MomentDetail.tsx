@@ -294,10 +294,7 @@ const MomentDetail: React.FC = () => {
 
   // User data - memoized to prevent unnecessary re-renders
   const { userInfo } = useSelector((state: any) => state.auth);
-  const userId = useMemo(
-    () => userInfo?.user?._id || userInfo?.data?._id || null,
-    [userInfo]
-  );
+  const userId = useMemo(() => userInfo?.user?._id, [userInfo]);
 
   // State
   const [newComment, setNewComment] = useState("");

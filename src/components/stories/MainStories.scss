@@ -38,11 +38,11 @@
   }
   
   &::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
     border-radius: 10px;
     
     &:hover {
-      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+      background: linear-gradient(135deg, #008E76 0%, #00BFA5 100%);
     }
   }
   
@@ -98,11 +98,11 @@
   
   &.has-stories,
   &.has-unviewed {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
     
     &:hover {
       transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(245, 87, 108, 0.4);
+      box-shadow: 0 8px 20px rgba(0, 191, 165, 0.4);
     }
   }
   
@@ -116,11 +116,11 @@
   }
   
   &.create-story {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
     
     &:hover {
       transform: scale(1.05);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 8px 20px rgba(0, 191, 165, 0.4);
     }
   }
   
@@ -147,7 +147,7 @@
       right: 0;
       width: 24px;
       height: 24px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -232,7 +232,7 @@
   }
   
   .create-story-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #00BFA5 0%, #008E76 100%);
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -246,7 +246,7 @@
     
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 8px 20px rgba(0, 191, 165, 0.4);
     }
   }
 }

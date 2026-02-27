@@ -1,0 +1,290 @@
+/* ===========================================
+   BananaTalk UsersList - Light Modern Design
+   =========================================== */
+
+/* Container styling */
+.users-list-wrapper {
+  height: 100%;
+  overflow-y: auto;
+  background: #FFFFFF;
+}
+
+/* List group override */
+.users-list-wrapper .list-group {
+  background: transparent;
+}
+
+.users-list-wrapper .list-group-flush {
+  border-radius: 0;
+}
+
+/* User item styling */
+.users-list-wrapper > div > div {
+  background: transparent !important;
+  border-color: #E4E6EB !important;
+  transition: all 0.2s ease;
+}
+
+.users-list-wrapper > div > div:hover {
+  background: #F0F2F5 !important;
+}
+
+/* Active user item */
+.users-list-wrapper > div > div.bg-gradient-to-r {
+  background: #E7F3FF !important;
+  border-left: 3px solid #00BFA5 !important;
+}
+
+/* Avatar styling */
+.users-list-wrapper img {
+  border-radius: 50% !important;
+  border: none !important;
+}
+
+/* Text colors for light theme */
+.users-list-wrapper h6 {
+  color: #050505 !important;
+}
+
+.users-list-wrapper .text-gray-500 {
+  color: #65676B !important;
+}
+
+.users-list-wrapper .text-gray-400 {
+  color: #8A8D91 !important;
+}
+
+/* Active item text */
+.users-list-wrapper > div > div.bg-gradient-to-r h6 {
+  color: #050505 !important;
+}
+
+.users-list-wrapper > div > div.bg-gradient-to-r .text-gray-500,
+.users-list-wrapper > div > div.bg-gradient-to-r .text-white\/80 {
+  color: #65676B !important;
+}
+
+/* Status indicator */
+.users-list-wrapper .bg-green-500 {
+  background: #31A24C !important;
+  box-shadow: none;
+}
+
+.users-list-wrapper .bg-gray-400 {
+  background: #BCC0C4 !important;
+}
+
+.users-list-wrapper .bg-yellow-500 {
+  background: #F7B928 !important;
+}
+
+.users-list-wrapper .bg-red-500 {
+  background: #E4405F !important;
+}
+
+/* Unread badge */
+.users-list-wrapper .badge {
+  background: #00BFA5 !important;
+  border: none !important;
+  font-weight: 600 !important;
+  box-shadow: none;
+  color: #FFFFFF !important;
+}
+
+/* Dropdown menu */
+.users-list-wrapper .absolute {
+  background: #FFFFFF !important;
+  backdrop-filter: none !important;
+  border: 1px solid #E4E6EB !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.users-list-wrapper .absolute button {
+  color: #050505 !important;
+  transition: all 0.2s ease;
+}
+
+.users-list-wrapper .absolute button:hover {
+  background: #F0F2F5 !important;
+}
+
+.users-list-wrapper .absolute button.text-red-600 {
+  color: #E4405F !important;
+}
+
+.users-list-wrapper .absolute button.text-red-600:hover {
+  background: #FEE2E2 !important;
+}
+
+.users-list-wrapper .absolute hr {
+  border-color: #E4E6EB !important;
+}
+
+/* Icon colors in dropdown */
+.users-list-wrapper .absolute .bi {
+  opacity: 0.8;
+}
+
+/* Empty state */
+.users-list-wrapper .flex-col.items-center {
+  color: #65676B;
+}
+
+.users-list-wrapper .flex-col.items-center i {
+  color: #00BFA5 !important;
+}
+
+/* Three dots button */
+.users-list-wrapper button.w-6.h-6 {
+  color: #65676B !important;
+}
+
+.users-list-wrapper button.w-6.h-6:hover {
+  background: #E4E6EB !important;
+  color: #050505 !important;
+}
+
+/* Time text */
+.users-list-wrapper small {
+  color: #65676B !important;
+}
+
+/* Typing indicator */
+.users-list-wrapper .text-blue-500 {
+  color: #00BFA5 !important;
+}
+
+/* Online indicator */
+.users-list-wrapper .text-green-500 {
+  color: #31A24C !important;
+}
+
+/* Debug panel - hide */
+.debug-panel {
+  display: none;
+}
+
+/* Connection status bar - light theme */
+.users-list-wrapper .bg-green-500\/10 {
+  background: rgba(49, 162, 76, 0.1) !important;
+}
+
+.users-list-wrapper .bg-red-500\/10 {
+  background: rgba(228, 64, 95, 0.1) !important;
+}
+
+.users-list-wrapper .text-green-400 {
+  color: #31A24C !important;
+}
+
+.users-list-wrapper .text-red-400 {
+  color: #E4405F !important;
+}
+
+.users-list-wrapper .bg-green-400 {
+  background: #31A24C !important;
+}
+
+.users-list-wrapper .bg-red-400 {
+  background: #E4405F !important;
+}
+
+/* Border adjustments */
+.users-list-wrapper .border-gray-100 {
+  border-color: #E4E6EB !important;
+}
+
+/* Loading state */
+.users-list-wrapper .animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Avatar placeholder gradient */
+.users-list-wrapper .from-indigo-500 {
+  background: linear-gradient(135deg, #00BFA5 0%, #00A896 100%) !important;
+}
+
+.users-list-wrapper .bg-gradient-to-br {
+  background: linear-gradient(135deg, #00BFA5 0%, #00A896 100%) !important;
+}
+
+/* Scrollbar */
+.users-list-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.users-list-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.users-list-wrapper::-webkit-scrollbar-thumb {
+  background: #BCC0C4;
+  border-radius: 3px;
+}
+
+.users-list-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #8A8D91;
+}
+
+/* Loading spinner */
+.users-list-wrapper .border-indigo-200 {
+  border-color: #E4E6EB !important;
+}
+
+.users-list-wrapper .border-t-indigo-600 {
+  border-top-color: #00BFA5 !important;
+}
+
+/* Last message text - ensure visibility */
+.users-list-wrapper p.truncate {
+  color: #65676B !important;
+  max-width: 180px;
+}
+
+.users-list-wrapper p.truncate.font-medium {
+  color: #050505 !important;
+  font-weight: 600 !important;
+}
+
+/* Fix for white text on active item */
+.users-list-wrapper > div > div.text-white h6,
+.users-list-wrapper > div > div.text-white p {
+  color: #050505 !important;
+}
+
+/* User name styling */
+.users-list-wrapper h6.truncate {
+  color: #050505 !important;
+  font-size: 0.9375rem;
+}
+
+/* Error state */
+.users-list-wrapper .bg-red-50 {
+  background: #FEE2E2 !important;
+}
+
+.users-list-wrapper .text-red-800 {
+  color: #991B1B !important;
+}
+
+.users-list-wrapper .text-red-700 {
+  color: #B91C1C !important;
+}
+
+.users-list-wrapper .border-red-200 {
+  border-color: #FECACA !important;
+}
+
+.users-list-wrapper .border-red-300 {
+  border-color: #FCA5A5 !important;
+}

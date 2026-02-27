@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
-import FormContainer from "../../composables/FormContainer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useLoginUserMutation } from "../../store/slices/usersSlice";
 import { setCredentials } from "../../store/slices/authSlice";
 import { Bounce, toast } from "react-toastify";
-import { Button, Col, Form, InputGroup, Row } from "react-bootstrap";
-import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
-import Loader from "../Loader";
+import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
+import { FaGoogle } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import "./Login.scss";
 
@@ -34,9 +31,12 @@ const Login = () => {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const userInfo = await loginUser({ email, password }).unwrap();
-      const ActionPayload: Response | any = userInfo;
-      dispatch(setCredentials({ ...ActionPayload }));
+      const response = await loginUser({ email, password }).unwrap();
+      dispatch(setCredentials({
+        user: response.data || response.user,
+        token: response.token,
+        message: response.message || "Login successful",
+      }));
       toast.success(t("authentication.login.successMessage"), {
         position: "top-right",
         autoClose: 2000,
@@ -46,136 +46,140 @@ const Login = () => {
       });
       navigate(redirect);
     } catch (error: any) {
-      if (error instanceof Error) {
-        toast(error.message, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          theme: "dark",
-          transition: Bounce,
-        });
-      } else {
-        toast(t("authentication.login.invalidCredentialsError"), {
-          position: "top-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          theme: "dark",
-          transition: Bounce,
-        });
-      }
+      toast.error(t("authentication.login.invalidCredentialsError"), {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
     }
   };
 
   const handleGoogleLogin = () => {
-    // Redirect to backend Google OAuth endpoint (matching your backend routes)
     const backendUrl = "https://api.banatalk.com";
-    // Store redirect in sessionStorage to retrieve after OAuth callback
     sessionStorage.setItem("oauth_redirect", redirect);
     window.location.href = `${backendUrl}/api/v1/auth/google`;
   };
 
-  const clickHandler = () => {
-    setShowPass((prev) => !prev);
-  };
-
   return (
-    <div className="login-page">
-      <FormContainer>
-        <Form onSubmit={submitHandler} className="login-form">
-          <h1 className="login-title">{t("authentication.login.title")}</h1>
-
-          {/* Google Login Button */}
-          <Button
-            variant="outline-danger"
-            className="google-login-btn"
-            onClick={handleGoogleLogin}
-            type="button"
-          >
-            <FaGoogle className="google-icon" />
-            {t("authentication.login.signInWithGoogle")}
-          </Button>
-
-          {/* Divider */}
-          <div className="divider">
-            <hr className="divider-line" />
-            <span className="divider-text">
-              {t("authentication.login.orText")}
-            </span>
-            <hr className="divider-line" />
+    <div className="auth-page">
+      <div className="auth-container">
+        {/* Left Side - Branding */}
+        <div className="auth-branding">
+          <div className="branding-content">
+            <div className="brand-logo">🍌</div>
+            <h1>Welcome Back!</h1>
+            <p>Continue your language learning journey with BananaTalk</p>
+            <div className="branding-features">
+              <div className="feature-item">
+                <span className="feature-icon">💬</span>
+                <span>Chat with native speakers</span>
+              </div>
+              <div className="feature-item">
+                <span className="feature-icon">🌍</span>
+                <span>Learn 50+ languages</span>
+              </div>
+              <div className="feature-item">
+                <span className="feature-icon">🎯</span>
+                <span>Track your progress</span>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <Form.Group controlId="email" className="form-group">
-            <Form.Label className="form-label">
-              {t("authentication.login.emailLabel")}
-            </Form.Label>
-            <Form.Control
-              type="email"
-              placeholder={t("authentication.login.emailPlaceholder")}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="form-control-custom"
-            />
-          </Form.Group>
+        {/* Right Side - Form */}
+        <div className="auth-form-container">
+          <div className="auth-form-wrapper">
+            <div className="form-header">
+              <h2>{t("authentication.login.title")}</h2>
+              <p>Enter your credentials to access your account</p>
+            </div>
 
-          <Form.Group controlId="password" className="form-group">
-            <Form.Label className="form-label">
-              {t("authentication.login.passwordLabel")}
-            </Form.Label>
-            <InputGroup className="password-input-group">
-              <Form.Control
-                type={showPass ? "text" : "password"}
-                placeholder={t("authentication.login.passwordPlaceholder")}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="form-control-custom"
-              />
-              <InputGroup.Text 
-                onClick={clickHandler} 
-                className="password-toggle"
+            {/* Google Login */}
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              className="google-btn"
+            >
+              <FaGoogle size={20} />
+              <span>{t("authentication.login.signInWithGoogle") || "Continue with Google"}</span>
+            </button>
+
+            {/* Divider */}
+            <div className="divider">
+              <span>{t("authentication.login.orText") || "or"}</span>
+            </div>
+
+            {/* Login Form */}
+            <form onSubmit={submitHandler} className="auth-form">
+              <div className="form-group">
+                <label htmlFor="email">{t("authentication.login.emailLabel")}</label>
+                <div className="input-wrapper">
+                  <Mail className="input-icon" size={20} />
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder={t("authentication.login.emailPlaceholder")}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <div className="label-row">
+                  <label htmlFor="password">{t("authentication.login.passwordLabel")}</label>
+                  <Link to="/forgot-password" className="forgot-link">
+                    {t("authentication.login.forgotPassword")}
+                  </Link>
+                </div>
+                <div className="input-wrapper">
+                  <Lock className="input-icon" size={20} />
+                  <input
+                    type={showPass ? "text" : "password"}
+                    id="password"
+                    placeholder={t("authentication.login.passwordPlaceholder")}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="toggle-password"
+                    onClick={() => setShowPass(!showPass)}
+                  >
+                    {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="submit-btn"
               >
-                {showPass ? <FaEyeSlash /> : <FaEye />}
-              </InputGroup.Text>
-            </InputGroup>
-          </Form.Group>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="animate-spin" size={20} />
+                    <span>{t("authentication.login.signingInButton")}</span>
+                  </>
+                ) : (
+                  <span>{t("authentication.login.signInButton")}</span>
+                )}
+              </button>
+            </form>
 
-          <Row className="forgot-password-row">
-            <Col className="text-end">
-              <Link to="/forgot-password" className="forgot-password-link">
-                {t("authentication.login.forgotPassword")}
+            <p className="auth-footer">
+              {t("authentication.login.newUserText")}{" "}
+              <Link to={redirect ? `/register?redirect=${redirect}` : `/register`}>
+                {t("authentication.login.registerLink")}
               </Link>
-            </Col>
-          </Row>
-
-          <Button
-            disabled={isLoading}
-            type="submit"
-            variant="primary"
-            className="submit-btn"
-          >
-            {isLoading
-              ? t("authentication.login.signingInButton")
-              : t("authentication.login.signInButton")}
-          </Button>
-
-          {isLoading && <Loader />}
-
-          <Row className="register-row">
-            <Col className="text-center">
-              <span className="register-text">
-                {t("authentication.login.newUserText")}{" "}
-                <Link
-                  to={redirect ? `/register?redirect=${redirect}` : `/register`}
-                  className="register-link"
-                >
-                  {t("authentication.login.registerLink")}
-                </Link>
-              </span>
-            </Col>
-          </Row>
-        </Form>
-      </FormContainer>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

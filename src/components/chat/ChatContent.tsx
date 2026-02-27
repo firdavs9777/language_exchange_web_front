@@ -1,13 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Button, Form, Container, Row, Col } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import {
   useCreateMessageMutation,
   useGetConversationQuery,
+  useMarkConversationReadMutation,
 } from "../../store/slices/chatSlice";
 import io, { Socket } from "socket.io-client";
 import "./ChatContent.css";
 import { BASE_URL } from "../../constants";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Define types for Redux state
 interface RootState {
@@ -15,19 +19,22 @@ interface RootState {
     userInfo: {
       user: {
         _id: string;
+        name?: string;
+        imageUrls?: string[];
       };
       token: string;
     };
   };
 }
 
-// Define the Socket.IO instance
-let socket: Socket | null = null;
+// Socket instance is now stored in a ref inside the component
 
 interface ChatContentProps {
   selectedUser: string;
   userName: string;
   profilePicture: string;
+  initialIsOnline?: boolean;
+  initialLastSeen?: string;
 }
 
 interface Message {
@@ -48,30 +55,50 @@ const ChatContent: React.FC<ChatContentProps> = ({
   selectedUser,
   userName,
   profilePicture,
+  initialIsOnline = false,
+  initialLastSeen = "",
 }) => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const userId = useSelector(
-    (state: RootState) => 
-      state.auth.userInfo?.user?._id || 
-      state.auth.userInfo?.data?._id ||
-      null
+    (state: RootState) => state.auth.userInfo?.user?._id
   );
   const token = useSelector((state: RootState) => state.auth.userInfo?.token);
+  const currentUserName = useSelector(
+    (state: RootState) => state.auth.userInfo?.user?.name
+  );
 
-  const { data, error, isLoading } = useGetConversationQuery({
-    senderId: userId,
-    receiverId: selectedUser,
-  });
+  const { data, error, isLoading, refetch } = useGetConversationQuery(
+    {
+      senderId: userId,
+      receiverId: selectedUser,
+    },
+    {
+      skip: !userId || !selectedUser,
+    }
+  );
+
+  const [createMessage] = useCreateMessageMutation();
+  const [markConversationRead] = useMarkConversationReadMutation();
 
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [isOnline, setIsOnline] = useState(true);
-  const [lastSeen, setLastSeen] = useState<string>("");
+  const [isOnline, setIsOnline] = useState(initialIsOnline);
+  const [lastSeen, setLastSeen] = useState<string>(initialLastSeen);
+  const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
   const tempIdRef = useRef<string>();
   const lastMessageId = useRef<string>();
+  const socketRef = useRef<Socket | null>(null);
+
+  // Update online status when initial props change (new user selected)
+  useEffect(() => {
+    setIsOnline(initialIsOnline);
+    setLastSeen(initialLastSeen);
+  }, [initialIsOnline, initialLastSeen, selectedUser]);
 
   // Initialize Socket.IO connection when token changes
   useEffect(() => {
@@ -80,19 +107,36 @@ const ChatContent: React.FC<ChatContentProps> = ({
     const SOCKET_URL = BASE_URL;
 
     // Disconnect existing socket if any
-    if (socket) {
-      socket.disconnect();
+    if (socketRef.current) {
+      socketRef.current.disconnect();
     }
 
-    socket = io(SOCKET_URL, {
+    socketRef.current = io(SOCKET_URL, {
       auth: {
         token: token,
       },
-      transports: ["websocket"],
+      transports: ["websocket", "polling"],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
+
+    const socket = socketRef.current;
 
     socket.on("connect", () => {
       console.log("Connected to socket server");
+
+      // Request initial user status when socket connects
+      if (selectedUser) {
+        socket.emit("getUserStatus", { userId: selectedUser }, (response: any) => {
+          if (response?.status === "success" && response?.data) {
+            setIsOnline(response.data.status === "online");
+            if (response.data.lastSeen) {
+              setLastSeen(response.data.lastSeen);
+            }
+          }
+        });
+      }
     });
 
     socket.on("connect_error", (error: Error) => {
@@ -114,23 +158,44 @@ const ChatContent: React.FC<ChatContentProps> = ({
       }
     });
 
+    // Handle user status updates
+    socket.on("userStatusUpdate", (data: { userId: string; status: string; lastSeen?: string }) => {
+      if (data.userId === selectedUser) {
+        setIsOnline(data.status === 'online');
+        if (data.lastSeen) {
+          setLastSeen(data.lastSeen);
+        }
+      }
+    });
+
     return () => {
-      if (socket) {
-        socket.off();
-        socket.disconnect();
-        socket = null;
+      if (socketRef.current) {
+        socketRef.current.off();
+        socketRef.current.disconnect();
+        socketRef.current = null;
       }
     };
   }, [token, selectedUser]);
 
-  // Load initial messages
+  // Load initial messages and mark as read
   useEffect(() => {
     if (data?.data) {
       setMessages(data.data);
+
+      // Mark messages as read when conversation is opened
+      const socket = socketRef.current;
+      if (socket?.connected) {
+        socket.emit("markAsRead", { senderId: selectedUser }, (response: any) => {
+          if (response?.status === "success") {
+            console.log(`Marked ${response.markedCount} messages as read`);
+          }
+        });
+      }
     }
-  }, [data]);
+  }, [data, selectedUser]);
 
   useEffect(() => {
+    const socket = socketRef.current;
     if (!socket || !selectedUser) return;
 
     // Handler for new messages - Updated to match server event name
@@ -138,16 +203,25 @@ const ChatContent: React.FC<ChatContentProps> = ({
       message: Message;
       unreadCount: number;
       isNewConversation: boolean;
+      senderId?: string;
     }) => {
       const newMsg = notificationData.message;
       console.log("Received new message:", newMsg);
 
-      setMessages((prevMessages) => {
-        if (prevMessages.some((msg) => msg._id === newMsg._id)) {
-          return prevMessages;
-        }
-        return [...prevMessages, newMsg];
-      });
+      // Only add message if it's from the current conversation partner
+      const isFromCurrentConversation =
+        newMsg.sender._id === selectedUser ||
+        newMsg.receiver === selectedUser ||
+        notificationData.senderId === selectedUser;
+
+      if (isFromCurrentConversation) {
+        setMessages((prevMessages) => {
+          if (prevMessages.some((msg) => msg._id === newMsg._id)) {
+            return prevMessages;
+          }
+          return [...prevMessages, newMsg];
+        });
+      }
     };
 
     // Handler for message errors
@@ -170,6 +244,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
     const handleUserTyping = (data: { userId: string; isTyping: boolean }) => {
       if (data.userId === selectedUser) {
         setIsTyping(data.isTyping);
+        // Auto-clear typing after 3 seconds
+        if (data.isTyping) {
+          setTimeout(() => setIsTyping(false), 3000);
+        }
       }
     };
 
@@ -186,8 +264,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
   }, [userId, selectedUser]);
 
   // Handle typing indicator
-  const handleTyping = () => {
-    if (!socket || !selectedUser) return;
+  const handleTyping = useCallback(() => {
+    const socket = socketRef.current;
+    if (!socket?.connected || !selectedUser) return;
 
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
@@ -197,9 +276,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
     socket.emit("typing", { receiver: selectedUser });
 
     typingTimeoutRef.current = setTimeout(() => {
-      socket?.emit("stopTyping", { receiver: selectedUser });
+      socketRef.current?.emit("stopTyping", { receiver: selectedUser });
     }, 2000);
-  };
+  }, [selectedUser]);
 
   // Auto-scroll to bottom only when new messages arrive
   useEffect(() => {
@@ -218,67 +297,122 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || !socket) return;
+    if (!newMessage.trim() || isSending) return;
+
+    const socket = socketRef.current;
+    const messageToSend = newMessage.trim();
+
+    // Create optimistic message
+    const tempId = `temp-${Date.now()}`;
+    tempIdRef.current = tempId;
+    const optimisticMessage: Message = {
+      _id: tempId,
+      message: messageToSend,
+      sender: { _id: userId, name: currentUserName || userName },
+      receiver: selectedUser,
+      createdAt: new Date().toISOString(),
+      isOptimistic: true,
+      status: "sent",
+    };
+
+    // Immediately show the message
+    setMessages((prev) => [...prev, optimisticMessage]);
+    setNewMessage("");
+    setIsSending(true);
+
+    // Clear typing indicator
+    if (socket?.connected) {
+      socket.emit("stopTyping", { receiver: selectedUser });
+    }
 
     try {
-      // Clear typing indicator
-      socket.emit("stopTyping", { receiver: selectedUser });
-
-      // Create optimistic message
-      const tempId = `temp-${Date.now()}`;
-      tempIdRef.current = tempId;
-      const optimisticMessage: Message = {
-        _id: tempId,
-        message: newMessage,
-        sender: { _id: userId, name: userName },
-        receiver: selectedUser,
-        createdAt: new Date().toISOString(),
-        isOptimistic: true,
-        status: "sent",
-      };
-
-      setMessages((prev) => [...prev, optimisticMessage]);
-      const messageToSend = newMessage;
-      setNewMessage("");
-
-      // Send message via socket with callback for acknowledgment
-      socket.emit(
-        "sendMessage",
-        {
-          receiver: selectedUser,
-          message: messageToSend,
-        },
-        (response: any) => {
-          if (response.status === "success") {
-            console.log("Message sent successfully:", response);
-            // Update the optimistic message with the real one
-            setMessages((prevMessages) => {
-              return prevMessages.map((msg) => {
-                if (msg._id === tempId) {
-                  return { ...response.message, status: "delivered" };
-                }
-                return msg;
+      // Try socket first if connected
+      if (socket?.connected) {
+        socket.emit(
+          "sendMessage",
+          {
+            receiver: selectedUser,
+            message: messageToSend,
+          },
+          (response: any) => {
+            setIsSending(false);
+            if (response?.status === "success" && response?.message) {
+              console.log("Message sent via socket:", response);
+              // Update the optimistic message with the real one
+              setMessages((prevMessages) => {
+                return prevMessages.map((msg) => {
+                  if (msg._id === tempId) {
+                    return { ...response.message, status: "delivered" };
+                  }
+                  return msg;
+                });
               });
-            });
-          } else {
-            console.error("Message send failed:", response);
-            // Mark message as error
-            setMessages((prevMessages) => {
-              return prevMessages.map((msg) => {
-                if (msg._id === tempId) {
-                  return { ...msg, status: "error" };
-                }
-                return msg;
-              });
-            });
+            } else {
+              console.warn("Socket response not successful, trying REST API...");
+              // Fallback to REST API
+              sendViaRestApi(tempId, messageToSend);
+            }
           }
-        }
-      );
+        );
+
+        // Timeout fallback - if no response in 5 seconds, use REST API
+        setTimeout(() => {
+          setMessages((prevMessages) => {
+            const msg = prevMessages.find((m) => m._id === tempId);
+            if (msg?.isOptimistic && msg?.status === "sent") {
+              console.warn("Socket timeout, falling back to REST API");
+              sendViaRestApi(tempId, messageToSend);
+            }
+            return prevMessages;
+          });
+        }, 5000);
+      } else {
+        // Socket not connected, use REST API directly
+        console.log("Socket not connected, using REST API");
+        await sendViaRestApi(tempId, messageToSend);
+      }
     } catch (error) {
       console.error("Error sending message:", error);
+      setIsSending(false);
       setMessages((prev) =>
         prev.map((msg) =>
-          msg._id === tempIdRef.current ? { ...msg, status: "error" } : msg
+          msg._id === tempId ? { ...msg, status: "error" } : msg
+        )
+      );
+    }
+  };
+
+  // REST API fallback for sending messages
+  const sendViaRestApi = async (tempId: string, messageText: string) => {
+    try {
+      const result = await createMessage({
+        sender: userId,
+        receiver: selectedUser,
+        message: messageText,
+        type: 'text',
+      }).unwrap();
+
+      console.log("Message sent via REST API:", result);
+
+      // Update the optimistic message with the real one
+      setMessages((prevMessages) => {
+        return prevMessages.map((msg) => {
+          if (msg._id === tempId) {
+            return {
+              ...result.data || result,
+              status: "delivered",
+            };
+          }
+          return msg;
+        });
+      });
+      setIsSending(false);
+    } catch (error) {
+      console.error("REST API send failed:", error);
+      setIsSending(false);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === tempId ? { ...msg, status: "error" } : msg
         )
       );
     }
@@ -302,9 +436,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
       (now.getTime() - date.getTime()) / (1000 * 60)
     );
 
-    if (diffInMinutes < 1) return "Just now";
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
+    if (diffInMinutes < 1) return t("chatPage.justNow");
+    if (diffInMinutes < 60) return t("chatPage.minutesAgo", { count: diffInMinutes });
+    if (diffInMinutes < 1440) return t("chatPage.hoursAgo", { count: Math.floor(diffInMinutes / 60) });
     return date.toLocaleDateString();
   };
 
@@ -329,7 +463,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
         <div className="loading-spinner">
           <div className="spinner"></div>
         </div>
-        <p className="loading-text">Loading conversation...</p>
+        <p className="loading-text">{t("chatPage.loadingConversation")}</p>
       </div>
     );
 
@@ -337,7 +471,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     return (
       <div className="chat-error">
         <div className="error-icon">⚠️</div>
-        <p>Error loading conversation</p>
+        <p>{t("chatPage.errorLoading")}</p>
       </div>
     );
 
@@ -354,6 +488,14 @@ const ChatContent: React.FC<ChatContentProps> = ({
       <div className="modern-chat-header">
         <div className="header-content">
           <div className="user-info-section">
+            {/* Back button for mobile */}
+            <button
+              className="back-btn"
+              onClick={() => navigate("/chat")}
+              aria-label="Back to conversations"
+            >
+              <ArrowLeft size={20} />
+            </button>
             <div className="profile-avatar-container">
               <img
                 src={profilePicture || "/default-avatar.png"}
@@ -373,14 +515,14 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 {isOnline ? (
                   <span className="online-status">
                     <span className="status-dot online"></span>
-                    Online
+                    {t("chatPage.online")}
                   </span>
                 ) : (
                   <span className="offline-status">
                     <span className="status-dot offline"></span>
                     {lastSeen
-                      ? `Last seen ${formatLastSeen(lastSeen)}`
-                      : "Offline"}
+                      ? `${t("chatPage.lastSeen")} ${formatLastSeen(lastSeen)}`
+                      : t("chatPage.offline")}
                   </span>
                 )}
               </div>
@@ -388,7 +530,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           </div>
 
           <div className="header-actions">
-            <button className="action-btn call-btn">
+            <button className="action-btn call-btn" title="Voice call">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -398,7 +540,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
               </svg>
             </button>
-            <button className="action-btn video-btn">
+            <button className="action-btn video-btn" title="Video call">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -409,7 +551,23 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
               </svg>
             </button>
-            <button className="action-btn info-btn">
+            <button
+              className="action-btn gallery-btn"
+              title="Shared media"
+              onClick={() => navigate(`/chat/${selectedUser}/media`)}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
+              </svg>
+            </button>
+            <button className="action-btn info-btn" title="Chat info">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -509,7 +667,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
                   <div className="typing-dot"></div>
                   <div className="typing-dot"></div>
                 </div>
-                <span className="typing-text">{userName} is typing...</span>
+                <span className="typing-text">{userName} {t("chatPage.typing")}</span>
               </div>
             </div>
           </div>
@@ -538,7 +696,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             <div className="text-input-wrapper">
               <Form.Control
                 type="text"
-                placeholder="Type your message..."
+                placeholder={t("chatPage.messagePlaceholder")}
                 value={newMessage}
                 onChange={(e) => {
                   setNewMessage(e.target.value);
@@ -563,691 +721,27 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
             <button
               type="submit"
-              className={`send-btn ${newMessage.trim() ? "active" : ""}`}
-              disabled={!newMessage.trim()}
+              className={`send-btn ${newMessage.trim() && !isSending ? "active" : ""}`}
+              disabled={!newMessage.trim() || isSending}
             >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <line x1="22" y1="2" x2="11" y2="13" />
-                <polygon points="22,2 15,22 11,13 2,9 22,2" />
-              </svg>
+              {isSending ? (
+                <div className="spinner" style={{ width: 18, height: 18, borderWidth: 2 }}></div>
+              ) : (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22,2 15,22 11,13 2,9 22,2" />
+                </svg>
+              )}
             </button>
           </div>
         </Form>
       </div>
 
-      <style jsx>{`
-        .modern-chat-container {
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .modern-chat-container::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(255, 255, 255, 0.02);
-          backdrop-filter: blur(10px);
-          z-index: 0;
-        }
-
-        .modern-chat-header {
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(20px);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          padding: 1rem 1.5rem;
-          z-index: 2;
-          position: relative;
-        }
-
-        .header-content {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .user-info-section {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-
-        .profile-avatar-container {
-          position: relative;
-        }
-
-        .profile-avatar {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          object-fit: cover;
-          border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .status-pulse {
-          position: absolute;
-          bottom: 2px;
-          right: 2px;
-          width: 16px;
-          height: 16px;
-        }
-
-        .status-pulse.online .pulse-ring {
-          border: 2px solid #00ff88;
-          border-radius: 50%;
-          height: 16px;
-          width: 16px;
-          position: absolute;
-          animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1)
-            infinite;
-        }
-
-        .status-pulse.online .pulse-dot {
-          background-color: #00ff88;
-          border-radius: 50%;
-          height: 8px;
-          width: 8px;
-          position: absolute;
-          top: 4px;
-          left: 4px;
-        }
-
-        .status-pulse.offline .pulse-dot {
-          background-color: #ff6b6b;
-          border-radius: 50%;
-          height: 8px;
-          width: 8px;
-          position: absolute;
-          top: 4px;
-          left: 4px;
-        }
-
-        @keyframes pulse-ring {
-          0% {
-            transform: scale(0.33);
-          }
-          80%,
-          100% {
-            opacity: 0;
-          }
-        }
-
-        .user-details {
-          color: white;
-        }
-
-        .user-name {
-          font-size: 1.2rem;
-          font-weight: 600;
-          margin: 0;
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .status-info {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          margin-top: 0.25rem;
-        }
-
-        .online-status,
-        .offline-status {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.875rem;
-          opacity: 0.9;
-        }
-
-        .status-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-        }
-
-        .status-dot.online {
-          background-color: #00ff88;
-          box-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
-        }
-
-        .status-dot.offline {
-          background-color: #ff6b6b;
-        }
-
-        .header-actions {
-          display: flex;
-          gap: 0.5rem;
-        }
-
-        .action-btn {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          border: none;
-          background: rgba(255, 255, 255, 0.1);
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          backdrop-filter: blur(10px);
-        }
-
-        .action-btn:hover {
-          background: rgba(255, 255, 255, 0.2);
-          transform: translateY(-1px);
-        }
-
-        .action-btn svg {
-          width: 18px;
-          height: 18px;
-        }
-
-        .modern-chat-messages {
-          flex: 1;
-          overflow-y: auto;
-          padding: 1.5rem;
-          z-index: 1;
-          position: relative;
-        }
-
-        .message-date-group {
-          margin-bottom: 2rem;
-        }
-
-        .date-separator {
-          text-align: center;
-          margin: 2rem 0 1.5rem;
-        }
-
-        .date-text {
-          background: rgba(255, 255, 255, 0.15);
-          color: white;
-          padding: 0.5rem 1rem;
-          border-radius: 20px;
-          font-size: 0.875rem;
-          font-weight: 500;
-          backdrop-filter: blur(10px);
-        }
-
-        .modern-message {
-          display: flex;
-          margin-bottom: 1rem;
-          animation: slideInMessage 0.3s ease-out;
-        }
-
-        .modern-message.sent {
-          justify-content: flex-end;
-        }
-
-        .modern-message.received {
-          justify-content: flex-start;
-        }
-
-        @keyframes slideInMessage {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .message-avatar {
-          width: 36px;
-          height: 36px;
-          margin-right: 0.75rem;
-          flex-shrink: 0;
-        }
-
-        .message-avatar img {
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-          object-fit: cover;
-          border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .message-wrapper {
-          max-width: 70%;
-        }
-
-        .message-bubble {
-          padding: 1rem 1.25rem;
-          border-radius: 18px;
-          position: relative;
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .modern-message.sent .message-bubble {
-          background: linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 0.25),
-            rgba(255, 255, 255, 0.15)
-          );
-          color: white;
-          margin-left: auto;
-        }
-
-        .modern-message.received .message-bubble {
-          background: rgba(255, 255, 255, 0.9);
-          color: #333;
-        }
-
-        .message-text {
-          margin: 0;
-          line-height: 1.4;
-          word-wrap: break-word;
-        }
-
-        .message-meta {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-top: 0.5rem;
-          gap: 0.5rem;
-        }
-
-        .message-time {
-          font-size: 0.75rem;
-          opacity: 0.7;
-        }
-
-        .message-status {
-          display: flex;
-          align-items: center;
-        }
-
-        .status-icon {
-          width: 16px;
-          height: 16px;
-        }
-
-        .status-icon.sent {
-          color: rgba(255, 255, 255, 0.7);
-        }
-
-        .status-icon.delivered {
-          color: #00ff88;
-        }
-
-        .status-icon.error {
-          color: #ff6b6b;
-        }
-
-        .typing-indicator-bubble {
-          background: rgba(255, 255, 255, 0.9);
-          padding: 1rem 1.25rem;
-          border-radius: 18px;
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .typing-animation {
-          display: flex;
-          gap: 4px;
-        }
-
-        .typing-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background-color: #667eea;
-          animation: typing-bounce 1.4s infinite ease-in-out;
-        }
-
-        .typing-dot:nth-child(1) {
-          animation-delay: -0.32s;
-        }
-        .typing-dot:nth-child(2) {
-          animation-delay: -0.16s;
-        }
-
-        @keyframes typing-bounce {
-          0%,
-          80%,
-          100% {
-            transform: scale(0.7);
-            opacity: 0.5;
-          }
-          40% {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-
-        .typing-text {
-          font-size: 0.875rem;
-          color: #666;
-          font-style: italic;
-        }
-
-        .modern-chat-input {
-          padding: 1.5rem;
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(20px);
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-          z-index: 2;
-          position: relative;
-        }
-
-        .input-form {
-          margin: 0;
-        }
-
-        .input-container {
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          background: rgba(255, 255, 255, 0.15);
-          border-radius: 25px;
-          padding: 0.5rem;
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .attachment-btn,
-        .emoji-btn {
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          border: none;
-          background: transparent;
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .attachment-btn:hover,
-        .emoji-btn:hover {
-          background: rgba(255, 255, 255, 0.1);
-          transform: scale(1.1);
-        }
-
-        .attachment-btn svg,
-        .emoji-btn svg {
-          width: 20px;
-          height: 20px;
-        }
-
-        .text-input-wrapper {
-          flex: 1;
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-
-        .modern-text-input {
-          border: none;
-          background: transparent;
-          color: white;
-          font-size: 1rem;
-          padding: 0.75rem 1rem;
-          flex: 1;
-          outline: none;
-        }
-
-        .modern-text-input::placeholder {
-          color: rgba(255, 255, 255, 0.6);
-        }
-
-        .modern-text-input:focus {
-          box-shadow: none;
-          border: none;
-          background: transparent;
-        }
-
-        .send-btn {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          border: none;
-          background: linear-gradient(135deg, #667eea, #764ba2);
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          opacity: 0.5;
-          transform: scale(0.9);
-        }
-
-        .send-btn.active {
-          opacity: 1;
-          transform: scale(1);
-          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .send-btn:hover.active {
-          transform: scale(1.05);
-          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        .send-btn:disabled {
-          cursor: not-allowed;
-        }
-
-        .send-btn svg {
-          width: 20px;
-          height: 20px;
-        }
-
-        .chat-loading {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100vh;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-        }
-
-        .loading-spinner {
-          margin-bottom: 1rem;
-        }
-
-        .spinner {
-          width: 40px;
-          height: 40px;
-          border: 4px solid rgba(255, 255, 255, 0.3);
-          border-top: 4px solid white;
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-          0% {
-            transform: rotate(0deg);
-          }
-          100% {
-            transform: rotate(360deg);
-          }
-        }
-
-        .loading-text {
-          font-size: 1.1rem;
-          opacity: 0.9;
-          margin: 0;
-        }
-
-        .chat-error {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100vh;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          text-align: center;
-        }
-
-        .error-icon {
-          font-size: 3rem;
-          margin-bottom: 1rem;
-        }
-
-        .chat-error p {
-          font-size: 1.1rem;
-          margin: 0;
-          opacity: 0.9;
-        }
-
-        /* Scrollbar Styling */
-        .modern-chat-messages::-webkit-scrollbar {
-          width: 6px;
-        }
-
-        .modern-chat-messages::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 3px;
-        }
-
-        .modern-chat-messages::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.3);
-          border-radius: 3px;
-        }
-
-        .modern-chat-messages::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-          .modern-chat-header {
-            padding: 1rem;
-          }
-
-          .header-actions {
-            gap: 0.25rem;
-          }
-
-          .action-btn {
-            width: 36px;
-            height: 36px;
-          }
-
-          .action-btn svg {
-            width: 16px;
-            height: 16px;
-          }
-
-          .modern-chat-messages {
-            padding: 1rem;
-          }
-
-          .message-wrapper {
-            max-width: 85%;
-          }
-
-          .modern-chat-input {
-            padding: 1rem;
-          }
-
-          .user-name {
-            font-size: 1.1rem;
-          }
-
-          .profile-avatar {
-            width: 42px;
-            height: 42px;
-          }
-        }
-
-        /* Message Error State */
-        .modern-message.error .message-bubble {
-          border: 1px solid rgba(255, 107, 107, 0.5);
-          background: linear-gradient(
-            135deg,
-            rgba(255, 107, 107, 0.15),
-            rgba(255, 107, 107, 0.05)
-          );
-        }
-
-        /* Message Animation on Send */
-        .modern-message.sent .message-bubble {
-          animation: messageSlideIn 0.3s ease-out;
-        }
-
-        @keyframes messageSlideIn {
-          from {
-            opacity: 0;
-            transform: translateX(20px) scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0) scale(1);
-          }
-        }
-
-        /* Enhanced Focus States */
-        .modern-text-input:focus {
-          outline: none;
-        }
-
-        .input-container:focus-within {
-          border-color: rgba(255, 255, 255, 0.4);
-          box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
-        }
-
-        /* Pulse Animation for Online Status */
-        @keyframes pulse-ring {
-          0% {
-            transform: scale(0.33);
-            opacity: 1;
-          }
-          80%,
-          100% {
-            opacity: 0;
-            transform: scale(2.33);
-          }
-        }
-
-        /* Message Hover Effects */
-        .modern-message:hover .message-bubble {
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Smooth Transitions */
-        * {
-          transition: all 0.2s ease;
-        }
-
-        /* Custom Form Control Override */
-        .modern-text-input.form-control {
-          border: none !important;
-          box-shadow: none !important;
-          background: transparent !important;
-        }
-
-        .modern-text-input.form-control:focus {
-          border: none !important;
-          box-shadow: none !important;
-          background: transparent !important;
-        }
-      `}</style>
     </Container>
   );
 };

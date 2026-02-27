@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import { ListGroup, Spinner, Alert, Badge, Modal, Button } from "react-bootstrap";
-import { useGetUserMessagesQuery } from "../../store/slices/chatSlice";
+import { useGetUserMessagesQuery, useGetConversationsQuery } from "../../store/slices/chatSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/index";
 import io, { Socket } from "socket.io-client";
 import { BASE_URL } from "../../constants";
+import "./UsersList.css";
 
 interface User {
   _id: string;
@@ -28,10 +29,16 @@ interface Message {
   _id: string;
   sender: User;
   receiver: User;
-  message: string;
+  message?: string;
+  content?: string; // Some APIs use 'content' instead of 'message'
   createdAt: string;
   read: boolean;
 }
+
+// Helper to get message text from different field names
+const getMessageText = (message: Message): string => {
+  return message.message || message.content || "";
+};
 
 interface UsersListProps {
   onSelectUser: (
@@ -66,8 +73,8 @@ const DebugMessageRead: React.FC<{
             <span className="text-gray-500"> None</span>
           ) : (
             <ul className="ml-4 mt-1">
-              {Object.entries(unreadCounts).map(([userId, count]) => (
-                <li key={userId} className="flex justify-between items-center">
+              {Object.entries(unreadCounts).map(([userId, count], index) => (
+                <li key={userId || `unread-${index}`} className="flex justify-between items-center">
                   <span>User {userId}: {count}</span>
                   {count > 0 && (
                     <button
@@ -96,7 +103,13 @@ const UsersList: React.FC<UsersListProps> = ({
     (state: RootState) => state.auth.userInfo?.user
   );
   const { data, error, isLoading, isError, refetch } = useGetUserMessagesQuery(
-    currentUser?._id
+    currentUser?._id,
+    { skip: !currentUser?._id }
+  );
+  // Also fetch conversations for better last message data
+  const { data: conversationsData, refetch: refetchConversations } = useGetConversationsQuery(
+    { page: 1, limit: 50 },
+    { skip: !currentUser?._id }
   );
   const token = useSelector((state: RootState) => state.auth.userInfo?.token);
   const socketRef = useRef<Socket | null>(null);
@@ -205,7 +218,7 @@ const UsersList: React.FC<UsersListProps> = ({
     // Message events with immediate UI updates
     socket.on("newMessage", (data: { message: Message; unreadCount: number; senderId: string }) => {
       console.log("📨 Received new message:", data);
-      
+
       // Update unread count immediately if the message is not from the currently active user
       if (data.senderId !== activeUserId) {
         setUnreadCounts(prev => ({
@@ -213,25 +226,31 @@ const UsersList: React.FC<UsersListProps> = ({
           [data.senderId]: data.unreadCount
         }));
       }
-      
-      refetch(); // Refresh the message list
+
+      // Refresh both data sources
+      refetch();
+      refetchConversations();
     });
 
     socket.on("messageSent", (data: { message: Message; unreadCount: number; receiverId: string }) => {
       console.log("📤 Message sent confirmation:", data);
-      refetch(); // Refresh to show the sent message
+      // Refresh both to show the sent message
+      refetch();
+      refetchConversations();
     });
 
     socket.on("messagesRead", (data: { readBy: string; count: number }) => {
       console.log("📖 Messages marked as read:", data);
-      
+
       // Clear unread count for the user who read the messages
       setUnreadCounts(prev => ({
         ...prev,
         [data.readBy]: 0
       }));
-      
-      refetch(); // Refresh to update read status
+
+      // Refresh to update read status
+      refetch();
+      refetchConversations();
     });
 
     // Enhanced typing events
@@ -270,7 +289,7 @@ const UsersList: React.FC<UsersListProps> = ({
     });
 
     return socket;
-  }, [token, currentUser?._id, refetch, activeUserId]);
+  }, [token, currentUser?._id, refetch, refetchConversations, activeUserId]);
 
   // Initialize socket on mount and when dependencies change
   useEffect(() => {
@@ -370,7 +389,7 @@ const UsersList: React.FC<UsersListProps> = ({
 
   // Extract conversation partners with enhanced status info
   const chatPartners = React.useMemo(() => {
-    if (!data?.data || !currentUser) return [];
+    if (!currentUser) return [];
 
     const partnersMap = new Map<
       string,
@@ -381,35 +400,79 @@ const UsersList: React.FC<UsersListProps> = ({
       }
     >();
 
-    data.data.forEach((message: Message) => {
-      const otherUser = message.sender._id === currentUser._id ? message.receiver : message.sender;
-      const isIncoming = message.sender._id !== currentUser._id;
-      const isUnread = isIncoming && !message.read;
-      const messageDate = new Date(message.createdAt);
+    // Process messages from getUserMessages
+    if (data?.data && Array.isArray(data.data)) {
+      data.data.forEach((message: Message) => {
+        const otherUser = message.sender?._id === currentUser._id ? message.receiver : message.sender;
+        if (!otherUser?._id) return; // Skip if no valid user
 
-      const existingPartner = partnersMap.get(otherUser._id);
+        const isIncoming = message.sender?._id !== currentUser._id;
+        const isUnread = isIncoming && !message.read;
+        const messageDate = new Date(message.createdAt);
+        const messageText = getMessageText(message);
 
-      if (!existingPartner) {
-        partnersMap.set(otherUser._id, {
-          ...otherUser,
-          lastMessage: message.message,
-          unreadCount: isUnread ? 1 : 0,
-          lastMessageTime: messageDate,
-          status: getUserCurrentStatus(otherUser._id) as any,
-          lastSeen: userStatuses[otherUser._id]?.lastSeen,
-        });
-      } else {
-        if (!existingPartner.lastMessageTime || messageDate > existingPartner.lastMessageTime) {
-          existingPartner.lastMessage = message.message;
+        const existingPartner = partnersMap.get(otherUser._id);
+
+        if (!existingPartner) {
+          partnersMap.set(otherUser._id, {
+            ...otherUser,
+            imageUrls: otherUser.imageUrls || [],
+            lastMessage: messageText,
+            unreadCount: isUnread ? 1 : 0,
+            lastMessageTime: messageDate,
+            status: getUserCurrentStatus(otherUser._id) as any,
+            lastSeen: userStatuses[otherUser._id]?.lastSeen,
+          });
+        } else {
+          if (!existingPartner.lastMessageTime || messageDate > existingPartner.lastMessageTime) {
+            existingPartner.lastMessage = messageText;
+            existingPartner.lastMessageTime = messageDate;
+          }
+          if (isUnread) {
+            existingPartner.unreadCount += 1;
+          }
+          existingPartner.status = getUserCurrentStatus(otherUser._id) as any;
+          existingPartner.lastSeen = userStatuses[otherUser._id]?.lastSeen;
+        }
+      });
+    }
+
+    // Also process conversations data if available (this often has better last message info)
+    if (conversationsData?.data && Array.isArray(conversationsData.data)) {
+      conversationsData.data.forEach((conversation: any) => {
+        // Find the other participant
+        const participants = conversation.participants || [];
+        const otherUser = participants.find((p: any) => p._id !== currentUser._id);
+
+        if (!otherUser?._id) return;
+
+        const lastMessage = conversation.lastMessage;
+        const messageText = lastMessage?.message || lastMessage?.content || "";
+        const messageDate = lastMessage?.createdAt ? new Date(lastMessage.createdAt) : null;
+        const unreadCount = conversation.unreadCount || 0;
+
+        const existingPartner = partnersMap.get(otherUser._id);
+
+        if (!existingPartner) {
+          partnersMap.set(otherUser._id, {
+            ...otherUser,
+            imageUrls: otherUser.imageUrls || [],
+            lastMessage: messageText,
+            unreadCount: unreadCount,
+            lastMessageTime: messageDate || undefined,
+            status: getUserCurrentStatus(otherUser._id) as any,
+            lastSeen: userStatuses[otherUser._id]?.lastSeen,
+          });
+        } else if (messageDate && (!existingPartner.lastMessageTime || messageDate > existingPartner.lastMessageTime)) {
+          // Update if this has a more recent message
+          existingPartner.lastMessage = messageText;
           existingPartner.lastMessageTime = messageDate;
+          if (unreadCount > existingPartner.unreadCount) {
+            existingPartner.unreadCount = unreadCount;
+          }
         }
-        if (isUnread) {
-          existingPartner.unreadCount += 1;
-        }
-        existingPartner.status = getUserCurrentStatus(otherUser._id) as any;
-        existingPartner.lastSeen = userStatuses[otherUser._id]?.lastSeen;
-      }
-    });
+      });
+    }
 
     // Override unread count with real-time data if available and user is not currently active
     const partners = Array.from(partnersMap.values()).map(partner => {
@@ -426,15 +489,15 @@ const UsersList: React.FC<UsersListProps> = ({
       // Sort by online status first, then by recent message time
       const aOnline = isUserOnline(a._id);
       const bOnline = isUserOnline(b._id);
-      
+
       if (aOnline && !bOnline) return -1;
       if (!aOnline && bOnline) return 1;
-      
+
       const aTime = a.lastMessageTime?.getTime() || 0;
       const bTime = b.lastMessageTime?.getTime() || 0;
       return bTime - aTime;
     });
-  }, [data, currentUser, userStatuses, onlineUsers, getUserCurrentStatus, isUserOnline, unreadCounts, activeUserId]);
+  }, [data, conversationsData, currentUser, userStatuses, onlineUsers, getUserCurrentStatus, isUserOnline, unreadCounts, activeUserId]);
 
   // Filter conversations based on search query
   const filteredChatPartners = React.useMemo(() => {
@@ -453,7 +516,8 @@ const UsersList: React.FC<UsersListProps> = ({
   const handleReload = React.useCallback(() => {
     console.log("🔄 Manually reloading user messages...");
     refetch();
-    
+    refetchConversations();
+
     // Also request fresh online users if socket is connected
     if (socketRef.current?.connected) {
       socketRef.current.emit('getOnlineUsers', (response: { users: OnlineUser[] }) => {
@@ -463,15 +527,7 @@ const UsersList: React.FC<UsersListProps> = ({
         }
       });
     }
-  }, [refetch]);
-
-  // Expose reload function via ref (optional)
-  React.useImperativeHandle(
-    React.forwardRef(() => null),
-    () => ({
-      reload: handleReload,
-    })
-  );
+  }, [refetch, refetchConversations]);
 
   const formatTime = (date: Date) => {
     const now = new Date();
@@ -645,18 +701,18 @@ const UsersList: React.FC<UsersListProps> = ({
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col users-list-wrapper">
       {/* Connection Status Bar */}
       <div className={`px-3 py-2 text-xs font-medium flex items-center justify-between ${
-        isSocketConnected ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+        isSocketConnected ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'
       }`}>
         <div className="flex items-center">
           <div className={`w-2 h-2 rounded-full mr-2 ${
-            isSocketConnected ? 'bg-green-500' : 'bg-red-500'
+            isSocketConnected ? 'bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.6)]' : 'bg-red-400'
           }`}></div>
           {isSocketConnected ? 'Connected' : 'Disconnected'}
           {onlineUsers.length > 0 && (
-            <span className="ml-2 text-green-600">
+            <span className="ml-2 text-green-400">
               • {onlineUsers.length} online
             </span>
           )}
@@ -683,7 +739,7 @@ const UsersList: React.FC<UsersListProps> = ({
           <div className="list-group list-group-flush">
             {filteredChatPartners.map((user, index) => (
               <div
-                key={user._id}
+                key={user._id || `user-${index}`}
                 className={`
                   cursor-pointer transition-all duration-200 border-0 px-0 py-0
                   ${activeUserId === user._id 
