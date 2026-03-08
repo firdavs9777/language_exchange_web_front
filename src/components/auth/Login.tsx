@@ -7,6 +7,7 @@ import { Bounce, toast } from "react-toastify";
 import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import { BASE_URL } from "../../constants";
 import "./Login.scss";
 
 const Login = () => {
@@ -57,7 +58,7 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    const backendUrl = "http://localhost:5003";
+    const backendUrl = BASE_URL;
     sessionStorage.setItem("oauth_redirect", redirect);
     window.location.href = `${backendUrl}/api/v1/auth/google`;
   };

@@ -1,7 +1,4 @@
-// export const BASE_URL = "http://localhost:5003";
-// export const BASE_URL = "http://64.23.181.246:5003";
-// export const BASE_URL = "";
-export const BASE_URL = "http://localhost:5003";
+export const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5003";
 export const MOMENTS_URL = "/api/v1/moments";
 export const USERS_URL = "/api/v1/users";
 export const COMMUNITY_URL = "/api/v1/auth/users";

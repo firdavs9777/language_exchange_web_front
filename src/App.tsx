@@ -9,8 +9,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FooterMain from "./components/footer/FooterMain";
-
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5003";
+import { BASE_URL } from "./constants";
 
 const App = () => {
   const location = useLocation();
@@ -18,7 +17,7 @@ const App = () => {
   // Track page visits for analytics
   useEffect(() => {
     try {
-      fetch(`${API_URL}/api/v1/analytics/visit`, {
+      fetch(`${BASE_URL}/api/v1/analytics/visit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

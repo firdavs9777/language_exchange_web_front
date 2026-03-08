@@ -21,6 +21,7 @@ import { logout } from "../../store/slices/authSlice";
 import { Bounce, toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
 
+import { BASE_URL } from "../../constants";
 import logo from "../../assets/logo.png";
 import "./MainNavbar.scss";
 
@@ -127,7 +128,7 @@ const MainNavbar = () => {
     if (Array.isArray(userInfo?.user?.images) && userInfo.user.images[0]) {
       return userInfo.user.images[0].startsWith("http")
         ? userInfo.user.images[0]
-        : `http://localhost:5003/uploads/${userInfo.user.images[0]}`;
+        : `${BASE_URL}/uploads/${userInfo.user.images[0]}`;
     }
     return "/default-avatar.png";
   };
