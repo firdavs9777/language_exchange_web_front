@@ -1,7 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useSearchUsersQuery } from "../../store/slices/usersSlice";
+import {
+  useSearchUsersQuery,
+  useSearchUsersByUsernameQuery,
+  useGetUserByIdQuery,
+} from "../../store/slices/usersSlice";
 import { useCreateChatRoomMutation } from "../../store/slices/chatSlice";
 import { Bounce, toast } from "react-toastify";
 import {
@@ -12,15 +16,24 @@ import {
   Clock,
   Loader2,
   UserPlus,
+  AtSign,
+  Hash,
 } from "lucide-react";
 
 interface User {
   _id: string;
   name: string;
+  username?: string;
   imageUrls?: string[];
   isOnline?: boolean;
   lastSeen?: string;
 }
+
+// Detect if input looks like a MongoDB ObjectId (24 hex chars)
+const isObjectId = (str: string) => /^[a-f\d]{24}$/i.test(str.trim());
+
+// Detect if input starts with @ (username search)
+const isUsernameQuery = (str: string) => str.trim().startsWith("@");
 
 const NewChat: React.FC = () => {
   const { t } = useTranslation();
@@ -30,13 +43,45 @@ const NewChat: React.FC = () => {
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [isGroupChat, setIsGroupChat] = useState(false);
 
-  const { data: searchData, isLoading: isSearching } = useSearchUsersQuery(
-    { query: searchQuery },
-    { skip: searchQuery.length < 2 }
+  const trimmedQuery = searchQuery.trim();
+  const searchByUsername = isUsernameQuery(trimmedQuery);
+  const searchById = isObjectId(trimmedQuery);
+  const searchByName = !searchByUsername && !searchById && trimmedQuery.length >= 2;
+
+  // Name search
+  const { data: nameSearchData, isLoading: isNameSearching } = useSearchUsersQuery(
+    { query: trimmedQuery },
+    { skip: !searchByName }
   );
+
+  // Username search (when query starts with @)
+  const { data: usernameSearchData, isLoading: isUsernameSearching } = useSearchUsersByUsernameQuery(
+    { query: trimmedQuery },
+    { skip: !searchByUsername || trimmedQuery.replace("@", "").length < 1 }
+  );
+
+  // ID search (when query is a valid ObjectId)
+  const { data: idSearchData, isLoading: isIdSearching } = useGetUserByIdQuery(
+    trimmedQuery,
+    { skip: !searchById }
+  );
+
   const [createChatRoom, { isLoading: isCreating }] = useCreateChatRoomMutation();
 
-  const searchResults: User[] = searchData?.data || [];
+  // Merge results from all search types
+  const getSearchResults = (): User[] => {
+    if (searchByName) return nameSearchData?.data || [];
+    if (searchByUsername) return usernameSearchData?.data || [];
+    if (searchById && idSearchData?.data) {
+      const user = idSearchData.data;
+      return [user];
+    }
+    return [];
+  };
+
+  const searchResults = getSearchResults();
+  const isSearching = isNameSearching || isUsernameSearching || isIdSearching;
+  const hasQuery = searchByName || searchByUsername || searchById;
 
   const handleSelectUser = (user: User) => {
     if (isGroupChat) {
@@ -52,20 +97,19 @@ const NewChat: React.FC = () => {
 
   const handleCreateChat = async (users: User[]) => {
     try {
-      const participantIds = users.map((u) => u._id);
-      const result = await createChatRoom({
-        participantIds,
-        isGroup: participantIds.length > 1,
-      }).unwrap();
+      // Backend expects { userId: string } for 1-on-1 chat
+      const targetUserId = users[0]._id;
+      const result = await createChatRoom(targetUserId).unwrap();
 
       const chatId = result?.data?._id;
       if (chatId) {
         navigate(`/chat/${chatId}`);
       } else {
-        navigate("/chat");
+        // Navigate to chat with the user directly
+        navigate(`/chat/${targetUserId}`);
       }
     } catch (error) {
-      toast.error(t("chat.newChat.createError") || "Failed to create chat", {
+      toast.error(t("newChat.createError") || "Failed to create chat", {
         position: "top-right",
         autoClose: 3000,
         theme: "dark",
@@ -76,7 +120,7 @@ const NewChat: React.FC = () => {
 
   const handleCreateGroupChat = () => {
     if (selectedUsers.length < 2) {
-      toast.error(t("chat.newChat.selectMoreUsers") || "Select at least 2 users for group chat", {
+      toast.error(t("newChat.selectMoreUsers") || "Select at least 2 users for group chat", {
         position: "top-right",
         autoClose: 3000,
         theme: "dark",
@@ -97,8 +141,17 @@ const NewChat: React.FC = () => {
 
     if (days > 0) return `${days}d ago`;
     if (hours > 0) return `${hours}h ago`;
-    return "Recently";
+    return t("newChat.recently") || "Recently";
   };
+
+  // Search mode indicator
+  const getSearchMode = () => {
+    if (searchByUsername) return { icon: <AtSign className="w-4 h-4" />, label: t("newChat.searchByUsername") || "Searching by username" };
+    if (searchById) return { icon: <Hash className="w-4 h-4" />, label: t("newChat.searchById") || "Searching by user ID" };
+    return null;
+  };
+
+  const searchMode = hasQuery ? getSearchMode() : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50">
@@ -113,10 +166,10 @@ const NewChat: React.FC = () => {
           </button>
           <div className="flex-1">
             <h1 className="text-xl font-bold">
-              {t("chat.newChat.title") || "New Chat"}
+              {t("newChat.title") || "New Chat"}
             </h1>
             <p className="text-teal-100 text-sm">
-              {t("chat.newChat.subtitle") || "Start a conversation"}
+              {t("newChat.subtitle") || "Start a conversation"}
             </p>
           </div>
         </div>
@@ -135,7 +188,7 @@ const NewChat: React.FC = () => {
             }`}
           >
             <MessageCircle className="w-5 h-5" />
-            {t("chat.newChat.directMessage") || "Direct"}
+            {t("newChat.directMessage") || "Direct"}
           </button>
           <button
             onClick={() => setIsGroupChat(true)}
@@ -146,7 +199,7 @@ const NewChat: React.FC = () => {
             }`}
           >
             <Users className="w-5 h-5" />
-            {t("chat.newChat.groupChat") || "Group"}
+            {t("newChat.groupChat") || "Group"}
           </button>
         </div>
 
@@ -157,10 +210,18 @@ const NewChat: React.FC = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={t("chat.newChat.searchPlaceholder") || "Search users..."}
+            placeholder={t("newChat.searchPlaceholder") || "Search by name, @username, or user ID..."}
             className="w-full pl-12 pr-4 py-3 bg-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:bg-white/30 transition-colors"
           />
         </div>
+
+        {/* Search mode indicator */}
+        {searchMode && (
+          <div className="flex items-center gap-2 mt-2 text-teal-100 text-xs">
+            {searchMode.icon}
+            <span>{searchMode.label}</span>
+          </div>
+        )}
       </div>
 
       {/* Selected Users for Group Chat */}
@@ -196,14 +257,28 @@ const NewChat: React.FC = () => {
 
       {/* Content */}
       <div className="px-4 py-6 max-w-2xl mx-auto">
-        {searchQuery.length < 2 ? (
+        {!hasQuery ? (
           <div className="text-center py-12">
             <div className="p-4 rounded-full bg-teal-100 w-fit mx-auto mb-4">
               <UserPlus className="w-8 h-8 text-teal-500" />
             </div>
-            <p className="text-gray-500">
-              {t("chat.newChat.searchHint") || "Search for users to start a chat"}
+            <p className="text-gray-600 font-medium mb-2">
+              {t("newChat.searchHint") || "Search for users to start a chat"}
             </p>
+            <div className="flex flex-col items-center gap-1.5 text-sm text-gray-400 mt-4">
+              <div className="flex items-center gap-2">
+                <Search className="w-3.5 h-3.5" />
+                <span>{t("newChat.hintName") || "Search by name"}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <AtSign className="w-3.5 h-3.5" />
+                <span>{t("newChat.hintUsername") || "Type @username to find by username"}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Hash className="w-3.5 h-3.5" />
+                <span>{t("newChat.hintId") || "Paste a user ID to find directly"}</span>
+              </div>
+            </div>
           </div>
         ) : isSearching ? (
           <div className="flex justify-center py-12">
@@ -215,7 +290,10 @@ const NewChat: React.FC = () => {
               <Search className="w-8 h-8 text-gray-400" />
             </div>
             <p className="text-gray-500">
-              {t("chat.newChat.noResults") || "No users found"}
+              {t("newChat.noResults") || "No users found"}
+            </p>
+            <p className="text-gray-400 text-sm mt-1">
+              {t("newChat.tryDifferent") || "Try a different name, @username, or user ID"}
             </p>
           </div>
         ) : (
@@ -255,15 +333,18 @@ const NewChat: React.FC = () => {
 
                   <div className="flex-1 text-left">
                     <h3 className="font-semibold text-gray-800">{user.name}</h3>
+                    {user.username && (
+                      <p className="text-xs text-teal-500 font-medium">@{user.username}</p>
+                    )}
                     <p className="text-sm text-gray-500 flex items-center gap-1">
                       {user.isOnline ? (
-                        <span className="text-green-500">Online</span>
-                      ) : (
+                        <span className="text-green-500">{t("chatPage.online") || "Online"}</span>
+                      ) : user.lastSeen ? (
                         <>
                           <Clock className="w-3 h-3" />
                           {formatLastSeen(user.lastSeen)}
                         </>
-                      )}
+                      ) : null}
                     </p>
                   </div>
 
@@ -303,7 +384,7 @@ const NewChat: React.FC = () => {
               ) : (
                 <>
                   <Users className="w-5 h-5" />
-                  {t("chat.newChat.createGroup") || "Create Group"} ({selectedUsers.length})
+                  {t("newChat.createGroup") || "Create Group"} ({selectedUsers.length})
                 </>
               )}
             </button>

@@ -625,6 +625,191 @@
   }
 }
 
+/* =========== Download App Banner (prominent, after hero) =========== */
+.download-banner {
+  padding: 0;
+  background: #111827;
+  position: relative;
+  overflow: hidden;
+}
+
+.download-banner-inner {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding: 3rem 0;
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2.5rem 0;
+    text-align: center;
+  }
+}
+
+.download-banner-qr {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  background: white;
+  border-radius: 20px;
+  padding: 1.25rem;
+  box-shadow: 0 8px 32px rgba(0, 191, 165, 0.2);
+
+  .qr-image {
+    border-radius: 8px;
+    display: block;
+  }
+
+  .qr-scan-text {
+    font-size: 0.8125rem;
+    color: #6B7280;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+}
+
+.download-banner-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.download-banner-text {
+  margin-bottom: 1.5rem;
+}
+
+.download-banner-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  line-height: 1.3;
+
+  svg {
+    color: #00BFA5;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 767px) {
+    font-size: 1.375rem;
+    justify-content: center;
+  }
+}
+
+.download-banner-desc {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.6;
+  max-width: 520px;
+}
+
+.download-banner-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  @media (max-width: 767px) {
+    align-items: center;
+  }
+}
+
+.store-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 767px) {
+    justify-content: center;
+  }
+}
+
+.store-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  border: 2px solid transparent;
+
+  &.apple-btn {
+    background: white;
+    color: #111827;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+      color: #111827;
+    }
+  }
+
+  &.google-btn {
+    background: transparent;
+    color: white;
+    border-color: rgba(255, 255, 255, 0.25);
+
+    &:hover {
+      border-color: #00BFA5;
+      background: rgba(0, 191, 165, 0.1);
+      transform: translateY(-2px);
+      color: white;
+    }
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.store-btn-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.store-btn-label {
+  font-size: 0.625rem;
+  font-weight: 500;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.store-btn-name {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.download-badges {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 767px) {
+    justify-content: center;
+  }
+}
+
+.download-badge-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+
+  svg {
+    color: #00BFA5;
+  }
+}
+
 /* =========== CTA Section =========== */
 .cta-section {
   padding: 6rem 0;

@@ -57,7 +57,7 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    const backendUrl = "https://api.banatalk.com";
+    const backendUrl = "http://localhost:5003";
     sessionStorage.setItem("oauth_redirect", redirect);
     window.location.href = `${backendUrl}/api/v1/auth/google`;
   };

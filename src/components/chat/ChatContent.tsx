@@ -1,33 +1,50 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Button, Form, Container, Row, Col } from "react-bootstrap";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { Form, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import {
   useCreateMessageMutation,
   useGetConversationQuery,
-  useMarkConversationReadMutation,
+  useSendVoiceMessageMutation,
+  useSendMediaMessageMutation,
 } from "../../store/slices/chatSlice";
-import io, { Socket } from "socket.io-client";
 import "./ChatContent.css";
-import { BASE_URL } from "../../constants";
-import { ArrowLeft } from "lucide-react";
+import StickerPanel from "./StickerPanel";
+import "./StickerPanel.css";
+import { useSocket } from "./hooks/useSocket";
+import {
+  ArrowLeft,
+  Phone,
+  Video,
+  MoreVertical,
+  Paperclip,
+  Smile,
+  Send,
+  Mic,
+  Check,
+  CheckCheck,
+  AlertCircle,
+  RefreshCw,
+  X,
+  Play,
+  Pause,
+  Image as ImageIcon,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-// Define types for Redux state
 interface RootState {
   auth: {
     userInfo: {
       user: {
         _id: string;
         name?: string;
+        username?: string;
         imageUrls?: string[];
       };
       token: string;
     };
   };
 }
-
-// Socket instance is now stored in a ref inside the component
 
 interface ChatContentProps {
   selectedUser: string;
@@ -37,19 +54,61 @@ interface ChatContentProps {
   initialLastSeen?: string;
 }
 
+interface MessageSender {
+  _id: string;
+  name: string;
+  username?: string;
+  images?: string[];
+  userMode?: string;
+}
+
+interface MessageReceiver {
+  _id: string;
+  name: string;
+  username?: string;
+  images?: string[];
+}
+
+interface MessageMedia {
+  url: string;
+  type: string;
+  thumbnail?: string;
+  fileName?: string;
+  fileSize?: number;
+  mimeType?: string;
+  duration?: number;
+  waveform?: number[];
+  dimensions?: { width: number; height: number };
+}
+
 interface Message {
   _id: string;
   message: string;
-  sender: {
-    _id: string;
-    name: string;
-    imageUrls?: string[];
-  };
-  receiver: string;
+  sender: MessageSender;
+  receiver: MessageReceiver | string;
+  messageType?: string;
+  read?: boolean;
+  readAt?: string;
   createdAt: string;
+  updatedAt?: string;
   isOptimistic?: boolean;
-  status?: "sent" | "delivered" | "error";
+  status?: "sending" | "sent" | "delivered" | "read" | "error";
+  media?: MessageMedia;
+  replyTo?: { _id: string; message: string; sender: { _id: string; name: string } };
 }
+
+const getReceiverId = (receiver: MessageReceiver | string): string => {
+  if (typeof receiver === "object" && receiver !== null) {
+    return receiver._id;
+  }
+  return receiver;
+};
+
+const formatDuration = (seconds: number): string => {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+};
 
 const ChatContent: React.FC<ChatContentProps> = ({
   selectedUser,
@@ -63,12 +122,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const userId = useSelector(
     (state: RootState) => state.auth.userInfo?.user?._id
   );
-  const token = useSelector((state: RootState) => state.auth.userInfo?.token);
   const currentUserName = useSelector(
     (state: RootState) => state.auth.userInfo?.user?.name
   );
 
-  const { data, error, isLoading, refetch } = useGetConversationQuery(
+  const { data, error, isLoading } = useGetConversationQuery(
     {
       senderId: userId,
       receiverId: selectedUser,
@@ -79,7 +137,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
   );
 
   const [createMessage] = useCreateMessageMutation();
-  const [markConversationRead] = useMarkConversationReadMutation();
+  const [sendVoiceMessage] = useSendVoiceMessageMutation();
+  const [sendMediaMessage] = useSendMediaMessageMutation();
 
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -87,374 +146,979 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const [isOnline, setIsOnline] = useState(initialIsOnline);
   const [lastSeen, setLastSeen] = useState<string>(initialLastSeen);
   const [isSending, setIsSending] = useState(false);
+
+  // Media upload state
+  const [mediaPreview, setMediaPreview] = useState<{ file: File; url: string; type: string } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Voice recording state
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingDuration, setRecordingDuration] = useState(0);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const recordingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const audioStreamRef = useRef<MediaStream | null>(null);
+
+  // Voice playback state
+  const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
+  const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
+
+  // Sticker panel state
+  const [isStickerPanelOpen, setIsStickerPanelOpen] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const typingTimeoutRef = useRef<NodeJS.Timeout>();
-  const tempIdRef = useRef<string>();
-  const lastMessageId = useRef<string>();
-  const socketRef = useRef<Socket | null>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const typingClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const selectedUserRef = useRef<string>(selectedUser);
+  const isAtBottomRef = useRef(true);
 
-  // Update online status when initial props change (new user selected)
+  // Shared socket
+  const { socket, isConnected, emit } = useSocket();
+
+  // Keep selectedUserRef in sync
+  useEffect(() => {
+    selectedUserRef.current = selectedUser;
+  }, [selectedUser]);
+
+  // Update online status when initial props change
   useEffect(() => {
     setIsOnline(initialIsOnline);
     setLastSeen(initialLastSeen);
   }, [initialIsOnline, initialLastSeen, selectedUser]);
 
-  // Initialize Socket.IO connection when token changes
+  // ========== Socket event listeners (shared socket) ==========
   useEffect(() => {
-    if (!token) return;
+    if (!socket) return;
 
-    const SOCKET_URL = BASE_URL;
-
-    // Disconnect existing socket if any
-    if (socketRef.current) {
-      socketRef.current.disconnect();
-    }
-
-    socketRef.current = io(SOCKET_URL, {
-      auth: {
-        token: token,
-      },
-      transports: ["websocket", "polling"],
-      reconnection: true,
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
-    });
-
-    const socket = socketRef.current;
-
-    socket.on("connect", () => {
-      console.log("Connected to socket server");
-
-      // Request initial user status when socket connects
-      if (selectedUser) {
-        socket.emit("getUserStatus", { userId: selectedUser }, (response: any) => {
-          if (response?.status === "success" && response?.data) {
-            setIsOnline(response.data.status === "online");
-            if (response.data.lastSeen) {
-              setLastSeen(response.data.lastSeen);
-            }
-          }
-        });
-      }
-    });
-
-    socket.on("connect_error", (error: Error) => {
-      console.error("Socket connection error:", error);
-    });
-
-    // Enhanced online status listeners
-    socket.on("userOnline", (data: { userId: string }) => {
-      if (data.userId === selectedUser) {
-        setIsOnline(true);
-        setLastSeen("");
-      }
-    });
-
-    socket.on("userOffline", (data: { userId: string; lastSeen: string }) => {
-      if (data.userId === selectedUser) {
-        setIsOnline(false);
-        setLastSeen(data.lastSeen);
-      }
-    });
-
-    // Handle user status updates
-    socket.on("userStatusUpdate", (data: { userId: string; status: string; lastSeen?: string }) => {
-      if (data.userId === selectedUser) {
-        setIsOnline(data.status === 'online');
-        if (data.lastSeen) {
-          setLastSeen(data.lastSeen);
-        }
-      }
-    });
-
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.off();
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
-    };
-  }, [token, selectedUser]);
-
-  // Load initial messages and mark as read
-  useEffect(() => {
-    if (data?.data) {
-      setMessages(data.data);
-
-      // Mark messages as read when conversation is opened
-      const socket = socketRef.current;
-      if (socket?.connected) {
-        socket.emit("markAsRead", { senderId: selectedUser }, (response: any) => {
-          if (response?.status === "success") {
-            console.log(`Marked ${response.markedCount} messages as read`);
-          }
-        });
-      }
-    }
-  }, [data, selectedUser]);
-
-  useEffect(() => {
-    const socket = socketRef.current;
-    if (!socket || !selectedUser) return;
-
-    // Handler for new messages - Updated to match server event name
     const handleNewMessage = (notificationData: {
       message: Message;
       unreadCount: number;
-      isNewConversation: boolean;
       senderId?: string;
     }) => {
+      console.log("[ChatContent] newMessage received:", notificationData);
       const newMsg = notificationData.message;
-      console.log("Received new message:", newMsg);
+      const currentSelectedUser = selectedUserRef.current;
 
-      // Only add message if it's from the current conversation partner
+      const receiverId = getReceiverId(newMsg.receiver);
       const isFromCurrentConversation =
-        newMsg.sender._id === selectedUser ||
-        newMsg.receiver === selectedUser ||
-        notificationData.senderId === selectedUser;
+        newMsg.sender._id === currentSelectedUser ||
+        receiverId === currentSelectedUser ||
+        notificationData.senderId === currentSelectedUser;
+
+      console.log("[ChatContent] newMessage check:", {
+        senderId: newMsg.sender._id,
+        receiverId,
+        notifSenderId: notificationData.senderId,
+        currentSelectedUser,
+        isFromCurrentConversation,
+      });
 
       if (isFromCurrentConversation) {
-        setMessages((prevMessages) => {
-          if (prevMessages.some((msg) => msg._id === newMsg._id)) {
-            return prevMessages;
+        setMessages((prev) => {
+          if (prev.some((msg) => msg._id === newMsg._id)) {
+            console.log("[ChatContent] Duplicate message, skipping");
+            return prev;
           }
-          return [...prevMessages, newMsg];
+          console.log("[ChatContent] Adding message to state");
+          return [...prev, { ...newMsg, status: "delivered" }];
         });
-      }
-    };
 
-    // Handler for message errors
-    const handleMessageError = (errorData: {
-      message: string;
-      error: string;
-    }) => {
-      console.error("Message error:", errorData);
-      setMessages((prevMessages) => {
-        return prevMessages.map((msg) => {
-          if (msg.isOptimistic && msg._id === tempIdRef.current) {
-            return { ...msg, status: "error" };
-          }
-          return msg;
-        });
-      });
-    };
-
-    // Handler for typing indicators - Updated to match server event
-    const handleUserTyping = (data: { userId: string; isTyping: boolean }) => {
-      if (data.userId === selectedUser) {
-        setIsTyping(data.isTyping);
-        // Auto-clear typing after 3 seconds
-        if (data.isTyping) {
-          setTimeout(() => setIsTyping(false), 3000);
+        if (newMsg.sender._id === currentSelectedUser && socket.connected) {
+          socket.emit("markAsRead", { senderId: currentSelectedUser });
         }
       }
     };
 
-    // Register event listeners with correct event names
+    const handleMediaMessage = (data: { message: Message }) => {
+      const newMsg = data.message;
+      const currentSelectedUser = selectedUserRef.current;
+
+      const receiverId = getReceiverId(newMsg.receiver);
+      const isFromCurrentConversation =
+        newMsg.sender._id === currentSelectedUser ||
+        receiverId === currentSelectedUser;
+
+      if (isFromCurrentConversation) {
+        setMessages((prev) => {
+          if (prev.some((msg) => msg._id === newMsg._id)) return prev;
+          return [...prev, { ...newMsg, status: "delivered" }];
+        });
+
+        if (newMsg.sender._id === currentSelectedUser && socket.connected) {
+          socket.emit("markAsRead", { senderId: currentSelectedUser });
+        }
+      }
+    };
+
+    const handleMessageSent = (data: { message: Message; receiverId: string }) => {
+      const currentSelectedUser = selectedUserRef.current;
+      if (data.receiverId === currentSelectedUser) {
+        setMessages((prev) => {
+          if (prev.some((msg) => msg._id === data.message._id)) return prev;
+          return [...prev, { ...data.message, status: "delivered" }];
+        });
+      }
+    };
+
+    const handleMessagesRead = (data: { readBy: string }) => {
+      if (data.readBy === selectedUserRef.current) {
+        setMessages((prev) =>
+          prev.map((msg) => {
+            if (msg.sender._id === userId) {
+              return { ...msg, status: "read", read: true, readAt: new Date().toISOString() };
+            }
+            return msg;
+          })
+        );
+      }
+    };
+
+    const handleMessageDeleted = (data: { messageId: string }) => {
+      setMessages((prev) => prev.filter((msg) => msg._id !== data.messageId));
+    };
+
+    const handleUserTyping = (data: { userId: string }) => {
+      if (data.userId === selectedUserRef.current) {
+        setIsTyping(true);
+        if (typingClearRef.current) clearTimeout(typingClearRef.current);
+        typingClearRef.current = setTimeout(() => setIsTyping(false), 4000);
+      }
+    };
+
+    const handleUserStoppedTyping = (data: { userId: string }) => {
+      if (data.userId === selectedUserRef.current) {
+        setIsTyping(false);
+        if (typingClearRef.current) {
+          clearTimeout(typingClearRef.current);
+          typingClearRef.current = null;
+        }
+      }
+    };
+
+    const handleUserStatusUpdate = (data: { userId: string; status: string; lastSeen?: string }) => {
+      if (data.userId === selectedUserRef.current) {
+        setIsOnline(data.status === "online");
+        if (data.lastSeen) setLastSeen(data.lastSeen);
+      }
+    };
+
+    const handleMessageError = (errorData: { message: string; error: string }) => {
+      console.error("[Socket] Message error:", errorData);
+    };
+
     socket.on("newMessage", handleNewMessage);
-    socket.on("messageError", handleMessageError);
+    socket.on("newVoiceMessage", handleMediaMessage);
+    socket.on("newVideoMessage", handleMediaMessage);
+    socket.on("messageSent", handleMessageSent);
+    socket.on("messagesRead", handleMessagesRead);
+    socket.on("messageDeleted", handleMessageDeleted);
     socket.on("userTyping", handleUserTyping);
+    socket.on("userStoppedTyping", handleUserStoppedTyping);
+    socket.on("userStatusUpdate", handleUserStatusUpdate);
+    socket.on("messageError", handleMessageError);
 
     return () => {
-      socket?.off("newMessage", handleNewMessage);
-      socket?.off("messageError", handleMessageError);
-      socket?.off("userTyping", handleUserTyping);
+      socket.off("newMessage", handleNewMessage);
+      socket.off("newVoiceMessage", handleMediaMessage);
+      socket.off("newVideoMessage", handleMediaMessage);
+      socket.off("messageSent", handleMessageSent);
+      socket.off("messagesRead", handleMessagesRead);
+      socket.off("messageDeleted", handleMessageDeleted);
+      socket.off("userTyping", handleUserTyping);
+      socket.off("userStoppedTyping", handleUserStoppedTyping);
+      socket.off("userStatusUpdate", handleUserStatusUpdate);
+      socket.off("messageError", handleMessageError);
     };
-  }, [userId, selectedUser]);
+  }, [socket, userId]);
 
-  // Handle typing indicator
-  const handleTyping = useCallback(() => {
-    const socket = socketRef.current;
-    if (!socket?.connected || !selectedUser) return;
+  // Request user status when selectedUser changes or socket connects
+  useEffect(() => {
+    if (!socket || !selectedUser) return;
 
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
+    const requestStatus = () => {
+      if (!socket.connected) return;
+      console.log("[ChatContent] Requesting status for:", selectedUser);
+      socket.emit("getUserStatus", { userId: selectedUser }, (response: any) => {
+        console.log("[ChatContent] getUserStatus response:", response);
+        if (response?.status === "success" && response?.data) {
+          setIsOnline(response.data.status === "online");
+          if (response.data.lastSeen) setLastSeen(response.data.lastSeen);
+        }
+      });
+    };
+
+    // Request now if connected
+    requestStatus();
+
+    // Also request when socket (re)connects
+    socket.on("connect", requestStatus);
+    return () => {
+      socket.off("connect", requestStatus);
+    };
+  }, [selectedUser, socket]);
+
+  // Load initial messages and mark as read
+  useEffect(() => {
+    if ((data as any)?.data) {
+      const loadedMessages = (data as any).data.map((msg: Message) => ({
+        ...msg,
+        status: msg.read ? "read" : "delivered",
+      }));
+      setMessages(loadedMessages);
+
+      if (socket?.connected && selectedUser) {
+        socket.emit("markAsRead", { senderId: selectedUser });
+      }
     }
+  }, [data, selectedUser, socket]);
 
-    // Send typing event with correct format
-    socket.emit("typing", { receiver: selectedUser });
-
-    typingTimeoutRef.current = setTimeout(() => {
-      socketRef.current?.emit("stopTyping", { receiver: selectedUser });
-    }, 2000);
+  // Clear state when switching conversations
+  useEffect(() => {
+    setIsTyping(false);
+    setNewMessage("");
+    setMediaPreview(null);
+    stopRecording();
   }, [selectedUser]);
 
-  // Auto-scroll to bottom only when new messages arrive
+  // Cleanup on unmount
   useEffect(() => {
-    if (messages.length > 0) {
-      const currentLastId = messages[messages.length - 1]._id;
-      if (lastMessageId.current !== currentLastId) {
-        scrollToBottom();
-        lastMessageId.current = currentLastId;
+    return () => {
+      if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+      if (typingClearRef.current) clearTimeout(typingClearRef.current);
+      if (recordingIntervalRef.current) clearInterval(recordingIntervalRef.current);
+      if (audioStreamRef.current) {
+        audioStreamRef.current.getTracks().forEach((t) => t.stop());
       }
+      if (audioPlayerRef.current) {
+        audioPlayerRef.current.pause();
+        audioPlayerRef.current = null;
+      }
+    };
+  }, []);
+
+  // Track if user is scrolled to bottom
+  const handleScroll = useCallback(() => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+    const threshold = 100;
+    isAtBottomRef.current =
+      container.scrollHeight - container.scrollTop - container.clientHeight < threshold;
+  }, []);
+
+  // Auto-scroll
+  useEffect(() => {
+    if (messages.length > 0 && isAtBottomRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  // ========== Typing ==========
+  const handleTyping = useCallback(() => {
+    if (!socket?.connected || !selectedUser) return;
 
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    emit("typing", { receiver: selectedUser });
+
+    typingTimeoutRef.current = setTimeout(() => {
+      emit("stopTyping", { receiver: selectedUser });
+    }, 2000);
+  }, [selectedUser, socket, emit]);
+
+  // ========== Send Text Message ==========
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // If there's a media preview, send it as media message
+    if (mediaPreview) {
+      await handleSendMedia();
+      return;
+    }
+
     if (!newMessage.trim() || isSending) return;
 
-    const socket = socketRef.current;
     const messageToSend = newMessage.trim();
 
-    // Create optimistic message
-    const tempId = `temp-${Date.now()}`;
-    tempIdRef.current = tempId;
+    const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const optimisticMessage: Message = {
       _id: tempId,
       message: messageToSend,
-      sender: { _id: userId, name: currentUserName || userName },
+      sender: { _id: userId, name: currentUserName || "" },
       receiver: selectedUser,
       createdAt: new Date().toISOString(),
       isOptimistic: true,
-      status: "sent",
+      status: "sending",
     };
 
-    // Immediately show the message
     setMessages((prev) => [...prev, optimisticMessage]);
     setNewMessage("");
     setIsSending(true);
+    isAtBottomRef.current = true;
 
-    // Clear typing indicator
+    // Stop typing
     if (socket?.connected) {
-      socket.emit("stopTyping", { receiver: selectedUser });
+      emit("stopTyping", { receiver: selectedUser });
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = null;
+      }
     }
 
-    try {
-      // Try socket first if connected
-      if (socket?.connected) {
-        socket.emit(
-          "sendMessage",
-          {
-            receiver: selectedUser,
-            message: messageToSend,
-          },
-          (response: any) => {
-            setIsSending(false);
-            if (response?.status === "success" && response?.message) {
-              console.log("Message sent via socket:", response);
-              // Update the optimistic message with the real one
-              setMessages((prevMessages) => {
-                return prevMessages.map((msg) => {
-                  if (msg._id === tempId) {
-                    return { ...response.message, status: "delivered" };
-                  }
-                  return msg;
-                });
-              });
-            } else {
-              console.warn("Socket response not successful, trying REST API...");
-              // Fallback to REST API
-              sendViaRestApi(tempId, messageToSend);
-            }
-          }
-        );
+    let resolved = false;
 
-        // Timeout fallback - if no response in 5 seconds, use REST API
-        setTimeout(() => {
-          setMessages((prevMessages) => {
-            const msg = prevMessages.find((m) => m._id === tempId);
-            if (msg?.isOptimistic && msg?.status === "sent") {
-              console.warn("Socket timeout, falling back to REST API");
-              sendViaRestApi(tempId, messageToSend);
-            }
-            return prevMessages;
-          });
-        }, 5000);
-      } else {
-        // Socket not connected, use REST API directly
-        console.log("Socket not connected, using REST API");
-        await sendViaRestApi(tempId, messageToSend);
-      }
-    } catch (error) {
-      console.error("Error sending message:", error);
-      setIsSending(false);
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === tempId ? { ...msg, status: "error" } : msg
-        )
+    if (socket?.connected) {
+      socket.emit(
+        "sendMessage",
+        { receiver: selectedUser, message: messageToSend },
+        (response: any) => {
+          if (resolved) return;
+          resolved = true;
+          setIsSending(false);
+
+          if (response?.status === "success" && response?.message) {
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg._id === tempId
+                  ? { ...response.message, status: "sent", isOptimistic: false }
+                  : msg
+              )
+            );
+          } else {
+            sendViaRestApi(tempId, messageToSend);
+          }
+        }
       );
+
+      setTimeout(() => {
+        if (resolved) return;
+        resolved = true;
+        sendViaRestApi(tempId, messageToSend);
+      }, 5000);
+    } else {
+      resolved = true;
+      await sendViaRestApi(tempId, messageToSend);
     }
   };
 
-  // REST API fallback for sending messages
   const sendViaRestApi = async (tempId: string, messageText: string) => {
     try {
-      const result = await createMessage({
+      const result: any = await createMessage({
         sender: userId,
         receiver: selectedUser,
         message: messageText,
-        type: 'text',
+        type: "text",
       }).unwrap();
 
-      console.log("Message sent via REST API:", result);
-
-      // Update the optimistic message with the real one
-      setMessages((prevMessages) => {
-        return prevMessages.map((msg) => {
-          if (msg._id === tempId) {
-            return {
-              ...result.data || result,
-              status: "delivered",
-            };
-          }
-          return msg;
-        });
-      });
+      const msgData = result.data || result;
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === tempId
+            ? { ...msgData, status: "delivered", isOptimistic: false }
+            : msg
+        )
+      );
       setIsSending(false);
-    } catch (error) {
-      console.error("REST API send failed:", error);
+    } catch (err) {
+      console.error("REST API send failed:", err);
       setIsSending(false);
       setMessages((prev) =>
         prev.map((msg) =>
-          msg._id === tempId ? { ...msg, status: "error" } : msg
+          msg._id === tempId ? { ...msg, status: "error", isOptimistic: false } : msg
         )
       );
     }
   };
+
+  // ========== Send Sticker ==========
+  const handleSendSticker = async (sticker: string) => {
+    if (isSending) return;
+
+    const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const optimisticMessage: Message = {
+      _id: tempId,
+      message: sticker,
+      messageType: "sticker",
+      sender: { _id: userId, name: currentUserName || "" },
+      receiver: selectedUser,
+      createdAt: new Date().toISOString(),
+      isOptimistic: true,
+      status: "sending",
+    };
+
+    setMessages((prev) => [...prev, optimisticMessage]);
+    setIsStickerPanelOpen(false);
+    isAtBottomRef.current = true;
+
+    let resolved = false;
+
+    if (socket?.connected) {
+      socket.emit(
+        "sendMessage",
+        { receiver: selectedUser, message: sticker, messageType: "sticker" },
+        (response: any) => {
+          if (resolved) return;
+          resolved = true;
+
+          if (response?.status === "success" && response?.message) {
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg._id === tempId
+                  ? { ...response.message, status: "sent", isOptimistic: false }
+                  : msg
+              )
+            );
+          } else {
+            // Fallback to REST API
+            sendStickerViaRest(tempId, sticker);
+          }
+        }
+      );
+
+      setTimeout(() => {
+        if (resolved) return;
+        resolved = true;
+        sendStickerViaRest(tempId, sticker);
+      }, 5000);
+    } else {
+      resolved = true;
+      await sendStickerViaRest(tempId, sticker);
+    }
+  };
+
+  const sendStickerViaRest = async (tempId: string, sticker: string) => {
+    try {
+      const result: any = await createMessage({
+        sender: userId,
+        receiver: selectedUser,
+        message: sticker,
+        type: "sticker",
+      }).unwrap();
+
+      const msgData = result.data || result;
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === tempId
+            ? { ...msgData, status: "delivered", isOptimistic: false }
+            : msg
+        )
+      );
+    } catch (err) {
+      console.error("Sticker send failed:", err);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === tempId ? { ...msg, status: "error", isOptimistic: false } : msg
+        )
+      );
+    }
+  };
+
+  // ========== Media Upload ==========
+  const handleAttachmentClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const isImage = file.type.startsWith("image/");
+    const isVideo = file.type.startsWith("video/");
+    const isAudio = file.type.startsWith("audio/");
+
+    if (!isImage && !isVideo && !isAudio) {
+      // Treat as document/file
+      const url = URL.createObjectURL(file);
+      setMediaPreview({ file, url, type: "document" });
+    } else {
+      const url = URL.createObjectURL(file);
+      setMediaPreview({
+        file,
+        url,
+        type: isImage ? "image" : isVideo ? "video" : "audio",
+      });
+    }
+
+    // Reset input so same file can be re-selected
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleCancelMedia = () => {
+    if (mediaPreview) {
+      URL.revokeObjectURL(mediaPreview.url);
+      setMediaPreview(null);
+    }
+  };
+
+  const handleSendMedia = async () => {
+    if (!mediaPreview || isSending) return;
+    setIsSending(true);
+    isAtBottomRef.current = true;
+
+    const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const optimisticMessage: Message = {
+      _id: tempId,
+      message: newMessage.trim(),
+      sender: { _id: userId, name: currentUserName || "" },
+      receiver: selectedUser,
+      messageType: "media",
+      media: {
+        url: mediaPreview.url,
+        type: mediaPreview.type,
+      },
+      createdAt: new Date().toISOString(),
+      isOptimistic: true,
+      status: "sending",
+    };
+
+    setMessages((prev) => [...prev, optimisticMessage]);
+    setNewMessage("");
+
+    try {
+      const formData = new FormData();
+      formData.append("attachment", mediaPreview.file);
+      formData.append("receiver", selectedUser);
+      if (newMessage.trim()) {
+        formData.append("message", newMessage.trim());
+      }
+
+      const result: any = await sendMediaMessage(formData).unwrap();
+      const msgData = result.data || result;
+
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === tempId
+            ? { ...msgData, status: "delivered", isOptimistic: false }
+            : msg
+        )
+      );
+    } catch (err) {
+      console.error("Media upload failed:", err);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === tempId ? { ...msg, status: "error", isOptimistic: false } : msg
+        )
+      );
+    } finally {
+      setIsSending(false);
+      handleCancelMedia();
+    }
+  };
+
+  // ========== Voice Recording ==========
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioStreamRef.current = stream;
+      audioChunksRef.current = [];
+
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+          ? "audio/webm;codecs=opus"
+          : "audio/webm",
+      });
+      mediaRecorderRef.current = mediaRecorder;
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        // Handled in stopRecording
+      };
+
+      mediaRecorder.start(100); // Collect data every 100ms
+      setIsRecording(true);
+      setRecordingDuration(0);
+
+      recordingIntervalRef.current = setInterval(() => {
+        setRecordingDuration((prev) => {
+          if (prev >= 300) {
+            // Max 5 minutes
+            stopRecording();
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+    } catch (err) {
+      console.error("Failed to start recording:", err);
+    }
+  };
+
+  const stopRecording = () => {
+    if (recordingIntervalRef.current) {
+      clearInterval(recordingIntervalRef.current);
+      recordingIntervalRef.current = null;
+    }
+
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+
+    if (audioStreamRef.current) {
+      audioStreamRef.current.getTracks().forEach((track) => track.stop());
+      audioStreamRef.current = null;
+    }
+
+    setIsRecording(false);
+  };
+
+  const cancelRecording = () => {
+    stopRecording();
+    audioChunksRef.current = [];
+    setRecordingDuration(0);
+  };
+
+  const sendVoiceRecording = async () => {
+    if (audioChunksRef.current.length === 0) return;
+
+    const duration = recordingDuration;
+    stopRecording();
+
+    // Wait briefly for any remaining data
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+    audioChunksRef.current = [];
+    setRecordingDuration(0);
+
+    if (audioBlob.size === 0) return;
+
+    setIsSending(true);
+    isAtBottomRef.current = true;
+
+    const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const tempUrl = URL.createObjectURL(audioBlob);
+
+    const optimisticMessage: Message = {
+      _id: tempId,
+      message: "",
+      sender: { _id: userId, name: currentUserName || "" },
+      receiver: selectedUser,
+      messageType: "voice",
+      media: {
+        url: tempUrl,
+        type: "voice",
+        duration,
+      },
+      createdAt: new Date().toISOString(),
+      isOptimistic: true,
+      status: "sending",
+    };
+
+    setMessages((prev) => [...prev, optimisticMessage]);
+
+    try {
+      const formData = new FormData();
+      formData.append("voice", audioBlob, `voice-${Date.now()}.webm`);
+      formData.append("receiver", selectedUser);
+      formData.append("duration", duration.toString());
+
+      const result: any = await sendVoiceMessage(formData).unwrap();
+      const msgData = result.data || result;
+
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === tempId
+            ? { ...msgData, status: "delivered", isOptimistic: false }
+            : msg
+        )
+      );
+    } catch (err) {
+      console.error("Voice send failed:", err);
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === tempId ? { ...msg, status: "error", isOptimistic: false } : msg
+        )
+      );
+    } finally {
+      setIsSending(false);
+      URL.revokeObjectURL(tempUrl);
+    }
+  };
+
+  // ========== Voice Playback ==========
+  const toggleAudioPlayback = (messageId: string, audioUrl: string) => {
+    if (playingAudioId === messageId) {
+      // Pause
+      audioPlayerRef.current?.pause();
+      setPlayingAudioId(null);
+      return;
+    }
+
+    // Stop previous
+    if (audioPlayerRef.current) {
+      audioPlayerRef.current.pause();
+    }
+
+    const audio = new Audio(audioUrl);
+    audioPlayerRef.current = audio;
+    setPlayingAudioId(messageId);
+
+    audio.play().catch(console.error);
+    audio.onended = () => {
+      setPlayingAudioId(null);
+      audioPlayerRef.current = null;
+    };
+  };
+
+  // ========== Other Handlers ==========
+  const handleRetryMessage = (failedMsg: Message) => {
+    setMessages((prev) => prev.filter((msg) => msg._id !== failedMsg._id));
+    const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const optimisticMessage: Message = {
+      ...failedMsg,
+      _id: tempId,
+      status: "sending",
+      isOptimistic: true,
+    };
+    setMessages((prev) => [...prev, optimisticMessage]);
+    setIsSending(true);
+    isAtBottomRef.current = true;
+
+    let resolved = false;
+
+    if (socket?.connected && !failedMsg.media) {
+      socket.emit(
+        "sendMessage",
+        { receiver: selectedUser, message: failedMsg.message },
+        (response: any) => {
+          if (resolved) return;
+          resolved = true;
+          setIsSending(false);
+
+          if (response?.status === "success" && response?.message) {
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg._id === tempId
+                  ? { ...response.message, status: "sent", isOptimistic: false }
+                  : msg
+              )
+            );
+          } else {
+            sendViaRestApi(tempId, failedMsg.message);
+          }
+        }
+      );
+
+      setTimeout(() => {
+        if (resolved) return;
+        resolved = true;
+        sendViaRestApi(tempId, failedMsg.message);
+      }, 5000);
+    } else {
+      resolved = true;
+      sendViaRestApi(tempId, failedMsg.message);
+    }
+  };
+
+  const handleDeleteMessage = useCallback((messageId: string) => {
+    if (!socket?.connected) return;
+
+    socket.emit("deleteMessage", { messageId }, (response: any) => {
+      if (response?.status === "success") {
+        setMessages((prev) => prev.filter((msg) => msg._id !== messageId));
+      }
+    });
+  }, [socket]);
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = useCallback((dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today.getTime() - 86400000);
+    const msgDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+    if (msgDate.getTime() === today.getTime()) return t("chatPage.today") || "Today";
+    if (msgDate.getTime() === yesterday.getTime()) return t("chatPage.yesterday") || "Yesterday";
+    return date.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
+  }, [t]);
 
   const formatLastSeen = (dateString: string) => {
     if (!dateString) return "";
     const date = new Date(dateString);
     const now = new Date();
-    const diffInMinutes = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60)
-    );
+    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
 
-    if (diffInMinutes < 1) return t("chatPage.justNow");
-    if (diffInMinutes < 60) return t("chatPage.minutesAgo", { count: diffInMinutes });
-    if (diffInMinutes < 1440) return t("chatPage.hoursAgo", { count: Math.floor(diffInMinutes / 60) });
+    if (diffInMinutes < 1) return t("chatPage.justNow") || "just now";
+    if (diffInMinutes < 60)
+      return t("chatPage.minutesAgo", { count: diffInMinutes }) || `${diffInMinutes}m ago`;
+    if (diffInMinutes < 1440)
+      return (
+        t("chatPage.hoursAgo", { count: Math.floor(diffInMinutes / 60) }) ||
+        `${Math.floor(diffInMinutes / 60)}h ago`
+      );
     return date.toLocaleDateString();
   };
 
-  // Group messages by date
-  const groupMessagesByDate = (messages: Message[]) => {
-    const groups: { [date: string]: Message[] } = {};
+  // Sort messages
+  const sortedMessages = useMemo(() => {
+    return [...messages].sort(
+      (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+  }, [messages]);
 
-    messages.forEach((msg) => {
-      const dateStr = formatDate(msg.createdAt);
-      if (!groups[dateStr]) {
-        groups[dateStr] = [];
+  // Group messages by date
+  const messagesByDate = useMemo(() => {
+    const groups: { date: string; dateKey: string; messages: Message[] }[] = [];
+    let currentDateKey = "";
+
+    sortedMessages.forEach((msg) => {
+      const dateKey = new Date(msg.createdAt).toDateString();
+      if (dateKey !== currentDateKey) {
+        currentDateKey = dateKey;
+        groups.push({ date: formatDate(msg.createdAt), dateKey, messages: [msg] });
+      } else {
+        groups[groups.length - 1].messages.push(msg);
       }
-      groups[dateStr].push(msg);
     });
 
     return groups;
+  }, [sortedMessages, formatDate]);
+
+  // Message grouping
+  const getMessagePosition = (
+    msgs: Message[],
+    index: number
+  ): "single" | "first" | "middle" | "last" => {
+    const current = msgs[index];
+    const prev = index > 0 ? msgs[index - 1] : null;
+    const next = index < msgs.length - 1 ? msgs[index + 1] : null;
+
+    const sameAsPrev = prev?.sender._id === current.sender._id;
+    const sameAsNext = next?.sender._id === current.sender._id;
+
+    if (!sameAsPrev && !sameAsNext) return "single";
+    if (!sameAsPrev && sameAsNext) return "first";
+    if (sameAsPrev && sameAsNext) return "middle";
+    return "last";
+  };
+
+  const getBubbleRadius = (isSent: boolean, position: string): string => {
+    if (isSent) {
+      switch (position) {
+        case "single": return "18px 18px 4px 18px";
+        case "first": return "18px 18px 4px 18px";
+        case "middle": return "18px 4px 4px 18px";
+        case "last": return "18px 4px 18px 18px";
+        default: return "18px";
+      }
+    } else {
+      switch (position) {
+        case "single": return "18px 18px 18px 4px";
+        case "first": return "18px 18px 18px 4px";
+        case "middle": return "4px 18px 18px 4px";
+        case "last": return "4px 18px 18px 18px";
+        default: return "18px";
+      }
+    }
+  };
+
+  const renderStatusIcon = (msg: Message) => {
+    if (msg.sender._id !== userId) return null;
+
+    switch (msg.status) {
+      case "sending":
+        return <Check size={14} className="status-icon sending" />;
+      case "sent":
+        return <Check size={14} className="status-icon sent" />;
+      case "delivered":
+        return <CheckCheck size={14} className="status-icon delivered" />;
+      case "read":
+        return <CheckCheck size={14} className="status-icon read" />;
+      case "error":
+        return <AlertCircle size={14} className="status-icon error" />;
+      default:
+        return <Check size={14} className="status-icon sent" />;
+    }
+  };
+
+  // ========== Render voice message bubble content ==========
+  const renderVoiceMessage = (msg: Message) => {
+    const duration = msg.media?.duration || 0;
+    const isPlaying = playingAudioId === msg._id;
+
+    return (
+      <div className="voice-message">
+        <button
+          className="voice-play-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (msg.media?.url) toggleAudioPlayback(msg._id, msg.media.url);
+          }}
+        >
+          {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+        </button>
+        <div className="voice-waveform">
+          <div className="voice-waveform-bars">
+            {(msg.media?.waveform || Array(20).fill(0.3)).slice(0, 30).map((v: number, i: number) => (
+              <div
+                key={i}
+                className="waveform-bar"
+                style={{ height: `${Math.max(4, (v || 0.3) * 24)}px` }}
+              />
+            ))}
+          </div>
+        </div>
+        <span className="voice-duration">{formatDuration(duration)}</span>
+      </div>
+    );
+  };
+
+  // ========== Render media content in bubble ==========
+  const renderMediaContent = (msg: Message) => {
+    if (!msg.media || !msg.media.type) return null;
+
+    const mediaType = msg.media.type || msg.messageType;
+
+    if (mediaType === "voice") {
+      return renderVoiceMessage(msg);
+    }
+
+    if (mediaType === "image" || msg.media.mimeType?.startsWith("image/")) {
+      return (
+        <div className="message-media">
+          <img src={msg.media.url} alt="media" className="message-image" loading="lazy" />
+        </div>
+      );
+    }
+
+    if (mediaType === "video" || msg.media.mimeType?.startsWith("video/")) {
+      return (
+        <div className="message-media">
+          {msg.media.thumbnail ? (
+            <div className="video-thumbnail-wrapper">
+              <img src={msg.media.thumbnail} alt="video" className="message-image" />
+              <div className="video-play-overlay">
+                <Play size={32} />
+              </div>
+            </div>
+          ) : (
+            <video src={msg.media.url} controls className="message-video" preload="metadata" />
+          )}
+        </div>
+      );
+    }
+
+    // Document/file
+    return (
+      <div className="message-file">
+        <Paperclip size={16} />
+        <span className="file-name">{msg.media.fileName || "File"}</span>
+        {msg.media.fileSize && (
+          <span className="file-size">
+            {(msg.media.fileSize / 1024).toFixed(0)}KB
+          </span>
+        )}
+      </div>
+    );
   };
 
   if (isLoading)
@@ -463,32 +1127,33 @@ const ChatContent: React.FC<ChatContentProps> = ({
         <div className="loading-spinner">
           <div className="spinner"></div>
         </div>
-        <p className="loading-text">{t("chatPage.loadingConversation")}</p>
+        <p className="loading-text">{t("chatPage.loadingConversation") || "Loading..."}</p>
       </div>
     );
 
   if (error)
     return (
       <div className="chat-error">
-        <div className="error-icon">⚠️</div>
-        <p>{t("chatPage.errorLoading")}</p>
+        <AlertCircle size={48} color="#EF4444" />
+        <p>{t("chatPage.errorLoading") || "Failed to load conversation"}</p>
       </div>
     );
 
-  // Sort messages by timestamp
-  const sortedMessages = [...messages].sort((a, b) => {
-    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-  });
-
-  const messagesByDate = groupMessagesByDate(sortedMessages);
-
   return (
     <Container fluid className="modern-chat-container">
-      {/* Enhanced Chat Header */}
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip"
+        style={{ display: "none" }}
+        onChange={handleFileSelect}
+      />
+
+      {/* Chat Header */}
       <div className="modern-chat-header">
         <div className="header-content">
           <div className="user-info-section">
-            {/* Back button for mobile */}
             <button
               className="back-btn"
               onClick={() => navigate("/chat")}
@@ -502,27 +1167,22 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 alt={userName}
                 className="profile-avatar"
               />
-              <div
-                className={`status-pulse ${isOnline ? "online" : "offline"}`}
-              >
-                <div className="pulse-ring"></div>
+              <div className={`status-pulse ${isOnline ? "online" : "offline"}`}>
                 <div className="pulse-dot"></div>
               </div>
             </div>
             <div className="user-details">
               <h3 className="user-name">{userName}</h3>
               <div className="status-info">
-                {isOnline ? (
-                  <span className="online-status">
-                    <span className="status-dot online"></span>
-                    {t("chatPage.online")}
-                  </span>
+                {isTyping ? (
+                  <span className="online-status">{t("chatPage.typing") || "typing..."}</span>
+                ) : isOnline ? (
+                  <span className="online-status">{t("chatPage.online") || "online"}</span>
                 ) : (
                   <span className="offline-status">
-                    <span className="status-dot offline"></span>
                     {lastSeen
-                      ? `${t("chatPage.lastSeen")} ${formatLastSeen(lastSeen)}`
-                      : t("chatPage.offline")}
+                      ? `${t("chatPage.lastSeen") || "last seen"} ${formatLastSeen(lastSeen)}`
+                      : t("chatPage.offline") || "offline"}
                   </span>
                 )}
               </div>
@@ -530,135 +1190,137 @@ const ChatContent: React.FC<ChatContentProps> = ({
           </div>
 
           <div className="header-actions">
-            <button className="action-btn call-btn" title="Voice call">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-              </svg>
+            <button className="action-btn" title="Voice call">
+              <Phone size={20} />
             </button>
-            <button className="action-btn video-btn" title="Video call">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <polygon points="23 7 16 12 23 17 23 7" />
-                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-              </svg>
+            <button className="action-btn" title="Video call">
+              <Video size={20} />
             </button>
-            <button
-              className="action-btn gallery-btn"
-              title="Shared media"
-              onClick={() => navigate(`/chat/${selectedUser}/media`)}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <polyline points="21 15 16 10 5 21" />
-              </svg>
-            </button>
-            <button className="action-btn info-btn" title="Chat info">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="16" x2="12" y2="12" />
-                <line x1="12" y1="8" x2="12.01" y2="8" />
-              </svg>
+            <button className="action-btn" title="More options">
+              <MoreVertical size={20} />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Enhanced Chat Messages */}
-      <div className="modern-chat-messages" ref={chatContainerRef}>
-        {Object.entries(messagesByDate).map(([date, msgs]) => (
-          <div key={date} className="message-date-group">
+      {/* Chat Messages */}
+      <div
+        className="modern-chat-messages"
+        ref={chatContainerRef}
+        onScroll={handleScroll}
+      >
+        {sortedMessages.length === 0 && (
+          <div className="empty-messages">
+            <div className="empty-messages-icon">
+              <Send size={36} />
+            </div>
+            <h3>{t("chatPage.noMessages") || "No messages yet"}</h3>
+            <p>{t("chatPage.startConversation") || "Send a message to start the conversation"}</p>
+          </div>
+        )}
+
+        {messagesByDate.map((group) => (
+          <div key={group.dateKey} className="message-date-group">
             <div className="date-separator">
-              <span className="date-text">{date}</span>
+              <span className="date-text">{group.date}</span>
             </div>
 
-            {msgs.map((msg: Message) => (
-              <div
-                key={msg._id}
-                className={`modern-message ${
-                  msg.sender._id === userId ? "sent" : "received"
-                } ${msg.status === "error" ? "error" : ""}`}
-              >
-                {msg.sender._id !== userId && (
-                  <div className="message-avatar">
-                    <img
-                      src={msg.sender.imageUrls?.[0] || "/default-avatar.png"}
-                      alt={msg.sender.name}
-                    />
-                  </div>
-                )}
+            {group.messages.map((msg: Message, index: number) => {
+              const isSent = msg.sender._id === userId;
+              const position = getMessagePosition(group.messages, index);
+              const showAvatar = !isSent && (position === "single" || position === "last");
+              const hideAvatarSpace = !isSent && (position === "middle" || position === "first");
+              const gap = position === "middle" || position === "last" ? "2px" : "8px";
+              const senderImages = msg.sender.images;
+              const avatarUrl =
+                senderImages && senderImages.length > 0
+                  ? senderImages[0]
+                  : profilePicture || "/default-avatar.png";
 
-                <div className="message-wrapper">
-                  <div className="message-bubble">
-                    <p className="message-text">{msg.message}</p>
-                    <div className="message-meta">
-                      <span className="message-time">
-                        {formatTime(msg.createdAt)}
-                      </span>
-                      {msg.sender._id === userId && (
-                        <div className="message-status">
-                          {msg.status === "error" ? (
-                            <svg
-                              className="status-icon error"
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                            >
-                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                            </svg>
-                          ) : msg.isOptimistic ? (
-                            <svg
-                              className="status-icon sent"
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                            >
-                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                            </svg>
-                          ) : (
-                            <svg
-                              className="status-icon delivered"
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                            >
-                              <path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z" />
-                            </svg>
-                          )}
-                        </div>
+              const isVoice = msg.messageType === "voice" || msg.media?.type === "voice";
+              const isSticker = msg.messageType === "sticker";
+              const hasMedia = !!msg.media?.type && !isVoice;
+
+              return (
+                <div
+                  key={msg._id}
+                  className={`modern-message ${isSent ? "sent" : "received"} ${
+                    msg.status === "error" ? "error" : ""
+                  }`}
+                  style={{ marginTop: index === 0 ? "0" : gap }}
+                >
+                  {!isSent && (
+                    <div
+                      className="message-avatar"
+                      style={{ visibility: showAvatar ? "visible" : "hidden" }}
+                    >
+                      {(showAvatar || hideAvatarSpace) && (
+                        <img src={avatarUrl} alt={msg.sender.name} />
                       )}
                     </div>
+                  )}
+
+                  <div className="message-wrapper">
+                    <div
+                      className={`message-bubble${isVoice ? " voice-bubble" : ""}${hasMedia ? " media-bubble" : ""}${isSticker ? " sticker-bubble" : ""}`}
+                      style={{
+                        borderRadius: getBubbleRadius(isSent, position),
+                      }}
+                      onDoubleClick={isSent && !msg.isOptimistic ? () => handleDeleteMessage(msg._id) : undefined}
+                    >
+                      {isSticker ? (
+                        <div className="sticker-message">{msg.message}</div>
+                      ) : (
+                        <>
+                          {renderMediaContent(msg)}
+
+                          {msg.replyTo && (
+                            <div className="reply-preview">
+                              <span className="reply-sender">{msg.replyTo.sender.name}</span>
+                              <span className="reply-text">{msg.replyTo.message}</span>
+                            </div>
+                          )}
+
+                          {msg.message && !isVoice && (
+                            <p className="message-text">{msg.message}</p>
+                          )}
+                        </>
+                      )}
+
+                      <div className="message-meta">
+                        <span className="message-time">
+                          {formatTime(msg.createdAt)}
+                        </span>
+                        {isSent && (
+                          <div className="message-status">
+                            {renderStatusIcon(msg)}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {msg.status === "error" && (
+                      <button
+                        className="retry-btn"
+                        onClick={() => handleRetryMessage(msg)}
+                        title="Retry sending"
+                      >
+                        <RefreshCw size={14} />
+                        <span>{t("chatPage.retry") || "Retry"}</span>
+                      </button>
+                    )}
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ))}
 
-        {/* Enhanced Typing Indicator */}
+        {/* Typing Indicator */}
         {isTyping && (
-          <div className="modern-message received">
+          <div className="modern-message received" style={{ marginTop: "8px" }}>
             <div className="message-avatar">
-              <img
-                src={profilePicture || "/default-avatar.png"}
-                alt={userName}
-              />
+              <img src={profilePicture || "/default-avatar.png"} alt={userName} />
             </div>
             <div className="message-wrapper">
               <div className="typing-indicator-bubble">
@@ -667,7 +1329,6 @@ const ChatContent: React.FC<ChatContentProps> = ({
                   <div className="typing-dot"></div>
                   <div className="typing-dot"></div>
                 </div>
-                <span className="typing-text">{userName} {t("chatPage.typing")}</span>
               </div>
             </div>
           </div>
@@ -676,72 +1337,119 @@ const ChatContent: React.FC<ChatContentProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Enhanced Message Input */}
-      <div className="modern-chat-input">
-        <Form onSubmit={handleSendMessage} className="input-form">
-          <div className="input-container">
-            <button type="button" className="attachment-btn">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="16" />
-                <line x1="8" y1="12" x2="16" y2="12" />
-              </svg>
+      {/* Media Preview */}
+      {mediaPreview && (
+        <div className="media-preview-bar">
+          <div className="media-preview-content">
+            {mediaPreview.type === "image" ? (
+              <img src={mediaPreview.url} alt="preview" className="media-preview-thumb" />
+            ) : mediaPreview.type === "video" ? (
+              <video src={mediaPreview.url} className="media-preview-thumb" />
+            ) : (
+              <div className="media-preview-file">
+                <Paperclip size={20} />
+                <span>{mediaPreview.file.name}</span>
+              </div>
+            )}
+          </div>
+          <button className="media-preview-cancel" onClick={handleCancelMedia}>
+            <X size={18} />
+          </button>
+        </div>
+      )}
+
+      {/* Voice Recording Bar */}
+      {isRecording && (
+        <div className="voice-recording-bar">
+          <div className="recording-indicator">
+            <div className="recording-dot" />
+            <span className="recording-time">{formatDuration(recordingDuration)}</span>
+          </div>
+          <div className="recording-actions">
+            <button className="recording-cancel-btn" onClick={cancelRecording}>
+              <X size={20} />
             </button>
-
-            <div className="text-input-wrapper">
-              <Form.Control
-                type="text"
-                placeholder={t("chatPage.messagePlaceholder")}
-                value={newMessage}
-                onChange={(e) => {
-                  setNewMessage(e.target.value);
-                  handleTyping();
-                }}
-                className="modern-text-input "
-              />
-              <button type="button" className="emoji-btn">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-                  <line x1="9" y1="9" x2="9.01" y2="9" />
-                  <line x1="15" y1="9" x2="15.01" y2="9" />
-                </svg>
-              </button>
-            </div>
-
-            <button
-              type="submit"
-              className={`send-btn ${newMessage.trim() && !isSending ? "active" : ""}`}
-              disabled={!newMessage.trim() || isSending}
-            >
-              {isSending ? (
-                <div className="spinner" style={{ width: 18, height: 18, borderWidth: 2 }}></div>
-              ) : (
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <line x1="22" y1="2" x2="11" y2="13" />
-                  <polygon points="22,2 15,22 11,13 2,9 22,2" />
-                </svg>
-              )}
+            <button className="recording-send-btn" onClick={sendVoiceRecording}>
+              <Send size={18} />
             </button>
           </div>
-        </Form>
-      </div>
+        </div>
+      )}
 
+      {/* Message Input */}
+      {!isRecording && (
+        <div className="modern-chat-input" style={{ position: "relative" }}>
+          {/* Sticker Panel */}
+          {isStickerPanelOpen && (
+            <StickerPanel
+              onSendSticker={handleSendSticker}
+              onClose={() => setIsStickerPanelOpen(false)}
+            />
+          )}
+
+          <Form onSubmit={handleSendMessage} className="input-form">
+            <div className="input-container">
+              <button
+                type="button"
+                className="attachment-btn"
+                title="Attach file"
+                onClick={handleAttachmentClick}
+              >
+                {mediaPreview ? <ImageIcon size={20} /> : <Paperclip size={20} />}
+              </button>
+
+              <div className="text-input-wrapper">
+                <Form.Control
+                  type="text"
+                  placeholder={
+                    mediaPreview
+                      ? t("chatPage.addCaption") || "Add a caption..."
+                      : t("chatPage.messagePlaceholder") || "Message..."
+                  }
+                  value={newMessage}
+                  onChange={(e) => {
+                    setNewMessage(e.target.value);
+                    handleTyping();
+                  }}
+                  onFocus={() => setIsStickerPanelOpen(false)}
+                  className="modern-text-input"
+                />
+                <button
+                  type="button"
+                  className={`emoji-btn ${isStickerPanelOpen ? "active" : ""}`}
+                  title="Stickers"
+                  onClick={() => setIsStickerPanelOpen(!isStickerPanelOpen)}
+                >
+                  {isStickerPanelOpen ? <X size={20} /> : <Smile size={20} />}
+                </button>
+              </div>
+
+              {newMessage.trim() || mediaPreview ? (
+                <button
+                  type="submit"
+                  className="send-btn active"
+                  disabled={isSending}
+                >
+                  {isSending ? (
+                    <div className="spinner" style={{ width: 18, height: 18, borderWidth: 2 }}></div>
+                  ) : (
+                    <Send size={18} />
+                  )}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="send-btn mic-btn"
+                  title="Voice message"
+                  onClick={startRecording}
+                >
+                  <Mic size={18} />
+                </button>
+              )}
+            </div>
+          </Form>
+        </div>
+      )}
     </Container>
   );
 };

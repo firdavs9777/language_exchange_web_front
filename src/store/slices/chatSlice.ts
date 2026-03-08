@@ -120,29 +120,39 @@ export const chatApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Conversation"],
     }),
     removeReaction: builder.mutation({
-      query: (messageId: string) => ({
-        url: `${MESSAGES_URL}/${messageId}/reactions`,
+      query: ({ messageId, emoji }: { messageId: string; emoji: string }) => ({
+        url: `${MESSAGES_URL}/${messageId}/reactions/${encodeURIComponent(emoji)}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Conversation"],
     }),
 
-    // Voice Messages
+    // Voice Messages - POST /api/v1/messages/voice with FormData (field: voice)
     sendVoiceMessage: builder.mutation({
-      query: ({ receiverId, audioData, duration }: { receiverId: string; audioData: FormData; duration: number }) => ({
+      query: (formData: FormData) => ({
         url: `${MESSAGES_URL}/voice`,
         method: "POST",
-        body: audioData,
+        body: formData,
       }),
       invalidatesTags: ["Conversation", "Conversations"],
     }),
 
-    // Media Messages
+    // Media Messages - POST /api/v1/messages with FormData (field: attachment)
     sendMediaMessage: builder.mutation({
-      query: ({ receiverId, media, type }: { receiverId: string; media: FormData; type: 'image' | 'video' | 'file' }) => ({
-        url: `${MESSAGES_URL}/media`,
+      query: (formData: FormData) => ({
+        url: `${MESSAGES_URL}`,
         method: "POST",
-        body: media,
+        body: formData,
+      }),
+      invalidatesTags: ["Conversation", "Conversations"],
+    }),
+
+    // Video Messages - POST /api/v1/messages/video with FormData (field: video)
+    sendVideoMessage: builder.mutation({
+      query: (formData: FormData) => ({
+        url: `${MESSAGES_URL}/video`,
+        method: "POST",
+        body: formData,
       }),
       invalidatesTags: ["Conversation", "Conversations"],
     }),
@@ -213,6 +223,8 @@ export const {
   useSendVoiceMessageMutation,
   // Media
   useSendMediaMessageMutation,
+  // Video
+  useSendVideoMessageMutation,
   // Read Receipts
   useMarkMessageReadMutation,
   useGetReadReceiptsQuery,

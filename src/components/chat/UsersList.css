@@ -1,290 +1,376 @@
 /* ===========================================
-   BananaTalk UsersList - Light Modern Design
+   BananaTalk UsersList - Telegram/Tandem Style
    =========================================== */
 
-/* Container styling */
 .users-list-wrapper {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+}
+
+.users-list-scroll {
+  flex: 1;
   overflow-y: auto;
-  background: #FFFFFF;
-}
-
-/* List group override */
-.users-list-wrapper .list-group {
-  background: transparent;
-}
-
-.users-list-wrapper .list-group-flush {
-  border-radius: 0;
-}
-
-/* User item styling */
-.users-list-wrapper > div > div {
-  background: transparent !important;
-  border-color: #E4E6EB !important;
-  transition: all 0.2s ease;
-}
-
-.users-list-wrapper > div > div:hover {
-  background: #F0F2F5 !important;
-}
-
-/* Active user item */
-.users-list-wrapper > div > div.bg-gradient-to-r {
-  background: #E7F3FF !important;
-  border-left: 3px solid #00BFA5 !important;
-}
-
-/* Avatar styling */
-.users-list-wrapper img {
-  border-radius: 50% !important;
-  border: none !important;
-}
-
-/* Text colors for light theme */
-.users-list-wrapper h6 {
-  color: #050505 !important;
-}
-
-.users-list-wrapper .text-gray-500 {
-  color: #65676B !important;
-}
-
-.users-list-wrapper .text-gray-400 {
-  color: #8A8D91 !important;
-}
-
-/* Active item text */
-.users-list-wrapper > div > div.bg-gradient-to-r h6 {
-  color: #050505 !important;
-}
-
-.users-list-wrapper > div > div.bg-gradient-to-r .text-gray-500,
-.users-list-wrapper > div > div.bg-gradient-to-r .text-white\/80 {
-  color: #65676B !important;
-}
-
-/* Status indicator */
-.users-list-wrapper .bg-green-500 {
-  background: #31A24C !important;
-  box-shadow: none;
-}
-
-.users-list-wrapper .bg-gray-400 {
-  background: #BCC0C4 !important;
-}
-
-.users-list-wrapper .bg-yellow-500 {
-  background: #F7B928 !important;
-}
-
-.users-list-wrapper .bg-red-500 {
-  background: #E4405F !important;
-}
-
-/* Unread badge */
-.users-list-wrapper .badge {
-  background: #00BFA5 !important;
-  border: none !important;
-  font-weight: 600 !important;
-  box-shadow: none;
-  color: #FFFFFF !important;
-}
-
-/* Dropdown menu */
-.users-list-wrapper .absolute {
-  background: #FFFFFF !important;
-  backdrop-filter: none !important;
-  border: 1px solid #E4E6EB !important;
-  border-radius: 8px !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
-}
-
-.users-list-wrapper .absolute button {
-  color: #050505 !important;
-  transition: all 0.2s ease;
-}
-
-.users-list-wrapper .absolute button:hover {
-  background: #F0F2F5 !important;
-}
-
-.users-list-wrapper .absolute button.text-red-600 {
-  color: #E4405F !important;
-}
-
-.users-list-wrapper .absolute button.text-red-600:hover {
-  background: #FEE2E2 !important;
-}
-
-.users-list-wrapper .absolute hr {
-  border-color: #E4E6EB !important;
-}
-
-/* Icon colors in dropdown */
-.users-list-wrapper .absolute .bi {
-  opacity: 0.8;
-}
-
-/* Empty state */
-.users-list-wrapper .flex-col.items-center {
-  color: #65676B;
-}
-
-.users-list-wrapper .flex-col.items-center i {
-  color: #00BFA5 !important;
-}
-
-/* Three dots button */
-.users-list-wrapper button.w-6.h-6 {
-  color: #65676B !important;
-}
-
-.users-list-wrapper button.w-6.h-6:hover {
-  background: #E4E6EB !important;
-  color: #050505 !important;
-}
-
-/* Time text */
-.users-list-wrapper small {
-  color: #65676B !important;
-}
-
-/* Typing indicator */
-.users-list-wrapper .text-blue-500 {
-  color: #00BFA5 !important;
-}
-
-/* Online indicator */
-.users-list-wrapper .text-green-500 {
-  color: #31A24C !important;
-}
-
-/* Debug panel - hide */
-.debug-panel {
-  display: none;
-}
-
-/* Connection status bar - light theme */
-.users-list-wrapper .bg-green-500\/10 {
-  background: rgba(49, 162, 76, 0.1) !important;
-}
-
-.users-list-wrapper .bg-red-500\/10 {
-  background: rgba(228, 64, 95, 0.1) !important;
-}
-
-.users-list-wrapper .text-green-400 {
-  color: #31A24C !important;
-}
-
-.users-list-wrapper .text-red-400 {
-  color: #E4405F !important;
-}
-
-.users-list-wrapper .bg-green-400 {
-  background: #31A24C !important;
-}
-
-.users-list-wrapper .bg-red-400 {
-  background: #E4405F !important;
-}
-
-/* Border adjustments */
-.users-list-wrapper .border-gray-100 {
-  border-color: #E4E6EB !important;
-}
-
-/* Loading state */
-.users-list-wrapper .animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-/* Avatar placeholder gradient */
-.users-list-wrapper .from-indigo-500 {
-  background: linear-gradient(135deg, #00BFA5 0%, #00A896 100%) !important;
-}
-
-.users-list-wrapper .bg-gradient-to-br {
-  background: linear-gradient(135deg, #00BFA5 0%, #00A896 100%) !important;
+  overflow-x: hidden;
 }
 
 /* Scrollbar */
-.users-list-wrapper::-webkit-scrollbar {
-  width: 6px;
+.users-list-scroll::-webkit-scrollbar {
+  width: 5px;
 }
 
-.users-list-wrapper::-webkit-scrollbar-track {
+.users-list-scroll::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.users-list-wrapper::-webkit-scrollbar-thumb {
-  background: #BCC0C4;
+.users-list-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
   border-radius: 3px;
 }
 
-.users-list-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #8A8D91;
+.users-list-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
 
-/* Loading spinner */
-.users-list-wrapper .border-indigo-200 {
-  border-color: #E4E6EB !important;
+/* List reset */
+.users-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.users-list-wrapper .border-t-indigo-600 {
-  border-top-color: #00BFA5 !important;
+/* ---------- Conversation item ---------- */
+
+.users-list-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  border: none;
+  position: relative;
 }
 
-/* Last message text - ensure visibility */
-.users-list-wrapper p.truncate {
-  color: #65676B !important;
-  max-width: 180px;
+.users-list-item:hover {
+  background-color: #f0f2f5;
 }
 
-.users-list-wrapper p.truncate.font-medium {
-  color: #050505 !important;
-  font-weight: 600 !important;
+.users-list-item--active {
+  background-color: #e7f3ff !important;
 }
 
-/* Fix for white text on active item */
-.users-list-wrapper > div > div.text-white h6,
-.users-list-wrapper > div > div.text-white p {
-  color: #050505 !important;
+.users-list-item--active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #00bfa5;
+  border-radius: 0 2px 2px 0;
 }
 
-/* User name styling */
-.users-list-wrapper h6.truncate {
-  color: #050505 !important;
+/* ---------- Avatar ---------- */
+
+.users-list-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.users-list-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #00bfa5 0%, #00a896 100%);
+}
+
+.users-list-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.users-list-avatar-letter {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* Online dot */
+.users-list-online-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 12px;
+  height: 12px;
+  background: #31a24c;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: online-pulse 2s ease-in-out infinite;
+}
+
+@keyframes online-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(49, 162, 76, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(49, 162, 76, 0);
+  }
+}
+
+/* ---------- Content ---------- */
+
+.users-list-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.users-list-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.users-list-name {
+  font-weight: 600;
   font-size: 0.9375rem;
+  color: #050505;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-/* Error state */
-.users-list-wrapper .bg-red-50 {
-  background: #FEE2E2 !important;
+.users-list-time {
+  font-size: 0.75rem;
+  color: #8a8d91;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.users-list-wrapper .text-red-800 {
-  color: #991B1B !important;
+.users-list-item--unread .users-list-time {
+  color: #00bfa5;
+  font-weight: 600;
 }
 
-.users-list-wrapper .text-red-700 {
-  color: #B91C1C !important;
+.users-list-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-.users-list-wrapper .border-red-200 {
-  border-color: #FECACA !important;
+.users-list-preview {
+  font-size: 0.8125rem;
+  color: #65676b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.4;
 }
 
-.users-list-wrapper .border-red-300 {
-  border-color: #FCA5A5 !important;
+.users-list-item--unread .users-list-preview {
+  color: #050505;
+  font-weight: 500;
+}
+
+.users-list-no-msg {
+  color: #8a8d91;
+  font-style: italic;
+}
+
+.users-list-typing-text {
+  color: #00bfa5;
+  font-style: italic;
+}
+
+/* ---------- Typing dots animation ---------- */
+
+.users-list-typing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 2px;
+}
+
+.users-list-typing-dots span {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background: #00bfa5;
+  border-radius: 50%;
+  animation: typing-bounce 1.4s ease-in-out infinite;
+}
+
+.users-list-typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.users-list-typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+/* ---------- Unread badge ---------- */
+
+.users-list-badge {
+  background: #00bfa5 !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-size: 0.6875rem !important;
+  font-weight: 600 !important;
+  min-width: 20px;
+  height: 20px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px !important;
+  flex-shrink: 0;
+}
+
+/* ---------- Loading ---------- */
+
+.users-list-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  gap: 12px;
+}
+
+.users-list-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e4e6eb;
+  border-top-color: #00bfa5;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.users-list-loading-text {
+  font-size: 0.8125rem;
+  color: #8a8d91;
+}
+
+/* ---------- Error ---------- */
+
+.users-list-error {
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.users-list-error-text {
+  font-size: 0.875rem;
+  color: #65676b;
+  margin-bottom: 12px;
+}
+
+.users-list-retry-btn {
+  background: none;
+  border: 1px solid #d1d5db;
+  border-radius: 20px;
+  padding: 6px 20px;
+  font-size: 0.8125rem;
+  color: #050505;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.users-list-retry-btn:hover {
+  background-color: #f0f2f5;
+}
+
+/* ---------- Empty state ---------- */
+
+.users-list-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.users-list-empty-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: #8a8d91;
+}
+
+.users-list-empty-title {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #65676b;
+  margin-bottom: 4px;
+}
+
+.users-list-empty-subtitle {
+  font-size: 0.8125rem;
+  color: #8a8d91;
+  margin-bottom: 0;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 576px) {
+  .users-list-item {
+    padding: 8px 12px;
+  }
+
+  .users-list-avatar {
+    width: 42px;
+    height: 42px;
+  }
+
+  .users-list-avatar-letter {
+    font-size: 1rem;
+  }
+
+  .users-list-name {
+    font-size: 0.875rem;
+  }
+
+  .users-list-preview {
+    font-size: 0.75rem;
+  }
 }

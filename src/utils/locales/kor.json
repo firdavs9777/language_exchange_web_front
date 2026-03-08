@@ -76,7 +76,7 @@
         "replace_image": "교체",
         "delete_image": "이미지 삭제",
         "remove_from_selection": "선택에서 제거",
-        "image_gallery": "이미지 갤러리 "
+        "image_gallery": "이미지 갤러리"
       },
     "profile": {
         "title": "내 프로필",
@@ -862,6 +862,20 @@
           "early": "조기 기능",
           "badges": "독점 배지"
         }
+      }
+    },
+    "download": {
+      "badge": "앱 다운로드",
+      "title": "어디서든 바나나톡과 함께",
+      "description": "모바일 앱으로 이동 중에도 학습하세요. iOS와 Android에서 모든 기능, 푸시 알림, 오프라인 접근이 가능합니다.",
+      "downloadOn": "다운로드",
+      "getItOn": "다운로드",
+      "scanQR": "QR 코드를 스캔하여 앱 다운로드",
+      "or": "또는",
+      "features": {
+        "offline": "오프라인 접근",
+        "push": "푸시 알림",
+        "fast": "빠르고 가벼운"
       }
     },
     "cta": {

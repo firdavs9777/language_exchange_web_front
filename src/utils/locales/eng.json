@@ -44,6 +44,25 @@
     "hoursAgo": "{{count}}h ago",
     "unknownUser": "Unknown User"
   },
+  "newChat": {
+    "title": "New Chat",
+    "subtitle": "Start a conversation",
+    "directMessage": "Direct",
+    "groupChat": "Group",
+    "searchPlaceholder": "Search by name, @username, or user ID...",
+    "searchHint": "Search for users to start a chat",
+    "hintName": "Search by name",
+    "hintUsername": "Type @username to find by username",
+    "hintId": "Paste a user ID to find directly",
+    "searchByUsername": "Searching by username",
+    "searchById": "Searching by user ID",
+    "noResults": "No users found",
+    "tryDifferent": "Try a different name, @username, or user ID",
+    "createGroup": "Create Group",
+    "selectMoreUsers": "Select at least 2 users for group chat",
+    "createError": "Failed to create chat",
+    "recently": "Recently"
+  },
   "notifications": "Notifications",
   "moments": "Moments",
   "language": "Language",
@@ -76,7 +95,7 @@
     "replace_image": "Replace",
     "delete_image": "Delete image",
     "remove_from_selection": "Remove from selection",
-    "image_gallery": "Image Gallery "
+    "image_gallery": "Image Gallery"
   },
   "profile": {
     "title": "My Profile",
@@ -863,6 +882,20 @@
           "early": "Early features",
           "badges": "Exclusive badges"
         }
+      }
+    },
+    "download": {
+      "badge": "Download the App",
+      "title": "Take BananaTalk Everywhere",
+      "description": "Learn on the go with our mobile app. Available on iOS and Android with all features, push notifications, and offline access.",
+      "downloadOn": "Download on the",
+      "getItOn": "Get it on",
+      "scanQR": "Scan to download the app",
+      "or": "or",
+      "features": {
+        "offline": "Offline access",
+        "push": "Push notifications",
+        "fast": "Fast & lightweight"
       }
     },
     "cta": {

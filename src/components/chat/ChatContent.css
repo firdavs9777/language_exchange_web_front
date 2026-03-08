@@ -303,6 +303,11 @@
 .status-icon {
   width: 14px;
   height: 14px;
+  flex-shrink: 0;
+}
+
+.status-icon.sending {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .status-icon.sent {
@@ -313,8 +318,74 @@
   color: #FFFFFF;
 }
 
+.status-icon.read {
+  color: #4FC3F7;
+}
+
 .status-icon.error {
   color: #EF4444;
+}
+
+/* Retry button for failed messages */
+.retry-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  padding: 4px 10px;
+  border: none;
+  background: #FEF2F2;
+  color: #EF4444;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-btn:hover {
+  background: #FEE2E2;
+}
+
+/* Reply preview inside bubble */
+.reply-preview {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  border-left: 3px solid rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.08);
+  font-size: 0.8125rem;
+}
+
+.modern-message.received .reply-preview {
+  border-left-color: #00BFA5;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.reply-sender {
+  font-weight: 600;
+  font-size: 0.75rem;
+  margin-bottom: 2px;
+}
+
+.reply-text {
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* Message media */
+.message-media {
+  margin-bottom: 6px;
+}
+
+.message-video {
+  max-width: 100%;
+  border-radius: 12px;
 }
 
 /* Typing Indicator */
@@ -407,6 +478,11 @@
 .attachment-btn:hover,
 .emoji-btn:hover {
   background: #E4E6EB;
+}
+
+.emoji-btn.active {
+  background: #D1FAE5;
+  color: #059669;
 }
 
 .attachment-btn svg,
@@ -746,20 +822,30 @@
   align-items: center;
   gap: 10px;
   min-width: 200px;
+  padding: 2px 0;
+}
+
+.voice-bubble {
+  min-width: 220px;
 }
 
 .voice-play-btn {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   color: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.voice-play-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
 }
 
 .modern-message.received .voice-play-btn {
@@ -767,19 +853,244 @@
   color: #050505;
 }
 
-.voice-waveform {
-  flex: 1;
-  height: 24px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
+.modern-message.received .voice-play-btn:hover {
+  background: #D8DADF;
 }
 
-.modern-message.received .voice-waveform {
-  background: #E4E6EB;
+.voice-waveform {
+  flex: 1;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.voice-waveform-bars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 100%;
+  width: 100%;
+}
+
+.waveform-bar {
+  width: 3px;
+  min-height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+}
+
+.modern-message.received .waveform-bar {
+  background: #BCC0C4;
 }
 
 .voice-duration {
   font-size: 0.75rem;
   opacity: 0.8;
   flex-shrink: 0;
+  min-width: 32px;
+  text-align: right;
+}
+
+/* Media bubble - less padding for images */
+.media-bubble {
+  padding: 4px !important;
+  overflow: hidden;
+}
+
+.media-bubble .message-text {
+  padding: 6px 10px 0;
+}
+
+.media-bubble .message-meta {
+  padding: 0 10px 4px;
+}
+
+/* Video thumbnail overlay */
+.video-thumbnail-wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.video-play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* File message */
+.message-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.file-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 180px;
+}
+
+.file-size {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* Media Preview Bar */
+.media-preview-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: #F0F2F5;
+  border-top: 1px solid #E4E6EB;
+}
+
+.media-preview-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.media-preview-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.media-preview-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #050505;
+  font-size: 0.875rem;
+}
+
+.media-preview-file span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.media-preview-cancel {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #65676B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.media-preview-cancel:hover {
+  background: #E4E6EB;
+}
+
+/* Voice Recording Bar */
+.voice-recording-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #FEF2F2;
+  border-top: 1px solid #FECACA;
+}
+
+.recording-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.recording-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #EF4444;
+  animation: recording-pulse 1s ease-in-out infinite;
+}
+
+@keyframes recording-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.recording-time {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #EF4444;
+  font-variant-numeric: tabular-nums;
+}
+
+.recording-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recording-cancel-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #FEE2E2;
+  color: #EF4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.recording-cancel-btn:hover {
+  background: #FECACA;
+}
+
+.recording-send-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #00BFA5;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.recording-send-btn:hover {
+  background: #00A896;
+}
+
+/* Mic button color */
+.mic-btn {
+  color: #00BFA5 !important;
+}
+
+.mic-btn:hover {
+  background: rgba(0, 191, 165, 0.1);
 }

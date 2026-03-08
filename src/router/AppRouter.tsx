@@ -30,6 +30,7 @@ import PrivacyPolicy from "../components/navbar/PrivacyPolicy";
 import DataDeletion from "../components/navbar/DataDeletion";
 import SupportPage from "../components/support/SupportMain";
 import TermsOfUse from "../components/navbar/TermsOfUse";
+import DownloadApp from "../components/download/DownloadApp";
 
 // Settings
 import Settings from "../components/settings/Settings";
@@ -104,6 +105,7 @@ const AppRouter = createBrowserRouter(
       <Route path="highlights" element={<Highlights />} />
       <Route path="privacy-policy/" element={<PrivacyPolicy />} />
       <Route path="terms-of-use/" element={<TermsOfUse />} />
+      <Route path="download" element={<DownloadApp />} />
 
       {/* Settings */}
       <Route path="settings" element={<Settings />} />
