@@ -20,12 +20,39 @@ const baseQuery = fetchBaseQuery({
 });
 
 // Token refresh wrapper
+// Debug logging for API calls
+const isDev = process.env.NODE_ENV === 'development';
+
+const loggedBaseQuery: typeof baseQuery = async (args, api, extraOptions) => {
+  const startTime = Date.now();
+  const url = typeof args === 'string' ? args : args.url;
+  const method = typeof args === 'string' ? 'GET' : (args.method || 'GET');
+
+  if (isDev) {
+    console.log(`[API] >> ${method} ${url}`, typeof args !== 'string' ? args.body || '' : '');
+  }
+
+  const result = await baseQuery(args, api, extraOptions);
+  const duration = Date.now() - startTime;
+
+  if (isDev) {
+    if (result.error) {
+      console.error(`[API] << ${method} ${url} [${(result.error as any)?.status || 'ERR'}] ${duration}ms`, result.error);
+    } else {
+      console.log(`[API] << ${method} ${url} [OK] ${duration}ms`, result.data);
+    }
+  }
+
+  return result;
+};
+
+// Token refresh wrapper
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  let result = await baseQuery(args, api, extraOptions);
+  let result = await loggedBaseQuery(args, api, extraOptions);
 
   // If we get a 401 or 403, try to refresh the token
   if (result.error && (result.error.status === 401 || result.error.status === 403)) {
