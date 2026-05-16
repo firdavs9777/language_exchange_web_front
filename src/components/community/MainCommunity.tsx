@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { useState, useMemo, useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { Loader2, X, Search } from "lucide-react";
 import { useGetCommunityMembersQuery } from "../../store/slices/communitySlice";
 import { useGetProfileVisitorsQuery } from "../../store/slices/usersSlice";
@@ -70,30 +70,12 @@ const ModernCommunity: React.FC = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Restore scroll once: after the first batch of members is actually in
-  // the DOM. Scrolling to Y=2000 before the grid is laid out is a no-op
-  // because the page is still short.
+  // Restore scroll once, after the first batch of members is in the DOM
+  // and BEFORE the browser paints. useLayoutEffect runs synchronously
+  // after layout, so the user never sees the page at y=0. Using
+  // behavior: "instant" overrides scroll-behavior: smooth from App.scss /
+  // MainCommunity.css — otherwise the restore would animate visibly.
   const hasRestoredScroll = useRef(false);
-  const restoreScrollWhenReady = useCallback(() => {
-    if (hasRestoredScroll.current) return;
-    const saved = sessionStorage.getItem("communityScroll");
-    if (!saved) {
-      hasRestoredScroll.current = true;
-      return;
-    }
-    const y = parseInt(saved, 10);
-    if (Number.isNaN(y) || y === 0) {
-      hasRestoredScroll.current = true;
-      return;
-    }
-    // Two rAFs so layout has settled after the data-driven render.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        window.scrollTo(0, y);
-        hasRestoredScroll.current = true;
-      });
-    });
-  }, []);
 
   const debouncedFilter = useDebounce(filter, 300);
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
@@ -167,12 +149,21 @@ const ModernCommunity: React.FC = () => {
     return merged;
   }, [communityData, extraPages]);
 
-  // Once the grid actually has rows to lay out, trigger the saved-scroll
-  // restore. Without this guard, a scrollTo(0, 2000) fires against a
-  // not-yet-tall-enough page and silently no-ops.
-  useEffect(() => {
-    if (allMembers.length > 0) restoreScrollWhenReady();
-  }, [allMembers.length, restoreScrollWhenReady]);
+  // Restore scroll exactly once, the first time the grid has rows.
+  useLayoutEffect(() => {
+    if (hasRestoredScroll.current) return;
+    if (allMembers.length === 0) return;
+    const saved = sessionStorage.getItem("communityScroll");
+    if (!saved) {
+      hasRestoredScroll.current = true;
+      return;
+    }
+    const y = parseInt(saved, 10);
+    if (!Number.isNaN(y) && y > 0) {
+      window.scrollTo({ top: y, left: 0, behavior: "instant" as ScrollBehavior });
+    }
+    hasRestoredScroll.current = true;
+  }, [allMembers.length]);
 
   const filteredMembers = useMemo(() => {
     let list: TandemMember[] = allMembers.filter((m) =>
