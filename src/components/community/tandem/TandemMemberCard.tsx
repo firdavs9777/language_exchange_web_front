@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Zap } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import LanguageFlagChip from "./LanguageFlagChip";
 
 export interface TandemMember {
@@ -33,10 +34,15 @@ const isRecentlyJoined = (createdAt?: string): boolean => {
 };
 
 const TandemMemberCard: React.FC<TandemMemberCardProps> = ({ member }) => {
+  const { t } = useTranslation();
   const avatar = member.imageUrls?.[0] || "/default-avatar.png";
   const isPro = member.isVIP || member.isVip;
   const isNew = member.isNew ?? isRecentlyJoined(member.createdAt);
-  const topic = member.topic || member.bio || "Let's practice!";
+  const topic =
+    member.topic ||
+    member.bio ||
+    t("communityMain.tandemCard.defaultTopic") ||
+    "Let's practice!";
 
   return (
     <Link to={`/community/${member._id}`} className="tandem-member-card" id={member._id}>
@@ -56,7 +62,7 @@ const TandemMemberCard: React.FC<TandemMemberCardProps> = ({ member }) => {
             <h3>{member.name}</h3>
             {isNew && (
               <div className="tandem-member-card__chip tandem-member-card__chip--new">
-                <span>NEW</span>
+                <span>{t("communityMain.tandemCard.newChip") || "NEW"}</span>
               </div>
             )}
           </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, SlidersHorizontal, Zap, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export type CommunityNavTab = "all" | "nearby" | "topics";
 
@@ -24,6 +25,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
   activeFilterCount = 0,
 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleTab = (tab: CommunityNavTab) => {
     onTabChange(tab);
@@ -42,7 +44,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
             }`}
             onClick={() => handleTab("all")}
           >
-            All members
+            {t("communityMain.subnav.allMembers") || "All members"}
           </button>
           <button
             type="button"
@@ -54,7 +56,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
             <span className="community-subnav__icon">
               <Zap size={14} fill="currentColor" />
             </span>
-            <span>Nearby</span>
+            <span>{t("communityMain.subnav.nearby") || "Nearby"}</span>
           </button>
           <button
             type="button"
@@ -66,7 +68,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
             <span className="community-subnav__icon">
               <Zap size={14} fill="currentColor" />
             </span>
-            <span>Topics</span>
+            <span>{t("communityMain.subnav.topics") || "Topics"}</span>
           </button>
         </div>
 
@@ -75,7 +77,9 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
             <Search size={16} className="community-subnav__search-icon" />
             <input
               type="text"
-              placeholder="Find members or topics"
+              placeholder={
+                t("communityMain.subnav.searchPlaceholder") || "Find members or topics"
+              }
               value={searchValue}
               onChange={(e) => onSearchChange(e.target.value)}
             />
@@ -84,7 +88,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
                 type="button"
                 className="community-subnav__search-clear"
                 onClick={() => onSearchChange("")}
-                aria-label="Clear search"
+                aria-label={t("communityMain.filters.clear") || "Clear search"}
               >
                 <X size={14} />
               </button>
@@ -98,10 +102,12 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
             onClick={onOpenFilters}
             aria-label={
               activeFilterCount > 0
-                ? `Filters (${activeFilterCount} active)`
-                : "Filters"
+                ? t("communityMain.subnav.filtersWithCount", {
+                    count: activeFilterCount,
+                  }) || `Filters (${activeFilterCount} active)`
+                : t("communityMain.subnav.filtersLabel") || "Filters"
             }
-            title="Filters"
+            title={t("communityMain.subnav.filtersLabel") || "Filters"}
           >
             <SlidersHorizontal size={18} />
             {activeFilterCount > 0 && (

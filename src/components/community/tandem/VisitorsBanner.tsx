@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface VisitorAvatar {
   _id: string;
@@ -14,6 +15,7 @@ interface VisitorsBannerProps {
 }
 
 const VisitorsBanner: React.FC<VisitorsBannerProps> = ({ visitors, totalCount }) => {
+  const { t } = useTranslation();
   if (!visitors.length || totalCount === 0) return null;
 
   const featuredName = visitors[0]?.name || "Someone";
@@ -21,13 +23,19 @@ const VisitorsBanner: React.FC<VisitorsBannerProps> = ({ visitors, totalCount })
   const previewAvatars = visitors.slice(0, 3);
   const remaining = Math.max(totalCount - previewAvatars.length, 0);
 
+  const headline =
+    otherCount > 0
+      ? t("communityMain.visitors.andOthers", {
+          name: featuredName,
+          count: otherCount,
+        }) ||
+        `${featuredName} and ${otherCount} others visited your profile!`
+      : t("communityMain.visitors.justYou", { name: featuredName }) ||
+        `${featuredName} visited your profile!`;
+
   return (
     <div className="visitors-banner">
-      <h3>
-        {otherCount > 0
-          ? `${featuredName} and ${otherCount} others visited your profile!`
-          : `${featuredName} visited your profile!`}
-      </h3>
+      <h3>{headline}</h3>
       <div className="visitors-banner__bottom">
         <div className="visitors-banner__members">
           <div className="visitors-banner__avatars">
@@ -43,7 +51,7 @@ const VisitorsBanner: React.FC<VisitorsBannerProps> = ({ visitors, totalCount })
           {remaining > 0 && <p>+{remaining}</p>}
         </div>
         <Link to="/visitors" className="visitors-banner__see-all">
-          See all
+          {t("communityMain.visitors.seeAll") || "See all"}
         </Link>
       </div>
     </div>

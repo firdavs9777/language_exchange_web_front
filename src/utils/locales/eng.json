@@ -463,6 +463,51 @@
     },
     "buttons": {
       "clearFilters": "Clear all filters"
+    },
+    "subnav": {
+      "allMembers": "All members",
+      "nearby": "Nearby",
+      "topics": "Topics",
+      "searchPlaceholder": "Find members or topics",
+      "filtersLabel": "Filters",
+      "filtersWithCount": "Filters ({{count}} active)"
+    },
+    "filterSheet": {
+      "title": "Filters",
+      "language": "Language",
+      "any": "Any",
+      "gender": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "ageRange": "Age range",
+      "min": "Min",
+      "max": "Max",
+      "experience": "Member experience",
+      "onlineNow": "Online now",
+      "newMembersOnly": "New members only (last 7 days)",
+      "reset": "Reset",
+      "apply": "Apply"
+    },
+    "highlighted": {
+      "title": "Highlighted Profiles",
+      "proBadge": "Pro",
+      "tryPro": "Try BananaTalk Pro",
+      "highlightSelfTopic": "Highlight your profile and let more people see you"
+    },
+    "visitors": {
+      "justYou": "{{name}} visited your profile!",
+      "andOthers": "{{name}} and {{count}} others visited your profile!",
+      "seeAll": "See all"
+    },
+    "tandemCard": {
+      "newChip": "NEW",
+      "defaultTopic": "Let's practice!"
+    },
+    "languageChip": {
+      "fluent": "FLUENT",
+      "learns": "LEARNS",
+      "native": "NATIVE"
     }
   },
   "communityDetail": {

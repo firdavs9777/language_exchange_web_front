@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { LANGUAGE_FLAGS } from "../type";
 
 interface LanguageFlagChipProps {
@@ -6,6 +7,12 @@ interface LanguageFlagChipProps {
   language?: string;
   extra?: number;
 }
+
+const LABEL_I18N_KEYS: Record<LanguageFlagChipProps["label"], string> = {
+  FLUENT: "communityMain.languageChip.fluent",
+  LEARNS: "communityMain.languageChip.learns",
+  NATIVE: "communityMain.languageChip.native",
+};
 
 const getCode = (language?: string): string => {
   if (!language) return "";
@@ -28,11 +35,13 @@ const getCode = (language?: string): string => {
 };
 
 const LanguageFlagChip: React.FC<LanguageFlagChipProps> = ({ label, language, extra }) => {
+  const { t } = useTranslation();
   const code = getCode(language);
   const flag = LANGUAGE_FLAGS[code] || "🌐";
+  const localizedLabel = t(LABEL_I18N_KEYS[label]) || label;
   return (
     <div className="lang-flag-chip">
-      <small className="lang-flag-chip__label">{label}</small>
+      <small className="lang-flag-chip__label">{localizedLabel}</small>
       <span className="lang-flag-chip__flag" aria-hidden>
         {flag}
       </span>

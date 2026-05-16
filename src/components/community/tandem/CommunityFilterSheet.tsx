@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { COMMON_LANGUAGES, LANGUAGE_FLAGS, LANGUAGE_CODES } from "../type";
 
 export interface CommunityFilters {
@@ -43,6 +44,7 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
   onClose,
   onApply,
 }) => {
+  const { t } = useTranslation();
   const [draft, setDraft] = useState<CommunityFilters>(initialFilters);
 
   useEffect(() => {
@@ -64,16 +66,21 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
   const handleApply = () => onApply(draft);
 
   return (
-    <div className="filter-sheet" role="dialog" aria-modal="true" aria-label="Filters">
+    <div
+      className="filter-sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-label={t("communityMain.filterSheet.title") || "Filters"}
+    >
       <div className="filter-sheet__backdrop" onClick={onClose} />
       <div className="filter-sheet__panel">
         <header className="filter-sheet__header">
-          <h2>Filters</h2>
+          <h2>{t("communityMain.filterSheet.title") || "Filters"}</h2>
           <button
             type="button"
             className="filter-sheet__close"
             onClick={onClose}
-            aria-label="Close filters"
+            aria-label={t("communityMain.filterSheet.title") || "Close filters"}
           >
             <X size={18} />
           </button>
@@ -81,14 +88,14 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
 
         <div className="filter-sheet__body">
           <section className="filter-section">
-            <h3>Language</h3>
+            <h3>{t("communityMain.filterSheet.language") || "Language"}</h3>
             <div className="filter-chips">
               <button
                 type="button"
                 className={`filter-chip ${!draft.language ? "filter-chip--active" : ""}`}
                 onClick={() => setDraft((d) => ({ ...d, language: "" }))}
               >
-                Any
+                {t("communityMain.filterSheet.any") || "Any"}
               </button>
               {COMMON_LANGUAGES.map((lang) => (
                 <button
@@ -107,26 +114,33 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
           </section>
 
           <section className="filter-section">
-            <h3>Gender</h3>
+            <h3>{t("communityMain.filterSheet.gender") || "Gender"}</h3>
             <div className="filter-chips">
-              {(["", "male", "female", "other"] as const).map((g) => (
-                <button
-                  key={g || "any"}
-                  type="button"
-                  className={`filter-chip ${draft.gender === g ? "filter-chip--active" : ""}`}
-                  onClick={() => setDraft((d) => ({ ...d, gender: g }))}
-                >
-                  {g === "" ? "Any" : g.charAt(0).toUpperCase() + g.slice(1)}
-                </button>
-              ))}
+              {(["", "male", "female", "other"] as const).map((g) => {
+                const label =
+                  g === ""
+                    ? t("communityMain.filterSheet.any") || "Any"
+                    : t(`communityMain.filterSheet.${g}`) ||
+                      g.charAt(0).toUpperCase() + g.slice(1);
+                return (
+                  <button
+                    key={g || "any"}
+                    type="button"
+                    className={`filter-chip ${draft.gender === g ? "filter-chip--active" : ""}`}
+                    onClick={() => setDraft((d) => ({ ...d, gender: g }))}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
           </section>
 
           <section className="filter-section">
-            <h3>Age range</h3>
+            <h3>{t("communityMain.filterSheet.ageRange") || "Age range"}</h3>
             <div className="filter-age">
               <label>
-                <span>Min</span>
+                <span>{t("communityMain.filterSheet.min") || "Min"}</span>
                 <input
                   type="number"
                   min={13}
@@ -141,7 +155,7 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
               </label>
               <span className="filter-age__dash">–</span>
               <label>
-                <span>Max</span>
+                <span>{t("communityMain.filterSheet.max") || "Max"}</span>
                 <input
                   type="number"
                   min={13}
@@ -158,14 +172,14 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
           </section>
 
           <section className="filter-section">
-            <h3>Member experience</h3>
+            <h3>{t("communityMain.filterSheet.experience") || "Member experience"}</h3>
             <label className="filter-toggle">
               <input
                 type="checkbox"
                 checked={draft.onlineOnly}
                 onChange={(e) => setDraft((d) => ({ ...d, onlineOnly: e.target.checked }))}
               />
-              <span>Online now</span>
+              <span>{t("communityMain.filterSheet.onlineNow") || "Online now"}</span>
             </label>
             <label className="filter-toggle">
               <input
@@ -173,17 +187,20 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
                 checked={draft.newOnly}
                 onChange={(e) => setDraft((d) => ({ ...d, newOnly: e.target.checked }))}
               />
-              <span>New members only (last 7 days)</span>
+              <span>
+                {t("communityMain.filterSheet.newMembersOnly") ||
+                  "New members only (last 7 days)"}
+              </span>
             </label>
           </section>
         </div>
 
         <footer className="filter-sheet__footer">
           <button type="button" className="filter-sheet__reset" onClick={handleReset}>
-            Reset
+            {t("communityMain.filterSheet.reset") || "Reset"}
           </button>
           <button type="button" className="filter-sheet__apply" onClick={handleApply}>
-            Apply
+            {t("communityMain.filterSheet.apply") || "Apply"}
           </button>
         </footer>
       </div>
