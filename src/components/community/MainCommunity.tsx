@@ -53,6 +53,23 @@ const ModernCommunity: React.FC = () => {
   // while a useEffect copy fires after paint.
   const [extraPages, setExtraPages] = useState<TandemMember[]>([]);
 
+  // Restore scroll when returning to /communities (e.g. back from
+  // /community/:id). Save on unmount, restore on mount. We wait for the
+  // first paint so the page-1 grid (derived from RTK cache) is on screen
+  // before we try to scroll into it.
+  useEffect(() => {
+    const saved = sessionStorage.getItem("communityScroll");
+    if (saved) {
+      const y = parseInt(saved, 10);
+      if (!Number.isNaN(y)) {
+        requestAnimationFrame(() => window.scrollTo(0, y));
+      }
+    }
+    return () => {
+      sessionStorage.setItem("communityScroll", String(window.scrollY));
+    };
+  }, []);
+
   const debouncedFilter = useDebounce(filter, 300);
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
   const currentUser = useMemo(
