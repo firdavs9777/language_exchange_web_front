@@ -154,7 +154,10 @@ const MainChat: React.FC = () => {
                 </div>
                 <div className="feature-item">
                   <div className="feature-dot" />
-                  <span>{t("chatPage.features.calls")}</span>
+                  <span>
+                    {t("chatPage.features.translation") ||
+                      "Built-in translation"}
+                  </span>
                 </div>
               </div>
             </div>

@@ -30,7 +30,8 @@
     "features": {
       "realtime": "实时消息",
       "exchange": "语言交换",
-      "calls": "语音和视频通话"
+      "calls": "语音和视频通话",
+      "translation": "内置翻译"
     },
     "online": "在线",
     "offline": "离线",
@@ -42,7 +43,39 @@
     "justNow": "刚刚",
     "minutesAgo": "{{count}}分钟前",
     "hoursAgo": "{{count}}小时前",
-    "unknownUser": "未知用户"
+    "unknownUser": "未知用户",
+    "backToConversations": "返回对话列表",
+    "moreOptions": "更多选项",
+    "retrySending": "重新发送",
+    "input": {
+      "attachFile": "添加附件",
+      "stickers": "贴纸",
+      "voiceMessage": "语音消息",
+      "sendGif": "发送 GIF"
+    },
+    "list": {
+      "noMatchTitle": "没有匹配的对话",
+      "noMatchSubtitle": "尝试调整搜索词",
+      "emptyTitle": "暂无对话",
+      "emptySubtitle": "开始对话后会显示在这里"
+    },
+    "deleteModal": {
+      "title": "删除对话",
+      "bodyPrefix": "删除与该用户的对话:",
+      "warning": "此操作无法撤销。",
+      "cancel": "取消",
+      "confirm": "删除",
+      "deleting": "正在删除..."
+    },
+    "gif": {
+      "title": "GIF",
+      "close": "关闭 GIF 选择器",
+      "searchPlaceholder": "搜索 GIF...",
+      "loading": "正在加载 GIF...",
+      "noResults": "未找到 GIF",
+      "poweredBy": "Powered by GIPHY",
+      "altText": "GIF"
+    }
   },
   "notifications": "通知",
   "moments": "动态",

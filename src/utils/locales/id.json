@@ -30,7 +30,8 @@
     "features": {
       "realtime": "Pesan real-time",
       "exchange": "Pertukaran bahasa",
-      "calls": "Panggilan suara & video"
+      "calls": "Panggilan suara & video",
+      "translation": "Terjemahan bawaan"
     },
     "online": "Online",
     "offline": "Offline",
@@ -42,7 +43,39 @@
     "justNow": "Baru saja",
     "minutesAgo": "{{count}} menit lalu",
     "hoursAgo": "{{count}} jam lalu",
-    "unknownUser": "Pengguna Tidak Dikenal"
+    "unknownUser": "Pengguna Tidak Dikenal",
+    "backToConversations": "Kembali ke percakapan",
+    "moreOptions": "Opsi lainnya",
+    "retrySending": "Coba kirim lagi",
+    "input": {
+      "attachFile": "Lampirkan file",
+      "stickers": "Stiker",
+      "voiceMessage": "Pesan suara",
+      "sendGif": "Kirim GIF"
+    },
+    "list": {
+      "noMatchTitle": "Tidak ada percakapan yang cocok",
+      "noMatchSubtitle": "Coba ubah pencarian",
+      "emptyTitle": "Belum ada percakapan",
+      "emptySubtitle": "Mulai percakapan untuk melihatnya di sini"
+    },
+    "deleteModal": {
+      "title": "Hapus percakapan",
+      "bodyPrefix": "Hapus percakapan Anda dengan:",
+      "warning": "Tindakan ini tidak dapat dibatalkan.",
+      "cancel": "Batal",
+      "confirm": "Hapus",
+      "deleting": "Menghapus..."
+    },
+    "gif": {
+      "title": "GIF",
+      "close": "Tutup pemilih GIF",
+      "searchPlaceholder": "Cari GIF...",
+      "loading": "Memuat GIF...",
+      "noResults": "Tidak ada GIF",
+      "poweredBy": "Didukung oleh GIPHY",
+      "altText": "GIF"
+    }
   },
   "notifications": "Notifikasi",
   "moments": "Momen",

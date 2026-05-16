@@ -30,7 +30,8 @@
     "features": {
       "realtime": "リアルタイムメッセージ",
       "exchange": "言語交換",
-      "calls": "音声・ビデオ通話"
+      "calls": "音声・ビデオ通話",
+      "translation": "翻訳機能内蔵"
     },
     "online": "オンライン",
     "offline": "オフライン",
@@ -42,7 +43,39 @@
     "justNow": "たった今",
     "minutesAgo": "{{count}}分前",
     "hoursAgo": "{{count}}時間前",
-    "unknownUser": "不明なユーザー"
+    "unknownUser": "不明なユーザー",
+    "backToConversations": "会話一覧に戻る",
+    "moreOptions": "その他のオプション",
+    "retrySending": "再送信",
+    "input": {
+      "attachFile": "ファイルを添付",
+      "stickers": "スタンプ",
+      "voiceMessage": "ボイスメッセージ",
+      "sendGif": "GIFを送信"
+    },
+    "list": {
+      "noMatchTitle": "一致する会話がありません",
+      "noMatchSubtitle": "検索条件を変えてみてください",
+      "emptyTitle": "まだ会話がありません",
+      "emptySubtitle": "会話を始めるとここに表示されます"
+    },
+    "deleteModal": {
+      "title": "会話を削除",
+      "bodyPrefix": "次のユーザーとの会話を削除しますか:",
+      "warning": "この操作は取り消せません。",
+      "cancel": "キャンセル",
+      "confirm": "削除",
+      "deleting": "削除中..."
+    },
+    "gif": {
+      "title": "GIF",
+      "close": "GIFピッカーを閉じる",
+      "searchPlaceholder": "GIFを検索...",
+      "loading": "GIFを読み込み中...",
+      "noResults": "GIFが見つかりません",
+      "poweredBy": "Powered by GIPHY",
+      "altText": "GIF"
+    }
   },
   "notifications": "通知",
   "moments": "モーメント",

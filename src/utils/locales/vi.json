@@ -30,7 +30,8 @@
     "features": {
       "realtime": "Nhắn tin thời gian thực",
       "exchange": "Trao đổi ngôn ngữ",
-      "calls": "Cuộc gọi thoại & video"
+      "calls": "Cuộc gọi thoại & video",
+      "translation": "Dịch tích hợp"
     },
     "online": "Trực tuyến",
     "offline": "Ngoại tuyến",
@@ -42,7 +43,39 @@
     "justNow": "Vừa xong",
     "minutesAgo": "{{count}} phút trước",
     "hoursAgo": "{{count}} giờ trước",
-    "unknownUser": "Người Dùng Không Xác Định"
+    "unknownUser": "Người Dùng Không Xác Định",
+    "backToConversations": "Quay lại danh sách trò chuyện",
+    "moreOptions": "Tùy chọn khác",
+    "retrySending": "Gửi lại",
+    "input": {
+      "attachFile": "Đính kèm tệp",
+      "stickers": "Sticker",
+      "voiceMessage": "Tin nhắn thoại",
+      "sendGif": "Gửi GIF"
+    },
+    "list": {
+      "noMatchTitle": "Không có cuộc trò chuyện phù hợp",
+      "noMatchSubtitle": "Hãy thử thay đổi tìm kiếm",
+      "emptyTitle": "Chưa có cuộc trò chuyện",
+      "emptySubtitle": "Bắt đầu một cuộc trò chuyện để xem ở đây"
+    },
+    "deleteModal": {
+      "title": "Xóa cuộc trò chuyện",
+      "bodyPrefix": "Xóa cuộc trò chuyện của bạn với:",
+      "warning": "Hành động này không thể hoàn tác.",
+      "cancel": "Hủy",
+      "confirm": "Xóa",
+      "deleting": "Đang xóa..."
+    },
+    "gif": {
+      "title": "GIF",
+      "close": "Đóng trình chọn GIF",
+      "searchPlaceholder": "Tìm GIF...",
+      "loading": "Đang tải GIF...",
+      "noResults": "Không tìm thấy GIF",
+      "poweredBy": "Powered by GIPHY",
+      "altText": "GIF"
+    }
   },
   "notifications": "Thông Báo",
   "moments": "Khoảnh Khắc",

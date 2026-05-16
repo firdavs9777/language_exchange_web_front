@@ -8,6 +8,7 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/index";
 import { useSocket } from "./hooks/useSocket";
+import { useTranslation } from "react-i18next";
 import "./UsersList.css";
 
 // ---------- Types ----------
@@ -103,6 +104,7 @@ const UsersList: React.FC<UsersListProps> = ({
   activeUserId,
   searchQuery = "",
 }) => {
+  const { t } = useTranslation();
   const currentUser = useSelector(
     (state: RootState) => state.auth.userInfo?.user
   );
@@ -551,8 +553,12 @@ const UsersList: React.FC<UsersListProps> = ({
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
           </div>
-          <p className="users-list-empty-title">No matching conversations</p>
-          <p className="users-list-empty-subtitle">Try adjusting your search</p>
+          <p className="users-list-empty-title">
+            {t("chatPage.list.noMatchTitle") || "No matching conversations"}
+          </p>
+          <p className="users-list-empty-subtitle">
+            {t("chatPage.list.noMatchSubtitle") || "Try adjusting your search"}
+          </p>
         </div>
       </div>
     );
@@ -594,7 +600,10 @@ const UsersList: React.FC<UsersListProps> = ({
                       )}
                     </div>
                     {online && (
-                      <span className="users-list-online-dot" title="Online" />
+                      <span
+                        className="users-list-online-dot"
+                        title={t("chatPage.online") || "Online"}
+                      />
                     )}
                   </div>
 
@@ -656,9 +665,12 @@ const UsersList: React.FC<UsersListProps> = ({
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
             </div>
-            <p className="users-list-empty-title">No conversations yet</p>
+            <p className="users-list-empty-title">
+              {t("chatPage.list.emptyTitle") || "No conversations yet"}
+            </p>
             <p className="users-list-empty-subtitle">
-              Start a conversation to see it here
+              {t("chatPage.list.emptySubtitle") ||
+                "Start a conversation to see it here"}
             </p>
           </div>
         )}
@@ -673,16 +685,17 @@ const UsersList: React.FC<UsersListProps> = ({
       >
         <Modal.Header closeButton className="border-0 pb-1">
           <Modal.Title className="fs-6 fw-semibold">
-            Delete Conversation
+            {t("chatPage.deleteModal.title") || "Delete Conversation"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="pt-0">
           <p className="mb-1 text-secondary" style={{ fontSize: "0.9rem" }}>
-            Delete your conversation with{" "}
+            {t("chatPage.deleteModal.bodyPrefix") ||
+              "Delete your conversation with"}{" "}
             <strong>{userToDelete?.name}</strong>?
           </p>
           <p className="mb-0 text-muted" style={{ fontSize: "0.8rem" }}>
-            This cannot be undone.
+            {t("chatPage.deleteModal.warning") || "This cannot be undone."}
           </p>
         </Modal.Body>
         <Modal.Footer className="border-0 pt-0">
@@ -692,7 +705,7 @@ const UsersList: React.FC<UsersListProps> = ({
             onClick={handleDeleteCancel}
             disabled={isDeleting}
           >
-            Cancel
+            {t("chatPage.deleteModal.cancel") || "Cancel"}
           </Button>
           <Button
             variant="danger"
@@ -700,7 +713,9 @@ const UsersList: React.FC<UsersListProps> = ({
             onClick={handleDeleteConfirm}
             disabled={isDeleting}
           >
-            {isDeleting ? "Deleting..." : "Delete"}
+            {isDeleting
+              ? t("chatPage.deleteModal.deleting") || "Deleting..."
+              : t("chatPage.deleteModal.confirm") || "Delete"}
           </Button>
         </Modal.Footer>
       </Modal>

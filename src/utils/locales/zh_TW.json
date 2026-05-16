@@ -30,7 +30,8 @@
     "features": {
       "realtime": "即時訊息",
       "exchange": "語言交換",
-      "calls": "語音和視訊通話"
+      "calls": "語音和視訊通話",
+      "translation": "內建翻譯"
     },
     "online": "線上",
     "offline": "離線",
@@ -42,7 +43,39 @@
     "justNow": "剛剛",
     "minutesAgo": "{{count}}分鐘前",
     "hoursAgo": "{{count}}小時前",
-    "unknownUser": "未知使用者"
+    "unknownUser": "未知使用者",
+    "backToConversations": "返回對話列表",
+    "moreOptions": "更多選項",
+    "retrySending": "重新發送",
+    "input": {
+      "attachFile": "新增附件",
+      "stickers": "貼圖",
+      "voiceMessage": "語音訊息",
+      "sendGif": "傳送 GIF"
+    },
+    "list": {
+      "noMatchTitle": "沒有相符的對話",
+      "noMatchSubtitle": "嘗試調整搜尋詞",
+      "emptyTitle": "尚無對話",
+      "emptySubtitle": "開始對話後會顯示在這裡"
+    },
+    "deleteModal": {
+      "title": "刪除對話",
+      "bodyPrefix": "刪除與該使用者的對話:",
+      "warning": "此動作無法復原。",
+      "cancel": "取消",
+      "confirm": "刪除",
+      "deleting": "刪除中..."
+    },
+    "gif": {
+      "title": "GIF",
+      "close": "關閉 GIF 選擇器",
+      "searchPlaceholder": "搜尋 GIF...",
+      "loading": "正在載入 GIF...",
+      "noResults": "找不到 GIF",
+      "poweredBy": "Powered by GIPHY",
+      "altText": "GIF"
+    }
   },
   "notifications": "通知",
   "moments": "動態",

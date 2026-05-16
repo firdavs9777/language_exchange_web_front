@@ -1150,3 +1150,28 @@
 .mic-btn:hover {
   background: rgba(0, 191, 165, 0.1);
 }
+
+/* GIF message bubble — image rendered inline, capped to a reasonable size */
+.gif-message {
+  display: block;
+  max-width: 240px;
+  max-height: 240px;
+  width: auto;
+  height: auto;
+  border-radius: 12px;
+  object-fit: contain;
+  background: transparent;
+}
+
+.modern-message.sent .message-bubble:has(.gif-message),
+.modern-message.received .message-bubble:has(.gif-message) {
+  background: transparent;
+  padding: 0;
+}
+
+@media (max-width: 480px) {
+  .gif-message {
+    max-width: 200px;
+    max-height: 200px;
+  }
+}

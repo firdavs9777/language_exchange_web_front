@@ -30,7 +30,8 @@
     "features": {
       "realtime": "ส่งข้อความแบบเรียลไทม์",
       "exchange": "แลกเปลี่ยนภาษา",
-      "calls": "โทรเสียงและวิดีโอ"
+      "calls": "โทรเสียงและวิดีโอ",
+      "translation": "การแปลในตัว"
     },
     "online": "ออนไลน์",
     "offline": "ออฟไลน์",
@@ -42,7 +43,39 @@
     "justNow": "เมื่อกี้",
     "minutesAgo": "{{count}} นาทีที่แล้ว",
     "hoursAgo": "{{count}} ชั่วโมงที่แล้ว",
-    "unknownUser": "ผู้ใช้ที่ไม่รู้จัก"
+    "unknownUser": "ผู้ใช้ที่ไม่รู้จัก",
+    "backToConversations": "กลับไปที่การสนทนา",
+    "moreOptions": "ตัวเลือกเพิ่มเติม",
+    "retrySending": "ส่งอีกครั้ง",
+    "input": {
+      "attachFile": "แนบไฟล์",
+      "stickers": "สติกเกอร์",
+      "voiceMessage": "ข้อความเสียง",
+      "sendGif": "ส่ง GIF"
+    },
+    "list": {
+      "noMatchTitle": "ไม่พบการสนทนาที่ตรงกัน",
+      "noMatchSubtitle": "ลองปรับการค้นหา",
+      "emptyTitle": "ยังไม่มีการสนทนา",
+      "emptySubtitle": "เริ่มการสนทนาเพื่อให้ปรากฏที่นี่"
+    },
+    "deleteModal": {
+      "title": "ลบการสนทนา",
+      "bodyPrefix": "ลบการสนทนากับ:",
+      "warning": "การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+      "cancel": "ยกเลิก",
+      "confirm": "ลบ",
+      "deleting": "กำลังลบ..."
+    },
+    "gif": {
+      "title": "GIF",
+      "close": "ปิดเครื่องมือเลือก GIF",
+      "searchPlaceholder": "ค้นหา GIF...",
+      "loading": "กำลังโหลด GIF...",
+      "noResults": "ไม่พบ GIF",
+      "poweredBy": "Powered by GIPHY",
+      "altText": "GIF"
+    }
   },
   "notifications": "การแจ้งเตือน",
   "moments": "โมเมนต์",

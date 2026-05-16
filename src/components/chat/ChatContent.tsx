@@ -11,6 +11,7 @@ import {
 import "./ChatContent.css";
 import StickerPanel from "./StickerPanel";
 import "./StickerPanel.css";
+import GifPickerPanel from "./GifPickerPanel";
 import { useSocket } from "./hooks/useSocket";
 import CorrectionCard, { MessageCorrection } from "./components/CorrectionCard";
 import CorrectionModal from "./components/CorrectionModal";
@@ -35,6 +36,7 @@ import {
   Image as ImageIcon,
   Edit3,
   Globe,
+  FileImage,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -175,6 +177,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
   // Sticker panel state
   const [isStickerPanelOpen, setIsStickerPanelOpen] = useState(false);
+  const [isGifPanelOpen, setIsGifPanelOpen] = useState(false);
 
   // Correction modal state
   const [correctingMessage, setCorrectingMessage] = useState<Message | null>(null);
@@ -662,6 +665,91 @@ const ChatContent: React.FC<ChatContentProps> = ({
   };
 
   // ========== Send Sticker ==========
+  // GIFs reuse the sticker pipeline — same optimistic insert + socket-with-
+  // REST-fallback shape, just a different messageType. Backend treats the URL
+  // as the message body; the rendering branch below picks it up by type.
+  const handleSendGif = async (gifUrl: string) => {
+    setIsGifPanelOpen(false);
+    await sendInlineMessage(gifUrl, "gif");
+  };
+
+  const sendInlineMessage = async (text: string, messageType: string) => {
+    if (isSending) return;
+    const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const optimisticMessage: Message = {
+      _id: tempId,
+      message: text,
+      messageType,
+      sender: { _id: userId, name: currentUserName || "" },
+      receiver: selectedUser,
+      createdAt: new Date().toISOString(),
+      isOptimistic: true,
+      status: "sending",
+    };
+    setMessages((prev) => [...prev, optimisticMessage]);
+    isAtBottomRef.current = true;
+
+    let resolved = false;
+    if (socket?.connected) {
+      socket.emit(
+        "sendMessage",
+        { receiver: selectedUser, message: text, messageType },
+        (response: any) => {
+          if (resolved) return;
+          resolved = true;
+          if (response?.status === "success" && response?.message) {
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg._id === tempId
+                  ? { ...response.message, status: "sent", isOptimistic: false }
+                  : msg
+              )
+            );
+          } else {
+            sendInlineMessageViaRest(tempId, text, messageType);
+          }
+        }
+      );
+      setTimeout(() => {
+        if (resolved) return;
+        resolved = true;
+        sendInlineMessageViaRest(tempId, text, messageType);
+      }, 5000);
+    } else {
+      resolved = true;
+      await sendInlineMessageViaRest(tempId, text, messageType);
+    }
+  };
+
+  const sendInlineMessageViaRest = async (
+    tempId: string,
+    text: string,
+    messageType: string
+  ) => {
+    try {
+      const result: any = await createMessage({
+        sender: userId,
+        receiver: selectedUser,
+        message: text,
+        type: messageType,
+      }).unwrap();
+      const msgData = result.data || result;
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === tempId
+            ? { ...msgData, status: "sent", isOptimistic: false }
+            : msg
+        )
+      );
+    } catch (err) {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === tempId ? { ...msg, status: "error" } : msg
+        )
+      );
+    }
+  };
+
   const handleSendSticker = async (sticker: string) => {
     if (isSending) return;
 
@@ -1289,7 +1377,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
             <button
               className="back-btn"
               onClick={() => navigate("/chat")}
-              aria-label="Back to conversations"
+              aria-label={
+                t("chatPage.backToConversations") || "Back to conversations"
+              }
             >
               <ArrowLeft size={20} />
             </button>
@@ -1322,13 +1412,13 @@ const ChatContent: React.FC<ChatContentProps> = ({
           </div>
 
           <div className="header-actions">
-            <button className="action-btn" title="Voice call">
-              <Phone size={20} />
-            </button>
-            <button className="action-btn" title="Video call">
-              <Video size={20} />
-            </button>
-            <button className="action-btn" title="More options">
+            {/* Voice/Video call buttons removed — calling is mobile-only per
+                the documented web scope (Community/Chats/Moments/Profile). */}
+            <button
+              className="action-btn"
+              title={t("chatPage.moreOptions") || "More options"}
+              aria-label={t("chatPage.moreOptions") || "More options"}
+            >
               <MoreVertical size={20} />
             </button>
           </div>
@@ -1371,6 +1461,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
               const isVoice = msg.messageType === "voice" || msg.media?.type === "voice";
               const isSticker = msg.messageType === "sticker";
+              const isGif =
+                msg.messageType === "gif" ||
+                (typeof msg.message === "string" &&
+                  /\.gif(\?|$)|giphy\.com\/media/i.test(msg.message));
               const hasMedia = !!msg.media?.type && !isVoice;
 
               return (
@@ -1402,6 +1496,13 @@ const ChatContent: React.FC<ChatContentProps> = ({
                     >
                       {isSticker ? (
                         <div className="sticker-message">{msg.message}</div>
+                      ) : isGif ? (
+                        <img
+                          className="gif-message"
+                          src={msg.message}
+                          alt={t("chatPage.gif.altText") || "GIF"}
+                          loading="lazy"
+                        />
                       ) : (
                         <>
                           {renderMediaContent(msg)}
@@ -1502,7 +1603,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
                       <button
                         className="retry-btn"
                         onClick={() => handleRetryMessage(msg)}
-                        title="Retry sending"
+                        title={t("chatPage.retrySending") || "Retry sending"}
                       >
                         <RefreshCw size={14} />
                         <span>{t("chatPage.retry") || "Retry"}</span>
@@ -1586,12 +1687,21 @@ const ChatContent: React.FC<ChatContentProps> = ({
             />
           )}
 
+          {/* GIF Picker */}
+          {isGifPanelOpen && (
+            <GifPickerPanel
+              onSelectGif={handleSendGif}
+              onClose={() => setIsGifPanelOpen(false)}
+            />
+          )}
+
           <Form onSubmit={handleSendMessage} className="input-form">
             <div className="input-container">
               <button
                 type="button"
                 className="attachment-btn"
-                title="Attach file"
+                title={t("chatPage.input.attachFile") || "Attach file"}
+                aria-label={t("chatPage.input.attachFile") || "Attach file"}
                 onClick={handleAttachmentClick}
               >
                 {mediaPreview ? <ImageIcon size={20} /> : <Paperclip size={20} />}
@@ -1616,10 +1726,26 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 <button
                   type="button"
                   className={`emoji-btn ${isStickerPanelOpen ? "active" : ""}`}
-                  title="Stickers"
-                  onClick={() => setIsStickerPanelOpen(!isStickerPanelOpen)}
+                  title={t("chatPage.input.stickers") || "Stickers"}
+                  aria-label={t("chatPage.input.stickers") || "Stickers"}
+                  onClick={() => {
+                    setIsStickerPanelOpen((v) => !v);
+                    setIsGifPanelOpen(false);
+                  }}
                 >
                   {isStickerPanelOpen ? <X size={20} /> : <Smile size={20} />}
+                </button>
+                <button
+                  type="button"
+                  className={`emoji-btn ${isGifPanelOpen ? "active" : ""}`}
+                  title={t("chatPage.input.sendGif") || "Send a GIF"}
+                  aria-label={t("chatPage.input.sendGif") || "Send a GIF"}
+                  onClick={() => {
+                    setIsGifPanelOpen((v) => !v);
+                    setIsStickerPanelOpen(false);
+                  }}
+                >
+                  <FileImage size={20} />
                 </button>
               </div>
 
@@ -1639,7 +1765,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 <button
                   type="button"
                   className="send-btn mic-btn"
-                  title="Voice message"
+                  title={t("chatPage.input.voiceMessage") || "Voice message"}
+                  aria-label={
+                    t("chatPage.input.voiceMessage") || "Voice message"
+                  }
                   onClick={startRecording}
                 >
                   <Mic size={18} />

@@ -22,6 +22,38 @@
   "community": "Community",
   "chat": "Chat",
   "chatPage": {
+    "backToConversations": "Back to conversations",
+    "moreOptions": "More options",
+    "retrySending": "Retry sending",
+    "input": {
+      "attachFile": "Attach file",
+      "stickers": "Stickers",
+      "voiceMessage": "Voice message",
+      "sendGif": "Send a GIF"
+    },
+    "list": {
+      "noMatchTitle": "No matching conversations",
+      "noMatchSubtitle": "Try adjusting your search",
+      "emptyTitle": "No conversations yet",
+      "emptySubtitle": "Start a conversation to see it here"
+    },
+    "deleteModal": {
+      "title": "Delete Conversation",
+      "bodyPrefix": "Delete your conversation with",
+      "warning": "This cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Delete",
+      "deleting": "Deleting..."
+    },
+    "gif": {
+      "title": "GIFs",
+      "close": "Close GIF picker",
+      "searchPlaceholder": "Search GIFs...",
+      "loading": "Loading GIFs...",
+      "noResults": "No GIFs found",
+      "poweredBy": "Powered by GIPHY",
+      "altText": "GIF"
+    },
     "messages": "Messages",
     "searchPlaceholder": "Search conversations...",
     "startConversation": "Start a Conversation",
@@ -30,7 +62,8 @@
     "features": {
       "realtime": "Real-time messaging",
       "exchange": "Language exchange",
-      "calls": "Voice & video calls"
+      "calls": "Voice & video calls",
+      "translation": "Built-in translation"
     },
     "online": "Online",
     "offline": "Offline",

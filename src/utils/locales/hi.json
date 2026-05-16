@@ -30,7 +30,8 @@
     "features": {
       "realtime": "रियल-टाइम मैसेजिंग",
       "exchange": "भाषा विनिमय",
-      "calls": "वॉइस और वीडियो कॉल"
+      "calls": "वॉइस और वीडियो कॉल",
+      "translation": "अंतर्निर्मित अनुवाद"
     },
     "online": "ऑनलाइन",
     "offline": "ऑफ़लाइन",
@@ -42,7 +43,39 @@
     "justNow": "अभी",
     "minutesAgo": "{{count}} मिनट पहले",
     "hoursAgo": "{{count}} घंटे पहले",
-    "unknownUser": "अज्ञात उपयोगकर्ता"
+    "unknownUser": "अज्ञात उपयोगकर्ता",
+    "backToConversations": "बातचीत पर वापस",
+    "moreOptions": "अधिक विकल्प",
+    "retrySending": "फिर से भेजें",
+    "input": {
+      "attachFile": "फ़ाइल संलग्न करें",
+      "stickers": "स्टिकर",
+      "voiceMessage": "वॉइस संदेश",
+      "sendGif": "GIF भेजें"
+    },
+    "list": {
+      "noMatchTitle": "कोई मेल खाती बातचीत नहीं",
+      "noMatchSubtitle": "अपनी खोज बदलकर देखें",
+      "emptyTitle": "अभी कोई बातचीत नहीं",
+      "emptySubtitle": "बातचीत शुरू करें ताकि यहाँ दिखे"
+    },
+    "deleteModal": {
+      "title": "बातचीत हटाएँ",
+      "bodyPrefix": "इस उपयोगकर्ता के साथ बातचीत हटाएँ:",
+      "warning": "यह क्रिया वापस नहीं ली जा सकती।",
+      "cancel": "रद्द करें",
+      "confirm": "हटाएँ",
+      "deleting": "हटा रहा है..."
+    },
+    "gif": {
+      "title": "GIF",
+      "close": "GIF चयनकर्ता बंद करें",
+      "searchPlaceholder": "GIF खोजें...",
+      "loading": "GIF लोड हो रहे हैं...",
+      "noResults": "कोई GIF नहीं मिला",
+      "poweredBy": "GIPHY द्वारा संचालित",
+      "altText": "GIF"
+    }
   },
   "notifications": "सूचनाएँ",
   "moments": "मोमेंट्स",

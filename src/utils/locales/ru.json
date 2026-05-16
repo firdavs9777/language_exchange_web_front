@@ -30,7 +30,8 @@
     "features": {
       "realtime": "Обмен сообщениями в реальном времени",
       "exchange": "Языковой обмен",
-      "calls": "Голосовые и видеозвонки"
+      "calls": "Голосовые и видеозвонки",
+      "translation": "Встроенный перевод"
     },
     "online": "Онлайн",
     "offline": "Офлайн",
@@ -42,7 +43,39 @@
     "justNow": "Только что",
     "minutesAgo": "{{count}}м назад",
     "hoursAgo": "{{count}}ч назад",
-    "unknownUser": "Неизвестный Пользователь"
+    "unknownUser": "Неизвестный Пользователь",
+    "backToConversations": "Назад к диалогам",
+    "moreOptions": "Ещё",
+    "retrySending": "Повторить отправку",
+    "input": {
+      "attachFile": "Прикрепить файл",
+      "stickers": "Стикеры",
+      "voiceMessage": "Голосовое сообщение",
+      "sendGif": "Отправить GIF"
+    },
+    "list": {
+      "noMatchTitle": "Нет подходящих диалогов",
+      "noMatchSubtitle": "Попробуйте изменить запрос",
+      "emptyTitle": "Диалогов пока нет",
+      "emptySubtitle": "Начните диалог, чтобы он появился здесь"
+    },
+    "deleteModal": {
+      "title": "Удалить диалог",
+      "bodyPrefix": "Удалить диалог с:",
+      "warning": "Это действие нельзя отменить.",
+      "cancel": "Отмена",
+      "confirm": "Удалить",
+      "deleting": "Удаление..."
+    },
+    "gif": {
+      "title": "GIF",
+      "close": "Закрыть выбор GIF",
+      "searchPlaceholder": "Поиск GIF...",
+      "loading": "Загрузка GIF...",
+      "noResults": "GIF не найдены",
+      "poweredBy": "Powered by GIPHY",
+      "altText": "GIF"
+    }
   },
   "notifications": "Уведомления",
   "moments": "Моменты",

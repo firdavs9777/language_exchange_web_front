@@ -30,7 +30,8 @@
     "features": {
       "realtime": "Messaggistica in tempo reale",
       "exchange": "Scambio linguistico",
-      "calls": "Chiamate vocali e video"
+      "calls": "Chiamate vocali e video",
+      "translation": "Traduzione integrata"
     },
     "online": "Online",
     "offline": "Offline",
@@ -42,7 +43,39 @@
     "justNow": "Adesso",
     "minutesAgo": "{{count}}m fa",
     "hoursAgo": "{{count}}h fa",
-    "unknownUser": "Utente Sconosciuto"
+    "unknownUser": "Utente Sconosciuto",
+    "backToConversations": "Torna alle conversazioni",
+    "moreOptions": "Altre opzioni",
+    "retrySending": "Riprova invio",
+    "input": {
+      "attachFile": "Allega file",
+      "stickers": "Adesivi",
+      "voiceMessage": "Messaggio vocale",
+      "sendGif": "Invia un GIF"
+    },
+    "list": {
+      "noMatchTitle": "Nessuna conversazione corrispondente",
+      "noMatchSubtitle": "Prova a modificare la ricerca",
+      "emptyTitle": "Nessuna conversazione",
+      "emptySubtitle": "Avvia una conversazione per vederla qui"
+    },
+    "deleteModal": {
+      "title": "Elimina conversazione",
+      "bodyPrefix": "Eliminare la conversazione con:",
+      "warning": "Questa azione non può essere annullata.",
+      "cancel": "Annulla",
+      "confirm": "Elimina",
+      "deleting": "Eliminazione..."
+    },
+    "gif": {
+      "title": "GIF",
+      "close": "Chiudi selettore GIF",
+      "searchPlaceholder": "Cerca GIF...",
+      "loading": "Caricamento GIF...",
+      "noResults": "Nessun GIF trovato",
+      "poweredBy": "Powered by GIPHY",
+      "altText": "GIF"
+    }
   },
   "notifications": "Notifiche",
   "moments": "Momenti",

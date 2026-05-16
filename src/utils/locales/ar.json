@@ -30,7 +30,8 @@
     "features": {
       "realtime": "مراسلة فورية",
       "exchange": "تبادل لغوي",
-      "calls": "مكالمات صوتية ومرئية"
+      "calls": "مكالمات صوتية ومرئية",
+      "translation": "ترجمة مدمجة"
     },
     "online": "متصل",
     "offline": "غير متصل",
@@ -42,7 +43,39 @@
     "justNow": "الآن",
     "minutesAgo": "منذ {{count}} د",
     "hoursAgo": "منذ {{count}} س",
-    "unknownUser": "مستخدم غير معروف"
+    "unknownUser": "مستخدم غير معروف",
+    "backToConversations": "العودة إلى المحادثات",
+    "moreOptions": "خيارات إضافية",
+    "retrySending": "إعادة الإرسال",
+    "input": {
+      "attachFile": "إرفاق ملف",
+      "stickers": "ملصقات",
+      "voiceMessage": "رسالة صوتية",
+      "sendGif": "إرسال GIF"
+    },
+    "list": {
+      "noMatchTitle": "لا توجد محادثات مطابقة",
+      "noMatchSubtitle": "حاول تعديل البحث",
+      "emptyTitle": "لا توجد محادثات بعد",
+      "emptySubtitle": "ابدأ محادثة لتظهر هنا"
+    },
+    "deleteModal": {
+      "title": "حذف المحادثة",
+      "bodyPrefix": "هل تريد حذف محادثتك مع:",
+      "warning": "لا يمكن التراجع عن هذا الإجراء.",
+      "cancel": "إلغاء",
+      "confirm": "حذف",
+      "deleting": "جارٍ الحذف..."
+    },
+    "gif": {
+      "title": "GIF",
+      "close": "إغلاق منتقي GIF",
+      "searchPlaceholder": "ابحث عن GIF...",
+      "loading": "جارٍ تحميل GIF...",
+      "noResults": "لم يتم العثور على GIF",
+      "poweredBy": "مدعوم من GIPHY",
+      "altText": "GIF"
+    }
   },
   "notifications": "الإشعارات",
   "moments": "اللحظات",

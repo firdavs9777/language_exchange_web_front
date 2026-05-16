@@ -30,7 +30,8 @@
     "features": {
       "realtime": "Gerçek zamanlı mesajlaşma",
       "exchange": "Dil değişimi",
-      "calls": "Sesli ve görüntülü aramalar"
+      "calls": "Sesli ve görüntülü aramalar",
+      "translation": "Yerleşik çeviri"
     },
     "online": "Çevrimiçi",
     "offline": "Çevrimdışı",
@@ -42,7 +43,39 @@
     "justNow": "Az önce",
     "minutesAgo": "{{count}}dk önce",
     "hoursAgo": "{{count}}sa önce",
-    "unknownUser": "Bilinmeyen Kullanıcı"
+    "unknownUser": "Bilinmeyen Kullanıcı",
+    "backToConversations": "Sohbetlere dön",
+    "moreOptions": "Daha fazla seçenek",
+    "retrySending": "Yeniden gönder",
+    "input": {
+      "attachFile": "Dosya ekle",
+      "stickers": "Çıkartmalar",
+      "voiceMessage": "Sesli mesaj",
+      "sendGif": "GIF gönder"
+    },
+    "list": {
+      "noMatchTitle": "Eşleşen sohbet yok",
+      "noMatchSubtitle": "Aramanızı ayarlamayı deneyin",
+      "emptyTitle": "Henüz sohbet yok",
+      "emptySubtitle": "Bir sohbet başlatın ve burada görelim"
+    },
+    "deleteModal": {
+      "title": "Sohbeti sil",
+      "bodyPrefix": "Şu kullanıcıyla olan sohbetinizi silin:",
+      "warning": "Bu işlem geri alınamaz.",
+      "cancel": "İptal",
+      "confirm": "Sil",
+      "deleting": "Siliniyor..."
+    },
+    "gif": {
+      "title": "GIF",
+      "close": "GIF seçiciyi kapat",
+      "searchPlaceholder": "GIF ara...",
+      "loading": "GIF'ler yükleniyor...",
+      "noResults": "GIF bulunamadı",
+      "poweredBy": "GIPHY ile destekleniyor",
+      "altText": "GIF"
+    }
   },
   "notifications": "Bildirimler",
   "moments": "Anlar",
