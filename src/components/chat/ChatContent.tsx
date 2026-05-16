@@ -12,6 +12,7 @@ import "./ChatContent.css";
 import StickerPanel from "./StickerPanel";
 import "./StickerPanel.css";
 import { useSocket } from "./hooks/useSocket";
+import CorrectionCard, { MessageCorrection } from "./components/CorrectionCard";
 import {
   ArrowLeft,
   Phone,
@@ -95,6 +96,7 @@ interface Message {
   status?: "sending" | "sent" | "delivered" | "read" | "error";
   media?: MessageMedia;
   replyTo?: { _id: string; message: string; sender: { _id: string; name: string } };
+  corrections?: MessageCorrection[];
 }
 
 const getReceiverId = (receiver: MessageReceiver | string): string => {
@@ -307,6 +309,21 @@ const ChatContent: React.FC<ChatContentProps> = ({
       console.error("[Socket] Message error:", errorData);
     };
 
+    const handleMessageCorrection = (data: {
+      messageId: string;
+      correction: MessageCorrection;
+    }) => {
+      if (!data?.messageId || !data?.correction) return;
+      setMessages((prev) =>
+        prev.map((m) => {
+          if (m._id !== data.messageId) return m;
+          const existing = m.corrections || [];
+          if (existing.some((c) => c._id === data.correction._id)) return m;
+          return { ...m, corrections: [...existing, data.correction] };
+        })
+      );
+    };
+
     socket.on("newMessage", handleNewMessage);
     socket.on("newVoiceMessage", handleMediaMessage);
     socket.on("newVideoMessage", handleMediaMessage);
@@ -317,6 +334,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     socket.on("userStoppedTyping", handleUserStoppedTyping);
     socket.on("userStatusUpdate", handleUserStatusUpdate);
     socket.on("messageError", handleMessageError);
+    socket.on("messageCorrection", handleMessageCorrection);
 
     return () => {
       socket.off("newMessage", handleNewMessage);
@@ -329,6 +347,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       socket.off("userStoppedTyping", handleUserStoppedTyping);
       socket.off("userStatusUpdate", handleUserStatusUpdate);
       socket.off("messageError", handleMessageError);
+      socket.off("messageCorrection", handleMessageCorrection);
     };
   }, [socket, userId]);
 
@@ -1283,6 +1302,32 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
                           {msg.message && !isVoice && (
                             <p className="message-text">{msg.message}</p>
+                          )}
+
+                          {msg.corrections && msg.corrections.length > 0 && (
+                            <CorrectionCard
+                              messageId={msg._id}
+                              correction={msg.corrections[0]}
+                              isMe={isSent}
+                              otherUserName={userName}
+                              onAccepted={(correctionId) => {
+                                setMessages((prev) =>
+                                  prev.map((m) =>
+                                    m._id === msg._id
+                                      ? {
+                                          ...m,
+                                          corrections: (m.corrections || []).map(
+                                            (c) =>
+                                              c._id === correctionId
+                                                ? { ...c, isAccepted: true }
+                                                : c
+                                          ),
+                                        }
+                                      : m
+                                  )
+                                );
+                              }}
+                            />
                           )}
                         </>
                       )}
