@@ -102,6 +102,9 @@ interface Message {
   media?: MessageMedia;
   replyTo?: { _id: string; message: string; sender: { _id: string; name: string } };
   corrections?: MessageCorrection[];
+  reactions?: Array<{ user: string; emoji: string; createdAt?: string }>;
+  isEdited?: boolean;
+  editedAt?: string;
 }
 
 const getReceiverId = (receiver: MessageReceiver | string): string => {
@@ -347,6 +350,83 @@ const ChatContent: React.FC<ChatContentProps> = ({
       );
     };
 
+    const handleCorrectionAccepted = (data: {
+      messageId: string;
+      correctionId: string;
+      acceptedBy: string;
+    }) => {
+      if (!data?.messageId || !data?.correctionId) return;
+      setMessages((prev) =>
+        prev.map((m) => {
+          if (m._id !== data.messageId) return m;
+          const updated = (m.corrections || []).map((c) =>
+            c._id === data.correctionId ? { ...c, isAccepted: true } : c
+          );
+          return { ...m, corrections: updated };
+        })
+      );
+    };
+
+    const handleMessageEdited = (data: {
+      messageId: string;
+      message?: Message;
+      editedAt?: string;
+    }) => {
+      if (!data?.messageId) return;
+      setMessages((prev) =>
+        prev.map((m) => {
+          if (m._id !== data.messageId) return m;
+          if (data.message) {
+            return {
+              ...m,
+              ...data.message,
+              isEdited: true,
+              editedAt: data.editedAt || data.message?.editedAt,
+            };
+          }
+          return { ...m, isEdited: true, editedAt: data.editedAt };
+        })
+      );
+    };
+
+    const handleMessageReaction = (data: {
+      messageId: string;
+      reactions: Array<{ user: string; emoji: string; createdAt?: string }>;
+    }) => {
+      if (!data?.messageId) return;
+      setMessages((prev) =>
+        prev.map((m) =>
+          m._id === data.messageId ? { ...m, reactions: data.reactions || [] } : m
+        )
+      );
+    };
+
+    const handleMessageSendError = (errorData: { error?: string }) => {
+      console.error("[Socket] messageSendError:", errorData);
+    };
+
+    const handleQueuedMessages = (
+      batch: Array<{ message: Message; senderId?: string }>
+    ) => {
+      if (!Array.isArray(batch) || batch.length === 0) return;
+      const currentSelectedUser = selectedUserRef.current;
+      setMessages((prev) => {
+        const existingIds = new Set(prev.map((m) => m._id));
+        const incoming = batch
+          .map((entry) => entry?.message)
+          .filter((msg): msg is Message => {
+            if (!msg || !msg._id || existingIds.has(msg._id)) return false;
+            const receiverId = getReceiverId(msg.receiver);
+            return (
+              msg.sender._id === currentSelectedUser ||
+              receiverId === currentSelectedUser
+            );
+          })
+          .map((msg) => ({ ...msg, status: "delivered" as const }));
+        return incoming.length > 0 ? [...prev, ...incoming] : prev;
+      });
+    };
+
     socket.on("newMessage", handleNewMessage);
     socket.on("newVoiceMessage", handleMediaMessage);
     socket.on("newVideoMessage", handleMediaMessage);
@@ -358,6 +438,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
     socket.on("userStatusUpdate", handleUserStatusUpdate);
     socket.on("messageError", handleMessageError);
     socket.on("messageCorrection", handleMessageCorrection);
+    socket.on("correctionAccepted", handleCorrectionAccepted);
+    socket.on("messageEdited", handleMessageEdited);
+    socket.on("messageReaction", handleMessageReaction);
+    socket.on("messageSendError", handleMessageSendError);
+    socket.on("queuedMessages", handleQueuedMessages);
 
     return () => {
       socket.off("newMessage", handleNewMessage);
@@ -371,6 +456,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
       socket.off("userStatusUpdate", handleUserStatusUpdate);
       socket.off("messageError", handleMessageError);
       socket.off("messageCorrection", handleMessageCorrection);
+      socket.off("correctionAccepted", handleCorrectionAccepted);
+      socket.off("messageEdited", handleMessageEdited);
+      socket.off("messageReaction", handleMessageReaction);
+      socket.off("messageSendError", handleMessageSendError);
+      socket.off("queuedMessages", handleQueuedMessages);
     };
   }, [socket, userId]);
 
