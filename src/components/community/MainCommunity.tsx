@@ -65,11 +65,17 @@ const ModernCommunity: React.FC = () => {
     isFetching,
     error: errorInfo,
     refetch,
-  } = useGetCommunityMembersQuery({
-    page,
-    limit: 20,
-    language: languageFilter || undefined,
-  });
+  } = useGetCommunityMembersQuery(
+    {
+      page,
+      limit: 20,
+      language: languageFilter || undefined,
+    },
+    // Skip the request entirely for logged-out visitors — the backend route
+    // requires auth and would 401, polluting the console. The page already
+    // renders a sign-up CTA in that case.
+    { skip: !userInfo }
+  );
 
   const {
     data: visitorsData,
