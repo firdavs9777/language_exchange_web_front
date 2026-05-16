@@ -184,6 +184,12 @@ i18n
     interpolation: {
       escapeValue: false,
     },
+    // Return empty string when a key is missing in every locale so that
+    // call sites using `t("key") || "fallback"` actually fall through to
+    // their inline English fallback instead of leaking the raw key.
+    parseMissingKeyHandler: () => "",
+    saveMissing: false,
+    returnEmptyString: true,
   });
 
 // Keep <html lang> in sync with the active language so search engines

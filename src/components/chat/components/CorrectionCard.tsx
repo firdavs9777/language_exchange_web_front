@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CheckCircle, Spellcheck, Check } from "lucide-react";
+import { CheckCircle, BookCheck, Check } from "lucide-react";
 import { useAcceptCorrectionMutation } from "../../../store/slices/learningSlice";
 import "./CorrectionCard.scss";
 
@@ -55,7 +55,7 @@ const CorrectionCard: React.FC<CorrectionCardProps> = ({
   return (
     <div className={`correction-card ${isMe ? "own" : "other"}`}>
       <div className="correction-header">
-        <Spellcheck size={14} />
+        <BookCheck size={14} />
         <span className="corrector-name">{correctorName} corrected</span>
         {accepted && <CheckCircle size={12} className="accepted-icon" />}
       </div>
