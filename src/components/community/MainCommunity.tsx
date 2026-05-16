@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { COMMON_LANGUAGES, LANGUAGE_FLAGS, LanguageFlagProps } from "./type";
 import { useDebounce } from "./utils";
-import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import CommunitySubNav, { CommunityNavTab } from "./tandem/CommunitySubNav";
 import HighlightedProfilesCarousel from "./tandem/HighlightedProfilesCarousel";
@@ -157,15 +157,11 @@ const ModernCommunity: React.FC = () => {
     setActiveTab("all");
   }, []);
 
-  // Logged-out visitors get the same UI shell + a sign-up CTA. The community
-  // list API requires auth and will 401 for them — we treat that as an
-  // expected empty state rather than a hard error.
-  const isAnonymous = !userInfo;
-  const isAuthError =
-    errorInfo &&
-    (((errorInfo as any).status === 401) || ((errorInfo as any).status === 403));
+  if (!userInfo) {
+    return <Navigate to="/login?redirect=/communities" replace />;
+  }
 
-  if (errorInfo && !(isAnonymous && isAuthError)) {
+  if (errorInfo) {
     return (
       <div className="community-page">
         <div className="community-page__container">
@@ -280,42 +276,6 @@ const ModernCommunity: React.FC = () => {
             <p>{t("communityMain.search.loading") || "Loading members..."}</p>
           </div>
         ) : filteredMembers.length === 0 ? (
-          isAnonymous ? (
-            <div className="community-empty">
-              <Search style={{ width: 40, height: 40, color: "#d1d5db", margin: "0 auto 12px", display: "block" }} />
-              <h3>Sign up to browse the community</h3>
-              <p>Create a free account to see real members, send messages, and find a language partner.</p>
-              <div style={{ display: "inline-flex", gap: 12, marginTop: 8 }}>
-                <Link
-                  to="/register"
-                  style={{
-                    padding: "10px 24px",
-                    borderRadius: 999,
-                    background: "#1f2937",
-                    color: "#fff",
-                    textDecoration: "none",
-                    fontWeight: 600,
-                  }}
-                >
-                  Create free account
-                </Link>
-                <Link
-                  to="/login?redirect=/communities"
-                  style={{
-                    padding: "10px 24px",
-                    borderRadius: 999,
-                    background: "#fff",
-                    color: "#1f2937",
-                    border: "1px solid #e5e7eb",
-                    textDecoration: "none",
-                    fontWeight: 600,
-                  }}
-                >
-                  Log in
-                </Link>
-              </div>
-            </div>
-          ) : (
           <div className="community-empty">
             <Search style={{ width: 40, height: 40, color: "#d1d5db", margin: "0 auto 12px", display: "block" }} />
             <h3>{t("communityMain.results.noneFound.title") || "No members found"}</h3>
@@ -336,7 +296,6 @@ const ModernCommunity: React.FC = () => {
               {t("communityMain.results.noneFound.resetFilters") || "Reset filters"}
             </button>
           </div>
-          )
         ) : (
           <>
             <div className="community-grid">
