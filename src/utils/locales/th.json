@@ -444,6 +444,51 @@
     },
     "buttons": {
       "clearFilters": "ล้างตัวกรองทั้งหมด"
+    },
+    "subnav": {
+      "allMembers": "สมาชิกทั้งหมด",
+      "nearby": "ใกล้เคียง",
+      "topics": "หัวข้อ",
+      "searchPlaceholder": "ค้นหาสมาชิกหรือหัวข้อ",
+      "filtersLabel": "ตัวกรอง",
+      "filtersWithCount": "ตัวกรอง (ใช้งานอยู่ {{count}})"
+    },
+    "filterSheet": {
+      "title": "ตัวกรอง",
+      "language": "ภาษา",
+      "any": "ทั้งหมด",
+      "gender": "เพศ",
+      "male": "ชาย",
+      "female": "หญิง",
+      "other": "อื่นๆ",
+      "ageRange": "ช่วงอายุ",
+      "min": "ต่ำสุด",
+      "max": "สูงสุด",
+      "experience": "ประสบการณ์สมาชิก",
+      "onlineNow": "ออนไลน์ตอนนี้",
+      "newMembersOnly": "เฉพาะสมาชิกใหม่ (7 วันล่าสุด)",
+      "reset": "รีเซ็ต",
+      "apply": "ใช้"
+    },
+    "highlighted": {
+      "title": "โปรไฟล์แนะนำ",
+      "proBadge": "Pro",
+      "tryPro": "ลองใช้ BananaTalk Pro",
+      "highlightSelfTopic": "เน้นโปรไฟล์ของคุณให้คนเห็นมากขึ้น"
+    },
+    "visitors": {
+      "justYou": "{{name}} เข้าชมโปรไฟล์ของคุณ!",
+      "andOthers": "{{name}} และอีก {{count}} คนเข้าชมโปรไฟล์ของคุณ!",
+      "seeAll": "ดูทั้งหมด"
+    },
+    "tandemCard": {
+      "newChip": "ใหม่",
+      "defaultTopic": "มาฝึกกัน!"
+    },
+    "languageChip": {
+      "fluent": "คล่อง",
+      "learns": "กำลังเรียน",
+      "native": "ภาษาแม่"
     }
   },
   "communityDetail": {

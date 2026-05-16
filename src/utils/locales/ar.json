@@ -444,6 +444,51 @@
     },
     "buttons": {
       "clearFilters": "مسح جميع الفلاتر"
+    },
+    "subnav": {
+      "allMembers": "كل الأعضاء",
+      "nearby": "القريبون",
+      "topics": "المواضيع",
+      "searchPlaceholder": "ابحث عن أعضاء أو مواضيع",
+      "filtersLabel": "الفلاتر",
+      "filtersWithCount": "الفلاتر ({{count}} نشط)"
+    },
+    "filterSheet": {
+      "title": "الفلاتر",
+      "language": "اللغة",
+      "any": "الكل",
+      "gender": "الجنس",
+      "male": "ذكر",
+      "female": "أنثى",
+      "other": "آخر",
+      "ageRange": "الفئة العمرية",
+      "min": "الحد الأدنى",
+      "max": "الحد الأقصى",
+      "experience": "تجربة العضو",
+      "onlineNow": "متصل الآن",
+      "newMembersOnly": "الأعضاء الجدد فقط (آخر 7 أيام)",
+      "reset": "إعادة تعيين",
+      "apply": "تطبيق"
+    },
+    "highlighted": {
+      "title": "ملفات مميزة",
+      "proBadge": "Pro",
+      "tryPro": "جرب BananaTalk Pro",
+      "highlightSelfTopic": "اجعل ملفك الشخصي مميزًا ليراك المزيد من الأشخاص"
+    },
+    "visitors": {
+      "justYou": "زار {{name}} ملفك الشخصي!",
+      "andOthers": "زار {{name}} و {{count}} آخرون ملفك الشخصي!",
+      "seeAll": "عرض الكل"
+    },
+    "tandemCard": {
+      "newChip": "جديد",
+      "defaultTopic": "لنتدرب معًا!"
+    },
+    "languageChip": {
+      "fluent": "بطلاقة",
+      "learns": "يتعلم",
+      "native": "اللغة الأم"
     }
   },
   "communityDetail": {

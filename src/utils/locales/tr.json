@@ -443,6 +443,51 @@
     },
     "buttons": {
       "clearFilters": "Tüm filtreleri temizle"
+    },
+    "subnav": {
+      "allMembers": "Tüm üyeler",
+      "nearby": "Yakındakiler",
+      "topics": "Konular",
+      "searchPlaceholder": "Üye veya konu bul",
+      "filtersLabel": "Filtreler",
+      "filtersWithCount": "Filtreler ({{count}} aktif)"
+    },
+    "filterSheet": {
+      "title": "Filtreler",
+      "language": "Dil",
+      "any": "Hepsi",
+      "gender": "Cinsiyet",
+      "male": "Erkek",
+      "female": "Kadın",
+      "other": "Diğer",
+      "ageRange": "Yaş aralığı",
+      "min": "Min",
+      "max": "Maks",
+      "experience": "Üye deneyimi",
+      "onlineNow": "Şimdi çevrimiçi",
+      "newMembersOnly": "Sadece yeni üyeler (son 7 gün)",
+      "reset": "Sıfırla",
+      "apply": "Uygula"
+    },
+    "highlighted": {
+      "title": "Öne çıkan profiller",
+      "proBadge": "Pro",
+      "tryPro": "BananaTalk Pro'yu deneyin",
+      "highlightSelfTopic": "Profilinizi öne çıkararak daha çok kişinin sizi görmesini sağlayın"
+    },
+    "visitors": {
+      "justYou": "{{name}} profilinizi ziyaret etti!",
+      "andOthers": "{{name}} ve {{count}} diğer kişi profilinizi ziyaret etti!",
+      "seeAll": "Tümünü gör"
+    },
+    "tandemCard": {
+      "newChip": "YENİ",
+      "defaultTopic": "Hadi pratik yapalım!"
+    },
+    "languageChip": {
+      "fluent": "AKICI",
+      "learns": "ÖĞRENİYOR",
+      "native": "ANA DİL"
     }
   },
   "communityDetail": {

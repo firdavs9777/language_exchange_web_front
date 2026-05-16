@@ -444,6 +444,51 @@
     },
     "buttons": {
       "clearFilters": "すべてのフィルターをクリア"
+    },
+    "subnav": {
+      "allMembers": "すべてのメンバー",
+      "nearby": "近くの人",
+      "topics": "トピック",
+      "searchPlaceholder": "メンバーまたはトピックを検索",
+      "filtersLabel": "フィルター",
+      "filtersWithCount": "フィルター ({{count}}件適用中)"
+    },
+    "filterSheet": {
+      "title": "フィルター",
+      "language": "言語",
+      "any": "すべて",
+      "gender": "性別",
+      "male": "男性",
+      "female": "女性",
+      "other": "その他",
+      "ageRange": "年齢",
+      "min": "最低",
+      "max": "最高",
+      "experience": "メンバー経験",
+      "onlineNow": "オンライン中",
+      "newMembersOnly": "新規メンバーのみ (過去7日間)",
+      "reset": "リセット",
+      "apply": "適用"
+    },
+    "highlighted": {
+      "title": "注目プロフィール",
+      "proBadge": "Pro",
+      "tryPro": "BananaTalk Proを試す",
+      "highlightSelfTopic": "プロフィールを目立たせて、もっと多くの人に見てもらおう"
+    },
+    "visitors": {
+      "justYou": "{{name}}さんがあなたのプロフィールを訪問しました!",
+      "andOthers": "{{name}}さんと他{{count}}人があなたのプロフィールを訪問しました!",
+      "seeAll": "すべて見る"
+    },
+    "tandemCard": {
+      "newChip": "新規",
+      "defaultTopic": "一緒に練習しましょう!"
+    },
+    "languageChip": {
+      "fluent": "ネイティブ",
+      "learns": "学習中",
+      "native": "母語"
     }
   },
   "communityDetail": {

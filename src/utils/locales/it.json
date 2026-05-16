@@ -444,6 +444,51 @@
     },
     "buttons": {
       "clearFilters": "Cancella tutti i filtri"
+    },
+    "subnav": {
+      "allMembers": "Tutti i membri",
+      "nearby": "Vicino",
+      "topics": "Argomenti",
+      "searchPlaceholder": "Cerca membri o argomenti",
+      "filtersLabel": "Filtri",
+      "filtersWithCount": "Filtri ({{count}} attivi)"
+    },
+    "filterSheet": {
+      "title": "Filtri",
+      "language": "Lingua",
+      "any": "Qualsiasi",
+      "gender": "Genere",
+      "male": "Uomo",
+      "female": "Donna",
+      "other": "Altro",
+      "ageRange": "Fascia d'età",
+      "min": "Min",
+      "max": "Max",
+      "experience": "Esperienza dei membri",
+      "onlineNow": "Online ora",
+      "newMembersOnly": "Solo nuovi membri (ultimi 7 giorni)",
+      "reset": "Reimposta",
+      "apply": "Applica"
+    },
+    "highlighted": {
+      "title": "Profili in evidenza",
+      "proBadge": "Pro",
+      "tryPro": "Prova BananaTalk Pro",
+      "highlightSelfTopic": "Metti in evidenza il tuo profilo e fatti vedere da più persone"
+    },
+    "visitors": {
+      "justYou": "{{name}} ha visitato il tuo profilo!",
+      "andOthers": "{{name}} e altri {{count}} hanno visitato il tuo profilo!",
+      "seeAll": "Vedi tutto"
+    },
+    "tandemCard": {
+      "newChip": "NUOVO",
+      "defaultTopic": "Pratichiamo insieme!"
+    },
+    "languageChip": {
+      "fluent": "FLUENTE",
+      "learns": "IMPARA",
+      "native": "MADRELINGUA"
     }
   },
   "communityDetail": {

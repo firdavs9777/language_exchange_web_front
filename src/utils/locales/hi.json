@@ -444,6 +444,51 @@
     },
     "buttons": {
       "clearFilters": "सभी फ़िल्टर साफ़ करें"
+    },
+    "subnav": {
+      "allMembers": "सभी सदस्य",
+      "nearby": "नज़दीक",
+      "topics": "विषय",
+      "searchPlaceholder": "सदस्य या विषय खोजें",
+      "filtersLabel": "फ़िल्टर",
+      "filtersWithCount": "फ़िल्टर ({{count}} सक्रिय)"
+    },
+    "filterSheet": {
+      "title": "फ़िल्टर",
+      "language": "भाषा",
+      "any": "कोई भी",
+      "gender": "लिंग",
+      "male": "पुरुष",
+      "female": "महिला",
+      "other": "अन्य",
+      "ageRange": "उम्र सीमा",
+      "min": "न्यूनतम",
+      "max": "अधिकतम",
+      "experience": "सदस्य अनुभव",
+      "onlineNow": "अभी ऑनलाइन",
+      "newMembersOnly": "केवल नए सदस्य (पिछले 7 दिन)",
+      "reset": "रीसेट",
+      "apply": "लागू करें"
+    },
+    "highlighted": {
+      "title": "चुनिंदा प्रोफ़ाइल",
+      "proBadge": "Pro",
+      "tryPro": "BananaTalk Pro आज़माएँ",
+      "highlightSelfTopic": "अपनी प्रोफ़ाइल को हाइलाइट करें और ज़्यादा लोगों को दिखाएँ"
+    },
+    "visitors": {
+      "justYou": "{{name}} ने आपकी प्रोफ़ाइल देखी!",
+      "andOthers": "{{name}} और {{count}} अन्य लोगों ने आपकी प्रोफ़ाइल देखी!",
+      "seeAll": "सब देखें"
+    },
+    "tandemCard": {
+      "newChip": "नया",
+      "defaultTopic": "चलिए अभ्यास करते हैं!"
+    },
+    "languageChip": {
+      "fluent": "धाराप्रवाह",
+      "learns": "सीख रहे हैं",
+      "native": "मातृभाषा"
     }
   },
   "communityDetail": {

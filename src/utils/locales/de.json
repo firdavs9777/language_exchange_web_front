@@ -444,6 +444,51 @@
     },
     "buttons": {
       "clearFilters": "Alle Filter löschen"
+    },
+    "subnav": {
+      "allMembers": "Alle Mitglieder",
+      "nearby": "In der Nähe",
+      "topics": "Themen",
+      "searchPlaceholder": "Mitglieder oder Themen finden",
+      "filtersLabel": "Filter",
+      "filtersWithCount": "Filter ({{count}} aktiv)"
+    },
+    "filterSheet": {
+      "title": "Filter",
+      "language": "Sprache",
+      "any": "Alle",
+      "gender": "Geschlecht",
+      "male": "Männlich",
+      "female": "Weiblich",
+      "other": "Andere",
+      "ageRange": "Altersbereich",
+      "min": "Min",
+      "max": "Max",
+      "experience": "Mitgliedererfahrung",
+      "onlineNow": "Jetzt online",
+      "newMembersOnly": "Nur neue Mitglieder (letzte 7 Tage)",
+      "reset": "Zurücksetzen",
+      "apply": "Anwenden"
+    },
+    "highlighted": {
+      "title": "Hervorgehobene Profile",
+      "proBadge": "Pro",
+      "tryPro": "BananaTalk Pro ausprobieren",
+      "highlightSelfTopic": "Hebe dein Profil hervor, damit mehr Leute dich sehen"
+    },
+    "visitors": {
+      "justYou": "{{name}} hat dein Profil besucht!",
+      "andOthers": "{{name}} und {{count}} weitere haben dein Profil besucht!",
+      "seeAll": "Alle anzeigen"
+    },
+    "tandemCard": {
+      "newChip": "NEU",
+      "defaultTopic": "Lass uns üben!"
+    },
+    "languageChip": {
+      "fluent": "FLIESSEND",
+      "learns": "LERNT",
+      "native": "MUTTERSPRACHE"
     }
   },
   "communityDetail": {

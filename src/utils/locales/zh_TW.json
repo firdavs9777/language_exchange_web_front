@@ -444,6 +444,51 @@
     },
     "buttons": {
       "clearFilters": "清除所有篩選"
+    },
+    "subnav": {
+      "allMembers": "全部成員",
+      "nearby": "附近",
+      "topics": "話題",
+      "searchPlaceholder": "尋找成員或話題",
+      "filtersLabel": "篩選",
+      "filtersWithCount": "篩選 ({{count}}個已啟用)"
+    },
+    "filterSheet": {
+      "title": "篩選",
+      "language": "語言",
+      "any": "全部",
+      "gender": "性別",
+      "male": "男",
+      "female": "女",
+      "other": "其他",
+      "ageRange": "年齡範圍",
+      "min": "最小",
+      "max": "最大",
+      "experience": "成員體驗",
+      "onlineNow": "目前線上",
+      "newMembersOnly": "僅新成員 (最近7天)",
+      "reset": "重設",
+      "apply": "套用"
+    },
+    "highlighted": {
+      "title": "精選個人檔案",
+      "proBadge": "Pro",
+      "tryPro": "試用 BananaTalk Pro",
+      "highlightSelfTopic": "讓您的個人檔案被更多人看見"
+    },
+    "visitors": {
+      "justYou": "{{name}}造訪了您的個人檔案!",
+      "andOthers": "{{name}}和其他{{count}}位使用者造訪了您的個人檔案!",
+      "seeAll": "查看全部"
+    },
+    "tandemCard": {
+      "newChip": "新",
+      "defaultTopic": "一起練習吧!"
+    },
+    "languageChip": {
+      "fluent": "流利",
+      "learns": "學習中",
+      "native": "母語"
     }
   },
   "communityDetail": {

@@ -444,6 +444,51 @@
     },
     "buttons": {
       "clearFilters": "Очистить все фильтры"
+    },
+    "subnav": {
+      "allMembers": "Все участники",
+      "nearby": "Рядом",
+      "topics": "Темы",
+      "searchPlaceholder": "Найти участников или темы",
+      "filtersLabel": "Фильтры",
+      "filtersWithCount": "Фильтры (активно: {{count}})"
+    },
+    "filterSheet": {
+      "title": "Фильтры",
+      "language": "Язык",
+      "any": "Любой",
+      "gender": "Пол",
+      "male": "Мужской",
+      "female": "Женский",
+      "other": "Другое",
+      "ageRange": "Возраст",
+      "min": "Мин",
+      "max": "Макс",
+      "experience": "Опыт участников",
+      "onlineNow": "Сейчас онлайн",
+      "newMembersOnly": "Только новые участники (последние 7 дней)",
+      "reset": "Сбросить",
+      "apply": "Применить"
+    },
+    "highlighted": {
+      "title": "Рекомендуемые профили",
+      "proBadge": "Pro",
+      "tryPro": "Попробовать BananaTalk Pro",
+      "highlightSelfTopic": "Выделите свой профиль, чтобы вас увидело больше людей"
+    },
+    "visitors": {
+      "justYou": "{{name}} посетил(а) ваш профиль!",
+      "andOthers": "{{name}} и ещё {{count}} посетили ваш профиль!",
+      "seeAll": "Посмотреть всех"
+    },
+    "tandemCard": {
+      "newChip": "НОВЫЙ",
+      "defaultTopic": "Давайте практиковаться!"
+    },
+    "languageChip": {
+      "fluent": "СВОБОДНО",
+      "learns": "ИЗУЧАЕТ",
+      "native": "РОДНОЙ"
     }
   },
   "communityDetail": {

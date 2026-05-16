@@ -443,6 +443,51 @@
     },
     "buttons": {
       "clearFilters": "I-clear ang lahat ng filter"
+    },
+    "subnav": {
+      "allMembers": "Lahat ng miyembro",
+      "nearby": "Malapit",
+      "topics": "Mga paksa",
+      "searchPlaceholder": "Maghanap ng miyembro o paksa",
+      "filtersLabel": "Mga filter",
+      "filtersWithCount": "Mga filter ({{count}} aktibo)"
+    },
+    "filterSheet": {
+      "title": "Mga filter",
+      "language": "Wika",
+      "any": "Lahat",
+      "gender": "Kasarian",
+      "male": "Lalaki",
+      "female": "Babae",
+      "other": "Iba pa",
+      "ageRange": "Saklaw ng edad",
+      "min": "Min",
+      "max": "Max",
+      "experience": "Karanasan ng miyembro",
+      "onlineNow": "Online ngayon",
+      "newMembersOnly": "Bagong miyembro lang (huling 7 araw)",
+      "reset": "I-reset",
+      "apply": "Ilapat"
+    },
+    "highlighted": {
+      "title": "Mga itinatampok na profile",
+      "proBadge": "Pro",
+      "tryPro": "Subukan ang BananaTalk Pro",
+      "highlightSelfTopic": "I-highlight ang iyong profile para makita ka ng mas maraming tao"
+    },
+    "visitors": {
+      "justYou": "Binisita ni {{name}} ang iyong profile!",
+      "andOthers": "Binisita ni {{name}} at {{count}} iba pa ang iyong profile!",
+      "seeAll": "Tingnan lahat"
+    },
+    "tandemCard": {
+      "newChip": "BAGO",
+      "defaultTopic": "Mag-ensayo tayo!"
+    },
+    "languageChip": {
+      "fluent": "MATATAS",
+      "learns": "NAG-AARAL",
+      "native": "KATUTUBO"
     }
   },
   "communityDetail": {
