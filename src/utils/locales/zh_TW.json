@@ -238,6 +238,28 @@
       "minutesAgo": "{{minutes}}分鐘前",
       "hoursAgo": "{{hours}}小時前",
       "daysAgo": "{{days}}天前"
+    },
+    "lightbox": {
+      "open": "全螢幕檢視圖片",
+      "close": "關閉圖片檢視器",
+      "previous": "上一張",
+      "next": "下一張"
+    },
+    "share": {
+      "fallbackTitle": "看看這則動態",
+      "success": "分享成功!",
+      "copied": "連結已複製到剪貼簿!",
+      "failed": "複製連結失敗"
+    },
+    "create": {
+      "header": "建立動態",
+      "titlePlaceholder": "新增標題...",
+      "addToMoment": "新增至動態",
+      "addPhotos": "新增圖片",
+      "addMood": "新增心情",
+      "addLocation": "新增位置",
+      "addTags": "新增標籤",
+      "tagPlaceholder": "新增標籤..."
     }
   },
   "createMoment": {

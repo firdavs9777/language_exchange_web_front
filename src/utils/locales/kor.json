@@ -238,6 +238,28 @@
       "minutesAgo": "{{minutes}}분 전",
       "hoursAgo": "{{hours}}시간 전",
       "daysAgo": "{{days}}일 전"
+    },
+    "lightbox": {
+      "open": "이미지를 전체 크기로 열기",
+      "close": "이미지 뷰어 닫기",
+      "previous": "이전 이미지",
+      "next": "다음 이미지"
+    },
+    "share": {
+      "fallbackTitle": "이 모먼트를 확인해 보세요",
+      "success": "공유되었습니다!",
+      "copied": "링크가 클립보드에 복사되었습니다!",
+      "failed": "링크 복사에 실패했습니다"
+    },
+    "create": {
+      "header": "모먼트 만들기",
+      "titlePlaceholder": "제목 추가...",
+      "addToMoment": "모먼트에 추가",
+      "addPhotos": "사진 추가",
+      "addMood": "기분 추가",
+      "addLocation": "위치 추가",
+      "addTags": "태그 추가",
+      "tagPlaceholder": "태그 추가..."
     }
   },
   "createMoment": {

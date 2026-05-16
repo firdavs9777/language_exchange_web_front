@@ -238,6 +238,28 @@
       "minutesAgo": "{{minutes}}m fa",
       "hoursAgo": "{{hours}}h fa",
       "daysAgo": "{{days}}g fa"
+    },
+    "lightbox": {
+      "open": "Apri immagine a dimensione intera",
+      "close": "Chiudi visualizzatore immagini",
+      "previous": "Immagine precedente",
+      "next": "Immagine successiva"
+    },
+    "share": {
+      "fallbackTitle": "Guarda questo momento",
+      "success": "Condiviso con successo!",
+      "copied": "Link copiato negli appunti!",
+      "failed": "Impossibile copiare il link"
+    },
+    "create": {
+      "header": "Crea momento",
+      "titlePlaceholder": "Aggiungi un titolo...",
+      "addToMoment": "Aggiungi al tuo momento",
+      "addPhotos": "Aggiungi foto",
+      "addMood": "Aggiungi umore",
+      "addLocation": "Aggiungi posizione",
+      "addTags": "Aggiungi tag",
+      "tagPlaceholder": "Aggiungi un tag..."
     }
   },
   "createMoment": {

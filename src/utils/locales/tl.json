@@ -238,6 +238,28 @@
       "minutesAgo": "{{minutes}}m nakalipas",
       "hoursAgo": "{{hours}}o nakalipas",
       "daysAgo": "{{days}}a nakalipas"
+    },
+    "lightbox": {
+      "open": "Buksan ang larawan sa buong sukat",
+      "close": "Isara ang viewer ng larawan",
+      "previous": "Nakaraang larawan",
+      "next": "Susunod na larawan"
+    },
+    "share": {
+      "fallbackTitle": "Tingnan ang sandaling ito",
+      "success": "Naibahagi nang matagumpay!",
+      "copied": "Nakopya ang link sa clipboard!",
+      "failed": "Hindi makopya ang link"
+    },
+    "create": {
+      "header": "Gumawa ng moment",
+      "titlePlaceholder": "Magdagdag ng pamagat...",
+      "addToMoment": "Idagdag sa iyong moment",
+      "addPhotos": "Magdagdag ng mga larawan",
+      "addMood": "Magdagdag ng mood",
+      "addLocation": "Magdagdag ng lokasyon",
+      "addTags": "Magdagdag ng mga tag",
+      "tagPlaceholder": "Magdagdag ng tag..."
     }
   },
   "createMoment": {

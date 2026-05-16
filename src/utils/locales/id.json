@@ -238,6 +238,28 @@
       "minutesAgo": "{{minutes}} menit lalu",
       "hoursAgo": "{{hours}} jam lalu",
       "daysAgo": "{{days}} hari lalu"
+    },
+    "lightbox": {
+      "open": "Buka gambar ukuran penuh",
+      "close": "Tutup penampil gambar",
+      "previous": "Gambar sebelumnya",
+      "next": "Gambar berikutnya"
+    },
+    "share": {
+      "fallbackTitle": "Lihat momen ini",
+      "success": "Berhasil dibagikan!",
+      "copied": "Tautan disalin ke clipboard!",
+      "failed": "Gagal menyalin tautan"
+    },
+    "create": {
+      "header": "Buat momen",
+      "titlePlaceholder": "Tambahkan judul...",
+      "addToMoment": "Tambahkan ke momen Anda",
+      "addPhotos": "Tambahkan foto",
+      "addMood": "Tambahkan suasana hati",
+      "addLocation": "Tambahkan lokasi",
+      "addTags": "Tambahkan tag",
+      "tagPlaceholder": "Tambahkan tag..."
     }
   },
   "createMoment": {

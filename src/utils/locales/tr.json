@@ -238,6 +238,28 @@
       "minutesAgo": "{{minutes}}dk önce",
       "hoursAgo": "{{hours}}sa önce",
       "daysAgo": "{{days}}g önce"
+    },
+    "lightbox": {
+      "open": "Görseli tam boyutunda aç",
+      "close": "Görsel görüntüleyiciyi kapat",
+      "previous": "Önceki görsel",
+      "next": "Sonraki görsel"
+    },
+    "share": {
+      "fallbackTitle": "Bu anı keşfedin",
+      "success": "Başarıyla paylaşıldı!",
+      "copied": "Bağlantı panoya kopyalandı!",
+      "failed": "Bağlantı kopyalanamadı"
+    },
+    "create": {
+      "header": "Moment oluştur",
+      "titlePlaceholder": "Başlık ekle...",
+      "addToMoment": "Moment'inize ekleyin",
+      "addPhotos": "Fotoğraf ekle",
+      "addMood": "Ruh hali ekle",
+      "addLocation": "Konum ekle",
+      "addTags": "Etiket ekle",
+      "tagPlaceholder": "Etiket ekle..."
     }
   },
   "createMoment": {

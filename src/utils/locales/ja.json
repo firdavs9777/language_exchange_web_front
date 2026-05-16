@@ -238,6 +238,28 @@
       "minutesAgo": "{{minutes}}分前",
       "hoursAgo": "{{hours}}時間前",
       "daysAgo": "{{days}}日前"
+    },
+    "lightbox": {
+      "open": "画像をフルサイズで開く",
+      "close": "画像ビューアを閉じる",
+      "previous": "前の画像",
+      "next": "次の画像"
+    },
+    "share": {
+      "fallbackTitle": "このモーメントをチェック",
+      "success": "共有しました!",
+      "copied": "リンクをコピーしました!",
+      "failed": "リンクのコピーに失敗しました"
+    },
+    "create": {
+      "header": "モーメントを作成",
+      "titlePlaceholder": "タイトルを追加...",
+      "addToMoment": "モーメントに追加",
+      "addPhotos": "写真を追加",
+      "addMood": "気分を追加",
+      "addLocation": "場所を追加",
+      "addTags": "タグを追加",
+      "tagPlaceholder": "タグを追加..."
     }
   },
   "createMoment": {

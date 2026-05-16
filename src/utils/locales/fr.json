@@ -238,6 +238,28 @@
       "minutesAgo": "il y a {{minutes}} min",
       "hoursAgo": "il y a {{hours}} h",
       "daysAgo": "il y a {{days}} j"
+    },
+    "lightbox": {
+      "open": "Ouvrir l'image en taille réelle",
+      "close": "Fermer la visionneuse d'images",
+      "previous": "Image précédente",
+      "next": "Image suivante"
+    },
+    "share": {
+      "fallbackTitle": "Découvrez ce moment",
+      "success": "Partagé avec succès !",
+      "copied": "Lien copié dans le presse-papiers !",
+      "failed": "Impossible de copier le lien"
+    },
+    "create": {
+      "header": "Créer un moment",
+      "titlePlaceholder": "Ajouter un titre...",
+      "addToMoment": "Ajouter à votre moment",
+      "addPhotos": "Ajouter des photos",
+      "addMood": "Ajouter une humeur",
+      "addLocation": "Ajouter un lieu",
+      "addTags": "Ajouter des tags",
+      "tagPlaceholder": "Ajouter un tag..."
     }
   },
   "createMoment": {

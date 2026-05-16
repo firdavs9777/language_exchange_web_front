@@ -238,6 +238,28 @@
       "minutesAgo": "{{minutes}} phút trước",
       "hoursAgo": "{{hours}} giờ trước",
       "daysAgo": "{{days}} ngày trước"
+    },
+    "lightbox": {
+      "open": "Mở ảnh kích thước đầy đủ",
+      "close": "Đóng trình xem ảnh",
+      "previous": "Ảnh trước",
+      "next": "Ảnh tiếp theo"
+    },
+    "share": {
+      "fallbackTitle": "Xem khoảnh khắc này",
+      "success": "Đã chia sẻ thành công!",
+      "copied": "Đã sao chép liên kết vào bộ nhớ tạm!",
+      "failed": "Không thể sao chép liên kết"
+    },
+    "create": {
+      "header": "Tạo khoảnh khắc",
+      "titlePlaceholder": "Thêm tiêu đề...",
+      "addToMoment": "Thêm vào khoảnh khắc",
+      "addPhotos": "Thêm ảnh",
+      "addMood": "Thêm tâm trạng",
+      "addLocation": "Thêm vị trí",
+      "addTags": "Thêm thẻ",
+      "tagPlaceholder": "Thêm thẻ..."
     }
   },
   "createMoment": {

@@ -238,6 +238,28 @@
       "minutesAgo": "منذ {{minutes}} د",
       "hoursAgo": "منذ {{hours}} س",
       "daysAgo": "منذ {{days}} ي"
+    },
+    "lightbox": {
+      "open": "فتح الصورة بالحجم الكامل",
+      "close": "إغلاق عارض الصور",
+      "previous": "الصورة السابقة",
+      "next": "الصورة التالية"
+    },
+    "share": {
+      "fallbackTitle": "تحقق من هذه اللحظة",
+      "success": "تمت المشاركة بنجاح!",
+      "copied": "تم نسخ الرابط إلى الحافظة!",
+      "failed": "فشل نسخ الرابط"
+    },
+    "create": {
+      "header": "إنشاء لحظة",
+      "titlePlaceholder": "أضف عنوانًا...",
+      "addToMoment": "أضف إلى لحظتك",
+      "addPhotos": "أضف الصور",
+      "addMood": "أضف المزاج",
+      "addLocation": "أضف الموقع",
+      "addTags": "أضف الوسوم",
+      "tagPlaceholder": "أضف وسمًا..."
     }
   },
   "createMoment": {

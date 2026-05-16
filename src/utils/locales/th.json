@@ -238,6 +238,28 @@
       "minutesAgo": "{{minutes}} นาทีที่แล้ว",
       "hoursAgo": "{{hours}} ชั่วโมงที่แล้ว",
       "daysAgo": "{{days}} วันที่แล้ว"
+    },
+    "lightbox": {
+      "open": "เปิดภาพแบบเต็มขนาด",
+      "close": "ปิดโปรแกรมดูภาพ",
+      "previous": "ภาพก่อนหน้า",
+      "next": "ภาพถัดไป"
+    },
+    "share": {
+      "fallbackTitle": "ดูช่วงเวลานี้สิ",
+      "success": "แชร์สำเร็จ!",
+      "copied": "คัดลอกลิงก์ไปยังคลิปบอร์ดแล้ว!",
+      "failed": "คัดลอกลิงก์ไม่สำเร็จ"
+    },
+    "create": {
+      "header": "สร้างช่วงเวลา",
+      "titlePlaceholder": "เพิ่มหัวข้อ...",
+      "addToMoment": "เพิ่มในช่วงเวลาของคุณ",
+      "addPhotos": "เพิ่มรูปภาพ",
+      "addMood": "เพิ่มอารมณ์",
+      "addLocation": "เพิ่มสถานที่",
+      "addTags": "เพิ่มแท็ก",
+      "tagPlaceholder": "เพิ่มแท็ก..."
     }
   },
   "createMoment": {

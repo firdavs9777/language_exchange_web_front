@@ -215,6 +215,28 @@
   },
   "moments_section": {
     "title": "Moments",
+    "lightbox": {
+      "open": "Open image at full size",
+      "close": "Close image viewer",
+      "previous": "Previous image",
+      "next": "Next image"
+    },
+    "share": {
+      "fallbackTitle": "Check out this moment",
+      "success": "Shared successfully!",
+      "copied": "Link copied to clipboard!",
+      "failed": "Failed to copy link"
+    },
+    "create": {
+      "header": "Create moment",
+      "titlePlaceholder": "Add a title...",
+      "addToMoment": "Add to your moment",
+      "addPhotos": "Add photos",
+      "addMood": "Add mood",
+      "addLocation": "Add location",
+      "addTags": "Add tags",
+      "tagPlaceholder": "Add a tag..."
+    },
     "question": "What's on your mind,",
     "loading": "Loading",
     "loading_moments": "Loading Moments...",

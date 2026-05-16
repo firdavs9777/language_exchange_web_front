@@ -221,6 +221,15 @@ const CommunityDetail: React.FC = () => {
     window.scrollTo(0, 0);
   }, [communityId]);
 
+  // Build the "Suggested for you" list. MUST run on every render (React
+  // hooks rule), so it lives here before the early returns below.
+  const suggestedMembers = useMemo<TandemMember[]>(() => {
+    const list: TandemMember[] = (suggestedData?.data || []) as TandemMember[];
+    return list
+      .filter((m) => m._id !== communityId && m._id !== userId)
+      .slice(0, 8);
+  }, [suggestedData, communityId, userId]);
+
   if (!communityId) {
     return (
       <div className="container py-5 text-center">
@@ -432,16 +441,6 @@ const CommunityDetail: React.FC = () => {
   const isUserFollowing: boolean = memberDetails.followers.includes(
     userId || ""
   );
-
-  // Build the "Suggested for you" list: drop the viewer + this profile,
-  // cap at 8 cards. Falls back to whatever the slice returned if the
-  // language-filtered set ends up too small.
-  const suggestedMembers = useMemo<TandemMember[]>(() => {
-    const list: TandemMember[] = (suggestedData?.data || []) as TandemMember[];
-    return list
-      .filter((m) => m._id !== communityId && m._id !== userId)
-      .slice(0, 8);
-  }, [suggestedData, communityId, userId]);
 
   // Helper function to get first name safely
   const getFirstName = (fullName: string | undefined): string => {

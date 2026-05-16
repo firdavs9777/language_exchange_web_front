@@ -238,6 +238,28 @@
       "minutesAgo": "vor {{minutes}} Min.",
       "hoursAgo": "vor {{hours}} Std.",
       "daysAgo": "vor {{days}} T."
+    },
+    "lightbox": {
+      "open": "Bild in voller Größe öffnen",
+      "close": "Bildansicht schließen",
+      "previous": "Vorheriges Bild",
+      "next": "Nächstes Bild"
+    },
+    "share": {
+      "fallbackTitle": "Schau dir diesen Moment an",
+      "success": "Erfolgreich geteilt!",
+      "copied": "Link in die Zwischenablage kopiert!",
+      "failed": "Link konnte nicht kopiert werden"
+    },
+    "create": {
+      "header": "Moment erstellen",
+      "titlePlaceholder": "Titel hinzufügen...",
+      "addToMoment": "Zu deinem Moment hinzufügen",
+      "addPhotos": "Fotos hinzufügen",
+      "addMood": "Stimmung hinzufügen",
+      "addLocation": "Ort hinzufügen",
+      "addTags": "Tags hinzufügen",
+      "tagPlaceholder": "Tag hinzufügen..."
     }
   },
   "createMoment": {

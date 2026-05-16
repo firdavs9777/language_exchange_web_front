@@ -238,6 +238,28 @@
       "minutesAgo": "{{minutes}} मिनट पहले",
       "hoursAgo": "{{hours}} घंटे पहले",
       "daysAgo": "{{days}} दिन पहले"
+    },
+    "lightbox": {
+      "open": "छवि को पूर्ण आकार में खोलें",
+      "close": "छवि व्यूअर बंद करें",
+      "previous": "पिछली छवि",
+      "next": "अगली छवि"
+    },
+    "share": {
+      "fallbackTitle": "इस पल को देखें",
+      "success": "सफलतापूर्वक साझा किया गया!",
+      "copied": "लिंक क्लिपबोर्ड पर कॉपी हो गया!",
+      "failed": "लिंक कॉपी करने में विफल"
+    },
+    "create": {
+      "header": "पल बनाएँ",
+      "titlePlaceholder": "शीर्षक जोड़ें...",
+      "addToMoment": "अपने पल में जोड़ें",
+      "addPhotos": "फ़ोटो जोड़ें",
+      "addMood": "मूड जोड़ें",
+      "addLocation": "स्थान जोड़ें",
+      "addTags": "टैग जोड़ें",
+      "tagPlaceholder": "टैग जोड़ें..."
     }
   },
   "createMoment": {
