@@ -11,7 +11,11 @@ export const LOGOUT_URL = "/api/v1/auth/logout";
 // router.post('/verify-reset-code', verifyResetCode);
 // router.post('/reset-password', resetPassword);
 export const SEND_EMAIL_CODE = "/api/v1/auth/forgot-password";
-export const REGISTER_EMAIL_CODE = "/api/v1/auth/sendEmailCode";
+// Backend exposes two distinct flows. /sendCodeEmail + /verifyEmailCode are the
+// legacy registration verification endpoints; /verify-reset-code is the
+// password-reset-only verifier. Don't conflate them — see usersSlice.
+export const REGISTER_EMAIL_CODE = "/api/v1/auth/sendCodeEmail";
+export const VERIFY_REGISTRATION_CODE = "/api/v1/auth/verifyEmailCode";
 export const CONFIRM_EMAIL_CODE = "/api/v1/auth/verify-reset-code";
 export const RESET_USER_PASSWORD = "/api/v1/auth/reset-password";
 export const COMMENTS = "comments";

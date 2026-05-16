@@ -24,7 +24,7 @@ import {
   useRegisterUserMutation,
   useUploadUserPhotoMutation,
   useSendCodeEmailMutation,
-  useVerifyCodeEmailMutation,
+  useVerifyRegistrationCodeMutation,
   useRegisterCodeEmailMutation,
 } from "../../store/slices/usersSlice";
 import Loader from "../Loader";
@@ -90,7 +90,7 @@ const Register = () => {
     useUploadUserPhotoMutation();
   const [sendCodeEmail, { isLoading: isSendingCode }] =
     useRegisterCodeEmailMutation();
-  const [verifyCode, { isLoading: isVerifying }] = useVerifyCodeEmailMutation();
+  const [verifyCode, { isLoading: isVerifying }] = useVerifyRegistrationCodeMutation();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
