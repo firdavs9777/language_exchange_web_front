@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Loader2, X, Search } from "lucide-react";
 import { useGetCommunityMembersQuery } from "../../store/slices/communitySlice";
 import { useGetProfileVisitorsQuery } from "../../store/slices/usersSlice";
@@ -93,7 +93,15 @@ const ModernCommunity: React.FC = () => {
     }
   }, [communityData, page]);
 
+  // Reset pagination + member list when filters change. Skip the first run
+  // so that returning from /community/:id (component remount) doesn't wipe
+  // the freshly-loaded cache and flash "No members found".
+  const skipFilterReset = useRef(true);
   useEffect(() => {
+    if (skipFilterReset.current) {
+      skipFilterReset.current = false;
+      return;
+    }
     setPage(1);
     setAllMembers([]);
   }, [debouncedFilter, languageFilter]);
