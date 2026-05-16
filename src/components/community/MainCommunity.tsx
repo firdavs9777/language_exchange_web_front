@@ -46,7 +46,12 @@ const ModernCommunity: React.FC = () => {
   const [activeTab, setActiveTab] = useState<CommunityNavTab>("all");
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [page, setPage] = useState(1);
-  const [allMembers, setAllMembers] = useState<TandemMember[]>([]);
+  // Pages beyond the first are accumulated here so "Load more" keeps prior
+  // results visible. Page 1 itself is derived directly from the RTK Query
+  // cache below — that way, returning from /community/:id shows the cached
+  // member list on the FIRST render instead of flashing the empty state
+  // while a useEffect copy fires after paint.
+  const [extraPages, setExtraPages] = useState<TandemMember[]>([]);
 
   const debouncedFilter = useDebounce(filter, 300);
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
@@ -78,24 +83,22 @@ const ModernCommunity: React.FC = () => {
     { skip: !currentUser._id }
   );
 
+  // When a "Load more" page arrives, append it to extraPages. Page 1 itself
+  // is read directly off the query cache via the useMemo below — no effect
+  // round-trip means no first-render flash of the empty state.
   useEffect(() => {
-    if (!communityData?.data) return;
-    if (page === 1) {
-      setAllMembers(communityData.data);
-    } else {
-      setAllMembers((prev) => {
-        const existingIds = new Set(prev.map((m) => m._id));
-        const newOnes = communityData.data.filter(
-          (m: TandemMember) => !existingIds.has(m._id)
-        );
-        return [...prev, ...newOnes];
-      });
-    }
+    if (!communityData?.data || page === 1) return;
+    setExtraPages((prev) => {
+      const existingIds = new Set(prev.map((m) => m._id));
+      const newOnes = communityData.data.filter(
+        (m: TandemMember) => !existingIds.has(m._id)
+      );
+      return [...prev, ...newOnes];
+    });
   }, [communityData, page]);
 
-  // Reset pagination + member list when filters change. Skip the first run
-  // so that returning from /community/:id (component remount) doesn't wipe
-  // the freshly-loaded cache and flash "No members found".
+  // Reset pagination when filters change. Skip the first run so a fresh
+  // mount (back-nav from /community/:id) doesn't clobber state.
   const skipFilterReset = useRef(true);
   useEffect(() => {
     if (skipFilterReset.current) {
@@ -103,8 +106,24 @@ const ModernCommunity: React.FC = () => {
       return;
     }
     setPage(1);
-    setAllMembers([]);
+    setExtraPages([]);
   }, [debouncedFilter, languageFilter]);
+
+  // Derived union of the first page (from RTK Query cache, available on the
+  // very first render after remount) + any accumulated extra pages.
+  const allMembers = useMemo<TandemMember[]>(() => {
+    const firstPage: TandemMember[] = communityData?.data || [];
+    if (!extraPages.length) return firstPage;
+    const seen = new Set(firstPage.map((m) => m._id));
+    const merged: TandemMember[] = [...firstPage];
+    for (const m of extraPages) {
+      if (!seen.has(m._id)) {
+        seen.add(m._id);
+        merged.push(m);
+      }
+    }
+    return merged;
+  }, [communityData, extraPages]);
 
   const filteredMembers = useMemo(() => {
     let list: TandemMember[] = allMembers.filter((m) =>
