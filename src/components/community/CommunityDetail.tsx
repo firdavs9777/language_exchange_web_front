@@ -1,6 +1,13 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useGetCommunityDetailsQuery } from "../../store/slices/communitySlice";
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
+import {
+  useGetCommunityDetailsQuery,
+  useGetCommunityMembersQuery,
+} from "../../store/slices/communitySlice";
+import TandemMemberCard, {
+  TandemMember,
+} from "./tandem/TandemMemberCard";
+import "./tandem/tandem-community.scss";
 import { useSelector } from "react-redux";
 import {
   useFollowUserMutation,
@@ -184,6 +191,16 @@ const CommunityDetail: React.FC = () => {
   const { id: communityId } = useParams<{ id: string }>();
   const { data, isLoading, error, refetch } =
     useGetCommunityDetailsQuery(communityId);
+
+  // Pull a page of community members so we can show a "Suggested for you"
+  // strip at the bottom of the profile. We filter the viewer + this profile
+  // out client-side; the language hint matches members who share the same
+  // language pair so the suggestions feel relevant.
+  const profileLanguage = data?.data?.native_language;
+  const { data: suggestedData } = useGetCommunityMembersQuery(
+    { page: 1, limit: 12, language: profileLanguage || undefined },
+    { skip: !profileLanguage }
+  );
   const [createChatRoom, { isLoading: isCreatingChat }] =
     useCreateChatRoomMutation();
 
@@ -416,6 +433,16 @@ const CommunityDetail: React.FC = () => {
     userId || ""
   );
 
+  // Build the "Suggested for you" list: drop the viewer + this profile,
+  // cap at 8 cards. Falls back to whatever the slice returned if the
+  // language-filtered set ends up too small.
+  const suggestedMembers = useMemo<TandemMember[]>(() => {
+    const list: TandemMember[] = (suggestedData?.data || []) as TandemMember[];
+    return list
+      .filter((m) => m._id !== communityId && m._id !== userId)
+      .slice(0, 8);
+  }, [suggestedData, communityId, userId]);
+
   // Helper function to get first name safely
   const getFirstName = (fullName: string | undefined): string => {
     if (!fullName || typeof fullName !== "string") return "User";
@@ -511,15 +538,6 @@ const CommunityDetail: React.FC = () => {
                       variant="success"
                       onClick={() => handleStartChat(memberDetails._id)}
                       isLoading={isCreatingChat}
-                    />
-
-                    <ActionButton
-                      icon="📞"
-                      label={t("communityDetail.buttons.videoCall")}
-                      variant="warning"
-                      onClick={() =>
-                        handleCallUser(memberDetails.name || "User")
-                      }
                     />
                   </>
                 )}
@@ -629,6 +647,26 @@ const CommunityDetail: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {suggestedMembers.length > 0 && (
+          <section className="cd-suggested">
+            <header className="cd-suggested__header">
+              <h2>
+                {t("communityDetail.suggested.title", {
+                  name: firstName,
+                }) || `More members like ${firstName}`}
+              </h2>
+              <Link to="/communities" className="cd-suggested__see-all">
+                {t("communityDetail.suggested.seeAll") || "See all members"}
+              </Link>
+            </header>
+            <div className="community-grid cd-suggested__grid">
+              {suggestedMembers.map((m) => (
+                <TandemMemberCard key={m._id} member={m} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

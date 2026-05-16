@@ -548,6 +548,10 @@
       "speaks": "구사 언어",
       "learning": "학습 중",
       "notSpecified": "지정되지 않음"
+    },
+    "suggested": {
+      "title": "{{name}}님과 비슷한 멤버",
+      "seeAll": "모든 멤버 보기"
     }
   },
   "communityDetailSection": {

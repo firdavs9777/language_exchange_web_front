@@ -549,6 +549,10 @@
       "speaks": "Fala",
       "learning": "Aprendendo",
       "notSpecified": "Não especificado"
+    },
+    "suggested": {
+      "title": "Mais membros como {{name}}",
+      "seeAll": "Ver todos os membros"
     }
   },
   "communityDetailSection": {

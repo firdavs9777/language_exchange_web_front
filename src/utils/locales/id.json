@@ -549,6 +549,10 @@
       "speaks": "Berbicara",
       "learning": "Sedang Belajar",
       "notSpecified": "Tidak ditentukan"
+    },
+    "suggested": {
+      "title": "Lebih banyak anggota seperti {{name}}",
+      "seeAll": "Lihat semua anggota"
     }
   },
   "communityDetailSection": {

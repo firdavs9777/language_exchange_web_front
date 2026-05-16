@@ -549,6 +549,10 @@
       "speaks": "Говорит на",
       "learning": "Изучает",
       "notSpecified": "Не указано"
+    },
+    "suggested": {
+      "title": "Другие участники, похожие на {{name}}",
+      "seeAll": "Посмотреть всех"
     }
   },
   "communityDetailSection": {

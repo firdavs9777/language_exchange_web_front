@@ -549,6 +549,10 @@
       "speaks": "話せる言語",
       "learning": "学習中",
       "notSpecified": "未設定"
+    },
+    "suggested": {
+      "title": "{{name}}さんと似たメンバー",
+      "seeAll": "すべてのメンバーを見る"
     }
   },
   "communityDetailSection": {

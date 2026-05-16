@@ -548,6 +548,10 @@
       "speaks": "Nagsasalita ng",
       "learning": "Nag-aaral ng",
       "notSpecified": "Hindi tinukoy"
+    },
+    "suggested": {
+      "title": "Mga miyembrong katulad ni {{name}}",
+      "seeAll": "Tingnan lahat ng miyembro"
     }
   },
   "communityDetailSection": {

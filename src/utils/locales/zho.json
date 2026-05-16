@@ -549,6 +549,10 @@
       "speaks": "会说",
       "learning": "正在学习",
       "notSpecified": "未指定"
+    },
+    "suggested": {
+      "title": "更多像 {{name}} 这样的成员",
+      "seeAll": "查看全部成员"
     }
   },
   "communityDetailSection": {

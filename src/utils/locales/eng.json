@@ -589,6 +589,10 @@
       "tryAgain": "Try Again",
       "backToCommunity": "Back to Community"
     },
+    "suggested": {
+      "title": "More members like {{name}}",
+      "seeAll": "See all members"
+    },
     "stats": {
       "followers": "Followers",
       "following": "Following"

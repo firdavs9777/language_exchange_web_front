@@ -549,6 +549,10 @@
       "speaks": "พูด",
       "learning": "กำลังเรียน",
       "notSpecified": "ไม่ระบุ"
+    },
+    "suggested": {
+      "title": "สมาชิกอื่นๆ ที่คล้ายกับ {{name}}",
+      "seeAll": "ดูสมาชิกทั้งหมด"
     }
   },
   "communityDetailSection": {

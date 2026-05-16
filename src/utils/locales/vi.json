@@ -549,6 +549,10 @@
       "speaks": "Nói",
       "learning": "Đang Học",
       "notSpecified": "Chưa xác định"
+    },
+    "suggested": {
+      "title": "Thành viên khác giống {{name}}",
+      "seeAll": "Xem tất cả thành viên"
     }
   },
   "communityDetailSection": {

@@ -549,6 +549,10 @@
       "speaks": "बोलते हैं",
       "learning": "सीख रहे हैं",
       "notSpecified": "निर्दिष्ट नहीं"
+    },
+    "suggested": {
+      "title": "{{name}} जैसे और सदस्य",
+      "seeAll": "सभी सदस्य देखें"
     }
   },
   "communityDetailSection": {

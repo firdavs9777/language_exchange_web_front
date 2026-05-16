@@ -549,6 +549,10 @@
       "speaks": "Parle",
       "learning": "Apprend",
       "notSpecified": "Non spécifié"
+    },
+    "suggested": {
+      "title": "Plus de membres comme {{name}}",
+      "seeAll": "Voir tous les membres"
     }
   },
   "communityDetailSection": {

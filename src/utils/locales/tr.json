@@ -548,6 +548,10 @@
       "speaks": "Konuşuyor",
       "learning": "Öğreniyor",
       "notSpecified": "Belirtilmedi"
+    },
+    "suggested": {
+      "title": "{{name}} gibi diğer üyeler",
+      "seeAll": "Tüm üyeleri gör"
     }
   },
   "communityDetailSection": {
