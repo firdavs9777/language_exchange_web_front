@@ -347,13 +347,20 @@
   background: #FEE2E2;
 }
 
+/* Chip row below partner text messages */
+.message-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
 /* Correct chip — partner text messages only */
 .correct-chip {
-  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-top: 4px;
   padding: 3px 8px;
   border: 1px solid rgba(249, 115, 22, 0.4);
   background: transparent;
@@ -368,6 +375,32 @@
 .correct-chip:hover {
   background: rgba(249, 115, 22, 0.08);
   border-color: rgba(249, 115, 22, 0.6);
+}
+
+/* Translate chip — partner text messages only */
+.translate-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  background: transparent;
+  color: #2563eb;
+  border-radius: 10px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.translate-chip:hover {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.6);
+}
+
+.translate-chip.active {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.6);
 }
 
 /* Reply preview inside bubble */

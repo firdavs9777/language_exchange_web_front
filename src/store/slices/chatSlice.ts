@@ -191,6 +191,29 @@ export const chatApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
+    // Save a translated phrase/word from a chat message to vocabulary (SRS queue)
+    saveMessageVocabulary: builder.mutation({
+      query: ({
+        messageId,
+        word,
+        translation,
+        language,
+        pronunciation,
+        partOfSpeech,
+      }: {
+        messageId: string;
+        word: string;
+        translation: string;
+        language: string;
+        pronunciation?: string;
+        partOfSpeech?: string;
+      }) => ({
+        url: `${MESSAGES_URL}/${messageId}/vocabulary`,
+        method: "POST",
+        body: { word, translation, language, pronunciation, partOfSpeech },
+      }),
+    }),
+
     // Unread Count
     getUnreadCount: builder.query({
       query: () => ({
@@ -232,6 +255,7 @@ export const {
   useSearchMessagesQuery,
   // Translation
   useTranslateMessageMutation,
+  useSaveMessageVocabularyMutation,
   // Unread
   useGetUnreadCountQuery,
 } = chatApiSlice;

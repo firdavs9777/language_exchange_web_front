@@ -14,6 +14,7 @@ import "./StickerPanel.css";
 import { useSocket } from "./hooks/useSocket";
 import CorrectionCard, { MessageCorrection } from "./components/CorrectionCard";
 import CorrectionModal from "./components/CorrectionModal";
+import TranslationCard from "./components/TranslationCard";
 import { useSendCorrectionMutation } from "../../store/slices/learningSlice";
 import {
   ArrowLeft,
@@ -33,6 +34,7 @@ import {
   Pause,
   Image as ImageIcon,
   Edit3,
+  Globe,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -122,7 +124,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
   initialIsOnline = false,
   initialLastSeen = "",
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const userId = useSelector(
     (state: RootState) => state.auth.userInfo?.user?._id
@@ -174,6 +176,20 @@ const ChatContent: React.FC<ChatContentProps> = ({
   // Correction modal state
   const [correctingMessage, setCorrectingMessage] = useState<Message | null>(null);
   const [sendCorrection, { isLoading: isSendingCorrection }] = useSendCorrectionMutation();
+
+  // Open translation cards, keyed by message _id
+  const [openTranslations, setOpenTranslations] = useState<Set<string>>(new Set());
+  const toggleTranslation = useCallback((messageId: string) => {
+    setOpenTranslations((prev) => {
+      const next = new Set(prev);
+      if (next.has(messageId)) next.delete(messageId);
+      else next.add(messageId);
+      return next;
+    });
+  }, []);
+
+  // Translation target language — defaults to i18n locale, falls back to 'en'
+  const targetLanguage = (i18n.language || "en").split("-")[0].toLowerCase();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -1311,6 +1327,15 @@ const ChatContent: React.FC<ChatContentProps> = ({
                             <p className="message-text">{msg.message}</p>
                           )}
 
+                          {openTranslations.has(msg._id) && msg.message && (
+                            <TranslationCard
+                              messageId={msg._id}
+                              originalText={msg.message}
+                              targetLanguage={targetLanguage}
+                              onClose={() => toggleTranslation(msg._id)}
+                            />
+                          )}
+
                           {msg.corrections && msg.corrections.length > 0 && (
                             <CorrectionCard
                               messageId={msg._id}
@@ -1357,15 +1382,30 @@ const ChatContent: React.FC<ChatContentProps> = ({
                       !isVoice &&
                       !hasMedia &&
                       msg.message && (
-                        <button
-                          type="button"
-                          className="correct-chip"
-                          onClick={() => setCorrectingMessage(msg)}
-                          title="Suggest a correction"
-                        >
-                          <Edit3 size={12} />
-                          <span>{t("chatPage.correct") || "Correct"}</span>
-                        </button>
+                        <div className="message-chip-row">
+                          <button
+                            type="button"
+                            className="correct-chip"
+                            onClick={() => setCorrectingMessage(msg)}
+                            title="Suggest a correction"
+                          >
+                            <Edit3 size={12} />
+                            <span>{t("chatPage.correct") || "Correct"}</span>
+                          </button>
+                          <button
+                            type="button"
+                            className={`translate-chip ${openTranslations.has(msg._id) ? "active" : ""}`}
+                            onClick={() => toggleTranslation(msg._id)}
+                            title="Translate this message"
+                          >
+                            <Globe size={12} />
+                            <span>
+                              {openTranslations.has(msg._id)
+                                ? t("chatPage.hide_translation") || "Hide"
+                                : t("chatPage.translate") || "Translate"}
+                            </span>
+                          </button>
+                        </div>
                       )}
 
                     {msg.status === "error" && (
