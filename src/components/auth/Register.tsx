@@ -196,22 +196,24 @@ const Register = () => {
 
     const [year, month, day] = birthDate.split("-");
 
-    // Prepare formData for submission
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("bio", bio);
-    formData.append("gender", selectedGender);
-    formData.append("native_language", nativeLanguage);
-    formData.append("language_to_learn", languageToLearn);
-    formData.append("birth_day", day);
-    formData.append("birth_month", month);
-    formData.append("birth_year", year);
+    // Send as plain JSON — backend /auth/register has no multer middleware,
+    // so a FormData body parses as empty and every required field "fails"
+    // validation. The photo upload below uses its own multipart route.
+    const registrationPayload = {
+      name,
+      email,
+      password,
+      bio,
+      gender: selectedGender,
+      native_language: nativeLanguage,
+      language_to_learn: languageToLearn,
+      birth_day: Number(day),
+      birth_month: Number(month),
+      birth_year: Number(year),
+    };
 
     try {
-      // Send formData to your server using the registerUser mutation
-      const response = await registerUser(formData).unwrap();
+      const response = await registerUser(registrationPayload).unwrap();
       const user_id = response as responseType;
 
       // If images are selected, upload them
@@ -730,13 +732,16 @@ const Register = () => {
 
                     <Button
                       onClick={handleFinalRegistration}
-                      variant="success"
-                      className="w-100 py-2 mb-3"
+                      variant="primary"
+                      className="w-100 py-2 mb-3 d-flex align-items-center justify-content-center"
                       disabled={isRegistering || isUploading}
                     >
                       {isRegistering || isUploading
                         ? "Processing..."
                         : "Complete Registration"}
+                      {!(isRegistering || isUploading) && (
+                        <FaArrowRight className="ms-2" />
+                      )}
                     </Button>
 
                     {(isRegistering || isUploading) && <Loader />}
