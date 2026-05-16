@@ -13,6 +13,8 @@ import StickerPanel from "./StickerPanel";
 import "./StickerPanel.css";
 import { useSocket } from "./hooks/useSocket";
 import CorrectionCard, { MessageCorrection } from "./components/CorrectionCard";
+import CorrectionModal from "./components/CorrectionModal";
+import { useSendCorrectionMutation } from "../../store/slices/learningSlice";
 import {
   ArrowLeft,
   Phone,
@@ -30,6 +32,7 @@ import {
   Play,
   Pause,
   Image as ImageIcon,
+  Edit3,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -167,6 +170,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
   // Sticker panel state
   const [isStickerPanelOpen, setIsStickerPanelOpen] = useState(false);
+
+  // Correction modal state
+  const [correctingMessage, setCorrectingMessage] = useState<Message | null>(null);
+  const [sendCorrection, { isLoading: isSendingCorrection }] = useSendCorrectionMutation();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -1309,6 +1316,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
                               messageId={msg._id}
                               correction={msg.corrections[0]}
                               isMe={isSent}
+                              currentUserId={userId || ""}
                               otherUserName={userName}
                               onAccepted={(correctionId) => {
                                 setMessages((prev) =>
@@ -1343,6 +1351,22 @@ const ChatContent: React.FC<ChatContentProps> = ({
                         )}
                       </div>
                     </div>
+
+                    {!isSent &&
+                      !isSticker &&
+                      !isVoice &&
+                      !hasMedia &&
+                      msg.message && (
+                        <button
+                          type="button"
+                          className="correct-chip"
+                          onClick={() => setCorrectingMessage(msg)}
+                          title="Suggest a correction"
+                        >
+                          <Edit3 size={12} />
+                          <span>{t("chatPage.correct") || "Correct"}</span>
+                        </button>
+                      )}
 
                     {msg.status === "error" && (
                       <button
@@ -1494,6 +1518,35 @@ const ChatContent: React.FC<ChatContentProps> = ({
             </div>
           </Form>
         </div>
+      )}
+
+      {correctingMessage && (
+        <CorrectionModal
+          message={{
+            _id: correctingMessage._id,
+            content: correctingMessage.message,
+            message: correctingMessage.message,
+            sender: {
+              _id: correctingMessage.sender._id,
+              name: correctingMessage.sender.name,
+            },
+          }}
+          onClose={() => setCorrectingMessage(null)}
+          onSubmit={async ({ correctedText, explanation }) => {
+            if (isSendingCorrection) return;
+            try {
+              await sendCorrection({
+                messageId: correctingMessage._id,
+                correctedText,
+                explanation,
+              }).unwrap();
+              setCorrectingMessage(null);
+            } catch (e: any) {
+              console.error("[sendCorrection] failed:", e);
+              alert(e?.data?.message || "Failed to send correction");
+            }
+          }}
+        />
       )}
     </Container>
   );

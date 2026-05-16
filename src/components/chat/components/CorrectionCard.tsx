@@ -17,6 +17,7 @@ interface CorrectionCardProps {
   messageId: string;
   correction: MessageCorrection;
   isMe: boolean;
+  currentUserId: string;
   otherUserName: string;
   onAccepted?: (correctionId: string) => void;
 }
@@ -25,6 +26,7 @@ const CorrectionCard: React.FC<CorrectionCardProps> = ({
   messageId,
   correction,
   isMe,
+  currentUserId,
   otherUserName,
   onAccepted,
 }) => {
@@ -33,7 +35,11 @@ const CorrectionCard: React.FC<CorrectionCardProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   const accepted = correction.isAccepted || localAccepted;
-  const correctorName = isMe ? "You" : correction.corrector?.name || otherUserName;
+  const isCorrector = correction.corrector?._id === currentUserId;
+  const canAccept = isMe && !isCorrector;
+  const correctorName = isCorrector
+    ? "You"
+    : correction.corrector?.name || otherUserName;
 
   const handleAccept = async () => {
     setError(null);
@@ -63,7 +69,7 @@ const CorrectionCard: React.FC<CorrectionCardProps> = ({
         <div className="correction-explanation">{correction.explanation}</div>
       )}
 
-      {!isMe && !accepted && (
+      {canAccept && !accepted && (
         <button
           className="correction-accept-btn"
           onClick={handleAccept}
@@ -78,7 +84,7 @@ const CorrectionCard: React.FC<CorrectionCardProps> = ({
         </button>
       )}
 
-      {!isMe && accepted && (
+      {canAccept && accepted && (
         <div className="correction-accepted-state">
           <CheckCircle size={14} />
           <span>Correction accepted — added to your learning record</span>
