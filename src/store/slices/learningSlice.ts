@@ -237,7 +237,7 @@ export const learningApiSlice = apiSlice.injectEndpoints({
     acceptCorrection: builder.mutation({
       query: ({ messageId, correctionId }: { messageId: string; correctionId: string }) => ({
         url: `/api/v1/messages/${messageId}/corrections/${correctionId}/accept`,
-        method: "POST",
+        method: "PUT",
       }),
     }),
   }),
