@@ -53,21 +53,46 @@ const ModernCommunity: React.FC = () => {
   // while a useEffect copy fires after paint.
   const [extraPages, setExtraPages] = useState<TandemMember[]>([]);
 
-  // Restore scroll when returning to /communities (e.g. back from
-  // /community/:id). Save on unmount, restore on mount. We wait for the
-  // first paint so the page-1 grid (derived from RTK cache) is on screen
-  // before we try to scroll into it.
+  // Persist scroll position continuously (throttled with rAF) so we never
+  // miss a save — relying on unmount alone is fragile because the browser
+  // can reset scroll before the cleanup runs in some transitions.
   useEffect(() => {
-    const saved = sessionStorage.getItem("communityScroll");
-    if (saved) {
-      const y = parseInt(saved, 10);
-      if (!Number.isNaN(y)) {
-        requestAnimationFrame(() => window.scrollTo(0, y));
-      }
-    }
-    return () => {
-      sessionStorage.setItem("communityScroll", String(window.scrollY));
+    let pending = false;
+    const onScroll = () => {
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(() => {
+        sessionStorage.setItem("communityScroll", String(window.scrollY));
+        pending = false;
+      });
     };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Restore scroll once: after the first batch of members is actually in
+  // the DOM. Scrolling to Y=2000 before the grid is laid out is a no-op
+  // because the page is still short.
+  const hasRestoredScroll = useRef(false);
+  const restoreScrollWhenReady = useCallback(() => {
+    if (hasRestoredScroll.current) return;
+    const saved = sessionStorage.getItem("communityScroll");
+    if (!saved) {
+      hasRestoredScroll.current = true;
+      return;
+    }
+    const y = parseInt(saved, 10);
+    if (Number.isNaN(y) || y === 0) {
+      hasRestoredScroll.current = true;
+      return;
+    }
+    // Two rAFs so layout has settled after the data-driven render.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.scrollTo(0, y);
+        hasRestoredScroll.current = true;
+      });
+    });
   }, []);
 
   const debouncedFilter = useDebounce(filter, 300);
@@ -141,6 +166,13 @@ const ModernCommunity: React.FC = () => {
     }
     return merged;
   }, [communityData, extraPages]);
+
+  // Once the grid actually has rows to lay out, trigger the saved-scroll
+  // restore. Without this guard, a scrollTo(0, 2000) fires against a
+  // not-yet-tall-enough page and silently no-ops.
+  useEffect(() => {
+    if (allMembers.length > 0) restoreScrollWhenReady();
+  }, [allMembers.length, restoreScrollWhenReady]);
 
   const filteredMembers = useMemo(() => {
     let list: TandemMember[] = allMembers.filter((m) =>
