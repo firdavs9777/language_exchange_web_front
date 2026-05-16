@@ -5,7 +5,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGetUserByIdQuery } from "../../store/slices/usersSlice";
 import { useTranslation } from "react-i18next";
 import { MessageCircle, Search, X, Plus, Sparkles } from "lucide-react";
-import { SocketProvider } from "./hooks/useSocket";
 import "./MainChat.css";
 
 const MainChat: React.FC = () => {
@@ -64,7 +63,6 @@ const MainChat: React.FC = () => {
   };
 
   return (
-    <SocketProvider>
     <div className={`chat-layout${userId ? " chat-selected" : ""}`}>
       {/* Sidebar */}
       <div className="chat-sidebar">
@@ -164,7 +162,6 @@ const MainChat: React.FC = () => {
         )}
       </div>
     </div>
-    </SocketProvider>
   );
 };
 
