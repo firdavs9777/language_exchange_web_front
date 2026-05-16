@@ -30,6 +30,8 @@ import {
 import Loader from "../Loader";
 import { Bounce, toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../store/slices/authSlice";
 
 export interface User {
   _id: string;
@@ -82,6 +84,7 @@ const Register = () => {
   const [step, setStep] = useState(1); // State to track current step
   const [isCodeVerified, setIsCodeVerified] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const [registerUser, { isLoading: isRegistering }] =
@@ -216,6 +219,22 @@ const Register = () => {
       const response = await registerUser(registrationPayload).unwrap();
       const user_id = response as responseType;
 
+      // Register returns { token, user, refreshToken? }. Stash the credentials
+      // immediately so the photo upload below (and any subsequent request)
+      // carries an Authorization header — otherwise PUT /users/:id/photo
+      // would 401 because the new account isn't "logged in" yet.
+      const registrationResponse = response as any;
+      if (registrationResponse?.token) {
+        dispatch(
+          setCredentials({
+            user: registrationResponse.user || registrationResponse.data,
+            token: registrationResponse.token,
+            refreshToken: registrationResponse.refreshToken,
+            message: "Registration successful",
+          })
+        );
+      }
+
       // If images are selected, upload them
       if (selectedImages && selectedImages.length > 0) {
         const uploadFormData = new FormData();
@@ -234,7 +253,8 @@ const Register = () => {
         theme: "dark",
         transition: Bounce,
       });
-      navigate("/login"); // Redirect to login page
+      // Already signed in — bounce straight to the community instead of login.
+      navigate(redirect || "/communities");
     } catch (error: any) {
       toast.error(`${error?.data?.error || "Error during registration"}`, {
         autoClose: 3000,
