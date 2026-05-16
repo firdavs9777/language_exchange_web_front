@@ -145,10 +145,17 @@ const Register = () => {
         setStep(3);
       }
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to send verification code", {
-        autoClose: 3000,
+      // Backend error shape is { success: false, error: "<message>" } — we
+      // were reading `data.message` which is always undefined, so the user
+      // either saw the generic fallback or (worse) nothing useful at all.
+      const message =
+        error?.data?.error ||
+        error?.data?.message ||
+        "Failed to send verification code";
+      toast.error(message, {
+        autoClose: 4000,
         hideProgressBar: false,
-        theme: "dark",
+        theme: "colored",
         transition: Bounce,
       });
       console.error("Error sending verification code:", error);
@@ -176,12 +183,15 @@ const Register = () => {
         });
       }
     } catch (error: any) {
-      toast.error(`${error?.data?.error || "Invalid verification code"}`, {
-        autoClose: 3000,
-        hideProgressBar: false,
-        theme: "dark",
-        transition: Bounce,
-      });
+      toast.error(
+        error?.data?.error || error?.data?.message || "Invalid verification code",
+        {
+          autoClose: 4000,
+          hideProgressBar: false,
+          theme: "colored",
+          transition: Bounce,
+        }
+      );
     }
   };
 
@@ -256,12 +266,15 @@ const Register = () => {
       // Already signed in — bounce straight to the community instead of login.
       navigate(redirect || "/communities");
     } catch (error: any) {
-      toast.error(`${error?.data?.error || "Error during registration"}`, {
-        autoClose: 3000,
-        hideProgressBar: false,
-        theme: "dark",
-        transition: Bounce,
-      });
+      toast.error(
+        error?.data?.error || error?.data?.message || "Error during registration",
+        {
+          autoClose: 4000,
+          hideProgressBar: false,
+          theme: "colored",
+          transition: Bounce,
+        }
+      );
     }
   };
 
