@@ -408,6 +408,12 @@
   background-color: #008E76;
 }
 
+/* Image gallery frame — responsive height controlled by class, not inline
+   style, so the breakpoints below can actually override it. */
+.cd-image-frame {
+  height: clamp(260px, 50vw, 420px);
+}
+
 /* Responsive layout */
 @media (max-width: 900px) {
   .profile-content {

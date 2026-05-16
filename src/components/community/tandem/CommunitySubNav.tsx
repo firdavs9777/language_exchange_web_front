@@ -11,6 +11,7 @@ interface CommunitySubNavProps {
   onSearchChange: (value: string) => void;
   onOpenFilters: () => void;
   hasActiveFilters?: boolean;
+  activeFilterCount?: number;
 }
 
 const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
@@ -20,6 +21,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
   onSearchChange,
   onOpenFilters,
   hasActiveFilters = false,
+  activeFilterCount = 0,
 }) => {
   const navigate = useNavigate();
 
@@ -94,10 +96,17 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
               hasActiveFilters ? "community-subnav__filter-btn--active" : ""
             }`}
             onClick={onOpenFilters}
-            aria-label="Filters"
+            aria-label={
+              activeFilterCount > 0
+                ? `Filters (${activeFilterCount} active)`
+                : "Filters"
+            }
             title="Filters"
           >
             <SlidersHorizontal size={18} />
+            {activeFilterCount > 0 && (
+              <span className="community-subnav__filter-badge">{activeFilterCount}</span>
+            )}
           </button>
         </div>
       </div>

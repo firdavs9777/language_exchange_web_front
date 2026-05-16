@@ -1,11 +1,11 @@
 import { useState, useMemo, useCallback, useEffect, useLayoutEffect, useRef } from "react";
-import { Loader2, X, Search } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { useGetCommunityMembersQuery } from "../../store/slices/communitySlice";
 import { useGetProfileVisitorsQuery } from "../../store/slices/usersSlice";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { COMMON_LANGUAGES, LANGUAGE_FLAGS, LanguageFlagProps } from "./type";
+import { LANGUAGE_FLAGS, LanguageFlagProps } from "./type";
 import { useDebounce } from "./utils";
 import { Navigate } from "react-router-dom";
 
@@ -13,7 +13,19 @@ import CommunitySubNav, { CommunityNavTab } from "./tandem/CommunitySubNav";
 import HighlightedProfilesCarousel from "./tandem/HighlightedProfilesCarousel";
 import VisitorsBanner from "./tandem/VisitorsBanner";
 import TandemMemberCard, { TandemMember } from "./tandem/TandemMemberCard";
+import CommunityFilterSheet, {
+  CommunityFilters,
+  EMPTY_FILTERS,
+  countActiveFilters,
+} from "./tandem/CommunityFilterSheet";
 import "./tandem/tandem-community.scss";
+
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+const isRecentlyJoined = (createdAt?: string): boolean => {
+  if (!createdAt) return false;
+  const t = new Date(createdAt).getTime();
+  return !Number.isNaN(t) && Date.now() - t < SEVEN_DAYS_MS;
+};
 
 // Re-exported so other files (legacy MemberCard, etc.) can keep importing it.
 export const LanguageFlag: React.FC<LanguageFlagProps> = ({ code }) => (
@@ -42,9 +54,9 @@ const getLanguageCode = (language: string): string => {
 const ModernCommunity: React.FC = () => {
   const { t } = useTranslation();
   const [filter, setFilter] = useState("");
-  const [languageFilter, setLanguageFilter] = useState("");
+  const [filters, setFilters] = useState<CommunityFilters>(EMPTY_FILTERS);
   const [activeTab, setActiveTab] = useState<CommunityNavTab>("all");
-  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [page, setPage] = useState(1);
   // Pages beyond the first are accumulated here so "Load more" keeps prior
   // results visible. Page 1 itself is derived directly from the RTK Query
@@ -97,7 +109,10 @@ const ModernCommunity: React.FC = () => {
   } = useGetCommunityMembersQuery({
     page,
     limit: 20,
-    language: languageFilter || undefined,
+    language: filters.language || undefined,
+    gender: filters.gender || undefined,
+    ageMin: filters.ageMin === "" ? undefined : filters.ageMin,
+    ageMax: filters.ageMax === "" ? undefined : filters.ageMax,
   });
 
   const {
@@ -131,7 +146,13 @@ const ModernCommunity: React.FC = () => {
     }
     setPage(1);
     setExtraPages([]);
-  }, [debouncedFilter, languageFilter]);
+  }, [
+    debouncedFilter,
+    filters.language,
+    filters.gender,
+    filters.ageMin,
+    filters.ageMax,
+  ]);
 
   // Derived union of the first page (from RTK Query cache, available on the
   // very first render after remount) + any accumulated extra pages.
@@ -176,15 +197,22 @@ const ModernCommunity: React.FC = () => {
           .some((field) => field?.toLowerCase().includes(term))
       );
     }
-    if (languageFilter) {
+    if (filters.language) {
       list = list.filter(
         (m) =>
-          m.native_language === languageFilter ||
-          m.language_to_learn === languageFilter
+          m.native_language === filters.language ||
+          m.language_to_learn === filters.language
       );
     }
+    // Client-side filters that the backend doesn't surface natively.
+    if (filters.onlineOnly) {
+      list = list.filter((m) => m.isOnline);
+    }
+    if (filters.newOnly) {
+      list = list.filter((m) => isRecentlyJoined(m.createdAt));
+    }
     return list;
-  }, [allMembers, currentUser._id, debouncedFilter, languageFilter]);
+  }, [allMembers, currentUser._id, debouncedFilter, filters]);
 
   const highlightedProfiles = useMemo(() => {
     const pool = filteredMembers.length ? filteredMembers : allMembers;
@@ -220,9 +248,11 @@ const ModernCommunity: React.FC = () => {
 
   const handleResetFilters = useCallback(() => {
     setFilter("");
-    setLanguageFilter("");
+    setFilters(EMPTY_FILTERS);
     setActiveTab("all");
   }, []);
+
+  const activeFilterCount = useMemo(() => countActiveFilters(filters), [filters]);
 
   if (!userInfo) {
     return <Navigate to="/login?redirect=/communities" replace />;
@@ -256,76 +286,22 @@ const ModernCommunity: React.FC = () => {
         onTabChange={setActiveTab}
         searchValue={filter}
         onSearchChange={setFilter}
-        onOpenFilters={() => setShowFilterDropdown((v) => !v)}
-        hasActiveFilters={Boolean(languageFilter)}
+        onOpenFilters={() => setIsFilterSheetOpen(true)}
+        hasActiveFilters={activeFilterCount > 0}
+        activeFilterCount={activeFilterCount}
+      />
+
+      <CommunityFilterSheet
+        open={isFilterSheetOpen}
+        initialFilters={filters}
+        onClose={() => setIsFilterSheetOpen(false)}
+        onApply={(next) => {
+          setFilters(next);
+          setIsFilterSheetOpen(false);
+        }}
       />
 
       <div className="community-page__container">
-        {showFilterDropdown && (
-          <div
-            className="community-filter-popover"
-            style={{
-              background: "#fff",
-              border: "1px solid #e5e7eb",
-              borderRadius: 16,
-              padding: 16,
-              margin: "16px 0",
-              boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-              <strong>Filter by language</strong>
-              <button
-                type="button"
-                onClick={() => setShowFilterDropdown(false)}
-                style={{ border: "none", background: "transparent", cursor: "pointer" }}
-                aria-label="Close filters"
-              >
-                <X size={16} />
-              </button>
-            </div>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <button
-                type="button"
-                onClick={() => { setLanguageFilter(""); setShowFilterDropdown(false); }}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: 999,
-                  border: "1px solid #e5e7eb",
-                  background: !languageFilter ? "#1f2937" : "#fff",
-                  color: !languageFilter ? "#fff" : "#1f2937",
-                  fontSize: "0.8125rem",
-                  cursor: "pointer",
-                }}
-              >
-                All languages
-              </button>
-              {COMMON_LANGUAGES.map((lang) => (
-                <button
-                  key={lang}
-                  type="button"
-                  onClick={() => { setLanguageFilter(lang); setShowFilterDropdown(false); }}
-                  style={{
-                    padding: "6px 12px",
-                    borderRadius: 999,
-                    border: "1px solid #e5e7eb",
-                    background: languageFilter === lang ? "#1f2937" : "#fff",
-                    color: languageFilter === lang ? "#fff" : "#1f2937",
-                    fontSize: "0.8125rem",
-                    cursor: "pointer",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 4,
-                  }}
-                >
-                  <span>{LANGUAGE_FLAGS[getLanguageCode(lang)] || "🌐"}</span>
-                  {lang}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
         {highlightedProfiles.length > 0 && (
           <HighlightedProfilesCarousel
             profiles={highlightedProfiles}

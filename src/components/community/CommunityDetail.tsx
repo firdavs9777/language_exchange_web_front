@@ -47,9 +47,8 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
   if (!images || images.length === 0) {
     return (
       <div
-        className="bg-gradient rounded-4 d-flex align-items-center justify-content-center position-relative overflow-hidden"
+        className="cd-image-frame bg-gradient rounded-4 d-flex align-items-center justify-content-center position-relative overflow-hidden"
         style={{
-          height: "400px",
           background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
         }}
       >
@@ -68,8 +67,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, userName }) => {
   return (
     <div className="position-relative">
       <div
-        className="rounded-4 overflow-hidden shadow-lg position-relative"
-        style={{ height: "400px" }}
+        className="cd-image-frame rounded-4 overflow-hidden shadow-lg position-relative"
       >
         <img
           src={images[activeIndex] || "/images/default-avatar.jpg"}
