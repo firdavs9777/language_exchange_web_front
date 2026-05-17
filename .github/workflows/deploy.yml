@@ -1,0 +1,37 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-frontend-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy via SSH
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and deploy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          port: ${{ secrets.DROPLET_PORT || 22 }}
+          script_stop: true
+          script: |
+            set -e
+            cd /home/language_exchange_web_front
+            echo "==> Pulling latest from main"
+            git fetch --all
+            git reset --hard origin/main
+            echo "==> Installing dependencies"
+            npm ci
+            echo "==> Building"
+            NODE_OPTIONS='--max-old-space-size=1024' GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 npm run build
+            echo "==> Reloading nginx"
+            sudo nginx -s reload
+            echo "==> Deploy complete"
