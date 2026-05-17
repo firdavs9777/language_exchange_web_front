@@ -680,6 +680,12 @@
 @media (max-width: 768px) {
   .modern-chat-header {
     padding: 0.625rem 0.75rem;
+    /* Stick the header at the top while messages scroll below — mirrors
+       native messenger apps. */
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #FFFFFF;
   }
 
   .profile-avatar {
@@ -696,13 +702,13 @@
   }
 
   .action-btn {
-    width: 34px;
-    height: 34px;
+    width: 40px;
+    height: 40px;
   }
 
   .action-btn svg {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
 
   .modern-chat-messages {
@@ -722,34 +728,40 @@
   }
 
   .modern-chat-input {
-    padding: 0.5rem 0.75rem 0.75rem;
+    padding: 0.5rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom, 0));
+    position: sticky;
+    bottom: 0;
+    background: #FFFFFF;
+    z-index: 15;
+    border-top: 1px solid #E4E6EB;
   }
 
   .input-container {
     padding: 4px 6px;
-    gap: 4px;
+    gap: 6px;
   }
 
+  /* Bigger tap targets on phones (40px minimum). */
   .attachment-btn,
   .emoji-btn {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
   }
 
   .attachment-btn svg,
   .emoji-btn svg {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
 
   .send-btn {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
   }
 
   .send-btn svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
   }
 }
 

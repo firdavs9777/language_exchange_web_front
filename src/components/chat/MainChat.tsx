@@ -42,6 +42,16 @@ const MainChat: React.FC = () => {
     }
   }, [userId]);
 
+  // Mark the body as "in chat" so global chrome (footer) can hide and the
+  // layout can lock body scroll on mobile. Cleans up on unmount so the
+  // rest of the app behaves normally.
+  useEffect(() => {
+    document.body.classList.add("chat-fullscreen");
+    return () => {
+      document.body.classList.remove("chat-fullscreen");
+    };
+  }, []);
+
   const handleSelectUser = (
     selectedUserId: string,
     selectedUserName: string,
