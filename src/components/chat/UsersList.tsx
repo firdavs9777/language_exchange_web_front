@@ -130,6 +130,9 @@ const UsersList: React.FC<UsersListProps> = ({
   const [pinConversation] = usePinConversationMutation();
   const [unpinConversation] = useUnpinConversationMutation();
   const [openMenuFor, setOpenMenuFor] = useState<string | null>(null);
+  // Whether the action dropdown should open upward (when the kebab is near
+  // the bottom of the viewport and a downward menu would clip).
+  const [menuOpensUp, setMenuOpensUp] = useState(false);
 
   const handleTogglePin = useCallback(
     async (e: React.MouseEvent, partner: User) => {
@@ -858,6 +861,11 @@ const UsersList: React.FC<UsersListProps> = ({
                       }
                       onClick={(e) => {
                         e.stopPropagation();
+                        // Flip menu upward when the button is in the bottom
+                        // half of the viewport so it doesn't clip below.
+                        const rect = (e.currentTarget as HTMLButtonElement)
+                          .getBoundingClientRect();
+                        setMenuOpensUp(rect.top > window.innerHeight / 2);
                         setOpenMenuFor((curr) =>
                           curr === user._id ? null : user._id
                         );
@@ -867,7 +875,9 @@ const UsersList: React.FC<UsersListProps> = ({
                     </button>
                     {openMenuFor === user._id && (
                       <div
-                        className="users-list-action-menu"
+                        className={`users-list-action-menu ${
+                          menuOpensUp ? "users-list-action-menu--up" : ""
+                        }`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         <button

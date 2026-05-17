@@ -380,6 +380,12 @@
   position: relative;
 }
 
+/* Lift the row that currently owns the open dropdown above its siblings
+   so the menu can never tuck behind the next row's background. */
+.users-list-item:has(.users-list-action-menu) {
+  z-index: 50;
+}
+
 .users-list-actions {
   position: absolute;
   top: 50%;
@@ -418,20 +424,39 @@
   position: absolute;
   top: calc(100% + 6px);
   right: 0;
-  z-index: 30;
+  z-index: 100;
   min-width: 160px;
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
   padding: 4px;
   animation: users-list-menu-pop 0.12s ease-out;
+}
+
+/* Upward variant — used when the kebab sits in the lower half of the
+   viewport so a downward menu would clip / overlap the chat area. */
+.users-list-action-menu--up {
+  top: auto;
+  bottom: calc(100% + 6px);
+  animation: users-list-menu-pop-up 0.12s ease-out;
 }
 
 @keyframes users-list-menu-pop {
   from {
     opacity: 0;
     transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes users-list-menu-pop-up {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
