@@ -169,6 +169,7 @@ const UsersList: React.FC<UsersListProps> = ({
             { autoClose: 1800, theme: "colored", transition: Bounce }
           );
         }
+        refetch();
         refetchConversations();
       } catch (err: any) {
         const message =
@@ -182,6 +183,7 @@ const UsersList: React.FC<UsersListProps> = ({
     [
       pinConversation,
       unpinConversation,
+      refetch,
       refetchConversations,
       conversationsData,
       t,
