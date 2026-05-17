@@ -155,23 +155,33 @@ const UsersList: React.FC<UsersListProps> = ({
         return;
       }
 
+      const action = partner.isPinned ? "unpin" : "pin";
+      const endpoint = `/api/v1/conversations/${resolvedConversationId}/${action}`;
+      console.log(
+        `[UsersList:${action}] >> POST ${endpoint}`,
+        { partner: partner.name, conversationId: resolvedConversationId }
+      );
+
       try {
-        if (partner.isPinned) {
-          await unpinConversation(resolvedConversationId).unwrap();
-          toast.success(
-            t("chatPage.actions.unpinned") || "Conversation unpinned",
-            { autoClose: 1800, theme: "colored", transition: Bounce }
-          );
-        } else {
-          await pinConversation(resolvedConversationId).unwrap();
-          toast.success(
-            t("chatPage.actions.pinned") || "Conversation pinned",
-            { autoClose: 1800, theme: "colored", transition: Bounce }
-          );
-        }
+        const response = partner.isPinned
+          ? await unpinConversation(resolvedConversationId).unwrap()
+          : await pinConversation(resolvedConversationId).unwrap();
+        console.log(`[UsersList:${action}] << OK`, response);
+
+        toast.success(
+          partner.isPinned
+            ? t("chatPage.actions.unpinned") || "Conversation unpinned"
+            : t("chatPage.actions.pinned") || "Conversation pinned",
+          { autoClose: 1800, theme: "colored", transition: Bounce }
+        );
         refetch();
         refetchConversations();
       } catch (err: any) {
+        console.error(`[UsersList:${action}] << FAIL`, {
+          status: err?.status,
+          data: err?.data,
+          raw: err,
+        });
         const message =
           err?.data?.error ||
           err?.data?.message ||
@@ -591,22 +601,35 @@ const UsersList: React.FC<UsersListProps> = ({
     if (!userToDelete || !currentUser?._id) return;
     setIsDeleting(true);
 
-    try {
-      // Prefer the conversationId we already threaded through onto the
-      // partner record; fall back to the lookup for safety.
-      const conversationId =
-        userToDelete.conversationId ||
-        conversationsData?.data?.find((c: any) =>
-          (c.participants || []).some(
-            (p: any) => p._id === userToDelete._id
-          )
-        )?._id;
+    // Prefer the conversationId we already threaded through onto the
+    // partner record; fall back to the lookup for safety.
+    const conversationId =
+      userToDelete.conversationId ||
+      conversationsData?.data?.find((c: any) =>
+        (c.participants || []).some(
+          (p: any) => p._id === userToDelete._id
+        )
+      )?._id;
 
+    const endpoint = conversationId
+      ? `/api/v1/conversations/${conversationId}`
+      : null;
+    console.log("[UsersList:delete] >> DELETE", endpoint || "(no conversationId found)", {
+      partner: userToDelete.name,
+      conversationId,
+    });
+
+    try {
       if (conversationId) {
-        await deleteConversation(conversationId).unwrap();
+        const response = await deleteConversation(conversationId).unwrap();
+        console.log("[UsersList:delete] << OK", response);
         toast.success(
           t("chatPage.actions.deleted") || "Conversation deleted",
           { autoClose: 1800, theme: "colored", transition: Bounce }
+        );
+      } else {
+        console.warn(
+          "[UsersList:delete] no conversation document found for partner; skipping API call"
         );
       }
 
@@ -615,6 +638,11 @@ const UsersList: React.FC<UsersListProps> = ({
       setShowDeleteModal(false);
       setUserToDelete(null);
     } catch (err: any) {
+      console.error("[UsersList:delete] << FAIL", {
+        status: err?.status,
+        data: err?.data,
+        raw: err,
+      });
       const message =
         err?.data?.error ||
         err?.data?.message ||
