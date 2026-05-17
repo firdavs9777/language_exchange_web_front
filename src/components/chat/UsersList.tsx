@@ -77,7 +77,9 @@ const getMessageText = (msg: Message): string => {
     if (msg.message || msg.content) return msg.message || msg.content || "";
     return "\ud83d\udcce Attachment";
   }
-  return msg.message || msg.content || "";
+  const text = msg.message || msg.content || "";
+  if (text === "Conversation started") return "";
+  return text;
 };
 
 const formatTime = (date: Date): string => {
@@ -531,7 +533,7 @@ const UsersList: React.FC<UsersListProps> = ({
         if (!existing) {
           partnersMap.set(otherUser._id, {
             ...otherUser,
-            imageUrls: otherUser.imageUrls || [],
+            imageUrls: otherUser.imageUrls || otherUser.images || [],
             lastMessage: messageText,
             unreadCount: convUnread,
             lastMessageTime: messageDate || undefined,

@@ -14,8 +14,8 @@ export const chatApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder: any) => ({
     // Conversations
     getConversations: builder.query({
-      query: ({ page = 1, limit = 20 } = {}) => ({
-        url: `${MESSAGES_URL}/conversations?page=${page}&limit=${limit}`,
+      query: ({ page = 1, limit = 50 } = {}) => ({
+        url: `${CONVERSATIONS_URL}?page=${page}&limit=${limit}`,
       }),
       providesTags: ["Conversations"],
     }),

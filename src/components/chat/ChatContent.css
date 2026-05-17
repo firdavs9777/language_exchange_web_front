@@ -190,6 +190,22 @@
   letter-spacing: 0.3px;
 }
 
+/* System notice (e.g. "Conversation started" placeholder) */
+.system-notice {
+  display: flex;
+  justify-content: center;
+  margin: 0.75rem 0;
+}
+
+.system-notice span {
+  background: #F0F2F5;
+  color: #65676B;
+  padding: 5px 14px;
+  border-radius: 14px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
 /* Message Styles */
 .modern-message {
   display: flex;
@@ -300,29 +316,26 @@
   align-items: center;
 }
 
-.status-icon {
-  width: 14px;
-  height: 14px;
+.status-text {
+  font-size: 0.6875rem;
+  font-weight: 500;
   flex-shrink: 0;
+  line-height: 1;
 }
 
-.status-icon.sending {
+.status-text.sending {
   color: rgba(255, 255, 255, 0.5);
 }
 
-.status-icon.sent {
-  color: rgba(255, 255, 255, 0.7);
+.status-text.delivered {
+  color: rgba(255, 255, 255, 0.8);
 }
 
-.status-icon.delivered {
-  color: #FFFFFF;
-}
-
-.status-icon.read {
+.status-text.read {
   color: #4FC3F7;
 }
 
-.status-icon.error {
+.status-text.error {
   color: #EF4444;
 }
 
@@ -951,6 +964,15 @@
 
 .modern-message.received .waveform-bar {
   background: #BCC0C4;
+}
+
+.waveform-bar--played {
+  background: rgba(255, 255, 255, 0.95);
+  transition: background 0.05s;
+}
+
+.modern-message.received .waveform-bar--played {
+  background: #00BFA5;
 }
 
 .voice-duration {

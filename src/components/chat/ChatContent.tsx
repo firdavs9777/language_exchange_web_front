@@ -26,8 +26,6 @@ import {
   Smile,
   Send,
   Mic,
-  Check,
-  CheckCheck,
   AlertCircle,
   RefreshCw,
   X,
@@ -173,6 +171,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
   // Voice playback state
   const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
+  const [audioProgress, setAudioProgress] = useState<number>(0); // 0-1
+  const [audioElapsed, setAudioElapsed] = useState<number>(0);
   const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
 
   // Sticker panel state
@@ -286,7 +286,12 @@ const ChatContent: React.FC<ChatContentProps> = ({
       const currentSelectedUser = selectedUserRef.current;
       if (data.receiverId === currentSelectedUser) {
         setMessages((prev) => {
-          if (prev.some((msg) => msg._id === data.message._id)) return prev;
+          // If already in state as our optimistic/sent message, upgrade to delivered
+          if (prev.some((msg) => msg._id === data.message._id)) {
+            return prev.map((msg) =>
+              msg._id === data.message._id ? { ...msg, status: "delivered" } : msg
+            );
+          }
           return [...prev, { ...data.message, status: "delivered" }];
         });
       }
@@ -498,7 +503,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     if ((data as any)?.data) {
       const loadedMessages = (data as any).data.map((msg: Message) => ({
         ...msg,
-        status: msg.read ? "read" : "delivered",
+        status: msg.status || (msg.read ? "read" : "delivered"),
       }));
       setMessages(loadedMessages);
 
@@ -614,7 +619,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             setMessages((prev) =>
               prev.map((msg) =>
                 msg._id === tempId
-                  ? { ...response.message, status: "sent", isOptimistic: false }
+                  ? { ...response.message, status: "delivered", isOptimistic: false }
                   : msg
               )
             );
@@ -701,7 +706,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             setMessages((prev) =>
               prev.map((msg) =>
                 msg._id === tempId
-                  ? { ...response.message, status: "sent", isOptimistic: false }
+                  ? { ...response.message, status: "delivered", isOptimistic: false }
                   : msg
               )
             );
@@ -737,7 +742,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       setMessages((prev) =>
         prev.map((msg) =>
           msg._id === tempId
-            ? { ...msgData, status: "sent", isOptimistic: false }
+            ? { ...msgData, status: "delivered", isOptimistic: false }
             : msg
         )
       );
@@ -783,7 +788,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             setMessages((prev) =>
               prev.map((msg) =>
                 msg._id === tempId
-                  ? { ...response.message, status: "sent", isOptimistic: false }
+                  ? { ...response.message, status: "delivered", isOptimistic: false }
                   : msg
               )
             );
@@ -1062,24 +1067,35 @@ const ChatContent: React.FC<ChatContentProps> = ({
   // ========== Voice Playback ==========
   const toggleAudioPlayback = (messageId: string, audioUrl: string) => {
     if (playingAudioId === messageId) {
-      // Pause
       audioPlayerRef.current?.pause();
       setPlayingAudioId(null);
       return;
     }
 
-    // Stop previous
     if (audioPlayerRef.current) {
       audioPlayerRef.current.pause();
     }
+
+    setAudioProgress(0);
+    setAudioElapsed(0);
 
     const audio = new Audio(audioUrl);
     audioPlayerRef.current = audio;
     setPlayingAudioId(messageId);
 
     audio.play().catch(console.error);
+
+    audio.addEventListener("timeupdate", () => {
+      if (audio.duration) {
+        setAudioProgress(audio.currentTime / audio.duration);
+        setAudioElapsed(audio.currentTime);
+      }
+    });
+
     audio.onended = () => {
       setPlayingAudioId(null);
+      setAudioProgress(0);
+      setAudioElapsed(0);
       audioPlayerRef.current = null;
     };
   };
@@ -1113,7 +1129,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             setMessages((prev) =>
               prev.map((msg) =>
                 msg._id === tempId
-                  ? { ...response.message, status: "sent", isOptimistic: false }
+                  ? { ...response.message, status: "delivered", isOptimistic: false }
                   : msg
               )
             );
@@ -1246,17 +1262,15 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
     switch (msg.status) {
       case "sending":
-        return <Check size={14} className="status-icon sending" />;
-      case "sent":
-        return <Check size={14} className="status-icon sent" />;
+        return <span className="status-text sending">Sending…</span>;
       case "delivered":
-        return <CheckCheck size={14} className="status-icon delivered" />;
+        return <span className="status-text delivered">Sent</span>;
       case "read":
-        return <CheckCheck size={14} className="status-icon read" />;
+        return <span className="status-text read">Read</span>;
       case "error":
-        return <AlertCircle size={14} className="status-icon error" />;
+        return <span className="status-text error">Failed</span>;
       default:
-        return <Check size={14} className="status-icon sent" />;
+        return <span className="status-text delivered">Sent</span>;
     }
   };
 
@@ -1264,6 +1278,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const renderVoiceMessage = (msg: Message) => {
     const duration = msg.media?.duration || 0;
     const isPlaying = playingAudioId === msg._id;
+    const bars = (msg.media?.waveform || Array(20).fill(0.3)).slice(0, 30);
+    const playedCount = isPlaying ? Math.floor(audioProgress * bars.length) : 0;
 
     return (
       <div className="voice-message">
@@ -1278,16 +1294,18 @@ const ChatContent: React.FC<ChatContentProps> = ({
         </button>
         <div className="voice-waveform">
           <div className="voice-waveform-bars">
-            {(msg.media?.waveform || Array(20).fill(0.3)).slice(0, 30).map((v: number, i: number) => (
+            {bars.map((v: number, i: number) => (
               <div
                 key={i}
-                className="waveform-bar"
+                className={`waveform-bar${i < playedCount ? " waveform-bar--played" : ""}`}
                 style={{ height: `${Math.max(4, (v || 0.3) * 24)}px` }}
               />
             ))}
           </div>
         </div>
-        <span className="voice-duration">{formatDuration(duration)}</span>
+        <span className="voice-duration">
+          {isPlaying ? formatDuration(audioElapsed) : formatDuration(duration)}
+        </span>
       </div>
     );
   };
@@ -1467,6 +1485,16 @@ const ChatContent: React.FC<ChatContentProps> = ({
                   /\.gif(\?|$)|giphy\.com\/media/i.test(msg.message));
               const hasMedia = !!msg.media?.type && !isVoice;
 
+              // System placeholder created by createConversationRoom — show as a
+              // centered notice instead of a chat bubble.
+              if (msg.message === "Conversation started") {
+                return (
+                  <div key={msg._id} className="system-notice">
+                    <span>{t("chatPage.conversationStarted") || "Conversation started"}</span>
+                  </div>
+                );
+              }
+
               return (
                 <div
                   key={msg._id}
@@ -1527,32 +1555,6 @@ const ChatContent: React.FC<ChatContentProps> = ({
                             />
                           )}
 
-                          {msg.corrections && msg.corrections.length > 0 && (
-                            <CorrectionCard
-                              messageId={msg._id}
-                              correction={msg.corrections[0]}
-                              isMe={isSent}
-                              currentUserId={userId || ""}
-                              otherUserName={userName}
-                              onAccepted={(correctionId) => {
-                                setMessages((prev) =>
-                                  prev.map((m) =>
-                                    m._id === msg._id
-                                      ? {
-                                          ...m,
-                                          corrections: (m.corrections || []).map(
-                                            (c) =>
-                                              c._id === correctionId
-                                                ? { ...c, isAccepted: true }
-                                                : c
-                                          ),
-                                        }
-                                      : m
-                                  )
-                                );
-                              }}
-                            />
-                          )}
                         </>
                       )}
 
@@ -1568,12 +1570,40 @@ const ChatContent: React.FC<ChatContentProps> = ({
                       </div>
                     </div>
 
-                    {!isSent &&
-                      !isSticker &&
-                      !isVoice &&
-                      !hasMedia &&
-                      msg.message && (
-                        <div className="message-chip-row">
+                    {/* Correction card lives OUTSIDE the bubble so it always
+                        renders on a white background — readable for both
+                        sent (teal) and received (grey) bubbles. */}
+                    {msg.corrections && msg.corrections.length > 0 && (
+                      <CorrectionCard
+                        messageId={msg._id}
+                        correction={msg.corrections[0]}
+                        isMe={isSent}
+                        currentUserId={userId || ""}
+                        otherUserName={userName}
+                        onAccepted={(correctionId) => {
+                          setMessages((prev) =>
+                            prev.map((m) =>
+                              m._id === msg._id
+                                ? {
+                                    ...m,
+                                    corrections: (m.corrections || []).map(
+                                      (c) =>
+                                        c._id === correctionId
+                                          ? { ...c, isAccepted: true }
+                                          : c
+                                    ),
+                                  }
+                                : m
+                            )
+                          );
+                        }}
+                      />
+                    )}
+
+                    {!isSent && !isSticker && !isVoice && !hasMedia && msg.message && (
+                      <div className="message-chip-row">
+                        {/* Hide Correct chip once a correction already exists */}
+                        {!(msg.corrections && msg.corrections.length > 0) && (
                           <button
                             type="button"
                             className="correct-chip"
@@ -1583,21 +1613,22 @@ const ChatContent: React.FC<ChatContentProps> = ({
                             <Edit3 size={12} />
                             <span>{t("chatPage.correct") || "Correct"}</span>
                           </button>
-                          <button
-                            type="button"
-                            className={`translate-chip ${openTranslations.has(msg._id) ? "active" : ""}`}
-                            onClick={() => toggleTranslation(msg._id)}
-                            title="Translate this message"
-                          >
-                            <Globe size={12} />
-                            <span>
-                              {openTranslations.has(msg._id)
-                                ? t("chatPage.hide_translation") || "Hide"
-                                : t("chatPage.translate") || "Translate"}
-                            </span>
-                          </button>
-                        </div>
-                      )}
+                        )}
+                        <button
+                          type="button"
+                          className={`translate-chip ${openTranslations.has(msg._id) ? "active" : ""}`}
+                          onClick={() => toggleTranslation(msg._id)}
+                          title="Translate this message"
+                        >
+                          <Globe size={12} />
+                          <span>
+                            {openTranslations.has(msg._id)
+                              ? t("chatPage.hide_translation") || "Hide"
+                              : t("chatPage.translate") || "Translate"}
+                          </span>
+                        </button>
+                      </div>
+                    )}
 
                     {msg.status === "error" && (
                       <button
@@ -1791,15 +1822,39 @@ const ChatContent: React.FC<ChatContentProps> = ({
             },
           }}
           onClose={() => setCorrectingMessage(null)}
-          onSubmit={async ({ correctedText, explanation }) => {
+          onSubmit={async ({ originalText, correctedText, explanation }) => {
             if (isSendingCorrection) return;
+            const targetMsg = correctingMessage;
+            setCorrectingMessage(null);
             try {
-              await sendCorrection({
-                messageId: correctingMessage._id,
+              const result: any = await sendCorrection({
+                messageId: targetMsg._id,
                 correctedText,
                 explanation,
               }).unwrap();
-              setCorrectingMessage(null);
+              // Use API response corrections if available; socket event is the
+              // canonical update, but this covers the gap before it arrives.
+              const serverCorrections: MessageCorrection[] | undefined =
+                Array.isArray(result?.data) ? result.data : undefined;
+              setMessages((prev) =>
+                prev.map((m) => {
+                  if (m._id !== targetMsg._id) return m;
+                  if (serverCorrections) {
+                    return { ...m, corrections: serverCorrections };
+                  }
+                  // Fallback: add optimistic correction card
+                  const optimistic: MessageCorrection = {
+                    _id: `opt-${Date.now()}`,
+                    corrector: { _id: userId || "", name: currentUserName || "You" },
+                    originalText: originalText || targetMsg.message,
+                    correctedText,
+                    explanation,
+                    isAccepted: false,
+                  };
+                  const existing = m.corrections || [];
+                  return { ...m, corrections: [...existing, optimistic] };
+                })
+              );
             } catch (e: any) {
               console.error("[sendCorrection] failed:", e);
               alert(e?.data?.message || "Failed to send correction");
