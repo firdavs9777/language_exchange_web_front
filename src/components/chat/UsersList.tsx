@@ -135,7 +135,18 @@ const UsersList: React.FC<UsersListProps> = ({
     async (e: React.MouseEvent, partner: User) => {
       e.stopPropagation();
       setOpenMenuFor(null);
-      if (!partner.conversationId) {
+
+      // The partner record may not have conversationId threaded onto it
+      // (e.g. if it came in through getUserMessages and the conversation
+      // hadn't been fetched yet). Fall back to scanning conversationsData
+      // for a matching participant before giving up.
+      const resolvedConversationId =
+        partner.conversationId ||
+        (conversationsData?.data || []).find((c: any) =>
+          (c.participants || []).some((p: any) => p._id === partner._id)
+        )?._id;
+
+      if (!resolvedConversationId) {
         toast.error(
           t("chatPage.actions.noConversationYet") ||
             "Start the conversation first to pin it",
@@ -143,15 +154,16 @@ const UsersList: React.FC<UsersListProps> = ({
         );
         return;
       }
+
       try {
         if (partner.isPinned) {
-          await unpinConversation(partner.conversationId).unwrap();
+          await unpinConversation(resolvedConversationId).unwrap();
           toast.success(
             t("chatPage.actions.unpinned") || "Conversation unpinned",
             { autoClose: 1800, theme: "colored", transition: Bounce }
           );
         } else {
-          await pinConversation(partner.conversationId).unwrap();
+          await pinConversation(resolvedConversationId).unwrap();
           toast.success(
             t("chatPage.actions.pinned") || "Conversation pinned",
             { autoClose: 1800, theme: "colored", transition: Bounce }
@@ -167,7 +179,13 @@ const UsersList: React.FC<UsersListProps> = ({
         toast.error(message, { autoClose: 3000, theme: "colored", transition: Bounce });
       }
     },
-    [pinConversation, unpinConversation, refetchConversations, t]
+    [
+      pinConversation,
+      unpinConversation,
+      refetchConversations,
+      conversationsData,
+      t,
+    ]
   );
 
   // Close the action menu when clicking anywhere outside it.
