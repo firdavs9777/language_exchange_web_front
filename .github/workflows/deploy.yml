@@ -27,6 +27,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
+          CI: false
           GENERATE_SOURCEMAP: false
           INLINE_RUNTIME_CHUNK: false
           IMAGE_INLINE_SIZE_LIMIT: 0
