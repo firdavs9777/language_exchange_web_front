@@ -329,9 +329,56 @@ const UsersList: React.FC<UsersListProps> = ({
       refetchConversations();
     };
 
+    // Backend's newer per-subscriber presence stream (presence:bulk on
+    // connect + presence:online / presence:offline as state changes). The
+    // older onlineUsers / userStatusUpdate events still fire but are
+    // global; these are scoped to "users you actually care about" and
+    // arrive even when the global broadcast is throttled.
+    const handlePresenceBulk = (data: { onlineUserIds?: string[] }) => {
+      const ids = Array.isArray(data?.onlineUserIds) ? data.onlineUserIds : [];
+      setOnlineUsers((prev) => {
+        const map = new Map(prev.map((u) => [u.userId, u]));
+        ids.forEach((id) => {
+          map.set(id, { userId: id, status: "online", lastSeen: null });
+        });
+        return Array.from(map.values());
+      });
+      setUserStatuses((prev) => {
+        const next = { ...prev };
+        ids.forEach((id) => {
+          next[id] = { status: "online", lastSeen: undefined };
+        });
+        return next;
+      });
+    };
+
+    const handlePresenceOnline = (data: { userId: string }) => {
+      if (!data?.userId) return;
+      handleUserStatusUpdate({
+        userId: data.userId,
+        status: "online",
+        lastSeen: null,
+      });
+    };
+
+    const handlePresenceOffline = (data: {
+      userId: string;
+      lastSeen?: string | null;
+    }) => {
+      if (!data?.userId) return;
+      handleUserStatusUpdate({
+        userId: data.userId,
+        status: "offline",
+        lastSeen: data.lastSeen ?? null,
+      });
+    };
+
     socket.on("disconnect", handleDisconnect);
     socket.on("onlineUsers", handleOnlineUsers);
     socket.on("userStatusUpdate", handleUserStatusUpdate);
+    socket.on("presence:bulk", handlePresenceBulk);
+    socket.on("presence:online", handlePresenceOnline);
+    socket.on("presence:offline", handlePresenceOffline);
     socket.on("newMessage", handleNewMessage);
     socket.on("newVoiceMessage", handleNewVoiceMessage);
     socket.on("newVideoMessage", handleNewVideoMessage);
@@ -345,6 +392,9 @@ const UsersList: React.FC<UsersListProps> = ({
       socket.off("disconnect", handleDisconnect);
       socket.off("onlineUsers", handleOnlineUsers);
       socket.off("userStatusUpdate", handleUserStatusUpdate);
+      socket.off("presence:bulk", handlePresenceBulk);
+      socket.off("presence:online", handlePresenceOnline);
+      socket.off("presence:offline", handlePresenceOffline);
       socket.off("newMessage", handleNewMessage);
       socket.off("newVoiceMessage", handleNewVoiceMessage);
       socket.off("newVideoMessage", handleNewVideoMessage);
