@@ -75,6 +75,16 @@
       "noResults": "GIF를 찾을 수 없습니다",
       "poweredBy": "Powered by GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "대화 옵션",
+      "pin": "고정",
+      "unpin": "고정 해제",
+      "pinned": "고정됨",
+      "noConversationYet": "먼저 대화를 시작해야 고정할 수 있습니다",
+      "pinFailed": "고정 변경에 실패했습니다",
+      "deleteFailed": "대화 삭제에 실패했습니다",
+      "deleted": "대화가 삭제되었습니다"
     }
   },
   "notifications": "알림",

@@ -75,6 +75,16 @@
       "noResults": "Aucun GIF trouvé",
       "poweredBy": "Propulsé par GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "Actions de la conversation",
+      "pin": "Épingler",
+      "unpin": "Désépingler",
+      "pinned": "Épinglée",
+      "noConversationYet": "Démarrez d'abord la conversation pour l'épingler",
+      "pinFailed": "Impossible de modifier l'épinglage",
+      "deleteFailed": "Impossible de supprimer la conversation",
+      "deleted": "Conversation supprimée"
     }
   },
   "notifications": "Notifications",

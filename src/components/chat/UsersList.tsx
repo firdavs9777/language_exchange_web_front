@@ -4,7 +4,11 @@ import {
   useGetUserMessagesQuery,
   useGetConversationsQuery,
   useDeleteConversationMutation,
+  usePinConversationMutation,
+  useUnpinConversationMutation,
 } from "../../store/slices/chatSlice";
+import { Bounce, toast } from "react-toastify";
+import { MoreVertical, Pin, PinOff, Trash2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/index";
 import { useSocket } from "./hooks/useSocket";
@@ -23,6 +27,10 @@ interface User {
   imageUrls: string[];
   status?: "online" | "offline" | "away" | "busy";
   lastSeen?: Date;
+  // Threaded through from the conversation record so per-conversation actions
+  // (pin/unpin/delete) can hit the right document instead of looking it up.
+  conversationId?: string;
+  isPinned?: boolean;
 }
 
 interface OnlineUser {
@@ -119,6 +127,56 @@ const UsersList: React.FC<UsersListProps> = ({
     );
 
   const [deleteConversation] = useDeleteConversationMutation();
+  const [pinConversation] = usePinConversationMutation();
+  const [unpinConversation] = useUnpinConversationMutation();
+  const [openMenuFor, setOpenMenuFor] = useState<string | null>(null);
+
+  const handleTogglePin = useCallback(
+    async (e: React.MouseEvent, partner: User) => {
+      e.stopPropagation();
+      setOpenMenuFor(null);
+      if (!partner.conversationId) {
+        toast.error(
+          t("chatPage.actions.noConversationYet") ||
+            "Start the conversation first to pin it",
+          { autoClose: 3000, theme: "colored", transition: Bounce }
+        );
+        return;
+      }
+      try {
+        if (partner.isPinned) {
+          await unpinConversation(partner.conversationId).unwrap();
+          toast.success(
+            t("chatPage.actions.unpinned") || "Conversation unpinned",
+            { autoClose: 1800, theme: "colored", transition: Bounce }
+          );
+        } else {
+          await pinConversation(partner.conversationId).unwrap();
+          toast.success(
+            t("chatPage.actions.pinned") || "Conversation pinned",
+            { autoClose: 1800, theme: "colored", transition: Bounce }
+          );
+        }
+        refetchConversations();
+      } catch (err: any) {
+        const message =
+          err?.data?.error ||
+          err?.data?.message ||
+          t("chatPage.actions.pinFailed") ||
+          "Couldn't update pin";
+        toast.error(message, { autoClose: 3000, theme: "colored", transition: Bounce });
+      }
+    },
+    [pinConversation, unpinConversation, refetchConversations, t]
+  );
+
+  // Close the action menu when clicking anywhere outside it.
+  useEffect(() => {
+    if (!openMenuFor) return;
+    const onDocClick = () => setOpenMenuFor(null);
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
+  }, [openMenuFor]);
 
   // Shared socket
   const { socket, isConnected } = useSocket();
@@ -396,15 +454,23 @@ const UsersList: React.FC<UsersListProps> = ({
             lastMessageTime: messageDate || undefined,
             status: getUserStatus(otherUser._id) as any,
             lastSeen: userStatuses[otherUser._id]?.lastSeen,
+            conversationId: conversation._id,
+            isPinned: Boolean(conversation.isPinned),
           });
-        } else if (
-          messageDate &&
-          (!existing.lastMessageTime || messageDate > existing.lastMessageTime)
-        ) {
-          existing.lastMessage = messageText;
-          existing.lastMessageTime = messageDate;
-          if (convUnread > existing.unreadCount) {
-            existing.unreadCount = convUnread;
+        } else {
+          // Keep the freshest conversation reference + pin state regardless
+          // of which lastMessage wins.
+          existing.conversationId = conversation._id;
+          existing.isPinned = existing.isPinned || Boolean(conversation.isPinned);
+          if (
+            messageDate &&
+            (!existing.lastMessageTime || messageDate > existing.lastMessageTime)
+          ) {
+            existing.lastMessage = messageText;
+            existing.lastMessageTime = messageDate;
+            if (convUnread > existing.unreadCount) {
+              existing.unreadCount = convUnread;
+            }
           }
         }
       });
@@ -420,8 +486,11 @@ const UsersList: React.FC<UsersListProps> = ({
       return partner;
     });
 
-    // Sort by last message time (most recent first)
+    // Sort: pinned conversations first (newest-pinned wins ties), then by
+    // last message time desc.
     return partners.sort((a, b) => {
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
       const aTime = a.lastMessageTime?.getTime() || 0;
       const bTime = b.lastMessageTime?.getTime() || 0;
       return bTime - aTime;
@@ -453,22 +522,39 @@ const UsersList: React.FC<UsersListProps> = ({
     setIsDeleting(true);
 
     try {
-      // Find the conversation ID for this user pair
-      const conversation = conversationsData?.data?.find((c: any) => {
-        const participants = c.participants || [];
-        return participants.some((p: any) => p._id === userToDelete._id);
-      });
+      // Prefer the conversationId we already threaded through onto the
+      // partner record; fall back to the lookup for safety.
+      const conversationId =
+        userToDelete.conversationId ||
+        conversationsData?.data?.find((c: any) =>
+          (c.participants || []).some(
+            (p: any) => p._id === userToDelete._id
+          )
+        )?._id;
 
-      if (conversation?._id) {
-        await deleteConversation(conversation._id).unwrap();
+      if (conversationId) {
+        await deleteConversation(conversationId).unwrap();
+        toast.success(
+          t("chatPage.actions.deleted") || "Conversation deleted",
+          { autoClose: 1800, theme: "colored", transition: Bounce }
+        );
       }
 
       refetch();
       refetchConversations();
       setShowDeleteModal(false);
       setUserToDelete(null);
-    } catch (_err) {
-      // silently handle
+    } catch (err: any) {
+      const message =
+        err?.data?.error ||
+        err?.data?.message ||
+        t("chatPage.actions.deleteFailed") ||
+        "Couldn't delete the conversation";
+      toast.error(message, {
+        autoClose: 3000,
+        theme: "colored",
+        transition: Bounce,
+      });
     } finally {
       setIsDeleting(false);
     }
@@ -611,6 +697,13 @@ const UsersList: React.FC<UsersListProps> = ({
                   <div className="users-list-content">
                     <div className="users-list-top-row">
                       <span className="users-list-name">
+                        {user.isPinned && (
+                          <Pin
+                            size={12}
+                            className="users-list-pin-icon"
+                            aria-label={t("chatPage.actions.pinned") || "Pinned"}
+                          />
+                        )}
                         {user.name}
                         {typing && (
                           <span className="users-list-typing-dots">
@@ -653,6 +746,66 @@ const UsersList: React.FC<UsersListProps> = ({
                         </Badge>
                       )}
                     </div>
+                  </div>
+
+                  {/* Per-conversation actions: pin/unpin + delete. Menu opens
+                      on click and closes on outside click (handled by the
+                      document listener registered above). */}
+                  <div className="users-list-actions">
+                    <button
+                      type="button"
+                      className="users-list-action-btn"
+                      aria-label={
+                        t("chatPage.actions.menuLabel") || "Conversation actions"
+                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenMenuFor((curr) =>
+                          curr === user._id ? null : user._id
+                        );
+                      }}
+                    >
+                      <MoreVertical size={16} />
+                    </button>
+                    {openMenuFor === user._id && (
+                      <div
+                        className="users-list-action-menu"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          type="button"
+                          className="users-list-action-item"
+                          onClick={(e) => handleTogglePin(e, user)}
+                        >
+                          {user.isPinned ? (
+                            <>
+                              <PinOff size={14} />
+                              <span>{t("chatPage.actions.unpin") || "Unpin"}</span>
+                            </>
+                          ) : (
+                            <>
+                              <Pin size={14} />
+                              <span>{t("chatPage.actions.pin") || "Pin"}</span>
+                            </>
+                          )}
+                        </button>
+                        <button
+                          type="button"
+                          className="users-list-action-item users-list-action-item--danger"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenMenuFor(null);
+                            setUserToDelete(user);
+                            setShowDeleteModal(true);
+                          }}
+                        >
+                          <Trash2 size={14} />
+                          <span>
+                            {t("chatPage.deleteModal.confirm") || "Delete"}
+                          </span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </li>
               );

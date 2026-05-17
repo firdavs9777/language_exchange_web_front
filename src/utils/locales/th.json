@@ -75,6 +75,16 @@
       "noResults": "ไม่พบ GIF",
       "poweredBy": "Powered by GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "ตัวเลือกการสนทนา",
+      "pin": "ปักหมุด",
+      "unpin": "เลิกปักหมุด",
+      "pinned": "ปักหมุดแล้ว",
+      "noConversationYet": "เริ่มการสนทนาก่อนเพื่อปักหมุด",
+      "pinFailed": "อัปเดตการปักหมุดไม่สำเร็จ",
+      "deleteFailed": "ลบการสนทนาไม่สำเร็จ",
+      "deleted": "ลบการสนทนาแล้ว"
     }
   },
   "notifications": "การแจ้งเตือน",

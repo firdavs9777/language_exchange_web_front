@@ -75,6 +75,16 @@
       "noResults": "No se encontraron GIFs",
       "poweredBy": "Con tecnología de GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "Acciones de la conversación",
+      "pin": "Fijar",
+      "unpin": "Desfijar",
+      "pinned": "Fijada",
+      "noConversationYet": "Inicia la conversación primero para fijarla",
+      "pinFailed": "No se pudo actualizar el fijado",
+      "deleteFailed": "No se pudo eliminar la conversación",
+      "deleted": "Conversación eliminada"
     }
   },
   "notifications": "Notificaciones",

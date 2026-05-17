@@ -75,6 +75,16 @@
       "noResults": "Keine GIFs gefunden",
       "poweredBy": "Powered by GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "Konversationsaktionen",
+      "pin": "Anheften",
+      "unpin": "Lösen",
+      "pinned": "Angeheftet",
+      "noConversationYet": "Starte zuerst die Konversation, um sie anzuheften",
+      "pinFailed": "Anheften konnte nicht aktualisiert werden",
+      "deleteFailed": "Konversation konnte nicht gelöscht werden",
+      "deleted": "Konversation gelöscht"
     }
   },
   "notifications": "Benachrichtigungen",

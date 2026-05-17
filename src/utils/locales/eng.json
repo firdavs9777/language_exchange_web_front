@@ -37,6 +37,16 @@
       "emptyTitle": "No conversations yet",
       "emptySubtitle": "Start a conversation to see it here"
     },
+    "actions": {
+      "menuLabel": "Conversation actions",
+      "pin": "Pin",
+      "unpin": "Unpin",
+      "pinned": "Pinned",
+      "noConversationYet": "Start the conversation first to pin it",
+      "pinFailed": "Couldn't update pin",
+      "deleteFailed": "Couldn't delete the conversation",
+      "deleted": "Conversation deleted"
+    },
     "deleteModal": {
       "title": "Delete Conversation",
       "bodyPrefix": "Delete your conversation with",

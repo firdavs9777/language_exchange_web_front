@@ -75,6 +75,16 @@
       "noResults": "GIF не найдены",
       "poweredBy": "Powered by GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "Действия с диалогом",
+      "pin": "Закрепить",
+      "unpin": "Открепить",
+      "pinned": "Закреплён",
+      "noConversationYet": "Сначала начните диалог, чтобы закрепить",
+      "pinFailed": "Не удалось обновить закрепление",
+      "deleteFailed": "Не удалось удалить диалог",
+      "deleted": "Диалог удалён"
     }
   },
   "notifications": "Уведомления",

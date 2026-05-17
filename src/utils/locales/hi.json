@@ -75,6 +75,16 @@
       "noResults": "कोई GIF नहीं मिला",
       "poweredBy": "GIPHY द्वारा संचालित",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "बातचीत क्रियाएँ",
+      "pin": "पिन करें",
+      "unpin": "अनपिन करें",
+      "pinned": "पिन किया गया",
+      "noConversationYet": "पिन करने के लिए पहले बातचीत शुरू करें",
+      "pinFailed": "पिन अपडेट करने में विफल",
+      "deleteFailed": "बातचीत हटाने में विफल",
+      "deleted": "बातचीत हटा दी गई"
     }
   },
   "notifications": "सूचनाएँ",

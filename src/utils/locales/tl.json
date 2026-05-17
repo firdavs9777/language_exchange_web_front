@@ -75,6 +75,16 @@
       "noResults": "Walang nahanap na GIF",
       "poweredBy": "Powered by GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "Mga aksyon sa usapan",
+      "pin": "I-pin",
+      "unpin": "Tanggalin ang pin",
+      "pinned": "Naka-pin",
+      "noConversationYet": "Simulan muna ang usapan bago i-pin",
+      "pinFailed": "Hindi nai-update ang pin",
+      "deleteFailed": "Hindi nabura ang usapan",
+      "deleted": "Naburas ang usapan"
     }
   },
   "notifications": "Mga Abiso",

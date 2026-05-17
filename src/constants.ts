@@ -3,6 +3,7 @@ export const MOMENTS_URL = "/api/v1/moments";
 export const USERS_URL = "/api/v1/users";
 export const COMMUNITY_URL = "/api/v1/auth/users";
 export const MESSAGES_URL = "/api/v1/messages";
+export const CONVERSATIONS_URL = "/api/v1/conversations";
 export const LOGIN_URL = "/api/v1/auth/login";
 export const REGISTER_URL = "/api/v1/auth/register";
 export const LOGOUT_URL = "/api/v1/auth/logout";

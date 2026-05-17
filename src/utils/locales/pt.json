@@ -75,6 +75,16 @@
       "noResults": "Nenhum GIF encontrado",
       "poweredBy": "Powered by GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "Ações da conversa",
+      "pin": "Fixar",
+      "unpin": "Desafixar",
+      "pinned": "Fixada",
+      "noConversationYet": "Inicie a conversa primeiro para fixá-la",
+      "pinFailed": "Não foi possível atualizar a fixação",
+      "deleteFailed": "Não foi possível excluir a conversa",
+      "deleted": "Conversa excluída"
     }
   },
   "notifications": "Notificações",

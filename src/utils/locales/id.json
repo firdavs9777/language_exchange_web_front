@@ -75,6 +75,16 @@
       "noResults": "Tidak ada GIF",
       "poweredBy": "Didukung oleh GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "Aksi percakapan",
+      "pin": "Sematkan",
+      "unpin": "Lepas sematan",
+      "pinned": "Disematkan",
+      "noConversationYet": "Mulai percakapan terlebih dahulu untuk menyematkannya",
+      "pinFailed": "Gagal memperbarui sematan",
+      "deleteFailed": "Gagal menghapus percakapan",
+      "deleted": "Percakapan dihapus"
     }
   },
   "notifications": "Notifikasi",

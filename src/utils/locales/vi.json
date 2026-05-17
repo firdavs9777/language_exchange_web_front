@@ -75,6 +75,16 @@
       "noResults": "Không tìm thấy GIF",
       "poweredBy": "Powered by GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "Tùy chọn cuộc trò chuyện",
+      "pin": "Ghim",
+      "unpin": "Bỏ ghim",
+      "pinned": "Đã ghim",
+      "noConversationYet": "Hãy bắt đầu cuộc trò chuyện trước khi ghim",
+      "pinFailed": "Không thể cập nhật ghim",
+      "deleteFailed": "Không thể xóa cuộc trò chuyện",
+      "deleted": "Đã xóa cuộc trò chuyện"
     }
   },
   "notifications": "Thông Báo",

@@ -75,6 +75,16 @@
       "noResults": "未找到 GIF",
       "poweredBy": "Powered by GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "对话操作",
+      "pin": "置顶",
+      "unpin": "取消置顶",
+      "pinned": "已置顶",
+      "noConversationYet": "请先开始对话再置顶",
+      "pinFailed": "更新置顶失败",
+      "deleteFailed": "删除对话失败",
+      "deleted": "对话已删除"
     }
   },
   "notifications": "通知",

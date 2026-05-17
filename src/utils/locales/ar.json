@@ -75,6 +75,16 @@
       "noResults": "لم يتم العثور على GIF",
       "poweredBy": "مدعوم من GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "إجراءات المحادثة",
+      "pin": "تثبيت",
+      "unpin": "إلغاء التثبيت",
+      "pinned": "مثبت",
+      "noConversationYet": "ابدأ المحادثة أولًا لتثبيتها",
+      "pinFailed": "تعذر تحديث التثبيت",
+      "deleteFailed": "تعذر حذف المحادثة",
+      "deleted": "تم حذف المحادثة"
     }
   },
   "notifications": "الإشعارات",

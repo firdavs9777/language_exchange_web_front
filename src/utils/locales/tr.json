@@ -75,6 +75,16 @@
       "noResults": "GIF bulunamadı",
       "poweredBy": "GIPHY ile destekleniyor",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "Sohbet işlemleri",
+      "pin": "Sabitle",
+      "unpin": "Sabitlemeyi kaldır",
+      "pinned": "Sabitlendi",
+      "noConversationYet": "Sabitlemek için önce sohbeti başlatın",
+      "pinFailed": "Sabitleme güncellenemedi",
+      "deleteFailed": "Sohbet silinemedi",
+      "deleted": "Sohbet silindi"
     }
   },
   "notifications": "Bildirimler",

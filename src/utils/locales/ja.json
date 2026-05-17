@@ -75,6 +75,16 @@
       "noResults": "GIFが見つかりません",
       "poweredBy": "Powered by GIPHY",
       "altText": "GIF"
+    },
+    "actions": {
+      "menuLabel": "会話のオプション",
+      "pin": "ピン留め",
+      "unpin": "ピン留め解除",
+      "pinned": "ピン留め済み",
+      "noConversationYet": "ピン留めするには先に会話を開始してください",
+      "pinFailed": "ピン留めの変更に失敗しました",
+      "deleteFailed": "会話の削除に失敗しました",
+      "deleted": "会話を削除しました"
     }
   },
   "notifications": "通知",
