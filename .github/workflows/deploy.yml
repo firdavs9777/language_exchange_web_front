@@ -11,27 +11,42 @@ concurrency:
 
 jobs:
   deploy:
-    name: Deploy via SSH
+    name: Build & Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: SSH and deploy
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          GENERATE_SOURCEMAP: false
+          INLINE_RUNTIME_CHUNK: false
+          IMAGE_INLINE_SIZE_LIMIT: 0
+          NODE_OPTIONS: --max-old-space-size=4096
+
+      - name: Upload build to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          port: ${{ secrets.DROPLET_PORT || 22 }}
+          source: "build"
+          target: /home/language_exchange_web_front/
+
+      - name: Reload nginx
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           port: ${{ secrets.DROPLET_PORT || 22 }}
-          script_stop: true
-          script: |
-            set -e
-            cd /home/language_exchange_web_front
-            echo "==> Pulling latest from main"
-            git fetch --all
-            git reset --hard origin/main
-            echo "==> Installing dependencies"
-            npm ci
-            echo "==> Building"
-            NODE_OPTIONS='--max-old-space-size=1024' GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 npm run build
-            echo "==> Reloading nginx"
-            sudo nginx -s reload
-            echo "==> Deploy complete"
+          script: nginx -s reload && echo "==> Deploy complete"
