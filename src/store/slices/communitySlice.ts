@@ -36,6 +36,16 @@ export const communityApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
     }),
+    // Public counterpart of getCommunityDetails — hits the PUBLIC
+    // GET /auth/users/:id/public endpoint so logged-out visitors can view a
+    // shared profile (the plain /auth/users/:id endpoint above is protected
+    // and 401s for anonymous requests). Same response shape.
+    getPublicUserProfile: builder.query({
+      query: (userId: string) => ({
+        url: `${COMMUNITY_URL}/${userId}/public`,
+      }),
+      keepUnusedDataFor: 5,
+    }),
 
     // Nearby Users (Discovery)
     getNearbyUsers: builder.query({
@@ -176,6 +186,7 @@ export const communityApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetCommunityMembersQuery,
   useGetCommunityDetailsQuery,
+  useGetPublicUserProfileQuery,
   // Nearby
   useGetNearbyUsersQuery,
   // Waves

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import {
   useGetCommunityDetailsQuery,
+  useGetPublicUserProfileQuery,
   useGetCommunityMembersQuery,
 } from "../../store/slices/communitySlice";
 import TandemMemberCard, {
@@ -201,17 +202,30 @@ interface CommunityDetailProps {
   // logged-out-accessible `/profile/:userId` route so those actions never
   // render for anonymous or third-party visitors regardless of auth state.
   readOnly?: boolean;
+  // When true, fetches the profile via the PUBLIC (unauthenticated)
+  // endpoint instead of the protected community endpoint. Used by the
+  // logged-out-accessible `/profile/:userId` route, which otherwise would
+  // 401 for anonymous visitors against the protected endpoint.
+  isPublic?: boolean;
 }
 
 const CommunityDetail: React.FC<CommunityDetailProps> = ({
   userId: userIdOverride,
   hideCommunityChrome = false,
   readOnly = false,
+  isPublic = false,
 }) => {
   const { id: routeId } = useParams<{ id: string }>();
   const communityId = userIdOverride ?? routeId;
-  const { data, isLoading, error, refetch } =
-    useGetCommunityDetailsQuery(communityId);
+  // Both hooks are called unconditionally (rules of hooks) and toggled via
+  // `skip` so only the relevant one actually fires a request: the public
+  // route uses the unauthenticated endpoint, everything else keeps using
+  // the existing protected endpoint exactly as before.
+  const authRes = useGetCommunityDetailsQuery(communityId, { skip: isPublic });
+  const publicRes = useGetPublicUserProfileQuery(communityId, {
+    skip: !isPublic,
+  });
+  const { data, isLoading, error, refetch } = isPublic ? publicRes : authRes;
 
   // Pull a page of community members so we can show a "Suggested for you"
   // strip at the bottom of the profile. We filter the viewer + this profile
