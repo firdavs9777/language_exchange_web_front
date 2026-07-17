@@ -46,6 +46,7 @@ export function buildCommunityQuery(
   limit: number
 ): Record<string, string> {
   const query: Record<string, string> = {};
+  query.matchLanguage = 'true';
 
   const hasFilterNative =
     filters.nativeLanguage !== undefined && filters.nativeLanguage !== '';
@@ -56,14 +57,13 @@ export function buildCommunityQuery(
   let apiLearningParam: string | undefined; // API learningLanguage: finds users who SPEAK this natively
 
   if (hasFilterNative || hasFilterLearning) {
-    // Explicit filters — apply only what was selected (inverted), no matchLanguage.
+    // Explicit filters — apply only what was selected (inverted).
     if (hasFilterNative) apiLearningParam = filters.nativeLanguage;
     if (hasFilterLearning) apiNativeParam = filters.learningLanguage;
   } else {
     // Default: language-exchange matching using my own languages (direct, not swapped).
     apiNativeParam = me.native_language;
     apiLearningParam = me.language_to_learn;
-    query.matchLanguage = 'true';
   }
 
   if (apiNativeParam) query.nativeLanguage = apiNativeParam;

@@ -6,12 +6,13 @@ it('inverts native/learning: UI nativeLanguage=Spanish -> API learningLanguage=S
   const q = buildCommunityQuery({ nativeLanguage: 'Spanish' }, me, 1, 20);
   expect(q.learningLanguage).toBe('Spanish');
   expect(q.nativeLanguage).toBeUndefined();
-  expect(q.matchLanguage).toBeUndefined();
+  expect(q.matchLanguage).toBe('true');
 });
 
 it('UI learningLanguage=French -> API nativeLanguage=French', () => {
   const q = buildCommunityQuery({ learningLanguage: 'French' }, me, 1, 20);
   expect(q.nativeLanguage).toBe('French');
+  expect(q.matchLanguage).toBe('true');
 });
 
 // Verified against the app's _buildFilterParams (partner_discovery_tab.dart):
