@@ -17,13 +17,15 @@ import {
   useVerifyRegistrationCodeMutation,
   useRegisterCodeEmailMutation,
   useUpdateUserByIdMutation,
+  useUpdateUserInfoMutation,
+  useAcceptTermsMutation,
 } from "../../store/slices/usersSlice";
 import { Bounce, toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../../store/slices/authSlice";
 
-import { SIGNUP_STEPS, STEP_LABELS } from "./register/steps";
+import { SIGNUP_STEPS, STEP_LABELS, SignupStep } from "./register/steps";
 import { passwordStrength, isAdult } from "./register/validators";
 import { buildRegisterPayload, LocationInput } from "./register/buildRegisterPayload";
 import UsernameAvailabilityField from "./register/UsernameAvailabilityField";
@@ -72,6 +74,10 @@ interface SendCodeEmailResponse {
 // CEFR proficiency levels (matches the app's language-level picker).
 const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
 
+// OAuth users already have email + name, so completion mode only walks the
+// remaining profile steps. The fresh-register flow uses the full SIGNUP_STEPS.
+const COMPLETION_STEPS: readonly SignupStep[] = ["languages", "photo", "finish"];
+
 const toastError = (message: string) =>
   toast.error(message, {
     autoClose: 4000,
@@ -89,15 +95,47 @@ const toastSuccess = (message: string) =>
   });
 
 const Register = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
+  const { search, state } = useLocation();
+
+  // --- Completion mode (OAuth profile-completion) --------------------------
+  // When AuthCallback routes an incomplete Google profile here it passes
+  // `state: { oauth: true, startStep: 'languages', userData }`. In that mode we
+  // skip email/verify/basics, prefill from userData, and on finish PATCH the
+  // profile via updatedetails + record terms instead of registering afresh.
+  const routerState = (state as any) || {};
+  const completionMode = routerState.oauth === true;
+  const oauthUserData = routerState.userData || {};
+  const authUserInfo = useSelector((s: any) => s.auth?.userInfo);
+  const completionUserId = oauthUserData._id || authUserInfo?.user?._id || "";
+
+  const STEPS: readonly SignupStep[] = completionMode
+    ? COMPLETION_STEPS
+    : SIGNUP_STEPS;
+
   // --- Account / profile fields --------------------------------------------
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(
+    completionMode ? oauthUserData.email || "" : ""
+  );
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
-  const [selectedGender, setSelectedGender] = useState("");
-  const [nativeLanguage, setNativeLanguage] = useState("");
-  const [languageToLearn, setLanguageToLearn] = useState("");
-  const [birthDate, setBirthDate] = useState("");
+  const [name, setName] = useState(
+    completionMode ? oauthUserData.name || "" : ""
+  );
+  const [selectedGender, setSelectedGender] = useState(
+    completionMode ? oauthUserData.gender || "" : ""
+  );
+  const [nativeLanguage, setNativeLanguage] = useState(
+    completionMode ? oauthUserData.nativeLanguage || "" : ""
+  );
+  const [languageToLearn, setLanguageToLearn] = useState(
+    completionMode ? oauthUserData.languageToLearn || "" : ""
+  );
+  const [birthDate, setBirthDate] = useState(
+    completionMode ? oauthUserData.birthDate || "" : ""
+  );
   const [verificationCode, setVerificationCode] = useState("");
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -113,23 +151,26 @@ const Register = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   // --- Wizard state ---------------------------------------------------------
-  const [stepIndex, setStepIndex] = useState(0);
+  const [stepIndex, setStepIndex] = useState(() => {
+    if (completionMode) {
+      const start = STEPS.indexOf(routerState.startStep as SignupStep);
+      return start >= 0 ? start : 0;
+    }
+    return 0;
+  });
   const [isCodeVerified, setIsCodeVerified] = useState(false);
-  const currentStep = SIGNUP_STEPS[stepIndex];
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const currentStep = STEPS[stepIndex];
 
   const [registerUser, { isLoading: isRegistering }] = useRegisterUserMutation();
   const [uploadUserPhoto, { isLoading: isUploading }] = useUploadUserPhotoMutation();
   const [sendCodeEmail, { isLoading: isSendingCode }] = useRegisterCodeEmailMutation();
   const [verifyCode, { isLoading: isVerifying }] = useVerifyRegistrationCodeMutation();
   const [updateUserById] = useUpdateUserByIdMutation();
+  const [updateUserInfo, { isLoading: isUpdatingDetails }] = useUpdateUserInfoMutation();
+  const [acceptTerms, { isLoading: isAcceptingTerms }] = useAcceptTermsMutation();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { search } = useLocation();
   const sp = new URLSearchParams(search);
   const redirect = sp.get("redirect") || "/";
 
@@ -195,6 +236,101 @@ const Register = () => {
     }
   };
 
+  // --- Shared post-steps ----------------------------------------------------
+  // Both the fresh-register and OAuth-completion flows end the same way: upload
+  // the selected profile photo(s) and persist the CEFR level. `updatedetails`
+  // does not whitelist `languageLevel`, so CEFR goes through PUT /auth/users/:id
+  // (same contract the app uses). The learning level wins; fall back to native.
+  const uploadPhotoAndPersistCefr = async (userId?: string) => {
+    if (selectedImages.length > 0 && userId) {
+      const uploadFormData = new FormData();
+      selectedImages.forEach((file) => {
+        uploadFormData.append("file", file);
+      });
+      await uploadUserPhoto({
+        userId,
+        imageFiles: uploadFormData,
+      }).unwrap();
+    }
+
+    const cefrLevel = learningLevel || languageLevel;
+    if (cefrLevel && userId) {
+      try {
+        await updateUserById({
+          id: userId,
+          body: { languageLevel: cefrLevel },
+        }).unwrap();
+      } catch {
+        // Non-fatal: the account exists and is logged in; CEFR is optional.
+      }
+    }
+  };
+
+  // --- OAuth profile completion --------------------------------------------
+  // The user already exists and is authenticated (token in the store). Patch
+  // the collected profile via updatedetails, run the shared post-steps, then
+  // record terms via accept-terms. No register call.
+  const handleProfileCompletion = async () => {
+    if (!location?.city || !location?.country) {
+      toastError("Please provide your city and country");
+      return;
+    }
+    if (!termsAccepted) {
+      toastError("Please accept the Terms of Service and Privacy Policy");
+      return;
+    }
+    if (selectedImages.length === 0) {
+      toastError("Please add a profile photo");
+      return;
+    }
+
+    const { city, country, coordinates } = location;
+    const formattedAddress = [city, country].filter(Boolean).join(", ");
+    const locationPayload: any = { formattedAddress, city, country };
+    if (coordinates && coordinates.length === 2) {
+      locationPayload.type = "Point";
+      locationPayload.coordinates = coordinates;
+    }
+
+    const detailsPayload: any = {
+      native_language: nativeLanguage,
+      language_to_learn: languageToLearn,
+      location: locationPayload,
+      termsAccepted: true,
+    };
+    if (selectedGender) detailsPayload.gender = selectedGender;
+    if (oauthUserData.bio) detailsPayload.bio = oauthUserData.bio;
+    if (birthDate && birthDate.includes("-")) {
+      const [birth_year, birth_month, birth_day] = birthDate.split("-");
+      detailsPayload.birth_year = birth_year;
+      detailsPayload.birth_month = birth_month;
+      detailsPayload.birth_day = birth_day;
+    }
+
+    try {
+      await updateUserInfo(detailsPayload).unwrap();
+
+      await uploadPhotoAndPersistCefr(completionUserId);
+
+      // Record acceptance of terms (protected endpoint). Non-fatal on failure —
+      // the profile is already saved.
+      try {
+        await acceptTerms().unwrap();
+      } catch {
+        // ignore: terms recording is best-effort
+      }
+
+      toastSuccess("Profile completed!");
+      navigate(redirect && redirect !== "/" ? redirect : "/communities");
+    } catch (error: any) {
+      toastError(
+        error?.data?.error ||
+          error?.data?.message ||
+          "Error completing your profile"
+      );
+    }
+  };
+
   // --- Final registration ---------------------------------------------------
   const handleFinalRegistration = async () => {
     if (!isCodeVerified) {
@@ -249,34 +385,9 @@ const Register = () => {
         registrationResponse?.user?._id ||
         registrationResponse?.data?._id;
 
-      // Photo is required by this wizard — upload the selected image(s).
-      if (selectedImages.length > 0 && newUserId) {
-        const uploadFormData = new FormData();
-        selectedImages.forEach((file) => {
-          uploadFormData.append("file", file);
-        });
-        await uploadUserPhoto({
-          userId: newUserId,
-          imageFiles: uploadFormData,
-        }).unwrap();
-      }
-
-      // register does NOT persist CEFR levels. updatedetails does not
-      // whitelist `languageLevel` (and has no `learningLevel` field at all),
-      // so persist the single CEFR value the backend actually understands
-      // via PUT /auth/users/:id — same contract the app uses. The learning
-      // level wins; fall back to the native level if that's all we have.
-      const cefrLevel = learningLevel || languageLevel;
-      if (cefrLevel && newUserId) {
-        try {
-          await updateUserById({
-            id: newUserId,
-            body: { languageLevel: cefrLevel },
-          }).unwrap();
-        } catch {
-          // Non-fatal: the account exists and is logged in; CEFR is optional.
-        }
-      }
+      // Photo upload + CEFR persistence are shared with the OAuth-completion
+      // flow. register does NOT persist CEFR levels, so the helper handles it.
+      await uploadPhotoAndPersistCefr(newUserId);
 
       toastSuccess("Registration successful!");
       // Already signed in — honor ?redirect=, defaulting to communities.
@@ -316,7 +427,11 @@ const Register = () => {
   const photoValid = selectedImages.length > 0;
   const finishValid = !!location?.city && !!location?.country && termsAccepted;
 
-  const isBusy = isRegistering || isUploading;
+  const isBusy =
+    isRegistering ||
+    isUploading ||
+    isUpdatingDetails ||
+    isAcceptingTerms;
 
   const canProceed = (): boolean => {
     switch (currentStep) {
@@ -341,10 +456,14 @@ const Register = () => {
         handleEmailNext();
         break;
       case "finish":
-        handleFinalRegistration();
+        if (completionMode) {
+          handleProfileCompletion();
+        } else {
+          handleFinalRegistration();
+        }
         break;
       default:
-        setStepIndex((i) => Math.min(i + 1, SIGNUP_STEPS.length - 1));
+        setStepIndex((i) => Math.min(i + 1, STEPS.length - 1));
     }
   };
 
@@ -354,7 +473,7 @@ const Register = () => {
   const inputClass =
     "w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent transition-all";
   const labelClass = "block text-sm font-medium text-gray-700 mb-1";
-  const progress = ((stepIndex + 1) / SIGNUP_STEPS.length) * 100;
+  const progress = ((stepIndex + 1) / STEPS.length) * 100;
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4">
@@ -372,7 +491,7 @@ const Register = () => {
             />
           </div>
           <div className="flex justify-between mt-2">
-            {SIGNUP_STEPS.map((s, i) => (
+            {STEPS.map((s, i) => (
               <span
                 key={s}
                 className={`text-[11px] sm:text-xs ${
@@ -796,7 +915,7 @@ const Register = () => {
                     <Loader2 className="w-4 h-4 animate-spin" /> Processing…
                   </>
                 ) : (
-                  <>Complete Registration</>
+                  <>{completionMode ? "Complete Profile" : "Complete Registration"}</>
                 )
               ) : currentStep === "email" && isSendingCode ? (
                 <>

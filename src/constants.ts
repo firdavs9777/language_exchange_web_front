@@ -7,6 +7,7 @@ export const CONVERSATIONS_URL = "/api/v1/conversations";
 export const LOGIN_URL = "/api/v1/auth/login";
 export const REGISTER_URL = "/api/v1/auth/register";
 export const LOGOUT_URL = "/api/v1/auth/logout";
+export const ACCEPT_TERMS_URL = "/api/v1/auth/accept-terms";
 
 // router.post('/forgot-password', forgotPassword);
 // router.post('/verify-reset-code', verifyResetCode);

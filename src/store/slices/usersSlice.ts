@@ -11,6 +11,7 @@ import {
   REGISTER_EMAIL_CODE,
   VERIFY_REGISTRATION_CODE,
   BLOCK_USER_URL,
+  ACCEPT_TERMS_URL,
   CHECK_USERNAME_URL,
   GEOCODE_REVERSE_URL,
   GEOCODE_FORWARD_URL,
@@ -141,6 +142,16 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
       keepUnusedDataFor: 5,
+    }),
+    // Record that the (already-authenticated) user accepted the Terms of
+    // Service / Privacy Policy. Protected endpoint — relies on the token in
+    // the store. Used by the OAuth profile-completion flow.
+    acceptTerms: builder.mutation({
+      query: () => ({
+        url: `${ACCEPT_TERMS_URL}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["User"],
     }),
     followUser: builder.mutation({
       query: ({
@@ -316,6 +327,7 @@ export const {
   useVerifyRegistrationCodeMutation,
   useResetPasswordUserMutation,
   useLogoutUserMutation,
+  useAcceptTermsMutation,
   useRegisterUserMutation,
   useGetUserProfileQuery,
   useGetFollowersQuery,
