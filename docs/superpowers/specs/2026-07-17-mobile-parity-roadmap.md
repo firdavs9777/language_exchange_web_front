@@ -22,14 +22,47 @@ The mobile app is the **source of truth**. Both talk to the same backend (`https
 - FCM push tokens, `ClientInfo`/device-metadata injection, biometric auth (native concerns).
 - In-browser coin purchase and in-browser WebRTC voice rooms (both deep-link to app).
 
-## Package 0 — App-Link Handoff Layer (foundational)
+## Package 0 — Bidirectional App ↔ Web Linking + Sharing (foundational)
 
-A reusable web→app handoff used by voice rooms, coin purchase, and any future app-only action.
+A single, matched universal-link layer so links work **both directions**:
+- **Web → app:** a `banatalk.com/...` link (or "Open in app" button) opens the native app on the exact screen if installed, else the store — with the destination preserved after install (deferred deep link).
+- **App → web:** share from the app produces a real `banatalk.com/...` link with a rich preview; opens the app for installers, web for everyone else.
 
-- Universal/App-Link config: `apple-app-site-association` + `.well-known/assetlinks.json` on the web domain.
-- A React `<OpenInApp>` component / hook that builds a smart link, attempts to open the app, and falls back to the correct store based on UA.
-- An interstitial route (e.g. `/open` or the `applink` domain target) for deferred deep links.
-- **Depends on:** native app registering the associated domains (mobile-side task, tracked but outside this repo).
+**Domain:** `banatalk.com` (no separate applink subdomain). **App IDs (source of truth, already consistent):** iOS bundle `com.bananatalk.bananatalkApp`, App Store ID `6755862146`; Android package `com.bananatalk.app`.
+
+### Canonical URL scheme (ONE source of truth — web routes = app GoRouter routes = `.well-known` path patterns)
+| Path | Web page | App route | Shareable |
+|---|---|---|---|
+| `/moment/:momentId` | exists ✅ | `/moment/:momentId` ✅ | already both |
+| `/profile/:userId` | **ADD (web has own-profile only)** | `/profile/:userId` ✅ | new |
+| `/chat/:userId` | exists (auth-gated) | `/chat/:userId?prefill=` ✅ | app-open only |
+| `/community/:id` | exists ✅ | **ADD GoRoute** | new |
+| `/room/:roomId` | ADD (Language Rooms, Pkg 2) | **ADD GoRoute** | new |
+| `/story/:storyId` | ADD | **ADD GoRoute** | new |
+
+### Web-side work (this repo)
+- `public/.well-known/apple-app-site-association` (JSON, no extension, served as `application/json`) declaring `<AppleTeamID>.com.bananatalk.bananatalkApp` + the path patterns above.
+- `public/.well-known/assetlinks.json` declaring `com.bananatalk.app` + release/Play-App-Signing SHA-256 fingerprints.
+- Ensure hosting (nginx in deploy script) serves `.well-known/*` over HTTPS, correct MIME, no redirect.
+- Add public route `/profile/:userId` (+ `/room/:id`, `/story/:id` as their packages land).
+- `<OpenInApp>` component/hook: build smart link, attempt app open, UA-based store fallback; interstitial `/open` route for deferred deep links.
+- Smart app banner (iOS `apple-itunes-app` with `app-argument`=content path; custom Android banner).
+- Central `shareUrl(type, id)` builder + Web Share buttons on moment/profile/community/story (today only moments).
+
+### Native-side work (bananatalk_app repo — authorized to edit)
+- iOS: add `com.apple.developer.associated-domains` = `applinks:banatalk.com` to `Runner.entitlements`.
+- Android: add `<intent-filter android:autoVerify="true">` for `https://banatalk.com` to MainActivity.
+- Add `app_links` package (uni_links is deprecated) to capture cold/warm incoming links → route through existing GoRouter.
+- Add missing GoRoutes: `/community/:id`, `/room/:id`, `/story/:id`.
+- Centralize the web domain in a constant/.env; add a shared `shareUrl` builder; extend `share_plus` to profile/community/room/story (today only moments).
+
+### Rich link previews ("make it better")
+CRA is **client-only**, so per-content Open Graph tags can't be rendered client-side — link-preview bots (iMessage, Slack, Twitter, WhatsApp) would see only the generic static tags. Requires a decision (tracked as an open question): (a) edge/nginx bot-detection serving prerendered OG HTML, (b) a small serverless OG endpoint per content type, or (c) migrate web to SSR (Next.js). Default recommendation: **(b) serverless OG** — smallest blast radius, no framework migration.
+
+### Inputs required from user (blockers for the `.well-known` files)
+- **Apple Developer Team ID** (10-char) — for the AASA `appID`.
+- **Android signing SHA-256 fingerprint(s)** — release keystore + Play App Signing cert (`gradlew signingReport` / Play Console → App integrity).
+- Confirmation that DNS/hosting for `banatalk.com` can serve `.well-known/` (CDN/nginx).
 
 ## Package 1 — Auth hardening (FIRST)
 
