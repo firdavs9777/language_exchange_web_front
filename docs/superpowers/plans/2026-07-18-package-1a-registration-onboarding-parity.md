@@ -16,6 +16,7 @@
 - Topics are **NOT** collected at signup (app sends `topics: []`). Do not add a topics step.
 - Register body must be **app-identical** (`backend/../register_two_screen.dart:585-610`): `{ name, username|null, password, email, bio:'', gender, images:[], birth_day, birth_month, birth_year, native_language, language_to_learn, topics:[], termsAccepted:true, location:{…} }`.
 - Location "100% true": never send `coordinates:[0,0]`. Real coords only (GPS reverse-geocode or forward-geocode of a typed city); if none obtainable, send `location` with `city/country/formattedAddress` and **omit** `coordinates` and `type`.
+- **Design system: Tailwind for ALL new/modified web UI (user decision 2026-07-18). Do NOT add new `.scss` files.** Reference the modern look in `src/components/profile/EditProfile.tsx` (teal gradient header, `rounded-2xl` glass cards, lucide icons, sticky action bar). The illustrative `className` strings in the component tasks below are placeholders — implement them with Tailwind utility classes matching that reference. The pure logic (validators, payload builder, geocode) is unaffected.
 - Backend web base + canonical patterns unchanged. Do NOT run `git push` unless the user asks; commit locally per task.
 - Do not touch unrelated pre-existing uncommitted files in either repo. Backend currently has unrelated modified files — stage only files named in each task.
 
@@ -1113,8 +1114,176 @@ cd front && git add -A && git commit -m "chore(auth): remove dead OAuthCallback 
 
 ---
 
+## Phase 5 — Auth UI cohesion + password-reset fix
+
+Grounded in the 2026-07-18 audit. Password reset today is `ForgetPassword.tsx` (3-step: `EnterEmail` → `VerifyCode` → `SetNewPassword`), plain react-bootstrap, and **broken**: `handlePasswordReset` posts `{ email, newPassword }` to `/auth/reset-password`, but the backend `resetPassword` (`backend/controllers/auth.js`) **requires `{ email, code, newPassword }`** and validates the hashed code — so every reset 400s. `VerifyCode.tsx` also clears the code after step 2, so the parent must retain it.
+
+### Task 14: Shared Tailwind auth shell
+
+**Files:**
+- Create: `front/src/components/auth/AuthShell.tsx`
+- Test: `front/src/components/auth/AuthShell.test.tsx`
+
+**Interfaces:**
+- Produces: `<AuthShell title subtitle?>{children}</AuthShell>` — the shared branded container (teal gradient side panel + `rounded-2xl` glass card) used by Login, Register, and the reset flow so all auth pages share one look. Tailwind only.
+
+- [ ] **Step 1: Write the failing test**
+
+```tsx
+// front/src/components/auth/AuthShell.test.tsx
+import { render, screen } from '@testing-library/react';
+import AuthShell from './AuthShell';
+it('renders title, subtitle, and children', () => {
+  render(<AuthShell title="Reset password" subtitle="We'll email you a code"><button>Go</button></AuthShell>);
+  expect(screen.getByText('Reset password')).toBeInTheDocument();
+  expect(screen.getByText("We'll email you a code")).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Go' })).toBeInTheDocument();
+});
+```
+
+- [ ] **Step 2: Run test to verify it fails**
+
+Run: `cd front && CI=true npx react-scripts test src/components/auth/AuthShell.test.tsx --watchAll=false`
+Expected: FAIL — cannot find component.
+
+- [ ] **Step 3: Implement (Tailwind, matching EditProfile look)**
+
+```tsx
+// front/src/components/auth/AuthShell.tsx
+import React from 'react';
+
+interface Props { title: string; subtitle?: string; children: React.ReactNode; }
+
+const AuthShell: React.FC<Props> = ({ title, subtitle, children }) => (
+  <div className="min-h-screen flex bg-gradient-to-br from-teal-50 via-sky-50 to-purple-50">
+    <div className="hidden lg:flex flex-1 items-center justify-center bg-gradient-to-br from-[#00BFA5] to-[#00A896] text-white p-12">
+      <div className="max-w-md">
+        <h1 className="text-4xl font-bold mb-4">BananaTalk</h1>
+        <p className="text-white/90">Practice languages with native speakers worldwide.</p>
+      </div>
+    </div>
+    <div className="flex-1 flex items-center justify-center p-6">
+      <div className="w-full max-w-md bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl p-8">
+        <h2 className="text-2xl font-semibold text-gray-900">{title}</h2>
+        {subtitle && <p className="text-gray-500 mt-1 mb-6">{subtitle}</p>}
+        <div className={subtitle ? '' : 'mt-6'}>{children}</div>
+      </div>
+    </div>
+  </div>
+);
+export default AuthShell;
+```
+
+- [ ] **Step 4: Run test to verify it passes**
+
+Run: `cd front && CI=true npx react-scripts test src/components/auth/AuthShell.test.tsx --watchAll=false`
+Expected: PASS.
+
+- [ ] **Step 5: Commit**
+
+```bash
+cd front && git add src/components/auth/AuthShell.tsx src/components/auth/AuthShell.test.tsx
+git commit -m "feat(auth): add shared Tailwind AuthShell for cohesive auth pages"
+```
+
+---
+
+### Task 15: Fix password-reset correctness (thread code, strength, guards, i18n)
+
+**Files:**
+- Modify: `front/src/components/auth/ForgetPassword.tsx` (retain `code` in parent; send it to reset), `front/src/components/auth/VerifyCode.tsx` (stop clearing code; lift it up; use `isLoading`), `front/src/components/auth/SetNewPassword.tsx` (password strength + loading guard)
+- Test: `front/src/components/auth/register/buildResetPayload.test.ts`
+- Create: `front/src/components/auth/register/buildResetPayload.ts`
+
+**Interfaces:**
+- Consumes: `passwordStrength` (Task 5), `useResetPasswordUserMutation`.
+- Produces: `buildResetPayload({email, code, newPassword}) => { email, code, newPassword }` — the backend-required shape (guards against sending a reset without a code).
+
+- [ ] **Step 1: Write the failing test**
+
+```ts
+// front/src/components/auth/register/buildResetPayload.test.ts
+import { buildResetPayload } from './buildResetPayload';
+it('includes the verified code (backend requires it)', () => {
+  expect(buildResetPayload({ email: 'a@b.com', code: '123456', newPassword: 'Abcdef12' }))
+    .toEqual({ email: 'a@b.com', code: '123456', newPassword: 'Abcdef12' });
+});
+it('throws if code missing (prevents the current broken call)', () => {
+  expect(() => buildResetPayload({ email: 'a@b.com', code: '', newPassword: 'Abcdef12' })).toThrow();
+});
+```
+
+- [ ] **Step 2: Run test to verify it fails**
+
+Run: `cd front && CI=true npx react-scripts test src/components/auth/register/buildResetPayload.test.ts --watchAll=false`
+Expected: FAIL — cannot find module.
+
+- [ ] **Step 3: Implement builder + wire the components**
+
+```ts
+// front/src/components/auth/register/buildResetPayload.ts
+export function buildResetPayload(input: { email: string; code: string; newPassword: string }) {
+  if (!input.code || !input.code.trim()) throw new Error('Verification code is required to reset the password');
+  return { email: input.email, code: input.code.trim(), newPassword: input.newPassword };
+}
+```
+
+Wire-up:
+- `ForgetPassword.tsx`: hold `code` in parent state; pass a setter to `VerifyCode`; `handlePasswordReset` calls `useResetPasswordUserMutation` with `buildResetPayload({ email, code, newPassword })`.
+- `VerifyCode.tsx`: remove the line that clears `code` on success; call the parent setter with the verified code; wire the destructured `isLoading` to `disabled` on the Verify button; add a "Resend code" button that re-calls `useSendCodeEmailMutation`.
+- `SetNewPassword.tsx`: block submit unless `passwordStrength(newPassword).valid` and `newPassword === confirm`; add `disabled` while the reset mutation is loading; render `PasswordStrengthMeter`.
+
+- [ ] **Step 4: Run test + typecheck**
+
+Run: `cd front && CI=true npx react-scripts test src/components/auth/register/buildResetPayload.test.ts --watchAll=false && npx tsc --noEmit`
+Expected: PASS; no type errors.
+
+- [ ] **Step 5: Commit**
+
+```bash
+cd front && git add src/components/auth/register/buildResetPayload.ts src/components/auth/register/buildResetPayload.test.ts src/components/auth/ForgetPassword.tsx src/components/auth/VerifyCode.tsx src/components/auth/SetNewPassword.tsx
+git commit -m "fix(auth): pass verified code to reset-password + add strength/loading guards"
+```
+
+---
+
+### Task 16: Rebuild reset UI on AuthShell (Tailwind) + finish i18n/a11y
+
+**Files:**
+- Modify: `front/src/components/auth/ForgetPassword.tsx`, `EnterEmail.tsx`, `VerifyCode.tsx`, `SetNewPassword.tsx` (wrap in `AuthShell`, Tailwind, remove bootstrap `Card/Form.Control`), and migrate hardcoded English to the existing i18n `t(...)` keys; add show-password toggle + `aria-label`s; add a "Back to login" link.
+
+**Interfaces:**
+- Consumes: `AuthShell` (Task 14), `PasswordStrengthMeter` (Task 9).
+
+- [ ] **Step 1: Migrate `EnterEmail`, `VerifyCode`, `SetNewPassword` to Tailwind + AuthShell**
+
+Replace each step's `Container`/`div.card`/`Form.Control`/`Button` with `AuthShell`-wrapped Tailwind markup (inputs `w-full rounded-lg border px-3 py-2`, primary button `bg-[#00BFA5] text-white rounded-lg py-2 disabled:opacity-50`). Reuse the `EditProfile` visual language. Add a "Back to login" `Link` to `/login` on step 1.
+
+- [ ] **Step 2: Finish i18n**
+
+Replace every hardcoded English string in `VerifyCode.tsx` and `SetNewPassword.tsx` with `t('authentication.passwordReset.*')` keys; add any missing keys to the locale files under `src/utils/locales/*.json` (match the existing key namespace used by `EnterEmail`).
+
+- [ ] **Step 3: a11y**
+
+Give the show-password toggle and any icon-only buttons `aria-label`; ensure each input has an associated `<label htmlFor>`.
+
+- [ ] **Step 4: Typecheck + build + manual smoke**
+
+Run: `cd front && npx tsc --noEmit && CI=false npx react-scripts build 2>&1 | tail -5`
+Expected: no type errors; build succeeds. Manual: run the reset flow end-to-end against a dev backend and confirm the password actually resets (no 400).
+
+- [ ] **Step 5: Commit**
+
+```bash
+cd front && git add src/components/auth/ForgetPassword.tsx src/components/auth/EnterEmail.tsx src/components/auth/VerifyCode.tsx src/components/auth/SetNewPassword.tsx src/utils/locales/
+git commit -m "feat(auth): rebuild reset flow on Tailwind AuthShell, finish i18n + a11y"
+```
+
+---
+
 ## Self-Review notes (author)
 
 - **Spec coverage:** verify-first reorder (T11), username live-check (T8) + backend honoring (T2/T3), password strength (T5/T9), 18+ gate (T5/T11), CEFR (T11 via updatedetails), required photo (T11), required location + "100% true" coords (T6/T10/T4), terms (T11 register body + T12 accept-terms), topics excluded (T6 emits `topics:[]`, no topics step), OAuth parity (T12). All spec sections map to a task.
 - **Open items resolved during planning:** accept-terms endpoint confirmed present (`POST /api/v1/auth/accept-terms`); CEFR set via `updatedetails` because `register` does not accept `languageLevel`; location schema does not require `coordinates`, so manual-only omits them; geocoder = Nominatim proxy (Task 4).
 - **Type consistency:** `LocationInput` defined in Task 6, reused in Tasks 10/11; `buildRegisterPayload` body matches the Global Constraints app-identical shape; hook names (`useLazyCheckUsernameQuery`, `useLazyReverseGeocodeQuery`, `useLazyForwardGeocodeQuery`, `useAcceptTermsMutation`) consistent across Tasks 7/8/10/12.
+- **Phase 5 coverage:** audit's confirmed reset bug (code not sent) → Task 15 (`buildResetPayload` requires `code`, matches backend `resetPassword` `{email,code,newPassword}`); auth-UI cohesion → Task 14 `AuthShell` (Tailwind) + Task 16 reset-flow migration; reset a11y/i18n/loading/resend/back-to-login → Task 16 + 15; password strength on reset reuses Task 5. Register wizard (Task 11) keeps its functional focus; its visual migration onto `AuthShell`/Tailwind rides along in the Phase 5 cohesion pass (incremental — Register may briefly retain its SCSS until then). Login generic-error toast + icon-button aria-labels are minor polish folded into Task 16's a11y pass where they touch shared components; deeper error-taxonomy work is deferred to 1b.
