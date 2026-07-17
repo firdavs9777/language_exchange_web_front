@@ -1,10 +1,11 @@
 import React from "react";
-import { Button, Form, Container } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import {
   useVerifyCodeEmailMutation,
   useSendCodeEmailMutation,
 } from "../../store/slices/usersSlice";
 import { Bounce, toast } from "react-toastify";
+import AuthShell from "./AuthShell";
 
 interface VerifyCodeProps {
   code: string;
@@ -21,9 +22,8 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({
   onNext,
   onPrevious,
 }) => {
-  const [verifyCodeEmail, { isLoading, error }] = useVerifyCodeEmailMutation(
-    {}
-  );
+  const { t } = useTranslation();
+  const [verifyCodeEmail, { isLoading }] = useVerifyCodeEmailMutation({});
   const [sendCodeEmail, { isLoading: isResending }] = useSendCodeEmailMutation(
     {}
   );
@@ -41,7 +41,7 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({
       const response = await verifyCodeEmail({ email, code }).unwrap();
       const typedResponse = response as SendCodeEmailResponse;
       if (typedResponse.success) {
-        toast.success("Verification code successfully verified!", {
+        toast.success(t("authentication.passwordReset.verifySuccessMessage"), {
           autoClose: 3000,
           hideProgressBar: false,
           theme: "dark",
@@ -54,7 +54,9 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({
       }
     } catch (error: any) {
       toast.error(
-        error?.data?.error || error?.data?.message || "Invalid verification code",
+        error?.data?.error ||
+          error?.data?.message ||
+          t("authentication.passwordReset.verifyErrorDefault"),
         {
           autoClose: 4000,
           hideProgressBar: false,
@@ -70,7 +72,7 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({
       const response = await sendCodeEmail({ email }).unwrap();
       const typedResponse = response as SendCodeEmailResponse;
       if (typedResponse.success) {
-        toast.success("A new verification code has been sent!", {
+        toast.success(t("authentication.passwordReset.resendSuccessMessage"), {
           autoClose: 3000,
           hideProgressBar: false,
           theme: "dark",
@@ -79,7 +81,9 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({
       }
     } catch (error: any) {
       toast.error(
-        error?.data?.error || error?.data?.message || "Failed to resend the code",
+        error?.data?.error ||
+          error?.data?.message ||
+          t("authentication.passwordReset.resendErrorDefault"),
         {
           autoClose: 4000,
           hideProgressBar: false,
@@ -91,51 +95,58 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({
   };
 
   return (
-    <Container className="d-flex m-auto mt-4 justify-content-center align-items-center">
-      <div
-        className="card p-4 shadow-sm"
-        style={{ maxWidth: "400px", width: "100%" }}
-      >
-        <h2 className="mb-4 text-center">Enter the verification code</h2>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="verificationCode">
-            <Form.Label>Verification Code</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter code"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Button
-            variant="warning"
+    <AuthShell
+      title={t("authentication.passwordReset.verifyTitle")}
+      subtitle={t("authentication.passwordReset.verifySubtitle") || undefined}
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label
+            htmlFor="verification-code"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            {t("authentication.passwordReset.codeLabel")}
+          </label>
+          <input
+            id="verification-code"
+            type="text"
+            placeholder={t("authentication.passwordReset.codePlaceholder")}
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            required
+            className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+          />
+        </div>
+        <div className="flex gap-3">
+          <button
             type="button"
             onClick={previousHandler}
-            className="w-100 mt-2 text-white"
+            className="flex-1 rounded-lg py-2 border border-gray-300 text-gray-700 hover:bg-gray-50"
           >
-            Previous
-          </Button>
-          <Button
-            variant="primary"
+            {t("authentication.passwordReset.previousButton")}
+          </button>
+          <button
             type="submit"
-            className="w-100 mt-2 text-white"
             disabled={isLoading}
+            className="flex-1 bg-[#00BFA5] text-white rounded-lg py-2 disabled:opacity-50"
           >
-            {isLoading ? "Verifying..." : "Verify"}
-          </Button>
-          <Button
-            variant="link"
-            type="button"
-            onClick={handleResend}
-            disabled={isResending}
-            className="w-100 mt-2"
-          >
-            {isResending ? "Resending..." : "Resend code"}
-          </Button>
-        </Form>
-      </div>
-    </Container>
+            {isLoading
+              ? t("authentication.passwordReset.verifyingButton")
+              : t("authentication.passwordReset.verifyButton")}
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={handleResend}
+          disabled={isResending}
+          className="w-full text-sm text-[#00BFA5] hover:underline disabled:opacity-50"
+        >
+          {isResending
+            ? t("authentication.passwordReset.resendingButton")
+            : t("authentication.passwordReset.resendButton")}
+        </button>
+      </form>
+    </AuthShell>
   );
 };
 
