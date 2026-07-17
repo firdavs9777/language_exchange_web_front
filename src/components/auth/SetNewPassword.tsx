@@ -1,7 +1,8 @@
 import React from "react";
 import { Button, Form, Container } from "react-bootstrap";
-import { useResetPasswordUserMutation } from "../../store/slices/usersSlice";
 import { Bounce, toast } from "react-toastify";
+import { passwordStrength } from "./register/validators";
+import PasswordStrengthMeter from "./register/PasswordStrengthMeter";
 
 interface SetNewPasswordProps {
   newPassword: string;
@@ -9,6 +10,7 @@ interface SetNewPasswordProps {
   setNewPassword: (val: string) => void;
   setConfirmPassword: (val: string) => void;
   onSubmit: () => void;
+  isLoading?: boolean;
 }
 
 const SetNewPassword: React.FC<SetNewPasswordProps> = ({
@@ -17,19 +19,33 @@ const SetNewPassword: React.FC<SetNewPasswordProps> = ({
   setNewPassword,
   setConfirmPassword,
   onSubmit,
+  isLoading,
 }) => {
+  const isPasswordValid = passwordStrength(newPassword).valid;
+  const passwordsMatch = newPassword === confirmPassword;
+  const canSubmit = isPasswordValid && passwordsMatch && !isLoading;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newPassword === confirmPassword) {
-      onSubmit();
-    } else {
+    if (!isPasswordValid) {
+      toast.error("Password does not meet the strength requirements", {
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "dark",
+        transition: Bounce,
+      });
+      return;
+    }
+    if (!passwordsMatch) {
       toast.error("Passwords do not match", {
         autoClose: 3000,
         hideProgressBar: false,
         theme: "dark",
         transition: Bounce,
       });
+      return;
     }
+    onSubmit();
   };
 
   return (
@@ -49,6 +65,9 @@ const SetNewPassword: React.FC<SetNewPasswordProps> = ({
               onChange={(e) => setNewPassword(e.target.value)}
               required
             />
+            <div className="mt-2">
+              <PasswordStrengthMeter password={newPassword} />
+            </div>
           </Form.Group>
           <Form.Group controlId="confirmPassword">
             <Form.Label>Confirm Password</Form.Label>
@@ -64,8 +83,9 @@ const SetNewPassword: React.FC<SetNewPasswordProps> = ({
             variant="primary"
             type="submit"
             className="w-100 mt-2 text-white"
+            disabled={!canSubmit}
           >
-            Reset Password
+            {isLoading ? "Resetting..." : "Reset Password"}
           </Button>
         </Form>
       </div>

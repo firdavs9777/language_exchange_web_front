@@ -1,6 +1,9 @@
 import React from "react";
 import { Button, Form, Container } from "react-bootstrap";
-import { useVerifyCodeEmailMutation } from "../../store/slices/usersSlice";
+import {
+  useVerifyCodeEmailMutation,
+  useSendCodeEmailMutation,
+} from "../../store/slices/usersSlice";
 import { Bounce, toast } from "react-toastify";
 
 interface VerifyCodeProps {
@@ -19,6 +22,9 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({
   onPrevious,
 }) => {
   const [verifyCodeEmail, { isLoading, error }] = useVerifyCodeEmailMutation(
+    {}
+  );
+  const [sendCodeEmail, { isLoading: isResending }] = useSendCodeEmailMutation(
     {}
   );
   interface SendCodeEmailResponse {
@@ -41,12 +47,39 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({
           theme: "dark",
           transition: Bounce,
         });
+        // Keep the verified code in parent state — it's required by the
+        // reset-password request in the next step.
+        setCode(code);
         onNext();
-        setCode("");
       }
     } catch (error: any) {
       toast.error(
         error?.data?.error || error?.data?.message || "Invalid verification code",
+        {
+          autoClose: 4000,
+          hideProgressBar: false,
+          theme: "colored",
+          transition: Bounce,
+        }
+      );
+    }
+  };
+
+  const handleResend = async () => {
+    try {
+      const response = await sendCodeEmail({ email }).unwrap();
+      const typedResponse = response as SendCodeEmailResponse;
+      if (typedResponse.success) {
+        toast.success("A new verification code has been sent!", {
+          autoClose: 3000,
+          hideProgressBar: false,
+          theme: "dark",
+          transition: Bounce,
+        });
+      }
+    } catch (error: any) {
+      toast.error(
+        error?.data?.error || error?.data?.message || "Failed to resend the code",
         {
           autoClose: 4000,
           hideProgressBar: false,
@@ -87,8 +120,18 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({
             variant="primary"
             type="submit"
             className="w-100 mt-2 text-white"
+            disabled={isLoading}
           >
-            Verify
+            {isLoading ? "Verifying..." : "Verify"}
+          </Button>
+          <Button
+            variant="link"
+            type="button"
+            onClick={handleResend}
+            disabled={isResending}
+            className="w-100 mt-2"
+          >
+            {isResending ? "Resending..." : "Resend code"}
           </Button>
         </Form>
       </div>
