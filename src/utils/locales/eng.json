@@ -1049,5 +1049,18 @@
       "exclusiveBadge": "Exclusive VIP badge",
       "translationFeature": "Message translation"
     }
+  },
+  "linking": {
+    "share": {
+      "label": "Share",
+      "copied": "Link copied to clipboard!",
+      "copyFailed": "Failed to copy link"
+    },
+    "openInApp": {
+      "label": "Open in app"
+    },
+    "appBanner": {
+      "text": "Open this in the BananaTalk app"
+    }
   }
 }

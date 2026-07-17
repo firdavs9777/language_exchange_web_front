@@ -21,6 +21,7 @@ import { AiFillProfile } from "react-icons/ai";
 import { ActionButtonProps, ImageGalleryProps, LanguagePairProps, StatsCardProps } from "./type";
 import { getLanguageFlag } from "./utils";
 import { RootState } from "../../store";
+import ShareButton from "../linking/ShareButton";
 
 // Modern Language Display Component
 const LanguagePair: React.FC<LanguagePairProps> = ({
@@ -187,8 +188,28 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   );
 };
 
-const CommunityDetail: React.FC = () => {
-  const { id: communityId } = useParams<{ id: string }>();
+interface CommunityDetailProps {
+  // Optional override so this view can be reused outside of the
+  // `/community/:id` route (e.g. the public `/profile/:userId` route).
+  // Falls back to the `:id` route param when not provided.
+  userId?: string;
+  // Hides the "Back to Community" navigation chrome when reused on routes
+  // that don't belong to the community section (e.g. public profile links).
+  hideCommunityChrome?: boolean;
+  // Hides owner/viewer action buttons (Follow, Start Chat, practice CTA) even
+  // when a logged-in viewer id happens to be present. Used by the public,
+  // logged-out-accessible `/profile/:userId` route so those actions never
+  // render for anonymous or third-party visitors regardless of auth state.
+  readOnly?: boolean;
+}
+
+const CommunityDetail: React.FC<CommunityDetailProps> = ({
+  userId: userIdOverride,
+  hideCommunityChrome = false,
+  readOnly = false,
+}) => {
+  const { id: routeId } = useParams<{ id: string }>();
+  const communityId = userIdOverride ?? routeId;
   const { data, isLoading, error, refetch } =
     useGetCommunityDetailsQuery(communityId);
 
@@ -474,17 +495,19 @@ const CommunityDetail: React.FC = () => {
 
   return (
     <div className="min-vh-100" style={{ backgroundColor: "#f8f9fa" }}>
-      <div className="bg-white border-bottom ">
-        <div className="container py-3">
-          <button
-            className="btn btn-link text-decoration-none p-0 d-flex align-items-center gap-2"
-            onClick={() => navigate("/communities")}
-          >
-            <span className="fs-5">←</span>
-            <span className="">{t("communityDetail.buttons.backToCommunity")}</span>
-          </button>
+      {!hideCommunityChrome && (
+        <div className="bg-white border-bottom ">
+          <div className="container py-3">
+            <button
+              className="btn btn-link text-decoration-none p-0 d-flex align-items-center gap-2"
+              onClick={() => navigate("/communities")}
+            >
+              <span className="fs-5">←</span>
+              <span className="">{t("communityDetail.buttons.backToCommunity")}</span>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="container py-4">
         <div className="row g-4">
@@ -511,7 +534,7 @@ const CommunityDetail: React.FC = () => {
 
               {/* Action Buttons */}
               <div className="d-grid gap-2">
-                {userId !== memberDetails._id && (
+                {!readOnly && userId && userId !== memberDetails._id && (
                   <>
                     {isUserFollowing ? (
                       <ActionButton
@@ -563,6 +586,12 @@ const CommunityDetail: React.FC = () => {
                       {memberDetails.gender}
                     </span>
                   )}
+                  <ShareButton
+                    type={hideCommunityChrome ? "profile" : "community"}
+                    id={communityId}
+                    title={memberDetails.name || "User"}
+                    className="btn btn-outline-secondary btn-sm rounded-3 ms-auto"
+                  />
                 </div>
                 {memberDetails.username && (
                   <p className="text-muted mb-2">
@@ -622,7 +651,7 @@ const CommunityDetail: React.FC = () => {
               </div>
 
               {/* Call to Action */}
-              {userId !== memberDetails._id && (
+              {!readOnly && userId && userId !== memberDetails._id && (
                 <div className="bg-primary bg-opacity-10 rounded-4 p-4 text-center border border-primary border-opacity-25">
                   <div className="mb-3">
                     <span className="fs-2">🌟</span>
