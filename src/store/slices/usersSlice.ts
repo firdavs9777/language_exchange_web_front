@@ -116,6 +116,17 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
       providesTags: ["User"],
     }),
+    // Update a user by id (hits /auth/users/:id). Unlike updateUserInfo
+    // (/auth/updatedetails), this endpoint accepts `languageLevel` — used to
+    // persist the signup wizard's CEFR selection right after registration.
+    updateUserById: builder.mutation({
+      query: ({ id, body }: { id: string; body: any }) => ({
+        url: `/api/v1/auth/users/${id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["User"],
+    }),
     deleteUserPhoto: builder.mutation({
       query: ({ userId, index }: { userId: string; index: number }) => ({
         url: `${COMMUNITY_URL}/${userId}/photo/${index}`,
@@ -313,6 +324,7 @@ export const {
   useUnFollowUserMutation,
   useUploadUserPhotoMutation,
   useUpdateUserInfoMutation,
+  useUpdateUserByIdMutation,
   useDeleteUserPhotoMutation,
   // New hooks
   useRecordProfileVisitMutation,

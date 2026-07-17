@@ -16,7 +16,7 @@ import {
   useUploadUserPhotoMutation,
   useVerifyRegistrationCodeMutation,
   useRegisterCodeEmailMutation,
-  useUpdateUserInfoMutation,
+  useUpdateUserByIdMutation,
 } from "../../store/slices/usersSlice";
 import { Bounce, toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
@@ -125,7 +125,7 @@ const Register = () => {
   const [uploadUserPhoto, { isLoading: isUploading }] = useUploadUserPhotoMutation();
   const [sendCodeEmail, { isLoading: isSendingCode }] = useRegisterCodeEmailMutation();
   const [verifyCode, { isLoading: isVerifying }] = useVerifyRegistrationCodeMutation();
-  const [updateUserInfo] = useUpdateUserInfoMutation();
+  const [updateUserById] = useUpdateUserByIdMutation();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -205,6 +205,14 @@ const Register = () => {
       toastError("Please provide your city and country");
       return;
     }
+    if (!termsAccepted) {
+      toastError("Please accept the Terms of Service and Privacy Policy");
+      return;
+    }
+    if (selectedImages.length === 0) {
+      toastError("Please add a profile photo");
+      return;
+    }
 
     const payload = buildRegisterPayload({
       name,
@@ -253,10 +261,18 @@ const Register = () => {
         }).unwrap();
       }
 
-      // register does NOT persist CEFR levels — set them via updatedetails.
-      if (languageLevel || learningLevel) {
+      // register does NOT persist CEFR levels. updatedetails does not
+      // whitelist `languageLevel` (and has no `learningLevel` field at all),
+      // so persist the single CEFR value the backend actually understands
+      // via PUT /auth/users/:id — same contract the app uses. The learning
+      // level wins; fall back to the native level if that's all we have.
+      const cefrLevel = learningLevel || languageLevel;
+      if (cefrLevel && newUserId) {
         try {
-          await updateUserInfo({ languageLevel, learningLevel }).unwrap();
+          await updateUserById({
+            id: newUserId,
+            body: { languageLevel: cefrLevel },
+          }).unwrap();
         } catch {
           // Non-fatal: the account exists and is logged in; CEFR is optional.
         }
@@ -309,7 +325,7 @@ const Register = () => {
       case "basics":
         return basicsValid;
       case "languages":
-        return true;
+        return !!nativeLanguage && !!languageToLearn && !!learningLevel;
       case "photo":
         return photoValid;
       case "finish":
