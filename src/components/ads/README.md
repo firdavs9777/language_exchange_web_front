@@ -17,6 +17,9 @@ until at least `REACT_APP_ADSENSE_CLIENT` is provided.
 | `REACT_APP_ADSENSE_SLOT_MOMENT_DETAIL` | Slot id for the moment-detail banner | `1234567890` |
 | `REACT_APP_ADSENSE_SLOT_FEED` | Slot id for feed interleaved ads | `1234567891` |
 | `REACT_APP_ADSENSE_SLOT_COMMENTS` | Slot id for the in-comments ad | `1234567892` |
+| `REACT_APP_ADSENSE_SLOT_HOME` | Slot id for the home (marketing) page ad | `1234567893` |
+| `REACT_APP_ADSENSE_SLOT_COMMUNITY` | Slot id for community-list interleaved ads | `1234567894` |
+| `REACT_APP_ADSENSE_SLOT_PROFILE` | Slot id for the profile overview ad | `1234567895` |
 | `REACT_APP_ADS_DEV` | Set to `true` to enable ads in a non-production build | `true` |
 | `REACT_APP_ADS_TEST` | Set to `true` to force `data-adtest="on"` in production | `true` |
 

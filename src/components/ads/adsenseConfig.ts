@@ -6,6 +6,9 @@
 //   REACT_APP_ADSENSE_SLOT_MOMENT_DETAIL  numeric slot id
 //   REACT_APP_ADSENSE_SLOT_FEED           numeric slot id
 //   REACT_APP_ADSENSE_SLOT_COMMENTS       numeric slot id
+//   REACT_APP_ADSENSE_SLOT_HOME           numeric slot id
+//   REACT_APP_ADSENSE_SLOT_COMMUNITY      numeric slot id
+//   REACT_APP_ADSENSE_SLOT_PROFILE        numeric slot id
 //   REACT_APP_ADS_DEV=true                enable ads outside production builds
 //   REACT_APP_ADS_TEST=true               force data-adtest="on" in production
 
@@ -17,6 +20,9 @@ export const AD_SLOTS = {
   momentDetail: process.env.REACT_APP_ADSENSE_SLOT_MOMENT_DETAIL || "",
   feed: process.env.REACT_APP_ADSENSE_SLOT_FEED || "",
   comments: process.env.REACT_APP_ADSENSE_SLOT_COMMENTS || "",
+  home: process.env.REACT_APP_ADSENSE_SLOT_HOME || "",
+  community: process.env.REACT_APP_ADSENSE_SLOT_COMMUNITY || "",
+  profile: process.env.REACT_APP_ADSENSE_SLOT_PROFILE || "",
 };
 
 // Ads only render when a client id is configured AND we're either in a

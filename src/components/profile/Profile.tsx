@@ -22,6 +22,8 @@ import PersonalityCard from "./parts/PersonalityCard";
 import TopicsCard from "./parts/TopicsCard";
 import PhotoGrid from "./parts/PhotoGrid";
 import MyMoments from "./MyMoments";
+import AdUnit from "../ads/AdUnit";
+import { AD_SLOTS } from "../ads/adsenseConfig";
 
 interface Moment {
   count: number;
@@ -165,6 +167,7 @@ const ProfileScreen: React.FC = () => {
             {imageUrls.length > 0 && (
               <PhotoGrid images={imageUrls} mode="view" />
             )}
+            <AdUnit slot={AD_SLOTS.profile} className="my-4" />
           </div>
         )}
 
