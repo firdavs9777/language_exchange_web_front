@@ -7,8 +7,23 @@ import {
   useGetConversationQuery,
   useSendVoiceMessageMutation,
   useSendMediaMessageMutation,
+  useEditMessageMutation,
+  useDeleteMessageMutation,
+  useAddReactionMutation,
+  useRemoveReactionMutation,
+  usePinMessageMutation,
+  useBookmarkMessageMutation,
+  useForwardMessageMutation,
+  useReplyToMessageMutation,
+  useTtsMessageMutation,
 } from "../../store/slices/chatSlice";
 import "./ChatContent.css";
+import MessageActionMenu from "./actions/MessageActionMenu";
+import ForwardDialog from "./actions/ForwardDialog";
+import ReactionRow from "./actions/ReactionRow";
+import PinnedBar from "./actions/PinnedBar";
+import ReplyComposerBar from "./actions/ReplyComposerBar";
+import { canDeleteForEveryone } from "./lib/messageActions";
 import StickerPanel from "./StickerPanel";
 import "./StickerPanel.css";
 import GifPickerPanel from "./GifPickerPanel";
@@ -105,6 +120,7 @@ interface Message {
   reactions?: Array<{ user: string; emoji: string; createdAt?: string }>;
   isEdited?: boolean;
   editedAt?: string;
+  pinned?: boolean;
 }
 
 const getReceiverId = (receiver: MessageReceiver | string): string => {
@@ -149,6 +165,22 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const [createMessage] = useCreateMessageMutation();
   const [sendVoiceMessage] = useSendVoiceMessageMutation();
   const [sendMediaMessage] = useSendMediaMessageMutation();
+
+  // ===== Message actions (Task 6 wiring) =====
+  const [editMessage] = useEditMessageMutation();
+  const [deleteMessageApi] = useDeleteMessageMutation();
+  const [addReaction] = useAddReactionMutation();
+  const [removeReaction] = useRemoveReactionMutation();
+  const [pinMessage] = usePinMessageMutation();
+  const [bookmarkMessage] = useBookmarkMessageMutation();
+  const [forwardMessage] = useForwardMessageMutation();
+  const [replyToMessage] = useReplyToMessageMutation();
+  const [ttsMessage] = useTtsMessageMutation();
+
+  // Message-action UI state
+  const [activeActionMsg, setActiveActionMsg] = useState<Message | null>(null);
+  const [replyingTo, setReplyingTo] = useState<Message | null>(null);
+  const [forwardMsg, setForwardMsg] = useState<Message | null>(null);
 
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -572,6 +604,57 @@ const ChatContent: React.FC<ChatContentProps> = ({
     // If there's a media preview, send it as media message
     if (mediaPreview) {
       await handleSendMedia();
+      return;
+    }
+
+    // Reply flow — link the outgoing message to the message being replied to.
+    if (replyingTo && newMessage.trim() && !isSending) {
+      const messageToSend = newMessage.trim();
+      const replyTarget = replyingTo;
+      const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const optimisticMessage: Message = {
+        _id: tempId,
+        message: messageToSend,
+        sender: { _id: userId, name: currentUserName || "" },
+        receiver: selectedUser,
+        createdAt: new Date().toISOString(),
+        isOptimistic: true,
+        status: "sending",
+        replyTo: {
+          _id: replyTarget._id,
+          message: replyTarget.message,
+          sender: { _id: replyTarget.sender._id, name: replyTarget.sender.name },
+        },
+      };
+      setMessages((prev) => [...prev, optimisticMessage]);
+      setNewMessage("");
+      setReplyingTo(null);
+      setIsSending(true);
+      isAtBottomRef.current = true;
+      try {
+        const result: any = await replyToMessage({
+          messageId: replyTarget._id,
+          message: messageToSend,
+          receiver: selectedUser,
+        }).unwrap();
+        const msgData = result.data || result;
+        setMessages((prev) =>
+          prev.map((m) =>
+            m._id === tempId
+              ? { ...msgData, status: "delivered", isOptimistic: false }
+              : m
+          )
+        );
+      } catch (err) {
+        console.error("Reply send failed:", err);
+        setMessages((prev) =>
+          prev.map((m) =>
+            m._id === tempId ? { ...m, status: "error", isOptimistic: false } : m
+          )
+        );
+      } finally {
+        setIsSending(false);
+      }
       return;
     }
 
@@ -1160,6 +1243,68 @@ const ChatContent: React.FC<ChatContentProps> = ({
     });
   }, [socket]);
 
+  // ===== Message-action handlers (Task 6) =====
+  const handleToggleReaction = useCallback(
+    (msg: Message, emoji: string) => {
+      const mine = (msg.reactions || []).some((r) => {
+        const uid = typeof r.user === "string" ? r.user : (r.user as any)?._id;
+        return uid === userId && r.emoji === emoji;
+      });
+      if (mine) removeReaction({ messageId: msg._id, emoji });
+      else addReaction({ messageId: msg._id, emoji });
+    },
+    [userId, addReaction, removeReaction]
+  );
+
+  const handleEditMessageAction = useCallback(
+    (msg: Message) => {
+      const next = window.prompt(t("chatPage.edit") || "Edit message", msg.message || "");
+      if (next == null) return;
+      const content = next.trim();
+      if (!content || content === msg.message) return;
+      editMessage({ messageId: msg._id, content })
+        .unwrap()
+        .then(() => {
+          setMessages((prev) =>
+            prev.map((m) =>
+              m._id === msg._id ? { ...m, message: content, isEdited: true } : m
+            )
+          );
+        })
+        .catch((err) => console.error("Edit failed:", err));
+    },
+    [editMessage, t]
+  );
+
+  const handleDeleteMessageAction = useCallback(
+    (msg: Message) => {
+      const forEveryone = canDeleteForEveryone(msg, userId || "");
+      deleteMessageApi({ messageId: msg._id, forEveryone })
+        .unwrap()
+        .then(() => setMessages((prev) => prev.filter((m) => m._id !== msg._id)))
+        .catch((err) => console.error("Delete failed:", err));
+    },
+    [deleteMessageApi, userId]
+  );
+
+  const handleTtsMessage = useCallback(
+    async (msg: Message) => {
+      try {
+        const res: any = await ttsMessage({ messageId: msg._id }).unwrap();
+        const url = res?.data?.audioUrl;
+        if (url) new Audio(url).play().catch((e) => console.error("TTS play failed:", e));
+      } catch (err) {
+        console.error("TTS failed:", err);
+      }
+    },
+    [ttsMessage]
+  );
+
+  const handleJumpToMessage = useCallback((messageId: string) => {
+    const el = chatContainerRef.current?.querySelector(`[data-msg-id="${messageId}"]`);
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, []);
+
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -1200,6 +1345,12 @@ const ChatContent: React.FC<ChatContentProps> = ({
       (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
   }, [messages]);
+
+  // Pinned messages for the PinnedBar (empty -> bar renders null)
+  const pinnedMessages = useMemo(
+    () => sortedMessages.filter((m) => m.pinned),
+    [sortedMessages]
+  );
 
   // Group messages by date
   const messagesByDate = useMemo(() => {
@@ -1443,6 +1594,13 @@ const ChatContent: React.FC<ChatContentProps> = ({
         </div>
       </div>
 
+      {/* Pinned messages bar (renders null when there are none) */}
+      <PinnedBar
+        pinned={pinnedMessages}
+        onJump={handleJumpToMessage}
+        onUnpin={(id) => pinMessage(id)}
+      />
+
       {/* Chat Messages */}
       <div
         className="modern-chat-messages"
@@ -1498,10 +1656,19 @@ const ChatContent: React.FC<ChatContentProps> = ({
               return (
                 <div
                   key={msg._id}
+                  data-msg-id={msg._id}
                   className={`modern-message ${isSent ? "sent" : "received"} ${
                     msg.status === "error" ? "error" : ""
                   }`}
                   style={{ marginTop: index === 0 ? "0" : gap }}
+                  onContextMenu={
+                    msg.isOptimistic
+                      ? undefined
+                      : (e) => {
+                          e.preventDefault();
+                          setActiveActionMsg(msg);
+                        }
+                  }
                 >
                   {!isSent && (
                     <div
@@ -1569,6 +1736,37 @@ const ChatContent: React.FC<ChatContentProps> = ({
                         )}
                       </div>
                     </div>
+
+                    {/* Message-actions trigger (opens MessageActionMenu) */}
+                    {!msg.isOptimistic && (
+                      <button
+                        type="button"
+                        className="msg-action-trigger"
+                        aria-label={t("chatPage.moreOptions") || "More options"}
+                        onClick={() => setActiveActionMsg(msg)}
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          border: "none",
+                          background: "transparent",
+                          color: "#94a3b8",
+                          cursor: "pointer",
+                          padding: 2,
+                          marginTop: 2,
+                          opacity: 0.6,
+                        }}
+                      >
+                        <MoreVertical size={14} />
+                      </button>
+                    )}
+
+                    {/* Reactions row (renders null when there are none) */}
+                    <ReactionRow
+                      reactions={msg.reactions}
+                      myUserId={userId || ""}
+                      onToggle={(emoji) => handleToggleReaction(msg, emoji)}
+                    />
 
                     {/* Correction card lives OUTSIDE the bubble so it always
                         renders on a white background — readable for both
@@ -1726,6 +1924,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
             />
           )}
 
+          {/* Reply band (renders null when not replying) */}
+          <ReplyComposerBar replyingTo={replyingTo} onCancel={() => setReplyingTo(null)} />
+
           <Form onSubmit={handleSendMessage} className="input-form">
             <div className="input-container">
               <button
@@ -1809,6 +2010,51 @@ const ChatContent: React.FC<ChatContentProps> = ({
           </Form>
         </div>
       )}
+
+      {/* Message action menu (opened via hover trigger / right-click) */}
+      {activeActionMsg && (
+        <div
+          onClick={() => setActiveActionMsg(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 1000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(0,0,0,0.3)",
+          }}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <MessageActionMenu
+              message={activeActionMsg}
+              meId={userId || ""}
+              onReply={() => setReplyingTo(activeActionMsg)}
+              onForward={() => setForwardMsg(activeActionMsg)}
+              onCopy={() =>
+                navigator.clipboard?.writeText(activeActionMsg.message || "")
+              }
+              onPin={() => pinMessage(activeActionMsg._id)}
+              onBookmark={() => bookmarkMessage(activeActionMsg._id)}
+              onTts={() => handleTtsMessage(activeActionMsg)}
+              onEdit={() => handleEditMessageAction(activeActionMsg)}
+              onDelete={() => handleDeleteMessageAction(activeActionMsg)}
+              onReact={(emoji) => handleToggleReaction(activeActionMsg, emoji)}
+              onClose={() => setActiveActionMsg(null)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Forward dialog */}
+      <ForwardDialog
+        open={!!forwardMsg}
+        onForward={(ids) => {
+          if (forwardMsg) forwardMessage({ messageId: forwardMsg._id, receivers: ids });
+          setForwardMsg(null);
+        }}
+        onClose={() => setForwardMsg(null)}
+      />
 
       {correctingMessage && (
         <CorrectionModal
