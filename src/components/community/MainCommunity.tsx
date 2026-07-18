@@ -19,6 +19,7 @@ import MemberCard, { CommunityMemberCard } from "./MemberCard";
 import CommunityFilterSheet from "./CommunityFilterSheet";
 import ActiveFilterChips from "./ActiveFilterChips";
 import QuickFilterChips from "./QuickFilterChips";
+import WaveSheet from "./WaveSheet";
 import { CommunityFilters, buildCommunityQuery } from "./lib/buildCommunityQuery";
 import * as filterStorage from "./lib/filterStorage";
 import { DEFAULT_FILTERS } from "./lib/filterStorage";
@@ -56,6 +57,7 @@ const ModernCommunity: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<CommunityNavTab>("all");
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
+  const [waveTarget, setWaveTarget] = useState<CommunityMemberCard | null>(null);
   const [page, setPage] = useState(1);
   // Pages beyond the first are accumulated here so "Load more" keeps prior
   // results visible. Page 1 is derived directly from the RTK Query cache below
@@ -299,10 +301,10 @@ const ModernCommunity: React.FC = () => {
     [navigate]
   );
 
-  // Task 6 wires the real wave sheet here — stubbed so the button is inert
-  // (never crashes) until then.
-  const handleWaveMember = useCallback((_user: CommunityMemberCard) => {
-    /* placeholder: wave interaction lands in Task 6 */
+  // Opens the WaveSheet for the tapped member; the sheet owns the actual
+  // send call (useSendWaveMutation) + mutual/already-waved handling.
+  const handleWaveMember = useCallback((user: CommunityMemberCard) => {
+    setWaveTarget(user);
   }, []);
 
   const handleResetAll = useCallback(() => {
@@ -358,6 +360,12 @@ const ModernCommunity: React.FC = () => {
         onApply={applyFilters}
         onClear={clearAllFilters}
         onClose={() => setIsFilterSheetOpen(false)}
+      />
+
+      <WaveSheet
+        open={!!waveTarget}
+        targetUser={waveTarget}
+        onClose={() => setWaveTarget(null)}
       />
 
       <div className="community-page__container">
