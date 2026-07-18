@@ -22,6 +22,9 @@ import {
 } from "../../store/slices/momentsSlice";
 import MomentReactionRow from "./actions/MomentReactionRow";
 import ShareButton from "../linking/ShareButton";
+import MomentVideoPlayer from "./media/MomentVideoPlayer";
+import VoiceNotePlayer from "./media/VoiceNotePlayer";
+import GradientMomentCard from "./media/GradientMomentCard";
 
 // TypeScript interfaces
 interface User {
@@ -43,8 +46,21 @@ interface MomentProps {
   refetch?: () => void;
   // Package 3 engagement (optional — feed card renders gracefully without them)
   reactions?: Array<{ user: string | { _id: string }; emoji: string }>;
+  reactionCount?: number;
   shareCount?: number;
   isSaved?: boolean;
+  saveCount?: number;
+  // Package 3 media variants (optional — falls back to images when absent)
+  mediaType?: "image" | "video" | "audio" | "text";
+  video?: {
+    url: string;
+    thumbnail?: string;
+    duration?: number;
+    width?: number;
+    height?: number;
+  };
+  audio?: { url: string; duration: number; waveform: number[] };
+  backgroundColor?: string;
 }
 
 interface AuthState {
@@ -73,6 +89,10 @@ const SingleMoment: React.FC<MomentProps> = ({
   reactions,
   shareCount = 0,
   isSaved = false,
+  mediaType,
+  video,
+  audio,
+  backgroundColor,
 }) => {
   const userId = useSelector(
     (state: RootState) => state.auth.userInfo?.user?._id
@@ -360,8 +380,31 @@ const SingleMoment: React.FC<MomentProps> = ({
           )}
         </div>
 
-        {/* Images */}
-        {imageUrls && imageUrls.length > 0 && (
+        {/* Media — precedence: video → audio → text/gradient → images */}
+        {video?.url ? (
+          <div className="mt-2 xs:mt-3 px-2 xs:px-3 sm:px-4 md:px-5">
+            <div className="relative" onDoubleClick={handleDoubleTapLike}>
+              <MomentVideoPlayer video={video} />
+              {showHeartBurst && (
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                  <Heart className="w-20 h-20 text-white fill-white drop-shadow-lg animate-ping" />
+                </div>
+              )}
+            </div>
+          </div>
+        ) : audio?.url ? (
+          <div className="mt-2 xs:mt-3 px-2 xs:px-3 sm:px-4 md:px-5">
+            <VoiceNotePlayer audio={audio} />
+          </div>
+        ) : mediaType === "text" ||
+          (backgroundColor && !(imageUrls && imageUrls.length > 0)) ? (
+          <div className="mt-2 xs:mt-3 px-2 xs:px-3 sm:px-4 md:px-5">
+            <GradientMomentCard
+              text={description}
+              backgroundColor={backgroundColor}
+            />
+          </div>
+        ) : imageUrls && imageUrls.length > 0 ? (
           <div className="mt-2 xs:mt-3">
             <div
               className="relative overflow-hidden bg-gray-100"
@@ -389,7 +432,7 @@ const SingleMoment: React.FC<MomentProps> = ({
               )}
             </div>
           </div>
-        )}
+        ) : null}
 
         {/* Engagement Stats */}
         {(currentLikeCount > 0 || commentCountNumber > 0) && (

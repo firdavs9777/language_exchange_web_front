@@ -20,6 +20,9 @@ import { Bounce, toast } from "react-toastify";
 import ImageLightbox from "./ImageLightbox";
 import ShareButton from "../linking/ShareButton";
 import MomentReactionRow from "./actions/MomentReactionRow";
+import MomentVideoPlayer from "./media/MomentVideoPlayer";
+import VoiceNotePlayer from "./media/VoiceNotePlayer";
+import GradientMomentCard from "./media/GradientMomentCard";
 
 // API hooks
 import {
@@ -74,6 +77,17 @@ interface MomentDetails {
   reactions?: Array<{ user: string | { _id: string }; emoji: string }>;
   shareCount?: number;
   isSaved?: boolean;
+  // Package 3 media variants
+  mediaType?: "image" | "video" | "audio" | "text";
+  video?: {
+    url: string;
+    thumbnail?: string;
+    duration?: number;
+    width?: number;
+    height?: number;
+  };
+  audio?: { url: string; duration: number; waveform: number[] };
+  backgroundColor?: string;
 }
 
 interface Comment {
@@ -705,8 +719,32 @@ const MomentDetail: React.FC = () => {
             <LocationInfo location={momentDetails.location} />
           </div>
 
-          {/* Images */}
-          {momentDetails.imageUrls.length > 0 && (
+          {/* Media — precedence: video → audio → text/gradient → images */}
+          {momentDetails.video?.url ? (
+            <div className="px-4 sm:px-6 pb-4">
+              <div className="relative" onDoubleClick={handleDoubleTapLike}>
+                <MomentVideoPlayer video={momentDetails.video} />
+                {showHeartBurst && (
+                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                    <Heart className="w-24 h-24 text-white fill-white drop-shadow-lg animate-ping" />
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : momentDetails.audio?.url ? (
+            <div className="px-4 sm:px-6 pb-4">
+              <VoiceNotePlayer audio={momentDetails.audio} />
+            </div>
+          ) : momentDetails.mediaType === "text" ||
+            (momentDetails.backgroundColor &&
+              !(momentDetails.imageUrls && momentDetails.imageUrls.length > 0)) ? (
+            <div className="px-4 sm:px-6 pb-4">
+              <GradientMomentCard
+                text={momentDetails.description}
+                backgroundColor={momentDetails.backgroundColor}
+              />
+            </div>
+          ) : momentDetails.imageUrls && momentDetails.imageUrls.length > 0 ? (
             <div className="px-4 sm:px-6 pb-4">
               <div className="relative" onDoubleClick={handleDoubleTapLike}>
                 <ImageCarousel
@@ -720,7 +758,7 @@ const MomentDetail: React.FC = () => {
                 )}
               </div>
             </div>
-          )}
+          ) : null}
 
           {/* Stats */}
           <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-gray-50/80 border-y border-gray-100/80">

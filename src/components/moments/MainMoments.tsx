@@ -746,6 +746,15 @@ const MainMoments: React.FC = () => {
                           imageUrls={moment.imageUrls}
                           createdAt={moment.createdAt}
                           refetch={refetch}
+                          reactions={moment.reactions}
+                          reactionCount={moment.reactionCount}
+                          shareCount={moment.shareCount}
+                          isSaved={moment.isSaved}
+                          saveCount={moment.saveCount}
+                          mediaType={moment.mediaType}
+                          video={moment.video}
+                          audio={moment.audio}
+                          backgroundColor={moment.backgroundColor}
                         />
                       </div>
                     </div>
