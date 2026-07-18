@@ -597,6 +597,34 @@ const ChatContent: React.FC<ChatContentProps> = ({
     }, 2000);
   }, [selectedUser, socket, emit]);
 
+  // ========== Optimistic-message helpers (shared by send paths) ==========
+  const makeOptimisticMessage = (text: string, extra?: Partial<Message>): Message => ({
+    _id: `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    message: text,
+    sender: { _id: userId, name: currentUserName || "" },
+    receiver: selectedUser,
+    createdAt: new Date().toISOString(),
+    isOptimistic: true,
+    status: "sending",
+    ...extra,
+  });
+
+  const finalizeOptimistic = (tempId: string, msgData: any) => {
+    setMessages((prev) =>
+      prev.map((m) =>
+        m._id === tempId ? { ...msgData, status: "delivered", isOptimistic: false } : m
+      )
+    );
+  };
+
+  const markOptimisticError = (tempId: string) => {
+    setMessages((prev) =>
+      prev.map((m) =>
+        m._id === tempId ? { ...m, status: "error", isOptimistic: false } : m
+      )
+    );
+  };
+
   // ========== Send Text Message ==========
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -611,21 +639,14 @@ const ChatContent: React.FC<ChatContentProps> = ({
     if (replyingTo && newMessage.trim() && !isSending) {
       const messageToSend = newMessage.trim();
       const replyTarget = replyingTo;
-      const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-      const optimisticMessage: Message = {
-        _id: tempId,
-        message: messageToSend,
-        sender: { _id: userId, name: currentUserName || "" },
-        receiver: selectedUser,
-        createdAt: new Date().toISOString(),
-        isOptimistic: true,
-        status: "sending",
+      const optimisticMessage = makeOptimisticMessage(messageToSend, {
         replyTo: {
           _id: replyTarget._id,
           message: replyTarget.message,
           sender: { _id: replyTarget.sender._id, name: replyTarget.sender.name },
         },
-      };
+      });
+      const tempId = optimisticMessage._id;
       setMessages((prev) => [...prev, optimisticMessage]);
       setNewMessage("");
       setReplyingTo(null);
@@ -638,20 +659,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
           receiver: selectedUser,
         }).unwrap();
         const msgData = result.data || result;
-        setMessages((prev) =>
-          prev.map((m) =>
-            m._id === tempId
-              ? { ...msgData, status: "delivered", isOptimistic: false }
-              : m
-          )
-        );
+        finalizeOptimistic(tempId, msgData);
       } catch (err) {
         console.error("Reply send failed:", err);
-        setMessages((prev) =>
-          prev.map((m) =>
-            m._id === tempId ? { ...m, status: "error", isOptimistic: false } : m
-          )
-        );
+        markOptimisticError(tempId);
       } finally {
         setIsSending(false);
       }
@@ -662,16 +673,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
     const messageToSend = newMessage.trim();
 
-    const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    const optimisticMessage: Message = {
-      _id: tempId,
-      message: messageToSend,
-      sender: { _id: userId, name: currentUserName || "" },
-      receiver: selectedUser,
-      createdAt: new Date().toISOString(),
-      isOptimistic: true,
-      status: "sending",
-    };
+    const optimisticMessage = makeOptimisticMessage(messageToSend);
+    const tempId = optimisticMessage._id;
 
     setMessages((prev) => [...prev, optimisticMessage]);
     setNewMessage("");
@@ -1233,16 +1236,6 @@ const ChatContent: React.FC<ChatContentProps> = ({
     }
   };
 
-  const handleDeleteMessage = useCallback((messageId: string) => {
-    if (!socket?.connected) return;
-
-    socket.emit("deleteMessage", { messageId }, (response: any) => {
-      if (response?.status === "success") {
-        setMessages((prev) => prev.filter((msg) => msg._id !== messageId));
-      }
-    });
-  }, [socket]);
-
   // ===== Message-action handlers (Task 6) =====
   const handleToggleReaction = useCallback(
     (msg: Message, emoji: string) => {
@@ -1250,8 +1243,14 @@ const ChatContent: React.FC<ChatContentProps> = ({
         const uid = typeof r.user === "string" ? r.user : (r.user as any)?._id;
         return uid === userId && r.emoji === emoji;
       });
-      if (mine) removeReaction({ messageId: msg._id, emoji });
-      else addReaction({ messageId: msg._id, emoji });
+      if (mine)
+        removeReaction({ messageId: msg._id, emoji })
+          .unwrap()
+          .catch((e) => console.error("Remove reaction failed:", e));
+      else
+        addReaction({ messageId: msg._id, emoji })
+          .unwrap()
+          .catch((e) => console.error("Add reaction failed:", e));
     },
     [userId, addReaction, removeReaction]
   );
@@ -1279,6 +1278,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const handleDeleteMessageAction = useCallback(
     (msg: Message) => {
       const forEveryone = canDeleteForEveryone(msg, userId || "");
+      const confirmed = window.confirm(
+        forEveryone ? "Delete this message for everyone?" : "Delete this message?"
+      );
+      if (!confirmed) return;
       deleteMessageApi({ messageId: msg._id, forEveryone })
         .unwrap()
         .then(() => setMessages((prev) => prev.filter((m) => m._id !== msg._id)))
@@ -1598,7 +1601,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
       <PinnedBar
         pinned={pinnedMessages}
         onJump={handleJumpToMessage}
-        onUnpin={(id) => pinMessage(id)}
+        onUnpin={(id) =>
+          pinMessage(id).unwrap().catch((e) => console.error("Unpin failed:", e))
+        }
       />
 
       {/* Chat Messages */}
@@ -1687,7 +1692,6 @@ const ChatContent: React.FC<ChatContentProps> = ({
                       style={{
                         borderRadius: getBubbleRadius(isSent, position),
                       }}
-                      onDoubleClick={isSent && !msg.isOptimistic ? () => handleDeleteMessage(msg._id) : undefined}
                     >
                       {isSticker ? (
                         <div className="sticker-message">{msg.message}</div>
@@ -1744,18 +1748,6 @@ const ChatContent: React.FC<ChatContentProps> = ({
                         className="msg-action-trigger"
                         aria-label={t("chatPage.moreOptions") || "More options"}
                         onClick={() => setActiveActionMsg(msg)}
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          border: "none",
-                          background: "transparent",
-                          color: "#94a3b8",
-                          cursor: "pointer",
-                          padding: 2,
-                          marginTop: 2,
-                          opacity: 0.6,
-                        }}
                       >
                         <MoreVertical size={14} />
                       </button>
@@ -2014,16 +2006,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
       {/* Message action menu (opened via hover trigger / right-click) */}
       {activeActionMsg && (
         <div
+          className="msg-action-overlay"
           onClick={() => setActiveActionMsg(null)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 1000,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "rgba(0,0,0,0.3)",
-          }}
         >
           <div onClick={(e) => e.stopPropagation()}>
             <MessageActionMenu
@@ -2034,8 +2018,16 @@ const ChatContent: React.FC<ChatContentProps> = ({
               onCopy={() =>
                 navigator.clipboard?.writeText(activeActionMsg.message || "")
               }
-              onPin={() => pinMessage(activeActionMsg._id)}
-              onBookmark={() => bookmarkMessage(activeActionMsg._id)}
+              onPin={() =>
+                pinMessage(activeActionMsg._id)
+                  .unwrap()
+                  .catch((e) => console.error("Pin failed:", e))
+              }
+              onBookmark={() =>
+                bookmarkMessage(activeActionMsg._id)
+                  .unwrap()
+                  .catch((e) => console.error("Bookmark failed:", e))
+              }
               onTts={() => handleTtsMessage(activeActionMsg)}
               onEdit={() => handleEditMessageAction(activeActionMsg)}
               onDelete={() => handleDeleteMessageAction(activeActionMsg)}
@@ -2050,7 +2042,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
       <ForwardDialog
         open={!!forwardMsg}
         onForward={(ids) => {
-          if (forwardMsg) forwardMessage({ messageId: forwardMsg._id, receivers: ids });
+          if (forwardMsg)
+            forwardMessage({ messageId: forwardMsg._id, receivers: ids })
+              .unwrap()
+              .catch((e) => console.error("Forward failed:", e));
           setForwardMsg(null);
         }}
         onClose={() => setForwardMsg(null)}
