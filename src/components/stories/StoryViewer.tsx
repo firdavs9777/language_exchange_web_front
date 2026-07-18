@@ -5,7 +5,6 @@ import {
   useGetUserStoriesQuery,
   useMarkIndividualStoryViewedMutation,
   useReactToStoryMutation,
-  useRemoveStoryReactionMutation,
   useReplyToStoryMutation,
   useVoteOnPollMutation,
   useDeleteIndividualStoryMutation,
@@ -74,7 +73,6 @@ const StoryViewer: React.FC = () => {
 
   const [markViewed] = useMarkIndividualStoryViewedMutation();
   const [reactToStory] = useReactToStoryMutation();
-  const [removeReaction] = useRemoveStoryReactionMutation();
   const [replyToStory] = useReplyToStoryMutation();
   const [voteOnPoll] = useVoteOnPollMutation();
   const [deleteStory] = useDeleteIndividualStoryMutation();
@@ -164,9 +162,9 @@ const StoryViewer: React.FC = () => {
     if (!currentStory) return;
 
     if (userReaction === emoji) {
-      // Remove reaction
+      // Remove reaction (the /react endpoint toggles the same emoji off)
       try {
-        await removeReaction(currentStory._id).unwrap();
+        await reactToStory({ storyId: currentStory._id, emoji }).unwrap();
         setUserReaction(null);
       } catch (error) {
         console.error("Failed to remove reaction:", error);

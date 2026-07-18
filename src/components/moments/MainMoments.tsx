@@ -22,6 +22,7 @@ import {
 import EmptyState from "./EmptyState";
 import SingleMoment from "./SingleMoment";
 import { MomentType } from "./types";
+import StoriesFeed from "../stories/StoriesFeed";
 
 interface User {
   _id: string;
@@ -760,6 +761,11 @@ const MainMoments: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
 
           <div className="relative">
+            {/* Stories ring strip */}
+            <div className="px-3 sm:px-4 lg:px-6 pt-3 sm:pt-4">
+              <StoriesFeed />
+            </div>
+
             {/* Create post area */}
             <div className="p-3 sm:p-4 lg:p-6">
               <CreatePostCard
