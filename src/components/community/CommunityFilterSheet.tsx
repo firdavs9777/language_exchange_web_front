@@ -99,9 +99,10 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
     countQuery,
     { skip: !open }
   );
-  // RTK wraps the fetch response under `.data`; the backend nests the count
-  // under `.data.count` -> { success, data: { count } }.
-  const matchCount: number | undefined = countResult?.data?.data?.count;
+  // `countResult` is destructured from the hook's `.data` (line above), so it
+  // is already the response body `{ success, data: { count } }` (this endpoint
+  // has no transformResponse). The count therefore lives at `.data.count`.
+  const matchCount: number | undefined = countResult?.data?.count;
 
   // --- Topics ----------------------------------------------------------------------
   const { data: topicsResult } = useGetTopicsQuery({}, { skip: !open });
