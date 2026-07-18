@@ -130,11 +130,11 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
     onChange({ ...value, [key]: val });
   };
 
-  const toggleTopic = (topicName: string) => {
+  const toggleTopic = (topicId: string) => {
     const current = value.topics || [];
-    const next = current.includes(topicName)
-      ? current.filter((topic) => topic !== topicName)
-      : [...current, topicName];
+    const next = current.includes(topicId)
+      ? current.filter((topic) => topic !== topicId)
+      : [...current, topicId];
     set("topics", next);
   };
 
@@ -349,12 +349,12 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
               </h3>
               <div className="flex flex-wrap gap-2">
                 {topicOptions.map((topic) => {
-                  const active = (value.topics || []).includes(topic.name);
+                  const active = (value.topics || []).includes(topic.id);
                   return (
                     <button
                       key={topic.id}
                       type="button"
-                      onClick={() => toggleTopic(topic.name)}
+                      onClick={() => toggleTopic(topic.id)}
                       className={`px-3 py-2 rounded-full text-sm font-medium transition-all ${
                         active
                           ? "bg-teal-500 text-white"

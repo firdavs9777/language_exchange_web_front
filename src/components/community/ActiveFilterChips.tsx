@@ -8,6 +8,8 @@ export interface ActiveFilterChipsProps {
   /** `topicValue` is passed when removing a single entry from `topics[]`. */
   onRemove: (key: keyof CommunityFilters, topicValue?: string) => void;
   onClear: () => void;
+  /** Optional map of topic ids to display names (for label rendering). */
+  topicLabels?: Record<string, string>;
 }
 
 interface Chip {
@@ -16,7 +18,7 @@ interface Chip {
   label: string;
 }
 
-function buildChips(value: CommunityFilters): Chip[] {
+function buildChips(value: CommunityFilters, topicLabels?: Record<string, string>): Chip[] {
   const chips: Chip[] = [];
 
   const minAge = value.minAge ?? DEFAULT_FILTERS.minAge;
@@ -43,7 +45,8 @@ function buildChips(value: CommunityFilters): Chip[] {
     chips.push({ key: "languageLevel", label: `Level: ${value.languageLevel}` });
   }
   (value.topics || []).forEach((topic) => {
-    chips.push({ key: "topics", topicValue: topic, label: `Topic: ${topic}` });
+    const displayLabel = topicLabels?.[topic] ?? topic;
+    chips.push({ key: "topics", topicValue: topic, label: `Topic: ${displayLabel}` });
   });
   if (value.topicsAtLeast) {
     chips.push({ key: "topicsAtLeast", label: `Shared topics ≥ ${value.topicsAtLeast}` });
@@ -61,8 +64,8 @@ function buildChips(value: CommunityFilters): Chip[] {
   return chips;
 }
 
-const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({ value, onRemove, onClear }) => {
-  const chips = buildChips(value);
+const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({ value, onRemove, onClear, topicLabels }) => {
+  const chips = buildChips(value, topicLabels);
 
   if (chips.length === 0) return null;
 
