@@ -1,3 +1,1 @@
-# Replace pub-0000000000000000 with your AdSense publisher ID (the digits after ca-pub-).
-# This file must be served at https://<your-domain>/ads.txt for AdSense to authorize inventory.
-google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+google.com, pub-5669092242437690, DIRECT, f08c47fec0942fa0
