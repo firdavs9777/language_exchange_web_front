@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { useTranslation } from 'react-i18next';
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
 import {
   useCreateMomentMutation,
@@ -77,6 +77,7 @@ interface AudioNote {
 
 const CreateMoment: React.FC = () => {
   const navigate = useNavigate();
+  const routerLocation = useLocation();
   const [createMoment] = useCreateMomentMutation();
   const [uploadMomentPhotos] = useUploadMomentPhotosMutation();
   const [uploadMomentVideo] = useUploadMomentVideoMutation();
@@ -120,6 +121,12 @@ const CreateMoment: React.FC = () => {
   const userInfo = useSelector((state: any) => state.auth.userInfo?.user);
   const user = userInfo?._id;
 
+  // Prompt-of-the-day handoff: MainMoments navigates here with router state
+  // ({ promptText, promptId }) when the user taps "Answer" on a prompt.
+  const promptIdRef = useRef<string | undefined>(
+    (routerLocation.state as { promptId?: string } | null)?.promptId
+  );
+
   // Generate language options using ISO6391
   const languageOptions = ISO6391.getAllCodes().map((code) => ({
     value: code,
@@ -150,6 +157,23 @@ const CreateMoment: React.FC = () => {
   useEffect(() => {
     setIsButtonEnabled(description.trim() !== "");
   }, [description]);
+
+  // Prefill the composer when arriving from "Prompt of the Day → Answer".
+  // Only prefill if the description is still empty so we never clobber
+  // anything the user has already typed.
+  useEffect(() => {
+    const state = routerLocation.state as
+      | { promptText?: string; promptId?: string }
+      | null
+      | undefined;
+    if (state?.promptId) {
+      promptIdRef.current = state.promptId;
+    }
+    if (state?.promptText && description.trim() === "") {
+      setDescription(state.promptText);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [routerLocation.state]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -244,6 +268,7 @@ const CreateMoment: React.FC = () => {
         payload.mediaType = "text";
         if (backgroundColor) payload.backgroundColor = backgroundColor;
       }
+      if (promptIdRef.current) payload.promptId = promptIdRef.current;
 
       const response = await createMoment(payload).unwrap();
       const newMoment = response as Moment;
