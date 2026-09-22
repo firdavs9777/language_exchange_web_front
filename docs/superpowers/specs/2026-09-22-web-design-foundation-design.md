@@ -99,7 +99,7 @@ constantly, and it does not degrade gracefully — it resolves to a **different 
 | Estonian | `es` | `et` | 🇪🇸 — **Spain** | 🇪🇪 |
 | Frisian | `fr` | `fy` | 🇫🇷 — **France** | 🇳🇱 |
 | Esperanto | `es` | `eo` | 🇪🇸 — **Spain** | 🌐 |
-| Chinese (Traditional) | `ch` | `zh` | 🌐 | 🇨🇳 |
+| Chinese (Traditional) | `ch` | `zh` | 🌐 | 🇹🇼 — see §3.2.2 |
 | Persian | `pe` | `fa` | 🌐 | 🇮🇷 |
 | Filipino | `fi` | `tl` — and `fi` **is Finnish** | 🌐 | 🇵🇭 |
 
@@ -248,12 +248,26 @@ Esperanto and the sign languages have no country and carry 🌐 or 🤟. Writing
 by hand would mean re-deciding all of that, differently, in a second place.
 
 One transform is required: **16 of the seed codes are variant-level** (`zh-CN`, `pt-BR`,
-`ar-EG`), while `NAME_TO_ISO` emits base codes. Collapse each to its base and designate one
-flag for that base — `zh-CN`/`zh-HK`/`zh-TW` → `zh` → 🇨🇳, `pt`/`pt-BR` → `pt` → 🇵🇹 — using
-the catalog's first occurrence, which puts canonical entries first. That designation is the
-only real decision in the task, and it is ~8 of them, not 115.
+`ar-EG`), while `NAME_TO_ISO` emits base codes.
 
-Anything still unresolved returns 🌐.
+**Do not collapse blindly to first-occurrence.** The catalog holds
+`zh-CN` → 🇨🇳, `zh-TW` → 🇹🇼 and `zh-HK` → 🇭🇰 as three separate entries. A naive
+base-code collapse takes the first and renders **🇨🇳 for every Traditional Chinese and
+Cantonese speaker** — flattening Taiwan and Hong Kong into the PRC flag on a product whose
+Chinese-speaking user base is a large share of the whole. That is not a rounding error; it
+is the kind of change users open support tickets about.
+
+So `languageFlag` resolves in two steps:
+
+1. Match the **full, unstripped** name against the seed catalog's `name` field first —
+   `'Chinese (Traditional)'` → `zh-TW` → 🇹🇼, `'Cantonese'` → `zh-HK` → 🇭🇰,
+   `'Portuguese (Brazil)'` → `pt-BR` → 🇧🇷.
+2. Only then strip the variant and resolve the base code through `NAME_TO_ISO`.
+
+This makes `displayCode` and `languageFlag` deliberately asymmetric, and correctly so: the
+pill's *label* names the language (`ZH` either way, per §3.2.1), while the flag names the
+specific variant the user actually chose. Remaining bases where no variant applies take
+their sole catalog entry; anything still unresolved returns 🌐.
 
 This is the §2.4 fix. A wrong flag is a wrong *picture*, and unlike the pill's label it has
 no parity argument attached: the app resolves its flags by base ISO code
@@ -505,8 +519,10 @@ beside their tests, matching `MemberCard.test.tsx` and `parts/*.test.tsx`.
   (the collisions), and `'Persian'` returns 🇮🇷 rather than 🌐 (the widened table from
   §3.2.2). `'Esperanto'` returns 🌐 — correct, and distinct from the 🇪🇸 it shows today.
   A genuinely unknown language still returns `🌐`.
-- Unit: a variant seed code collapses to its base — `languageFlag('Chinese (Traditional)')`
-  returns 🇨🇳 via `zh`, exercising the §3.2.2 transform rather than assuming it.
+- Unit: variant fidelity, the §3.2.2 guard — `languageFlag('Chinese (Traditional)')`
+  returns 🇹🇼 and **not** 🇨🇳, `'Cantonese'` returns 🇭🇰, `'Portuguese (Brazil)'` returns
+  🇧🇷. A naive base-code collapse passes none of these, which is the point of asserting
+  them.
   Asserting `'Persian'` "resolves via `fa` not `pe`" would prove nothing through the
   public API — both codes were absent from the old ten-key table and both rendered 🌐.
 - Unit: `displayCode('Filipino') === 'TL'`, exercising the `fil → tl` branch of
