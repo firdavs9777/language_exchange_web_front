@@ -57,3 +57,30 @@ it("applies the requested size", () => {
   render(<Avatar name="Yeonwoo" size={72} />);
   expect(screen.getByTestId("avatar")).toHaveStyle({ width: "72px", height: "72px" });
 });
+
+it("gives the initials fallback an accessible name", () => {
+  render(<Avatar name="Yeonwoo" />);
+  const el = screen.getByTestId("avatar-initials");
+  expect(el).toHaveAttribute("role", "img");
+  expect(el).toHaveAttribute("aria-label", "Yeonwoo");
+});
+
+it("falls back to a sensible accessible name when there is no name", () => {
+  render(<Avatar name="" />);
+  const el = screen.getByTestId("avatar-initials");
+  expect(el).toHaveAttribute("role", "img");
+  expect(el.getAttribute("aria-label")).toBeTruthy();
+});
+
+it("gives the online dot an img role so its aria-label is announced", () => {
+  render(<Avatar name="Yeonwoo" isOnline />);
+  expect(screen.getByTestId("avatar-online-dot")).toHaveAttribute("role", "img");
+});
+
+// Dark mode swaps the story ring's inner surface rather than the ring itself.
+it("carries a dark-mode surface variant on the story ring", () => {
+  render(<Avatar name="Yeonwoo" hasStory />);
+  expect(screen.getByTestId("avatar-story-ring").firstChild).toHaveClass(
+    "dark:bg-cardbg-dark"
+  );
+});

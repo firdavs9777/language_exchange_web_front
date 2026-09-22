@@ -88,3 +88,17 @@ it("two instances for one user stay in agreement", async () => {
     expect(el).toHaveTextContent("Following");
   });
 });
+
+it("ships a dark-mode text variant in both follow states", () => {
+  const { rerender } = render(
+    <FollowButton userId="me" targetUserId="u1" isFollowing={false} />
+  );
+  expect(screen.getByTestId("follow-button").className).toContain(
+    "dark:text-brand-light"
+  );
+
+  rerender(<FollowButton userId="me" targetUserId="u1" isFollowing={true} />);
+  expect(screen.getByTestId("follow-button").className).toContain(
+    "dark:text-gray-300"
+  );
+});

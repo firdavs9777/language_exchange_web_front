@@ -30,3 +30,11 @@ it("uses arbitrary opacity modifiers, never bare steps", () => {
   rerender(<Badge tone="banana">VIP</Badge>);
   expect(screen.getByTestId("badge").className).not.toMatch(/bg-banana\/\d+(\s|$)/);
 });
+
+it("ships a dark-mode text variant for both tones", () => {
+  const { rerender } = render(<Badge>New</Badge>);
+  expect(screen.getByTestId("badge").className).toContain("dark:text-brand-light");
+
+  rerender(<Badge tone="banana">VIP</Badge>);
+  expect(screen.getByTestId("badge").className).toContain("dark:text-banana-light");
+});

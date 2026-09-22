@@ -53,3 +53,10 @@ it("still renders when a code cannot be resolved", () => {
   expect(screen.getByTestId("language-pill")).toBeInTheDocument();
   expect(screen.getByTestId("language-pill-learning")).toHaveTextContent("EN");
 });
+
+it("ships a dark-mode background variant", () => {
+  render(<LanguageExchangePill nativeLanguage="Korean" learningLanguage="English" />);
+  expect(screen.getByTestId("language-pill").className).toContain(
+    "dark:bg-brand/[0.18]"
+  );
+});
