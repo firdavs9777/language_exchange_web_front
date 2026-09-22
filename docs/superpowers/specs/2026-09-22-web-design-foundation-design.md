@@ -40,9 +40,10 @@ Each sub-project gets its own spec, plan and implementation pass.
 ### 2.1 There are no tokens
 
 `tailwind.config.js` is `theme: { extend: {} }`. Every brand value is a literal at the
-call site. `#00BFA5` is hardcoded in five places; elsewhere the same teal is spelled
-`teal-500`, and `MainMoments.tsx` reaches for `from-blue-500 to-purple-600` — a palette
-the app does not have.
+call site: `#00BFA5` appears **145 times across 30 files**, heaviest in `HomeMain.scss`,
+`Register.scss` and the chat CSS. Elsewhere the same intent is spelled `teal-500` — which
+is Tailwind's `#14b8a6`, a different colour — and `MainMoments.tsx` reaches for
+`from-blue-500 to-purple-600`, a palette the app does not have at all.
 
 The elevation is off by more than the colour is. The app's `AppShadows.sm` is
 `0 1px 4px rgba(0,0,0,.04)`; the web reaches for Tailwind `shadow-lg`
@@ -53,7 +54,7 @@ related, and no amount of colour matching fixes it.
 ### 2.2 The avatar is written three times
 
 - `MemberCard.tsx` — story ring, native-language flag overlay, online dot
-- `ProfileHeader.tsx` — ring, online dot, initials fallback
+- `ProfileHeader.tsx:20` — ring, online dot, initials fallback
 - `SingleMoment.tsx:318` — a bare `<img>` with a hover border
 
 Three implementations, three behaviours, three sets of bugs. Only one has an initials
@@ -62,104 +63,170 @@ fallback, so a user with no photo renders as a broken image in the moments feed.
 ### 2.3 The language pair is drawn three ways, and none of them show proficiency
 
 `MemberCard` shows two flag emoji and an arrow. `LanguagesCard` shows two chunky bordered
-boxes plus a purple `Award` chip. `MomentCardHeader` shows nothing at all. On a language
-exchange product the exchange pair is the single most important fact about a person, and
-the web currently makes three different weak claims about it.
+boxes plus a purple `Award` chip. The moment card header (`SingleMoment.tsx`) shows
+nothing at all. On a language exchange product the exchange pair is the single most
+important fact about a person, and the web currently makes three different weak claims
+about it.
 
-### 2.4 The language-code map is wrong for most languages
+### 2.4 Four language-code maps, and the fallback picks the wrong language
 
-`LANGUAGE_CODES` lives in `src/components/community/type.ts` — so Moments and Profile
-cannot reach it without importing across feature folders — and it holds **ten** entries.
-Everything else falls through `MemberCard.tsx:41`:
+The code/flag mapping exists in four places:
+
+| Location | Entries | Consumers |
+|---|---|---|
+| `components/community/type.ts` | 10 | `MemberCard`, `community/utils.ts` |
+| `tandem/LanguageFlagChip.tsx:34` | own `codes` object | `TandemMemberCard`, `HighlightedProfilesCarousel` |
+| `community/utils.ts` | re-export | — |
+| (nothing in Moments or Profile) | — | they cannot reach any of the above without importing across feature folders |
+
+Two of those carry the same fallback (`MemberCard.tsx:41`, `LanguageFlagChip.tsx:34`):
 
 ```ts
 return LANGUAGE_CODES[language] || language.substring(0, 2).toLowerCase();
 ```
 
-The backend catalog (`seeds/languages.js`) holds ~140 languages, so that fallback runs
-constantly, and it is not a graceful degradation — it is wrong:
+The backend catalog (`seeds/languages.js`) holds ~137 languages, so that fallback runs
+constantly, and it does not degrade gracefully — it resolves to a **different language**:
 
 | Language | `substring(0,2)` | Correct (backend `utils/languageCodes.js`) |
 |---|---|---|
 | Persian | `pe` | `fa` |
 | Chinese (Traditional) | `ch` | `zh` |
-| Filipino | `fi` | `tl` — and `fi` **is Finnish**, a different language |
+| Filipino | `fi` | `tl` — and `fi` **is Finnish** |
 
-A wrong code means a wrong flag today, and a wrong pill tomorrow.
+Today that produces a wrong flag. §3.2 fixes the flag path. It deliberately does **not**
+fix the pill's code path — see §3.2.1.
 
 ### 2.5 Two design systems are layered on top of each other
 
-`src/index.tsx:7` loads a customised `bootstrap.custom.css` globally, `App.tsx` wraps the
-app in a react-bootstrap `Container`, and 20 files import react-bootstrap components —
-including `CommunityDetail.tsx` and four Profile subscreens. Bootstrap is not accidental
-here; it is the web's original design system, and the app's tokens live in neither it nor
-Tailwind.
+Bootstrap arrives two different ways, and they need separating because they have different
+conversion costs:
+
+- **Global CSS.** `src/index.tsx:7` loads a customised `bootstrap.custom.css`, so
+  `d-flex`, `btn btn-*` and `text-muted` work anywhere. `CommunityDetail.tsx` is styled
+  entirely this way and imports **no** react-bootstrap component.
+- **The component library.** 20 files import from `react-bootstrap` — ten of them in
+  Profile (`UserFollowing`, `UserFollowers`, `UserVisitors`, `InfoRow`, `PublicProfile`,
+  `EditMyMoment`, `EditModal`, `LanguageView`, `ImageViewer/ImageModal`,
+  `ImageUploader/ImageUploader`), the rest in `App.tsx`, shared chrome (`Loader`,
+  `Message`, `FormContainer`, `ModalGlobal`), `navbar/TermsOfUse`, Chat and Stories.
+
+Bootstrap is not accidental here; it is the web's original design system, and the app's
+tokens live in neither it nor Tailwind.
 
 ---
 
 ## 3. Design
 
-### 3.1 Tokens
+### 3.1 Tokens — additive, never overriding
 
-`tailwind.config.js` gains a `theme.extend` ported verbatim from
-`lib/core/theme/app_theme.dart`. Values, not approximations:
+`tailwind.config.js` gains a `theme.extend` carrying the app's values from
+`lib/core/theme/app_theme.dart` under **brand-specific names**. It overrides none of
+Tailwind's defaults.
 
 ```js
 colors: {
-  teal:   { DEFAULT: '#00BFA5', light: '#5DF2D6', dark: '#008E76' },  // AppColors.primary
+  brand:  { DEFAULT: '#00BFA5', light: '#5DF2D6', dark: '#008E76' },  // AppColors.primary
   banana: { DEFAULT: '#FFD54F', light: '#FFFF81', dark: '#C9A415' },  // AppColors.secondary
-  surface:    { DEFAULT: '#FFFFFF', dark: '#1E1E1E' },
-  canvas:     { DEFAULT: '#F8F9FA', dark: '#121212' },
-  cardbg:     { DEFAULT: '#FFFFFF', dark: '#2C2C2C' },
+  surface: { DEFAULT: '#FFFFFF', dark: '#1E1E1E' },
+  canvas:  { DEFAULT: '#F8F9FA', dark: '#121212' },
+  cardbg:  { DEFAULT: '#FFFFFF', dark: '#2C2C2C' },
 },
-borderRadius: { md: '12px', lg: '16px', xl: '20px', xxl: '24px' },   // AppRadius
+borderRadius: { card: '20px', chip: '12px', sheet: '24px' },   // AppRadius.xl / md / xxl
 boxShadow: {
-  sm: '0 1px 4px rgba(0,0,0,0.04)',    // AppShadows.sm
-  md: '0 2px 8px rgba(0,0,0,0.06)',    // AppShadows.md
-  lg: '0 4px 16px rgba(0,0,0,0.08)',   // AppShadows.lg
-  teal: '0 6px 16px rgba(0,191,165,0.30)',  // AppShadows.colored
+  card:  '0 1px 4px rgba(0,0,0,0.04)',   // AppShadows.sm
+  raised:'0 2px 8px rgba(0,0,0,0.06)',   // AppShadows.md
+  float: '0 4px 16px rgba(0,0,0,0.08)',  // AppShadows.lg
+  brand: '0 6px 16px rgba(0,191,165,0.30)',  // AppShadows.colored
 },
 ```
 
-Tailwind's own `shadow-sm/md/lg` are **overridden**, not supplemented. An additive
-`shadow-app-sm` would leave `shadow-lg` meaning the wrong thing at 200 existing call
-sites, and the goal is that reaching for the default produces the app's elevation.
+**Why additive rather than overriding Tailwind's scales.** An earlier draft of this spec
+overrode `teal`, `borderRadius` and `boxShadow` so that "reaching for the default produces
+the app's elevation." Measured against the codebase, each of those would have detonated on
+merge:
 
-`gray-50 … gray-900` are already Material's ramp in both systems and are left alone.
-The purple `accent` (`#7C4DFF`) is ported but unused here; it exists so a later surface
-that needs it does not invent a third purple.
+| Override | Collateral |
+|---|---|
+| `colors.teal` | Tailwind **replaces** the scale rather than merging, so all **327** `teal-50…teal-900` usages across 49 files stop emitting CSS — silently, with no build error |
+| `borderRadius.lg/xl` | `rounded-xl` 12px → 20px at **127** call sites, `rounded-lg` 8px → 16px at **105** |
+| `boxShadow.sm/md/lg` | **102** call sites re-weighted at once, including Chat and Learning, which no sub-project in this sequence touches |
 
-**Not tokenised:** `AppSpacing`. Tailwind's 4px scale already matches it
-(`AppSpacing.md = 12` = `p-3`), and a parallel spacing vocabulary would be a second way to
-say the same thing.
+Brand-named tokens cost one thing — legacy call sites keep their current look until their
+sub-project converts them — and that is precisely the trade already approved for Bootstrap
+in §4. It also buys a property worth having: whether a given element is app-matched
+becomes answerable by reading its class name.
+
+**`gray` is left alone, and that is a knowing divergence.** Tailwind v3's `gray` is Cool
+Gray (`gray-500` = `#6b7280`) while the app uses Material grey (`#9E9E9E`) — different in
+both hue and lightness. Greys carry nearly all text and border colour on the site, so
+repainting them is a larger change than everything else in this spec combined, with no
+primitive depending on it. Recorded as an open item, not silently assumed equivalent.
+
+**Not tokenised:** `AppSpacing` — Tailwind's 4px scale already matches it
+(`AppSpacing.md = 12` = `p-3`). `AppColors.accent` (`#7C4DFF`) — no consumer yet. Tailwind's
+`shadow-xl`/`shadow-2xl` keep their defaults, since nothing in this spec uses them.
+
+**One porting note:** Flutter's `blurRadius` is a Gaussian sigma and CSS's blur radius is
+not the same quantity; these are transcribed 1:1. Applied consistently across all four
+shadows, so they stay in proportion to each other. This is deliberate — do not "correct" it
+without re-checking all four together.
 
 ### 3.2 `src/utils/languages.ts`
 
-`LANGUAGE_CODES`, `LANGUAGE_FLAGS` and the code/flag helpers move out of
-`components/community/type.ts` into `src/utils/languages.ts`, and the map is filled in
-from the backend's own `utils/languageCodes.js` `NAME_TO_ISO` — the source of truth both
-the API and the app already agree on. Lookups are case-insensitive, and variants are
-stripped before lookup so `Chinese (Traditional)` resolves to `zh`.
+All four maps in §2.4 collapse into one module, which exposes two functions along the two
+paths the app itself keeps separate:
 
 ```ts
-displayCode(language: string): string   // 'Korean' -> 'KO', 'Chinese (Traditional)' -> 'ZH'
-languageFlag(language: string): string  // unchanged behaviour, correct input
+displayCode(language: string): string   // the pill's label
+languageFlag(language: string): string  // the avatar's corner flag
 ```
 
-`displayCode` returns **uppercase ISO 639-1**, matching `LanguageCodes.displayCode` in the
-app. The unknown case returns `''` rather than a guessed two-letter slice — §2.4 is a
-correctness bug, and the fix is to stop guessing, not to guess better.
+#### 3.2.1 `displayCode` mirrors the app verbatim
 
-`components/community/type.ts` re-exports from the new module for one sub-project, so
-Community's conversion is a single import change rather than a prerequisite.
+Ported from `LanguageCodes.displayCode` (`lib/utils/language_codes.dart:58`), algorithm
+and data both:
+
+1. `stripVariant` — drop a trailing regional parenthetical (`Chinese (Traditional)` → `Chinese`)
+2. lowercase and trim; empty → `''`
+3. **substring** match against the app's 19-name map, first hit wins:
+   `japanese → JP`, `english → EN`, `korean → KO`, `chinese → ZH`, `spanish → ES`,
+   `french → FR`, `german → DE`, `italian → IT`, `portuguese → PT`, `russian → RU`,
+   `arabic → AR`, `hindi → HI`, `tajik → TG`, `vietnamese → VI`, `thai → TH`,
+   `indonesian → ID`, `turkish → TR`, `filipino → TL`, `cantonese → YUE`
+4. otherwise base ISO 639-1, uppercased
+5. otherwise the first two letters, uppercased
+
+**This reproduces two of the app's own quirks on purpose.** `japanese → JP` is a country
+code, not ISO `ja`, and `cantonese → YUE` is three letters — both contradict the comment
+directly above them in the app claiming "ISO-style, not country-style". And step 5 means
+any language outside the 19 falls through to a slice, so **Persian renders `PE`**.
+
+Parity was chosen over correctness here deliberately. The pill exists so the two products
+say the same thing about the same person; a web pill reading `JA` beside an app pill
+reading `JP` would defeat its only purpose. When the app fixes its map, the web follows.
+Both quirks are logged in §6.5 for the app team.
+
+#### 3.2.2 `languageFlag` uses the correct map
+
+The flag resolves through the backend's own `NAME_TO_ISO`
+(`utils/languageCodes.js`) — case-insensitive, variant stripped — returning `🌐` when the
+language cannot be resolved. This is the §2.4 fix: a wrong flag is a wrong *picture*, and
+unlike the pill's label it has no parity argument attached, since the app resolves flags by
+base ISO code too rather than through `displayCode`.
+
+**Migration.** `components/community/type.ts` and `tandem/LanguageFlagChip.tsx` both
+re-export from the new module rather than keeping their own maps, so `MemberCard`,
+`TandemMemberCard` and `HighlightedProfilesCarousel` are corrected by this spec without
+being rewritten by it. No other behaviour in those files changes.
 
 ### 3.3 `LanguageExchangePill`
 
-The centrepiece. `KO ⇄ EN` in a teal pill, with proficiency dots on the learning side.
+The centrepiece. `KO ⇄ EN` in a brand-teal pill, with proficiency dots on the learning side.
 
 ```
 ╭──────────────────────╮
-│  KO  ⇄  EN  ● ● ○    │   teal/9% fill, radius round, teal-dark text
+│  KO  ⇄  EN  ● ● ○    │   brand/9% fill, rounded-full, brand-dark text
 ╰──────────────────────╯
 ```
 
@@ -180,12 +247,14 @@ That last rule is the whole point, and §6.2 explains why it is the common case 
 edge case. Absent is not zero: three empty dots read as "beginner", a claim the data has
 not made.
 
-**ISO codes, not country flags.** The app rejected country flags deliberately — a Korean
-speaker in Sydney is still `KO`, and English maps onto no single country. Flags remain on
-the avatar corner, where they describe the person rather than the language.
+**Codes, not country flags.** Flags remain on the avatar corner, where they describe the
+person rather than the language.
 
 No dots on the native side. They would be three-of-three for everybody, varying for
 nobody, and in the app they cost ~20px that overflowed the moment header at 320pt.
+
+A language whose code resolves to `''` renders the pill with that side's code omitted —
+never a blank or collapsed component.
 
 ### 3.4 `Avatar`
 
@@ -196,39 +265,43 @@ interface AvatarProps {
   src?: string;
   name: string;           // drives the initials fallback
   size?: 40 | 54 | 72 | 80;
-  hasStory?: boolean;     // conic teal→banana ring
+  hasStory?: boolean;     // conic brand→banana ring
   isOnline?: boolean;     // green dot, bottom-right
   flag?: string;          // native-language flag, bottom-left
 }
 ```
 
-`hasStory` is an **explicit prop with no default truthiness**, because of §6.3: the
-community list payload never carries the field, so Community passes `false` and Moments
-passes the stamped value. A primitive that read `user.hasActiveStory` itself would carry
-the current bug into all four surfaces.
+`hasStory` is an **explicit prop** rather than something the primitive derives from a user
+object, because the three current call sites get the value from three different places:
+Community and Profile from `user.hasActiveStory` stamped by `controllers/users.js`
+(§6.3), Moments from the same field stamped by `controllers/moments.js`. A primitive that
+reached into a user shape itself would have to know which of those it was looking at.
+
+**Every current caller passes a real value** — `hasActiveStory` is live on all three
+payloads. Nothing here turns an existing ring off.
 
 Initials fallback is on the primitive, not the caller — it is the behaviour two of the
 three current implementations forgot.
 
 ### 3.5 `SurfaceCard`
 
-`rounded-xl bg-surface shadow-sm dark:bg-cardbg-dark dark:shadow-none`, with a `padding`
-prop and an optional `interactive` flag adding hover elevation and an active press scale.
-Deliberately the same treatment the app gives both the community partner row and the
-moment card, so the two main browse surfaces stop looking like different products.
+`rounded-card bg-surface shadow-card dark:bg-cardbg-dark dark:shadow-none`, with a
+`padding` prop and an optional `interactive` flag adding hover elevation and an active
+press scale. Deliberately the same treatment the app gives both the community partner row
+and the moment card, so the two main browse surfaces stop looking like different products.
 
 Dark mode drops the shadow rather than darkening it, matching
-`boxShadow: context.isDarkMode ? [] : AppShadows.sm` in `community_card.dart`.
+`boxShadow: context.isDarkMode ? [] : AppShadows.sm` in `community_card.dart:90`.
 
 ### 3.6 `Badge`
 
-`<Badge tone="banana">VIP</Badge>` / `<Badge tone="teal">New</Badge>` — a round chip,
-tonal fill at the app's alphas (banana 28%, teal 12%), dark-tone text. Replaces the
+`<Badge tone="banana">VIP</Badge>` / `<Badge tone="brand">New</Badge>` — a round chip,
+tonal fill at the app's alphas (banana 28%, brand 12%), dark-tone text. Replaces the
 gradient-filled badges currently inlined in `MemberCard`.
 
 ### 3.7 `FollowButton`
 
-An outlined teal pill that becomes an outlined neutral `Following` once followed, owning
+An outlined brand pill that becomes an outlined neutral `Following` once followed, owning
 the `useFollowUserMutation` / `useUnFollowUserMutation` pair, its pending state, and its
 cache invalidation.
 
@@ -242,15 +315,29 @@ shape.
 
 ## 4. Bootstrap is frozen, not removed
 
-Bootstrap stays loaded and the 20 files that use it keep working. The rule this spec
-establishes is: **no new Bootstrap markup.** Each later sub-project converts the Bootstrap
-files it touches — Community converts `CommunityDetail.tsx`, Profile converts
-`UserFollowers`/`UserFollowing`/`UserVisitors`/`MyMoments` — and the dependency, the
-global CSS import and the `App.tsx` `Container` are deleted by whichever sub-project
-removes the last usage.
+Bootstrap stays loaded and all 20 react-bootstrap files keep working. The rule this spec
+establishes is: **no new Bootstrap markup, global-CSS or component.**
 
-Removing it here would mean rewriting ~2,600 lines of markup before a single pixel matched
-the app, with the tokens it was meant to validate still unproven.
+Conversion is owned per sub-project, using the corrected inventory from §2.5:
+
+- **Community** converts `CommunityDetail.tsx` off the global Bootstrap CSS classes. It
+  imports no react-bootstrap component, so this removes zero library usages.
+- **Profile** converts its ten react-bootstrap files.
+- **Notifications** introduces none.
+
+That leaves ten files owned by nobody in this sequence: `App.tsx`, the shared chrome
+(`Loader`, `Message` ×2, `FormContainer`, `ModalGlobal`), `navbar/TermsOfUse`,
+`chat/ChatContent`, `chat/UsersList` and `stories/MyStories`. An earlier draft said the
+dependency would be "deleted by whichever sub-project removes the last usage" — with these
+ten unowned, that trigger can never fire.
+
+**So the exit condition gets an explicit owner: a seventh sub-project, "retire Bootstrap",
+scheduled after Notifications.** Its scope is exactly those ten files plus the `index.tsx`
+imports, the `App.tsx` `Container`, and the four package removals. Naming it now keeps
+"frozen" from quietly meaning "permanent".
+
+Removing Bootstrap inside *this* spec would mean rewriting ~2,600 lines of markup before a
+single pixel matched the app, with the tokens it was meant to validate still unproven.
 
 ---
 
@@ -286,12 +373,23 @@ user who never set a level carries `null`, which makes §3.3's "render no dots" 
 **common** path. Rendering three empty dots instead would mislabel most of the user base
 as beginners.
 
-### 6.3 `hasActiveStory` is not on the community payload
+### 6.3 `hasActiveStory` is live on every payload the primitives touch
 
-It is stamped in exactly one place — `controllers/moments.js:33` and `:45`, onto *moment
-authors*, one lookup per page. The users controller never sets it, so
-`communitySlice.ts:53` reads `undefined` and `MemberCard`'s story-ring branch has never
-rendered. Hence the explicit prop in §3.4.
+Stamped in three places, all via the privacy-aware batched helper
+`lib/activeStoryFlags.js` → `usersWithVisibleActiveStory`:
+
+- `controllers/users.js:390` — `getUsers`, the community list
+- `controllers/users.js:443` — `getUser`, the profile detail
+- `controllers/moments.js:33` / `:45` — moment authors, one lookup per feed page
+
+So `communitySlice.ts:53` reads a real boolean and `MemberCard`'s story ring is a
+**working feature**. The comment at `users.js:435` records why `getUser` stamps it too:
+the ring "appeared on a community card and then vanished when you opened that person's
+profile."
+
+This corrects an earlier draft of this spec, which claimed the field was absent from the
+community payload and instructed Community to pass `false` — that would have deleted a
+shipping feature.
 
 ### 6.4 `responseRate` does not exist
 
@@ -299,8 +397,18 @@ It appears nowhere in the backend — no controller, model, lib, service or rout
 app's `community_model.dart:256` parses `json['responseRate']`, which is therefore always
 `null`, so the app's own **`Replies fast` match tag can never fire in production.**
 
-Consequence for us: Community must not port that tag. It is recorded here rather than in
-the Community spec because it is a finding about the app, and the app team should be told.
+Consequence for us: Community must not port that tag.
+
+### 6.5 Findings to hand back to the app team
+
+Neither blocks this spec; both are recorded because they were found here and are invisible
+from inside the app.
+
+1. §6.4's dead `Replies fast` tag.
+2. `LanguageCodes.displayCode` returns `JP` for Japanese and `YUE` for Cantonese, both
+   contradicting the ISO-style rule stated in its own doc comment, and falls through to a
+   two-letter slice for any of the ~118 catalog languages outside its 19-name map
+   (Persian → `PE`, not `FA`). The web now mirrors this by §3.2.1.
 
 ---
 
@@ -309,12 +417,14 @@ the Community spec because it is a finding about the app, and the app team shoul
 `MatchTags` (only Community renders it — building it now would be designing an API with no
 consumer), the notification bell and unread badge (Notifications sub-project), shared empty
 states and loading skeletons, the app-download banner, VIP and AI Study redirect gating,
-and any change to routing, data fetching or the RTK Query slices beyond §3.7's use of the
-existing follow mutations.
+the `gray` ramp divergence (§3.1), the Bootstrap retirement itself (§4), and any change to
+routing, data fetching or the RTK Query slices beyond §3.7's use of the existing follow
+mutations.
 
 No existing surface is converted in this spec. `MemberCard`, `ProfileHeader`,
 `SingleMoment` and `LanguagesCard` keep their current markup until their own sub-project
-reaches them — otherwise "foundation" quietly becomes "rewrite Community".
+reaches them — the one exception being the §3.2 import swap, which changes their language
+*data source* without touching their layout.
 
 ---
 
@@ -323,19 +433,25 @@ reaches them — otherwise "foundation" quietly becomes "rewrite Community".
 Existing setup: `react-scripts test` (Jest) with `@testing-library/react`. Primitives live
 beside their tests, matching `MemberCard.test.tsx` and `parts/*.test.tsx`.
 
-- Unit: `displayCode` — `'Korean' → 'KO'`, `'Chinese (Traditional)' → 'ZH'`,
-  `'Persian' → 'FA'` (the §2.4 regression), case-insensitivity, and unknown → `''`.
+- Unit: `displayCode` parity with the app — `'Korean' → 'KO'`, `'Chinese (Traditional)' →
+  'ZH'`, **`'Japanese' → 'JP'`** and **`'Cantonese' → 'YUE'`** (the deliberate quirks of
+  §3.2.1, asserted so nobody "fixes" them into ISO), `'Persian' → 'PE'`,
+  case-insensitivity, and `'' → ''`.
+- Unit: `languageFlag` — `'Persian'` resolves via `fa` and **not** via `pe`; `'Filipino'`
+  does not resolve as Finnish; an unknown language returns `🌐`. This is the §2.4 guard.
 - Unit: the level→dots mapping, each CEFR band, plus `null`, `undefined`, `''` and an
   unrecognised string all yielding no dots.
 - Component: `LanguageExchangePill` renders both codes and the right dot count; **asserts
-  zero dot elements when the level is null** — the §6.2 guard.
+  zero dot elements when the level is null** — the §6.2 guard; renders without crashing
+  when one code resolves to `''`.
 - Component: `Avatar` renders initials when `src` is absent; renders the story ring only
   when `hasStory` is true; renders the online dot only when `isOnline` is true.
 - Component: `FollowButton` shows `Following` from cached state, and two instances bound
   to the same user agree after one is clicked — the stale-state regression named in §3.7.
 - Component: `Badge` and `SurfaceCard` render their tone/elevation classes.
-- Config: a test asserting `shadow-sm` resolves to the app's `0 1px 4px rgba(0,0,0,0.04)`,
-  so a future Tailwind upgrade cannot silently restore the default ramp.
+- Config: a test asserting the `teal-*` scale still resolves (`teal-500` → `#14b8a6`) and
+  that `rounded-xl` is still 12px — the guard against a future edit reintroducing the
+  override this spec rejected in §3.1.
 
 No snapshot tests. They would lock in markup that four sub-projects are about to consume
 and reshape.
@@ -344,19 +460,22 @@ and reshape.
 
 ## 9. Risks
 
-- **Overriding `shadow-sm/md/lg` changes ~200 existing call sites at once.** That is the
-  intent — but it lands everywhere on merge, including the Bootstrap-styled screens. The
-  change is flattening (shadows get softer), so the failure mode is "looks flatter than
-  before", not "looks broken". It should still be eyeballed on Chat and Learning, which
-  no sub-project in this sequence touches.
+- **Brand tokens create a visibly mixed period.** Until each surface converts, a
+  `shadow-card` row can sit beside a `shadow-lg` one on the same screen. This is the
+  accepted cost of not detonating 327 + 235 + 102 call sites at once, and it resolves
+  surface by surface. It does mean "the web looks inconsistent" is an expected
+  intermediate state, not a bug report.
+- **The pill deliberately ships two wrong codes.** `JP` and `YUE` are enshrined by §3.2.1
+  and pinned by a test. If the app corrects its map, the web's test fails by design and
+  must be updated in step — the failure is the notification mechanism.
 - **Two primitives land with a single consumer each.** `SurfaceCard` and `Badge` are used
   by Community first and only proven when Moments and Profile arrive. If either API is
   wrong, it is wrong in one place and cheap to change; both are deliberately thin.
-- **The language map is only as good as the backend's.** `NAME_TO_ISO` covers what prod
-  data actually holds, but a language present in `seeds/languages.js` and absent from the
-  map returns `''`. The pill must render the pair without a code rather than render
-  nothing — a missing code must not blank the whole component.
-- **Bootstrap and Tailwind both define `.container`.** Freezing Bootstrap means that
-  collision persists for now. It already exists today and this spec does not worsen it,
-  but the first sub-project to convert a Bootstrap file should confirm the
-  `App.tsx` `Container` still lays out correctly once tokens change the type scale.
+- **The §3.2 import swap touches live components.** `MemberCard`, `TandemMemberCard` and
+  `HighlightedProfilesCarousel` change language source without changing layout. Their
+  rendered flags *will* change for languages outside the old ten-entry map — that is the
+  fix, but it is the only user-visible change in an otherwise invisible spec, and should
+  be eyeballed on a profile in a less common language.
+- **`gray` stays Cool Gray.** Every text and border colour on the web remains slightly
+  bluer than the app's. Accepted and documented rather than assumed away; revisit once the
+  surfaces are converted and the difference can be judged side by side.
