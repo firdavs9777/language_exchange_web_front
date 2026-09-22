@@ -5,6 +5,12 @@
 // name-keyed, used by CommunityDetail) and tandem/LanguageFlagChip.tsx (a
 // fourth, thirteen entries where the others had ten). They had already drifted.
 
+import {
+  CATALOG_NAME_TO_FLAG,
+  NAME_TO_ISO,
+  CODE_TO_FLAG,
+} from "./languages.data";
+
 /** "Portuguese (Brazil)" -> "Portuguese". Names without a parenthetical pass through. */
 export function stripVariant(name: string): string {
   return name.replace(/\s*\([^)]*\)\s*$/, "").trim();
@@ -68,4 +74,36 @@ export function displayCode(language: string): string {
   if (iso) return iso.toUpperCase();
 
   return language.toUpperCase().slice(0, language.length > 2 ? 2 : language.length);
+}
+
+/**
+ * Flag for a language NAME (or a bare ISO code).
+ *
+ * Resolution order is behaviour, not preference:
+ *
+ *   1. the FULL, unstripped catalog name -- this is what keeps
+ *      "Chinese (Traditional)" on the Taiwanese flag and "Cantonese" on the
+ *      Hong Kong one. Collapsing them to base `zh` would render the PRC flag
+ *      for every speaker of either.
+ *   2. the stripped name through NAME_TO_ISO, for names the catalog spells
+ *      differently ("Tagalog" and "Filipino" both reach `tl`).
+ *   3. a bare ISO code ('en', 'pt-BR').
+ *
+ * Unlike displayCode, this does NOT mirror the app's quirks: a wrong flag is
+ * a wrong picture, and there is no parity argument for showing one.
+ */
+export function languageFlag(language: string): string {
+  const raw = (language || "").trim().toLowerCase();
+  if (!raw) return "🌐";
+
+  const exact = CATALOG_NAME_TO_FLAG[raw];
+  if (exact) return exact;
+
+  const base = NAME_TO_ISO[stripVariant(raw)];
+  if (base && CODE_TO_FLAG[base]) return CODE_TO_FLAG[base];
+
+  const iso = toBaseIso6391(raw);
+  if (iso && CODE_TO_FLAG[iso]) return CODE_TO_FLAG[iso];
+
+  return "🌐";
 }

@@ -1,4 +1,4 @@
-import { displayCode, stripVariant, toBaseIso6391 } from "./languages";
+import { displayCode, languageFlag, stripVariant, toBaseIso6391 } from "./languages";
 
 it("strips a trailing regional parenthetical", () => {
   expect(stripVariant("Chinese (Traditional)")).toBe("Chinese");
@@ -46,4 +46,47 @@ it("resolves untaggable codes to nothing rather than guessing", () => {
   expect(toBaseIso6391("pt-BR")).toBe("pt");
   expect(toBaseIso6391("en")).toBe("en");
   expect(toBaseIso6391("persian")).toBeNull();
+});
+
+// The visible half of the old bug: a slice that lands on one of the ten old
+// flag keys renders a confidently wrong country.
+it("fixes the collisions that rendered the wrong country", () => {
+  expect(languageFlag("Estonian")).toBe("🇪🇪");
+  expect(languageFlag("Estonian")).not.toBe("🇪🇸");
+  expect(languageFlag("Frisian")).toBe("🇳🇱");
+  expect(languageFlag("Frisian")).not.toBe("🇫🇷");
+});
+
+// The quiet half: these used to return the globe under both the old and the
+// new code, so the widened table from Task 2 is what actually moves them.
+it("resolves languages the old ten-key table had no flag for", () => {
+  expect(languageFlag("Persian")).toBe("🇮🇷");
+  expect(languageFlag("Filipino")).toBe("🇵🇭");
+});
+
+// The politically load-bearing case. A naive base-code collapse renders the
+// PRC flag for every Traditional Chinese and Cantonese speaker.
+it("preserves regional variants instead of collapsing them", () => {
+  expect(languageFlag("Chinese (Traditional)")).toBe("🇹🇼");
+  expect(languageFlag("Cantonese")).toBe("🇭🇰");
+  expect(languageFlag("Portuguese (Brazil)")).toBe("🇧🇷");
+  expect(languageFlag("English (UK)")).toBe("🇬🇧");
+});
+
+it("resolves a plain base name to its designated flag", () => {
+  // `zh` is the one code with no base catalog row; CN is what plain
+  // "Chinese" renders today, so this preserves existing behaviour.
+  expect(languageFlag("Chinese")).toBe("🇨🇳");
+  expect(languageFlag("Korean")).toBe("🇰🇷");
+});
+
+it("accepts a bare ISO code", () => {
+  expect(languageFlag("en")).toBe("🇺🇸");
+  expect(languageFlag("ko")).toBe("🇰🇷");
+});
+
+it("returns the globe rather than guessing", () => {
+  expect(languageFlag("Esperanto")).toBe("🌐"); // the catalog's own answer
+  expect(languageFlag("Klingon")).toBe("🌐");
+  expect(languageFlag("")).toBe("🌐");
 });
