@@ -24,9 +24,10 @@ const FollowButton: React.FC<FollowButtonProps> = ({
   isFollowing,
   onToggled,
 }) => {
-  const [followUser, { isLoading: following }] = useFollowUserMutation();
-  const [unFollowUser, { isLoading: unfollowing }] = useUnFollowUserMutation();
-  const busy = following || unfollowing;
+  const [followUser, { isLoading: isFollowLoading }] = useFollowUserMutation();
+  const [unFollowUser, { isLoading: isUnfollowLoading }] =
+    useUnFollowUserMutation();
+  const busy = isFollowLoading || isUnfollowLoading;
 
   const handleClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -36,8 +37,15 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       else await followUser({ userId, targetUserId }).unwrap();
       onToggled?.(!isFollowing);
     } catch {
-      // The mutation's own error handling surfaces this; the button simply
-      // stays in whatever state the cache reports.
+      // This primitive deliberately leaves error UX to its caller -- it does
+      // not toast or surface a message itself. Nothing in this codebase
+      // handles the error on its behalf either: src/store/index.ts registers
+      // only apiSlice.middleware, with no RTK-Query error-logging middleware,
+      // and the existing consumer (CommunityDetail.tsx) does its own
+      // toast.error(...) around its own call to these mutations. So a failed
+      // mutation here is swallowed silently: no toast, no onToggled call: the
+      // button simply stays showing the isFollowing state the caller passed
+      // in, unchanged.
     }
   };
 
