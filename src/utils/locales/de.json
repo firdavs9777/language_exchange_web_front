@@ -914,7 +914,11 @@
         "message1": "Hallo! Wie geht es dir? 👋",
         "message2": "Hey! Ich übe gerade mein Deutsch!",
         "message3": "Super! Lass uns zusammen üben 🇩🇪"
-      }
+      },
+      "title": "Sag es ruhig falsch.",
+      "titleAccent": "Wir übersetzen.",
+      "subtitle": "Schreib in deiner Sprache, die anderen lesen es in ihrer. Tippe auf eine Nachricht, um zu sehen, wie es wirklich gesagt wurde — so lernst du.",
+      "trust": "Kostenlos für immer · 137 Sprachen · KI-Tutor rund um die Uhr"
     },
     "sections": {
       "features": "Funktionen",
@@ -980,7 +984,10 @@
           "connections": "5 neue Verbindungen/Tag",
           "community": "Community-Zugang",
           "lessons": "Grundlegende Lektionen"
-        }
+        },
+        "f1": "Unbegrenzter 1-zu-1-Chat mit Übersetzung",
+        "f2": "Community durchsuchen und Kontakte knüpfen",
+        "f3": "Moments posten und Storys lesen"
       },
       "premium": {
         "name": "Premium",
@@ -1004,7 +1011,12 @@
           "early": "Frühzeitiger Zugang zu neuen Funktionen",
           "badges": "Exklusive Abzeichen"
         }
-      }
+      },
+      "best": "Bester Wert",
+      "perMonth": "pro Monat",
+      "every": "alle",
+      "save": "Spare",
+      "getVip": "VIP in der App holen"
     },
     "download": {
       "badge": "App herunterladen",
@@ -1023,7 +1035,14 @@
     "cta": {
       "title": "Bereit, deine Sprachreise zu beginnen?",
       "description": "Schließe dich Millionen von Lernenden an und beginne noch heute, eine neue Sprache zu sprechen",
-      "button": "Kostenloses Konto erstellen"
+      "button": "Kostenloses Konto erstellen",
+      "subtitle": "Kostenlos starten. Keine Karte, kein Testzeitraum-Countdown."
+    },
+    "stats": {
+      "languages": "Sprachen",
+      "app languages": "App-Sprachen",
+      "AI tutor": "KI-Tutor",
+      "forever tier": "Kostenlos für immer"
     }
   },
   "vip": {

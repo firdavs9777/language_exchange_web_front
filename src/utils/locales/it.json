@@ -914,7 +914,11 @@
         "message1": "Ciao! Come stai? 👋",
         "message2": "Hey! I'm practicing my Italian!",
         "message3": "Benissimo! Pratichiamo insieme 🇮🇹"
-      }
+      },
+      "title": "Dillo male.",
+      "titleAccent": "Ci pensiamo noi a tradurre.",
+      "subtitle": "Scrivi nella tua lingua, loro leggono nella loro. Tocca un messaggio per vedere come è stato detto davvero — è così che si impara.",
+      "trust": "Livello gratuito per sempre · 137 lingue · Tutor IA 24/7"
     },
     "sections": {
       "features": "Funzionalità",
@@ -980,7 +984,10 @@
           "connections": "5 nuove connessioni/giorno",
           "community": "Accesso alla comunità",
           "lessons": "Lezioni base"
-        }
+        },
+        "f1": "Chat 1 a 1 illimitata con traduzione",
+        "f2": "Esplora e connettiti con la community",
+        "f3": "Pubblica Moments e leggi le Stories"
       },
       "premium": {
         "name": "Premium",
@@ -1004,7 +1011,12 @@
           "early": "Funzionalità in anteprima",
           "badges": "Badge esclusivi"
         }
-      }
+      },
+      "best": "Miglior valore",
+      "perMonth": "al mese",
+      "every": "ogni",
+      "save": "Risparmia",
+      "getVip": "Ottieni VIP nell'app"
     },
     "download": {
       "badge": "Scarica l'App",
@@ -1023,7 +1035,14 @@
     "cta": {
       "title": "Pronto a Iniziare il Tuo Viaggio Linguistico?",
       "description": "Unisciti a milioni di studenti e inizia a parlare una nuova lingua oggi",
-      "button": "Crea Account Gratuito"
+      "button": "Crea Account Gratuito",
+      "subtitle": "Gratis per iniziare. Nessuna carta, nessun conto alla rovescia di prova."
+    },
+    "stats": {
+      "languages": "lingue",
+      "app languages": "lingue dell'app",
+      "AI tutor": "tutor IA",
+      "forever tier": "livello gratuito"
     }
   },
   "vip": {

@@ -913,7 +913,11 @@
         "message1": "Merhaba! Nasılsın? 👋",
         "message2": "Hey! I'm practicing Turkish!",
         "message3": "Harika! Birlikte pratik yapalım 🇹🇷"
-      }
+      },
+      "title": "Yanlış söyle.",
+      "titleAccent": "Biz çevireceğiz.",
+      "subtitle": "Kendi dilinde yaz, karşı taraf kendi dilinde okusun. Nasıl gerçekten söylendiğini görmek için herhangi bir mesaja dokun — öğrenmenin yolu bu.",
+      "trust": "Sonsuza kadar ücretsiz katman · 137 dil · 7/24 yapay zeka öğretmeni"
     },
     "sections": {
       "features": "Özellikler",
@@ -979,7 +983,10 @@
           "connections": "Günde 5 yeni bağlantı",
           "community": "Topluluk erişimi",
           "lessons": "Temel dersler"
-        }
+        },
+        "f1": "Çeviriyle sınırsız birebir sohbet",
+        "f2": "Topluluğa göz atın ve bağlantı kurun",
+        "f3": "Moments paylaşın ve Stories okuyun"
       },
       "premium": {
         "name": "Premium",
@@ -1003,7 +1010,12 @@
           "early": "Erken erişim özellikleri",
           "badges": "Özel rozetler"
         }
-      }
+      },
+      "best": "En iyi değer",
+      "perMonth": "aylık",
+      "every": "her",
+      "save": "Tasarruf et",
+      "getVip": "Uygulamada VIP olun"
     },
     "download": {
       "badge": "Uygulamayı İndir",
@@ -1022,7 +1034,14 @@
     "cta": {
       "title": "Dil Yolculuğunuza Başlamaya Hazır Mısınız?",
       "description": "Milyonlarca öğrenenin arasına katılın ve bugün yeni bir dil konuşmaya başlayın",
-      "button": "Ücretsiz Hesap Oluştur"
+      "button": "Ücretsiz Hesap Oluştur",
+      "subtitle": "Ücretsiz başlayın. Kart yok, deneme süresi geri sayımı yok."
+    },
+    "stats": {
+      "languages": "dil",
+      "app languages": "uygulama dili",
+      "AI tutor": "yapay zeka öğretmeni",
+      "forever tier": "ücretsiz katman"
     }
   },
   "vip": {

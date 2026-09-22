@@ -950,7 +950,11 @@
         "message1": "你好！你好嗎？ 👋",
         "message2": "Hey! I'm practicing Chinese!",
         "message3": "太棒了！一起練習吧 🇹🇼"
-      }
+      },
+      "title": "說錯也沒關係。",
+      "titleAccent": "我們幫你翻譯。",
+      "subtitle": "用你的語言輸入，對方用他們的語言閱讀。輕點任何訊息即可看到真正的說法──這就是學習的方式。",
+      "trust": "永久免費方案・137種語言・AI 家教全天候"
     },
     "sections": {
       "features": "功能特色",
@@ -1016,7 +1020,10 @@
           "connections": "每日5個新連結",
           "community": "社群存取",
           "lessons": "基礎課程"
-        }
+        },
+        "f1": "無限一對一聊天，附帶翻譯",
+        "f2": "瀏覽並連結社群",
+        "f3": "發佈 Moments、閱讀 Stories"
       },
       "premium": {
         "name": "進階版",
@@ -1040,12 +1047,24 @@
           "early": "搶先體驗新功能",
           "badges": "專屬徽章"
         }
-      }
+      },
+      "best": "最超值",
+      "perMonth": "每月",
+      "every": "每",
+      "save": "節省",
+      "getVip": "在應用程式中升級 VIP"
     },
     "cta": {
       "title": "準備好開始您的語言之旅了嗎？",
       "description": "加入數百萬學習者，今天就開始說一門新語言",
-      "button": "建立免費帳戶"
+      "button": "建立免費帳戶",
+      "subtitle": "免費開始，不需要信用卡，也沒有試用倒數計時。"
+    },
+    "stats": {
+      "languages": "種語言",
+      "app languages": "應用程式語言",
+      "AI tutor": "AI 家教",
+      "forever tier": "永久免費方案"
     }
   }
 }

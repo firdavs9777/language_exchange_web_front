@@ -913,7 +913,11 @@
         "message1": "Kumusta! Kamusta ka? 👋",
         "message2": "Hey! I'm practicing Tagalog!",
         "message3": "Magaling! Mag-practice tayo 🇵🇭"
-      }
+      },
+      "title": "Sabihin mo lang, kahit mali.",
+      "titleAccent": "Kami na ang bahalang magsalin.",
+      "subtitle": "Mag-type sa sarili mong wika, babasahin nila ito sa kanila. I-tap ang anumang mensahe para makita kung paano ito talaga sinabi — ganito ka matuto.",
+      "trust": "Libre habambuhay · 137 wika · AI tutor 24/7"
     },
     "sections": {
       "features": "Mga Feature",
@@ -979,7 +983,10 @@
           "connections": "5 bagong koneksyon/araw",
           "community": "Access sa komunidad",
           "lessons": "Basic na mga aralin"
-        }
+        },
+        "f1": "Walang limitasyong 1-on-1 chat na may salin",
+        "f2": "Mag-browse at kumonekta sa komunidad",
+        "f3": "Mag-post ng Moments at magbasa ng Stories"
       },
       "premium": {
         "name": "Premium",
@@ -1003,7 +1010,12 @@
           "early": "Maagang mga feature",
           "badges": "Eksklusibong mga badge"
         }
-      }
+      },
+      "best": "Pinakamahusay na halaga",
+      "perMonth": "kada buwan",
+      "every": "bawat",
+      "save": "Makatipid",
+      "getVip": "Kumuha ng VIP sa app"
     },
     "download": {
       "badge": "I-download ang App",
@@ -1022,7 +1034,14 @@
     "cta": {
       "title": "Handa Ka Na Bang Simulan ang Iyong Paglalakbay sa Wika?",
       "description": "Sumali sa milyun-milyong nag-aaral at magsimulang magsalita ng bagong wika ngayon",
-      "button": "Gumawa ng Libreng Account"
+      "button": "Gumawa ng Libreng Account",
+      "subtitle": "Libre para magsimula. Walang kard, walang countdown ng trial."
+    },
+    "stats": {
+      "languages": "wika",
+      "app languages": "wika ng app",
+      "AI tutor": "AI tutor",
+      "forever tier": "libreng bersyon"
     }
   },
   "vip": {

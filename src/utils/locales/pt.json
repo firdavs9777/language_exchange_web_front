@@ -914,7 +914,11 @@
         "message1": "Olá! Como vai? 👋",
         "message2": "Hey! I'm practicing Portuguese!",
         "message3": "Ótimo! Vamos praticar juntos 🇧🇷"
-      }
+      },
+      "title": "Diga errado.",
+      "titleAccent": "Nós traduzimos.",
+      "subtitle": "Digite no seu idioma, a outra pessoa lê no dela. Toque em qualquer mensagem para ver como foi realmente dito — é assim que você aprende.",
+      "trust": "Nível gratuito para sempre · 137 idiomas · Tutor de IA 24/7"
     },
     "sections": {
       "features": "Recursos",
@@ -980,7 +984,10 @@
           "connections": "5 novas conexões/dia",
           "community": "Acesso à comunidade",
           "lessons": "Lições básicas"
-        }
+        },
+        "f1": "Chat 1 a 1 ilimitado com tradução",
+        "f2": "Explore e conecte-se com a comunidade",
+        "f3": "Publique Moments e leia Stories"
       },
       "premium": {
         "name": "Premium",
@@ -1004,7 +1011,12 @@
           "early": "Recursos antecipados",
           "badges": "Emblemas exclusivos"
         }
-      }
+      },
+      "best": "Melhor valor",
+      "perMonth": "por mês",
+      "every": "a cada",
+      "save": "Economize",
+      "getVip": "Obter VIP no app"
     },
     "download": {
       "badge": "Baixe o App",
@@ -1023,7 +1035,14 @@
     "cta": {
       "title": "Pronto para Começar Sua Jornada de Idiomas?",
       "description": "Junte-se a milhões de estudantes e comece a falar um novo idioma hoje",
-      "button": "Criar Conta Grátis"
+      "button": "Criar Conta Grátis",
+      "subtitle": "Grátis para começar. Sem cartão, sem contagem regressiva de teste."
+    },
+    "stats": {
+      "languages": "idiomas",
+      "app languages": "idiomas do app",
+      "AI tutor": "tutor de IA",
+      "forever tier": "nível gratuito"
     }
   },
   "vip": {
