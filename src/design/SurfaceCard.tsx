@@ -29,6 +29,18 @@ const SurfaceCard: React.FC<SurfaceCardProps> = ({
   <div
     data-testid="surface-card"
     onClick={onClick}
+    role={interactive ? "button" : undefined}
+    tabIndex={interactive ? 0 : undefined}
+    onKeyDown={
+      interactive
+        ? (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              if (e.key === " ") e.preventDefault();
+              onClick?.();
+            }
+          }
+        : undefined
+    }
     className={[
       "rounded-card bg-surface shadow-card",
       // Dark mode drops the shadow rather than darkening it -- see

@@ -38,6 +38,8 @@ const Avatar: React.FC<AvatarProps> = ({
   ) : (
     <div
       data-testid="avatar-initials"
+      role="img"
+      aria-label={name || "Unknown user"}
       className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-brand-light to-banana-light font-bold text-brand-dark"
       style={{ fontSize: Math.round(size / 2.7) }}
     >
@@ -77,6 +79,7 @@ const Avatar: React.FC<AvatarProps> = ({
       {isOnline && (
         <span
           data-testid="avatar-online-dot"
+          role="img"
           aria-label="Online"
           className={`absolute -bottom-0.5 -right-0.5 ${dot} rounded-full border-2 border-surface bg-[#4CAF50] dark:border-cardbg-dark`}
         />
