@@ -9,7 +9,9 @@
       "about": "Hakkında",
       "services": "Hizmetler",
       "pricing": "Fiyatlandırma",
-      "contact": "İletişim"
+      "contact": "İletişim",
+      "communities": "Topluluklar",
+      "download": "Uygulamayı İndir"
     },
     "contactInfo": "İletişim Bilgileri",
     "address": "Seoul, Güney Kore, Gangnam-gu",
@@ -1066,7 +1068,8 @@
       "languages": "dil",
       "app languages": "uygulama dili",
       "AI tutor": "yapay zeka öğretmeni",
-      "forever tier": "ücretsiz katman"
+      "forever tier": "ücretsiz katman",
+      "learners": "öğrenciler"
     }
   },
   "vip": {

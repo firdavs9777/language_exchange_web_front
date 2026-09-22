@@ -9,7 +9,9 @@
       "about": "เกี่ยวกับ",
       "services": "บริการ",
       "pricing": "ราคา",
-      "contact": "ติดต่อ"
+      "contact": "ติดต่อ",
+      "communities": "ชุมชน",
+      "download": "ดาวน์โหลดแอป"
     },
     "contactInfo": "ข้อมูลติดต่อ",
     "address": "โซล, เกาหลีใต้, คังนัม-กู",
@@ -1067,7 +1069,8 @@
       "languages": "ภาษา",
       "app languages": "ภาษาที่แอปรองรับ",
       "AI tutor": "AI ติวเตอร์",
-      "forever tier": "แพ็กเกจฟรี"
+      "forever tier": "แพ็กเกจฟรี",
+      "learners": "ผู้เรียน"
     }
   },
   "vip": {

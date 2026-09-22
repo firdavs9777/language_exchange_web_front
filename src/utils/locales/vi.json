@@ -9,7 +9,9 @@
       "about": "Giới Thiệu",
       "services": "Dịch Vụ",
       "pricing": "Bảng Giá",
-      "contact": "Liên Hệ"
+      "contact": "Liên Hệ",
+      "communities": "Cộng Đồng",
+      "download": "Tải Ứng Dụng"
     },
     "contactInfo": "Thông Tin Liên Hệ",
     "address": "Seoul, Hàn Quốc, Gangnam-gu",
@@ -1067,7 +1069,8 @@
       "languages": "ngôn ngữ",
       "app languages": "ngôn ngữ ứng dụng",
       "AI tutor": "gia sư AI",
-      "forever tier": "gói miễn phí"
+      "forever tier": "gói miễn phí",
+      "learners": "người học"
     }
   },
   "vip": {

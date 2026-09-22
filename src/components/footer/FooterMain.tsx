@@ -48,9 +48,10 @@ const FooterMain: React.FC = () => {
               <h4 className="footer-link-title">{t("footer.quickLinks")}</h4>
               <ul>
                 <li><Link to="/">{t("footer.links.home")}</Link></li>
-                <li><Link to="/communities">{t("footer.links.about")}</Link></li>
-                <li><Link to="/pricing">{t("footer.links.pricing")}</Link></li>
-                <li><Link to="/contact">{t("footer.links.contact")}</Link></li>
+                <li><Link to="/communities">{t("footer.links.communities") || "Communities"}</Link></li>
+                <li><Link to="/#pricing">{t("footer.links.pricing")}</Link></li>
+                <li><Link to="/download">{t("footer.links.download") || "Download the app"}</Link></li>
+                <li><Link to="/support">{t("footer.links.contact")}</Link></li>
               </ul>
             </div>
 

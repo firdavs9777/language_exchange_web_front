@@ -9,7 +9,9 @@
       "about": "Sobre",
       "services": "Serviços",
       "pricing": "Preços",
-      "contact": "Contato"
+      "contact": "Contato",
+      "communities": "Comunidades",
+      "download": "Baixe o App"
     },
     "contactInfo": "Informações de Contato",
     "address": "Seul, Coreia do Sul, Gangnam-gu",
@@ -1067,7 +1069,8 @@
       "languages": "idiomas",
       "app languages": "idiomas do app",
       "AI tutor": "tutor de IA",
-      "forever tier": "nível gratuito"
+      "forever tier": "nível gratuito",
+      "learners": "alunos"
     }
   },
   "vip": {

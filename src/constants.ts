@@ -58,3 +58,6 @@ export const BLOCK_USER_URL = "/api/v1/users";
 export const CHECK_USERNAME_URL = "/api/v1/auth/users/check-username";
 export const GEOCODE_REVERSE_URL = "/api/v1/geocode/reverse";
 export const GEOCODE_FORWARD_URL = "/api/v1/geocode/forward";
+
+export const PUBLIC_STATS_URL = "/api/v1/public/stats";
+export const ANALYTICS_EVENTS_URL = "/api/v1/analytics/events";

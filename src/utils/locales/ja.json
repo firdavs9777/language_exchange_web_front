@@ -9,7 +9,9 @@
       "about": "概要",
       "services": "サービス",
       "pricing": "料金",
-      "contact": "お問い合わせ"
+      "contact": "お問い合わせ",
+      "communities": "コミュニティ",
+      "download": "アプリをダウンロード"
     },
     "contactInfo": "連絡先",
     "address": "韓国ソウル市江南区",
@@ -1067,7 +1069,8 @@
       "languages": "言語",
       "app languages": "アプリの対応言語",
       "AI tutor": "AIチューター",
-      "forever tier": "永久無料プラン"
+      "forever tier": "永久無料プラン",
+      "learners": "学習者"
     }
   },
   "vip": {

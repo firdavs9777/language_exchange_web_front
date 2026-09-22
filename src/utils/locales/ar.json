@@ -9,7 +9,9 @@
       "about": "حول",
       "services": "الخدمات",
       "pricing": "الأسعار",
-      "contact": "اتصل بنا"
+      "contact": "اتصل بنا",
+      "communities": "المجتمعات",
+      "download": "حمّل التطبيق"
     },
     "contactInfo": "معلومات الاتصال",
     "address": "سيول، كوريا الجنوبية، غانغنام-غو",
@@ -1067,7 +1069,8 @@
       "languages": "لغة",
       "app languages": "لغات التطبيق",
       "AI tutor": "مدرّس الذكاء الاصطناعي",
-      "forever tier": "الخطة المجانية"
+      "forever tier": "الخطة المجانية",
+      "learners": "متعلم"
     }
   },
   "vip": {

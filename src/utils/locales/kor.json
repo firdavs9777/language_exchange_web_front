@@ -9,7 +9,9 @@
       "about": "소개",
       "services": "서비스",
       "pricing": "요금제",
-      "contact": "연락처"
+      "contact": "연락처",
+      "communities": "커뮤니티",
+      "download": "앱 다운로드"
     },
     "contactInfo": "연락처 정보",
     "address": "서울특별시 강남구",
@@ -1066,7 +1068,8 @@
       "languages": "언어",
       "app languages": "앱 지원 언어",
       "AI tutor": "AI 튜터",
-      "forever tier": "평생 무료 플랜"
+      "forever tier": "평생 무료 플랜",
+      "learners": "학습자"
     }
   },
   "vip": {

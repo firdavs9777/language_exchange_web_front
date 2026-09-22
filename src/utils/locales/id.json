@@ -9,7 +9,9 @@
       "about": "Tentang",
       "services": "Layanan",
       "pricing": "Harga",
-      "contact": "Kontak"
+      "contact": "Kontak",
+      "communities": "Komunitas",
+      "download": "Unduh Aplikasi"
     },
     "contactInfo": "Info Kontak",
     "address": "Seoul, Korea Selatan, Gangnam-gu",
@@ -1067,7 +1069,8 @@
       "languages": "bahasa",
       "app languages": "bahasa aplikasi",
       "AI tutor": "tutor AI",
-      "forever tier": "paket gratis"
+      "forever tier": "paket gratis",
+      "learners": "pelajar"
     }
   },
   "vip": {

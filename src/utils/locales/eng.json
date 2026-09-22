@@ -9,7 +9,9 @@
       "about": "About",
       "services": "Services",
       "pricing": "Pricing",
-      "contact": "Contact"
+      "contact": "Contact",
+      "communities": "Communities",
+      "download": "Download the app"
     },
     "contactInfo": "Contact Info",
     "address": "Seoul, South Korea, Gangnam-gu",
@@ -968,7 +970,8 @@
       "languages": "languages",
       "app languages": "app languages",
       "AI tutor": "AI tutor",
-      "forever tier": "forever tier"
+      "forever tier": "forever tier",
+      "learners": "learners"
     },
     "features": {
       "title": "Everything you need to actually speak the language",

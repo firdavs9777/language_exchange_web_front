@@ -9,7 +9,9 @@
       "about": "Tungkol",
       "services": "Serbisyo",
       "pricing": "Presyo",
-      "contact": "Kontak"
+      "contact": "Kontak",
+      "communities": "Mga Komunidad",
+      "download": "I-download ang App"
     },
     "contactInfo": "Impormasyon sa Kontak",
     "address": "Seoul, South Korea, Gangnam-gu",
@@ -1066,7 +1068,8 @@
       "languages": "wika",
       "app languages": "wika ng app",
       "AI tutor": "AI tutor",
-      "forever tier": "libreng bersyon"
+      "forever tier": "libreng bersyon",
+      "learners": "mga nag-aaral"
     }
   },
   "vip": {

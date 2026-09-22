@@ -9,7 +9,9 @@
       "about": "परिचय",
       "services": "सेवाएँ",
       "pricing": "मूल्य निर्धारण",
-      "contact": "संपर्क"
+      "contact": "संपर्क",
+      "communities": "समुदाय",
+      "download": "ऐप डाउनलोड करें"
     },
     "contactInfo": "संपर्क जानकारी",
     "address": "सियोल, दक्षिण कोरिया, गंगनम-गु",
@@ -1067,7 +1069,8 @@
       "languages": "भाषाएं",
       "app languages": "ऐप भाषाएं",
       "AI tutor": "AI ट्यूटर",
-      "forever tier": "मुफ़्त प्लान"
+      "forever tier": "मुफ़्त प्लान",
+      "learners": "शिक्षार्थी"
     }
   },
   "vip": {
