@@ -1,8 +1,9 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { BASE_URL } from "../constants";
 import { trackEvent } from "./track";
 import { gaEvent } from "./ga";
+import { routeTemplate } from "./routeTemplate";
 
 // The legacy visit ping (WebVisit, geo-located server-side) stays as it was;
 // it feeds the existing weekly report. The new event channel and GA sit
@@ -25,9 +26,15 @@ function legacyVisitPing(pathname: string): void {
 
 export function usePageView(): void {
   const { pathname } = useLocation();
+  const params = useParams();
   useEffect(() => {
+    // A layout route's useParams() includes params of the whole matched
+    // branch (react-router v6), so this covers a leaf like /profile/:userId
+    // even though App itself is mounted above the leaf route.
+    const tracked = routeTemplate(pathname, params);
     legacyVisitPing(pathname);
-    trackEvent("page_view", { path: pathname });
-    gaEvent("page_view", { page_path: pathname });
+    trackEvent("page_view", { path: tracked });
+    gaEvent("page_view", { page_path: tracked });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 }

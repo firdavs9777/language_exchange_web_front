@@ -49,18 +49,26 @@ export function buildPayload(name: EventName, data: EventData) {
   };
 }
 
-async function post(body: string): Promise<boolean> {
+async function post(body: string): Promise<Response | null> {
   try {
-    const res = await fetch(`${BASE_URL}${ANALYTICS_EVENTS_URL}`, {
+    return await fetch(`${BASE_URL}${ANALYTICS_EVENTS_URL}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body,
       keepalive: true,
     });
-    return res.ok;
   } catch {
-    return false;
+    return null; // network error: worth one retry
   }
+}
+
+// A 4xx means the request itself was rejected (bad payload, validation) --
+// retrying sends the same bad request again, so it's treated as final. A
+// network failure or a 5xx is worth the one retry.
+function shouldRetry(res: Response | null): boolean {
+  if (res === null) return true;
+  if (res.ok) return false;
+  return !(res.status >= 400 && res.status < 500);
 }
 
 export function trackEvent(name: EventName, data: EventData = {}): void {
@@ -72,6 +80,7 @@ export function trackEvent(name: EventName, data: EventData = {}): void {
     return;
   }
   void (async () => {
-    if (!(await post(body))) await post(body);
+    const first = await post(body);
+    if (shouldRetry(first)) await post(body);
   })();
 }

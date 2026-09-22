@@ -40,3 +40,11 @@ it("retries exactly once, then stays silent", async () => {
   await flush();
   expect(global.fetch).toHaveBeenCalledTimes(2);
 });
+
+it("does not retry a 4xx: the request itself was rejected", async () => {
+  (global as any).fetch = jest.fn(async () => new Response(null, { status: 400 }));
+  trackEvent("page_view", { path: "/" });
+  await flush();
+  await flush();
+  expect(global.fetch).toHaveBeenCalledTimes(1);
+});
