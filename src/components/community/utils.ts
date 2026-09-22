@@ -1,9 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import { displayCode, languageFlag } from '../../utils/languages';
-
-export const getLanguageCode = (language: string): string =>
-  displayCode(language).toLowerCase();
+import { languageFlag } from '../../utils/languages';
 
 export const generateRandomStats = () => ({
   rating: (Math.random() * 2 + 3).toFixed(1),
