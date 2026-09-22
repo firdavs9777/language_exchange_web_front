@@ -9,7 +9,6 @@ import NotFound from "../components/errors/NotFound";
 
 import MainCommnity from "../components/community/MainCommunity";
 import Login from "../components/auth/Login";
-import MomentsAppPromo from "../components/moments/MomentsAppPromo";
 import Register from "../components/auth/Register";
 import MomentDetail from "../components/moments/MomentDetail";
 import CreateMoment from "../components/moments/CreateMoment";
@@ -59,6 +58,7 @@ import StoryViewer from "../components/stories/StoryViewer";
 
 // Moments
 import SavedMoments from "../components/moments/SavedMoments";
+import MainMoments from "../components/moments/MainMoments";
 
 const MainChatWrapper = () => {
   const { userId } = useParams();
@@ -79,7 +79,7 @@ export const routes = createRoutesFromElements(
     <Route path="forgot-password" element={<ForgetPassword />} />
     <Route path="communities" element={<MainCommnity />} />
     <Route path="community/:id" element={<CommunityDetail />} />
-    <Route path="moments" element={<MomentsAppPromo />} />
+    <Route path="moments" element={<MainMoments />} />
     <Route path="moment/:id" element={<MomentDetail />} />
     <Route path="add-moment" element={<CreateMoment />} />
     <Route path="edit-moment/:id" element={<EditMyMoment />} />
