@@ -23,12 +23,18 @@ it("renders a placeholder initial for a nameless user", () => {
   expect(screen.getByTestId("avatar-initials")).toHaveTextContent("?");
 });
 
+it("renders a placeholder initial for a whitespace-only name", () => {
+  render(<Avatar name="   " />);
+  expect(screen.getByTestId("avatar-initials")).toHaveTextContent("?");
+});
+
 it("shows the story ring only when hasStory is true", () => {
   const { rerender } = render(<Avatar name="Yeonwoo" />);
   expect(screen.queryByTestId("avatar-story-ring")).not.toBeInTheDocument();
 
   rerender(<Avatar name="Yeonwoo" hasStory />);
   expect(screen.getByTestId("avatar-story-ring")).toBeInTheDocument();
+  expect(screen.getByTestId("avatar-initials")).toBeInTheDocument();
 });
 
 it("shows the online dot only when isOnline is true", () => {
