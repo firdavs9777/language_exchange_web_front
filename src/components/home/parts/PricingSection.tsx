@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Check } from "lucide-react";
 import { SurfaceCard, Badge } from "../../../design";
@@ -16,9 +16,17 @@ const PLAY_STORE_URL =
 
 const PricingSection: React.FC = () => {
   const { t } = useTranslation();
-  const platform = inferPlatform(
-    typeof navigator === "undefined" ? "" : navigator.userAgent
-  );
+  // Mount, then decide. Reading the user agent during render would bake the
+  // prerendered iOS choice into the markup, and React 18 does not patch
+  // mismatched attributes while hydrating — Android visitors would keep the
+  // App Store link forever. Starting at "ios" makes the first client render
+  // match the server; the effect then re-renders with the real platform, which
+  // React does apply, and the plans query refetches for Android.
+  const [platform, setPlatform] = useState<"ios" | "android">("ios");
+  useEffect(() => {
+    setPlatform(inferPlatform(typeof navigator === "undefined" ? "" : navigator.userAgent));
+  }, []);
+
   const { data, isError } = useGetVipPlansQuery(platform);
 
   // A pricing section that renders nothing is worse than one slightly stale.

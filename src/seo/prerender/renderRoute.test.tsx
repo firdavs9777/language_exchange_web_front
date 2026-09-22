@@ -15,20 +15,6 @@ const { SEO_PAGES, canonicalUrl } = require("../pages");
 
 jest.setTimeout(30000);
 
-// renderToString on a router tree makes React warn that useLayoutEffect does
-// nothing on the server. It is expected here and only here; every other
-// console.error still reaches the real console.
-const realError = console.error;
-beforeAll(() => {
-  jest.spyOn(console, "error").mockImplementation((...args: any[]) => {
-    if (typeof args[0] === "string" && args[0].indexOf("useLayoutEffect does nothing on the server") !== -1) return;
-    realError(...args);
-  });
-});
-afterAll(() => {
-  (console.error as any).mockRestore();
-});
-
 // This is the same harness scripts/prerender.js runs at build time, executed
 // here without a DOM so a component that reads window during render fails
 // the suite, not the deploy.

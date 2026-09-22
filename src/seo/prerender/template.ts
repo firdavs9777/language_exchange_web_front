@@ -11,6 +11,11 @@ const REPLACED_HEAD_TAGS: RegExp[] = [
   /<title>[\s\S]*?<\/title>\s*/i,
   /<meta name="description"[^>]*>\s*/gi,
   /<meta name="robots"[^>]*>\s*/gi,
+  // Crawler-specific directives win over the generic robots tag in Google's
+  // and Bing's resolution, so a shell "index, follow" here would override the
+  // page's own noindex. Removed with the rest of the shell's robots policy.
+  /<meta name="googlebot"[^>]*>\s*/gi,
+  /<meta name="bingbot"[^>]*>\s*/gi,
   /<link rel="canonical"[^>]*>\s*/gi,
   /<meta property="og:[^"]*"[^>]*>\s*/gi,
   /<meta name="twitter:[^"]*"[^>]*>\s*/gi,

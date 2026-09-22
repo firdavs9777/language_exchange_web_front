@@ -11,3 +11,14 @@ export function markPrerendered(): void {
 export function isPrerendered(): boolean {
   return prerendered;
 }
+
+/**
+ * Clear after the first commit (App.tsx). Components mounted during hydration
+ * have already taken their initial state, so clearing here costs them nothing
+ * and lets everything mounted later — every client-side navigation — animate
+ * normally instead of being stuck in the "already visible" state for the
+ * whole session.
+ */
+export function clearPrerendered(): void {
+  prerendered = false;
+}

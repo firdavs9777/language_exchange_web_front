@@ -5,6 +5,7 @@ const TEMPLATE = `<!doctype html><html><head>
 <title>Shell Title</title>
 <meta name="description" content="shell description"/>
 <meta name="robots" content="index, follow"/>
+<meta name="googlebot" content="index, follow"/>
 <link rel="canonical" href="https://banatalk.com"/>
 <meta property="og:title" content="shell og"/>
 <meta property="og:locale:alternate" content="ko_KR"/>
@@ -27,6 +28,9 @@ it("replaces the shell's route-specific head tags with the page's", () => {
   expect(out).not.toContain("shell tw");
   expect(out).not.toContain("og:locale:alternate");
   expect(out).not.toContain('rel="canonical" href="https://banatalk.com"');
+  // A crawler-specific directive outranks the generic robots tag, so the
+  // shell's must go or the 404's noindex would be overridden.
+  expect(out).not.toContain('name="googlebot"');
 });
 
 it("keeps tags that are not route-specific", () => {

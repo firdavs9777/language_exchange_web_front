@@ -1,5 +1,5 @@
 // Node-side module hooks so scripts/prerender.js can require the CRA app.
-// Babel compiles TS/JSX with the app's own preset; styles are stubbed the way
+// Babel compiles TS/JSX with the presets below; styles are stubbed the way
 // CRA's Jest config stubs them; media imports resolve to their hashed build
 // URLs so prerendered <img src> matches what the client would render.
 const path = require("path");
@@ -7,7 +7,10 @@ const fs = require("fs");
 
 process.env.NODE_ENV = process.env.NODE_ENV || "production";
 process.env.BABEL_ENV = process.env.NODE_ENV;
-require("dotenv").config({ path: path.join(__dirname, "..", ".env.production") });
+// CRA's cascade: .env is the shared base, .env.production wins over it.
+const ROOT = path.join(__dirname, "..");
+require("dotenv").config({ path: path.join(ROOT, ".env") });
+require("dotenv").config({ path: path.join(ROOT, ".env.production"), override: true });
 
 // The presets are spelled out rather than reused from babel-preset-react-app:
 // that preset only emits CommonJS (what Node's require needs) in its "test"
