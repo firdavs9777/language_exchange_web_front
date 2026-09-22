@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, matchPath } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { detectPlatform } from '../../utils/platform';
+import { detectPlatform, MobilePlatform } from '../../utils/platform';
 import OpenInApp from './OpenInApp';
 import { ShareType } from '../../utils/shareUrl';
 import './AppBanner.scss';
@@ -26,9 +26,17 @@ const EXCLUDED_IDS: Record<ShareType, string[]> = {
 const AppBanner: React.FC = () => {
   const location = useLocation();
   const [dismissed, setDismissed] = useState(false);
+  // Unknown until mounted: the prerender has no user agent, and the first
+  // client render must match the prerendered (empty) output.
+  const [platform, setPlatform] = useState<MobilePlatform | null>(null);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setPlatform(detectPlatform(navigator.userAgent));
+  }, []);
+
   if (dismissed) return null;
-  if (detectPlatform(navigator.userAgent) === 'other') return null;
+  if (platform === null || platform === 'other') return null;
 
   for (const { pattern, type } of PATTERNS) {
     const m = matchPath(pattern, location.pathname);

@@ -13,13 +13,20 @@ const TONE: Record<"brand" | "banana", string> = {
 const PromoCarousel: React.FC = () => {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [dismissed, setDismissed] = useState(() =>
-    isSuppressed("promo-carousel", {
-      pathname: window.location.pathname,
-      referrer: document.referrer,
-      viewportWidth: window.innerWidth,
-    })
-  );
+  // Hidden until mounted. Suppression depends on viewport, referrer and
+  // stored dismissals, none of which exist at prerender time; deciding in an
+  // effect keeps the prerendered HTML and the first client render identical.
+  const [dismissed, setDismissed] = useState(true);
+
+  useEffect(() => {
+    setDismissed(
+      isSuppressed("promo-carousel", {
+        pathname: window.location.pathname,
+        referrer: document.referrer,
+        viewportWidth: window.innerWidth,
+      })
+    );
+  }, []);
 
   useEffect(() => {
     if (paused || dismissed) return;
