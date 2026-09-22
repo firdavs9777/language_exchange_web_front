@@ -13,10 +13,14 @@ const PAGES_WITH_PRICING = ["/"];
 export function prefetchersFor(path: string): Prefetcher[] {
   const list: Prefetcher[] = [];
   if (PAGES_WITH_PRICING.includes(path)) {
-    list.push((store) => Promise.resolve(store.dispatch(plansApiSlice.endpoints.getVipPlans.initiate("ios") as any)));
+    // .unwrap() turns a failed query into a rejected promise, so renderRoute's
+    // prefetch() can catch it and log a warning -- store.dispatch(...) alone
+    // resolves with a rejected *action* and never rejects, which would
+    // silently swallow the failure.
+    list.push((store) => (store.dispatch(plansApiSlice.endpoints.getVipPlans.initiate("ios")) as any).unwrap());
   }
   if (path === "/") {
-    list.push((store) => Promise.resolve(store.dispatch(publicStatsApiSlice.endpoints.getPublicStats.initiate() as any)));
+    list.push((store) => (store.dispatch(publicStatsApiSlice.endpoints.getPublicStats.initiate()) as any).unwrap());
   }
   return list;
 }

@@ -49,3 +49,11 @@ it("shows the curated stat values, not a count-up starting at zero", async () =>
   expect(out.html).toContain(">137<");
   expect(out.html).toContain(">18<");
 });
+
+it("logs a warning per failed prefetch instead of swallowing the failure", async () => {
+  const log = jest.fn();
+  const out = await renderRoute("/", { prefetch: true, fetchTimeoutMs: 2000, log });
+  expect(log).toHaveBeenCalledTimes(2);
+  expect(log.mock.calls.every(([m]: [string]) => /prefetch for \/ failed/.test(m))).toBe(true);
+  expect(out.html).toContain(">137<");
+});
