@@ -176,13 +176,16 @@ One tree, two providers; the hydration section below relies on this.
 - For each route in the public route list (`src/seo/publicRoutes.ts`, derived from `pages.ts`
   minus dynamic routes, plus `/404`), it builds a fresh Redux store, **prefetches the data the
   page needs** (below), runs the static handler for the URL, and renders
-  `<HelmetProvider><Provider store={store}><StaticRouterProvider router={staticRouter} context={context}/></Provider></HelmetProvider>`
-  with `renderToString`, i18n fixed to English.
+  `<HelmetProvider><Provider store={store}><StaticRouterProvider router={staticRouter} context={context} hydrate={false}/></Provider></HelmetProvider>`
+  with `renderToString`, i18n fixed to English. `hydrate={false}` is required: by default
+  `StaticRouterProvider` appends a `<script>window.__staticRouterHydrationData=…</script>`
+  inside the markup, which the client's `RouterProvider` never renders, so leaving it on
+  guarantees a hydration mismatch on every prerendered page.
 - **Build-time data.** RTK Query hooks subscribe in effects, which `renderToString` never runs,
   so any data a prerendered page should contain is dispatched and awaited before render:
   `await store.dispatch(publicStatsApi.endpoints.getPublicStats.initiate())` for every page that
   mounts `StatStrip`, `getPublicCommunities` for `/communities`, and
-  `getVipPlans({ platform: "ios" })` for pages with `PricingSection` (the client refetches for
+  `getVipPlans("ios")` (the endpoint's argument is the platform string) for pages with `PricingSection` (the client refetches for
   Android after hydration; iOS and Android prices are the same figures today). A fetch that
   fails or times out (5s) is logged as a warning and the page renders its fallback (§8); the
   build does not fail on data. Components detect "no data" as `!data`, never `isLoading`, since
@@ -456,7 +459,7 @@ something the backend lacks, it is listed under "Not in this spec".
 | 7.2 | `GET /api/v1/public/communities` | none | Clubs with `status: 'active'` (the `Club` model has no visibility field): `{ id, name, description, memberCount, languages[] }` where `languages` is `[club.language]` today so the shape can grow, limit 24, sorted by memberCount desc. Cache 10 minutes. |
 | 7.3 | `POST /api/v1/analytics/events` | none | Body `{ name, path, placement?, platform?, referrer?, language?, sessionId }`, `name` enum `page_view | store_tap | cta_tap`. Stores `WebEvent` with server-side `device`/`os` from UA (reusing `parseUserAgent` from `analytics.js`), `ip` hashed with a server salt (not stored raw). Rate-limited 60/min per IP. Returns 204. |
 | 7.4 | `GET /api/v1/admin/analytics/events` | admin | Query `days` (default 30). Returns `{ byDay: [{ date, pageViews, storeTaps }], byPlacement: [{ placement, platform, taps }], topReferrers: [{ referrer, count }], topPaths: [{ path, views }] }` via aggregation. |
-| 7.5 | `GET /api/v1/admin/analytics/visits` | admin | Thin wrapper over the existing `WebVisit.getWeeklyStats`: returns its `thisWeek`, `lastWeek`, `dailyBreakdown`, `topCountries` and `deviceBreakdown` unchanged, plus one derived field `newVisitorRatio = thisWeek.newVisitors / thisWeek.visits`. No new aggregation. |
+| 7.5 | `GET /api/v1/admin/analytics/visits` | admin | Thin wrapper over the existing `WebVisit.getWeeklyStats`: returns its `thisWeek`, `lastWeek`, `dailyBreakdown`, `topCountries` and `deviceBreakdown` unchanged, plus one derived field `newVisitorRatio = thisWeek.newVisitors / thisWeek.totalVisits` (those are the helper's actual key names; `0` when `totalVisits` is 0). No new aggregation. |
 
 New model `WebEvent` (`models/WebEvent.js`) with a TTL index of 400 days. Routes in
 `routes/public.js` (new) and additions to `routes/analytics.js` and `routes/admin.js`. Each has a
