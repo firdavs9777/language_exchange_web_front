@@ -57,3 +57,14 @@ it("logs a warning per failed prefetch instead of swallowing the failure", async
   expect(log.mock.calls.every(([m]: [string]) => /prefetch for \/ failed/.test(m))).toBe(true);
   expect(out.html).toContain(">137<");
 });
+
+it("returns the api slice state so the client can hydrate from it", async () => {
+  const { apiSlice } = require("../../store/slices/apiSlice");
+  const out = await renderRoute("/", { prefetch: false });
+  const api = out.state[apiSlice.reducerPath];
+  expect(api).toBeDefined();
+  // Nothing was fetched, but the shape must be there -- and subscriptions,
+  // which are client-only, must never cross the wire.
+  expect(api.queries).toEqual({});
+  expect(api.subscriptions).toEqual({});
+});

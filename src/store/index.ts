@@ -6,8 +6,19 @@ import commentsSliceReducer from "./slices/comments";
 import chatApiSliceReducer from "./slices/chatSlice";
 import storiesApiSliceReducer from "./slices/storiesSlice";
 
-/** A fresh store. The browser makes one; the prerender makes one per route. */
-export function makeStore() {
+declare global {
+  interface Window {
+    __BT_PRELOADED_STATE__?: Record<string, unknown>;
+  }
+}
+
+/**
+ * A fresh store. The browser makes one; the prerender makes one per route.
+ *
+ * `preloadedState` is deliberately untyped: RootState is derived from this
+ * function's return type, so naming it here would make the type circular.
+ */
+export function makeStore(preloadedState?: any) {
   return configureStore({
     reducer: {
       [apiSlice.reducerPath]: apiSlice.reducer,
@@ -19,10 +30,27 @@ export function makeStore() {
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
     devTools: true,
+    preloadedState,
   });
 }
 
-const store = makeStore();
+/**
+ * The state the prerender fetched, inlined into the page by
+ * src/seo/prerender/template.ts. Hydrating without it would render the
+ * fallbacks over server markup that already has the data, which React
+ * reports as a hydration mismatch and recovers from by re-rendering the
+ * whole tree client-side. Read once, then removed so nothing later mistakes
+ * a stale global for fresh data.
+ */
+export function readPreloadedState(): Record<string, unknown> | undefined {
+  if (typeof window === "undefined") return undefined;
+  const state = window.__BT_PRELOADED_STATE__;
+  if (!state || typeof state !== "object") return undefined;
+  delete window.__BT_PRELOADED_STATE__;
+  return state;
+}
+
+const store = makeStore(readPreloadedState());
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type RootState = ReturnType<AppStore["getState"]>;
