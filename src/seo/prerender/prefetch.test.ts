@@ -19,6 +19,27 @@ it("prefetches plans and public stats for the homepage, nothing for legal pages"
   expect(prefetchersFor("/privacy-policy")).toEqual([]);
 });
 
+it("prefetches the public moments feed and prompt of the day for /moments, nothing for /download", async () => {
+  const calls: string[] = [];
+  (global as any).fetch = jest.fn(async (input: any) => {
+    calls.push(typeof input === "string" ? input : input.url);
+    return new Response(JSON.stringify({ success: true, data: [] }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  });
+
+  const prefetchers = prefetchersFor("/moments");
+  expect(prefetchers.length).toBe(2);
+
+  const store = makeStore();
+  await Promise.all(prefetchers.map((run) => run(store)));
+  expect(calls.some((u) => u.includes("/moments?"))).toBe(true);
+  expect(calls.some((u) => u.includes("/moments/prompt-of-day"))).toBe(true);
+
+  expect(prefetchersFor("/download")).toEqual([]);
+});
+
 it("rejects when the network is unreachable, so renderRoute can log it", async () => {
   (global as any).fetch = jest.fn(async () => {
     throw new Error("offline");

@@ -1,6 +1,7 @@
 import { AppStore } from "../../store";
 import { plansApiSlice } from "../../store/slices/plansSlice";
 import { publicStatsApiSlice } from "../../store/slices/publicStatsSlice";
+import { momentsApiSlice } from "../../store/slices/momentsSlice";
 
 export type Prefetcher = (store: AppStore) => Promise<unknown>;
 
@@ -21,6 +22,17 @@ export function prefetchersFor(path: string): Prefetcher[] {
   }
   if (path === "/") {
     list.push((store) => (store.dispatch(publicStatsApiSlice.endpoints.getPublicStats.initiate()) as any).unwrap());
+  }
+  if (path === "/moments") {
+    // Args must match MainMoments' first anonymous render exactly (page 1,
+    // limit 10, activeTab "forYou", no language) -- RTK Query keys its cache
+    // on the serialized args, so any mismatch means this prefetch is wasted.
+    list.push((store) =>
+      (store.dispatch(momentsApiSlice.endpoints.getMoments.initiate({ page: 1, limit: 10 })) as any).unwrap()
+    );
+    list.push((store) =>
+      (store.dispatch(momentsApiSlice.endpoints.getPromptOfDay.initiate({ language: undefined })) as any).unwrap()
+    );
   }
   return list;
 }

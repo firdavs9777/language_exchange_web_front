@@ -58,6 +58,15 @@ it("logs a warning per failed prefetch instead of swallowing the failure", async
   expect(out.html).toContain(">137<");
 });
 
+it("logs a warning per failed prefetch for /moments and still renders, with state transferred", async () => {
+  const { apiSlice } = require("../../store/slices/apiSlice");
+  const log = jest.fn();
+  const out = await renderRoute("/moments", { prefetch: true, fetchTimeoutMs: 2000, log });
+  expect(log).toHaveBeenCalledTimes(2);
+  expect((out.html.match(/<h1[\s>]/g) || []).length).toBe(1);
+  expect(typeof out.state[apiSlice.reducerPath].queries).toBe("object");
+});
+
 it("returns the api slice state so the client can hydrate from it", async () => {
   const { apiSlice } = require("../../store/slices/apiSlice");
   const out = await renderRoute("/", { prefetch: false });
