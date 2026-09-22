@@ -44,3 +44,26 @@ it("fills the root and refuses a template without an empty root", () => {
   expect(injectIntoTemplate(TEMPLATE, rendered)).toContain('<div id="root"><div><h1>Hi</h1></div></div>');
   expect(() => injectIntoTemplate("<html><body></body></html>", rendered)).toThrow(/root/);
 });
+
+it("injects the preloaded state after the root and before the bundle scripts", () => {
+  const out = injectIntoTemplate(TEMPLATE, {
+    ...rendered,
+    state: { api: { queries: { k: { data: "</script><b>" } } } },
+  });
+  expect(out).toContain("window.__BT_PRELOADED_STATE__=");
+  // The closing tag inside the data must be escaped or it would end the script.
+  expect(out).not.toContain("</script><b>");
+  expect(out).toContain("\\u003c/script>\\u003cb>");
+
+  const rootAt = out.indexOf('<div id="root">');
+  const stateAt = out.indexOf("window.__BT_PRELOADED_STATE__=");
+  const bundleAt = out.indexOf('<script src="/static/js/main.js">');
+  expect(rootAt).toBeGreaterThan(-1);
+  expect(bundleAt).toBeGreaterThan(-1);
+  expect(stateAt).toBeGreaterThan(rootAt);
+  expect(stateAt).toBeLessThan(bundleAt);
+});
+
+it("injects nothing when the render carried no state", () => {
+  expect(injectIntoTemplate(TEMPLATE, rendered)).not.toContain("__BT_PRELOADED_STATE__");
+});

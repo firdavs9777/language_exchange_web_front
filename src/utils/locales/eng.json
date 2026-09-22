@@ -1149,7 +1149,7 @@
     },
     "moments": {
       "title": "BananaTalk Moments: Stories in Your Target Language",
-      "description": "Moments are short posts and stories shared by language learners on BananaTalk. See how the community uses them, then post your own in the app."
+      "description": "Moments are short posts and stories shared by language learners on BananaTalk. Read the feed, react, and post your own."
     },
     "privacy": {
       "title": "Privacy Policy | BananaTalk",
@@ -1174,5 +1174,11 @@
     "body": "The link may be old, or the page may have moved. Here is the way back.",
     "home": "Go to the homepage",
     "download": "Get the app"
+  },
+  "consent": {
+    "label": "Cookie consent",
+    "message": "We use analytics cookies to understand what brings people here.",
+    "accept": "OK",
+    "decline": "No thanks"
   }
 }

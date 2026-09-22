@@ -10,7 +10,7 @@
       "services": "Servizi",
       "pricing": "Prezzi",
       "contact": "Contatti",
-      "communities": "Community",
+      "communities": "Comunità",
       "download": "Scarica l'App"
     },
     "contactInfo": "Informazioni di Contatto",
@@ -1121,7 +1121,7 @@
     },
     "moments": {
       "title": "Moments di BananaTalk: storie nella tua lingua target",
-      "description": "I Moments sono brevi post e storie condivisi dagli studenti di lingue su BananaTalk. Guarda come li usa la community, poi pubblica i tuoi nell'app."
+      "description": "I Moments sono brevi post e storie condivisi dagli studenti di lingue su BananaTalk. Leggi il feed, reagisci e pubblica i tuoi."
     },
     "privacy": {
       "title": "Informativa sulla Privacy | BananaTalk",
@@ -1146,5 +1146,11 @@
     "body": "Il link potrebbe essere obsoleto, oppure la pagina potrebbe essere stata spostata. Ecco come tornare indietro.",
     "home": "Vai alla home page",
     "download": "Scarica l'app"
+  },
+  "consent": {
+    "label": "Consenso ai cookie",
+    "message": "Utilizziamo cookie di analisi per capire cosa porta le persone qui.",
+    "accept": "OK",
+    "decline": "No grazie"
   }
 }

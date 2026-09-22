@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { isSuppressed, recordDismissal } from "./growthGate";
+import { openSurface, closeSurface } from "./surfaceRegistry";
 
 const APP_STORE_URL =
   "https://apps.apple.com/us/app/bananatalk-learn-meet-or-date/id6755862146";
@@ -57,6 +58,12 @@ const AppDownloadPopup: React.FC = () => {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, dismiss]);
+
+  useEffect(() => {
+    if (!open) return;
+    openSurface("download-popup");
+    return () => closeSurface("download-popup");
+  }, [open]);
 
   if (!open) return null;
 

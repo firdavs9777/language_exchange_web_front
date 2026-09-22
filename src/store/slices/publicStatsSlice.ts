@@ -15,6 +15,11 @@ export const publicStatsApiSlice = apiSlice.injectEndpoints({
       query: () => ({ url: PUBLIC_STATS_URL }),
       transformResponse: (response: any) => (response && response.data ? response.data : response),
       keepUnusedDataFor: 3600,
+      // The prerender ships fulfilled entries in the preloaded state: the first
+      // render must match that markup, but a mount must still refresh live data.
+      // (RTK reads `refetchOnMountOrArgChange` only from the createApi config or
+      // a hook option, so `forceRefetch` is the per-endpoint equivalent.)
+      forceRefetch: () => true,
     }),
   }),
 });

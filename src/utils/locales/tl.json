@@ -1120,7 +1120,7 @@
     },
     "moments": {
       "title": "BananaTalk Moments: Mga Kwento sa Wikang Pinag-aaralan Mo",
-      "description": "Ang Moments ay mga maiikling post at kwento na ibinabahagi ng mga nag-aaral ng wika sa BananaTalk. Tingnan kung paano ito ginagamit ng komunidad, pagkatapos mag-post ng sarili mo sa app."
+      "description": "Ang Moments ay mga maiikling post at kwento na ibinabahagi ng mga nag-aaral ng wika sa BananaTalk. Basahin ang feed, mag-react, at mag-post ng sarili mo."
     },
     "privacy": {
       "title": "Patakaran sa Privacy | BananaTalk",
@@ -1145,5 +1145,11 @@
     "body": "Maaaring luma na ang link, o maaaring nailipat na ang pahina. Narito ang paraan pabalik.",
     "home": "Pumunta sa homepage",
     "download": "Kunin ang app"
+  },
+  "consent": {
+    "label": "Pahintulot sa cookie",
+    "message": "Gumagamit kami ng analytics cookies para maunawaan kung ano ang nagdadala ng mga tao rito.",
+    "accept": "OK",
+    "decline": "Huwag na lang"
   }
 }

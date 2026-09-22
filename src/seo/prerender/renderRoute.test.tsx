@@ -49,3 +49,31 @@ it("shows the curated stat values, not a count-up starting at zero", async () =>
   expect(out.html).toContain(">137<");
   expect(out.html).toContain(">18<");
 });
+
+it("logs a warning per failed prefetch instead of swallowing the failure", async () => {
+  const log = jest.fn();
+  const out = await renderRoute("/", { prefetch: true, fetchTimeoutMs: 2000, log });
+  expect(log).toHaveBeenCalledTimes(2);
+  expect(log.mock.calls.every(([m]: [string]) => /prefetch for \/ failed/.test(m))).toBe(true);
+  expect(out.html).toContain(">137<");
+});
+
+it("logs a warning per failed prefetch for /moments and still renders, with state transferred", async () => {
+  const { apiSlice } = require("../../store/slices/apiSlice");
+  const log = jest.fn();
+  const out = await renderRoute("/moments", { prefetch: true, fetchTimeoutMs: 2000, log });
+  expect(log).toHaveBeenCalledTimes(2);
+  expect((out.html.match(/<h1[\s>]/g) || []).length).toBe(1);
+  expect(typeof out.state[apiSlice.reducerPath].queries).toBe("object");
+});
+
+it("returns the api slice state so the client can hydrate from it", async () => {
+  const { apiSlice } = require("../../store/slices/apiSlice");
+  const out = await renderRoute("/", { prefetch: false });
+  const api = out.state[apiSlice.reducerPath];
+  expect(api).toBeDefined();
+  // Nothing was fetched, but the shape must be there -- and subscriptions,
+  // which are client-only, must never cross the wire.
+  expect(api.queries).toEqual({});
+  expect(api.subscriptions).toEqual({});
+});

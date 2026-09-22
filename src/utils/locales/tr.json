@@ -1120,7 +1120,7 @@
     },
     "moments": {
       "title": "BananaTalk Moments: Hedef Dilinizde Hikayeler",
-      "description": "Moments, BananaTalk'ta dil öğrenenlerin paylaştığı kısa gönderiler ve hikayelerdir. Topluluğun bunları nasıl kullandığını görün, ardından uygulamada kendi gönderinizi paylaşın."
+      "description": "Moments, BananaTalk'ta dil öğrenenlerin paylaştığı kısa gönderiler ve hikayelerdir. Akışı okuyun, tepki verin ve kendi gönderinizi paylaşın."
     },
     "privacy": {
       "title": "Gizlilik Politikası | BananaTalk",
@@ -1145,5 +1145,11 @@
     "body": "Bağlantı eski olabilir veya sayfa taşınmış olabilir. İşte geri dönüş yolu.",
     "home": "Ana sayfaya git",
     "download": "Uygulamayı edin"
+  },
+  "consent": {
+    "label": "Çerez izni",
+    "message": "Ziyaretçileri buraya neyin getirdiğini anlamak için analiz çerezleri kullanıyoruz.",
+    "accept": "Tamam",
+    "decline": "Hayır, teşekkürler"
   }
 }

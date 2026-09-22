@@ -5,6 +5,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { createStaticHandler, createStaticRouter, StaticRouterProvider } from "react-router-dom/server";
 import { routes } from "../../router/routes";
 import { makeStore, AppStore } from "../../store";
+import { apiSlice } from "../../store/slices/apiSlice";
 import i18n from "../../utils/i18n";
 import { SITE_ORIGIN } from "../pages";
 import { makeRequest } from "./requestShim";
@@ -15,6 +16,8 @@ export interface RenderedRoute {
   status: number;
   html: string;
   head: string;
+  /** The store state the prerender fetched, for the client to hydrate from. */
+  state: Record<string, unknown>;
 }
 
 export interface RenderOptions {
@@ -105,5 +108,12 @@ export async function renderRoute(path: string, opts: RenderOptions = {}): Promi
   if (h1Count !== 1) throw new Error(`Route ${path} rendered ${h1Count} <h1> elements; expected exactly 1`);
   if (!/<title[^>]*>[^<]+<\/title>/.test(head)) throw new Error(`Route ${path} set no <title>`);
 
-  return { path, status: path === "/404" ? 404 : context.statusCode, html, head };
+  // Ship the fetched data with the page so the client's first render matches
+  // this markup. Subscriptions and in-flight mutations are per-client
+  // bookkeeping and mean nothing in the browser, so they are dropped;
+  // `queries` and `provided` carry the fulfilled results.
+  const apiState = store.getState()[apiSlice.reducerPath];
+  const state = { [apiSlice.reducerPath]: { ...apiState, subscriptions: {}, mutations: {} } };
+
+  return { path, status: path === "/404" ? 404 : context.statusCode, html, head, state };
 }

@@ -3,6 +3,8 @@
 export interface RenderedFragment {
   html: string;
   head: string;
+  /** Prefetched store state to hand the client. Absent: nothing is inlined. */
+  state?: Record<string, unknown>;
 }
 
 // Shell tags the page's own head replaces. Everything else in the template
@@ -23,6 +25,17 @@ const REPLACED_HEAD_TAGS: RegExp[] = [
 
 const ROOT = /<div id="root">\s*<\/div>/;
 
+/**
+ * The prerender's data, inlined right after the root div -- ahead of CRA's
+ * deferred bundle scripts, so the store is built from it. `<` is escaped
+ * because a "</script>" anywhere in the data would otherwise close this tag.
+ */
+function stateScript(state?: Record<string, unknown>): string {
+  if (!state) return "";
+  const json = JSON.stringify(state).replace(/</g, "\\u003c");
+  return `<script>window.__BT_PRELOADED_STATE__=${json};</script>`;
+}
+
 export function injectIntoTemplate(template: string, rendered: RenderedFragment): string {
   let doc = template;
   for (const re of REPLACED_HEAD_TAGS) doc = doc.replace(re, "");
@@ -31,5 +44,5 @@ export function injectIntoTemplate(template: string, rendered: RenderedFragment)
   // dollar signs (prices), and `$&` / `$'` in a string replacement would be
   // substituted rather than written out.
   doc = doc.replace("</head>", () => `${rendered.head}\n</head>`);
-  return doc.replace(ROOT, () => `<div id="root">${rendered.html}</div>`);
+  return doc.replace(ROOT, () => `<div id="root">${rendered.html}</div>${stateScript(rendered.state)}`);
 }

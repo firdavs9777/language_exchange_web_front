@@ -1121,7 +1121,7 @@
     },
     "moments": {
       "title": "Moments do BananaTalk: histórias no seu idioma-alvo",
-      "description": "Moments são postagens e histórias curtas compartilhadas por quem aprende idiomas no BananaTalk. Veja como a comunidade os usa e depois publique os seus no app."
+      "description": "Moments são postagens e histórias curtas compartilhadas por quem aprende idiomas no BananaTalk. Leia o feed, reaja e publique os seus."
     },
     "privacy": {
       "title": "Política de Privacidade | BananaTalk",
@@ -1146,5 +1146,11 @@
     "body": "O link pode estar desatualizado, ou a página pode ter sido movida. Aqui está o caminho de volta.",
     "home": "Ir para a página inicial",
     "download": "Baixar o app"
+  },
+  "consent": {
+    "label": "Consentimento de cookies",
+    "message": "Usamos cookies de análise para entender o que traz as pessoas até aqui.",
+    "accept": "OK",
+    "decline": "Não, obrigado"
   }
 }

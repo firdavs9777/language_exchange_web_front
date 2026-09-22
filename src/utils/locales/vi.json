@@ -1121,7 +1121,7 @@
     },
     "moments": {
       "title": "BananaTalk Moments: Câu Chuyện Bằng Ngôn Ngữ Bạn Đang Học",
-      "description": "Moments là những bài đăng và câu chuyện ngắn được người học ngôn ngữ chia sẻ trên BananaTalk. Xem cộng đồng sử dụng chúng như thế nào, rồi đăng bài của riêng bạn trong ứng dụng."
+      "description": "Moments là những bài đăng và câu chuyện ngắn được người học ngôn ngữ chia sẻ trên BananaTalk. Đọc bảng tin, thả cảm xúc, và đăng bài của riêng bạn."
     },
     "privacy": {
       "title": "Chính Sách Bảo Mật | BananaTalk",
@@ -1146,5 +1146,11 @@
     "body": "Liên kết có thể đã cũ, hoặc trang có thể đã được di chuyển. Đây là cách quay lại.",
     "home": "Về trang chủ",
     "download": "Tải ứng dụng"
+  },
+  "consent": {
+    "label": "Đồng ý sử dụng cookie",
+    "message": "Chúng tôi sử dụng cookie phân tích để hiểu điều gì đã đưa mọi người đến đây.",
+    "accept": "OK",
+    "decline": "Không, cảm ơn"
   }
 }

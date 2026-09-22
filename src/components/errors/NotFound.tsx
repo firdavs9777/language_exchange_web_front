@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import PageMeta from "../../seo/PageMeta";
 
-// Rendered by the "*" route. Prerendered to build/404.html and served by
-// nginx with a real 404 status (deploy/nginx.snippet.conf), so a dead link no
+// Rendered by the "*" route. Prerendered to build/404.html and, once
+// deploy/nginx.snippet.conf is applied on the server, served with a real 404
+// status for any URL outside the generated route allowlist -- so a dead link no
 // longer returns 200 with an empty page.
 const NotFound: React.FC = () => {
   const { t } = useTranslation();
