@@ -77,14 +77,15 @@ The code/flag mapping exists in five places:
 | `community/type.ts` — `LANGUAGE_CODES` (name→code) | 10 | `MemberCard` |
 | `community/type.ts` — `LANGUAGE_FLAGS` (**code**→flag) | 10 | `MemberCard` |
 | `community/utils.ts` — `getLanguageCode` + `getLanguageFlag` (**name**→flag, inline) | 10 | `CommunityDetail.tsx:23`, rendered at `:37` and `:43` |
-| `tandem/LanguageFlagChip.tsx:34` — own `codes` object | 10 | `TandemMemberCard`, `HighlightedProfilesCarousel` |
+| `tandem/LanguageFlagChip.tsx:34` — own `codes` object | 13 (the same ten plus Uzbek, Turkish, Arabic) | `TandemMemberCard`, `HighlightedProfilesCarousel` |
 | (nothing in Moments or Profile) | — | they cannot reach any of the above without importing across feature folders |
 
 Note that two of these are keyed differently — `type.ts` maps a *code* to a flag,
 `utils.ts` maps a *name* to a flag — so they are not even the same kind of table, and
 `CommunityDetail` is the screen that uses the odd one out.
 
-Three carry the same fallback (`MemberCard.tsx:41`, `utils.ts:6`, `LanguageFlagChip.tsx:34`):
+Three carry the same fallback (`MemberCard.tsx:42`, `utils.ts:7` — spelled `.slice(0, 2)`
+there — and `LanguageFlagChip.tsx:34`):
 
 ```ts
 return LANGUAGE_CODES[language] || language.substring(0, 2).toLowerCase();
@@ -93,18 +94,20 @@ return LANGUAGE_CODES[language] || language.substring(0, 2).toLowerCase();
 The backend catalog (`seeds/languages.js`) holds ~137 languages, so that fallback runs
 constantly, and it does not degrade gracefully — it resolves to a **different language**:
 
-| Language | `substring(0,2)` | Correct | Flag shown today |
-|---|---|---|---|
-| Javanese | `ja` | `jv` | 🇯🇵 — **Japan** |
-| Estonian | `es` | `et` | 🇪🇸 — **Spain** |
-| Frisian | `fr` | `fy` | 🇫🇷 — **France** |
-| Chinese (Traditional) | `ch` | `zh` | 🌐 |
-| Persian | `pe` | `fa` | 🌐 |
-| Filipino | `fi` | `tl` — and `fi` **is Finnish** | 🌐 |
+| Language | `substring(0,2)` | Correct | Flag today | Flag after |
+|---|---|---|---|---|
+| Estonian | `es` | `et` | 🇪🇸 — **Spain** | 🇪🇪 |
+| Frisian | `fr` | `fy` | 🇫🇷 — **France** | 🇳🇱 |
+| Esperanto | `es` | `eo` | 🇪🇸 — **Spain** | 🌐 |
+| Chinese (Traditional) | `ch` | `zh` | 🌐 | 🇨🇳 |
+| Persian | `pe` | `fa` | 🌐 | 🇮🇷 |
+| Filipino | `fi` | `tl` — and `fi` **is Finnish** | 🌐 | 🇵🇭 |
+
+Every row above is verified present in `seeds/languages.js` and `NAME_TO_ISO`.
 
 The failure has two shapes, and only one of them is visible. Where the slice lands on one
-of the ten flag keys, the user sees a **confidently wrong country** — a Javanese speaker
-flagged as Japanese. Where it does not, the flag falls back to 🌐, which is merely
+of the ten flag keys, the user sees a **confidently wrong country** — an Estonian speaker
+flagged as Spanish. Where it does not, the flag falls back to 🌐, which is merely
 unhelpful. §3.2 fixes both, and §3.2.2 has to widen the flag table to do it. It
 deliberately does **not** fix the pill's code path — see §3.2.1.
 
@@ -206,7 +209,7 @@ and data both:
    `arabic → AR`, `hindi → HI`, `tajik → TG`, `vietnamese → VI`, `thai → TH`,
    `indonesian → ID`, `turkish → TR`, `filipino → TL`, `cantonese → YUE`
 4. otherwise `toBaseIso6391`, uppercased — and this step is **not** a plain two-letter
-   truncation. Ported from `language_codes.dart:38`, in order: return nothing for the
+   truncation. Ported from `language_codes.dart:36`, in order: return nothing for the
    untaggable set `{ase, bfi, jsl, kvk, haw}` (sign languages and Hawaiian, which have no
    639-1 code); map the three-letter bases `fil → tl` and `prs → fa`; strip a hyphen
    suffix (`pt-BR` → `pt`); then accept the result only if it is exactly two letters.
@@ -233,10 +236,24 @@ language cannot be resolved.
 **The flag table is widened to match.** Correct name→code resolution alone fixes almost
 nothing: `LANGUAGE_FLAGS` holds ten code keys (`en es fr de it pt ru ja ko zh`), so Persian
 returns 🌐 whether it resolves to `pe` or `fa` — identical output, no observable fix. What
-correct resolution *does* fix immediately is the collisions: Javanese stops rendering 🇯🇵.
+correct resolution *does* fix immediately is the collisions: Estonian stops rendering 🇪🇸.
 To fix the rest, the flag table is expanded to cover **every code `NAME_TO_ISO` can
-produce** (~40), which is a data change, not a logic one. Anything still unresolved
-returns 🌐.
+produce — 115 distinct codes across its 134 name keys.**
+
+**Transcribe the table; do not author it.** `seeds/languages.js` already carries a `flag:`
+on all 138 entries, keyed by code — `{ code: 'fa', name: 'Persian', …, flag: '🇮🇷' }`,
+`{ code: 'et', …, flag: '🇪🇪' }`, `{ code: 'fy', …, flag: '🇳🇱' }`. It has already settled
+every judgment a hand-written table would stall on: Frisian is 🇳🇱, Hawaiian is 🇺🇸,
+Esperanto and the sign languages have no country and carry 🌐 or 🤟. Writing 115 entries
+by hand would mean re-deciding all of that, differently, in a second place.
+
+One transform is required: **16 of the seed codes are variant-level** (`zh-CN`, `pt-BR`,
+`ar-EG`), while `NAME_TO_ISO` emits base codes. Collapse each to its base and designate one
+flag for that base — `zh-CN`/`zh-HK`/`zh-TW` → `zh` → 🇨🇳, `pt`/`pt-BR` → `pt` → 🇵🇹 — using
+the catalog's first occurrence, which puts canonical entries first. That designation is the
+only real decision in the task, and it is ~8 of them, not 115.
+
+Anything still unresolved returns 🌐.
 
 This is the §2.4 fix. A wrong flag is a wrong *picture*, and unlike the pill's label it has
 no parity argument attached: the app resolves its flags by base ISO code
@@ -484,9 +501,12 @@ beside their tests, matching `MemberCard.test.tsx` and `parts/*.test.tsx`.
   §3.2.1, asserted so nobody "fixes" them into ISO), `'Persian' → 'PE'`,
   case-insensitivity, and `'' → ''`.
 - Unit: `languageFlag` — the §2.4 guard, asserted on cases whose **output actually
-  changes**: `'Javanese'` returns 🇮🇩 and **not** 🇯🇵, `'Estonian'` not 🇪🇸, `'Frisian'`
-  not 🇫🇷 (the collisions), and `'Persian'` returns 🇮🇷 rather than 🌐 (the widened table
-  from §3.2.2). A genuinely unknown language still returns `🌐`.
+  changes**: `'Estonian'` returns 🇪🇪 and **not** 🇪🇸, `'Frisian'` returns 🇳🇱 and not 🇫🇷
+  (the collisions), and `'Persian'` returns 🇮🇷 rather than 🌐 (the widened table from
+  §3.2.2). `'Esperanto'` returns 🌐 — correct, and distinct from the 🇪🇸 it shows today.
+  A genuinely unknown language still returns `🌐`.
+- Unit: a variant seed code collapses to its base — `languageFlag('Chinese (Traditional)')`
+  returns 🇨🇳 via `zh`, exercising the §3.2.2 transform rather than assuming it.
   Asserting `'Persian'` "resolves via `fa` not `pe`" would prove nothing through the
   public API — both codes were absent from the old ten-key table and both rendered 🌐.
 - Unit: `displayCode('Filipino') === 'TL'`, exercising the `fil → tl` branch of
@@ -526,9 +546,9 @@ and reshape.
 - **The §3.2 import swap touches live components.** `MemberCard`, `CommunityDetail`,
   `TandemMemberCard` and `HighlightedProfilesCarousel` change language source without
   changing layout. This is the only user-visible change in an otherwise invisible spec, and
-  it moves in two ways: flags that were **wrong** get corrected (Javanese 🇯🇵 → 🇮🇩), and
-  flags that were 🌐 become real for the ~30 languages the widened table adds. Both are the
-  fix; both should be eyeballed on a profile in an uncommon language before merge.
+  it moves in two ways: flags that were **wrong** get corrected (Estonian 🇪🇸 → 🇪🇪), and
+  flags that were 🌐 become real across the widened table. Both are the fix; both should be
+  eyeballed on a profile in an uncommon language before merge.
   `CommunityDetail` deserves its own look, since it is the one screen whose flag helper was
   keyed by name rather than by code.
 - **`gray` stays Cool Gray.** Every text and border colour on the web remains slightly
