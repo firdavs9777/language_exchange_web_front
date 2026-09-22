@@ -27,15 +27,8 @@ export const COMMON_LANGUAGES = [
   "Japanese", "Chinese", "Portuguese", "Russian", "Italian"
 ] as const;
 
-export const LANGUAGE_FLAGS: Record<string, string> = {
-  en: "🇺🇸", es: "🇪🇸", fr: "🇫🇷", de: "🇩🇪", it: "🇮🇹",
-  pt: "🇵🇹", ru: "🇷🇺", ja: "🇯🇵", ko: "🇰🇷", zh: "🇨🇳",
-};
-
-export const LANGUAGE_CODES: Record<string, string> = {
-  English: "en", Spanish: "es", French: "fr", German: "de", Italian: "it",
-  Portuguese: "pt", Russian: "ru", Japanese: "ja", Korean: "ko", Chinese: "zh",
-};
+// Both tables now live in src/utils/languages.ts, generated from the backend
+// catalog. New code should import displayCode/languageFlag directly.
 
 export const TABS = [
   { id: "all" as const, label: "All", icon: Users },
