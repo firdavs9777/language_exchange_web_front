@@ -1136,5 +1136,12 @@
       "title": "Demande de suppression des données | BananaTalk",
       "description": "Comment supprimer votre compte BananaTalk et vos données personnelles, et ce qui se passe après votre demande."
     }
+  },
+  "notFound": {
+    "pageTitle": "Page introuvable | BananaTalk",
+    "title": "Cette page n'existe pas",
+    "body": "Le lien est peut-être ancien, ou la page a pu être déplacée. Voici comment revenir.",
+    "home": "Aller à la page d'accueil",
+    "download": "Obtenir l'application"
   }
 }

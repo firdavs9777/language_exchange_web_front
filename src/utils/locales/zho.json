@@ -1122,5 +1122,12 @@
       "title": "数据删除请求 | BananaTalk",
       "description": "了解如何删除你的 BananaTalk 账户和个人数据,以及申请后会发生什么。"
     }
+  },
+  "notFound": {
+    "pageTitle": "找不到页面 | BananaTalk",
+    "title": "此页面不存在",
+    "body": "链接可能已过期，或页面可能已被移动。这是返回的方法。",
+    "home": "前往首页",
+    "download": "获取应用"
   }
 }

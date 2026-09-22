@@ -1135,5 +1135,12 @@
       "title": "Veri Silme Talebi | BananaTalk",
       "description": "BananaTalk hesabınızı ve kişisel verilerinizi nasıl sileceğiniz ve talep sonrasında neler olacağı."
     }
+  },
+  "notFound": {
+    "pageTitle": "Sayfa bulunamadı | BananaTalk",
+    "title": "Bu sayfa mevcut değil",
+    "body": "Bağlantı eski olabilir veya sayfa taşınmış olabilir. İşte geri dönüş yolu.",
+    "home": "Ana sayfaya git",
+    "download": "Uygulamayı edin"
   }
 }

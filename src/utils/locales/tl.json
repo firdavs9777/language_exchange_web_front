@@ -1135,5 +1135,12 @@
       "title": "Kahilingan sa Pagbura ng Data | BananaTalk",
       "description": "Kung paano burahin ang iyong BananaTalk account at personal na data, at kung ano ang mangyayari pagkatapos mong humiling."
     }
+  },
+  "notFound": {
+    "pageTitle": "Hindi Nahanap ang Pahina | BananaTalk",
+    "title": "Ang pahinang ito ay hindi umiiral",
+    "body": "Maaaring luma na ang link, o maaaring nailipat na ang pahina. Narito ang paraan pabalik.",
+    "home": "Pumunta sa homepage",
+    "download": "Kunin ang app"
   }
 }

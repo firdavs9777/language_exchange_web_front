@@ -1136,5 +1136,12 @@
       "title": "Solicitud de Eliminación de Datos | BananaTalk",
       "description": "Cómo eliminar tu cuenta de BananaTalk y tus datos personales, y qué sucede después de solicitarlo."
     }
+  },
+  "notFound": {
+    "pageTitle": "Página no encontrada | BananaTalk",
+    "title": "Esta página no existe",
+    "body": "El enlace puede ser antiguo, o la página pudo haberse movido. Aquí tienes el camino de regreso.",
+    "home": "Ir a la página de inicio",
+    "download": "Obtener la app"
   }
 }

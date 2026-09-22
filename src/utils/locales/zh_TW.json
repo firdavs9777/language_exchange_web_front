@@ -1122,5 +1122,12 @@
       "title": "資料刪除請求 | BananaTalk",
       "description": "了解如何刪除你的 BananaTalk 帳戶與個人資料,以及申請後會發生什麼事。"
     }
+  },
+  "notFound": {
+    "pageTitle": "找不到頁面 | BananaTalk",
+    "title": "此頁面不存在",
+    "body": "連結可能已過期，或頁面可能已被搬移。這是返回的方法。",
+    "home": "前往首頁",
+    "download": "取得應用程式"
   }
 }

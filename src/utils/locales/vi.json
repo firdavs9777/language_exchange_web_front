@@ -1136,5 +1136,12 @@
       "title": "Yêu Cầu Xóa Dữ Liệu | BananaTalk",
       "description": "Cách xóa tài khoản BananaTalk và dữ liệu cá nhân của bạn, và điều gì xảy ra sau khi bạn yêu cầu."
     }
+  },
+  "notFound": {
+    "pageTitle": "Không tìm thấy trang | BananaTalk",
+    "title": "Trang này không tồn tại",
+    "body": "Liên kết có thể đã cũ, hoặc trang có thể đã được di chuyển. Đây là cách quay lại.",
+    "home": "Về trang chủ",
+    "download": "Tải ứng dụng"
   }
 }

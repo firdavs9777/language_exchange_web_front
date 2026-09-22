@@ -1136,5 +1136,12 @@
       "title": "Antrag auf Datenlöschung | BananaTalk",
       "description": "Wie du dein BananaTalk-Konto und deine persönlichen Daten löschst, und was danach passiert."
     }
+  },
+  "notFound": {
+    "pageTitle": "Seite nicht gefunden | BananaTalk",
+    "title": "Diese Seite gibt es nicht",
+    "body": "Der Link ist möglicherweise veraltet, oder die Seite wurde verschoben. Hier geht es zurück.",
+    "home": "Zur Startseite",
+    "download": "App herunterladen"
   }
 }

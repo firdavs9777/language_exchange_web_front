@@ -1164,5 +1164,12 @@
       "title": "Data Deletion Request | BananaTalk",
       "description": "How to delete your BananaTalk account and personal data, and what happens after you ask."
     }
+  },
+  "notFound": {
+    "pageTitle": "Page not found | BananaTalk",
+    "title": "This page doesn't exist",
+    "body": "The link may be old, or the page may have moved. Here is the way back.",
+    "home": "Go to the homepage",
+    "download": "Get the app"
   }
 }

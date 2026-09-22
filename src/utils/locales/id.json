@@ -1136,5 +1136,12 @@
       "title": "Permintaan Penghapusan Data | BananaTalk",
       "description": "Cara menghapus akun BananaTalk dan data pribadimu, serta yang terjadi setelah kamu mengajukan permintaan."
     }
+  },
+  "notFound": {
+    "pageTitle": "Halaman tidak ditemukan | BananaTalk",
+    "title": "Halaman ini tidak ada",
+    "body": "Tautan mungkin sudah lama, atau halaman mungkin telah dipindahkan. Berikut cara untuk kembali.",
+    "home": "Ke halaman utama",
+    "download": "Dapatkan aplikasinya"
   }
 }

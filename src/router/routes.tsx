@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import App from "../App";
 import HomeScreen from "../components/home/HomeMain";
+import NotFound from "../components/errors/NotFound";
 
 import MainCommnity from "../components/community/MainCommunity";
 import Login from "../components/auth/Login";
@@ -124,5 +125,8 @@ export const routes = createRoutesFromElements(
 
     {/* Moments */}
     <Route path="moments/saved" element={<SavedMoments />} />
+
+    {/* Catch-all. Must stay last. */}
+    <Route path="*" element={<NotFound />} />
   </Route>
 );

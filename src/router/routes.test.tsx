@@ -24,3 +24,10 @@ it("matches every public marketing path to a layout plus a page", () => {
     expect(matches![1].route.path).not.toBe("*");
   }
 });
+
+it("sends unknown paths to the catch-all route", () => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, "/no-such-page");
+  expect(matches && matches.length).toBe(2);
+  expect(matches![1].route.path).toBe("*");
+});

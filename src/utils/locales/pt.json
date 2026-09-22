@@ -1136,5 +1136,12 @@
       "title": "Solicitação de Exclusão de Dados | BananaTalk",
       "description": "Como excluir sua conta e dados pessoais do BananaTalk, e o que acontece após o pedido."
     }
+  },
+  "notFound": {
+    "pageTitle": "Página não encontrada | BananaTalk",
+    "title": "Esta página não existe",
+    "body": "O link pode estar desatualizado, ou a página pode ter sido movida. Aqui está o caminho de volta.",
+    "home": "Ir para a página inicial",
+    "download": "Baixar o app"
   }
 }
