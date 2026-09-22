@@ -241,7 +241,7 @@ To fix the rest, the flag table is expanded to cover **every code `NAME_TO_ISO` 
 produce — 115 distinct codes across its 134 name keys.**
 
 **Transcribe the table; do not author it.** `seeds/languages.js` already carries a `flag:`
-on all 138 entries, keyed by code — `{ code: 'fa', name: 'Persian', …, flag: '🇮🇷' }`,
+on all 137 entries, keyed by code — `{ code: 'fa', name: 'Persian', …, flag: '🇮🇷' }`,
 `{ code: 'et', …, flag: '🇪🇪' }`, `{ code: 'fy', …, flag: '🇳🇱' }`. It has already settled
 every judgment a hand-written table would stall on: Frisian is 🇳🇱, Hawaiian is 🇺🇸,
 Esperanto and the sign languages have no country and carry 🌐 or 🤟. Writing 115 entries
@@ -266,8 +266,14 @@ So `languageFlag` resolves in two steps:
 
 This makes `displayCode` and `languageFlag` deliberately asymmetric, and correctly so: the
 pill's *label* names the language (`ZH` either way, per §3.2.1), while the flag names the
-specific variant the user actually chose. Remaining bases where no variant applies take
-their sole catalog entry; anything still unresolved returns 🌐.
+specific variant the user actually chose. Every other base takes its sole catalog entry. Measured against the real data, **114 of
+the 115 codes resolve directly from the catalog and exactly one does not**: `zh` has no
+base row at all, only `zh-CN` 🇨🇳, `zh-TW` 🇹🇼 and `zh-HK` 🇭🇰. So the designation list is a
+single line — `zh → 🇨🇳`, which is also what plain "Chinese" renders today, so no current
+behaviour changes. The generator must **fail loudly** if a future catalog adds a second
+such gap, rather than quietly emitting 🌐.
+
+Anything still unresolved returns 🌐.
 
 This is the §2.4 fix. A wrong flag is a wrong *picture*, and unlike the pill's label it has
 no parity argument attached: the app resolves its flags by base ISO code
