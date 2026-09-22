@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { prefersReducedMotion } from "./useInView";
+import { isPrerendered } from "../../../seo/prerender/hydrationFlag";
 
 /**
  * Animates 0 -> target with an ease-out curve, for the stat strip.
@@ -13,7 +14,10 @@ export function useCountUp(
   opts: { durationMs?: number; start?: boolean } = {}
 ): number {
   const { durationMs = 1200, start = true } = opts;
-  const reduced = prefersReducedMotion();
+  // Instant (final value on the first render) under reduced motion, in Node,
+  // and when hydrating prerendered HTML: a crawler must never read "0
+  // languages", and hydration must not flip the text from 137 to 0.
+  const reduced = prefersReducedMotion() || typeof window === "undefined" || isPrerendered();
   const [value, setValue] = useState(reduced ? target : 0);
   const frame = useRef<number>();
 

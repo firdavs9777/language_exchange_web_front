@@ -151,6 +151,9 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    // Every translation is inlined below, so the http backend never loads a
+    // thing — and must not schedule its hourly reload (an open handle in Node).
+    backend: { reloadInterval: false },
     resources: {
       en: { translation: en },
       ko: { translation: ko },

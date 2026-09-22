@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { isPrerendered } from "../../../seo/prerender/hydrationFlag";
 
 /** True when the user has asked for less motion. Read at call time, not cached. */
 export function prefersReducedMotion(): boolean {
@@ -24,7 +25,7 @@ export function useInView<T extends HTMLElement>(
   const { once = true, rootMargin = "0px 0px -10% 0px" } = options;
   const ref = useRef<T>(null);
   const [inView, setInView] = useState(
-    () => typeof IntersectionObserver === "undefined" || prefersReducedMotion()
+    () => typeof IntersectionObserver === "undefined" || prefersReducedMotion() || isPrerendered()
   );
 
   useEffect(() => {
