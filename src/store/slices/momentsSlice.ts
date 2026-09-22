@@ -9,6 +9,11 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
       providesTags: ['Moments'],
+      // The prerender ships fulfilled entries in the preloaded state: the first
+      // render must match that markup, but a mount must still refresh live data.
+      // (RTK reads `refetchOnMountOrArgChange` only from the createApi config or
+      // a hook option, so `forceRefetch` is the per-endpoint equivalent.)
+      forceRefetch: () => true,
     }),
     // Trending moments
     getTrendingMoments: builder.query({
@@ -212,6 +217,11 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
       query: ({ language }: { language?: string } = {}) => ({
         url: `${MOMENTS_URL}/prompt-of-day${language ? `?language=${language}` : ''}`,
       }),
+      // The prerender ships fulfilled entries in the preloaded state: the first
+      // render must match that markup, but a mount must still refresh live data.
+      // (RTK reads `refetchOnMountOrArgChange` only from the createApi config or
+      // a hook option, so `forceRefetch` is the per-endpoint equivalent.)
+      forceRefetch: () => true,
     }),
     // Reels feed — GET /api/v1/moments/reels?before=&limit=
     // Returns {success, data, nextCursor}. NOTE: 404s when backend

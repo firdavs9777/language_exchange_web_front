@@ -6,7 +6,8 @@ import ConsentBar from "./ConsentBar";
 import { openSurface, _resetSurfacesForTests } from "./surfaceRegistry";
 
 jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
-jest.mock("../../analytics/ga", () => ({ loadGa: jest.fn(), gaEvent: jest.fn() }));
+// An id must be present for the bar to render at all; ConsentBar.noGa.test.tsx covers the empty case.
+jest.mock("../../analytics/ga", () => ({ GA_MEASUREMENT_ID: "G-TEST", loadGa: jest.fn(), gaEvent: jest.fn() }));
 const { loadGa } = require("../../analytics/ga");
 
 beforeEach(() => {

@@ -82,6 +82,11 @@ export const plansApiSlice = apiSlice.injectEndpoints({
         return Array.isArray(response?.data) ? response.data : [];
       },
       keepUnusedDataFor: 300,
+      // The prerender ships fulfilled entries in the preloaded state: the first
+      // render must match that markup, but a mount must still refresh live data.
+      // (RTK reads `refetchOnMountOrArgChange` only from the createApi config or
+      // a hook option, so `forceRefetch` is the per-endpoint equivalent.)
+      forceRefetch: () => true,
     }),
   }),
 });

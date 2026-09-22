@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { readConsent, writeConsent, Consent } from "../../analytics/consent";
-import { loadGa } from "../../analytics/ga";
+import { loadGa, GA_MEASUREMENT_ID } from "../../analytics/ga";
 import { useSurfaceOpen } from "./surfaceRegistry";
 
 type State = "pending" | Consent | null; // pending until mounted: never in prerendered HTML
@@ -16,6 +16,12 @@ const ConsentBar: React.FC = () => {
     setState(stored);
     if (stored === "granted") loadGa();
   }, []);
+
+  // No measurement id: GA is inert, so asking for consent collects a decision
+  // nothing acts on. Below the hooks so they still run unconditionally.
+  // When GA is switched on this bar also needs a way to withdraw consent, which
+  // it does not have yet (follow-up).
+  if (!GA_MEASUREMENT_ID) return null;
 
   if (state !== null || popupOpen) return null;
 
