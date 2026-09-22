@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import {  RouterProvider } from "react-router-dom";
 import { Provider } from "react-redux";
 import "./assets/styles/bootstrap.custom.css";
+import "./assets/styles/legacy-buttons.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 import router from "./router/AppRouter";
