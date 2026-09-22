@@ -68,18 +68,23 @@ nothing at all. On a language exchange product the exchange pair is the single m
 important fact about a person, and the web currently makes three different weak claims
 about it.
 
-### 2.4 Four language-code maps, and the fallback picks the wrong language
+### 2.4 Five language-code maps, and the fallback picks the wrong language
 
-The code/flag mapping exists in four places:
+The code/flag mapping exists in five places:
 
 | Location | Entries | Consumers |
 |---|---|---|
-| `components/community/type.ts` | 10 | `MemberCard`, `community/utils.ts` |
-| `tandem/LanguageFlagChip.tsx:34` | own `codes` object | `TandemMemberCard`, `HighlightedProfilesCarousel` |
-| `community/utils.ts` | re-export | — |
+| `community/type.ts` — `LANGUAGE_CODES` (name→code) | 10 | `MemberCard` |
+| `community/type.ts` — `LANGUAGE_FLAGS` (**code**→flag) | 10 | `MemberCard` |
+| `community/utils.ts` — `getLanguageCode` + `getLanguageFlag` (**name**→flag, inline) | 10 | `CommunityDetail.tsx:23`, rendered at `:37` and `:43` |
+| `tandem/LanguageFlagChip.tsx:34` — own `codes` object | 10 | `TandemMemberCard`, `HighlightedProfilesCarousel` |
 | (nothing in Moments or Profile) | — | they cannot reach any of the above without importing across feature folders |
 
-Two of those carry the same fallback (`MemberCard.tsx:41`, `LanguageFlagChip.tsx:34`):
+Note that two of these are keyed differently — `type.ts` maps a *code* to a flag,
+`utils.ts` maps a *name* to a flag — so they are not even the same kind of table, and
+`CommunityDetail` is the screen that uses the odd one out.
+
+Three carry the same fallback (`MemberCard.tsx:41`, `utils.ts:6`, `LanguageFlagChip.tsx:34`):
 
 ```ts
 return LANGUAGE_CODES[language] || language.substring(0, 2).toLowerCase();
@@ -88,14 +93,20 @@ return LANGUAGE_CODES[language] || language.substring(0, 2).toLowerCase();
 The backend catalog (`seeds/languages.js`) holds ~137 languages, so that fallback runs
 constantly, and it does not degrade gracefully — it resolves to a **different language**:
 
-| Language | `substring(0,2)` | Correct (backend `utils/languageCodes.js`) |
-|---|---|---|
-| Persian | `pe` | `fa` |
-| Chinese (Traditional) | `ch` | `zh` |
-| Filipino | `fi` | `tl` — and `fi` **is Finnish** |
+| Language | `substring(0,2)` | Correct | Flag shown today |
+|---|---|---|---|
+| Javanese | `ja` | `jv` | 🇯🇵 — **Japan** |
+| Estonian | `es` | `et` | 🇪🇸 — **Spain** |
+| Frisian | `fr` | `fy` | 🇫🇷 — **France** |
+| Chinese (Traditional) | `ch` | `zh` | 🌐 |
+| Persian | `pe` | `fa` | 🌐 |
+| Filipino | `fi` | `tl` — and `fi` **is Finnish** | 🌐 |
 
-Today that produces a wrong flag. §3.2 fixes the flag path. It deliberately does **not**
-fix the pill's code path — see §3.2.1.
+The failure has two shapes, and only one of them is visible. Where the slice lands on one
+of the ten flag keys, the user sees a **confidently wrong country** — a Javanese speaker
+flagged as Japanese. Where it does not, the flag falls back to 🌐, which is merely
+unhelpful. §3.2 fixes both, and §3.2.2 has to widen the flag table to do it. It
+deliberately does **not** fix the pill's code path — see §3.2.1.
 
 ### 2.5 Two design systems are layered on top of each other
 
@@ -174,7 +185,7 @@ without re-checking all four together.
 
 ### 3.2 `src/utils/languages.ts`
 
-All four maps in §2.4 collapse into one module, which exposes two functions along the two
+All five maps in §2.4 collapse into one module, which exposes two functions along the two
 paths the app itself keeps separate:
 
 ```ts
@@ -194,7 +205,13 @@ and data both:
    `french → FR`, `german → DE`, `italian → IT`, `portuguese → PT`, `russian → RU`,
    `arabic → AR`, `hindi → HI`, `tajik → TG`, `vietnamese → VI`, `thai → TH`,
    `indonesian → ID`, `turkish → TR`, `filipino → TL`, `cantonese → YUE`
-4. otherwise base ISO 639-1, uppercased
+4. otherwise `toBaseIso6391`, uppercased — and this step is **not** a plain two-letter
+   truncation. Ported from `language_codes.dart:38`, in order: return nothing for the
+   untaggable set `{ase, bfi, jsl, kvk, haw}` (sign languages and Hawaiian, which have no
+   639-1 code); map the three-letter bases `fil → tl` and `prs → fa`; strip a hyphen
+   suffix (`pt-BR` → `pt`); then accept the result only if it is exactly two letters.
+   **Skipping the `fil → tl` case here would send Filipino to step 5 and produce `FI` —
+   Finnish — which is the precise bug §2.4 exists to name.**
 5. otherwise the first two letters, uppercased
 
 **This reproduces two of the app's own quirks on purpose.** `japanese → JP` is a country
@@ -211,14 +228,33 @@ Both quirks are logged in §6.5 for the app team.
 
 The flag resolves through the backend's own `NAME_TO_ISO`
 (`utils/languageCodes.js`) — case-insensitive, variant stripped — returning `🌐` when the
-language cannot be resolved. This is the §2.4 fix: a wrong flag is a wrong *picture*, and
-unlike the pill's label it has no parity argument attached, since the app resolves flags by
-base ISO code too rather than through `displayCode`.
+language cannot be resolved.
 
-**Migration.** `components/community/type.ts` and `tandem/LanguageFlagChip.tsx` both
-re-export from the new module rather than keeping their own maps, so `MemberCard`,
-`TandemMemberCard` and `HighlightedProfilesCarousel` are corrected by this spec without
-being rewritten by it. No other behaviour in those files changes.
+**The flag table is widened to match.** Correct name→code resolution alone fixes almost
+nothing: `LANGUAGE_FLAGS` holds ten code keys (`en es fr de it pt ru ja ko zh`), so Persian
+returns 🌐 whether it resolves to `pe` or `fa` — identical output, no observable fix. What
+correct resolution *does* fix immediately is the collisions: Javanese stops rendering 🇯🇵.
+To fix the rest, the flag table is expanded to cover **every code `NAME_TO_ISO` can
+produce** (~40), which is a data change, not a logic one. Anything still unresolved
+returns 🌐.
+
+This is the §2.4 fix. A wrong flag is a wrong *picture*, and unlike the pill's label it has
+no parity argument attached: the app resolves its flags by base ISO code
+(`services/language_service.dart:204`) rather than through `displayCode`. The app also
+carries a second, name-keyed flag map at `single_moment.dart:57`, so "the app does it this
+way" is support for the choice, not proof — the choice stands on the collisions being
+wrong regardless.
+
+**Migration.** `components/community/type.ts`, `components/community/utils.ts` and
+`tandem/LanguageFlagChip.tsx` all re-export from the new module rather than keeping their
+own maps, so `MemberCard`, `CommunityDetail`, `TandemMemberCard` and
+`HighlightedProfilesCarousel` are corrected by this spec without being rewritten by it.
+
+`utils.ts` needs the most care of the three: its `getLanguageFlag` is keyed by language
+*name* while `type.ts`'s is keyed by *code*, so the replacement must accept a name — which
+the new `languageFlag(language)` does. `utils.ts` keeps `generateRandomStats` and
+`useDebounce`, which have nothing to do with languages. No other behaviour in any of the
+three changes.
 
 ### 3.3 `LanguageExchangePill`
 
@@ -226,7 +262,7 @@ The centrepiece. `KO ⇄ EN` in a brand-teal pill, with proficiency dots on the 
 
 ```
 ╭──────────────────────╮
-│  KO  ⇄  EN  ● ● ○    │   brand/9% fill, rounded-full, brand-dark text
+│  KO  ⇄  EN  ● ● ○    │   bg-brand/[0.09], rounded-full, brand-dark text
 ╰──────────────────────╯
 ```
 
@@ -296,7 +332,12 @@ Dark mode drops the shadow rather than darkening it, matching
 ### 3.6 `Badge`
 
 `<Badge tone="banana">VIP</Badge>` / `<Badge tone="brand">New</Badge>` — a round chip,
-tonal fill at the app's alphas (banana 28%, brand 12%), dark-tone text. Replaces the
+tonal fill at the app's alphas (banana 28%, brand 12%), dark-tone text.
+
+Alphas are written as arbitrary opacity modifiers (`bg-banana/[0.28]`, `bg-brand/[0.12]`),
+not `/28` and `/12`. Tailwind v3's shorthand modifier only accepts steps present in
+`theme.opacity`, and an absent step emits **no background rule at all** rather than a build
+error — the same silent-failure shape §3.1 was restructured to avoid. Replaces the
 gradient-filled badges currently inlined in `MemberCard`.
 
 ### 3.7 `FollowButton`
@@ -335,6 +376,11 @@ ten unowned, that trigger can never fire.
 scheduled after Notifications.** Its scope is exactly those ten files plus the `index.tsx`
 imports, the `App.tsx` `Container`, and the four package removals. Naming it now keeps
 "frozen" from quietly meaning "permanent".
+
+Two of those four need not wait: `react-router-bootstrap` and
+`@types/react-router-bootstrap` have **zero** usages anywhere in `src/`. They can be
+dropped in this sub-project, and are called out here so nobody re-adds them in the
+interim.
 
 Removing Bootstrap inside *this* spec would mean rewriting ~2,600 lines of markup before a
 single pixel matched the app, with the tokens it was meant to validate still unproven.
@@ -437,8 +483,14 @@ beside their tests, matching `MemberCard.test.tsx` and `parts/*.test.tsx`.
   'ZH'`, **`'Japanese' → 'JP'`** and **`'Cantonese' → 'YUE'`** (the deliberate quirks of
   §3.2.1, asserted so nobody "fixes" them into ISO), `'Persian' → 'PE'`,
   case-insensitivity, and `'' → ''`.
-- Unit: `languageFlag` — `'Persian'` resolves via `fa` and **not** via `pe`; `'Filipino'`
-  does not resolve as Finnish; an unknown language returns `🌐`. This is the §2.4 guard.
+- Unit: `languageFlag` — the §2.4 guard, asserted on cases whose **output actually
+  changes**: `'Javanese'` returns 🇮🇩 and **not** 🇯🇵, `'Estonian'` not 🇪🇸, `'Frisian'`
+  not 🇫🇷 (the collisions), and `'Persian'` returns 🇮🇷 rather than 🌐 (the widened table
+  from §3.2.2). A genuinely unknown language still returns `🌐`.
+  Asserting `'Persian'` "resolves via `fa` not `pe`" would prove nothing through the
+  public API — both codes were absent from the old ten-key table and both rendered 🌐.
+- Unit: `displayCode('Filipino') === 'TL'`, exercising the `fil → tl` branch of
+  §3.2.1 step 4 specifically. Without it the port silently regresses to `FI` — Finnish.
 - Unit: the level→dots mapping, each CEFR band, plus `null`, `undefined`, `''` and an
   unrecognised string all yielding no dots.
 - Component: `LanguageExchangePill` renders both codes and the right dot count; **asserts
@@ -471,11 +523,14 @@ and reshape.
 - **Two primitives land with a single consumer each.** `SurfaceCard` and `Badge` are used
   by Community first and only proven when Moments and Profile arrive. If either API is
   wrong, it is wrong in one place and cheap to change; both are deliberately thin.
-- **The §3.2 import swap touches live components.** `MemberCard`, `TandemMemberCard` and
-  `HighlightedProfilesCarousel` change language source without changing layout. Their
-  rendered flags *will* change for languages outside the old ten-entry map — that is the
-  fix, but it is the only user-visible change in an otherwise invisible spec, and should
-  be eyeballed on a profile in a less common language.
+- **The §3.2 import swap touches live components.** `MemberCard`, `CommunityDetail`,
+  `TandemMemberCard` and `HighlightedProfilesCarousel` change language source without
+  changing layout. This is the only user-visible change in an otherwise invisible spec, and
+  it moves in two ways: flags that were **wrong** get corrected (Javanese 🇯🇵 → 🇮🇩), and
+  flags that were 🌐 become real for the ~30 languages the widened table adds. Both are the
+  fix; both should be eyeballed on a profile in an uncommon language before merge.
+  `CommunityDetail` deserves its own look, since it is the one screen whose flag helper was
+  keyed by name rather than by code.
 - **`gray` stays Cool Gray.** Every text and border colour on the web remains slightly
   bluer than the app's. Accepted and documented rather than assumed away; revisit once the
   surfaces are converted and the difference can be judged side by side.
