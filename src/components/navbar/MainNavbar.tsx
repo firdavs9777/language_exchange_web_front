@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import {
   FaUsers,
   FaComment,
@@ -22,6 +22,8 @@ import { NavLink } from "react-router-dom";
 
 import { BASE_URL } from "../../constants";
 import logo from "../../assets/logo.png";
+import { useGetConversationsQuery } from "../../store/slices/chatSlice";
+import { useSocket } from "../chat/hooks/useSocket";
 import "./MainNavbar.scss";
 
 const LANGUAGES = [
@@ -60,6 +62,38 @@ const MainNavbar = () => {
   const { t, i18n } = useTranslation();
 
   const currentLang = LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0];
+
+  // Unread chat badge. Shares the same RTK Query cache key UsersList uses
+  // ({page:1, limit:50}), so no duplicate request when the chat page is also
+  // mounted; refetches live off the same socket events UsersList reacts to,
+  // so the badge stays correct even when the chat page isn't open at all.
+  const currentUserId = userInfo?.user?._id;
+  const { data: conversationsData, refetch: refetchConversations } = useGetConversationsQuery(
+    { page: 1, limit: 50 },
+    { skip: !currentUserId }
+  );
+  const { socket } = useSocket();
+
+  const unreadChatCount = useMemo(() => {
+    const list = conversationsData?.data;
+    if (!Array.isArray(list)) return 0;
+    return list.reduce((sum: number, c: any) => sum + (c?.unreadCount || 0), 0);
+  }, [conversationsData]);
+
+  useEffect(() => {
+    if (!socket || !currentUserId) return;
+    const handleConversationsChanged = () => refetchConversations();
+    socket.on("newMessage", handleConversationsChanged);
+    socket.on("newVoiceMessage", handleConversationsChanged);
+    socket.on("newVideoMessage", handleConversationsChanged);
+    socket.on("messagesRead", handleConversationsChanged);
+    return () => {
+      socket.off("newMessage", handleConversationsChanged);
+      socket.off("newVoiceMessage", handleConversationsChanged);
+      socket.off("newVideoMessage", handleConversationsChanged);
+      socket.off("messagesRead", handleConversationsChanged);
+    };
+  }, [socket, currentUserId, refetchConversations]);
 
   // Scroll effect
   useEffect(() => {
@@ -161,7 +195,14 @@ const MainNavbar = () => {
                   to="/chat"
                   className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
                 >
-                  <FaComment />
+                  <span className="navbar-icon-wrap">
+                    <FaComment />
+                    {unreadChatCount > 0 && (
+                      <span className="navbar-unread-badge" data-testid="chat-unread-badge">
+                        {unreadChatCount > 99 ? "99+" : unreadChatCount}
+                      </span>
+                    )}
+                  </span>
                   <span>{t("chat")}</span>
                 </NavLink>
 
@@ -311,7 +352,15 @@ const MainNavbar = () => {
               {userInfo && (
                 <>
                   <NavLink to="/chat" className="mobile-nav-link" onClick={closeMobileMenu}>
-                    <FaComment /> {t("chat")}
+                    <span className="navbar-icon-wrap">
+                      <FaComment />
+                      {unreadChatCount > 0 && (
+                        <span className="navbar-unread-badge" data-testid="chat-unread-badge-mobile">
+                          {unreadChatCount > 99 ? "99+" : unreadChatCount}
+                        </span>
+                      )}
+                    </span>{" "}
+                    {t("chat")}
                   </NavLink>
                   <NavLink to="/moments" className="mobile-nav-link" onClick={closeMobileMenu}>
                     <FaGlobe /> {t("moments")}

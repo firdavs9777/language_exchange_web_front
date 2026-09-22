@@ -303,6 +303,31 @@
       "addLocation": "Tambahkan lokasi",
       "addTags": "Tambahkan tag",
       "tagPlaceholder": "Tambahkan tag..."
+    },
+    "promo": {
+      "title": "Momen kini ada di aplikasi",
+      "subtitle": "Story, balasan AI Study, dan feed yang dibuat untuk ponsel, bukan tab browser. Gratis dipasang, tanpa ganti akun.",
+      "appStore": "Unduh di App Store",
+      "playStore": "Unduh di Google Play",
+      "appOnly": "Di aplikasi",
+      "perks": {
+        "stories": {
+          "title": "Story yang menghilang",
+          "body": "Bagikan momen yang bertahan 24 jam, seperti cara komunitas aplikasi benar-benar memakainya."
+        },
+        "aiStudy": {
+          "title": "Balasan AI Study",
+          "body": "Posting dalam bahasa yang sedang kamu pelajari dan dapatkan koreksi lembut dari AI langsung di komentar."
+        },
+        "reactions": {
+          "title": "Reaksi lebih kaya",
+          "body": "Reaksi suara, terjemahan sekali ketuk, dan utas komentar yang dibuat untuk feed, bukan formulir."
+        },
+        "notifications": {
+          "title": "Notifikasi langsung",
+          "body": "Tahu seketika saat seseorang dari bahasa targetmu membalas, tanpa menyegarkan tab browser."
+        }
+      }
     }
   },
   "createMoment": {
@@ -914,7 +939,11 @@
         "message1": "Halo! Apa kabar? 👋",
         "message2": "Hey! I'm practicing Indonesian!",
         "message3": "Bagus! Ayo berlatih bersama 🇮🇩"
-      }
+      },
+      "title": "Ucapkan saja meski salah.",
+      "titleAccent": "Kami yang terjemahkan.",
+      "subtitle": "Ketik dalam bahasamu, mereka membaca dalam bahasa mereka. Ketuk pesan apa pun untuk melihat cara pengucapan yang sebenarnya — begitulah cara belajar.",
+      "trust": "Paket gratis selamanya · 137 bahasa · Tutor AI 24/7"
     },
     "sections": {
       "features": "Fitur",
@@ -980,7 +1009,10 @@
           "connections": "5 koneksi baru/hari",
           "community": "Akses komunitas",
           "lessons": "Pelajaran dasar"
-        }
+        },
+        "f1": "Obrolan 1-lawan-1 tanpa batas dengan terjemahan",
+        "f2": "Jelajahi dan terhubung dengan komunitas",
+        "f3": "Posting Moments dan baca Stories"
       },
       "premium": {
         "name": "Premium",
@@ -1004,7 +1036,12 @@
           "early": "Fitur awal",
           "badges": "Lencana eksklusif"
         }
-      }
+      },
+      "best": "Nilai terbaik",
+      "perMonth": "per bulan",
+      "every": "setiap",
+      "save": "Hemat",
+      "getVip": "Dapatkan VIP di aplikasi"
     },
     "download": {
       "badge": "Unduh Aplikasi",
@@ -1023,7 +1060,14 @@
     "cta": {
       "title": "Siap Memulai Perjalanan Bahasa Anda?",
       "description": "Bergabung dengan jutaan pelajar dan mulai berbicara bahasa baru hari ini",
-      "button": "Buat Akun Gratis"
+      "button": "Buat Akun Gratis",
+      "subtitle": "Gratis untuk memulai. Tanpa kartu, tanpa hitung mundur masa percobaan."
+    },
+    "stats": {
+      "languages": "bahasa",
+      "app languages": "bahasa aplikasi",
+      "AI tutor": "tutor AI",
+      "forever tier": "paket gratis"
     }
   },
   "vip": {

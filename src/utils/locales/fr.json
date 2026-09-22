@@ -303,6 +303,31 @@
       "addLocation": "Ajouter un lieu",
       "addTags": "Ajouter des tags",
       "tagPlaceholder": "Ajouter un tag..."
+    },
+    "promo": {
+      "title": "Les Moments sont désormais dans l'app",
+      "subtitle": "Stories, réponses Étude IA et un fil conçu pour le téléphone, pas pour un onglet de navigateur. Installation gratuite, sans changer de compte.",
+      "appStore": "Télécharger sur l'App Store",
+      "playStore": "Télécharger sur Google Play",
+      "appOnly": "Dans l'app",
+      "perks": {
+        "stories": {
+          "title": "Des stories qui disparaissent",
+          "body": "Partagez un moment qui dure 24 heures, comme la communauté de l'app l'utilise vraiment."
+        },
+        "aiStudy": {
+          "title": "Réponses Étude IA",
+          "body": "Publiez dans la langue que vous apprenez et recevez une correction bienveillante de l'IA directement dans les commentaires."
+        },
+        "reactions": {
+          "title": "Des réactions plus riches",
+          "body": "Réactions vocales, traduction d'un simple toucher et fils de commentaires pensés pour un fil, pas pour un formulaire."
+        },
+        "notifications": {
+          "title": "Notifications en direct",
+          "body": "Sachez à l'instant même où quelqu'un de votre langue cible répond, sans rafraîchir un onglet de navigateur."
+        }
+      }
     }
   },
   "createMoment": {
@@ -914,7 +939,11 @@
         "message1": "Bonjour ! Comment ça va ? 👋",
         "message2": "Salut ! Je pratique mon français !",
         "message3": "Très bien ! Pratiquons ensemble 🇫🇷"
-      }
+      },
+      "title": "Dis-le mal.",
+      "titleAccent": "On traduit.",
+      "subtitle": "Écris dans ta langue, l'autre le lit dans la sienne. Touche un message pour voir comment il a vraiment été dit — c'est comme ça qu'on apprend.",
+      "trust": "Offre gratuite à vie · 137 langues · Tuteur IA 24h/24"
     },
     "sections": {
       "features": "Fonctionnalités",
@@ -980,7 +1009,10 @@
           "connections": "5 nouvelles connexions/jour",
           "community": "Accès à la communauté",
           "lessons": "Leçons de base"
-        }
+        },
+        "f1": "Chat 1 à 1 illimité avec traduction",
+        "f2": "Parcourez et connectez-vous à la communauté",
+        "f3": "Publiez des Moments et lisez des Stories"
       },
       "premium": {
         "name": "Premium",
@@ -1004,7 +1036,12 @@
           "early": "Fonctionnalités en avant-première",
           "badges": "Badges exclusifs"
         }
-      }
+      },
+      "best": "Meilleure offre",
+      "perMonth": "par mois",
+      "every": "tous les",
+      "save": "Économisez",
+      "getVip": "Obtenir VIP dans l'appli"
     },
     "download": {
       "badge": "Télécharger l'application",
@@ -1023,7 +1060,14 @@
     "cta": {
       "title": "Prêt à commencer votre parcours linguistique ?",
       "description": "Rejoignez des millions d'apprenants et commencez à parler une nouvelle langue dès aujourd'hui",
-      "button": "Créer un compte gratuit"
+      "button": "Créer un compte gratuit",
+      "subtitle": "Gratuit pour commencer. Sans carte, sans compte à rebours d'essai."
+    },
+    "stats": {
+      "languages": "langues",
+      "app languages": "langues de l'appli",
+      "AI tutor": "tuteur IA",
+      "forever tier": "offre gratuite"
     }
   },
   "vip": {

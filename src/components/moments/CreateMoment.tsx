@@ -121,8 +121,10 @@ const CreateMoment: React.FC = () => {
   const userInfo = useSelector((state: any) => state.auth.userInfo?.user);
   const user = userInfo?._id;
 
-  // Prompt-of-the-day handoff: MainMoments navigates here with router state
-  // ({ promptText, promptId }) when the user taps "Answer" on a prompt.
+  // Prompt-of-the-day handoff: a caller may navigate here with router state
+  // ({ promptText, promptId }) to pre-fill the composer with a prompt. The web
+  // feed that used to do this is gone (/moments now promotes the app), but the
+  // contract stays so deep links and future surfaces can still hand off.
   const promptIdRef = useRef<string | undefined>(
     (routerLocation.state as { promptId?: string } | null)?.promptId
   );

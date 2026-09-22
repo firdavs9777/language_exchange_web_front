@@ -322,6 +322,31 @@
       "minutesAgo": "{{minutes}}m ago",
       "hoursAgo": "{{hours}}h ago",
       "daysAgo": "{{days}}d ago"
+    },
+    "promo": {
+      "title": "Moments lives in the app now",
+      "subtitle": "Stories, AI Study replies, and a feed built for a phone, not a browser tab. Free to install, no account switch needed.",
+      "appStore": "Get it on the App Store",
+      "playStore": "Get it on Google Play",
+      "appOnly": "In the app",
+      "perks": {
+        "stories": {
+          "title": "Stories that disappear",
+          "body": "Share a moment that lasts 24 hours, the way the app's community actually uses it."
+        },
+        "aiStudy": {
+          "title": "AI Study replies",
+          "body": "Post in the language you're learning and get a gentle AI correction right in the comments."
+        },
+        "reactions": {
+          "title": "Richer reactions",
+          "body": "Voice reactions, translations on tap, and comment threads built for a feed, not a form."
+        },
+        "notifications": {
+          "title": "Live notifications",
+          "body": "Know the moment someone from your target language replies — no refreshing a browser tab."
+        }
+      }
     }
   },
   "createMoment": {
@@ -1004,7 +1029,10 @@
           "community": "Browse and connect with the community",
           "moments": "Post Moments and read Stories",
           "tutor_trial": "Daily AI Tutor and translation quota"
-        }
+        },
+        "f1": "Unlimited 1-on-1 chat with translation",
+        "f2": "Browse and connect with the community",
+        "f3": "Post Moments and read Stories"
       },
       "monthly": {
         "name": "VIP — Monthly",
@@ -1029,7 +1057,12 @@
           "early_access": "Early access to new features",
           "support": "Direct support from the BananaTalk team"
         }
-      }
+      },
+      "best": "Best value",
+      "perMonth": "per month",
+      "every": "every",
+      "save": "Save",
+      "getVip": "Get VIP in the app"
     },
     "download": {
       "badge": "Download the App",
@@ -1048,7 +1081,8 @@
     "cta": {
       "title": "Ready to have a real conversation?",
       "description": "Join the BananaTalk community and start practicing today. No credit card needed.",
-      "button": "Create your free account"
+      "button": "Create your free account",
+      "subtitle": "Free to start. No card, no trial countdown."
     }
   },
   "vip": {

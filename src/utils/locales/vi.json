@@ -303,6 +303,31 @@
       "addLocation": "Thêm vị trí",
       "addTags": "Thêm thẻ",
       "tagPlaceholder": "Thêm thẻ..."
+    },
+    "promo": {
+      "title": "Khoảnh Khắc giờ đã có trong ứng dụng",
+      "subtitle": "Story, phản hồi từ AI Study và một bảng tin được thiết kế cho điện thoại, không phải cho tab trình duyệt. Cài đặt miễn phí, không cần đổi tài khoản.",
+      "appStore": "Tải trên App Store",
+      "playStore": "Tải trên Google Play",
+      "appOnly": "Trong ứng dụng",
+      "perks": {
+        "stories": {
+          "title": "Story biến mất sau 24 giờ",
+          "body": "Chia sẻ một khoảnh khắc tồn tại 24 giờ, đúng như cách cộng đồng trong ứng dụng thực sự dùng."
+        },
+        "aiStudy": {
+          "title": "Phản hồi từ AI Study",
+          "body": "Đăng bài bằng ngôn ngữ bạn đang học và nhận sửa lỗi nhẹ nhàng từ AI ngay trong phần bình luận."
+        },
+        "reactions": {
+          "title": "Phản ứng phong phú hơn",
+          "body": "Phản ứng bằng giọng nói, dịch chỉ với một chạm và luồng bình luận được thiết kế cho bảng tin, không phải biểu mẫu."
+        },
+        "notifications": {
+          "title": "Thông báo tức thì",
+          "body": "Biết ngay khi có người nói ngôn ngữ bạn đang học trả lời — không cần tải lại tab trình duyệt."
+        }
+      }
     }
   },
   "createMoment": {
@@ -914,7 +939,11 @@
         "message1": "Xin chào! Bạn khỏe không? 👋",
         "message2": "Hey! I'm practicing Vietnamese!",
         "message3": "Tuyệt vời! Hãy cùng luyện tập 🇻🇳"
-      }
+      },
+      "title": "Cứ nói sai đi.",
+      "titleAccent": "Chúng tôi sẽ dịch.",
+      "subtitle": "Gõ bằng ngôn ngữ của bạn, họ đọc bằng ngôn ngữ của họ. Chạm vào bất kỳ tin nhắn nào để xem nó thực sự được nói như thế nào — đó là cách bạn học.",
+      "trust": "Gói miễn phí trọn đời · 137 ngôn ngữ · Gia sư AI 24/7"
     },
     "sections": {
       "features": "Tính Năng",
@@ -980,7 +1009,10 @@
           "connections": "5 kết nối mới/ngày",
           "community": "Truy cập cộng đồng",
           "lessons": "Bài học cơ bản"
-        }
+        },
+        "f1": "Trò chuyện 1-1 không giới hạn kèm dịch thuật",
+        "f2": "Duyệt và kết nối với cộng đồng",
+        "f3": "Đăng Moments và đọc Stories"
       },
       "premium": {
         "name": "Premium",
@@ -1004,7 +1036,12 @@
           "early": "Tính năng sớm",
           "badges": "Huy hiệu độc quyền"
         }
-      }
+      },
+      "best": "Giá trị tốt nhất",
+      "perMonth": "mỗi tháng",
+      "every": "mỗi",
+      "save": "Tiết kiệm",
+      "getVip": "Nhận VIP trong ứng dụng"
     },
     "download": {
       "badge": "Tải Ứng Dụng",
@@ -1023,7 +1060,14 @@
     "cta": {
       "title": "Bạn Đã Sẵn Sàng Bắt Đầu Hành Trình Ngôn Ngữ Chưa?",
       "description": "Tham gia cùng hàng triệu người học và bắt đầu nói ngôn ngữ mới ngay hôm nay",
-      "button": "Tạo Tài Khoản Miễn Phí"
+      "button": "Tạo Tài Khoản Miễn Phí",
+      "subtitle": "Miễn phí để bắt đầu. Không cần thẻ, không đếm ngược dùng thử."
+    },
+    "stats": {
+      "languages": "ngôn ngữ",
+      "app languages": "ngôn ngữ ứng dụng",
+      "AI tutor": "gia sư AI",
+      "forever tier": "gói miễn phí"
     }
   },
   "vip": {

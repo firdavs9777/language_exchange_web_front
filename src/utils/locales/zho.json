@@ -303,6 +303,31 @@
       "addLocation": "添加位置",
       "addTags": "添加标签",
       "tagPlaceholder": "添加标签..."
+    },
+    "promo": {
+      "title": "动态现已移至 App",
+      "subtitle": "限时动态、AI 学习回复，以及为手机而非浏览器标签页打造的信息流。免费安装，无需切换账号。",
+      "appStore": "在 App Store 下载",
+      "playStore": "在 Google Play 下载",
+      "appOnly": "仅限 App",
+      "perks": {
+        "stories": {
+          "title": "24 小时后消失的限时动态",
+          "body": "分享仅保留 24 小时的瞬间，这正是 App 社区的真实用法。"
+        },
+        "aiStudy": {
+          "title": "AI 学习回复",
+          "body": "用你正在学习的语言发帖，AI 会在评论中温和地为你纠正。"
+        },
+        "reactions": {
+          "title": "更丰富的互动",
+          "body": "语音回应、一键翻译，以及为信息流而非表单设计的评论串。"
+        },
+        "notifications": {
+          "title": "实时通知",
+          "body": "目标语言的用户一回复你就能知道，无需刷新浏览器标签页。"
+        }
+      }
     }
   },
   "createMoment": {
@@ -950,7 +975,11 @@
         "message1": "你好！最近怎么样？👋",
         "message2": "我很好，正在练习中文！",
         "message3": "太棒了！我们一起练习吧 🇨🇳"
-      }
+      },
+      "title": "说错也没关系。",
+      "titleAccent": "我们帮你翻译。",
+      "subtitle": "用你的语言输入，对方用他们的语言阅读。轻触任何消息即可看到真正的说法——这就是学习的方式。",
+      "trust": "永久免费套餐・137种语言・AI 导师全天候"
     },
     "sections": {
       "features": "功能特色",
@@ -1016,7 +1045,10 @@
           "connections": "每日5个新连接",
           "community": "社区访问",
           "lessons": "基础课程"
-        }
+        },
+        "f1": "无限一对一聊天，附带翻译",
+        "f2": "浏览并连接社区",
+        "f3": "发布 Moments、阅读 Stories"
       },
       "premium": {
         "name": "高级版",
@@ -1040,12 +1072,24 @@
           "early": "抢先体验新功能",
           "badges": "专属徽章"
         }
-      }
+      },
+      "best": "最超值",
+      "perMonth": "每月",
+      "every": "每",
+      "save": "节省",
+      "getVip": "在应用内升级 VIP"
     },
     "cta": {
       "title": "准备好开始您的语言之旅了吗？",
       "description": "加入数百万学习者，今天就开始说一门新语言",
-      "button": "创建免费账户"
+      "button": "创建免费账户",
+      "subtitle": "免费开始，无需信用卡，也没有试用倒计时。"
+    },
+    "stats": {
+      "languages": "种语言",
+      "app languages": "应用支持语言",
+      "AI tutor": "AI 导师",
+      "forever tier": "永久免费套餐"
     }
   }
 }

@@ -303,6 +303,31 @@
       "addLocation": "Magdagdag ng lokasyon",
       "addTags": "Magdagdag ng mga tag",
       "tagPlaceholder": "Magdagdag ng tag..."
+    },
+    "promo": {
+      "title": "Nasa app na ngayon ang Mga Sandali",
+      "subtitle": "Mga Story, sagot ng AI Study, at feed na ginawa para sa telepono, hindi para sa browser tab. Libreng i-install, hindi na kailangang magpalit ng account.",
+      "appStore": "Kunin sa App Store",
+      "playStore": "Kunin sa Google Play",
+      "appOnly": "Sa app",
+      "perks": {
+        "stories": {
+          "title": "Mga Story na nawawala",
+          "body": "Magbahagi ng sandaling tumatagal ng 24 oras, gaya ng tunay na paggamit ng komunidad sa app."
+        },
+        "aiStudy": {
+          "title": "Mga sagot ng AI Study",
+          "body": "Mag-post sa wikang pinag-aaralan mo at makatanggap ng banayad na pagwawasto ng AI mismo sa mga komento."
+        },
+        "reactions": {
+          "title": "Mas mayamang reaksyon",
+          "body": "Mga voice reaction, pagsasalin sa isang tap, at mga comment thread na ginawa para sa feed, hindi para sa form."
+        },
+        "notifications": {
+          "title": "Live na notification",
+          "body": "Malaman sa sandaling sumagot ang isang tao mula sa target na wika mo — walang pag-refresh ng browser tab."
+        }
+      }
     }
   },
   "createMoment": {
@@ -913,7 +938,11 @@
         "message1": "Kumusta! Kamusta ka? 👋",
         "message2": "Hey! I'm practicing Tagalog!",
         "message3": "Magaling! Mag-practice tayo 🇵🇭"
-      }
+      },
+      "title": "Sabihin mo lang, kahit mali.",
+      "titleAccent": "Kami na ang bahalang magsalin.",
+      "subtitle": "Mag-type sa sarili mong wika, babasahin nila ito sa kanila. I-tap ang anumang mensahe para makita kung paano ito talaga sinabi — ganito ka matuto.",
+      "trust": "Libre habambuhay · 137 wika · AI tutor 24/7"
     },
     "sections": {
       "features": "Mga Feature",
@@ -979,7 +1008,10 @@
           "connections": "5 bagong koneksyon/araw",
           "community": "Access sa komunidad",
           "lessons": "Basic na mga aralin"
-        }
+        },
+        "f1": "Walang limitasyong 1-on-1 chat na may salin",
+        "f2": "Mag-browse at kumonekta sa komunidad",
+        "f3": "Mag-post ng Moments at magbasa ng Stories"
       },
       "premium": {
         "name": "Premium",
@@ -1003,7 +1035,12 @@
           "early": "Maagang mga feature",
           "badges": "Eksklusibong mga badge"
         }
-      }
+      },
+      "best": "Pinakamahusay na halaga",
+      "perMonth": "kada buwan",
+      "every": "bawat",
+      "save": "Makatipid",
+      "getVip": "Kumuha ng VIP sa app"
     },
     "download": {
       "badge": "I-download ang App",
@@ -1022,7 +1059,14 @@
     "cta": {
       "title": "Handa Ka Na Bang Simulan ang Iyong Paglalakbay sa Wika?",
       "description": "Sumali sa milyun-milyong nag-aaral at magsimulang magsalita ng bagong wika ngayon",
-      "button": "Gumawa ng Libreng Account"
+      "button": "Gumawa ng Libreng Account",
+      "subtitle": "Libre para magsimula. Walang kard, walang countdown ng trial."
+    },
+    "stats": {
+      "languages": "wika",
+      "app languages": "wika ng app",
+      "AI tutor": "AI tutor",
+      "forever tier": "libreng bersyon"
     }
   },
   "vip": {

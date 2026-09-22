@@ -303,6 +303,31 @@
       "addLocation": "新增位置",
       "addTags": "新增標籤",
       "tagPlaceholder": "新增標籤..."
+    },
+    "promo": {
+      "title": "動態現在移到 App 了",
+      "subtitle": "限時動態、AI 學習回覆，以及為手機而非瀏覽器分頁打造的動態牆。免費安裝，無需切換帳號。",
+      "appStore": "在 App Store 下載",
+      "playStore": "在 Google Play 下載",
+      "appOnly": "僅限 App",
+      "perks": {
+        "stories": {
+          "title": "24 小時後消失的限時動態",
+          "body": "分享只保留 24 小時的瞬間，這正是 App 社群的真實用法。"
+        },
+        "aiStudy": {
+          "title": "AI 學習回覆",
+          "body": "用你正在學習的語言發文，AI 會在留言中溫和地為你糾正。"
+        },
+        "reactions": {
+          "title": "更豐富的互動",
+          "body": "語音回應、一鍵翻譯，以及為動態牆而非表單設計的留言串。"
+        },
+        "notifications": {
+          "title": "即時通知",
+          "body": "目標語言的使用者一回覆你就會知道，無需重新整理瀏覽器分頁。"
+        }
+      }
     }
   },
   "createMoment": {
@@ -950,7 +975,11 @@
         "message1": "你好！你好嗎？ 👋",
         "message2": "Hey! I'm practicing Chinese!",
         "message3": "太棒了！一起練習吧 🇹🇼"
-      }
+      },
+      "title": "說錯也沒關係。",
+      "titleAccent": "我們幫你翻譯。",
+      "subtitle": "用你的語言輸入，對方用他們的語言閱讀。輕點任何訊息即可看到真正的說法──這就是學習的方式。",
+      "trust": "永久免費方案・137種語言・AI 家教全天候"
     },
     "sections": {
       "features": "功能特色",
@@ -1016,7 +1045,10 @@
           "connections": "每日5個新連結",
           "community": "社群存取",
           "lessons": "基礎課程"
-        }
+        },
+        "f1": "無限一對一聊天，附帶翻譯",
+        "f2": "瀏覽並連結社群",
+        "f3": "發佈 Moments、閱讀 Stories"
       },
       "premium": {
         "name": "進階版",
@@ -1040,12 +1072,24 @@
           "early": "搶先體驗新功能",
           "badges": "專屬徽章"
         }
-      }
+      },
+      "best": "最超值",
+      "perMonth": "每月",
+      "every": "每",
+      "save": "節省",
+      "getVip": "在應用程式中升級 VIP"
     },
     "cta": {
       "title": "準備好開始您的語言之旅了嗎？",
       "description": "加入數百萬學習者，今天就開始說一門新語言",
-      "button": "建立免費帳戶"
+      "button": "建立免費帳戶",
+      "subtitle": "免費開始，不需要信用卡，也沒有試用倒數計時。"
+    },
+    "stats": {
+      "languages": "種語言",
+      "app languages": "應用程式語言",
+      "AI tutor": "AI 家教",
+      "forever tier": "永久免費方案"
     }
   }
 }
