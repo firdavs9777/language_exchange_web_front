@@ -303,6 +303,31 @@
       "addLocation": "Magdagdag ng lokasyon",
       "addTags": "Magdagdag ng mga tag",
       "tagPlaceholder": "Magdagdag ng tag..."
+    },
+    "promo": {
+      "title": "Nasa app na ngayon ang Mga Sandali",
+      "subtitle": "Mga Story, sagot ng AI Study, at feed na ginawa para sa telepono, hindi para sa browser tab. Libreng i-install, hindi na kailangang magpalit ng account.",
+      "appStore": "Kunin sa App Store",
+      "playStore": "Kunin sa Google Play",
+      "appOnly": "Sa app",
+      "perks": {
+        "stories": {
+          "title": "Mga Story na nawawala",
+          "body": "Magbahagi ng sandaling tumatagal ng 24 oras, gaya ng tunay na paggamit ng komunidad sa app."
+        },
+        "aiStudy": {
+          "title": "Mga sagot ng AI Study",
+          "body": "Mag-post sa wikang pinag-aaralan mo at makatanggap ng banayad na pagwawasto ng AI mismo sa mga komento."
+        },
+        "reactions": {
+          "title": "Mas mayamang reaksyon",
+          "body": "Mga voice reaction, pagsasalin sa isang tap, at mga comment thread na ginawa para sa feed, hindi para sa form."
+        },
+        "notifications": {
+          "title": "Live na notification",
+          "body": "Malaman sa sandaling sumagot ang isang tao mula sa target na wika mo — walang pag-refresh ng browser tab."
+        }
+      }
     }
   },
   "createMoment": {

@@ -303,6 +303,31 @@
       "addLocation": "Ort hinzufügen",
       "addTags": "Tags hinzufügen",
       "tagPlaceholder": "Tag hinzufügen..."
+    },
+    "promo": {
+      "title": "Momente gibt es jetzt in der App",
+      "subtitle": "Storys, KI-Lern-Antworten und ein Feed, der fürs Handy gemacht ist, nicht für einen Browser-Tab. Kostenlos installieren, kein Kontowechsel nötig.",
+      "appStore": "Im App Store laden",
+      "playStore": "Bei Google Play laden",
+      "appOnly": "In der App",
+      "perks": {
+        "stories": {
+          "title": "Storys, die verschwinden",
+          "body": "Teile einen Moment, der 24 Stunden bleibt – so nutzt ihn die App-Community wirklich."
+        },
+        "aiStudy": {
+          "title": "KI-Lern-Antworten",
+          "body": "Poste in der Sprache, die du lernst, und erhalte direkt in den Kommentaren eine sanfte KI-Korrektur."
+        },
+        "reactions": {
+          "title": "Reichere Reaktionen",
+          "body": "Sprachreaktionen, Übersetzung per Tipp und Kommentar-Threads, die für einen Feed gebaut sind, nicht für ein Formular."
+        },
+        "notifications": {
+          "title": "Live-Benachrichtigungen",
+          "body": "Erfahre sofort, wenn jemand aus deiner Zielsprache antwortet – ohne einen Browser-Tab zu aktualisieren."
+        }
+      }
     }
   },
   "createMoment": {

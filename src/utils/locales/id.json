@@ -303,6 +303,31 @@
       "addLocation": "Tambahkan lokasi",
       "addTags": "Tambahkan tag",
       "tagPlaceholder": "Tambahkan tag..."
+    },
+    "promo": {
+      "title": "Momen kini ada di aplikasi",
+      "subtitle": "Story, balasan AI Study, dan feed yang dibuat untuk ponsel, bukan tab browser. Gratis dipasang, tanpa ganti akun.",
+      "appStore": "Unduh di App Store",
+      "playStore": "Unduh di Google Play",
+      "appOnly": "Di aplikasi",
+      "perks": {
+        "stories": {
+          "title": "Story yang menghilang",
+          "body": "Bagikan momen yang bertahan 24 jam, seperti cara komunitas aplikasi benar-benar memakainya."
+        },
+        "aiStudy": {
+          "title": "Balasan AI Study",
+          "body": "Posting dalam bahasa yang sedang kamu pelajari dan dapatkan koreksi lembut dari AI langsung di komentar."
+        },
+        "reactions": {
+          "title": "Reaksi lebih kaya",
+          "body": "Reaksi suara, terjemahan sekali ketuk, dan utas komentar yang dibuat untuk feed, bukan formulir."
+        },
+        "notifications": {
+          "title": "Notifikasi langsung",
+          "body": "Tahu seketika saat seseorang dari bahasa targetmu membalas, tanpa menyegarkan tab browser."
+        }
+      }
     }
   },
   "createMoment": {

@@ -303,6 +303,31 @@
       "addLocation": "위치 추가",
       "addTags": "태그 추가",
       "tagPlaceholder": "태그 추가..."
+    },
+    "promo": {
+      "title": "모멘트는 이제 앱에서 만나요",
+      "subtitle": "스토리, AI 스터디 답글, 그리고 브라우저 탭이 아닌 휴대폰을 위해 만든 피드. 무료 설치, 계정 전환 없이 그대로 사용하세요.",
+      "appStore": "App Store에서 받기",
+      "playStore": "Google Play에서 받기",
+      "appOnly": "앱 전용",
+      "perks": {
+        "stories": {
+          "title": "24시간 후 사라지는 스토리",
+          "body": "앱 커뮤니티가 실제로 쓰는 방식 그대로, 24시간 동안만 남는 순간을 공유하세요."
+        },
+        "aiStudy": {
+          "title": "AI 스터디 답글",
+          "body": "배우는 언어로 글을 올리면 댓글에서 바로 부드러운 AI 교정을 받을 수 있어요."
+        },
+        "reactions": {
+          "title": "더 풍부한 반응",
+          "body": "음성 반응, 탭 한 번으로 번역, 폼이 아닌 피드를 위해 만든 댓글 스레드."
+        },
+        "notifications": {
+          "title": "실시간 알림",
+          "body": "목표 언어 사용자가 답글을 남기는 순간 바로 알 수 있어요. 브라우저 새로고침은 필요 없습니다."
+        }
+      }
     }
   },
   "createMoment": {

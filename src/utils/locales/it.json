@@ -303,6 +303,31 @@
       "addLocation": "Aggiungi posizione",
       "addTags": "Aggiungi tag",
       "tagPlaceholder": "Aggiungi un tag..."
+    },
+    "promo": {
+      "title": "Momenti ora vive nell'app",
+      "subtitle": "Storie, risposte di Studio IA e un feed pensato per il telefono, non per una scheda del browser. Installazione gratuita, senza cambiare account.",
+      "appStore": "Scarica su App Store",
+      "playStore": "Scarica su Google Play",
+      "appOnly": "Nell'app",
+      "perks": {
+        "stories": {
+          "title": "Storie che scompaiono",
+          "body": "Condividi un momento che dura 24 ore, proprio come lo usa davvero la community dell'app."
+        },
+        "aiStudy": {
+          "title": "Risposte di Studio IA",
+          "body": "Pubblica nella lingua che stai imparando e ricevi una correzione gentile dall'IA direttamente nei commenti."
+        },
+        "reactions": {
+          "title": "Reazioni più ricche",
+          "body": "Reazioni vocali, traduzione con un tocco e thread di commenti pensati per un feed, non per un modulo."
+        },
+        "notifications": {
+          "title": "Notifiche in tempo reale",
+          "body": "Sappi subito quando qualcuno della tua lingua di destinazione risponde, senza ricaricare una scheda del browser."
+        }
+      }
     }
   },
   "createMoment": {

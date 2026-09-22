@@ -9,7 +9,7 @@ import HomeScreen from "../components/home/HomeMain";
 
 import MainCommnity from "../components/community/MainCommunity";
 import Login from "../components/auth/Login";
-import MainMoments from "../components/moments/MainMoments";
+import MomentsAppPromo from "../components/moments/MomentsAppPromo";
 import Register from "../components/auth/Register";
 import MomentDetail from "../components/moments/MomentDetail";
 import CreateMoment from "../components/moments/CreateMoment";
@@ -77,7 +77,7 @@ const AppRouter = createBrowserRouter(
       <Route path="forgot-password" element={<ForgetPassword />} />
       <Route path="communities" element={<MainCommnity />} />
       <Route path="community/:id" element={<CommunityDetail />} />
-      <Route path="moments" element={<MainMoments />} />
+      <Route path="moments" element={<MomentsAppPromo />} />
       <Route path="moment/:id" element={<MomentDetail />} />
       <Route path="add-moment" element={<CreateMoment />} />
       <Route path="edit-moment/:id" element={<EditMyMoment />} />

@@ -303,6 +303,31 @@
       "addLocation": "Ajouter un lieu",
       "addTags": "Ajouter des tags",
       "tagPlaceholder": "Ajouter un tag..."
+    },
+    "promo": {
+      "title": "Les Moments sont désormais dans l'app",
+      "subtitle": "Stories, réponses Étude IA et un fil conçu pour le téléphone, pas pour un onglet de navigateur. Installation gratuite, sans changer de compte.",
+      "appStore": "Télécharger sur l'App Store",
+      "playStore": "Télécharger sur Google Play",
+      "appOnly": "Dans l'app",
+      "perks": {
+        "stories": {
+          "title": "Des stories qui disparaissent",
+          "body": "Partagez un moment qui dure 24 heures, comme la communauté de l'app l'utilise vraiment."
+        },
+        "aiStudy": {
+          "title": "Réponses Étude IA",
+          "body": "Publiez dans la langue que vous apprenez et recevez une correction bienveillante de l'IA directement dans les commentaires."
+        },
+        "reactions": {
+          "title": "Des réactions plus riches",
+          "body": "Réactions vocales, traduction d'un simple toucher et fils de commentaires pensés pour un fil, pas pour un formulaire."
+        },
+        "notifications": {
+          "title": "Notifications en direct",
+          "body": "Sachez à l'instant même où quelqu'un de votre langue cible répond, sans rafraîchir un onglet de navigateur."
+        }
+      }
     }
   },
   "createMoment": {

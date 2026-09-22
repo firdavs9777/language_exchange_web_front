@@ -303,6 +303,31 @@
       "addLocation": "Añadir ubicación",
       "addTags": "Añadir etiquetas",
       "tagPlaceholder": "Añadir una etiqueta..."
+    },
+    "promo": {
+      "title": "Momentos ahora vive en la app",
+      "subtitle": "Historias, respuestas de Estudio con IA y un feed hecho para el móvil, no para una pestaña del navegador. Instalación gratis, sin cambiar de cuenta.",
+      "appStore": "Descargar en App Store",
+      "playStore": "Descargar en Google Play",
+      "appOnly": "En la app",
+      "perks": {
+        "stories": {
+          "title": "Historias que desaparecen",
+          "body": "Comparte un momento que dura 24 horas, tal como lo usa de verdad la comunidad de la app."
+        },
+        "aiStudy": {
+          "title": "Respuestas de Estudio con IA",
+          "body": "Publica en el idioma que estás aprendiendo y recibe una corrección amable de la IA justo en los comentarios."
+        },
+        "reactions": {
+          "title": "Reacciones más ricas",
+          "body": "Reacciones de voz, traducción con un toque e hilos de comentarios pensados para un feed, no para un formulario."
+        },
+        "notifications": {
+          "title": "Notificaciones en vivo",
+          "body": "Entérate al instante cuando alguien de tu idioma objetivo responde, sin recargar una pestaña del navegador."
+        }
+      }
     }
   },
   "createMoment": {

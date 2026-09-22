@@ -303,6 +303,31 @@
       "addLocation": "添加位置",
       "addTags": "添加标签",
       "tagPlaceholder": "添加标签..."
+    },
+    "promo": {
+      "title": "动态现已移至 App",
+      "subtitle": "限时动态、AI 学习回复，以及为手机而非浏览器标签页打造的信息流。免费安装，无需切换账号。",
+      "appStore": "在 App Store 下载",
+      "playStore": "在 Google Play 下载",
+      "appOnly": "仅限 App",
+      "perks": {
+        "stories": {
+          "title": "24 小时后消失的限时动态",
+          "body": "分享仅保留 24 小时的瞬间，这正是 App 社区的真实用法。"
+        },
+        "aiStudy": {
+          "title": "AI 学习回复",
+          "body": "用你正在学习的语言发帖，AI 会在评论中温和地为你纠正。"
+        },
+        "reactions": {
+          "title": "更丰富的互动",
+          "body": "语音回应、一键翻译，以及为信息流而非表单设计的评论串。"
+        },
+        "notifications": {
+          "title": "实时通知",
+          "body": "目标语言的用户一回复你就能知道，无需刷新浏览器标签页。"
+        }
+      }
     }
   },
   "createMoment": {

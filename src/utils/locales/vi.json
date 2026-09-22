@@ -303,6 +303,31 @@
       "addLocation": "Thêm vị trí",
       "addTags": "Thêm thẻ",
       "tagPlaceholder": "Thêm thẻ..."
+    },
+    "promo": {
+      "title": "Khoảnh Khắc giờ đã có trong ứng dụng",
+      "subtitle": "Story, phản hồi từ AI Study và một bảng tin được thiết kế cho điện thoại, không phải cho tab trình duyệt. Cài đặt miễn phí, không cần đổi tài khoản.",
+      "appStore": "Tải trên App Store",
+      "playStore": "Tải trên Google Play",
+      "appOnly": "Trong ứng dụng",
+      "perks": {
+        "stories": {
+          "title": "Story biến mất sau 24 giờ",
+          "body": "Chia sẻ một khoảnh khắc tồn tại 24 giờ, đúng như cách cộng đồng trong ứng dụng thực sự dùng."
+        },
+        "aiStudy": {
+          "title": "Phản hồi từ AI Study",
+          "body": "Đăng bài bằng ngôn ngữ bạn đang học và nhận sửa lỗi nhẹ nhàng từ AI ngay trong phần bình luận."
+        },
+        "reactions": {
+          "title": "Phản ứng phong phú hơn",
+          "body": "Phản ứng bằng giọng nói, dịch chỉ với một chạm và luồng bình luận được thiết kế cho bảng tin, không phải biểu mẫu."
+        },
+        "notifications": {
+          "title": "Thông báo tức thì",
+          "body": "Biết ngay khi có người nói ngôn ngữ bạn đang học trả lời — không cần tải lại tab trình duyệt."
+        }
+      }
     }
   },
   "createMoment": {

@@ -303,6 +303,31 @@
       "addLocation": "新增位置",
       "addTags": "新增標籤",
       "tagPlaceholder": "新增標籤..."
+    },
+    "promo": {
+      "title": "動態現在移到 App 了",
+      "subtitle": "限時動態、AI 學習回覆，以及為手機而非瀏覽器分頁打造的動態牆。免費安裝，無需切換帳號。",
+      "appStore": "在 App Store 下載",
+      "playStore": "在 Google Play 下載",
+      "appOnly": "僅限 App",
+      "perks": {
+        "stories": {
+          "title": "24 小時後消失的限時動態",
+          "body": "分享只保留 24 小時的瞬間，這正是 App 社群的真實用法。"
+        },
+        "aiStudy": {
+          "title": "AI 學習回覆",
+          "body": "用你正在學習的語言發文，AI 會在留言中溫和地為你糾正。"
+        },
+        "reactions": {
+          "title": "更豐富的互動",
+          "body": "語音回應、一鍵翻譯，以及為動態牆而非表單設計的留言串。"
+        },
+        "notifications": {
+          "title": "即時通知",
+          "body": "目標語言的使用者一回覆你就會知道，無需重新整理瀏覽器分頁。"
+        }
+      }
     }
   },
   "createMoment": {
