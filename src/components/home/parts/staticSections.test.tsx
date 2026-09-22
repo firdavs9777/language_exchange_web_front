@@ -6,6 +6,10 @@ import EarlyAdopterBand from "./EarlyAdopterBand";
 import FinalCta from "./FinalCta";
 
 jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
+jest.mock("../../../store/slices/publicStatsSlice", () => ({
+  ...jest.requireActual("../../../store/slices/publicStatsSlice"),
+  useGetPublicStatsQuery: () => ({ data: undefined }),
+}));
 
 // jsdom has no matchMedia. Without a stub, prefersReducedMotion() returns
 // false, useCountUp animates from 0, and the first render shows "0" instead

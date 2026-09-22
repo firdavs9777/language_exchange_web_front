@@ -7,6 +7,10 @@ jest.mock("../../store/slices/plansSlice", () => ({
   ...jest.requireActual("../../store/slices/plansSlice"),
   useGetVipPlansQuery: () => ({ data: undefined, isError: true, isLoading: false }),
 }));
+jest.mock("../../store/slices/publicStatsSlice", () => ({
+  ...jest.requireActual("../../store/slices/publicStatsSlice"),
+  useGetPublicStatsQuery: () => ({ data: undefined }),
+}));
 
 beforeEach(() => window.localStorage.clear());
 

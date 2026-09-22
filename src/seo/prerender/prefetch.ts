@@ -1,5 +1,6 @@
 import { AppStore } from "../../store";
 import { plansApiSlice } from "../../store/slices/plansSlice";
+import { publicStatsApiSlice } from "../../store/slices/publicStatsSlice";
 
 export type Prefetcher = (store: AppStore) => Promise<unknown>;
 
@@ -13,6 +14,9 @@ export function prefetchersFor(path: string): Prefetcher[] {
   const list: Prefetcher[] = [];
   if (PAGES_WITH_PRICING.includes(path)) {
     list.push((store) => Promise.resolve(store.dispatch(plansApiSlice.endpoints.getVipPlans.initiate("ios") as any)));
+  }
+  if (path === "/") {
+    list.push((store) => Promise.resolve(store.dispatch(publicStatsApiSlice.endpoints.getPublicStats.initiate() as any)));
   }
   return list;
 }
