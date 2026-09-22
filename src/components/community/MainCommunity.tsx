@@ -329,12 +329,7 @@ const ModernCommunity: React.FC = () => {
           <div className="community-empty">
             <h3>{t("communityMain.errors.generic") || "Something went wrong"}</h3>
             <p>{t("communityMain.errors.loadError") || "We couldn't load the community."}</p>
-            <button
-              type="button"
-              onClick={() => refetch()}
-              className="community-loadmore"
-              style={{ background: "#1f2937", color: "#fff", padding: "10px 24px", borderRadius: 999, border: "none", cursor: "pointer" }}
-            >
+            <button type="button" onClick={() => refetch()} className="community-empty__action">
               {t("communityMain.errors.tryAgain") || "Try again"}
             </button>
           </div>
@@ -404,22 +399,10 @@ const ModernCommunity: React.FC = () => {
           </div>
         ) : allMembers.length === 0 ? (
           <div className="community-empty">
-            <Search style={{ width: 40, height: 40, color: "#d1d5db", margin: "0 auto 12px", display: "block" }} />
+            <Search className="community-empty__icon" aria-hidden />
             <h3>{t("communityMain.results.noneFound.title") || "No members found"}</h3>
             <p>{t("communityMain.results.noneFound.message") || "Try widening your search or clearing filters."}</p>
-            <button
-              type="button"
-              onClick={handleResetAll}
-              style={{
-                padding: "10px 24px",
-                borderRadius: 999,
-                background: "#1f2937",
-                color: "#fff",
-                border: "none",
-                cursor: "pointer",
-                fontWeight: 600,
-              }}
-            >
+            <button type="button" onClick={handleResetAll} className="community-empty__action">
               {t("communityMain.results.noneFound.resetFilters") || "Reset filters"}
             </button>
           </div>
