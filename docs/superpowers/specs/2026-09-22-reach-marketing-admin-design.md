@@ -38,11 +38,11 @@ description, canonical (`https://banatalk.com`) and OG image.
 
 ### 1.2 The sitemap promises pages that do not exist
 
-`public/sitemap.xml` lists 27 URLs. About 14 (`/about`, `/features`, `/languages`, `/help`,
+`public/sitemap.xml` lists 28 URLs. Twenty-one (`/about`, `/features`, `/languages`, `/help`,
 `/faq`, `/blog`, `/learn-korean`, `/pen-pals`, `/cultural-dating`, …) have no route. Because
 there is no catch-all route, each returns HTTP 200 with an empty page: a soft-404 on every
-promised URL. `lastmod` is 2024-12-29. The 19 `hreflang` alternates point at `?lang=xx`, a
-query parameter the app never reads.
+promised URL. `lastmod` is 2024-12-29. Separately, `public/index.html` carries 19 `hreflang`
+alternates pointing at `?lang=xx`, a query parameter the app never reads.
 
 ### 1.3 The claims disagree with each other
 
@@ -107,9 +107,10 @@ has an unused `isAdmin?: boolean`. Nothing on the web consumes any of it.
 "Every other route" (`/login`, `/register`, `/chat/*`, `/settings/*`, `/my-moments`,
 `/stories/*`, `/admin/*`, …) renders `PageMeta` with `noindex, nofollow` and a plain title.
 
-The fourteen dead sitemap URLs are dropped from the sitemap and answered with HTTP 410 by
-nginx (§4.4). `/learn-korean` and `/pen-pals` are the two exceptions: `/learn-korean` becomes
-real, and `/pen-pals` becomes a 301 to `/meet`.
+The current sitemap's 28 URLs are handled as follows (exact list in §4.4): routes that exist
+and are indexed stay; `/login`, `/register` and `/stories` exist but are noindex and leave the
+sitemap; `/learn-korean` becomes real; four dead URLs with an obvious successor become 301s;
+the remaining sixteen dead URLs are answered with HTTP 410 by nginx.
 
 ---
 
@@ -154,16 +155,38 @@ and `manifest.json` `theme_color` becomes `#14B8A6` to match the meta tag.
 
 ### 4.2 Static rendering
 
+**Route tree extraction, first.** `src/router/AppRouter.tsx` currently calls
+`createBrowserRouter(createRoutesFromElements(...))` at module load, which both touches
+`window` on import and leaves the route tree unreachable to a static renderer. It is split:
+`src/router/routes.tsx` exports the route objects (`createRoutesFromElements(<Route ...>)`,
+with `App` as the layout element rendering `<Outlet/>` as today), and `AppRouter.tsx` becomes
+`createBrowserRouter(routes)`. The client keeps `<RouterProvider router={AppRouter}/>` in
+`index.tsx`. The prerender uses the same `routes` with the data-router static APIs that
+`react-router-dom@6.23.1` already exports: `createStaticHandler(routes)`, `handler.query(new
+Request(url))`, `createStaticRouter(routes, context)`, `<StaticRouterProvider router context/>`.
+One tree, two providers; the hydration section below relies on this.
+
 **`scripts/prerender.tsx`**, run by `npm run build` after `react-scripts build`
 (`"build": "react-scripts build && node -r ./scripts/register.js scripts/prerender.tsx"`).
 
-- `scripts/register.js` sets up `@babel/register` with `babel-preset-react-app` (already a CRA
-  dependency), extensions `.ts .tsx .js .jsx`, and `ignore-styles`-style hooks that make
-  `.css .scss .png .svg .jpg` imports resolve to empty modules or the filename.
+- `scripts/register.js` sets up `@babel/register` (new devDependency; only
+  `babel-preset-react-app@10.0.1` is present today) with that preset, extensions
+  `.ts .tsx .js .jsx`, and `ignore-styles`-style hooks that make `.css .scss .png .svg .jpg`
+  imports resolve to empty modules or the filename.
 - For each route in the public route list (`src/seo/publicRoutes.ts`, derived from `pages.ts`
-  minus dynamic routes, plus `/404`), it renders
-  `<HelmetProvider><Provider store={freshStore}><StaticRouter location={path}><App/></StaticRouter></Provider></HelmetProvider>`
-  with `renderToString`, using a fresh Redux store and i18n fixed to English.
+  minus dynamic routes, plus `/404`), it builds a fresh Redux store, **prefetches the data the
+  page needs** (below), runs the static handler for the URL, and renders
+  `<HelmetProvider><Provider store={store}><StaticRouterProvider router={staticRouter} context={context}/></Provider></HelmetProvider>`
+  with `renderToString`, i18n fixed to English.
+- **Build-time data.** RTK Query hooks subscribe in effects, which `renderToString` never runs,
+  so any data a prerendered page should contain is dispatched and awaited before render:
+  `await store.dispatch(publicStatsApi.endpoints.getPublicStats.initiate())` for every page that
+  mounts `StatStrip`, `getPublicCommunities` for `/communities`, and
+  `getVipPlans({ platform: "ios" })` for pages with `PricingSection` (the client refetches for
+  Android after hydration; iOS and Android prices are the same figures today). A fetch that
+  fails or times out (5s) is logged as a warning and the page renders its fallback (§8); the
+  build does not fail on data. Components detect "no data" as `!data`, never `isLoading`, since
+  an unsubscribed query reports `isUninitialized`. `PricingSection` already does this.
 - It reads `build/index.html` as the template, replaces `<div id="root"></div>` with the
   rendered markup, injects helmet's `title`, `meta`, `link` and `script` output into `<head>`
   (replacing the static title/description/canonical/OG tags it supersedes), and writes
@@ -175,11 +198,15 @@ and `manifest.json` `theme_color` becomes `#14B8A6` to match the meta tag.
 - Render-time discipline is the only cost. Components on public routes read `window` in
   effects, never in render. Where the current code reads at module top level
   (`inferPlatform` in `plansSlice.ts`, `prefersReducedMotion`), it is wrapped so it returns a
-  neutral default when `typeof window === "undefined"`. RTK Query hooks return `isLoading`
-  server-side and each public page renders its fallback content in that state (§8).
+  neutral default when `typeof window === "undefined"`. Known render-time readers that the
+  inventory (§11) must handle: `AppBanner.tsx:31` (`navigator.userAgent` in render, mounted by
+  `App` on every route), `plansSlice.inferPlatform`, `anim/useInView`'s reduced-motion check,
+  and anything in `App.tsx`/`SocketProvider` that runs outside an effect.
 
 **Hydration.** `src/index.tsx` uses `hydrateRoot` when `#root` has children and `createRoot`
-otherwise. Because i18n on the client may resolve to a non-English language after detection,
+otherwise, in both cases rendering `<RouterProvider router={AppRouter}/>` over the same
+`routes` tree the prerender used, so the matched element tree is identical. Because i18n on
+the client may resolve to a non-English language after detection,
 the first client render is forced to English to match the prerendered markup, then
 `changeLanguage` runs in an effect. This avoids a hydration mismatch and a flash of wrong
 language is acceptable for a first visit; a stored language choice applies after hydration.
@@ -203,15 +230,24 @@ at `/sitemap.xml`.
 - **`deploy/nginx.snippet.conf`**, versioned in the repo with a comment explaining how to
   include it in the server block:
   - `error_page 404 /404.html;` and a `location = /404.html { internal; }`.
-  - `return 410;` for each dead sitemap path (`/about /features /languages /help /faq /blog
-    /cultural-dating /language-partners /pricing /community-guidelines /contact /careers
-    /press /success-stories` — the exact list is taken from the current sitemap at
-    implementation time, minus `/learn-korean` and `/pen-pals`).
-  - `return 301 /meet;` for `/pen-pals`.
+  - **301 redirects**, dead URL → successor: `/privacy` → `/privacy-policy`, `/terms` →
+    `/terms-of-use`, `/pen-pals` → `/meet`, `/language-exchange` → `/`.
+  - **`return 410;`** for the sixteen dead sitemap URLs with no successor: `/about`,
+    `/features`, `/languages`, `/help`, `/faq`, `/blog`, `/success-stories`, `/learn-english`,
+    `/learn-spanish`, `/learn-japanese`, `/learn-chinese`, `/learn-french`, `/learn-german`,
+    `/video-call`, `/cultural-dating`, `/international-dating`.
   - `try_files $uri $uri/ /index.html;` unchanged.
 
   The snippet is applied by hand on the server; the spec cannot version the live config.
-  The README section "Deploy" documents the step.
+  The frontend has no `README.md` today; the plan creates one with a "Deploy" section that
+  documents the build, the prerender step and this snippet.
+
+- **Footer links.** `FooterMain.tsx` links to `/pricing` and `/contact`, neither of which
+  exists, and labels `/communities` "About". After this work every prerendered page would link
+  to a 410, so the footer changes in Phase A: `/pricing` → `/#pricing` (the homepage section),
+  `/contact` → `/support`, the "About" label → "Communities", plus links to `/download`,
+  `/meet` and `/learn-korean` once those exist in Phase B. A test asserts every internal footer
+  link matches a route in the tree.
 
 ### 4.5 Measurement
 
@@ -332,11 +368,13 @@ links.
 `GET /api/v1/public/communities` (§7.2). `MainCommunity` currently assumes auth. New behaviour:
 when `userInfo` is absent it renders `PublicCommunities` (`src/components/community/PublicCommunities.tsx`):
 `h1` "Language exchange communities", a grid of `SurfaceCard`s with name, one-line
-description, member count and up to three `LanguageExchangePill`s, each card's action being a
-`StoreLink` (`placement="communities"`) since joining requires the app. Prerendered with the
-endpoint's response at build time; when the endpoint is unreachable at build time the build
-**does not fail** (this is data, not code) and the page prerenders its empty-state copy, logged
-as a warning. Logged-in behaviour is unchanged.
+description, member count and one `LanguageExchangePill` per language (one today, since a
+club has a single `language`), each card's action being a
+`StoreLink` (`placement="communities"`) since joining requires the app. The prerender
+prefetches `getPublicCommunities` before rendering (§4.2), so the crawler's HTML contains the
+real list; when the endpoint is unreachable at build time the build **does not fail** (this is
+data, not code) and the page prerenders its empty-state copy, logged as a warning. Logged-in
+behaviour is unchanged.
 
 ### 5.6 Weight
 
@@ -359,9 +397,10 @@ as a warning. Logged-in behaviour is unchanged.
 
 ### 6.1 Access
 
-- The login/refresh response includes `user.role`; the plan verifies this against
-  `sendTokenResponse` and adds the field to the serialised user if absent (one backend line).
-  `authSlice` derives `isAdmin = user.role === "admin"` and drops the unused manual flag.
+- The login/refresh response already includes `user.role` (`sendTokenResponse` serialises the
+  full user via `toObject()`); the plan confirms it with a test against the stored `userInfo`
+  and adds nothing to the backend unless that test fails. `authSlice` derives
+  `isAdmin = user.role === "admin"` and drops the unused manual flag.
 - `MainNavbar` shows an "Admin" item (desktop and mobile menus) only when `isAdmin`; it links to
   `/admin`.
 - `RequireAdmin` (`src/components/admin/RequireAdmin.tsx`) wraps every `/admin/*` route:
@@ -414,10 +453,10 @@ something the backend lacks, it is listed under "Not in this spec".
 | # | Endpoint | Auth | Purpose |
 |---|---|---|---|
 | 7.1 | `GET /api/v1/public/stats` | none | `{ learners, languages, countries, generatedAt }`. `learners` = count of non-banned users rounded down to two significant figures, `null` below 1,000; `languages` = 137 from the catalog; `countries` = distinct user countries, same rounding. In-memory cache, 1 hour. |
-| 7.2 | `GET /api/v1/public/communities` | none | Public clubs (not archived, visibility public): `{ id, name, description, memberCount, languages[] }`, limit 24, sorted by memberCount desc. Cache 10 minutes. |
+| 7.2 | `GET /api/v1/public/communities` | none | Clubs with `status: 'active'` (the `Club` model has no visibility field): `{ id, name, description, memberCount, languages[] }` where `languages` is `[club.language]` today so the shape can grow, limit 24, sorted by memberCount desc. Cache 10 minutes. |
 | 7.3 | `POST /api/v1/analytics/events` | none | Body `{ name, path, placement?, platform?, referrer?, language?, sessionId }`, `name` enum `page_view | store_tap | cta_tap`. Stores `WebEvent` with server-side `device`/`os` from UA (reusing `parseUserAgent` from `analytics.js`), `ip` hashed with a server salt (not stored raw). Rate-limited 60/min per IP. Returns 204. |
 | 7.4 | `GET /api/v1/admin/analytics/events` | admin | Query `days` (default 30). Returns `{ byDay: [{ date, pageViews, storeTaps }], byPlacement: [{ placement, platform, taps }], topReferrers: [{ referrer, count }], topPaths: [{ path, views }] }` via aggregation. |
-| 7.5 | `GET /api/v1/admin/analytics/visits` | admin | Reuses `WebVisit`'s existing aggregation helpers: `{ thisWeek, lastWeek, byCountry, byDevice, newVsReturning }`. |
+| 7.5 | `GET /api/v1/admin/analytics/visits` | admin | Thin wrapper over the existing `WebVisit.getWeeklyStats`: returns its `thisWeek`, `lastWeek`, `dailyBreakdown`, `topCountries` and `deviceBreakdown` unchanged, plus one derived field `newVisitorRatio = thisWeek.newVisitors / thisWeek.visits`. No new aggregation. |
 
 New model `WebEvent` (`models/WebEvent.js`) with a TTL index of 400 days. Routes in
 `routes/public.js` (new) and additions to `routes/analytics.js` and `routes/admin.js`. Each has a
@@ -429,7 +468,8 @@ supertest route test in the backend's existing style. No existing endpoint or mo
 
 - **Public pages never depend on the backend to render.** Stats missing → curated stats only.
   Communities missing → empty-state copy with store links. Plans missing → existing fallback.
-  Each fallback is what prerender emits, so a crawler always sees a complete page.
+  Prerender prefetches these three (§4.2) and emits live data when the fetch succeeds and the
+  same fallback when it fails, so a crawler always sees a complete page either way.
 - **Prerender fails loudly** on thrown errors, missing `h1`, or browser-global access (§4.2).
   It does **not** fail on data-fetch failures at build time; those are logged and fall back.
 - **Analytics never reaches the user.** `trackEvent` and `gaEvent` swallow all errors after one
@@ -490,9 +530,14 @@ Console verification itself (the user does it; the spec only makes the site wort
 ## 11. Risks
 
 - **Render-time `window` access lurks in shared components.** Mitigated by the failing Proxy
-  and by keeping the public page set small; the plan inventories `window`/`document` reads
-  under `src/components/{home,growth,download,landing,community,navbar,footer}` before writing
-  the script.
+  and by keeping the public page set small; the plan inventories `window`/`document`/
+  `navigator`/`localStorage`/`matchMedia` reads under `src/App.tsx`, `src/components/linking`
+  (`AppBanner` is a known offender), the socket provider, and
+  `src/components/{home,growth,download,landing,community,navbar,footer}` before writing the
+  script, and moves each into an effect or behind a `typeof window` guard.
+- **The route-tree split touches every route.** `routes.tsx` is a mechanical move, but the
+  existing `AppRouter` import in `index.tsx` and any test that imports the router must follow.
+  The plan does this as its first task so the rest of Phase A builds on it.
 - **Hydration mismatch from language detection.** Mitigated by first-render-in-English (§4.2);
   if a mismatch still appears, `suppressHydrationWarning` is **not** the fix — the differing
   component moves its language-dependent output into an effect.
