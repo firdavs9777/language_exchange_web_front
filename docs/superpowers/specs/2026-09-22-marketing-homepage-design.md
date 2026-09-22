@@ -154,6 +154,12 @@ manual dots, and is dismissible with dismissal remembered for 7 days.
 
 Three slides ship: the app-does-more push, VIP, and Gatherings.
 
+**Two tones, not three.** `tone` is `"brand"` or `"banana"` only. Teal means "here is the
+product" (app push, Gatherings); banana means "here is an offer" (VIP). An earlier mockup
+used a third purple gradient — `AppColors.accent`, which has no presence anywhere else on
+the web — and three gradients cycling in one band reads as a slot machine rather than an
+announcement. Restricting the palette also makes the tone itself carry meaning.
+
 ### 5.2 App-download popup
 
 Governed entirely by `growthGate.ts`. It fires when **either** the visitor scrolls past the
@@ -186,9 +192,13 @@ both appear.
 `137 languages` (the catalog count), `14 app languages` (the shipped locale set),
 `24/7 AI tutor`, `Free forever tier`. Every one is checkable.
 
-**Member count is deliberately excluded.** It would need a new public backend endpoint —
-outside this spec's web-only scope — and for an app launched in December the number may
-undersell rather than persuade. Revisit when the number is an asset.
+**Member count is deliberately excluded.** `COMMUNITY_COUNT_URL`
+(`/api/v1/auth/users/count`) exists in `constants.ts` and is already used by the community
+slice, but the route is `router.route('/count').get(protect, getUsersCount)`
+(`routes/users.js:63`) — **authenticated**, so a logged-out visitor cannot call it. Exposing
+it publicly is a backend change, outside this spec's web-only scope, and for an app launched
+in December the number may undersell rather than persuade. Revisit when it is an asset worth
+a backend change.
 
 ### 6.2 The language marquee is curated, and excludes sign languages
 
@@ -216,6 +226,16 @@ subdivision flags, Latin uses 🏛️.
 The band states the real launch date and invites visitors to be early, rather than borrowing
 credibility the product has not yet earned. It is explicitly temporary: once reviews exist,
 this band is what gets replaced by them.
+
+---
+
+### 6.4 Copy follows the existing i18n pattern
+
+The page has 18 locale files and `home` already carries eight keyed subsections. New copy
+uses the codebase's existing idiom — `t("home.hero.title") || "English fallback"` — and adds
+keys to `src/utils/locales/eng.json` only. The other 17 locales fall back to the inline
+English until translated, exactly as `HomeMain.tsx:137-190` does today. **Do not hand-write
+17 translation files**; that is a separate content task, not part of this build.
 
 ---
 
