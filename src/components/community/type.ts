@@ -27,15 +27,13 @@ export const COMMON_LANGUAGES = [
   "Japanese", "Chinese", "Portuguese", "Russian", "Italian"
 ] as const;
 
-export const LANGUAGE_FLAGS: Record<string, string> = {
-  en: "🇺🇸", es: "🇪🇸", fr: "🇫🇷", de: "🇩🇪", it: "🇮🇹",
-  pt: "🇵🇹", ru: "🇷🇺", ja: "🇯🇵", ko: "🇰🇷", zh: "🇨🇳",
-};
-
-export const LANGUAGE_CODES: Record<string, string> = {
-  English: "en", Spanish: "es", French: "fr", German: "de", Italian: "it",
-  Portuguese: "pt", Russian: "ru", Japanese: "ja", Korean: "ko", Chinese: "zh",
-};
+// Both tables now live in src/utils/languages.ts, generated from the backend
+// catalog. LANGUAGE_FLAGS is re-exported because its contract is unchanged
+// (still code-keyed). The old LANGUAGE_CODES is deliberately NOT re-exported:
+// it was keyed by capitalized name ("English") and the generated NAME_TO_ISO
+// is keyed lowercase, so an alias would keep the name while changing the
+// contract. New code should import displayCode/languageFlag directly.
+export { CODE_TO_FLAG as LANGUAGE_FLAGS } from "../../utils/languages.data";
 
 export const TABS = [
   { id: "all" as const, label: "All", icon: Users },

@@ -1,6 +1,6 @@
 import React from "react";
 import { MapPin, ArrowRight } from "lucide-react";
-import { LANGUAGE_FLAGS, LANGUAGE_CODES } from "./type";
+import { languageFlag } from "../../utils/languages";
 
 /**
  * Normalized member shape as produced by `communityApiSlice.getCommunityMembers`
@@ -37,16 +37,6 @@ export interface MemberCardProps {
 
 const NEW_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 
-const getLanguageCode = (language?: string): string => {
-  if (!language) return "";
-  return LANGUAGE_CODES[language] || language.substring(0, 2).toLowerCase();
-};
-
-const getFlag = (language?: string): string => {
-  const code = getLanguageCode(language);
-  return LANGUAGE_FLAGS[code] || "🌐";
-};
-
 const getAge = (birthYear?: string | number): number | undefined => {
   if (birthYear === undefined || birthYear === null || birthYear === "") return undefined;
   const year = typeof birthYear === "string" ? parseInt(birthYear, 10) : birthYear;
@@ -74,8 +64,8 @@ const MemberCard: React.FC<MemberCardProps> = ({ user, onWave, onOpen }) => {
   const isNew = !!user.isNew || isRecentlyCreated(user.createdAt);
   const locationLabel = formatLocation(user.location);
   const avatar = user.imageUrls?.[0];
-  const nativeFlag = getFlag(user.native_language);
-  const learningFlag = getFlag(user.language_to_learn);
+  const nativeFlag = languageFlag(user.native_language);
+  const learningFlag = languageFlag(user.language_to_learn);
 
   const handleWaveClick = (e: React.MouseEvent) => {
     e.stopPropagation();
