@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import "./App.scss";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./utils/i18n";
+import RouteMeta from "./seo/RouteMeta";
 
 import MainNavbar from "./components/navbar/MainNavbar";
 import { Container } from "react-bootstrap";
@@ -35,6 +36,7 @@ const App = () => {
 
   return (
     <I18nextProvider i18n={i18n}>
+      <RouteMeta />
       <SocketProvider>
         <MainNavbar />
         <AppBanner />

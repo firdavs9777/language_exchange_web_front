@@ -1105,5 +1105,36 @@
       "exclusiveBadge": "Lencana VIP eksklusif",
       "translationFeature": "Terjemahan pesan"
     }
+  },
+  "seo": {
+    "appTitle": "BananaTalk",
+    "home": {
+      "title": "BananaTalk: Aplikasi Pertukaran Bahasa Gratis dengan Penutur Asli",
+      "description": "Mengobrol dengan penutur asli dalam 137 bahasa. Tulis dalam bahasamu, mereka membacanya dalam bahasa mereka, dan tutor AI menunjukkan perbedaannya. Gratis di iOS dan Android."
+    },
+    "download": {
+      "title": "Unduh BananaTalk untuk iPhone dan Android",
+      "description": "Dapatkan aplikasi pertukaran bahasa BananaTalk gratis untuk iPhone dan Android. Mengobrol dengan penutur asli dengan terjemahan instan dan koreksi tutor AI."
+    },
+    "moments": {
+      "title": "Moments BananaTalk: Cerita dalam Bahasa Targetmu",
+      "description": "Moments adalah postingan dan cerita singkat yang dibagikan oleh pembelajar bahasa di BananaTalk. Lihat bagaimana komunitas menggunakannya, lalu unggah momenmu sendiri di aplikasi."
+    },
+    "privacy": {
+      "title": "Kebijakan Privasi | BananaTalk",
+      "description": "Bagaimana BananaTalk mengumpulkan, menggunakan, dan melindungi datamu, serta pilihan yang kamu miliki."
+    },
+    "terms": {
+      "title": "Ketentuan Penggunaan | BananaTalk",
+      "description": "Ketentuan yang mengatur penggunaanmu atas BananaTalk, termasuk aturan konten, moderasi, dan pelaporan."
+    },
+    "support": {
+      "title": "Dukungan dan Kontak | BananaTalk",
+      "description": "Dapatkan bantuan untuk BananaTalk: pertanyaan akun, melaporkan masalah, dan cara menghubungi tim."
+    },
+    "dataDeletion": {
+      "title": "Permintaan Penghapusan Data | BananaTalk",
+      "description": "Cara menghapus akun BananaTalk dan data pribadimu, serta yang terjadi setelah kamu mengajukan permintaan."
+    }
   }
 }

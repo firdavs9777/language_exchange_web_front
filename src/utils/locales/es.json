@@ -1105,5 +1105,36 @@
       "exclusiveBadge": "Insignia exclusiva VIP",
       "translationFeature": "Traducción de mensajes"
     }
+  },
+  "seo": {
+    "appTitle": "BananaTalk",
+    "home": {
+      "title": "BananaTalk: App gratuita de intercambio de idiomas con nativos",
+      "description": "Chatea con hablantes nativos en 137 idiomas. Escribe en tu idioma, ellos lo leen en el suyo, y un tutor de IA te muestra la diferencia. Gratis en iOS y Android."
+    },
+    "download": {
+      "title": "Descarga BananaTalk para iPhone y Android",
+      "description": "Consigue la app gratuita de intercambio de idiomas BananaTalk para iPhone y Android. Chatea con nativos con traducciones instantáneas y correcciones de un tutor de IA."
+    },
+    "moments": {
+      "title": "Moments de BananaTalk: historias en tu idioma objetivo",
+      "description": "Los Moments son publicaciones e historias breves compartidas por estudiantes de idiomas en BananaTalk. Mira cómo los usa la comunidad y publica los tuyos en la app."
+    },
+    "privacy": {
+      "title": "Política de Privacidad | BananaTalk",
+      "description": "Cómo BananaTalk recopila, usa y protege tus datos, y las opciones que tienes."
+    },
+    "terms": {
+      "title": "Términos de Uso | BananaTalk",
+      "description": "Los términos que rigen tu uso de BananaTalk, incluidas las reglas de contenido, la moderación y las denuncias."
+    },
+    "support": {
+      "title": "Soporte y Contacto | BananaTalk",
+      "description": "Obtén ayuda con BananaTalk: preguntas sobre tu cuenta, cómo reportar un problema y cómo contactar al equipo."
+    },
+    "dataDeletion": {
+      "title": "Solicitud de Eliminación de Datos | BananaTalk",
+      "description": "Cómo eliminar tu cuenta de BananaTalk y tus datos personales, y qué sucede después de solicitarlo."
+    }
   }
 }

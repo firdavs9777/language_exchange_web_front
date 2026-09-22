@@ -1105,5 +1105,36 @@
       "exclusiveBadge": "Huy hiệu VIP độc quyền",
       "translationFeature": "Dịch tin nhắn"
     }
+  },
+  "seo": {
+    "appTitle": "BananaTalk",
+    "home": {
+      "title": "BananaTalk: Ứng Dụng Trao Đổi Ngôn Ngữ Miễn Phí Với Người Bản Xứ",
+      "description": "Trò chuyện với người bản xứ bằng 137 ngôn ngữ. Viết bằng ngôn ngữ của bạn, họ đọc bằng ngôn ngữ của họ, và gia sư AI sẽ chỉ ra sự khác biệt. Miễn phí trên iOS và Android."
+    },
+    "download": {
+      "title": "Tải BananaTalk cho iPhone và Android",
+      "description": "Nhận ứng dụng trao đổi ngôn ngữ BananaTalk miễn phí cho iPhone và Android. Trò chuyện với người bản xứ với bản dịch tức thì và sửa lỗi từ gia sư AI."
+    },
+    "moments": {
+      "title": "BananaTalk Moments: Câu Chuyện Bằng Ngôn Ngữ Bạn Đang Học",
+      "description": "Moments là những bài đăng và câu chuyện ngắn được người học ngôn ngữ chia sẻ trên BananaTalk. Xem cộng đồng sử dụng chúng như thế nào, rồi đăng bài của riêng bạn trong ứng dụng."
+    },
+    "privacy": {
+      "title": "Chính Sách Bảo Mật | BananaTalk",
+      "description": "Cách BananaTalk thu thập, sử dụng và bảo vệ dữ liệu của bạn, cùng những lựa chọn bạn có."
+    },
+    "terms": {
+      "title": "Điều Khoản Sử Dụng | BananaTalk",
+      "description": "Các điều khoản chi phối việc bạn sử dụng BananaTalk, bao gồm quy tắc nội dung, kiểm duyệt và báo cáo."
+    },
+    "support": {
+      "title": "Hỗ Trợ và Liên Hệ | BananaTalk",
+      "description": "Nhận trợ giúp về BananaTalk: câu hỏi về tài khoản, báo cáo sự cố và cách liên hệ với đội ngũ."
+    },
+    "dataDeletion": {
+      "title": "Yêu Cầu Xóa Dữ Liệu | BananaTalk",
+      "description": "Cách xóa tài khoản BananaTalk và dữ liệu cá nhân của bạn, và điều gì xảy ra sau khi bạn yêu cầu."
+    }
   }
 }

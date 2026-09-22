@@ -1105,5 +1105,36 @@
       "exclusiveBadge": "شارة VIP حصرية",
       "translationFeature": "ترجمة الرسائل"
     }
+  },
+  "seo": {
+    "appTitle": "BananaTalk",
+    "home": {
+      "title": "BananaTalk: تطبيق مجاني لتبادل اللغات مع متحدثين أصليين",
+      "description": "تحدّث مع متحدثين أصليين بـ137 لغة. اكتب بلغتك، ويقرأها الطرف الآخر بلغته، ويوضح لك مدرّس ذكاء اصطناعي الفرق. مجاني على iOS وAndroid."
+    },
+    "download": {
+      "title": "حمّل BananaTalk لأجهزة iPhone وAndroid",
+      "description": "احصل على تطبيق BananaTalk المجاني لتبادل اللغات على iPhone وAndroid. تحدّث مع متحدثين أصليين مع ترجمة فورية وتصحيحات من مدرّس ذكاء اصطناعي."
+    },
+    "moments": {
+      "title": "لحظات BananaTalk: قصص بلغتك المستهدفة",
+      "description": "اللحظات هي منشورات وقصص قصيرة يشاركها متعلمو اللغات على BananaTalk. شاهد كيف يستخدمها المجتمع، ثم انشر لحظتك الخاصة في التطبيق."
+    },
+    "privacy": {
+      "title": "سياسة الخصوصية | BananaTalk",
+      "description": "كيف يجمع BananaTalk بياناتك ويستخدمها ويحميها، والخيارات المتاحة لك."
+    },
+    "terms": {
+      "title": "شروط الاستخدام | BananaTalk",
+      "description": "الشروط التي تحكم استخدامك لـ BananaTalk، بما في ذلك قواعد المحتوى والإشراف والإبلاغ."
+    },
+    "support": {
+      "title": "الدعم والتواصل | BananaTalk",
+      "description": "احصل على مساعدة بخصوص BananaTalk: أسئلة الحساب، الإبلاغ عن مشكلة، وكيفية التواصل مع الفريق."
+    },
+    "dataDeletion": {
+      "title": "طلب حذف البيانات | BananaTalk",
+      "description": "كيفية حذف حسابك وبياناتك الشخصية في BananaTalk، وما يحدث بعد تقديم الطلب."
+    }
   }
 }

@@ -1104,5 +1104,36 @@
       "exclusiveBadge": "Eksklusibong VIP badge",
       "translationFeature": "Pagsasalin ng mensahe"
     }
+  },
+  "seo": {
+    "appTitle": "BananaTalk",
+    "home": {
+      "title": "BananaTalk: Libreng Language Exchange App kasama ang mga Native Speaker",
+      "description": "Mag-chat sa mga native speaker sa 137 wika. Magsulat sa sarili mong wika, babasahin nila ito sa kanila, at ipapakita ng AI tutor ang pagkakaiba. Libre sa iOS at Android."
+    },
+    "download": {
+      "title": "I-download ang BananaTalk para sa iPhone at Android",
+      "description": "Kunin ang libreng BananaTalk language exchange app para sa iPhone at Android. Mag-chat sa mga native speaker na may instant na pagsasalin at pagwawasto ng AI tutor."
+    },
+    "moments": {
+      "title": "BananaTalk Moments: Mga Kwento sa Wikang Pinag-aaralan Mo",
+      "description": "Ang Moments ay mga maiikling post at kwento na ibinabahagi ng mga nag-aaral ng wika sa BananaTalk. Tingnan kung paano ito ginagamit ng komunidad, pagkatapos mag-post ng sarili mo sa app."
+    },
+    "privacy": {
+      "title": "Patakaran sa Privacy | BananaTalk",
+      "description": "Kung paano kinokolekta, ginagamit, at pinoprotektahan ng BananaTalk ang iyong data, at ang mga pagpipiliang meron ka."
+    },
+    "terms": {
+      "title": "Mga Tuntunin sa Paggamit | BananaTalk",
+      "description": "Ang mga tuntuning namamahala sa iyong paggamit ng BananaTalk, kabilang ang mga panuntunan sa content, moderation, at pag-uulat."
+    },
+    "support": {
+      "title": "Suporta at Contact | BananaTalk",
+      "description": "Kumuha ng tulong para sa BananaTalk: mga tanong sa account, pag-uulat ng problema, at kung paano makontak ang team."
+    },
+    "dataDeletion": {
+      "title": "Kahilingan sa Pagbura ng Data | BananaTalk",
+      "description": "Kung paano burahin ang iyong BananaTalk account at personal na data, at kung ano ang mangyayari pagkatapos mong humiling."
+    }
   }
 }

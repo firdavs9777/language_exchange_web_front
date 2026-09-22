@@ -1105,5 +1105,36 @@
       "exclusiveBadge": "Badge esclusivo VIP",
       "translationFeature": "Traduzione messaggi"
     }
+  },
+  "seo": {
+    "appTitle": "BananaTalk",
+    "home": {
+      "title": "BananaTalk: app gratuita di scambio linguistico con madrelingua",
+      "description": "Chatta con madrelingua in 137 lingue. Scrivi nella tua lingua, loro la leggono nella propria, e un tutor IA ti mostra la differenza. Gratis su iOS e Android."
+    },
+    "download": {
+      "title": "Scarica BananaTalk per iPhone e Android",
+      "description": "Ottieni l'app gratuita di scambio linguistico BananaTalk per iPhone e Android. Chatta con madrelingua con traduzioni istantanee e correzioni del tutor IA."
+    },
+    "moments": {
+      "title": "Moments di BananaTalk: storie nella tua lingua target",
+      "description": "I Moments sono brevi post e storie condivisi dagli studenti di lingue su BananaTalk. Guarda come li usa la community, poi pubblica i tuoi nell'app."
+    },
+    "privacy": {
+      "title": "Informativa sulla Privacy | BananaTalk",
+      "description": "Come BananaTalk raccoglie, usa e protegge i tuoi dati, e le scelte che hai a disposizione."
+    },
+    "terms": {
+      "title": "Termini di Utilizzo | BananaTalk",
+      "description": "I termini che regolano il tuo utilizzo di BananaTalk, incluse le regole sui contenuti, la moderazione e le segnalazioni."
+    },
+    "support": {
+      "title": "Supporto e Contatti | BananaTalk",
+      "description": "Ottieni aiuto su BananaTalk: domande sull'account, segnalazione di un problema e come contattare il team."
+    },
+    "dataDeletion": {
+      "title": "Richiesta di Cancellazione Dati | BananaTalk",
+      "description": "Come eliminare il tuo account BananaTalk e i tuoi dati personali, e cosa succede dopo la richiesta."
+    }
   }
 }
