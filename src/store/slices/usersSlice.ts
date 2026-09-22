@@ -164,8 +164,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         url: `${COMMUNITY_URL}/${userId}/follow/${targetUserId}`,
         method: "PUT",
       }),
-      keepUnusedDataFor: 5,
-      providesTags: ["User"],
+      invalidatesTags: ["User"],
     }),
     unFollowUser: builder.mutation({
       query: ({
