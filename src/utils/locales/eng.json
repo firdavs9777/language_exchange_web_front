@@ -928,12 +928,22 @@
         "message1": "안녕하세요! How was your weekend?",
         "message2": "주말에 친구들과 등산 갔어요 ⛰️",
         "message3": "Nice! 산 → mountain. Saved to your study queue."
-      }
+      },
+      "title": "Say it badly.",
+      "titleAccent": "We'll translate.",
+      "subtitle": "Type in your language, they read it in theirs. Tap any message to see how it was really said — that's how you learn.",
+      "trust": "Free forever tier · 137 languages · AI tutor 24/7"
     },
     "sections": {
       "features": "What's inside",
       "howItWorks": "How it works",
       "pricing": "Pricing"
+    },
+    "stats": {
+      "languages": "languages",
+      "app languages": "app languages",
+      "AI tutor": "AI tutor",
+      "forever tier": "forever tier"
     },
     "features": {
       "title": "Everything you need to actually speak the language",

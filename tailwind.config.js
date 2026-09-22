@@ -32,6 +32,30 @@ module.exports = {
         float: "0 4px 16px rgba(0,0,0,0.08)",     // AppShadows.lg
         brand: "0 6px 16px rgba(0,191,165,0.30)", // AppShadows.colored
       },
+      keyframes: {
+        "bt-rise": {
+          from: { opacity: "0", transform: "translateY(10px)" },
+          to: { opacity: "1", transform: "none" },
+        },
+        "bt-marquee": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
+        "bt-float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-8px)" },
+        },
+        "bt-shimmer": {
+          from: { backgroundPosition: "200% 0" },
+          to: { backgroundPosition: "-200% 0" },
+        },
+      },
+      animation: {
+        "bt-rise": "bt-rise .5s ease-out both",
+        "bt-marquee": "bt-marquee 28s linear infinite",
+        "bt-float": "bt-float 4s ease-in-out infinite",
+        "bt-shimmer": "bt-shimmer 3s linear infinite",
+      },
     },
   },
   plugins: [],

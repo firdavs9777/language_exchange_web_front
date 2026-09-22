@@ -47,6 +47,9 @@ export const LEARNING_URL = "/api/v1/learning";
 
 // VIP
 export const VIP_URL = "/api/v1/vip";
+// Public: displays real store prices before login. See
+// language_exchange_backend_application routes/purchases.js:37.
+export const VIP_PLANS_URL = "/api/v1/purchases/plans";
 
 // Block & Report
 export const BLOCK_USER_URL = "/api/v1/users";
