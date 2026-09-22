@@ -1145,5 +1145,11 @@
     "body": "Maaaring luma na ang link, o maaaring nailipat na ang pahina. Narito ang paraan pabalik.",
     "home": "Pumunta sa homepage",
     "download": "Kunin ang app"
+  },
+  "consent": {
+    "label": "Pahintulot sa cookie",
+    "message": "Gumagamit kami ng analytics cookies para maunawaan kung ano ang nagdadala ng mga tao rito.",
+    "accept": "OK",
+    "decline": "Huwag na lang"
   }
 }

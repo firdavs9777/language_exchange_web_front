@@ -1146,5 +1146,11 @@
     "body": "Liên kết có thể đã cũ, hoặc trang có thể đã được di chuyển. Đây là cách quay lại.",
     "home": "Về trang chủ",
     "download": "Tải ứng dụng"
+  },
+  "consent": {
+    "label": "Đồng ý sử dụng cookie",
+    "message": "Chúng tôi sử dụng cookie phân tích để hiểu điều gì đã đưa mọi người đến đây.",
+    "accept": "OK",
+    "decline": "Không, cảm ơn"
   }
 }

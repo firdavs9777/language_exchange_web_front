@@ -1146,5 +1146,11 @@
     "body": "Der Link ist möglicherweise veraltet, oder die Seite wurde verschoben. Hier geht es zurück.",
     "home": "Zur Startseite",
     "download": "App herunterladen"
+  },
+  "consent": {
+    "label": "Cookie-Einwilligung",
+    "message": "Wir verwenden Analyse-Cookies, um zu verstehen, was Besucher hierher bringt.",
+    "accept": "OK",
+    "decline": "Nein, danke"
   }
 }

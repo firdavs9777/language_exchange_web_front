@@ -1145,5 +1145,11 @@
     "body": "Bağlantı eski olabilir veya sayfa taşınmış olabilir. İşte geri dönüş yolu.",
     "home": "Ana sayfaya git",
     "download": "Uygulamayı edin"
+  },
+  "consent": {
+    "label": "Çerez izni",
+    "message": "Ziyaretçileri buraya neyin getirdiğini anlamak için analiz çerezleri kullanıyoruz.",
+    "accept": "Tamam",
+    "decline": "Hayır, teşekkürler"
   }
 }

@@ -1146,5 +1146,11 @@
     "body": "O link pode estar desatualizado, ou a página pode ter sido movida. Aqui está o caminho de volta.",
     "home": "Ir para a página inicial",
     "download": "Baixar o app"
+  },
+  "consent": {
+    "label": "Consentimento de cookies",
+    "message": "Usamos cookies de análise para entender o que traz as pessoas até aqui.",
+    "accept": "OK",
+    "decline": "Não, obrigado"
   }
 }

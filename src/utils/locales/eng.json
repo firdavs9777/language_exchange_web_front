@@ -1174,5 +1174,11 @@
     "body": "The link may be old, or the page may have moved. Here is the way back.",
     "home": "Go to the homepage",
     "download": "Get the app"
+  },
+  "consent": {
+    "label": "Cookie consent",
+    "message": "We use analytics cookies to understand what brings people here.",
+    "accept": "OK",
+    "decline": "No thanks"
   }
 }
