@@ -1105,5 +1105,43 @@
       "exclusiveBadge": "限定VIPバッジ",
       "translationFeature": "メッセージ翻訳"
     }
+  },
+  "seo": {
+    "appTitle": "BananaTalk",
+    "home": {
+      "title": "BananaTalk:ネイティブと繋がる無料言語交換アプリ",
+      "description": "137の言語のネイティブスピーカーとチャットしよう。自分の言語で書くと相手は自分の言語で読み、AIチューターが違いを教えてくれます。iOSとAndroidで無料。"
+    },
+    "download": {
+      "title": "iPhoneとAndroid向けBananaTalkをダウンロード",
+      "description": "無料のBananaTalk言語交換アプリをiPhoneとAndroidで入手。ネイティブスピーカーとチャットしながら、瞬時翻訳とAIチューターの添削を受けられます。"
+    },
+    "moments": {
+      "title": "BananaTalkモーメント:学習言語で綴るストーリー",
+      "description": "モーメントはBananaTalkの学習者が共有する短い投稿やストーリーです。コミュニティの使い方を見て、あなたもアプリで投稿してみましょう。"
+    },
+    "privacy": {
+      "title": "プライバシーポリシー | BananaTalk",
+      "description": "BananaTalkがどのようにデータを収集・利用・保護するか、そしてあなたが持つ選択肢について。"
+    },
+    "terms": {
+      "title": "利用規約 | BananaTalk",
+      "description": "コンテンツルール、モデレーション、通報を含む、BananaTalk利用に関する規約です。"
+    },
+    "support": {
+      "title": "サポートとお問い合わせ | BananaTalk",
+      "description": "アカウントに関する質問、問題の報告、チームへの連絡方法など、BananaTalkのサポートを受けられます。"
+    },
+    "dataDeletion": {
+      "title": "データ削除リクエスト | BananaTalk",
+      "description": "BananaTalkのアカウントと個人データを削除する方法、および申請後の流れについて。"
+    }
+  },
+  "notFound": {
+    "pageTitle": "ページが見つかりません | BananaTalk",
+    "title": "このページは存在しません",
+    "body": "リンクが古いか、ページが移動された可能性があります。戻る方法はこちらです。",
+    "home": "ホームページへ移動",
+    "download": "アプリを入手"
   }
 }

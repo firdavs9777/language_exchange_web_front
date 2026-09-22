@@ -1104,5 +1104,43 @@
       "exclusiveBadge": "Özel VIP rozeti",
       "translationFeature": "Mesaj çevirisi"
     }
+  },
+  "seo": {
+    "appTitle": "BananaTalk",
+    "home": {
+      "title": "BananaTalk: Ana Dili Konuşanlarla Ücretsiz Dil Değişimi Uygulaması",
+      "description": "137 dilde ana dili konuşanlarla sohbet edin. Kendi dilinizde yazın, karşı taraf kendi dilinde okusun ve bir yapay zeka öğretmeni farkı size göstersin. iOS ve Android'de ücretsiz."
+    },
+    "download": {
+      "title": "iPhone ve Android için BananaTalk'ı İndirin",
+      "description": "iPhone ve Android için ücretsiz BananaTalk dil değişimi uygulamasını edinin. Anında çeviri ve yapay zeka öğretmen düzeltmeleriyle ana dili konuşanlarla sohbet edin."
+    },
+    "moments": {
+      "title": "BananaTalk Moments: Hedef Dilinizde Hikayeler",
+      "description": "Moments, BananaTalk'ta dil öğrenenlerin paylaştığı kısa gönderiler ve hikayelerdir. Topluluğun bunları nasıl kullandığını görün, ardından uygulamada kendi gönderinizi paylaşın."
+    },
+    "privacy": {
+      "title": "Gizlilik Politikası | BananaTalk",
+      "description": "BananaTalk'ın verilerinizi nasıl topladığı, kullandığı ve koruduğu ile sahip olduğunuz seçenekler."
+    },
+    "terms": {
+      "title": "Kullanım Koşulları | BananaTalk",
+      "description": "İçerik kuralları, moderasyon ve şikayetler dahil olmak üzere BananaTalk kullanımınızı yöneten koşullar."
+    },
+    "support": {
+      "title": "Destek ve İletişim | BananaTalk",
+      "description": "BananaTalk hakkında yardım alın: hesap soruları, bir sorunu bildirme ve ekiple nasıl iletişime geçileceği."
+    },
+    "dataDeletion": {
+      "title": "Veri Silme Talebi | BananaTalk",
+      "description": "BananaTalk hesabınızı ve kişisel verilerinizi nasıl sileceğiniz ve talep sonrasında neler olacağı."
+    }
+  },
+  "notFound": {
+    "pageTitle": "Sayfa bulunamadı | BananaTalk",
+    "title": "Bu sayfa mevcut değil",
+    "body": "Bağlantı eski olabilir veya sayfa taşınmış olabilir. İşte geri dönüş yolu.",
+    "home": "Ana sayfaya git",
+    "download": "Uygulamayı edin"
   }
 }

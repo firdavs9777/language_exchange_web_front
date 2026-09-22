@@ -47,6 +47,8 @@ const normalizeUserInfo = (stored: any) => {
 
 // Get and normalize stored userInfo, then update localStorage if needed
 const getInitialUserInfo = () => {
+  // No storage without a browser (prerender, node tests): start logged out.
+  if (typeof window === "undefined") return null;
   const storedRaw = localStorage.getItem("userInfo");
   if (!storedRaw) return null;
 

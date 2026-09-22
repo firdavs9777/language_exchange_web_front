@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import "./App.scss";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./utils/i18n";
+import { restoreAfterHydration } from "./utils/hydrationLanguage";
+import { clearPrerendered } from "./seo/prerender/hydrationFlag";
+import RouteMeta from "./seo/RouteMeta";
 
 import MainNavbar from "./components/navbar/MainNavbar";
 import { Container } from "react-bootstrap";
@@ -33,8 +36,17 @@ const App = () => {
     }
   }, [location.pathname]);
 
+  // After a prerendered page hydrates in English, switch to the visitor's
+  // language — and let later mounts animate again: hydration has committed, so
+  // nothing more will be compared against the prerendered markup.
+  useEffect(() => {
+    restoreAfterHydration(i18n);
+    clearPrerendered();
+  }, []);
+
   return (
     <I18nextProvider i18n={i18n}>
+      <RouteMeta />
       <SocketProvider>
         <MainNavbar />
         <AppBanner />

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { isSuppressed, recordDismissal } from "./growthGate";
 
@@ -8,13 +8,18 @@ const storeUrlForUserAgent = (): string =>
     : "https://apps.apple.com/us/app/bananatalk-learn-meet-or-date/id6755862146";
 
 const StickyAppBanner: React.FC = () => {
-  const [hidden, setHidden] = useState(() =>
-    isSuppressed("sticky-banner", {
-      pathname: window.location.pathname,
-      referrer: document.referrer,
-      viewportWidth: window.innerWidth,
-    })
-  );
+  // Hidden until mounted, for the same reason as PromoCarousel.
+  const [hidden, setHidden] = useState(true);
+
+  useEffect(() => {
+    setHidden(
+      isSuppressed("sticky-banner", {
+        pathname: window.location.pathname,
+        referrer: document.referrer,
+        viewportWidth: window.innerWidth,
+      })
+    );
+  }, []);
   const [storeUrl] = useState(storeUrlForUserAgent);
 
   const dismiss = useCallback(() => {

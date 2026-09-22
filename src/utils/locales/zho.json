@@ -1091,5 +1091,43 @@
       "AI tutor": "AI 导师",
       "forever tier": "永久免费套餐"
     }
+  },
+  "seo": {
+    "appTitle": "BananaTalk",
+    "home": {
+      "title": "BananaTalk：与母语人士免费语言交换应用",
+      "description": "与137种语言的母语人士聊天。用你的语言写,对方用他们的语言阅读,AI 导师会指出差异。iOS 和 Android 免费使用。"
+    },
+    "download": {
+      "title": "下载 BananaTalk,支持 iPhone 和 Android",
+      "description": "在 iPhone 和 Android 上获取免费的 BananaTalk 语言交换应用。与母语人士聊天,享受即时翻译和 AI 导师纠正。"
+    },
+    "moments": {
+      "title": "BananaTalk 动态:用目标语言写故事",
+      "description": "动态是 BananaTalk 语言学习者分享的简短帖子和故事。看看社区如何使用它们,然后在应用中发布你自己的动态。"
+    },
+    "privacy": {
+      "title": "隐私政策 | BananaTalk",
+      "description": "了解 BananaTalk 如何收集、使用和保护你的数据,以及你拥有的选择权。"
+    },
+    "terms": {
+      "title": "使用条款 | BananaTalk",
+      "description": "管理你使用 BananaTalk 的条款,包括内容规则、内容审核和举报。"
+    },
+    "support": {
+      "title": "支持与联系 | BananaTalk",
+      "description": "获取 BananaTalk 帮助:账户问题、举报问题以及如何联系团队。"
+    },
+    "dataDeletion": {
+      "title": "数据删除请求 | BananaTalk",
+      "description": "了解如何删除你的 BananaTalk 账户和个人数据,以及申请后会发生什么。"
+    }
+  },
+  "notFound": {
+    "pageTitle": "找不到页面 | BananaTalk",
+    "title": "此页面不存在",
+    "body": "链接可能已过期，或页面可能已被移动。这是返回的方法。",
+    "home": "前往首页",
+    "download": "获取应用"
   }
 }

@@ -1105,5 +1105,43 @@
       "exclusiveBadge": "Badge VIP exclusif",
       "translationFeature": "Traduction des messages"
     }
+  },
+  "seo": {
+    "appTitle": "BananaTalk",
+    "home": {
+      "title": "BananaTalk : appli gratuite d'échange linguistique avec natifs",
+      "description": "Discutez avec des locuteurs natifs dans 137 langues. Écrivez dans votre langue, ils la lisent dans la leur, et un tuteur IA vous montre la différence. Gratuit sur iOS et Android."
+    },
+    "download": {
+      "title": "Téléchargez BananaTalk pour iPhone et Android",
+      "description": "Obtenez l'appli gratuite d'échange linguistique BananaTalk pour iPhone et Android. Discutez avec des natifs grâce aux traductions instantanées et aux corrections d'un tuteur IA."
+    },
+    "moments": {
+      "title": "Moments BananaTalk : histoires dans votre langue cible",
+      "description": "Les Moments sont de courtes publications et histoires partagées par les apprenants de langues sur BananaTalk. Voyez comment la communauté les utilise, puis publiez les vôtres dans l'appli."
+    },
+    "privacy": {
+      "title": "Politique de confidentialité | BananaTalk",
+      "description": "Comment BananaTalk collecte, utilise et protège vos données, et les choix dont vous disposez."
+    },
+    "terms": {
+      "title": "Conditions d'utilisation | BananaTalk",
+      "description": "Les conditions qui régissent votre utilisation de BananaTalk, y compris les règles de contenu, la modération et les signalements."
+    },
+    "support": {
+      "title": "Assistance et contact | BananaTalk",
+      "description": "Obtenez de l'aide sur BananaTalk : questions de compte, signalement d'un problème et comment joindre l'équipe."
+    },
+    "dataDeletion": {
+      "title": "Demande de suppression des données | BananaTalk",
+      "description": "Comment supprimer votre compte BananaTalk et vos données personnelles, et ce qui se passe après votre demande."
+    }
+  },
+  "notFound": {
+    "pageTitle": "Page introuvable | BananaTalk",
+    "title": "Cette page n'existe pas",
+    "body": "Le lien est peut-être ancien, ou la page a pu être déplacée. Voici comment revenir.",
+    "home": "Aller à la page d'accueil",
+    "download": "Obtenir l'application"
   }
 }

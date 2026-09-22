@@ -1091,5 +1091,43 @@
       "AI tutor": "AI 家教",
       "forever tier": "永久免費方案"
     }
+  },
+  "seo": {
+    "appTitle": "BananaTalk",
+    "home": {
+      "title": "BananaTalk:與母語人士免費語言交換應用程式",
+      "description": "與137種語言的母語人士聊天。用你的語言書寫,對方用他們的語言閱讀,AI 導師會指出差異。iOS 和 Android 免費使用。"
+    },
+    "download": {
+      "title": "下載 BananaTalk,支援 iPhone 和 Android",
+      "description": "在 iPhone 和 Android 上取得免費的 BananaTalk 語言交換應用程式。與母語人士聊天,享受即時翻譯與 AI 導師糾正。"
+    },
+    "moments": {
+      "title": "BananaTalk 動態:用目標語言寫故事",
+      "description": "動態是 BananaTalk 語言學習者分享的簡短貼文與故事。看看社群如何使用它們,然後在應用程式中發布你自己的動態。"
+    },
+    "privacy": {
+      "title": "隱私政策 | BananaTalk",
+      "description": "了解 BananaTalk 如何收集、使用及保護你的資料,以及你擁有的選擇權。"
+    },
+    "terms": {
+      "title": "使用條款 | BananaTalk",
+      "description": "規範你使用 BananaTalk 的條款,包括內容規則、審核與檢舉。"
+    },
+    "support": {
+      "title": "支援與聯絡 | BananaTalk",
+      "description": "取得 BananaTalk 協助:帳戶問題、回報問題以及如何聯繫團隊。"
+    },
+    "dataDeletion": {
+      "title": "資料刪除請求 | BananaTalk",
+      "description": "了解如何刪除你的 BananaTalk 帳戶與個人資料,以及申請後會發生什麼事。"
+    }
+  },
+  "notFound": {
+    "pageTitle": "找不到頁面 | BananaTalk",
+    "title": "此頁面不存在",
+    "body": "連結可能已過期，或頁面可能已被搬移。這是返回的方法。",
+    "home": "前往首頁",
+    "download": "取得應用程式"
   }
 }

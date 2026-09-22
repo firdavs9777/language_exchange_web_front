@@ -1133,5 +1133,43 @@
     "appBanner": {
       "text": "Open this in the BananaTalk app"
     }
+  },
+  "seo": {
+    "appTitle": "BananaTalk",
+    "home": {
+      "title": "BananaTalk: Free Language Exchange App with Native Speakers",
+      "description": "Chat with native speakers in 137 languages. Write in your language, they read it in theirs, and an AI tutor shows you the difference. Free on iOS and Android."
+    },
+    "download": {
+      "title": "Download BananaTalk for iPhone and Android",
+      "description": "Get the free BananaTalk language exchange app for iPhone and Android. Chat with native speakers with instant translations and AI tutor corrections."
+    },
+    "moments": {
+      "title": "BananaTalk Moments: Stories in Your Target Language",
+      "description": "Moments are short posts and stories shared by language learners on BananaTalk. See how the community uses them, then post your own in the app."
+    },
+    "privacy": {
+      "title": "Privacy Policy | BananaTalk",
+      "description": "How BananaTalk collects, uses and protects your data, and the choices you have."
+    },
+    "terms": {
+      "title": "Terms of Use | BananaTalk",
+      "description": "The terms that govern your use of BananaTalk, including content rules, moderation and reporting."
+    },
+    "support": {
+      "title": "Support and Contact | BananaTalk",
+      "description": "Get help with BananaTalk: account questions, reporting a problem, and how to reach the team."
+    },
+    "dataDeletion": {
+      "title": "Data Deletion Request | BananaTalk",
+      "description": "How to delete your BananaTalk account and personal data, and what happens after you ask."
+    }
+  },
+  "notFound": {
+    "pageTitle": "Page not found | BananaTalk",
+    "title": "This page doesn't exist",
+    "body": "The link may be old, or the page may have moved. Here is the way back.",
+    "home": "Go to the homepage",
+    "download": "Get the app"
   }
 }
