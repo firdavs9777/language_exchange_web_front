@@ -20,63 +20,6 @@ module.exports = {
         surface: { DEFAULT: "#FFFFFF", dark: "#1E1E1E" },
         canvas: { DEFAULT: "#F8F9FA", dark: "#121212" },
         cardbg: { DEFAULT: "#FFFFFF", dark: "#2C2C2C" },
-        // Neutral scale of our own. Tailwind's `gray` is cool-blue and reads
-        // cheap beside the teal brand; `ink` is a degree warmer and goes
-        // deeper at the top end, which is what gives the navbar and footer
-        // their weight. Additive -- `gray-N` is untouched.
-        ink: {
-          50: "#F7F8FA",
-          100: "#EEF1F5",
-          200: "#DFE4EB",
-          300: "#C7CFDA",
-          400: "#98A3B4",
-          500: "#6B7686",
-          600: "#4E5868",
-          700: "#3A4352",
-          800: "#262E3B",
-          900: "#171E29",
-          950: "#0D131C",
-        },
-        // Hairlines. A border is not a light gray text colour; naming it
-        // stops the two from being swapped by accident.
-        line: { DEFAULT: "#E5E9F0", strong: "#D3DAE4", dark: "#2F3641" },
-      },
-      fontFamily: {
-        // Inter for UI text (tall x-height, real tabular figures), Plus Jakarta
-        // Sans for headings (geometric, a little more character than Inter at
-        // display sizes without turning playful). Loaded in public/index.html.
-        sans: [
-          "Inter",
-          "system-ui",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          '"Segoe UI"',
-          "Roboto",
-          '"Helvetica Neue"',
-          "Arial",
-          '"Noto Sans"',
-          "sans-serif",
-        ],
-        display: [
-          '"Plus Jakarta Sans"',
-          "Inter",
-          "system-ui",
-          "-apple-system",
-          '"Segoe UI"',
-          "sans-serif",
-        ],
-      },
-      fontSize: {
-        // Display sizes only. The body scale stays Tailwind's so no existing
-        // `text-sm` moves. Tracking tightens as size grows -- large type set at
-        // 0 tracking looks loose, which is the single most common tell of an
-        // un-designed page.
-        eyebrow: ["0.75rem", { lineHeight: "1", letterSpacing: "0.14em" }],
-        "display-sm": ["1.75rem", { lineHeight: "1.2", letterSpacing: "-0.018em" }],
-        "display-md": ["2.25rem", { lineHeight: "1.15", letterSpacing: "-0.024em" }],
-        "display-lg": ["2.75rem", { lineHeight: "1.1", letterSpacing: "-0.028em" }],
-        "display-xl": ["3.5rem", { lineHeight: "1.06", letterSpacing: "-0.032em" }],
-        "display-2xl": ["4.5rem", { lineHeight: "1.02", letterSpacing: "-0.036em" }],
       },
       borderRadius: {
         card: "20px",  // AppRadius.xl
@@ -88,10 +31,6 @@ module.exports = {
         raised: "0 2px 8px rgba(0,0,0,0.06)",     // AppShadows.md
         float: "0 4px 16px rgba(0,0,0,0.08)",     // AppShadows.lg
         brand: "0 6px 16px rgba(0,191,165,0.30)", // AppShadows.colored
-        // Wide, low-opacity and offset downward: reads as elevation rather
-        // than as a grey outline, which is what the old flat shadows did.
-        lift: "0 10px 30px -12px rgba(13,19,28,0.18)",
-        glass: "0 8px 32px -8px rgba(13,19,28,0.24)",
       },
       keyframes: {
         "bt-rise": {

@@ -1,55 +1,43 @@
-// === BananaTalk Navbar ===
-//
-// Colours and type come from the app-wide tokens in src/index.css and
-// tailwind.config.js (see src/design/typography.test.ts). The SCSS variables
-// below are the same values, kept as variables only because this file uses
-// `rgba($primary, x)`, which needs a real colour rather than a CSS var.
+// === BananaTalk Navbar - Modern & Responsive ===
 
 $primary: #00BFA5;
-$primary-dark: #008E76;
-$primary-light: #5DF2D6;
-$dark: #0D131C;      // ink-950
-$dark-alt: #171E29;  // ink-900
-$text-muted: #98A3B4; // ink-400
-$radius: 14px;
-$transition: all 200ms cubic-bezier(0.22, 1, 0.36, 1);
-
-$font-sans: var(--bt-font-sans);
-$font-display: var(--bt-font-display);
+$primary-dark: #009688;
+$primary-light: #4DD0B8;
+$dark: #0F172A;
+$dark-alt: #1E293B;
+$text-muted: #94A3B8;
+$radius: 12px;
+$transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
 // ============ HEADER ============
 .main-navbar {
   position: sticky;
   top: 0;
   z-index: 1000;
-  font-family: $font-sans;
-  // A flat dark bar reads as a block of colour. The gradient is almost
-  // invisible on its own but it gives the bar a top edge to catch light on.
-  background: linear-gradient(180deg, #131A25 0%, $dark 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: $dark;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   transition: $transition;
 
   &.scrolled {
-    background: rgba(13, 19, 28, 0.78);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.55);
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
   }
 }
 
 .navbar-inner {
-  max-width: 1280px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 0 1.75rem;
+  padding: 0 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 72px;
-  gap: 1.5rem;
+  height: 68px;
 
   @media (max-width: 768px) {
-    height: 62px;
+    height: 60px;
     padding: 0 1rem;
   }
 }
@@ -90,26 +78,22 @@ $font-display: var(--bt-font-display);
 }
 
 .logo-name {
-  font-family: $font-display;
-  font-size: 1.3125rem;
+  font-size: 1.25rem;
   font-weight: 800;
-  color: #fff;
-  // Wordmarks are the one place tracking should go properly tight.
-  letter-spacing: -0.034em;
+  color: white;
+  letter-spacing: -0.02em;
 
   @media (max-width: 768px) {
-    font-size: 1.125rem;
+    font-size: 1.1rem;
   }
 }
 
 .logo-tagline {
-  font-family: $font-display;
-  font-size: 0.625rem;
+  font-size: 0.65rem;
   color: $primary-light;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  opacity: 0.85;
 }
 
 // ============ NAV LINKS (Desktop) ============
@@ -127,13 +111,12 @@ $font-display: var(--bt-font-display);
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.9375rem;
-  color: #B4BDCB;
+  padding: 0.5rem 1rem;
+  color: $text-muted;
   text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: -0.008em;
-  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 10px;
   transition: $transition;
   position: relative;
 
@@ -173,13 +156,22 @@ $font-display: var(--bt-font-display);
   }
 
   &.active {
-    color: #fff;
-    // A filled pill with a faint inner edge: states the current page without
-    // the underline tick, which never lined up with a pill-shaped hover.
-    background: rgba($primary, 0.14);
-    box-shadow: inset 0 0 0 1px rgba($primary, 0.28);
+    color: white;
+    background: rgba($primary, 0.12);
 
-    svg { color: $primary-light; }
+    svg { color: $primary; }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 2px;
+      background: $primary;
+      border-radius: 2px;
+    }
   }
 }
 
@@ -240,12 +232,10 @@ $font-display: var(--bt-font-display);
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  background: rgba(23, 30, 41, 0.97);
-  backdrop-filter: saturate(180%) blur(16px);
-  -webkit-backdrop-filter: saturate(180%) blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 18px;
-  box-shadow: 0 24px 64px -16px rgba(0, 0, 0, 0.65);
+  background: $dark-alt;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: $radius;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   animation: dropIn 0.2s ease;
   overflow: hidden;
   z-index: 9999;
@@ -264,11 +254,10 @@ $font-display: var(--bt-font-display);
 
 .dropdown-header {
   padding: 0.75rem 1rem;
-  font-family: $font-display;
-  font-size: 0.6875rem;
-  font-weight: 700;
+  font-size: 0.7rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   color: $text-muted;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
@@ -483,26 +472,21 @@ $font-display: var(--bt-font-display);
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5625rem 1.375rem;
-  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  padding: 0.5rem 1.25rem;
+  background: $primary;
   border: none;
-  border-radius: 999px;
+  border-radius: 50px;
   color: white;
   text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18);
   transition: $transition;
 
   &:hover {
+    background: $primary-dark;
     transform: translateY(-1px);
-    box-shadow: 0 8px 20px -6px rgba($primary, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.24);
-  }
-
-  &:active {
-    transform: translateY(0);
+    box-shadow: 0 4px 15px rgba($primary, 0.3);
   }
 
   @media (max-width: 900px) {
@@ -647,11 +631,10 @@ $font-display: var(--bt-font-display);
 }
 
 .mobile-section-title {
-  font-family: $font-display;
-  font-size: 0.6875rem;
-  font-weight: 700;
+  font-size: 0.7rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   color: $text-muted;
   padding: 0.5rem 0.5rem 0.25rem;
 }
