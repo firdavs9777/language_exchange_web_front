@@ -193,10 +193,28 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Inter for UI, Plus Jakarta Sans for headings. display=swap so the
-         prerendered pages paint their text immediately in the fallback stack
-         instead of holding first paint for the font request. -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" />
+    <!-- Inter for UI, Plus Jakarta Sans for headings.
+
+         Loaded as rel="preload" and promoted to a stylesheet on load, so the
+         request never blocks rendering: a plain rel="stylesheet" here held
+         first paint on every prerendered page for a round trip to a third
+         party. display=swap still applies once it lands, and the <noscript>
+         copy keeps the fonts for scripting-off visitors.
+
+         Inter carries 300 and 800 because src/assets/styles/typography.css
+         used to fetch the family a second time just for those two, and the
+         app uses both (font-light, font-extrabold). Weight 500 stays: it is
+         the most-used non-default weight in the app (126 `font-medium` plus
+         47 explicit `font-weight: 500`). -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" />
+    </noscript>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />    <!--
       manifest.json provides metadata used when your web app is installed on a

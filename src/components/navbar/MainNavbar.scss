@@ -7,6 +7,11 @@
 
 $primary: #00BFA5;
 $primary-dark: #008E76;
+// The accessible pair. White text on $primary is 2.33:1 and on $primary-dark
+// is 4.09:1 -- both under AA at the 14px the login button uses. These are
+// 4.89:1 and 7.06:1.
+$primary-deep: #00806A;
+$primary-deepest: #00654F;
 $primary-light: #5DF2D6;
 $dark: #0D131C;      // ink-950
 $dark-alt: #171E29;  // ink-900
@@ -484,7 +489,7 @@ $font-display: var(--bt-font-display);
   align-items: center;
   gap: 0.5rem;
   padding: 0.5625rem 1.375rem;
-  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  background: linear-gradient(135deg, $primary-deep 0%, $primary-deepest 100%);
   border: none;
   border-radius: 999px;
   color: white;
@@ -758,7 +763,8 @@ $font-display: var(--bt-font-display);
   gap: 0.5rem;
   width: 100%;
   padding: 0.7rem;
-  background: $primary;
+  // Same reason as .login-btn: white on $primary is 2.33:1.
+  background: $primary-deep;
   border: none;
   border-radius: 10px;
   color: white;
@@ -768,6 +774,6 @@ $font-display: var(--bt-font-display);
   transition: $transition;
 
   &:hover {
-    background: $primary-dark;
+    background: $primary-deepest;
   }
 }
