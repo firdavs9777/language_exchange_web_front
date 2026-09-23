@@ -77,6 +77,14 @@ export const communityApiSlice = apiSlice.injectEndpoints({
         url: `${COMMUNITY_URL}/${userId}`,
       }),
       keepUnusedDataFor: 5,
+      // Tagged so followUser/unFollowUser (invalidatesTags: ["User"]) actually
+      // refetch this profile. Without it the profile page's follower count and
+      // its derived isFollowing never reconciled after a follow -- the
+      // optimistic state in ProfileActions was hiding a stale cache.
+      providesTags: (_result: any, _error: any, id: string) => [
+        { type: "User", id },
+        "User",
+      ],
     }),
     // Public counterpart of getCommunityDetails — hits the PUBLIC
     // GET /auth/users/:id/public endpoint so logged-out visitors can view a

@@ -145,3 +145,35 @@ describe("getCommunityCount endpoint", () => {
     expect(url.searchParams.get("minAge")).toBe("25");
   });
 });
+
+// The profile page derives both the follower count and `isFollowing` from this
+// query's response, so a follow that does not refetch it leaves the page
+// showing the state from before the tap (P1 review finding). followUser
+// invalidates the "User" tag; this asserts getCommunityDetails actually
+// provides it.
+describe("getCommunityDetails cache invalidation", () => {
+  it("is refetched after a follow", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    const { usersApiSlice } = require("./usersSlice");
+
+    await store.dispatch(
+      (communityApiSlice.endpoints as any).getCommunityDetails.initiate("user-1")
+    );
+    const profileCalls = () =>
+      calls.filter((c) => new URL(c.url).pathname === "/api/v1/auth/users/user-1").length;
+    expect(profileCalls()).toBe(1);
+
+    await store.dispatch(
+      (usersApiSlice.endpoints as any).followUser.initiate({
+        userId: "me",
+        targetUserId: "user-1",
+      })
+    );
+
+    // The refetch is scheduled by the invalidation middleware, not awaited by
+    // the mutation's own promise.
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(profileCalls()).toBe(2);
+  });
+});

@@ -22,6 +22,11 @@ export interface ProfileActionsProps {
   isFollowing?: boolean;
   /** Fired after a follow/unfollow the server accepted, never after a rollback. */
   onFollowChanged?: (nowFollowing: boolean) => void;
+  /**
+   * Fired after the block succeeded. The page owns the destination: staying on
+   * the profile of someone you just blocked is the one thing it must not do.
+   */
+  onBlocked?: () => void;
 }
 
 function messageOf(error: any, fallback: string): string {
@@ -55,6 +60,7 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
   name,
   isFollowing,
   onFollowChanged,
+  onBlocked,
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -142,9 +148,11 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
   const handleConfirm = async (reason: string): Promise<void> => {
     setDialogError("");
     try {
-      if (dialog === "block") await blockUser(userId).unwrap();
+      const blocking = dialog === "block";
+      if (blocking) await blockUser(userId).unwrap();
       else await reportUser({ userId, reason }).unwrap();
       setDialog(null);
+      if (blocking && onBlocked) onBlocked();
     } catch (error) {
       setDialogError(
         messageOf(error, t("profile.actions.action_failed") || "That didn't work. Try again.")

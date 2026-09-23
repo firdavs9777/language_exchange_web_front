@@ -57,3 +57,44 @@ it("matches the admin console paths to real routes, not the catch-all", () => {
     }
   }
 });
+
+// The profile redesign put one component on both profile paths. The element on
+// each route is <Suspense><LazyThing /></Suspense>, and a lazy component keeps
+// no record of what it will import -- so lazyWithRetry is swapped for a stub
+// that hangs its sessionStorage key (the module path) on the component, which
+// is the only thing that identifies the chunk without resolving the import.
+function chunkKeysFor(paths: string[]): string[] {
+  let keys: string[] = [];
+  jest.isolateModules(() => {
+    jest.doMock("./lazyWithRetry", () => ({
+      lazyWithRetry: (key: string) => {
+        const Stub: any = () => null;
+        Stub.chunkKey = key;
+        return Stub;
+      },
+    }));
+    const { routes } = require("./routes");
+    keys = paths.map((path) => {
+      const matches = matchRoutes(routes, path);
+      const element: any = matches![matches!.length - 1].route.element;
+      return element.props.children.type.chunkKey;
+    });
+    jest.dontMock("./lazyWithRetry");
+  });
+  return keys;
+}
+
+it("renders the one profile page on both /profile and /profile/:userId", () => {
+  const [own, other, edit] = chunkKeysFor(["/profile", "/profile/abc123", "/profile/edit"]);
+  expect(own).toBe("../components/profile/ProfilePage");
+  expect(other).toBe("../components/profile/ProfilePage");
+  // The static segment still wins over the dynamic one.
+  expect(edit).toBe("../components/profile/EditProfile");
+});
+
+// /profile/:userId used to mount CommunityDetail through PublicProfile. The
+// community route keeps it; the profile route must not.
+it("leaves /community/:id on CommunityDetail", () => {
+  const [community] = chunkKeysFor(["/community/abc123"]);
+  expect(community).toBe("../components/community/CommunityDetail");
+});
