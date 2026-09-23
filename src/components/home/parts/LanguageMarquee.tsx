@@ -14,7 +14,7 @@ const LanguageMarquee: React.FC = () => {
       className="overflow-hidden py-10 [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]"
     >
       <h2 className="mb-1 text-center text-xs font-bold uppercase tracking-widest text-gray-900 dark:text-gray-50">
-        {t("home.marquee.title") || "Every language is welcome here"}
+        {t("home.marquee.title") || "Native speakers of every language you want to learn"}
       </h2>
       <p className="mb-5 text-center text-[11px] font-semibold uppercase tracking-widest text-gray-400">
         {t("home.marquee.caption") || "137 languages, and counting"}

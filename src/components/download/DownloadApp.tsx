@@ -30,13 +30,14 @@ const DownloadApp: React.FC = () => {
   // unreadable and un-indexable (spec §5.3). The hop is now opt-in: only the
   // surfaces that mean "take me to the store" append `go=1`. A desktop has no
   // store to open, so it just reads the page.
+  // Reuses the platform decided above (one user-agent read) -- it settles a
+  // render after mount, and the effect re-runs when it does.
   useEffect(() => {
     if (!/(^|[?&])go=1(&|$)/.test(search)) return;
-    const ua = detectPlatform(navigator.userAgent);
-    if (ua === "ios" || ua === "android") {
-      window.location.assign(storeHref(ua, "download-page"));
+    if (platform === "ios" || platform === "android") {
+      window.location.assign(storeHref(platform, "download-page"));
     }
-  }, [search]);
+  }, [search, platform]);
 
   // ~10KB of QR generator that nobody needs until the page is on screen, so it
   // is pulled in a chunk of its own after mount. The box below is rendered

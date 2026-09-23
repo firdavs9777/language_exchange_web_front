@@ -8,7 +8,7 @@ import {
   seoTitleEn,
   seoDescriptionEn,
 } from "./pages";
-import { APP_STORE_URL, PLAY_STORE_URL } from "../components/growth/StoreLink";
+import { APP_STORE_URL, PLAY_STORE_URL } from "../components/growth/storeUrls";
 
 describe("SEO map", () => {
   it("every entry is a real route", () => {

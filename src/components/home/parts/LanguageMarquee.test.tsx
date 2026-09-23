@@ -52,7 +52,7 @@ it("gives the section a real heading", () => {
 
 it("falls back to the English title and caption when a translation is missing", () => {
   render(<LanguageMarquee />);
-  expect(screen.getByText("Every language is welcome here")).toBeInTheDocument();
+  expect(screen.getByText("Native speakers of every language you want to learn")).toBeInTheDocument();
   expect(screen.getByText("137 languages, and counting")).toBeInTheDocument();
 });
 
