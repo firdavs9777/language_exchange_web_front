@@ -394,14 +394,17 @@ const SingleMoment: React.FC<MomentProps> = ({
           {description && (
             <div className="text-gray-800 text-xs xs:text-sm sm:text-base md:text-lg leading-normal">
               {/* Tapping the body translates the moment into the viewer's UI
-                  language, the way the app does. When the body is truncated
-                  the server still translates the whole moment, so the
-                  translated line can be longer than the preview. */}
+                  language, the way the app does. The card shows a 200-char
+                  preview but the server translates the whole moment, so the
+                  translated line can be longer than the preview — and the
+                  same-language check has to compare against the untruncated
+                  `description` (`fullText`), not the preview. */}
               <TranslatableText
                 as="p"
                 text={`${displayDescription}${
                   shouldTruncateDescription && !showFullDescription ? "..." : ""
                 }`}
+                fullText={description}
                 onTranslate={handleTranslateBody}
                 isLoggedIn={Boolean(userId)}
                 onRequireLogin={handleRequireLogin}

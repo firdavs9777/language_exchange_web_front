@@ -39,13 +39,13 @@ jest.mock("../../store/slices/momentsSlice", () => ({
 
 const DESCRIPTION = "오늘 날씨가 정말 좋아요";
 
-const renderMoment = () =>
+const renderMoment = (description: string = DESCRIPTION) =>
   render(
     <MemoryRouter>
       <SingleMoment
         _id="moment-1"
         title="Title"
-        description={DESCRIPTION}
+        description={description}
         likeCount={0}
         likedUsers={[]}
         commentCount={0}
@@ -91,6 +91,31 @@ describe("SingleMoment translate on tap", () => {
     await waitFor(() =>
       expect(screen.getByTestId("translatable-translation")).toHaveTextContent(
         "The weather is lovely today"
+      )
+    );
+  });
+
+  // The card renders a 200-char preview, so the same-language check must run
+  // against the untruncated body it hands over as `fullText`.
+  it("recognises a long moment already in the viewer's language", async () => {
+    const longDescription = "오늘 날씨가 정말 좋아요. ".repeat(30).trim();
+    expect(longDescription.length).toBeGreaterThan(300);
+
+    mockTranslateMoment.mockReturnValue({
+      unwrap: () =>
+        Promise.resolve({
+          success: true,
+          data: { language: "ko", translatedText: longDescription },
+          cached: false,
+        }),
+    });
+
+    renderMoment(longDescription);
+    fireEvent.click(screen.getByTestId("translatable-text"));
+
+    await waitFor(() =>
+      expect(screen.getByTestId("translatable-translation")).toHaveTextContent(
+        "moments_section.translate.same"
       )
     );
   });
