@@ -50,6 +50,16 @@ export const LOCALE_LOADERS: Record<string, LocaleLoader> = {
 const loaderFor = (lng: string): LocaleLoader | undefined =>
   LOCALE_LOADERS[lng] || LOCALE_LOADERS[lng.replace(/-/g, "_")];
 
+/**
+ * How long to wait before the one retry a failed chunk gets.
+ *
+ * One retry, in here, rather than leaning on i18next's five: see `read` below.
+ */
+const RETRY_DELAY_MS = 400;
+
+const unwrap = (mod: { default: object } | object): object =>
+  ((mod as any) && (mod as any).default) || mod;
+
 const i18nLazyBackend: BackendModule = {
   type: "backend",
   init(): void {
@@ -64,19 +74,37 @@ const i18nLazyBackend: BackendModule = {
       callback(null, {});
       return;
     }
-    loader().then(
-      (mod) => callback(null, ((mod as any) && (mod as any).default) || mod),
-      // `true`, not `false`, and the difference is load-bearing: i18next's
-      // BackendConnector retries only when the callback's *data* argument is
-      // truthy. With `false` it marks this lng|ns as -1 and skips it forever,
-      // so one transient failure -- a chunk 404 after a mid-session deploy, a
-      // tunnel, a blocked request -- would leave that language stuck on
-      // English for the rest of the tab with no way back. With `true` it
-      // retries five times with a doubling backoff and then settles at 0, so a
-      // later user-initiated switch tries again (and webpack 5 does re-request
-      // a chunk whose load rejected).
-      (err) => callback(err, true)
-    );
+
+    // Retry once here, and report the final failure as `callback(err, false)`.
+    //
+    // The obvious alternative -- `callback(err, true)`, which is what i18next's
+    // own retry loop keys off -- is a trap, measured against i18next 23.7.18:
+    // once its five attempts are exhausted it still ends at
+    // `loaded(name, err, data)` with that same truthy `data`, and `loaded` does
+    // `if (data) this.store.addResourceBundle(lng, ns, data)`. Spreading `true`
+    // contributes no properties, so the store quietly gains an *empty* bundle
+    // for that language. From then on `queueLoad`'s first branch --
+    // `if (!options.reload && this.store.hasResourceBundle(lng, ns))` -- sees a
+    // bundle, marks the state "loaded", and no later switch ever reads again.
+    // The language is stuck on the English fallback for the rest of the tab,
+    // and it looks like a successful empty load rather than a failure.
+    //
+    // `false` keeps the bookkeeping honest: nothing is written to the store and
+    // the state stays -1, which src/utils/switchLanguage.ts can see and clear so
+    // the next switch really does re-fetch the chunk.
+    const attempt = (retriesLeft: number): void => {
+      loader().then(
+        (mod) => callback(null, unwrap(mod)),
+        (err) => {
+          if (retriesLeft > 0) {
+            setTimeout(() => attempt(retriesLeft - 1), RETRY_DELAY_MS);
+            return;
+          }
+          callback(err, false);
+        }
+      );
+    };
+    attempt(1);
   },
 };
 

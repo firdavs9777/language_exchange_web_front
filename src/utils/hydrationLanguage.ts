@@ -1,4 +1,5 @@
 import { i18n as I18n } from "i18next";
+import { switchLanguage } from "./switchLanguage";
 
 // Prerendered HTML is English. To hydrate without a mismatch the first client
 // render must be English too; the visitor's language is restored in an effect
@@ -79,13 +80,16 @@ export function prepareForHydration(i18n: I18n): string {
  * Call from an effect after the first commit. No-op when nothing is pending.
  *
  * Deliberately fire-and-forget: since task D1 the visitor's locale is a lazy
- * chunk, so `changeLanguage` is a promise. i18next loads the bundle *before*
- * it switches and emits `languageChanged`, so the English first render simply
+ * chunk, so switching is a promise. i18next loads the bundle *before* it
+ * switches and emits `languageChanged`, so the English first render simply
  * stays on screen until the JSON lands -- there is no window in which `t()`
  * returns a raw key or the "" that `parseMissingKeyHandler` yields.
+ *
+ * Goes through switchLanguage so a chunk that failed on an earlier attempt is
+ * re-fetched rather than silently leaving the visitor on English.
  */
 export function restoreAfterHydration(i18n: I18n): void {
-  if (pending && pending !== i18n.language) void i18n.changeLanguage(pending);
+  if (pending && pending !== i18n.language) void switchLanguage(i18n, pending);
   pending = null;
 }
 

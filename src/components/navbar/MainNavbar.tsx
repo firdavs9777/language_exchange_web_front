@@ -15,6 +15,7 @@ import {
   FaUserShield,
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import { switchLanguage } from "../../utils/switchLanguage";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectIsAdmin } from "../../store/slices/authSlice";
@@ -140,15 +141,11 @@ const MainNavbar = () => {
     // *network* order and i18next has no staleness guard: the slower-arriving
     // language wins and the menu disagrees with the page. Re-apply whatever was
     // asked for last once a switch settles. Bounded: the re-apply's own callback
-    // finds the two in agreement and stops. The guard is for the mocked i18n in
-    // MainNavbar.test.tsx, whose changeLanguage returns undefined.
-    const switched = i18n.changeLanguage(lng) as Promise<unknown> | undefined;
-    if (switched && typeof switched.then === "function") {
-      switched.then(() => {
-        const wanted = requestedLanguage.current;
-        if (wanted && wanted !== i18n.language) i18n.changeLanguage(wanted);
-      });
-    }
+    // finds the two in agreement and stops.
+    void switchLanguage(i18n, lng).then(() => {
+      const wanted = requestedLanguage.current;
+      if (wanted && wanted !== i18n.language) void switchLanguage(i18n, wanted);
+    });
     localStorage.setItem("preferredLanguage", lng);
     setIsLanguageDropdownOpen(false);
     toast.info(`${lang?.flag} ${lang?.name}`, {

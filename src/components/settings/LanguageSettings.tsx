@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { switchLanguage } from "../../utils/switchLanguage";
 import { RootState } from "../../store";
 import { useUpdateUserInfoMutation } from "../../store/slices/usersSlice";
 import { Bounce, toast } from "react-toastify";
@@ -74,13 +75,10 @@ const LanguageSettings: React.FC = () => {
     // network order and i18next keeps whichever *arrived* last, not whichever
     // was *asked for* last. Re-apply the last request once a switch settles;
     // the re-apply's own callback finds them in agreement and stops.
-    const switched = i18n.changeLanguage(code) as Promise<unknown> | undefined;
-    if (switched && typeof switched.then === "function") {
-      switched.then(() => {
-        const wanted = requestedLanguage.current;
-        if (wanted && wanted !== i18n.language) i18n.changeLanguage(wanted);
-      });
-    }
+    void switchLanguage(i18n, code).then(() => {
+      const wanted = requestedLanguage.current;
+      if (wanted && wanted !== i18n.language) void switchLanguage(i18n, wanted);
+    });
     localStorage.setItem("i18nextLng", code);
   };
 
