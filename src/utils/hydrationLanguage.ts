@@ -35,9 +35,17 @@ export function prepareForHydration(i18n: I18n): string {
   return detected;
 }
 
-/** Call from an effect after the first commit. No-op when nothing is pending. */
+/**
+ * Call from an effect after the first commit. No-op when nothing is pending.
+ *
+ * Deliberately fire-and-forget: since task D1 the visitor's locale is a lazy
+ * chunk, so `changeLanguage` is a promise. i18next loads the bundle *before*
+ * it switches and emits `languageChanged`, so the English first render simply
+ * stays on screen until the JSON lands -- there is no window in which `t()`
+ * returns a raw key or the "" that `parseMissingKeyHandler` yields.
+ */
 export function restoreAfterHydration(i18n: I18n): void {
-  if (pending && pending !== i18n.language) i18n.changeLanguage(pending);
+  if (pending && pending !== i18n.language) void i18n.changeLanguage(pending);
   pending = null;
 }
 

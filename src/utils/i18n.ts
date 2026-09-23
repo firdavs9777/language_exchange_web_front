@@ -1,27 +1,14 @@
 // src/utils/i18n.ts
 import i18n from "i18next";
-import Backend from "i18next-http-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 
+import lazyBackend from "./i18nLazyBackend";
+
+// The only locale that ships inside the entrypoint. The other 17 are
+// `import()`ed by src/utils/i18nLazyBackend.ts, one webpack chunk each --
+// they were ~306 KB gzipped of a 552 KB main.js that every visitor paid for.
 import en from "./locales/eng.json";
-import ko from "./locales/kor.json";
-import zh from "./locales/zho.json";
-import ar from "./locales/ar.json";
-import de from "./locales/de.json";
-import es from "./locales/es.json";
-import fr from "./locales/fr.json";
-import hi from "./locales/hi.json";
-import id from "./locales/id.json";
-import it from "./locales/it.json";
-import ja from "./locales/ja.json";
-import pt from "./locales/pt.json";
-import ru from "./locales/ru.json";
-import th from "./locales/th.json";
-import tl from "./locales/tl.json";
-import tr from "./locales/tr.json";
-import vi from "./locales/vi.json";
-import zh_TW from "./locales/zh_TW.json";
 
 export const SUPPORTED_LANGUAGES = [
   "en",
@@ -147,33 +134,16 @@ const STORAGE_KEY = "i18nextLng";
 const GEO_CACHE_KEY = "i18nextGeoLng";
 
 i18n
-  .use(Backend)
+  .use(lazyBackend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    // Every translation is inlined below, so the http backend never loads a
-    // thing — and must not schedule its hourly reload (an open handle in Node).
-    backend: { reloadInterval: false },
     resources: {
       en: { translation: en },
-      ko: { translation: ko },
-      zh: { translation: zh },
-      zh_TW: { translation: zh_TW },
-      ar: { translation: ar },
-      de: { translation: de },
-      es: { translation: es },
-      fr: { translation: fr },
-      hi: { translation: hi },
-      id: { translation: id },
-      it: { translation: it },
-      ja: { translation: ja },
-      pt: { translation: pt },
-      ru: { translation: ru },
-      th: { translation: th },
-      tl: { translation: tl },
-      tr: { translation: tr },
-      vi: { translation: vi },
     },
+    // English is bundled, the rest is not: without this i18next treats a
+    // populated `resources` as the complete set and never asks the backend.
+    partialBundledLanguages: true,
     fallbackLng: "en",
     supportedLngs: SUPPORTED_LANGUAGES as unknown as string[],
     nonExplicitSupportedLngs: true,
