@@ -43,12 +43,13 @@
     "webpack": "^4.41.0"
   },
   "scripts": {
-    "deploy": "NODE_OPTIONS='--max-old-space-size=1024' GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 npm run build && sudo nginx -s reload && echo '✅ Deployed!'",
+    "deploy": "NODE_OPTIONS='--max-old-space-size=1024' GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 npm run build && npm run test:budget && sudo nginx -s reload && echo '✅ Deployed!'",
     "start": "react-scripts start",
     "build": "react-scripts build && node scripts/prerender.js",
     "build:spa": "react-scripts build",
     "prerender": "node scripts/prerender.js",
     "test": "react-scripts test",
+    "test:budget": "CI=true react-scripts test --testPathPattern=bundleBudget --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

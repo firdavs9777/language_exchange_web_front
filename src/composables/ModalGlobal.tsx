@@ -1,5 +1,9 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
+// The bootstrap-icons stylesheet, pulled in by this chunk rather than by the
+// main bundle: this module renders `bi-*` glyphs and must never be reached
+// from an eager route. See src/lazyIcons.ts.
+import "../lazyIcons";
 
 export interface ModalAction {
   label: string;

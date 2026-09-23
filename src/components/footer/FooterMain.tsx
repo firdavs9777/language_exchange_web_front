@@ -1,6 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+// lucide, not bootstrap-icons: the footer renders on every prerendered
+// marketing page, and the bootstrap-icons font/stylesheet is now confined to
+// the authenticated lazy chunks (src/lazyIcons.ts). These seven glyphs are
+// tree-shaken out of lucide, so they cost bytes instead of a webfont.
+import {
+  Instagram,
+  Twitter,
+  Facebook,
+  Linkedin,
+  Youtube,
+  Mail,
+  MapPin,
+} from "lucide-react";
 import StoreLink from "../growth/StoreLink";
 import "./FooterMain.scss";
 
@@ -23,19 +36,19 @@ const FooterMain: React.FC = () => {
             </p>
             <div className="footer-social">
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                <i className="bi bi-instagram"></i>
+                <Instagram size={18} aria-hidden="true" />
               </a>
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                <i className="bi bi-twitter-x"></i>
+                <Twitter size={18} aria-hidden="true" />
               </a>
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                <i className="bi bi-facebook"></i>
+                <Facebook size={18} aria-hidden="true" />
               </a>
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                <i className="bi bi-linkedin"></i>
+                <Linkedin size={18} aria-hidden="true" />
               </a>
               <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-                <i className="bi bi-youtube"></i>
+                <Youtube size={18} aria-hidden="true" />
               </a>
             </div>
           </div>
@@ -59,11 +72,11 @@ const FooterMain: React.FC = () => {
               <h4 className="footer-link-title">{t("footer.contactInfo")}</h4>
               <ul className="footer-contact">
                 <li>
-                  <i className="bi bi-envelope"></i>
+                  <Mail size={16} aria-hidden="true" />
                   <span>bananatalkmain@gmail.com</span>
                 </li>
                 <li>
-                  <i className="bi bi-geo-alt"></i>
+                  <MapPin size={16} aria-hidden="true" />
                   <span>{t("footer.address")}</span>
                 </li>
               </ul>

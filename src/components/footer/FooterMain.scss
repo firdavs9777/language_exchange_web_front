@@ -223,7 +223,10 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
     color: $ink-400;
     margin-bottom: 0.75rem !important;
 
-    i {
+    /* `i` kept for any bootstrap-icons markup left elsewhere; `svg` is what
+       the lucide glyphs render as since the icon stylesheet left the head. */
+    i,
+    svg {
       color: $brand;
       margin-top: 2px;
       flex-shrink: 0;

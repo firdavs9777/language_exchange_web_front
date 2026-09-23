@@ -3,6 +3,10 @@ import { Modal, Button, Image, Row, Col } from "react-bootstrap";
 import { Bounce, toast } from "react-toastify";
 import "./ImageUploader.css";
 import { useTranslation } from "react-i18next";
+// The bootstrap-icons stylesheet, pulled in by this chunk rather than by the
+// main bundle: this module renders `bi-*` glyphs and must never be reached
+// from an eager route. See src/lazyIcons.ts.
+import "../../../lazyIcons";
 
 export interface ImageViewerModalProps {
   images: string[];

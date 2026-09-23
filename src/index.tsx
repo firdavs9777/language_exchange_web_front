@@ -7,7 +7,10 @@ import { Provider } from "react-redux";
 import { HelmetProvider } from "react-helmet-async";
 import "./assets/styles/bootstrap.custom.css";
 import "./assets/styles/legacy-buttons.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
+// bootstrap-icons is deliberately NOT imported here. It is ~2,000 glyph
+// rules plus a webfont that no prerendered marketing page uses; the
+// authenticated screens that still spell `bi-*` import src/lazyIcons.ts
+// instead, so webpack ships it with their lazy chunk.
 
 import router from "./router/AppRouter";
 import store from "./store";
