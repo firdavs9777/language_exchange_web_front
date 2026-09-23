@@ -6,7 +6,6 @@ export interface UserType {
   name: string;
   email: string;
   password: string;
-  isAdmin?: boolean;
   __v?: number;
   createdAt?: string;
   updatedAt?: string;
@@ -92,4 +91,16 @@ const authSlice = createSlice({
 });
 
 export const { setCredentials, logout } = authSlice.actions;
+
+/**
+ * The single source of truth for "is this an admin" in the web client.
+ *
+ * `role` is the backend's own field (`authorize('admin')` reads it server-side),
+ * so this selector and the API agree by construction. It gates the navbar entry
+ * and the `/admin` route guard — both cosmetic: every admin route is protected
+ * server-side, and a forged `userInfo` in localStorage buys nothing but an
+ * empty console full of 403s.
+ */
+export const selectIsAdmin = (state: { auth: { userInfo?: any } }) =>
+  state.auth.userInfo?.user?.role === "admin";
 export default authSlice.reducer;

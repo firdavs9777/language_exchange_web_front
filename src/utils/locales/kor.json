@@ -1180,5 +1180,16 @@
     "message": "어떤 경로로 오셨는지 파악하기 위해 분석 쿠키를 사용해요.",
     "accept": "확인",
     "decline": "괜찮아요"
+  },
+  "admin": {
+    "nav": {
+      "admin": "관리자",
+      "overview": "개요",
+      "reach": "유입",
+      "users": "사용자",
+      "content": "콘텐츠",
+      "aiUsage": "AI 사용량",
+      "audit": "감사 로그"
+    }
   }
 }

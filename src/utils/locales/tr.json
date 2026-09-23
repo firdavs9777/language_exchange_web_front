@@ -1180,5 +1180,16 @@
     "message": "Ziyaretçileri buraya neyin getirdiğini anlamak için analiz çerezleri kullanıyoruz.",
     "accept": "Tamam",
     "decline": "Hayır, teşekkürler"
+  },
+  "admin": {
+    "nav": {
+      "admin": "Yönetim",
+      "overview": "Genel bakış",
+      "reach": "Erişim",
+      "users": "Kullanıcılar",
+      "content": "İçerik",
+      "aiUsage": "AI kullanımı",
+      "audit": "Denetim kaydı"
+    }
   }
 }

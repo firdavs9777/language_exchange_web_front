@@ -116,6 +116,13 @@ export const apiSlice = createApi({
     "Vocabulary",
     "Lessons",
     "Quizzes",
+    // Admin console. AdminUserList covers the paginated lists (search, banned)
+    // so a ban/role change refetches the table the moderator is looking at;
+    // AdminUser covers a single user's detail drawer.
+    "AdminUser",
+    "AdminUserList",
+    "AdminContent",
+    "AdminStats",
   ],
   refetchOnFocus: false,
   refetchOnReconnect: true,

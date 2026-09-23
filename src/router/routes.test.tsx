@@ -31,3 +31,17 @@ it("sends unknown paths to the catch-all route", () => {
   expect(matches && matches.length).toBe(2);
   expect(matches![1].route.path).toBe("*");
 });
+
+// The admin console is a lazy child tree. It must resolve to real routes (not
+// the catch-all) while still importing in plain Node: React.lazy defers the
+// import until something renders it, and nothing prerenders /admin.
+it("matches the admin console paths to real routes, not the catch-all", () => {
+  const { routes } = require("./routes");
+  for (const path of ["/admin", "/admin/reach", "/admin/users", "/admin/content", "/admin/ai-usage", "/admin/audit"]) {
+    const matches = matchRoutes(routes, path);
+    expect(matches && matches.length).toBe(3); // App -> AdminLayout -> page
+    for (const m of matches!) {
+      expect(m.route.path).not.toBe("*");
+    }
+  }
+});

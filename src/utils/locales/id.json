@@ -1180,5 +1180,16 @@
     "message": "Kami menggunakan cookie analitik untuk memahami apa yang membawa orang ke sini.",
     "accept": "OK",
     "decline": "Tidak, terima kasih"
+  },
+  "admin": {
+    "nav": {
+      "admin": "Admin",
+      "overview": "Ikhtisar",
+      "reach": "Jangkauan",
+      "users": "Pengguna",
+      "content": "Konten",
+      "aiUsage": "Penggunaan AI",
+      "audit": "Log audit"
+    }
   }
 }

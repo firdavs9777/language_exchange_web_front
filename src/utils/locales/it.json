@@ -1180,5 +1180,16 @@
     "selectMoreUsers": "Seleziona almeno 2 utenti per una chat di gruppo",
     "createError": "Impossibile creare la chat",
     "recently": "Recenti"
+  },
+  "admin": {
+    "nav": {
+      "admin": "Admin",
+      "overview": "Panoramica",
+      "reach": "Copertura",
+      "users": "Utenti",
+      "content": "Contenuti",
+      "aiUsage": "Uso dell'IA",
+      "audit": "Registro di controllo"
+    }
   }
 }

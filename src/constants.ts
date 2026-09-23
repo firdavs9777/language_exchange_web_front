@@ -61,3 +61,7 @@ export const GEOCODE_FORWARD_URL = "/api/v1/geocode/forward";
 
 export const PUBLIC_STATS_URL = "/api/v1/public/stats";
 export const ANALYTICS_EVENTS_URL = "/api/v1/analytics/events";
+
+// Admin console. Every route below lives under `protect` + `authorize('admin')`
+// server-side (routes/admin.js); the client-side guard is cosmetic.
+export const ADMIN_URL = "/api/v1/admin";

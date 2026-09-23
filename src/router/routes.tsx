@@ -1,3 +1,4 @@
+import React from "react";
 import {
   createRoutesFromElements,
   Route,
@@ -59,6 +60,26 @@ import StoryViewer from "../components/stories/StoryViewer";
 // Moments
 import SavedMoments from "../components/moments/SavedMoments";
 import MainMoments from "../components/moments/MainMoments";
+
+// Admin console. Lazy on purpose, and lazy is load-bearing twice over: this
+// module is required by scripts/prerender.js in plain Node, and the console
+// pulls in charts, tables and the whole admin slice that no visitor of a
+// public page should download. React.lazy defers the import until a route
+// actually renders, so /admin costs nothing to anyone who never opens it.
+const AdminLayout = React.lazy(() => import("../components/admin/AdminLayout"));
+const AdminOverview = React.lazy(() => import("../components/admin/pages/AdminOverview"));
+const AdminReach = React.lazy(() => import("../components/admin/pages/AdminReach"));
+const AdminUsers = React.lazy(() => import("../components/admin/pages/AdminUsers"));
+const AdminContent = React.lazy(() => import("../components/admin/pages/AdminContent"));
+const AdminAiUsage = React.lazy(() => import("../components/admin/pages/AdminAiUsage"));
+const AdminAudit = React.lazy(() => import("../components/admin/pages/AdminAudit"));
+
+// One Suspense per element keeps the rail on screen while a section loads;
+// the fallback is null because the chunk is local and the flash of a spinner
+// costs more than it buys.
+const lazyRoute = (node: React.ReactNode) => (
+  <React.Suspense fallback={null}>{node}</React.Suspense>
+);
 
 const MainChatWrapper = () => {
   const { userId } = useParams();
@@ -125,6 +146,17 @@ export const routes = createRoutesFromElements(
 
     {/* Moments */}
     <Route path="moments/saved" element={<SavedMoments />} />
+
+    {/* Admin console. Guarded inside AdminLayout (RequireAdmin) and noindex
+        by default — RouteMeta marks every path outside SEO_PAGES. */}
+    <Route path="admin" element={lazyRoute(<AdminLayout />)}>
+      <Route index element={lazyRoute(<AdminOverview />)} />
+      <Route path="reach" element={lazyRoute(<AdminReach />)} />
+      <Route path="users" element={lazyRoute(<AdminUsers />)} />
+      <Route path="content" element={lazyRoute(<AdminContent />)} />
+      <Route path="ai-usage" element={lazyRoute(<AdminAiUsage />)} />
+      <Route path="audit" element={lazyRoute(<AdminAudit />)} />
+    </Route>
 
     {/* Catch-all. Must stay last. */}
     <Route path="*" element={<NotFound />} />

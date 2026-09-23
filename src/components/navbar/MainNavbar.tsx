@@ -12,11 +12,12 @@ import {
   FaHeart,
   FaUserFriends,
   FaChevronDown,
+  FaUserShield,
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../store/slices/authSlice";
+import { logout, selectIsAdmin } from "../../store/slices/authSlice";
 import { Bounce, toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
 
@@ -57,6 +58,9 @@ const MainNavbar = () => {
   const userDropdownRef = useRef<HTMLDivElement>(null);
 
   const userInfo = useSelector((state: any) => state.auth.userInfo);
+  // The console's only entry point. Role comes from the backend; the route
+  // itself is guarded again by RequireAdmin, and the API by authorize('admin').
+  const isAdmin = useSelector(selectIsAdmin);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
@@ -213,6 +217,16 @@ const MainNavbar = () => {
                   <FaGlobe />
                   <span>{t("moments")}</span>
                 </NavLink>
+
+                {isAdmin && (
+                  <NavLink
+                    to="/admin"
+                    className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+                  >
+                    <FaUserShield />
+                    <span>{t("admin.nav.admin") || "Admin"}</span>
+                  </NavLink>
+                )}
               </>
             )}
           </div>
@@ -365,6 +379,11 @@ const MainNavbar = () => {
                   <NavLink to="/moments" className="mobile-nav-link" onClick={closeMobileMenu}>
                     <FaGlobe /> {t("moments")}
                   </NavLink>
+                  {isAdmin && (
+                    <NavLink to="/admin" className="mobile-nav-link" onClick={closeMobileMenu}>
+                      <FaUserShield /> {t("admin.nav.admin") || "Admin"}
+                    </NavLink>
+                  )}
                 </>
               )}
             </div>

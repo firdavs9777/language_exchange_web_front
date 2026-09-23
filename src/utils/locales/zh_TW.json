@@ -1180,5 +1180,16 @@
     "message": "我們使用分析 Cookie，了解大家是怎麼找到這裡的。",
     "accept": "好",
     "decline": "不用了，謝謝"
+  },
+  "admin": {
+    "nav": {
+      "admin": "管理",
+      "overview": "總覽",
+      "reach": "觸及",
+      "users": "使用者",
+      "content": "內容",
+      "aiUsage": "AI 使用量",
+      "audit": "稽核日誌"
+    }
   }
 }

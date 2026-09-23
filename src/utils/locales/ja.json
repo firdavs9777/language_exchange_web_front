@@ -1180,5 +1180,16 @@
     "message": "どこから来ていただいたかを知るために、分析用のクッキーを使っています。",
     "accept": "OK",
     "decline": "利用しない"
+  },
+  "admin": {
+    "nav": {
+      "admin": "管理",
+      "overview": "概要",
+      "reach": "リーチ",
+      "users": "ユーザー",
+      "content": "コンテンツ",
+      "aiUsage": "AI利用状況",
+      "audit": "監査ログ"
+    }
   }
 }

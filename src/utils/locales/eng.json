@@ -1180,5 +1180,16 @@
     "message": "We use analytics cookies to understand what brings people here.",
     "accept": "OK",
     "decline": "No thanks"
+  },
+  "admin": {
+    "nav": {
+      "admin": "Admin",
+      "overview": "Overview",
+      "reach": "Reach",
+      "users": "Users",
+      "content": "Content",
+      "aiUsage": "AI usage",
+      "audit": "Audit log"
+    }
   }
 }

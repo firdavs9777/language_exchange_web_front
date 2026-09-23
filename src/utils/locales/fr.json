@@ -1180,5 +1180,16 @@
     "selectMoreUsers": "Sélectionnez au moins 2 utilisateurs pour une discussion de groupe",
     "createError": "Échec de la création de la discussion",
     "recently": "Récents"
+  },
+  "admin": {
+    "nav": {
+      "admin": "Admin",
+      "overview": "Aperçu",
+      "reach": "Portée",
+      "users": "Utilisateurs",
+      "content": "Contenu",
+      "aiUsage": "Usage de l'IA",
+      "audit": "Journal d'audit"
+    }
   }
 }

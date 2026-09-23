@@ -1180,5 +1180,16 @@
     "message": "Wir verwenden Analyse-Cookies, um zu verstehen, was Besucher hierher bringt.",
     "accept": "OK",
     "decline": "Nein, danke"
+  },
+  "admin": {
+    "nav": {
+      "admin": "Admin",
+      "overview": "Übersicht",
+      "reach": "Reichweite",
+      "users": "Nutzer",
+      "content": "Inhalte",
+      "aiUsage": "KI-Nutzung",
+      "audit": "Audit-Protokoll"
+    }
   }
 }

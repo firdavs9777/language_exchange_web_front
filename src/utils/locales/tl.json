@@ -1180,5 +1180,16 @@
     "message": "Gumagamit kami ng analytics cookies para maunawaan kung ano ang nagdadala ng mga tao rito.",
     "accept": "OK",
     "decline": "Huwag na lang"
+  },
+  "admin": {
+    "nav": {
+      "admin": "Admin",
+      "overview": "Pangkalahatang-ideya",
+      "reach": "Abot",
+      "users": "Mga user",
+      "content": "Nilalaman",
+      "aiUsage": "Paggamit ng AI",
+      "audit": "Audit log"
+    }
   }
 }

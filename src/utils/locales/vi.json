@@ -1180,5 +1180,16 @@
     "message": "Chúng tôi sử dụng cookie phân tích để hiểu điều gì đã đưa mọi người đến đây.",
     "accept": "OK",
     "decline": "Không, cảm ơn"
+  },
+  "admin": {
+    "nav": {
+      "admin": "Quản trị",
+      "overview": "Tổng quan",
+      "reach": "Tiếp cận",
+      "users": "Người dùng",
+      "content": "Nội dung",
+      "aiUsage": "Sử dụng AI",
+      "audit": "Nhật ký kiểm tra"
+    }
   }
 }
