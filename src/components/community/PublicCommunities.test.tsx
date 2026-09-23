@@ -72,8 +72,8 @@ it("shows the member count, grouped", () => {
 it("renders one language pill per language the community speaks", () => {
   render(<PublicCommunities />);
   const cards = screen.getAllByTestId("public-community-card");
-  expect(cards[0].querySelectorAll('[data-testid="language-pill"]')).toHaveLength(1);
-  expect(cards[1].querySelectorAll('[data-testid="language-pill"]')).toHaveLength(2);
+  expect(cards[0].querySelectorAll('[data-testid="language-chip"]')).toHaveLength(1);
+  expect(cards[1].querySelectorAll('[data-testid="language-chip"]')).toHaveLength(2);
   expect(cards[0].textContent).toContain("KO");
   expect(cards[1].textContent).toContain("ES");
   expect(cards[1].textContent).toContain("EN");

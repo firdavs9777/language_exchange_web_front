@@ -82,7 +82,7 @@ export const SEO_PAGES: SeoPage[] = [
     titleKey: "seo.learnKorean.title",
     descriptionKey: "seo.learnKorean.description",
     primary: "learn Korean by chatting",
-    secondary: ["talk to Korean native speakers", "Korean language exchange", "practise Korean online"],
+    secondary: ["talk to Korean native speakers", "Korean language exchange", "practice Korean online"],
     titleEn: "Learn Korean by Chatting With Native Speakers",
     descriptionEn:
       "Learn Korean by chatting with native Korean speakers for free. You write English, they write Hangul, and an AI tutor explains 존댓말 vs 반말 as you go.",
@@ -95,7 +95,7 @@ export const SEO_PAGES: SeoPage[] = [
     secondary: ["language exchange groups", "practice a language with a group", "find a language partner group"],
     titleEn: "Language Exchange Communities | BananaTalk",
     descriptionEn:
-      "Join language exchange communities on BananaTalk: real groups practising Korean, Spanish, Japanese and more together, free, every day.",
+      "Join language exchange communities on BananaTalk: real groups practicing Korean, Spanish, Japanese and more together, free, every day.",
   },
   {
     path: "/moments",

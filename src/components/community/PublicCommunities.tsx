@@ -1,7 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import SurfaceCard from "../../design/SurfaceCard";
-import LanguageExchangePill from "../../design/LanguageExchangePill";
+import Badge from "../../design/Badge";
+import { displayCode } from "../../utils/languages";
 import StoreLink from "../growth/StoreLink";
 import {
   useGetPublicCommunitiesQuery,
@@ -39,17 +40,13 @@ const CommunityCard: React.FC<{ community: PublicCommunity }> = ({ community }) 
 
         {languages.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
-            {/* One pill per language the club practises. Both sides of the
-                pill are that language on purpose: a club is people exchanging
-                one language with each other, and the pill must not invent a
-                second language the payload never named. */}
+            {/* One chip per language the club practices. A plain Badge, not the
+                exchange pill: a club names one language, and an arrow between
+                two copies of it would read as a glitch. */}
             {languages.map((language, i) => (
-              <LanguageExchangePill
-                key={`${language}-${i}`}
-                nativeLanguage={language}
-                learningLanguage={language}
-                dense
-              />
+              <Badge key={`${language}-${i}`}>
+                <span data-testid="language-chip">{displayCode(language)}</span>
+              </Badge>
             ))}
           </div>
         )}
@@ -106,7 +103,7 @@ const PublicCommunities: React.FC = () => {
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-600 dark:text-gray-300">
             {t("communities.public.intro") ||
-              "Real groups inside BananaTalk, where people practise one language together every day. Find yours here, then open it in the app and start talking."}
+              "Real groups inside BananaTalk, where people practice one language together every day. Find yours here, then open it in the app and start talking."}
           </p>
         </header>
 
