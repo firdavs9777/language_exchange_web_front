@@ -153,12 +153,12 @@ const HeroDemo: React.FC<HeroDemoProps> = ({
             <StoreLink
               store="ios"
               placement={placement}
-              className="rounded-xl bg-gray-900 px-5 py-3 text-sm font-bold text-white"
+              className="min-w-[11rem] rounded-xl bg-gray-900 px-5 py-3 text-sm font-bold text-white"
             />
             <StoreLink
               store="android"
               placement={placement}
-              className="rounded-xl bg-gray-900 px-5 py-3 text-sm font-bold text-white"
+              className="min-w-[11rem] rounded-xl bg-gray-900 px-5 py-3 text-sm font-bold text-white"
             />
           </div>
 
