@@ -485,7 +485,7 @@ const ErrorState: React.FC<ErrorStateProps> = ({ t, refetch }) => (
       >
         <FaRedo className="h-3 w-3 transition-transform group-hover:rotate-180" />
         <span className="hidden xs:inline">
-          {t("moments_section.rety_btn")}
+          {t("moments_section.retry_btn")}
         </span>
       </button>
     </div>
