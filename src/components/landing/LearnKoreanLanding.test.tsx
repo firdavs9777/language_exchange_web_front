@@ -39,6 +39,30 @@ it("shows Hangul, its translation, and a tutor note on 존댓말 vs 반말", () 
   expect(note).toContain("반말");
 });
 
+// The supporting line has to agree with the demo below it: on this page the
+// learner is the one writing Korean, and the tutor is correcting them.
+it("promises the learner writes Korean, which is what the demo shows", () => {
+  const { container } = render(<LearnKoreanLanding />);
+  const text = container.textContent || "";
+  expect(text).toContain("You try it in 한국어");
+  expect(text).not.toContain("You write English");
+});
+
+// Prerendered at build time: nothing here can know who is awake. "Korean
+// speakers are learning your language right now" is a claim about the world;
+// "online now" would be a claim about this minute's roster.
+it("claims no live availability", () => {
+  const { container } = render(<LearnKoreanLanding />);
+  expect(container.textContent || "").not.toMatch(/\bonline\b/i);
+});
+
+it("says what it is: a language exchange, with native speakers", () => {
+  const { container } = render(<LearnKoreanLanding />);
+  const text = (container.textContent || "").toLowerCase();
+  expect(text).toContain("language exchange");
+  expect(text).toContain("native speakers");
+});
+
 it("tags every store link as the learn-korean placement", () => {
   render(<LearnKoreanLanding />);
   const hrefs = [

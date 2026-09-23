@@ -62,17 +62,17 @@ export const MEET_COPY: LandingCopy = {
     titleAccent: line("meet.hero.titleAccent", "who actually write back."),
     subtitle: line(
       "meet.hero.subtitle",
-      "BananaTalk is where you make international friends by talking. Pick a language, say hi, and every message arrives translated — so neither of you has to be fluent first."
+      "BananaTalk is where you make international friends by talking to native speakers. Pick a language, say hi, and every message arrives translated — so neither of you has to be fluent first."
     ),
-    trust: line("meet.hero.trust", "Free forever tier · 137 languages · Real people, real time zones"),
+    trust: line("meet.hero.trust", "Free forever tier · 137 languages · Every message translated both ways"),
     messages: [
       {
         text: line("meet.hero.demo.1.text", "Bora ver o pôr do sol no sábado?"),
         translation: line("meet.hero.demo.1.translation", "Want to watch the sunset on Saturday?"),
       },
       {
-        text: line("meet.hero.demo.2.text", "Yes! Is it cold there in September?"),
-        translation: line("meet.hero.demo.2.translation", "Sim! Faz frio aí em setembro?"),
+        text: line("meet.hero.demo.2.text", "Yes! Is it still warm there in September?"),
+        translation: line("meet.hero.demo.2.translation", "Sim! Ainda faz calor aí em setembro?"),
       },
     ],
     noteLabel: line("meet.hero.note.label", "✦ TRANSLATED BOTH WAYS"),
@@ -88,7 +88,7 @@ export const MEET_COPY: LandingCopy = {
         title: line("meet.howItWorks.steps.1.title", "Pick a language, not a profile"),
         body: line(
           "meet.howItWorks.steps.1.body",
-          "Choose the language or the country you are curious about. We show you the people who want to hear from someone like you."
+          "Choose the language or the country you are curious about. We show you the people already learning yours — it is a language exchange, so you both get something."
         ),
       },
       {
@@ -107,7 +107,7 @@ export const MEET_COPY: LandingCopy = {
       },
     ],
   },
-  featuresTitle: line("meet.features.title", "Built for meeting people, not collecting matches"),
+  featuresTitle: line("meet.features.title", "Built for conversations that keep going"),
   cta: {
     title: line("meet.cta.title", "Someone in another country is awake right now"),
     subtitle: line("meet.cta.subtitle", "Free to start. No card, no trial countdown."),
@@ -125,11 +125,13 @@ export const LEARN_KOREAN_COPY: LandingCopy = {
   hero: {
     title: line("learnKorean.hero.title", "Learn Korean by chatting"),
     titleAccent: line("learnKorean.hero.titleAccent", "with actual Koreans."),
+    // translator note: "your language" means the reader's own language, whatever
+    // it is. Never render it as "English" -- a Spanish reader writes Spanish here.
     subtitle: line(
       "learnKorean.hero.subtitle",
-      "Trade languages with Korean native speakers who want yours in return. You write English, they write 한국어, and both of you read it in your own."
+      "Trade languages with Korean native speakers who want yours in return. You try it in 한국어, they answer in the Korean people really use, and the AI tutor fixes what you got wrong — privately."
     ),
-    trust: line("learnKorean.hero.trust", "Free forever tier · Korean natives online now · AI tutor 24/7"),
+    trust: line("learnKorean.hero.trust", "Free forever tier · Korean native speakers · AI tutor 24/7"),
     messages: [
       {
         text: line("learnKorean.hero.demo.1.text", "주말에 뭐 했어요?"),
@@ -147,10 +149,10 @@ export const LEARN_KOREAN_COPY: LandingCopy = {
     ),
   },
   howItWorks: {
-    title: line("learnKorean.howItWorks.title", "Why chatting is how Korean sticks"),
+    title: line("learnKorean.howItWorks.title", "Why Korean sticks when you chat"),
     steps: [
       {
-        title: line("learnKorean.howItWorks.steps.1.title", "The Korean people actually type"),
+        title: line("learnKorean.howItWorks.steps.1.title", "The Korean that shows up in real chats"),
         body: line(
           "learnKorean.howItWorks.steps.1.body",
           "Your textbook teaches 합니다. Your partner types 했어요, ㅋㅋ and 헐 — the Korean waiting for you in a real conversation."
@@ -167,12 +169,12 @@ export const LEARN_KOREAN_COPY: LandingCopy = {
         title: line("learnKorean.howItWorks.steps.3.title", "Corrected without the embarrassment"),
         body: line(
           "learnKorean.howItWorks.steps.3.body",
-          "The AI tutor marks up your Korean privately. Your partner only sees you trying, which is the part that keeps them replying."
+          "The AI tutor marks up your Korean where only you can see it, so a language exchange never turns into a test. Your partner just sees you trying, which is the part that keeps them replying."
         ),
       },
     ],
   },
-  featuresTitle: line("learnKorean.features.title", "What you get while you learn Korean"),
+  featuresTitle: line("learnKorean.features.title", "Three things a textbook cannot give you"),
   cta: {
     title: line("learnKorean.cta.title", "Korean speakers are learning your language right now"),
     subtitle: line("learnKorean.cta.subtitle", "Free to start. No card, no trial countdown."),

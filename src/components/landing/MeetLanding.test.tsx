@@ -2,6 +2,14 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import MeetLanding from "./MeetLanding";
+import { MEET_COPY } from "./copy";
+import { SEO_PAGES, seoTitleEn, seoDescriptionEn } from "../../seo/pages";
+
+// The word, not every word that contains it: a substring test trips on
+// "update", "candidate" and "validated", and this page renders the homepage's
+// feature copy, so an unrelated edit there would fail a /meet test with a
+// baffling message.
+const DATING_WORD = /\b(date|dates|dated|dating)\b/i;
 
 // `mockTMode` toggles the mocked `t` between echoing its key (proves the copy
 // is routed through i18n) and returning "" (proves the `t(key) || "English"`
@@ -45,7 +53,25 @@ it("plays a conversation between two languages, translated both ways", () => {
 // dating page and must not read as one.
 it("never says the word this page is not about", () => {
   const { container } = render(<MeetLanding />);
-  expect(container.textContent || "").not.toMatch(/date/i);
+  expect(container.textContent || "").not.toMatch(DATING_WORD);
+});
+
+// The test above only sees what English fallbacks render today. This one holds
+// after task B7 translates the page and after any homepage copy edit, because
+// it asserts on this page's own copy and on what a search result will show.
+it("keeps the dating word out of the copy module and the SEO entry too", () => {
+  const page = SEO_PAGES.filter((p) => p.path === "/meet")[0];
+  const strings = JSON.stringify(MEET_COPY) + seoTitleEn(page) + seoDescriptionEn(page);
+  expect(strings).not.toMatch(DATING_WORD);
+});
+
+// Spec §5: the learner framing is the primary one, so the phrases the SEO
+// entry lists as secondary have to appear in the body copy, not just the map.
+it("says what it is: a language exchange, with native speakers", () => {
+  const { container } = render(<MeetLanding />);
+  const text = (container.textContent || "").toLowerCase();
+  expect(text).toContain("language exchange");
+  expect(text).toContain("native speakers");
 });
 
 it("tags every store link as the meet placement", () => {
