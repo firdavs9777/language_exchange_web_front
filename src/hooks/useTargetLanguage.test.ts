@@ -27,16 +27,16 @@ describe("useTargetLanguage", () => {
     expect(result.current).toBe("ko");
   });
 
-  it("returns 'zh-TW' for the underscore-spelled zh_TW resource key", () => {
+  it("returns 'zh' for the underscore-spelled zh_TW resource key (backend has no zh-TW)", () => {
     mockLanguage = "zh_TW";
     const { result } = renderHook(() => useTargetLanguage());
-    expect(result.current).toBe("zh-TW");
+    expect(result.current).toBe("zh");
   });
 
-  it("returns 'zh-TW' for the hyphen spelling too, instead of collapsing to bare 'zh'", () => {
+  it("returns 'zh' for the hyphen spelling too, not 'zh-TW' (unsupported by the backend's translation validator/service)", () => {
     mockLanguage = "zh-TW";
     const { result } = renderHook(() => useTargetLanguage());
-    expect(result.current).toBe("zh-TW");
+    expect(result.current).toBe("zh");
   });
 
   it("returns bare 'zh' for Simplified Chinese", () => {
