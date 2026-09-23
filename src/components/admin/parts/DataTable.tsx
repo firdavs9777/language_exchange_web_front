@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export interface DataTableColumn {
   /** Field read off the row when there is no `render`. */
@@ -52,6 +53,7 @@ const DataTable: React.FC<DataTableProps> = ({
   caption,
   className = "",
 }) => {
+  const { t } = useTranslation();
   const safeRows = Array.isArray(rows) ? rows : [];
   const currentPage = typeof page === "number" && page > 0 ? page : 1;
 
@@ -138,7 +140,9 @@ const DataTable: React.FC<DataTableProps> = ({
 
       {onPageChange ? (
         <div className="flex items-center justify-end gap-3 pt-3 text-sm">
-          <span className="text-ink-500 dark:text-ink-400">Page {currentPage}</span>
+          <span className="text-ink-500 dark:text-ink-400">
+            {t("admin.table.page", { page: currentPage }) || `Page ${currentPage}`}
+          </span>
           <button
             type="button"
             data-testid="data-table-prev"
@@ -146,7 +150,7 @@ const DataTable: React.FC<DataTableProps> = ({
             disabled={currentPage <= 1}
             className="rounded-chip border border-line px-2.5 py-1 text-ink-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-line-dark dark:text-ink-200"
           >
-            Previous
+            {t("admin.table.previous") || "Previous"}
           </button>
           <button
             type="button"
@@ -155,7 +159,7 @@ const DataTable: React.FC<DataTableProps> = ({
             disabled={!hasMore}
             className="rounded-chip border border-line px-2.5 py-1 text-ink-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-line-dark dark:text-ink-200"
           >
-            Next
+            {t("admin.table.next") || "Next"}
           </button>
         </div>
       ) : null}

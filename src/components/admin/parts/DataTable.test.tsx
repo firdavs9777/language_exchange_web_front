@@ -3,6 +3,8 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import DataTable from "./DataTable";
 
+jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
+
 const columns = [
   { key: "name", header: "Name" },
   { key: "email", header: "Email" },
