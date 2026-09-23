@@ -147,7 +147,16 @@
   "profile": {
     "title": "내 프로필",
     "edit_profile": "프로필 수정",
-    "photos": "사진",
+    "photos": {
+      "title": "사진",
+      "add": "사진 추가",
+      "alt": "{{name}}님의 사진 {{index}}",
+      "open": "사진 {{index}} 열기",
+      "close": "닫기",
+      "previous": "이전 사진",
+      "next": "다음 사진",
+      "counter": "{{index}} / {{total}}"
+    },
     "messages": {
       "image_update_success": "프로필 사진을 변경했어요",
       "image_update_failure": "프로필 사진을 변경하지 못했어요",
@@ -230,7 +239,16 @@
       "save": "저장",
       "cancel": "취소",
       "edit_photo": "사진 수정",
-      "clear": "선택 해제"
+      "clear": "선택 해제",
+      "settings": "설정",
+      "message": "메시지",
+      "follow": "팔로우",
+      "following": "팔로잉",
+      "more": "옵션 더 보기",
+      "block": "차단",
+      "report": "신고",
+      "this_person": "이 사람",
+      "action_failed": "처리하지 못했어요. 다시 시도해 주세요."
     },
     "buttons": {
       "edit": "수정",
@@ -258,6 +276,106 @@
       "kdrama": "K-드라마",
       "languages": "언어",
       "culture": "문화"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "인증됨",
+      "joined": "{{date}} 가입",
+      "active": "{{time}} 활동",
+      "online": "지금 접속 중"
+    },
+    "block": {
+      "title": "{{name}}님을 차단할까요?",
+      "body": "차단하면 상대방은 메시지를 보내거나 내 프로필을 볼 수 없어요."
+    },
+    "report": {
+      "title": "{{name}}님을 신고할까요?",
+      "body": "어떤 점이 문제인지 알려 주세요. 모든 신고는 검토하고 있어요.",
+      "reason": "신고 사유"
+    },
+    "languages": {
+      "also_learning": "함께 배우는 언어"
+    },
+    "about": {
+      "title": "소개",
+      "occupation": "직업",
+      "school": "학교",
+      "read_more": "더 보기",
+      "read_less": "접기"
+    },
+    "learning": {
+      "title": "학습 현황",
+      "streak": "연속 학습",
+      "days": "일",
+      "xp": "총 XP",
+      "level": "레벨"
+    },
+    "moments": {
+      "see_all": "전체 보기",
+      "empty_own": "첫 모멘트를 남겨 보세요",
+      "empty_other": "아직 모멘트가 없어요",
+      "photo_alt": "모멘트 사진"
+    },
+    "page": {
+      "title": "프로필",
+      "error_title": "프로필을 불러오지 못했어요",
+      "error_body": "연결 상태를 확인하고 다시 시도해 주세요.",
+      "retry": "다시 시도",
+      "not_found_title": "프로필을 찾을 수 없어요",
+      "not_found_body": "이 프로필은 삭제되었거나 처음부터 없었어요.",
+      "back_to_community": "커뮤니티 둘러보기"
+    },
+    "lists": {
+      "title": "팔로워·팔로잉",
+      "title_of": "{{name}}님의 팔로워·팔로잉",
+      "title_other": "팔로워·팔로잉",
+      "search": "이름으로 검색",
+      "search_empty": "“{{query}}”와 일치하는 사람이 없어요",
+      "empty_followers_own": "아직 팔로워가 없어요.",
+      "empty_followers_other": "아직 이 사람을 팔로우한 사람이 없어요.",
+      "empty_following_own": "아직 팔로우한 사람이 없어요.",
+      "empty_following_other": "아직 아무도 팔로우하지 않았어요.",
+      "error_title": "목록을 불러오지 못했어요",
+      "error_body": "연결 상태를 확인하고 다시 시도해 주세요.",
+      "retry": "다시 시도"
+    },
+    "edit": {
+      "back": "뒤로",
+      "about": "소개",
+      "photos_hint": "첫 번째 사진이 어디에서나 대표 사진으로 보여요.",
+      "add_photo": "사진 추가",
+      "photo_alt": "사진 {{index}}",
+      "delete_photo": "사진 {{index}} 삭제",
+      "delete_photo_title": "이 사진을 삭제할까요?",
+      "delete_photo_body": "프로필에서 사라지고 다른 사람에게도 보이지 않아요.",
+      "delete_photo_confirm": "사진 삭제",
+      "level": "레벨",
+      "level_hint": "배우고 있는 언어의 실력 수준이에요.",
+      "occupation": "직업",
+      "occupation_placeholder": "어떤 일을 하고 있나요?",
+      "school": "학교",
+      "school_placeholder": "어디에서 공부하고 있나요?",
+      "saving": "저장 중",
+      "unsaved": "저장하지 않은 변경 사항이 있어요",
+      "leave_title": "저장하지 않고 나갈까요?",
+      "leave_body": "프로필에서 수정한 내용이 사라져요.",
+      "leave_confirm": "변경 사항 버리기",
+      "stay": "계속 수정"
+    },
+    "myMoments": {
+      "title": "내 모멘트",
+      "create": "모멘트 남기기",
+      "edit": "모멘트 수정",
+      "delete": "모멘트 삭제",
+      "delete_title": "이 모멘트를 삭제할까요?",
+      "delete_body": "좋아요와 댓글까지 함께 모두에게서 사라져요.",
+      "delete_confirm": "삭제",
+      "delete_failed": "모멘트를 삭제하지 못했어요. 다시 시도해 주세요.",
+      "empty_title": "아직 모멘트가 없어요",
+      "empty_body": "커뮤니티에 첫 모멘트를 남겨 보세요.",
+      "error_title": "모멘트를 불러오지 못했어요",
+      "error_body": "연결 상태를 확인하고 다시 시도해 주세요.",
+      "retry": "다시 시도"
     }
   },
   "moments_section": {
@@ -436,7 +554,8 @@
       "addMoreText": "더 추가",
       "updateButton": "모멘트 수정",
       "updatingButton": "수정 중…",
-      "cancelButton": "취소"
+      "cancelButton": "취소",
+      "removeImage": "이미지 제거"
     }
   },
   "authentication": {

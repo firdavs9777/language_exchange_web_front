@@ -147,7 +147,16 @@
   "profile": {
     "title": "โปรไฟล์ของฉัน",
     "edit_profile": "แก้ไขโปรไฟล์",
-    "photos": "รูปภาพ",
+    "photos": {
+      "title": "รูปภาพ",
+      "add": "เพิ่มรูปภาพ",
+      "alt": "{{name}} รูปภาพ {{index}}",
+      "open": "เปิดรูปภาพ {{index}}",
+      "close": "ปิด",
+      "previous": "รูปก่อนหน้า",
+      "next": "รูปถัดไป",
+      "counter": "{{index}} จาก {{total}}"
+    },
     "messages": {
       "image_update_success": "อัปเดตรูปโปรไฟล์สำเร็จ",
       "image_update_failure": "ไม่สามารถอัปเดตรูปโปรไฟล์",
@@ -230,7 +239,16 @@
       "save": "บันทึก",
       "cancel": "ยกเลิก",
       "edit_photo": "แก้ไขรูปภาพ",
-      "clear": "ล้างการเลือก"
+      "clear": "ล้างการเลือก",
+      "settings": "ตั้งค่า",
+      "message": "ส่งข้อความ",
+      "follow": "ติดตาม",
+      "following": "กำลังติดตาม",
+      "more": "ตัวเลือกเพิ่มเติม",
+      "block": "บล็อก",
+      "report": "รายงาน",
+      "this_person": "คนนี้",
+      "action_failed": "ทำรายการไม่สำเร็จ กรุณาลองใหม่"
     },
     "buttons": {
       "edit": "แก้ไข",
@@ -258,6 +276,106 @@
       "kdrama": "K-Drama",
       "languages": "ภาษา",
       "culture": "วัฒนธรรม"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "ยืนยันแล้ว",
+      "joined": "เข้าร่วมเมื่อ {{date}}",
+      "active": "ใช้งานเมื่อ {{time}}",
+      "online": "ออนไลน์อยู่"
+    },
+    "block": {
+      "title": "บล็อก {{name}} ไหม",
+      "body": "เขาจะส่งข้อความหาคุณหรือดูโปรไฟล์ของคุณไม่ได้อีก"
+    },
+    "report": {
+      "title": "รายงาน {{name}} ไหม",
+      "body": "บอกเราว่ามีอะไรผิดปกติ ทุกรายงานจะได้รับการตรวจสอบ",
+      "reason": "เหตุผล"
+    },
+    "languages": {
+      "also_learning": "กำลังเรียนด้วย"
+    },
+    "about": {
+      "title": "เกี่ยวกับ",
+      "occupation": "งาน",
+      "school": "สถานศึกษา",
+      "read_more": "อ่านเพิ่มเติม",
+      "read_less": "ย่อ"
+    },
+    "learning": {
+      "title": "ความคืบหน้าการเรียน",
+      "streak": "เรียนต่อเนื่อง",
+      "days": "วัน",
+      "xp": "XP รวม",
+      "level": "เลเวล"
+    },
+    "moments": {
+      "see_all": "ดูทั้งหมด",
+      "empty_own": "แชร์โมเมนต์แรกของคุณ",
+      "empty_other": "ยังไม่มีโมเมนต์",
+      "photo_alt": "รูปภาพโมเมนต์"
+    },
+    "page": {
+      "title": "โปรไฟล์",
+      "error_title": "โหลดโปรไฟล์นี้ไม่สำเร็จ",
+      "error_body": "กรุณาตรวจสอบการเชื่อมต่อแล้วลองใหม่",
+      "retry": "ลองใหม่",
+      "not_found_title": "ไม่พบโปรไฟล์นี้",
+      "not_found_body": "โปรไฟล์นี้ไม่มีอยู่แล้ว หรืออาจไม่เคยมีมาก่อน",
+      "back_to_community": "ไปดูคอมมูนิตี้"
+    },
+    "lists": {
+      "title": "เครือข่ายของคุณ",
+      "title_of": "เครือข่ายของ {{name}}",
+      "title_other": "เครือข่าย",
+      "search": "ค้นหาด้วยชื่อ",
+      "search_empty": "ไม่มีใครตรงกับ “{{query}}”",
+      "empty_followers_own": "ยังไม่มีใครติดตามคุณ",
+      "empty_followers_other": "ยังไม่มีใครติดตามคนนี้",
+      "empty_following_own": "คุณยังไม่ได้ติดตามใคร",
+      "empty_following_other": "คนนี้ยังไม่ได้ติดตามใคร",
+      "error_title": "โหลดรายการนี้ไม่สำเร็จ",
+      "error_body": "กรุณาตรวจสอบการเชื่อมต่อแล้วลองใหม่",
+      "retry": "ลองใหม่"
+    },
+    "edit": {
+      "back": "ย้อนกลับ",
+      "about": "เกี่ยวกับ",
+      "photos_hint": "รูปแรกคือรูปที่ทุกคนจะเห็นในทุกที่",
+      "add_photo": "เพิ่มรูปภาพ",
+      "photo_alt": "รูปภาพ {{index}}",
+      "delete_photo": "ลบรูปภาพ {{index}}",
+      "delete_photo_title": "ลบรูปนี้ไหม",
+      "delete_photo_body": "รูปนี้จะถูกลบออกจากโปรไฟล์ของคุณสำหรับทุกคน",
+      "delete_photo_confirm": "ลบรูปภาพ",
+      "level": "ระดับ",
+      "level_hint": "ระดับของคุณในภาษาที่กำลังเรียน",
+      "occupation": "อาชีพ",
+      "occupation_placeholder": "คุณทำงานอะไร",
+      "school": "สถานศึกษา",
+      "school_placeholder": "คุณเรียนที่ไหน",
+      "saving": "กำลังบันทึก",
+      "unsaved": "คุณมีการเปลี่ยนแปลงที่ยังไม่ได้บันทึก",
+      "leave_title": "ออกโดยไม่บันทึกไหม",
+      "leave_body": "การเปลี่ยนแปลงในโปรไฟล์นี้จะหายไป",
+      "leave_confirm": "ทิ้งการเปลี่ยนแปลง",
+      "stay": "แก้ไขต่อ"
+    },
+    "myMoments": {
+      "title": "โมเมนต์ของฉัน",
+      "create": "แชร์โมเมนต์",
+      "edit": "แก้ไขโมเมนต์",
+      "delete": "ลบโมเมนต์",
+      "delete_title": "ลบโมเมนต์นี้ไหม",
+      "delete_body": "โมเมนต์นี้จะหายไปสำหรับทุกคน พร้อมกับไลก์และคอมเมนต์ทั้งหมด",
+      "delete_confirm": "ลบ",
+      "delete_failed": "ลบโมเมนต์นั้นไม่สำเร็จ กรุณาลองใหม่",
+      "empty_title": "ยังไม่มีโมเมนต์",
+      "empty_body": "แชร์โมเมนต์แรกของคุณกับคอมมูนิตี้",
+      "error_title": "โหลดโมเมนต์ของคุณไม่สำเร็จ",
+      "error_body": "กรุณาตรวจสอบการเชื่อมต่อแล้วลองใหม่",
+      "retry": "ลองใหม่"
     }
   },
   "moments_section": {
@@ -436,7 +554,8 @@
       "addMoreText": "เพิ่มอีก",
       "updateButton": "อัปเดตโมเมนต์",
       "updatingButton": "กำลังอัปเดต...",
-      "cancelButton": "ยกเลิก"
+      "cancelButton": "ยกเลิก",
+      "removeImage": "นำรูปออก"
     }
   },
   "authentication": {

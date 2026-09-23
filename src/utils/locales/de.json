@@ -147,7 +147,16 @@
   "profile": {
     "title": "Mein Profil",
     "edit_profile": "Profil bearbeiten",
-    "photos": "Fotos",
+    "photos": {
+      "title": "Fotos",
+      "add": "Fotos hinzufügen",
+      "alt": "{{name}}, Foto {{index}}",
+      "open": "Foto {{index}} öffnen",
+      "close": "Schließen",
+      "previous": "Vorheriges Foto",
+      "next": "Nächstes Foto",
+      "counter": "{{index}} von {{total}}"
+    },
     "messages": {
       "image_update_success": "Profilbild erfolgreich aktualisiert",
       "image_update_failure": "Profilbild konnte nicht aktualisiert werden",
@@ -230,7 +239,16 @@
       "save": "Speichern",
       "cancel": "Abbrechen",
       "edit_photo": "Foto bearbeiten",
-      "clear": "Auswahl aufheben"
+      "clear": "Auswahl aufheben",
+      "settings": "Einstellungen",
+      "message": "Nachricht",
+      "follow": "Folgen",
+      "following": "Folge ich",
+      "more": "Weitere Optionen",
+      "block": "Blockieren",
+      "report": "Melden",
+      "this_person": "diese Person",
+      "action_failed": "Das hat nicht geklappt. Versuch es noch mal."
     },
     "buttons": {
       "edit": "Bearbeiten",
@@ -258,6 +276,106 @@
       "kdrama": "K-Drama",
       "languages": "Sprachen",
       "culture": "Kultur"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "Verifiziert",
+      "joined": "Dabei seit {{date}}",
+      "active": "Aktiv {{time}}",
+      "online": "Jetzt online"
+    },
+    "block": {
+      "title": "{{name}} blockieren?",
+      "body": "Diese Person kann dir dann nicht mehr schreiben und dein Profil nicht mehr sehen."
+    },
+    "report": {
+      "title": "{{name}} melden?",
+      "body": "Sag uns, was nicht stimmt. Jede Meldung wird geprüft.",
+      "reason": "Grund"
+    },
+    "languages": {
+      "also_learning": "Lernt außerdem"
+    },
+    "about": {
+      "title": "Info",
+      "occupation": "Arbeit",
+      "school": "Schule",
+      "read_more": "Mehr lesen",
+      "read_less": "Weniger anzeigen"
+    },
+    "learning": {
+      "title": "Lernfortschritt",
+      "streak": "Serie",
+      "days": "Tage",
+      "xp": "XP gesamt",
+      "level": "Level"
+    },
+    "moments": {
+      "see_all": "Alle anzeigen",
+      "empty_own": "Teile deinen ersten Moment",
+      "empty_other": "Noch keine Momente",
+      "photo_alt": "Foto zum Moment"
+    },
+    "page": {
+      "title": "Profil",
+      "error_title": "Wir konnten dieses Profil nicht laden",
+      "error_body": "Prüfe deine Verbindung und versuch es noch mal.",
+      "retry": "Erneut versuchen",
+      "not_found_title": "Profil nicht gefunden",
+      "not_found_body": "Dieses Profil gibt es nicht mehr – oder es gab es nie.",
+      "back_to_community": "Community durchsuchen"
+    },
+    "lists": {
+      "title": "Deine Kontakte",
+      "title_of": "Kontakte von {{name}}",
+      "title_other": "Kontakte",
+      "search": "Nach Namen suchen",
+      "search_empty": "Hier passt niemand zu „{{query}}“",
+      "empty_followers_own": "Du hast noch keine Follower.",
+      "empty_followers_other": "Dieser Person folgt noch niemand.",
+      "empty_following_own": "Du folgst noch niemandem.",
+      "empty_following_other": "Diese Person folgt noch niemandem.",
+      "error_title": "Wir konnten diese Liste nicht laden",
+      "error_body": "Prüfe deine Verbindung und versuch es noch mal.",
+      "retry": "Erneut versuchen"
+    },
+    "edit": {
+      "back": "Zurück",
+      "about": "Info",
+      "photos_hint": "Dein erstes Foto wird überall angezeigt.",
+      "add_photo": "Foto hinzufügen",
+      "photo_alt": "Foto {{index}}",
+      "delete_photo": "Foto {{index}} löschen",
+      "delete_photo_title": "Dieses Foto löschen?",
+      "delete_photo_body": "Es wird für alle aus deinem Profil entfernt.",
+      "delete_photo_confirm": "Foto löschen",
+      "level": "Level",
+      "level_hint": "Dein Level in der Sprache, die du lernst.",
+      "occupation": "Beruf",
+      "occupation_placeholder": "Was machst du beruflich?",
+      "school": "Schule",
+      "school_placeholder": "Wo studierst du?",
+      "saving": "Wird gespeichert",
+      "unsaved": "Du hast ungespeicherte Änderungen",
+      "leave_title": "Ohne Speichern verlassen?",
+      "leave_body": "Deine Änderungen an diesem Profil gehen verloren.",
+      "leave_confirm": "Verwerfen",
+      "stay": "Weiter bearbeiten"
+    },
+    "myMoments": {
+      "title": "Meine Momente",
+      "create": "Moment teilen",
+      "edit": "Moment bearbeiten",
+      "delete": "Moment löschen",
+      "delete_title": "Diesen Moment löschen?",
+      "delete_body": "Er verschwindet für alle – samt Likes und Kommentaren.",
+      "delete_confirm": "Löschen",
+      "delete_failed": "Wir konnten diesen Moment nicht löschen. Versuch es noch mal.",
+      "empty_title": "Noch keine Momente",
+      "empty_body": "Teile deinen ersten Moment mit der Community.",
+      "error_title": "Wir konnten deine Momente nicht laden",
+      "error_body": "Prüfe deine Verbindung und versuch es noch mal.",
+      "retry": "Erneut versuchen"
     }
   },
   "moments_section": {
@@ -436,7 +554,8 @@
       "addMoreText": "Weitere hinzufügen",
       "updateButton": "Moment aktualisieren",
       "updatingButton": "Wird aktualisiert…",
-      "cancelButton": "Abbrechen"
+      "cancelButton": "Abbrechen",
+      "removeImage": "Bild entfernen"
     }
   },
   "authentication": {

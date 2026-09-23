@@ -147,7 +147,16 @@
   "profile": {
     "title": "Profil Saya",
     "edit_profile": "Edit Profil",
-    "photos": "Foto",
+    "photos": {
+      "title": "Foto",
+      "add": "Tambah foto",
+      "alt": "{{name}}, foto {{index}}",
+      "open": "Buka foto {{index}}",
+      "close": "Tutup",
+      "previous": "Foto sebelumnya",
+      "next": "Foto berikutnya",
+      "counter": "{{index}} dari {{total}}"
+    },
     "messages": {
       "image_update_success": "Foto profil berhasil diperbarui",
       "image_update_failure": "Gagal memperbarui foto profil",
@@ -230,7 +239,16 @@
       "save": "Simpan",
       "cancel": "Batal",
       "edit_photo": "Edit Foto",
-      "clear": "Hapus pilihan"
+      "clear": "Hapus pilihan",
+      "settings": "Pengaturan",
+      "message": "Kirim pesan",
+      "follow": "Ikuti",
+      "following": "Mengikuti",
+      "more": "Opsi lainnya",
+      "block": "Blokir",
+      "report": "Laporkan",
+      "this_person": "orang ini",
+      "action_failed": "Gagal. Silakan coba lagi."
     },
     "buttons": {
       "edit": "Edit",
@@ -258,6 +276,106 @@
       "kdrama": "K-Drama",
       "languages": "Bahasa",
       "culture": "Budaya"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "Terverifikasi",
+      "joined": "Bergabung {{date}}",
+      "active": "Aktif {{time}}",
+      "online": "Online sekarang"
+    },
+    "block": {
+      "title": "Blokir {{name}}?",
+      "body": "Dia tidak akan bisa mengirim pesan kepada Anda atau melihat profil Anda."
+    },
+    "report": {
+      "title": "Laporkan {{name}}?",
+      "body": "Beri tahu kami apa yang salah. Setiap laporan kami tinjau.",
+      "reason": "Alasan"
+    },
+    "languages": {
+      "also_learning": "Juga belajar"
+    },
+    "about": {
+      "title": "Tentang",
+      "occupation": "Pekerjaan",
+      "school": "Sekolah",
+      "read_more": "Selengkapnya",
+      "read_less": "Ciutkan"
+    },
+    "learning": {
+      "title": "Progres belajar",
+      "streak": "Streak",
+      "days": "hari",
+      "xp": "Total XP",
+      "level": "Level"
+    },
+    "moments": {
+      "see_all": "Lihat semua",
+      "empty_own": "Bagikan momen pertama Anda",
+      "empty_other": "Belum ada momen",
+      "photo_alt": "Foto momen"
+    },
+    "page": {
+      "title": "Profil",
+      "error_title": "Gagal memuat profil ini",
+      "error_body": "Periksa koneksi Anda lalu coba lagi.",
+      "retry": "Coba lagi",
+      "not_found_title": "Profil tidak ditemukan",
+      "not_found_body": "Profil ini sudah tidak ada, atau memang tidak pernah ada di sini.",
+      "back_to_community": "Jelajahi komunitas"
+    },
+    "lists": {
+      "title": "Koneksi Anda",
+      "title_of": "Koneksi {{name}}",
+      "title_other": "Koneksi",
+      "search": "Cari berdasarkan nama",
+      "search_empty": "Tidak ada yang cocok dengan \"{{query}}\"",
+      "empty_followers_own": "Belum ada yang mengikuti Anda.",
+      "empty_followers_other": "Belum ada yang mengikuti pengguna ini.",
+      "empty_following_own": "Anda belum mengikuti siapa pun.",
+      "empty_following_other": "Pengguna ini belum mengikuti siapa pun.",
+      "error_title": "Gagal memuat daftar ini",
+      "error_body": "Periksa koneksi Anda lalu coba lagi.",
+      "retry": "Coba lagi"
+    },
+    "edit": {
+      "back": "Kembali",
+      "about": "Tentang",
+      "photos_hint": "Foto pertama Anda adalah yang dilihat orang di mana-mana.",
+      "add_photo": "Tambah foto",
+      "photo_alt": "Foto {{index}}",
+      "delete_photo": "Hapus foto {{index}}",
+      "delete_photo_title": "Hapus foto ini?",
+      "delete_photo_body": "Foto ini akan hilang dari profil Anda untuk semua orang.",
+      "delete_photo_confirm": "Hapus foto",
+      "level": "Level",
+      "level_hint": "Level Anda dalam bahasa yang sedang Anda pelajari.",
+      "occupation": "Pekerjaan",
+      "occupation_placeholder": "Apa pekerjaan Anda?",
+      "school": "Sekolah",
+      "school_placeholder": "Di mana Anda belajar?",
+      "saving": "Menyimpan",
+      "unsaved": "Ada perubahan yang belum disimpan",
+      "leave_title": "Keluar tanpa menyimpan?",
+      "leave_body": "Perubahan Anda pada profil ini akan hilang.",
+      "leave_confirm": "Buang perubahan",
+      "stay": "Lanjut mengedit"
+    },
+    "myMoments": {
+      "title": "Momen saya",
+      "create": "Bagikan momen",
+      "edit": "Edit momen",
+      "delete": "Hapus momen",
+      "delete_title": "Hapus momen ini?",
+      "delete_body": "Momen ini akan hilang untuk semua orang, beserta suka dan komentarnya.",
+      "delete_confirm": "Hapus",
+      "delete_failed": "Gagal menghapus momen itu. Silakan coba lagi.",
+      "empty_title": "Belum ada momen",
+      "empty_body": "Bagikan momen pertama Anda dengan komunitas.",
+      "error_title": "Gagal memuat momen Anda",
+      "error_body": "Periksa koneksi Anda lalu coba lagi.",
+      "retry": "Coba lagi"
     }
   },
   "moments_section": {
@@ -436,7 +554,8 @@
       "addMoreText": "Tambah lagi",
       "updateButton": "Perbarui Momen",
       "updatingButton": "Memperbarui...",
-      "cancelButton": "Batal"
+      "cancelButton": "Batal",
+      "removeImage": "Hapus gambar"
     }
   },
   "authentication": {

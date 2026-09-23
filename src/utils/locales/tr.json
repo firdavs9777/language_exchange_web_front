@@ -147,7 +147,16 @@
   "profile": {
     "title": "Profilim",
     "edit_profile": "Profili Düzenle",
-    "photos": "Fotoğraflar",
+    "photos": {
+      "title": "Fotoğraflar",
+      "add": "Fotoğraf ekle",
+      "alt": "{{name}}, fotoğraf {{index}}",
+      "open": "{{index}}. fotoğrafı aç",
+      "close": "Kapat",
+      "previous": "Önceki fotoğraf",
+      "next": "Sonraki fotoğraf",
+      "counter": "{{index}} / {{total}}"
+    },
     "messages": {
       "image_update_success": "Profil resmi başarıyla güncellendi",
       "image_update_failure": "Profil resmi güncellenemedi",
@@ -230,7 +239,16 @@
       "save": "Kaydet",
       "cancel": "İptal",
       "edit_photo": "Fotoğrafı Düzenle",
-      "clear": "Seçimi temizle"
+      "clear": "Seçimi temizle",
+      "settings": "Ayarlar",
+      "message": "Mesaj",
+      "follow": "Takip Et",
+      "following": "Takip Ediliyor",
+      "more": "Daha fazla seçenek",
+      "block": "Engelle",
+      "report": "Şikayet Et",
+      "this_person": "bu kişi",
+      "action_failed": "Bu işe yaramadı. Tekrar dene."
     },
     "buttons": {
       "edit": "Düzenle",
@@ -258,6 +276,106 @@
       "kdrama": "K-Drama",
       "languages": "Diller",
       "culture": "Kültür"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "Doğrulanmış",
+      "joined": "Katıldı: {{date}}",
+      "active": "Son aktif: {{time}}",
+      "online": "Şu an çevrimiçi"
+    },
+    "block": {
+      "title": "{{name}} engellensin mi?",
+      "body": "Sana mesaj gönderemez ve profilini göremez."
+    },
+    "report": {
+      "title": "{{name}} şikayet edilsin mi?",
+      "body": "Neyin yanlış olduğunu bize anlat. Her şikayet inceleniyor.",
+      "reason": "Sebep"
+    },
+    "languages": {
+      "also_learning": "Ayrıca öğreniyor"
+    },
+    "about": {
+      "title": "Hakkında",
+      "occupation": "İş",
+      "school": "Okul",
+      "read_more": "Devamını oku",
+      "read_less": "Daha az göster"
+    },
+    "learning": {
+      "title": "Öğrenme ilerlemesi",
+      "streak": "Seri",
+      "days": "gün",
+      "xp": "Toplam XP",
+      "level": "Seviye"
+    },
+    "moments": {
+      "see_all": "Tümünü gör",
+      "empty_own": "İlk anını paylaş",
+      "empty_other": "Henüz an yok",
+      "photo_alt": "An fotoğrafı"
+    },
+    "page": {
+      "title": "Profil",
+      "error_title": "Bu profili yükleyemedik",
+      "error_body": "Bağlantını kontrol et ve tekrar dene.",
+      "retry": "Tekrar Dene",
+      "not_found_title": "Profil bulunamadı",
+      "not_found_body": "Bu profil artık yok ya da hiç var olmadı.",
+      "back_to_community": "Topluluğa göz at"
+    },
+    "lists": {
+      "title": "Bağlantıların",
+      "title_of": "{{name}} kullanıcısının bağlantıları",
+      "title_other": "Bağlantılar",
+      "search": "İsme göre ara",
+      "search_empty": "Burada “{{query}}” ile eşleşen kimse yok",
+      "empty_followers_own": "Henüz takipçin yok.",
+      "empty_followers_other": "Bu kişinin henüz takipçisi yok.",
+      "empty_following_own": "Henüz kimseyi takip etmiyorsun.",
+      "empty_following_other": "Bu kişi henüz kimseyi takip etmiyor.",
+      "error_title": "Bu listeyi yükleyemedik",
+      "error_body": "Bağlantını kontrol et ve tekrar dene.",
+      "retry": "Tekrar Dene"
+    },
+    "edit": {
+      "back": "Geri",
+      "about": "Hakkında",
+      "photos_hint": "İlk fotoğrafın, herkesin her yerde gördüğü fotoğraftır.",
+      "add_photo": "Fotoğraf ekle",
+      "photo_alt": "Fotoğraf {{index}}",
+      "delete_photo": "{{index}}. fotoğrafı sil",
+      "delete_photo_title": "Bu fotoğraf silinsin mi?",
+      "delete_photo_body": "Profilinden herkes için kaldırılır.",
+      "delete_photo_confirm": "Fotoğrafı sil",
+      "level": "Seviye",
+      "level_hint": "Öğrendiğin dildeki seviyen.",
+      "occupation": "Meslek",
+      "occupation_placeholder": "Ne iş yapıyorsun?",
+      "school": "Okul",
+      "school_placeholder": "Nerede okuyorsun?",
+      "saving": "Kaydediliyor",
+      "unsaved": "Kaydedilmemiş değişikliklerin var",
+      "leave_title": "Kaydetmeden çıkılsın mı?",
+      "leave_body": "Bu profildeki değişikliklerin kaybolacak.",
+      "leave_confirm": "Vazgeç",
+      "stay": "Düzenlemeye dön"
+    },
+    "myMoments": {
+      "title": "Anlarım",
+      "create": "Bir An Paylaş",
+      "edit": "Anı düzenle",
+      "delete": "Anı sil",
+      "delete_title": "Bu an silinsin mi?",
+      "delete_body": "Beğenileri ve yorumlarıyla birlikte herkes için kaybolur.",
+      "delete_confirm": "Sil",
+      "delete_failed": "Bu anı silemedik. Tekrar dene.",
+      "empty_title": "Henüz an yok",
+      "empty_body": "İlk anını toplulukla paylaş.",
+      "error_title": "Anlarını yükleyemedik",
+      "error_body": "Bağlantını kontrol et ve tekrar dene.",
+      "retry": "Tekrar Dene"
     }
   },
   "moments_section": {
@@ -436,7 +554,8 @@
       "addMoreText": "Daha fazla ekle",
       "updateButton": "Anı Güncelle",
       "updatingButton": "Güncelleniyor…",
-      "cancelButton": "İptal"
+      "cancelButton": "İptal",
+      "removeImage": "Görseli kaldır"
     }
   },
   "authentication": {

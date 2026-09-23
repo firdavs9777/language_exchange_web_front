@@ -147,7 +147,16 @@
   "profile": {
     "title": "Hồ Sơ Của Tôi",
     "edit_profile": "Chỉnh Sửa Hồ Sơ",
-    "photos": "Ảnh",
+    "photos": {
+      "title": "Ảnh",
+      "add": "Thêm ảnh",
+      "alt": "{{name}}, ảnh {{index}}",
+      "open": "Mở ảnh {{index}}",
+      "close": "Đóng",
+      "previous": "Ảnh trước",
+      "next": "Ảnh sau",
+      "counter": "{{index}}/{{total}}"
+    },
     "messages": {
       "image_update_success": "Đã cập nhật ảnh hồ sơ thành công",
       "image_update_failure": "Không thể cập nhật ảnh hồ sơ",
@@ -230,7 +239,16 @@
       "save": "Lưu",
       "cancel": "Hủy",
       "edit_photo": "Chỉnh Sửa Ảnh",
-      "clear": "Xóa lựa chọn"
+      "clear": "Xóa lựa chọn",
+      "settings": "Cài đặt",
+      "message": "Nhắn tin",
+      "follow": "Theo dõi",
+      "following": "Đang theo dõi",
+      "more": "Thêm tùy chọn",
+      "block": "Chặn",
+      "report": "Báo cáo",
+      "this_person": "người này",
+      "action_failed": "Chưa thực hiện được. Vui lòng thử lại."
     },
     "buttons": {
       "edit": "Chỉnh Sửa",
@@ -258,6 +276,106 @@
       "kdrama": "K-Drama",
       "languages": "Ngôn Ngữ",
       "culture": "Văn Hóa"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "Đã xác minh",
+      "joined": "Tham gia {{date}}",
+      "active": "Hoạt động {{time}}",
+      "online": "Đang trực tuyến"
+    },
+    "block": {
+      "title": "Chặn {{name}}?",
+      "body": "Người này sẽ không thể nhắn tin cho bạn hoặc xem hồ sơ của bạn."
+    },
+    "report": {
+      "title": "Báo cáo {{name}}?",
+      "body": "Hãy cho chúng tôi biết vấn đề là gì. Mọi báo cáo đều được xem xét.",
+      "reason": "Lý do"
+    },
+    "languages": {
+      "also_learning": "Cũng đang học"
+    },
+    "about": {
+      "title": "Giới thiệu",
+      "occupation": "Công việc",
+      "school": "Trường học",
+      "read_more": "Xem thêm",
+      "read_less": "Thu gọn"
+    },
+    "learning": {
+      "title": "Tiến độ học",
+      "streak": "Chuỗi ngày học",
+      "days": "ngày",
+      "xp": "Tổng XP",
+      "level": "Cấp độ"
+    },
+    "moments": {
+      "see_all": "Xem tất cả",
+      "empty_own": "Chia sẻ khoảnh khắc đầu tiên",
+      "empty_other": "Chưa có khoảnh khắc nào",
+      "photo_alt": "Ảnh khoảnh khắc"
+    },
+    "page": {
+      "title": "Hồ sơ",
+      "error_title": "Không tải được hồ sơ này",
+      "error_body": "Hãy kiểm tra kết nối và thử lại.",
+      "retry": "Thử lại",
+      "not_found_title": "Không tìm thấy hồ sơ",
+      "not_found_body": "Hồ sơ này không còn tồn tại, hoặc chưa từng có.",
+      "back_to_community": "Khám phá cộng đồng"
+    },
+    "lists": {
+      "title": "Kết nối của bạn",
+      "title_of": "Kết nối của {{name}}",
+      "title_other": "Kết nối",
+      "search": "Tìm theo tên",
+      "search_empty": "Không có ai khớp với “{{query}}”",
+      "empty_followers_own": "Bạn chưa có người theo dõi nào.",
+      "empty_followers_other": "Chưa có ai theo dõi người này.",
+      "empty_following_own": "Bạn chưa theo dõi ai.",
+      "empty_following_other": "Người này chưa theo dõi ai.",
+      "error_title": "Không tải được danh sách này",
+      "error_body": "Hãy kiểm tra kết nối và thử lại.",
+      "retry": "Thử lại"
+    },
+    "edit": {
+      "back": "Quay lại",
+      "about": "Giới thiệu",
+      "photos_hint": "Ảnh đầu tiên là ảnh mọi người nhìn thấy ở khắp nơi.",
+      "add_photo": "Thêm ảnh",
+      "photo_alt": "Ảnh {{index}}",
+      "delete_photo": "Xóa ảnh {{index}}",
+      "delete_photo_title": "Xóa ảnh này?",
+      "delete_photo_body": "Ảnh sẽ bị gỡ khỏi hồ sơ của bạn với tất cả mọi người.",
+      "delete_photo_confirm": "Xóa ảnh",
+      "level": "Trình độ",
+      "level_hint": "Trình độ của bạn ở ngôn ngữ đang học.",
+      "occupation": "Nghề nghiệp",
+      "occupation_placeholder": "Bạn làm nghề gì?",
+      "school": "Trường học",
+      "school_placeholder": "Bạn học ở đâu?",
+      "saving": "Đang lưu",
+      "unsaved": "Bạn có thay đổi chưa lưu",
+      "leave_title": "Rời đi mà không lưu?",
+      "leave_body": "Những thay đổi của bạn ở hồ sơ này sẽ mất.",
+      "leave_confirm": "Bỏ thay đổi",
+      "stay": "Tiếp tục chỉnh sửa"
+    },
+    "myMoments": {
+      "title": "Khoảnh khắc của tôi",
+      "create": "Chia sẻ khoảnh khắc",
+      "edit": "Sửa khoảnh khắc",
+      "delete": "Xóa khoảnh khắc",
+      "delete_title": "Xóa khoảnh khắc này?",
+      "delete_body": "Khoảnh khắc sẽ biến mất với mọi người, cùng với lượt thích và bình luận.",
+      "delete_confirm": "Xóa",
+      "delete_failed": "Không xóa được khoảnh khắc đó. Vui lòng thử lại.",
+      "empty_title": "Chưa có khoảnh khắc nào",
+      "empty_body": "Chia sẻ khoảnh khắc đầu tiên của bạn với cộng đồng.",
+      "error_title": "Không tải được khoảnh khắc của bạn",
+      "error_body": "Hãy kiểm tra kết nối và thử lại.",
+      "retry": "Thử lại"
     }
   },
   "moments_section": {
@@ -436,7 +554,8 @@
       "addMoreText": "Thêm nữa",
       "updateButton": "Cập Nhật Khoảnh Khắc",
       "updatingButton": "Đang cập nhật...",
-      "cancelButton": "Hủy"
+      "cancelButton": "Hủy",
+      "removeImage": "Gỡ ảnh"
     }
   },
   "authentication": {

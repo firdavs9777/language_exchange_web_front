@@ -147,7 +147,16 @@
   "profile": {
     "title": "我的個人檔案",
     "edit_profile": "編輯個人檔案",
-    "photos": "相片",
+    "photos": {
+      "title": "相片",
+      "add": "新增相片",
+      "alt": "{{name}} 的第 {{index}} 張相片",
+      "open": "開啟相片 {{index}}",
+      "close": "關閉",
+      "previous": "上一張",
+      "next": "下一張",
+      "counter": "{{index}} / {{total}}"
+    },
     "messages": {
       "image_update_success": "大頭貼已更新",
       "image_update_failure": "大頭貼更新失敗",
@@ -230,7 +239,16 @@
       "save": "儲存",
       "cancel": "取消",
       "edit_photo": "編輯相片",
-      "clear": "清除選取"
+      "clear": "清除選取",
+      "settings": "設定",
+      "message": "傳訊息",
+      "follow": "追蹤",
+      "following": "追蹤中",
+      "more": "更多選項",
+      "block": "封鎖",
+      "report": "檢舉",
+      "this_person": "這個人",
+      "action_failed": "操作沒有成功，請再試一次。"
     },
     "buttons": {
       "edit": "編輯",
@@ -258,6 +276,106 @@
       "kdrama": "韓劇",
       "languages": "語言",
       "culture": "文化"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "已驗證",
+      "joined": "{{date}} 加入",
+      "active": "{{time}}活躍",
+      "online": "目前在線"
+    },
+    "block": {
+      "title": "確定要封鎖 {{name}}？",
+      "body": "對方將無法傳訊息給你，也看不到你的個人檔案。"
+    },
+    "report": {
+      "title": "確定要檢舉 {{name}}？",
+      "body": "告訴我們哪裡有問題。每一則檢舉我們都會看。",
+      "reason": "檢舉原因"
+    },
+    "languages": {
+      "also_learning": "也在學"
+    },
+    "about": {
+      "title": "自我介紹",
+      "occupation": "工作",
+      "school": "學校",
+      "read_more": "展開",
+      "read_less": "收合"
+    },
+    "learning": {
+      "title": "學習進度",
+      "streak": "連續學習",
+      "days": "天",
+      "xp": "總 XP",
+      "level": "等級"
+    },
+    "moments": {
+      "see_all": "查看全部",
+      "empty_own": "發布你的第一則動態",
+      "empty_other": "還沒有動態",
+      "photo_alt": "動態圖片"
+    },
+    "page": {
+      "title": "個人檔案",
+      "error_title": "個人檔案載入失敗",
+      "error_body": "請檢查網路後再試一次。",
+      "retry": "再試一次",
+      "not_found_title": "找不到這個個人檔案",
+      "not_found_body": "這個個人檔案已經不存在，或者從來沒有出現過。",
+      "back_to_community": "去社群逛逛"
+    },
+    "lists": {
+      "title": "追蹤與粉絲",
+      "title_of": "{{name}} 的追蹤與粉絲",
+      "title_other": "追蹤與粉絲",
+      "search": "用名字搜尋",
+      "search_empty": "沒有找到和「{{query}}」相符的人",
+      "empty_followers_own": "你還沒有粉絲。",
+      "empty_followers_other": "對方還沒有粉絲。",
+      "empty_following_own": "你還沒有追蹤任何人。",
+      "empty_following_other": "對方還沒有追蹤任何人。",
+      "error_title": "名單載入失敗",
+      "error_body": "請檢查網路後再試一次。",
+      "retry": "再試一次"
+    },
+    "edit": {
+      "back": "返回",
+      "about": "自我介紹",
+      "photos_hint": "第一張相片會顯示在所有人看得到的地方。",
+      "add_photo": "新增相片",
+      "photo_alt": "相片 {{index}}",
+      "delete_photo": "刪除相片 {{index}}",
+      "delete_photo_title": "確定要刪除這張相片？",
+      "delete_photo_body": "刪除後，所有人都不會再在你的個人檔案看到它。",
+      "delete_photo_confirm": "刪除相片",
+      "level": "等級",
+      "level_hint": "你在所學語言上的程度。",
+      "occupation": "職業",
+      "occupation_placeholder": "你從事什麼工作？",
+      "school": "學校",
+      "school_placeholder": "你在哪裡讀書？",
+      "saving": "儲存中",
+      "unsaved": "你有還沒儲存的變更",
+      "leave_title": "不儲存就離開？",
+      "leave_body": "你對個人檔案做的變更會消失。",
+      "leave_confirm": "捨棄變更",
+      "stay": "繼續編輯"
+    },
+    "myMoments": {
+      "title": "我的動態",
+      "create": "發布動態",
+      "edit": "編輯動態",
+      "delete": "刪除動態",
+      "delete_title": "確定要刪除這則動態？",
+      "delete_body": "所有人都看不到了，讚和留言也會一起消失。",
+      "delete_confirm": "刪除",
+      "delete_failed": "這則動態刪除失敗，請再試一次。",
+      "empty_title": "還沒有動態",
+      "empty_body": "把你的第一則動態分享給社群吧。",
+      "error_title": "動態載入失敗",
+      "error_body": "請檢查網路後再試一次。",
+      "retry": "再試一次"
     }
   },
   "moments_section": {
@@ -436,7 +554,8 @@
       "addMoreText": "繼續新增",
       "updateButton": "更新動態",
       "updatingButton": "更新中…",
-      "cancelButton": "取消"
+      "cancelButton": "取消",
+      "removeImage": "移除圖片"
     }
   },
   "authentication": {
