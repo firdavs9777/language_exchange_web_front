@@ -110,3 +110,26 @@ it("returns the api slice state so the client can hydrate from it", async () => 
   expect(api.queries).toEqual({});
   expect(api.subscriptions).toEqual({});
 });
+
+// /communities is the first indexed page behind an auth-gated route: the
+// logged-out branch is what a crawler (and the prerender, which has no
+// localStorage) must get, and it must render without any data at all.
+it("prerenders /communities as the public page, falling back to its empty state", async () => {
+  const out = await renderRoute("/communities", { prefetch: false });
+  expect(out.status).toBe(200);
+  expect((out.html.match(/<h1[\s>]/g) || []).length).toBe(1);
+  expect(out.html).toContain("Language exchange communities");
+  expect(out.html).toContain("utm_campaign=communities");
+  expect(out.head).toContain('href="https://banatalk.com/communities"');
+  expect(out.head).not.toContain("noindex");
+});
+
+it("logs the failed /communities prefetch, still renders, and transfers the store state", async () => {
+  const { apiSlice } = require("../../store/slices/apiSlice");
+  const log = jest.fn();
+  const out = await renderRoute("/communities", { prefetch: true, fetchTimeoutMs: 2000, log });
+  expect(log).toHaveBeenCalledTimes(1);
+  expect(log.mock.calls.every(([m]: [string]) => /prefetch for \/communities failed/.test(m))).toBe(true);
+  expect((out.html.match(/<h1[\s>]/g) || []).length).toBe(1);
+  expect(typeof out.state[apiSlice.reducerPath].queries).toBe("object");
+});

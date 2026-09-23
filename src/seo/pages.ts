@@ -88,6 +88,16 @@ export const SEO_PAGES: SeoPage[] = [
       "Learn Korean by chatting with native Korean speakers for free. You write English, they write Hangul, and an AI tutor explains 존댓말 vs 반말 as you go.",
   },
   {
+    path: "/communities",
+    titleKey: "seo.communities.title",
+    descriptionKey: "seo.communities.description",
+    primary: "language exchange communities",
+    secondary: ["language exchange groups", "practice a language with a group", "find a language partner group"],
+    titleEn: "Language Exchange Communities | BananaTalk",
+    descriptionEn:
+      "Join language exchange communities on BananaTalk: real groups practising Korean, Spanish, Japanese and more together, free, every day.",
+  },
+  {
     path: "/moments",
     titleKey: "seo.moments.title",
     descriptionKey: "seo.moments.description",

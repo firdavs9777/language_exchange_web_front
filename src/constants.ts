@@ -65,6 +65,9 @@ export const GEOCODE_REVERSE_URL = "/api/v1/geocode/reverse";
 export const GEOCODE_FORWARD_URL = "/api/v1/geocode/forward";
 
 export const PUBLIC_STATS_URL = "/api/v1/public/stats";
+// Unauthenticated, cached for 10 minutes server-side (controllers/public.js):
+// the communities a logged-out visitor and a crawler see on /communities.
+export const PUBLIC_COMMUNITIES_URL = "/api/v1/public/communities";
 export const ANALYTICS_EVENTS_URL = "/api/v1/analytics/events";
 
 // Admin console. Every route below lives under `protect` + `authorize('admin')`

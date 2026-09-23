@@ -53,3 +53,23 @@ it("rejects when the network is unreachable, so renderRoute can log it", async (
     Promise.all(prefetchersFor("/").map((run) => run(makeStore())))
   ).rejects.toBeTruthy();
 });
+
+// /communities is prerendered with its cards in the HTML, so the crawler sees
+// real groups and the client hydrates onto the same markup.
+it("prefetches the public communities list for /communities", async () => {
+  const calls: string[] = [];
+  (global as any).fetch = jest.fn(async (input: any) => {
+    calls.push(typeof input === "string" ? input : input.url);
+    return new Response(JSON.stringify({ success: true, data: [] }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  });
+
+  const prefetchers = prefetchersFor("/communities");
+  expect(prefetchers.length).toBe(1);
+
+  const store = makeStore();
+  await Promise.all(prefetchers.map((run) => run(store)));
+  expect(calls.some((u) => u.includes("/public/communities"))).toBe(true);
+});

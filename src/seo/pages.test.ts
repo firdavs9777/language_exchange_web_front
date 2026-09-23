@@ -71,6 +71,17 @@ describe("SEO map", () => {
     expect(seoDescriptionEn(korean).toLowerCase()).toContain("learn korean by chatting");
   });
 
+  // Task B5's public communities page. Same pattern: the English strings live
+  // on the entry until the locale pass merges seo.communities.* into all 18.
+  it("carries the public communities page with the phrase it owns", () => {
+    const communities = findSeoPage("/communities")!;
+    expect(communities.primary).toBe("language exchange communities");
+    expect(communities.titleKey).toBe("seo.communities.title");
+    expect(communities.descriptionKey).toBe("seo.communities.description");
+    expect(seoTitleEn(communities).toLowerCase()).toContain("language exchange communities");
+    expect(seoDescriptionEn(communities).toLowerCase()).toContain("language exchange");
+  });
+
   it("normalizes trailing slashes and builds canonical URLs", () => {
     expect(normalizePath("/privacy-policy/")).toBe("/privacy-policy");
     expect(normalizePath("/")).toBe("/");
