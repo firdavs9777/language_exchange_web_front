@@ -1,4 +1,6 @@
 import "@testing-library/jest-dom";
+import pathMod from "path";
+import fsMod from "fs";
 import { render, screen, act } from "@testing-library/react";
 import Reveal from "./Reveal";
 import { useCountUp } from "./useCountUp";
@@ -55,4 +57,63 @@ it("returns the target immediately under reduced motion", () => {
   setReducedMotion(true);
   render(<CountProbe to={137} />);
   expect(screen.getByTestId("count")).toHaveTextContent("137");
+});
+
+// ---------------------------------------------------------------------------
+// Motion tokens. Every homepage animation is CSS-only and lives in
+// tailwind.config.js, never inline in a component: the page is prerendered
+// with renderToString, so an animation that needed JS state would either
+// change the server markup or desync at hydration.
+//
+// require() with an absolute path rather than a relative import: CRA's
+// ModuleScopePlugin forbids importing from outside src/ (Jest does not, but
+// keeping it a runtime require sidesteps the rule) -- same reasoning as
+// src/design/tokens.test.ts.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const twConfig = require(pathMod.resolve(__dirname, "../../../../tailwind.config.js"));
+const extend = twConfig.theme.extend;
+
+const HOMEPAGE_ANIMATIONS = [
+  "bt-type-dots",
+  "bt-msg-in",
+  "bt-line-in",
+  "bt-drift",
+  "bt-gradient",
+];
+
+it("defines a keyframe for every homepage animation", () => {
+  HOMEPAGE_ANIMATIONS.forEach((name) => {
+    expect(extend.keyframes[name]).toBeDefined();
+  });
+});
+
+it("defines a matching animation utility for every homepage keyframe", () => {
+  HOMEPAGE_ANIMATIONS.forEach((name) => {
+    expect(typeof extend.animation[name]).toBe("string");
+    expect(extend.animation[name]).toContain(name);
+  });
+});
+
+// These are ambient loops, not entrances: a one-shot animation would leave
+// the hero dead after the first 14 seconds.
+it("loops every homepage animation", () => {
+  HOMEPAGE_ANIMATIONS.forEach((name) => {
+    expect(extend.animation[name]).toContain("infinite");
+  });
+});
+
+// Arbitrary `animate-[...]` values would put keyframes back in the markup,
+// out of reach of the token file and of these tests.
+it("keeps arbitrary animation values out of the homepage", () => {
+  const walk = (dir: string): string[] =>
+    fsMod.readdirSync(dir, { withFileTypes: true }).reduce((acc: string[], e: any) => {
+      const full = pathMod.join(dir, e.name);
+      return acc.concat(e.isDirectory() ? walk(full) : [full]);
+    }, []);
+  const offenders = walk(pathMod.resolve(__dirname, ".."))
+    // Source only: this file names the offending string in order to test for
+    // it, and would otherwise report itself.
+    .filter((f) => /\.(tsx?|jsx?)$/.test(f) && f.indexOf(".test.") === -1)
+    .filter((f) => fsMod.readFileSync(f, "utf8").indexOf("animate-[") !== -1);
+  expect(offenders).toEqual([]);
 });

@@ -80,3 +80,19 @@ it("closes with both store links", () => {
   expect(cta.querySelector('a[href*="apps.apple.com"]')).toBeTruthy();
   expect(cta.querySelector('a[href*="play.google.com"]')).toBeTruthy();
 });
+
+// The closing CTA breathes rather than sitting flat -- a background-position
+// loop, so it costs no layout and stops dead under reduced motion.
+it("runs a shifting gradient behind the closing CTA", () => {
+  render(<FinalCta />);
+  const cta = screen.getByTestId("final-cta");
+  expect(cta.className).toContain("motion-safe:animate-bt-gradient");
+  expect(cta.className).toContain("bg-gradient-to-br");
+});
+
+// Contrast: white on the darkest stop of the gradient, never a tinted grey.
+it("keeps the CTA heading white against every stop of the gradient", () => {
+  render(<FinalCta />);
+  const h2 = screen.getByTestId("final-cta").querySelector("h2");
+  expect((h2 as Element).className).toContain("text-white");
+});
