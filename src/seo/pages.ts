@@ -1,4 +1,4 @@
-import { APP_STORE_URL, PLAY_STORE_URL } from "../components/growth/StoreLink";
+import { APP_STORE_URL, PLAY_STORE_URL } from "../components/growth/storeUrls";
 
 export const SITE_ORIGIN = "https://banatalk.com";
 export const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og-image.png`;

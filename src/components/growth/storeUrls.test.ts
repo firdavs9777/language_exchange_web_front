@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { APP_STORE_URL, PLAY_STORE_URL } from "./StoreLink";
+import { APP_STORE_URL, PLAY_STORE_URL } from "./storeUrls";
 
 // One home for the store URLs. Before StoreLink there were six copies of them
 // across the app, two of which had drifted to a stale app id, and none of
@@ -11,7 +11,7 @@ import { APP_STORE_URL, PLAY_STORE_URL } from "./StoreLink";
 // The needles are derived from the constants rather than written out, so this
 // file does not trip its own rule.
 const SRC = path.join(__dirname, "../..");
-const ALLOWED = path.join(SRC, "components/growth/StoreLink.tsx");
+const ALLOWED = path.join(SRC, "components/growth/storeUrls.ts");
 const HOSTS = [APP_STORE_URL, PLAY_STORE_URL].map((url) => url.split("/")[2]);
 
 const TEXT_EXT = [".ts", ".tsx", ".js", ".jsx", ".json", ".css", ".scss", ".html", ".md", ".txt"];
@@ -29,7 +29,7 @@ function walk(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-it("keeps both store hostnames in StoreLink.tsx and nowhere else", () => {
+it("keeps both store hostnames in storeUrls.ts and nowhere else", () => {
   const offenders: string[] = [];
   for (const file of walk(SRC)) {
     if (file === ALLOWED) continue;

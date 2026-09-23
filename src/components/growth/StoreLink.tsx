@@ -3,18 +3,10 @@ import { useTranslation } from "react-i18next";
 import { trackEvent } from "../../analytics/track";
 import { gaEvent } from "../../analytics/ga";
 
-// The only place in src/ where the store hostnames are written down --
-// src/components/growth/storeUrls.test.ts greps for the seventh copy. Everything
-// else (utils/platform.ts, openInAppAction, growthGate) imports from here.
-export const APP_STORE_URL =
-  "https://apps.apple.com/us/app/bananatalk-learn-meet-or-date/id6755862146";
-export const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.bananatalk.app";
-
-/** Hostnames of the two stores, derived rather than retyped (growthGate). */
-export const STORE_HOSTS: string[] = [APP_STORE_URL, PLAY_STORE_URL].map(
-  (url) => url.split("/")[2]
-);
+// Store URLs live in ./storeUrls (React-free); re-exported so existing
+// `import { APP_STORE_URL } from "./StoreLink"` call sites keep working.
+import { APP_STORE_URL, PLAY_STORE_URL } from "./storeUrls";
+export { APP_STORE_URL, PLAY_STORE_URL, STORE_HOSTS } from "./storeUrls";
 
 export type StoreId = "ios" | "android";
 

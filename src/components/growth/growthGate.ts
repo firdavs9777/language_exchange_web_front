@@ -5,7 +5,7 @@
 // interrupted, they are the easiest thing here to get wrong, and they are
 // painful to verify through a rendered component.
 
-import { STORE_HOSTS } from "./StoreLink";
+import { STORE_HOSTS } from "./storeUrls";
 
 export type GateKey = "download-popup" | "promo-carousel" | "sticky-banner";
 
