@@ -163,12 +163,15 @@ describe("momentsSlice Task 0 endpoints hit the REAL backend routes", () => {
     appendSpy.mockRestore();
   });
 
-  it("recordMomentViews -> POST /api/v1/moments/views with a views[] batch that clears the backend's MIN_VIEW_MS", async () => {
+  it("recordMomentViews -> POST /api/v1/moments/views with a views[] batch carrying real per-moment watchedMs/completed", async () => {
     const calls = mockFetch();
     const store = makeStore();
     await store.dispatch(
       (momentsApiSlice.endpoints as any).recordMomentViews.initiate({
-        momentIds: ["moment-1", "moment-2"],
+        views: [
+          { momentId: "moment-1", watchedMs: 1500, completed: false },
+          { momentId: "moment-2", watchedMs: 6000, completed: true },
+        ],
       })
     );
     expect(calls).toHaveLength(1);
@@ -177,8 +180,8 @@ describe("momentsSlice Task 0 endpoints hit the REAL backend routes", () => {
     expect(calls[0].method).toBe("POST");
     const parsed = JSON.parse(calls[0].body as string);
     expect(parsed.views).toEqual([
-      { momentId: "moment-1", watchedMs: 1000, completed: false },
-      { momentId: "moment-2", watchedMs: 1000, completed: false },
+      { momentId: "moment-1", watchedMs: 1500, completed: false },
+      { momentId: "moment-2", watchedMs: 6000, completed: true },
     ]);
   });
 

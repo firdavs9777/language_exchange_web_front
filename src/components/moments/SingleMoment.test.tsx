@@ -3,6 +3,7 @@ import "@testing-library/jest-dom";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import SingleMoment from "./SingleMoment";
+import { _resetMomentViewsForTests } from "./useMomentViews";
 
 const mockTranslateMoment = jest.fn();
 const mockToastError = jest.fn();
@@ -33,6 +34,7 @@ jest.mock("../../store/slices/momentsSlice", () => ({
   useSaveMomentMutation: () => noopMutation(),
   useUnsaveMomentMutation: () => noopMutation(),
   useTranslateMomentMutation: () => [mockTranslateMoment, {}],
+  useRecordMomentViewsMutation: () => [jest.fn(() => ({ unwrap: () => Promise.resolve({}) })), {}],
 }));
 
 const DESCRIPTION = "오늘 날씨가 정말 좋아요";
@@ -58,6 +60,13 @@ describe("SingleMoment translate on tap", () => {
     mockTranslateMoment.mockReset();
     mockToastError.mockReset();
     mockUserId = "me-1";
+  });
+
+  afterEach(() => {
+    // useMomentViews keeps a module-level shared IntersectionObserver,
+    // flush interval and window/document listeners -- clear them so no
+    // test leaves a real timer/listener running past this file.
+    _resetMomentViewsForTests();
   });
 
   it("translates the moment body with the moment id and the target language", async () => {

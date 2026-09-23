@@ -233,18 +233,20 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
     // Record a batch of moment views -- POST /api/v1/moments/views, body
     // { views: [{ momentId, watchedMs, completed }] }. The backend only
     // counts a view once watchedMs >= 1000ms (controllers/momentViews.js
-    // MIN_VIEW_MS); the caller (useMomentViews, Task 4) only enqueues a
-    // momentId once its own IntersectionObserver has already confirmed
-    // >=50% visible for >=1s, so every id here has already cleared that bar
-    // -- watchedMs is filled in at exactly the threshold rather than tracked
-    // per-id. Response: { success, recorded }.
+    // MIN_VIEW_MS); the caller (useMomentViews, Task 4) tracks each moment's
+    // real dwell time via an IntersectionObserver and only enqueues a view
+    // once watchedMs has already cleared that bar, so the real watchedMs (and
+    // whether the viewer watched >=5s, i.e. completed) is passed straight
+    // through here rather than synthesized. Response: { success, recorded }.
     recordMomentViews: builder.mutation({
-      query: ({ momentIds }: { momentIds: string[] }) => ({
+      query: ({
+        views,
+      }: {
+        views: { momentId: string; watchedMs: number; completed: boolean }[];
+      }) => ({
         url: `${MOMENTS_URL}/views`,
         method: "POST",
-        body: {
-          views: momentIds.map((momentId) => ({ momentId, watchedMs: 1000, completed: false })),
-        },
+        body: { views },
       }),
     }),
     // Emoji reactions (distinct from like/dislike)

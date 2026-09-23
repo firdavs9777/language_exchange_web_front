@@ -22,6 +22,7 @@ import {
   useTranslateMomentMutation,
 } from "../../store/slices/momentsSlice";
 import { useTargetLanguage } from "../../hooks/useTargetLanguage";
+import { useMomentViews } from "./useMomentViews";
 import TranslatableText from "./TranslatableText";
 import MomentReactionRow from "./actions/MomentReactionRow";
 import ShareButton from "../linking/ShareButton";
@@ -111,6 +112,7 @@ const SingleMoment: React.FC<MomentProps> = ({
   const [unsaveMoment] = useUnsaveMomentMutation();
   const [translateMoment] = useTranslateMomentMutation();
   const targetLanguage = useTargetLanguage();
+  const momentViewRef = useMomentViews({ momentId: _id, isLoggedIn: Boolean(userId) });
   const isLiking = false;
   const isDisliking = false;
 
@@ -325,6 +327,7 @@ const SingleMoment: React.FC<MomentProps> = ({
   return (
     <Link to={`/moment/${_id}`} className="block no-underline">
       <article
+        ref={momentViewRef}
         className={`group relative w-full bg-white shadow-sm border border-gray-200 transition-all duration-300 hover:shadow-md ${
           isHovered ? "shadow-md" : ""
         } rounded-none sm:rounded-lg`}
