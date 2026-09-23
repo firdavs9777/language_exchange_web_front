@@ -1,11 +1,15 @@
-import { MOMENTS_URL } from "../../constants";
+import { MOMENTS_URL, COMMENTS_URL } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
 export const momentsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder: any) => ({
     getMoments: builder.query({
-      query: ({ page = 1, limit = 10 } = {}) => ({
-        url: `${MOMENTS_URL}?page=${page}&limit=${limit}`,
+      // `feed` is only appended when given, so `getMoments({ page: 1, limit: 10 })`
+      // serializes to the exact same cache key/URL as before it existed -- the
+      // prerender prefetch (src/seo/prerender/prefetch.ts) and its snapshot in
+      // the preloaded state depend on that match.
+      query: ({ page = 1, limit = 10, feed }: { page?: number; limit?: number; feed?: "forYou" | "following" } = {}) => ({
+        url: `${MOMENTS_URL}?page=${page}&limit=${limit}${feed ? `&feed=${feed}` : ""}`,
       }),
       keepUnusedDataFor: 5,
       providesTags: ['Moments'],
@@ -144,7 +148,7 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
       query: ({ momentId, page = 1, limit = 20 }: { momentId: string; page?: number; limit?: number }) => ({
         url: `${MOMENTS_URL}/${momentId}/comments?page=${page}&limit=${limit}`,
       }),
-      providesTags: ['Moments'],
+      providesTags: ['Moments', 'Comments'],
     }),
     addMomentComment: builder.mutation({
       query: ({ momentId, content, parentId }: { momentId: string; content: string; parentId?: string }) => ({
@@ -152,14 +156,96 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { content, parentId },
       }),
-      invalidatesTags: ["Moments"],
+      invalidatesTags: ["Moments", "Comments"],
     }),
     deleteMomentComment: builder.mutation({
       query: ({ momentId, commentId }: { momentId: string; commentId: string }) => ({
         url: `${MOMENTS_URL}/${momentId}/comments/${commentId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Moments"],
+      invalidatesTags: ["Moments", "Comments"],
+    }),
+    // Translate a comment -- POST /api/v1/comments/:id/translate, body
+    // { targetLanguage }. Response data: { language, translatedText,
+    // translatedAt }. Uses the standalone /api/v1/comments mount (comment.js
+    // is registered there too) since translation only needs the comment id.
+    translateComment: builder.mutation({
+      query: ({ commentId, targetLanguage }: { commentId: string; targetLanguage: string }) => ({
+        url: `${COMMENTS_URL}/${commentId}/translate`,
+        method: "POST",
+        body: { targetLanguage },
+      }),
+    }),
+    // Like/unlike a comment -- POST /api/v1/comments/:id/like, no body.
+    // Response data: { isLiked, likeCount }.
+    likeComment: builder.mutation({
+      query: (commentId: string) => ({
+        url: `${COMMENTS_URL}/${commentId}/like`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Comments"],
+    }),
+    // Emoji react to a comment -- POST /api/v1/comments/:id/react, body
+    // { emoji }. Response data: { reactions, reactionCount }.
+    reactToComment: builder.mutation({
+      query: ({ commentId, emoji }: { commentId: string; emoji: string }) => ({
+        url: `${COMMENTS_URL}/${commentId}/react`,
+        method: "POST",
+        body: { emoji },
+      }),
+      invalidatesTags: ["Comments"],
+    }),
+    // Remove a comment's emoji reaction -- DELETE /api/v1/comments/:id/react,
+    // no body (the server removes whichever reaction the caller left).
+    // Response data: { reactions, reactionCount }.
+    unreactToComment: builder.mutation({
+      query: ({ commentId }: { commentId: string; emoji?: string }) => ({
+        url: `${COMMENTS_URL}/${commentId}/react`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Comments"],
+    }),
+    // Paginated replies to a comment -- GET /api/v1/comments/:id/replies?page=&limit=.
+    // Response envelope: { success, count, total, page, pages, data }.
+    getCommentReplies: builder.query({
+      query: ({ commentId, page = 1, limit = 20 }: { commentId: string; page?: number; limit?: number }) => ({
+        url: `${COMMENTS_URL}/${commentId}/replies?page=${page}&limit=${limit}`,
+      }),
+      providesTags: ["Comments"],
+    }),
+    // Attach an image to an existing comment -- PUT /api/v1/comments/:id/image,
+    // multipart with field name "image" (uploadSingleCompressed('image', ...)
+    // server-side). Response data: { imageUrl }. FormData body -- no
+    // Content-Type header here, fetchBaseQuery/the browser set the multipart
+    // boundary for us.
+    uploadCommentImage: builder.mutation({
+      query: ({ commentId, file }: { commentId: string; file: File }) => {
+        const formData = new FormData();
+        formData.append("image", file);
+        return {
+          url: `${COMMENTS_URL}/${commentId}/image`,
+          method: "PUT",
+          body: formData,
+        };
+      },
+      invalidatesTags: ["Comments"],
+    }),
+    // Record a batch of moment views -- POST /api/v1/moments/views, body
+    // { views: [{ momentId, watchedMs, completed }] }. The backend only
+    // counts a view once watchedMs >= 1000ms (controllers/momentViews.js
+    // MIN_VIEW_MS); the caller (useMomentViews, Task 4) only enqueues a
+    // momentId once its own IntersectionObserver has already confirmed
+    // >=50% visible for >=1s, so every id here has already cleared that bar
+    // -- watchedMs is filled in at exactly the threshold rather than tracked
+    // per-id. Response: { success, recorded }.
+    recordMomentViews: builder.mutation({
+      query: ({ momentIds }: { momentIds: string[] }) => ({
+        url: `${MOMENTS_URL}/views`,
+        method: "POST",
+        body: {
+          views: momentIds.map((momentId) => ({ momentId, watchedMs: 1000, completed: false })),
+        },
+      }),
     }),
     // Emoji reactions (distinct from like/dislike)
     reactToMoment: builder.mutation({
@@ -271,6 +357,14 @@ export const {
   useUploadMomentAudioMutation,
   useGetPromptOfDayQuery,
   useGetReelsFeedQuery,
+  // Comment engagement, comment translation, replies, images, view counting
+  useTranslateCommentMutation,
+  useLikeCommentMutation,
+  useReactToCommentMutation,
+  useUnreactToCommentMutation,
+  useGetCommentRepliesQuery,
+  useUploadCommentImageMutation,
+  useRecordMomentViewsMutation,
 } = momentsApiSlice;
 
 export default momentsApiSlice.reducer;

@@ -1,5 +1,10 @@
 export const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5003";
 export const MOMENTS_URL = "/api/v1/moments";
+// Comment routes are also mounted directly (routes/comment.js is registered
+// both under /api/v1/moments/:momentId/comments and, standalone, here) --
+// endpoints that only need a comment id (like/react/translate/replies/image)
+// use this base instead of nesting under a momentId they don't have.
+export const COMMENTS_URL = "/api/v1/comments";
 export const USERS_URL = "/api/v1/users";
 export const COMMUNITY_URL = "/api/v1/auth/users";
 export const MESSAGES_URL = "/api/v1/messages";
