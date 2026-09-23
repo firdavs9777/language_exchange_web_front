@@ -147,6 +147,12 @@ export const apiSlice = createApi({
     "AdminUserList",
     "AdminContent",
     "AdminStats",
+    // Content desk (moments moderation) and the reports queue: separate from
+    // AdminContent (clubs/gatherings) so a moment hide/unhide or a report
+    // review doesn't refetch the club and gathering tables too.
+    "AdminContentStats",
+    "AdminMoments",
+    "AdminReports",
   ],
   refetchOnFocus: false,
   refetchOnReconnect: true,
