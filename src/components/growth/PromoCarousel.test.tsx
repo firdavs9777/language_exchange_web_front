@@ -67,3 +67,11 @@ it("pauses while keyboard-focused on a descendant", () => {
   act(() => { jest.advanceTimersByTime(6000); });
   expect(screen.getByTestId("promo-slide")).toHaveTextContent(PROMO_SLIDES[1].title);
 });
+
+// A slide that says "get the app" means the store, not a page about the store:
+// `go=1` is what DownloadApp reads to make the hop (spec 5.3).
+it("sends the app slides to the download page with the redirect flag", () => {
+  const appSlides = PROMO_SLIDES.filter((s) => s.ctaHref.indexOf("/download") === 0);
+  expect(appSlides.length).toBeGreaterThan(0);
+  appSlides.forEach((s) => expect(s.ctaHref).toBe("/download?go=1"));
+});

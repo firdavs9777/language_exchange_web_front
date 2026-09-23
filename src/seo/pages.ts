@@ -1,3 +1,5 @@
+import { APP_STORE_URL, PLAY_STORE_URL } from "../components/growth/StoreLink";
+
 export const SITE_ORIGIN = "https://banatalk.com";
 export const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og-image.png`;
 
@@ -36,6 +38,24 @@ export const SEO_PAGES: SeoPage[] = [
     descriptionKey: "seo.download.description",
     primary: "download bananatalk",
     secondary: ["language exchange app for iphone", "language exchange app for android"],
+    // The store URLs come from StoreLink, the one file allowed to spell them
+    // (storeUrls.test.ts), and without a campaign: this is the app's identity
+    // for a search engine, not a tap we want to attribute.
+    jsonLd: (ctx) => ({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "BananaTalk",
+      applicationCategory: "SocialNetworkingApplication",
+      operatingSystem: "iOS, Android",
+      url: ctx.url,
+      sameAs: [APP_STORE_URL, PLAY_STORE_URL],
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+        description: "Free, VIP from $9.99",
+      },
+    }),
   },
   {
     path: "/moments",

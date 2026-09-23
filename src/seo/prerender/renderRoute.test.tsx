@@ -50,6 +50,17 @@ it("shows the curated stat values, not a count-up starting at zero", async () =>
   expect(out.html).toContain(">18<");
 });
 
+// The download page decides its store and draws its QR after mount; what the
+// crawler gets is the readable page with the box already reserved.
+it("prerenders /download with the QR box reserved and the app's JSON-LD", async () => {
+  const out = await renderRoute("/download", { prefetch: false });
+  expect(out.html).toContain('data-testid="download-qr"');
+  expect(out.html).toContain("Download BananaTalk");
+  expect(out.html).toContain("utm_campaign=download-page");
+  expect(out.head).toContain("SoftwareApplication");
+  expect(out.head).toContain("Free, VIP from $9.99");
+});
+
 it("logs a warning per failed prefetch instead of swallowing the failure", async () => {
   const log = jest.fn();
   const out = await renderRoute("/", { prefetch: true, fetchTimeoutMs: 2000, log });

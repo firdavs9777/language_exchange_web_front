@@ -2,6 +2,7 @@ import { matchRoutes } from "react-router-dom";
 import en from "../utils/locales/eng.json";
 import { routes } from "../router/routes";
 import { SEO_PAGES, findSeoPage, canonicalUrl, normalizePath } from "./pages";
+import { APP_STORE_URL, PLAY_STORE_URL } from "../components/growth/StoreLink";
 import { getByPath } from "./i18nFallback";
 
 describe("SEO map", () => {
@@ -33,6 +34,22 @@ describe("SEO map", () => {
     for (const page of SEO_PAGES) {
       expect(getByPath(en, page.titleKey).toLowerCase()).toContain(page.primary.toLowerCase());
     }
+  });
+
+  // The download page is the one entry a rich result can act on: the card
+  // Google draws for an app needs both store links and a price.
+  it("describes the app on /download, with both stores and the real price", () => {
+    const page = findSeoPage("/download")!;
+    expect(page.jsonLd).toBeDefined();
+    const ld = page.jsonLd!({ url: canonicalUrl("/download") }) as any;
+    expect(ld["@type"]).toBe("SoftwareApplication");
+    expect(ld.url).toBe("https://banatalk.com/download");
+    expect(ld.sameAs).toEqual([APP_STORE_URL, PLAY_STORE_URL]);
+    expect(ld.operatingSystem).toContain("iOS");
+    expect(ld.operatingSystem).toContain("Android");
+    expect(ld.offers.price).toBe("0");
+    expect(ld.offers.description).toBe("Free, VIP from $9.99");
+    expect(() => JSON.stringify(ld)).not.toThrow();
   });
 
   it("normalizes trailing slashes and builds canonical URLs", () => {
