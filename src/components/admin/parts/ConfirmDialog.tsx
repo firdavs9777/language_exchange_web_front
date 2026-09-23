@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import DialogShell from "../../../design/DialogShell";
 
 export interface ConfirmDialogProps {
   open: boolean;
@@ -67,20 +68,8 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     }
   }, [open]);
 
-  // Escape closes. Bound in an effect, never read during render.
-  useEffect(() => {
-    if (!open) return undefined;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onCancel();
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, onCancel]);
-
-  useEffect(() => {
-    if (open && firstFieldRef.current) firstFieldRef.current.focus();
-  }, [open]);
-
+  // Escape, the backdrop, initial focus and the Tab loop all live in
+  // DialogShell now; this component owns only the question it asks.
   if (!open) return null;
 
   const reasonOk = !requireReason || reason.trim().length > 0;
@@ -94,99 +83,89 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   ].join(" ");
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
-      <div
-        data-testid="confirm-dialog-backdrop"
-        onClick={onCancel}
-        className="absolute inset-0 bg-ink-900/50"
-      />
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        data-testid="confirm-dialog"
-        className={[
-          "relative w-full max-w-md rounded-card border border-line bg-surface p-5 shadow-lg",
-          "dark:border-line-dark dark:bg-cardbg-dark",
-        ].join(" ")}
-      >
-        <h2 className="font-display text-base text-ink-900 dark:text-ink-50">{title}</h2>
-        {body ? (
-          <div className="pt-2 text-sm text-ink-600 dark:text-ink-300">{body}</div>
-        ) : null}
+    <DialogShell
+      label={title}
+      onClose={onCancel}
+      testId="confirm-dialog"
+      backdropTestId="confirm-dialog-backdrop"
+      initialFocusRef={firstFieldRef}
+    >
+      <h2 className="font-display text-base text-ink-900 dark:text-ink-50">{title}</h2>
+      {body ? (
+        <div className="pt-2 text-sm text-ink-600 dark:text-ink-300">{body}</div>
+      ) : null}
 
-        {requireReason ? (
-          <label className="mt-4 block text-xs font-medium uppercase tracking-wide text-ink-500 dark:text-ink-400">
-            {reasonLabel}
-            <textarea
-              data-testid="confirm-dialog-reason"
-              ref={(node) => {
-                firstFieldRef.current = node;
-              }}
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              rows={3}
-              className={fieldClass}
-            />
-          </label>
-        ) : null}
-
-        {requireTypedValue ? (
-          <label className="mt-4 block text-xs font-medium uppercase tracking-wide text-ink-500 dark:text-ink-400">
-            {typedLabel || `Type ${requireTypedValue} to confirm`}
-            <input
-              data-testid="confirm-dialog-typed"
-              type="text"
-              value={typed}
-              onChange={(e) => setTyped(e.target.value)}
-              autoComplete="off"
-              className={fieldClass}
-            />
-          </label>
-        ) : null}
-
-        {error ? (
-          <div
-            data-testid="confirm-dialog-error"
-            role="alert"
-            className="mt-4 rounded-card border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300"
-          >
-            {error}
-          </div>
-        ) : null}
-
-        <div className="mt-5 flex justify-end gap-2">
-          <button
-            type="button"
-            data-testid="confirm-dialog-cancel"
-            onClick={onCancel}
-            className="rounded-chip border border-line px-3 py-1.5 text-sm font-medium text-ink-700 hover:bg-ink-100 dark:border-line-dark dark:text-ink-200 dark:hover:bg-ink-800"
-          >
-            {cancelLabel}
-          </button>
-          <button
-            type="button"
-            data-testid="confirm-dialog-confirm"
+      {requireReason ? (
+        <label className="mt-4 block text-xs font-medium uppercase tracking-wide text-ink-500 dark:text-ink-400">
+          {reasonLabel}
+          <textarea
+            data-testid="confirm-dialog-reason"
             ref={(node) => {
-              if (!requireReason) firstFieldRef.current = node;
+              firstFieldRef.current = node;
             }}
-            onClick={() => {
-              if (!canConfirm) return;
-              onConfirm(reason.trim());
-            }}
-            disabled={!canConfirm}
-            aria-busy={busy}
-            className={[
-              "rounded-chip px-3 py-1.5 text-sm font-semibold text-white",
-              "disabled:cursor-not-allowed disabled:opacity-50",
-              danger ? "bg-red-600 hover:bg-red-700" : "bg-brand-deep hover:bg-brand-dark",
-            ].join(" ")}
-          >
-            {confirmLabel}
-          </button>
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            rows={3}
+            className={fieldClass}
+          />
+        </label>
+      ) : null}
+
+      {requireTypedValue ? (
+        <label className="mt-4 block text-xs font-medium uppercase tracking-wide text-ink-500 dark:text-ink-400">
+          {typedLabel || `Type ${requireTypedValue} to confirm`}
+          <input
+            data-testid="confirm-dialog-typed"
+            type="text"
+            value={typed}
+            onChange={(e) => setTyped(e.target.value)}
+            autoComplete="off"
+            className={fieldClass}
+          />
+        </label>
+      ) : null}
+
+      {error ? (
+        <div
+          data-testid="confirm-dialog-error"
+          role="alert"
+          className="mt-4 rounded-card border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-500/40 dark:bg-red-500/10 dark:text-red-300"
+        >
+          {error}
         </div>
+      ) : null}
+
+      <div className="mt-5 flex justify-end gap-2">
+        <button
+          type="button"
+          data-testid="confirm-dialog-cancel"
+          onClick={onCancel}
+          className="rounded-chip border border-line px-3 py-1.5 text-sm font-medium text-ink-700 hover:bg-ink-100 dark:border-line-dark dark:text-ink-200 dark:hover:bg-ink-800"
+        >
+          {cancelLabel}
+        </button>
+        <button
+          type="button"
+          data-testid="confirm-dialog-confirm"
+          ref={(node) => {
+            if (!requireReason) firstFieldRef.current = node;
+          }}
+          onClick={() => {
+            if (!canConfirm) return;
+            onConfirm(reason.trim());
+          }}
+          disabled={!canConfirm}
+          aria-busy={busy}
+          className={[
+            "rounded-chip px-3 py-1.5 text-sm font-semibold text-white",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            danger ? "bg-red-600 hover:bg-red-700" : "bg-brand-deep hover:bg-brand-dark",
+          ].join(" ")}
+        >
+          {confirmLabel}
+        </button>
       </div>
-    </div>
+    </DialogShell>
   );
 };
 

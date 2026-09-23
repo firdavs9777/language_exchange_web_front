@@ -7,8 +7,10 @@ import {
   useChangeAdminUserRoleMutation,
   useHardDeleteAdminUserMutation,
 } from "../../../store/slices/adminSlice";
-import { Avatar, Badge } from "../../../design";
+import { Pencil } from "lucide-react";
+import { Avatar, Badge, LanguageExchangePill } from "../../../design";
 import ConfirmDialog from "./ConfirmDialog";
+import EditUserDialog from "./EditUserDialog";
 
 export interface UserDetailDrawerProps {
   userId: string;
@@ -22,6 +24,13 @@ const formatWhen = (value: any): string => {
   if (!value) return "—";
   const date = new Date(value);
   return isNaN(date.getTime()) ? String(value) : date.toLocaleString();
+};
+
+/** Day only: a subscription's end date has no meaningful time of day. */
+const formatDate = (value: any): string => {
+  if (!value) return "—";
+  const date = new Date(value);
+  return isNaN(date.getTime()) ? String(value) : date.toLocaleDateString();
 };
 
 const num = (value: any): string =>
@@ -56,6 +65,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ userId, onClose }) 
   const [changeRole, roleState] = useChangeAdminUserRoleMutation();
   const [deleteUser, deleteState] = useHardDeleteAdminUserMutation();
   const [pending, setPending] = useState<Pending>(null);
+  const [editing, setEditing] = useState(false);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
   const payload: any = detail.data || {};
@@ -64,17 +74,18 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ userId, onClose }) 
   const activity: any = payload.activitySummary || {};
   const isBanned = !!user.isBanned;
   const isAdmin = user.role === "admin";
+  const isVip = user.userMode === "vip" || !!(user.vipSubscription && user.vipSubscription.isActive);
   const nextRole: "admin" | "user" = isAdmin ? "user" : "admin";
 
-  // Escape closes the drawer — unless a confirm dialog is open, which owns
-  // Escape while it is up.
+  // Escape closes the drawer — unless a dialog is open on top of it, which
+  // owns Escape while it is up.
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !pending) onClose();
+      if (event.key === "Escape" && !pending && !editing) onClose();
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onClose, pending]);
+  }, [onClose, pending, editing]);
 
   // Focus moves into the panel on open so the keyboard follows the eye.
   useEffect(() => {
@@ -128,10 +139,12 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ userId, onClose }) 
   const actionButton =
     "rounded-chip border border-line px-3 py-1.5 text-sm font-medium text-ink-700 hover:bg-ink-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-line-dark dark:text-ink-200 dark:hover:bg-ink-800";
 
-  const field = (label: string, value: React.ReactNode) => (
+  const field = (label: string, value: React.ReactNode, testId?: string) => (
     <div>
       <div className={fieldLabel}>{label}</div>
-      <div className={fieldValue}>{value}</div>
+      <div className={fieldValue} data-testid={testId}>
+        {value}
+      </div>
     </div>
   );
 
@@ -215,7 +228,40 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ userId, onClose }) 
               {field(t("admin.users.lastActive") || "Last active", formatWhen(user.lastActive))}
               {field(
                 t("admin.users.languages") || "Languages",
-                `${user.native_language || "—"} → ${user.language_to_learn || "—"}`
+                user.native_language && user.language_to_learn ? (
+                  <LanguageExchangePill
+                    nativeLanguage={user.native_language}
+                    learningLanguage={user.language_to_learn}
+                    dense
+                  />
+                ) : (
+                  "—"
+                )
+              )}
+              {field(
+                t("admin.users.mode") || "Mode",
+                isVip ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Badge tone="banana">{t("admin.users.vip") || "VIP"}</Badge>
+                    <span className="text-xs text-ink-500 dark:text-ink-400">
+                      {user.vipSubscription && user.vipSubscription.endDate
+                        ? `${t("admin.users.vipUntil") || "until"} ${formatDate(
+                            user.vipSubscription.endDate
+                          )}`
+                        : ""}
+                    </span>
+                  </span>
+                ) : (
+                  t("admin.users.regular") || "Regular"
+                ),
+                "drawer-vip"
+              )}
+              {field(
+                t("admin.users.verified") || "Verified",
+                user.isEmailVerified
+                  ? t("admin.users.yes") || "Yes"
+                  : t("admin.users.no") || "No",
+                "drawer-verified"
               )}
             </div>
 
@@ -285,6 +331,16 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ userId, onClose }) 
             </ul>
 
             <div className="mt-6 flex flex-wrap gap-2 border-t border-line pt-4 dark:border-line-dark">
+              <button
+                type="button"
+                data-testid="drawer-edit"
+                disabled={busy}
+                onClick={() => setEditing(true)}
+                className={`${actionButton} inline-flex items-center gap-1.5`}
+              >
+                <Pencil className="h-4 w-4" aria-hidden />
+                {t("admin.users.edit") || "Edit"}
+              </button>
               {isBanned ? (
                 <button
                   type="button"
@@ -330,6 +386,10 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ userId, onClose }) 
           </>
         )}
       </div>
+
+      {editing ? (
+        <EditUserDialog user={user} onClose={() => setEditing(false)} />
+      ) : null}
 
       <ConfirmDialog
         open={pending === "ban"}

@@ -12,7 +12,9 @@ const mockBan = jest.fn();
 const mockUnban = jest.fn();
 const mockRole = jest.fn();
 const mockDelete = jest.fn();
-const mockIdle = { isLoading: false, error: undefined as any };
+const mockCreate = jest.fn();
+const mockUpdate = jest.fn();
+const mockIdle = { isLoading: false, error: undefined as any, reset: jest.fn() };
 
 jest.mock("../../../store/slices/adminSlice", () => ({
   useSearchAdminUsersQuery: (...args: any[]) => mockSearch(...args),
@@ -22,7 +24,11 @@ jest.mock("../../../store/slices/adminSlice", () => ({
   useUnbanAdminUserMutation: () => [mockUnban, mockIdle],
   useChangeAdminUserRoleMutation: () => [mockRole, mockIdle],
   useHardDeleteAdminUserMutation: () => [mockDelete, mockIdle],
+  useCreateUserMutation: () => [mockCreate, mockIdle],
+  useUpdateUserMutation: () => [mockUpdate, mockIdle],
 }));
+
+const DAY = 24 * 60 * 60 * 1000;
 
 const USERS = [
   {
@@ -34,6 +40,12 @@ const USERS = [
     isBanned: false,
     createdAt: "2025-01-02T00:00:00.000Z",
     imageUrls: [],
+    native_language: "English",
+    language_to_learn: "Korean",
+    userMode: "vip",
+    isEmailVerified: true,
+    lastActive: new Date(Date.now() - 3 * DAY).toISOString(),
+    vipSubscription: { isActive: true, endDate: "2026-12-01T00:00:00.000Z" },
   },
   {
     _id: "u2",
@@ -45,6 +57,11 @@ const USERS = [
     banReason: "spam",
     createdAt: "2025-02-03T00:00:00.000Z",
     imageUrls: [],
+    native_language: "Spanish",
+    language_to_learn: "English",
+    userMode: "regular",
+    isEmailVerified: false,
+    lastActive: null,
   },
 ];
 
@@ -214,4 +231,50 @@ it("renders without crashing when the payload is empty", () => {
   const { container } = render(<AdminUsers />);
   expect(container.textContent).not.toContain("undefined");
   expect(screen.getByTestId("data-table")).toBeInTheDocument();
+});
+
+// --- v2 columns and the register popup --------------------------------------
+
+it("pills each user's languages, native first", () => {
+  render(<AdminUsers />);
+  const pills = screen.getAllByTestId("language-pill");
+  expect(pills).toHaveLength(2);
+  expect(pills[0]).toHaveTextContent("EN");
+  expect(pills[0]).toHaveTextContent("KO");
+  expect(pills[1]).toHaveTextContent("ES");
+});
+
+it("badges the VIP users and leaves everyone else plain", () => {
+  render(<AdminUsers />);
+  const rows = screen.getAllByTestId("data-row");
+  expect(rows[0]).toHaveTextContent("VIP");
+  expect(rows[1]).not.toHaveTextContent("VIP");
+});
+
+it("marks who has a verified email", () => {
+  render(<AdminUsers />);
+  const rows = screen.getAllByTestId("data-row");
+  expect(rows[0].querySelector('[data-testid="admin-users-verified"]')).toBeInTheDocument();
+  expect(rows[1].querySelector('[data-testid="admin-users-verified"]')).toBeNull();
+});
+
+it("shows last active as a relative time, and a dash when there is none", () => {
+  render(<AdminUsers />);
+  const rows = screen.getAllByTestId("data-row");
+  expect(rows[0]).toHaveTextContent("3d ago");
+  expect(rows[1]).toHaveTextContent("—");
+});
+
+it("opens the register popup from the Add user button", () => {
+  render(<AdminUsers />);
+  expect(screen.queryByTestId("register-user-dialog")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByTestId("admin-users-add"));
+  expect(screen.getByTestId("register-user-dialog")).toBeInTheDocument();
+});
+
+it("closes the register popup again", () => {
+  render(<AdminUsers />);
+  fireEvent.click(screen.getByTestId("admin-users-add"));
+  fireEvent.click(screen.getByTestId("register-user-cancel"));
+  expect(screen.queryByTestId("register-user-dialog")).not.toBeInTheDocument();
 });
