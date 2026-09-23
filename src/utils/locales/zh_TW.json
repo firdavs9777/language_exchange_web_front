@@ -349,6 +349,49 @@
           "body": "目標語言的夥伴一回覆你就知道，不用一直重新整理瀏覽器分頁。"
         }
       }
+    },
+    "translate": {
+      "tap": "點一下翻譯",
+      "loading": "翻譯中…",
+      "same": "已經是你的語言了",
+      "error": "翻譯失敗，點一下重試"
+    },
+    "tabs": {
+      "forYou": "為你推薦",
+      "following": "追蹤中",
+      "explore": "探索",
+      "trending": "熱門"
+    },
+    "following": {
+      "empty": "追蹤別人，才能在這裡看到他們的動態",
+      "findPeople": "找人"
+    },
+    "commentEngagement": {
+      "attachImage": "新增照片",
+      "beFirst": "第一個留言，分享你的想法！",
+      "cancel": "取消",
+      "commentTab": "留言",
+      "correctedLabel": "已修正",
+      "correctedPlaceholder": "寫出母語者會怎麼說",
+      "correction": "修正",
+      "correctionNotePlaceholder": "新增備註（選填）",
+      "correctionTab": "修正",
+      "delete": "刪除",
+      "explanationLabel": "說明",
+      "explanationPlaceholder": "為什麼要這樣寫？（選填）",
+      "hideReplies": "隱藏回覆",
+      "imageFailed": "留言已發布，但照片上傳失敗。",
+      "loadMoreComments": "載入更多留言",
+      "loadMoreReplies": "載入更多",
+      "loadingReplies": "正在載入回覆…",
+      "originalLabel": "原文",
+      "post": "發布",
+      "postCorrection": "發布修正",
+      "postFailed": "發布失敗，請再試一次。",
+      "react": "回應",
+      "reply": "回覆",
+      "replyPlaceholder": "寫下你的回覆…",
+      "viewReplies": "查看 {{count}} 則回覆"
     }
   },
   "createMoment": {

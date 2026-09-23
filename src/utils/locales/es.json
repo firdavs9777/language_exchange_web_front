@@ -330,6 +330,49 @@
           "body": "Entérate al instante cuando alguien de tu idioma objetivo responde, sin recargar una pestaña del navegador."
         }
       }
+    },
+    "translate": {
+      "tap": "Toca para traducir",
+      "loading": "Traduciendo…",
+      "same": "Ya está en tu idioma",
+      "error": "No se pudo traducir. Toca para reintentar."
+    },
+    "tabs": {
+      "forYou": "Para ti",
+      "following": "Siguiendo",
+      "explore": "Explorar",
+      "trending": "Tendencias"
+    },
+    "following": {
+      "empty": "Sigue a personas para ver sus momentos aquí",
+      "findPeople": "Buscar personas"
+    },
+    "commentEngagement": {
+      "attachImage": "Agregar una foto",
+      "beFirst": "¡Sé el primero en compartir tu opinión!",
+      "cancel": "Cancelar",
+      "commentTab": "Comentario",
+      "correctedLabel": "Corregido",
+      "correctedPlaceholder": "Escríbelo como lo diría un hablante nativo",
+      "correction": "Corrección",
+      "correctionNotePlaceholder": "Agrega una nota (opcional)",
+      "correctionTab": "Corrección",
+      "delete": "Eliminar",
+      "explanationLabel": "Explicación",
+      "explanationPlaceholder": "¿Por qué se escribe así? (opcional)",
+      "hideReplies": "Ocultar respuestas",
+      "imageFailed": "Comentario publicado, pero la foto no se pudo adjuntar.",
+      "loadMoreComments": "Cargar más comentarios",
+      "loadMoreReplies": "Cargar más",
+      "loadingReplies": "Cargando respuestas…",
+      "originalLabel": "Original",
+      "post": "Publicar",
+      "postCorrection": "Publicar corrección",
+      "postFailed": "No se pudo publicar. Inténtalo de nuevo.",
+      "react": "Reaccionar",
+      "reply": "Responder",
+      "replyPlaceholder": "Escribe una respuesta…",
+      "viewReplies": "Ver {{count}} respuestas"
     }
   },
   "createMoment": {

@@ -9,9 +9,9 @@ import {
   FaSearch,
   FaTimes,
 } from "react-icons/fa";
-import { Compass, PenLine, Sparkles, TrendingUp, X } from "lucide-react";
+import { Compass, PenLine, Sparkles, TrendingUp, Users, X } from "lucide-react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Pagination from "../../composables/Pagination";
 import {
   useGetExploreMomentsQuery,
@@ -34,7 +34,7 @@ interface User {
   language_to_learn?: string;
 }
 
-type FeedTab = "forYou" | "trending" | "explore";
+type FeedTab = "forYou" | "trending" | "explore" | "following";
 
 interface PromptOfDay {
   text?: string;
@@ -42,12 +42,6 @@ interface PromptOfDay {
   promptId?: string;
   language?: string;
 }
-
-const FEED_TABS: { key: FeedTab; label: string; Icon: typeof Sparkles }[] = [
-  { key: "forYou", label: "For You", Icon: Sparkles },
-  { key: "trending", label: "Trending", Icon: TrendingUp },
-  { key: "explore", label: "Explore", Icon: Compass },
-];
 
 interface UserInfo {
   user: User;
@@ -491,7 +485,7 @@ const ErrorState: React.FC<ErrorStateProps> = ({ t, refetch }) => (
       >
         <FaRedo className="h-3 w-3 transition-transform group-hover:rotate-180" />
         <span className="hidden xs:inline">
-          {t("moments_section.rety_btn")}
+          {t("moments_section.retry_btn")}
         </span>
       </button>
     </div>
@@ -547,6 +541,10 @@ const MainMoments: React.FC = () => {
     { page: currentPage, limit },
     { skip: activeTab !== "explore" }
   );
+  const followingFeed = useGetMomentsQuery(
+    { page: currentPage, limit, feed: "following" },
+    { skip: activeTab !== "following" }
+  );
 
   // Select the active tab's query result to drive the feed pipeline.
   const activeFeed =
@@ -554,6 +552,8 @@ const MainMoments: React.FC = () => {
       ? trendingFeed
       : activeTab === "explore"
       ? exploreFeed
+      : activeTab === "following"
+      ? followingFeed
       : forYouFeed;
   const { data, isLoading, error, refetch } = activeFeed;
 
@@ -563,6 +563,46 @@ const MainMoments: React.FC = () => {
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  // Feed tabs: labels are localized with English fallbacks; Following only
+  // shows for signed-in users (the backend serves it only for them anyway).
+  const feedTabs = useMemo(() => {
+    const tabs: { key: FeedTab; label: string; Icon: typeof Sparkles }[] = [
+      {
+        key: "forYou",
+        label: t("moments_section.tabs.forYou") || "For You",
+        Icon: Sparkles,
+      },
+      {
+        key: "trending",
+        label: t("moments_section.tabs.trending") || "Trending",
+        Icon: TrendingUp,
+      },
+      {
+        key: "explore",
+        label: t("moments_section.tabs.explore") || "Explore",
+        Icon: Compass,
+      },
+    ];
+    if (userInfo?.user) {
+      tabs.push({
+        key: "following",
+        label: t("moments_section.tabs.following") || "Following",
+        Icon: Users,
+      });
+    }
+    return tabs;
+  }, [t, userInfo]);
+
+  // If the user logs out while viewing Following (or the tab otherwise
+  // becomes unavailable), fall back to For You rather than querying a feed
+  // the backend won't serve to an anonymous request.
+  useEffect(() => {
+    if (activeTab === "following" && !userInfo?.user) {
+      setActiveTab("forYou");
+      setCurrentPage(1);
+    }
+  }, [activeTab, userInfo]);
 
   // Memoize user data with proper typing
   const { userName, userImage } = useMemo(
@@ -785,7 +825,7 @@ const MainMoments: React.FC = () => {
                 aria-label="Feed"
                 className="mb-4 flex gap-1 rounded-full bg-white/60 dark:bg-gray-800/50 backdrop-blur-sm border border-white/30 dark:border-gray-700/50 p-1 shadow-lg"
               >
-                {FEED_TABS.map(({ key, label, Icon }) => {
+                {feedTabs.map(({ key, label, Icon }) => {
                   const isActive = activeTab === key;
                   return (
                     <button
@@ -985,6 +1025,28 @@ const MainMoments: React.FC = () => {
                     <FaTimes className="w-4 h-4" />
                     <span className="font-medium">Clear All Filters</span>
                   </button>
+                </div>
+              </div>
+            ) : activeTab === "following" ? (
+              <div
+                className="text-center py-12 sm:py-16 px-4"
+                data-testid="following-empty-state"
+              >
+                <div className="max-w-md mx-auto">
+                  <div className="mx-auto mb-6 sm:mb-8 flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-gradient-to-r from-teal-500 to-indigo-500 shadow-lg">
+                    <Users className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">
+                    {t("moments_section.following.empty") ||
+                      "Follow people to see their moments here"}
+                  </h3>
+                  <Link
+                    to="/communities"
+                    className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-indigo-500 px-6 py-3 text-sm sm:text-base font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 focus:outline-none focus:ring-2 focus:ring-teal-400/50"
+                  >
+                    {t("moments_section.following.findPeople") ||
+                      "Find people"}
+                  </Link>
                 </div>
               </div>
             ) : (

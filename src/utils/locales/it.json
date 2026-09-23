@@ -330,6 +330,49 @@
           "body": "Sappi subito quando qualcuno della tua lingua di destinazione risponde, senza ricaricare una scheda del browser."
         }
       }
+    },
+    "translate": {
+      "tap": "Tocca per tradurre",
+      "loading": "Traduzione in corso…",
+      "same": "Già nella tua lingua",
+      "error": "Impossibile tradurre. Tocca per riprovare."
+    },
+    "tabs": {
+      "forYou": "Per te",
+      "following": "Seguiti",
+      "explore": "Esplora",
+      "trending": "Tendenze"
+    },
+    "following": {
+      "empty": "Segui altre persone per vedere i loro momenti qui",
+      "findPeople": "Trova persone"
+    },
+    "commentEngagement": {
+      "attachImage": "Aggiungi una foto",
+      "beFirst": "Sii il primo a condividere il tuo pensiero!",
+      "cancel": "Annulla",
+      "commentTab": "Commento",
+      "correctedLabel": "Corretto",
+      "correctedPlaceholder": "Scrivilo come lo direbbe un madrelingua",
+      "correction": "Correzione",
+      "correctionNotePlaceholder": "Aggiungi una nota (facoltativo)",
+      "correctionTab": "Correzione",
+      "delete": "Elimina",
+      "explanationLabel": "Spiegazione",
+      "explanationPlaceholder": "Perché si scrive così? (facoltativo)",
+      "hideReplies": "Nascondi risposte",
+      "imageFailed": "Commento pubblicato, ma la foto non è stata allegata.",
+      "loadMoreComments": "Carica altri commenti",
+      "loadMoreReplies": "Carica altro",
+      "loadingReplies": "Caricamento risposte…",
+      "originalLabel": "Originale",
+      "post": "Pubblica",
+      "postCorrection": "Pubblica correzione",
+      "postFailed": "Impossibile pubblicare. Riprova.",
+      "react": "Reagisci",
+      "reply": "Rispondi",
+      "replyPlaceholder": "Scrivi una risposta…",
+      "viewReplies": "Vedi {{count}} risposte"
     }
   },
   "createMoment": {

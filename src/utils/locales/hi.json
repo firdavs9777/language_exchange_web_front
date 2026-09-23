@@ -349,6 +349,49 @@
           "body": "जैसे ही आपकी लक्षित भाषा का कोई व्यक्ति जवाब दे, तुरंत जानें — ब्राउज़र टैब रीफ़्रेश करने की ज़रूरत नहीं।"
         }
       }
+    },
+    "translate": {
+      "tap": "अनुवाद के लिए टैप करें",
+      "loading": "अनुवाद हो रहा है…",
+      "same": "पहले से आपकी भाषा में है",
+      "error": "अनुवाद नहीं हो सका। फिर से कोशिश करने के लिए टैप करें।"
+    },
+    "tabs": {
+      "forYou": "आपके लिए",
+      "following": "फ़ॉलोइंग",
+      "explore": "खोजें",
+      "trending": "ट्रेंडिंग"
+    },
+    "following": {
+      "empty": "लोगों को फॉलो करें और उनके मोमेंट्स यहाँ देखें",
+      "findPeople": "लोगों को खोजें"
+    },
+    "commentEngagement": {
+      "attachImage": "फ़ोटो जोड़ें",
+      "beFirst": "अपनी राय साझा करने वाले पहले व्यक्ति बनें!",
+      "cancel": "रद्द करें",
+      "commentTab": "टिप्पणी",
+      "correctedLabel": "सुधारा गया",
+      "correctedPlaceholder": "इसे वैसे लिखें जैसे कोई मूल भाषी कहेगा",
+      "correction": "सुधार",
+      "correctionNotePlaceholder": "एक नोट जोड़ें (वैकल्पिक)",
+      "correctionTab": "सुधार",
+      "delete": "हटाएँ",
+      "explanationLabel": "स्पष्टीकरण",
+      "explanationPlaceholder": "यह ऐसा क्यों लिखा जाता है? (वैकल्पिक)",
+      "hideReplies": "जवाब छिपाएं",
+      "imageFailed": "टिप्पणी पोस्ट हो गई, लेकिन फ़ोटो अटैच नहीं हो सकी।",
+      "loadMoreComments": "और टिप्पणियाँ लोड करें",
+      "loadMoreReplies": "और लोड करें",
+      "loadingReplies": "जवाब लोड हो रहे हैं…",
+      "originalLabel": "मूल",
+      "post": "पोस्ट करें",
+      "postCorrection": "सुधार पोस्ट करें",
+      "postFailed": "पोस्ट नहीं हो सका। फिर से प्रयास करें।",
+      "react": "रिएक्ट करें",
+      "reply": "जवाब दें",
+      "replyPlaceholder": "जवाब लिखें…",
+      "viewReplies": "{{count}} जवाब देखें"
     }
   },
   "createMoment": {

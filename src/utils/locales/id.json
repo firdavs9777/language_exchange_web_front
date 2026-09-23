@@ -349,6 +349,49 @@
           "body": "Tahu seketika saat seseorang dari bahasa targetmu membalas, tanpa menyegarkan tab browser."
         }
       }
+    },
+    "translate": {
+      "tap": "Ketuk untuk menerjemahkan",
+      "loading": "Menerjemahkan…",
+      "same": "Sudah dalam bahasamu",
+      "error": "Gagal menerjemahkan. Ketuk untuk mencoba lagi."
+    },
+    "tabs": {
+      "forYou": "Untukmu",
+      "following": "Mengikuti",
+      "explore": "Jelajahi",
+      "trending": "Trending"
+    },
+    "following": {
+      "empty": "Ikuti orang lain untuk melihat momen mereka di sini",
+      "findPeople": "Cari orang"
+    },
+    "commentEngagement": {
+      "attachImage": "Tambahkan foto",
+      "beFirst": "Jadilah yang pertama berbagi pendapat!",
+      "cancel": "Batal",
+      "commentTab": "Komentar",
+      "correctedLabel": "Dikoreksi",
+      "correctedPlaceholder": "Tulis seperti cara penutur asli akan mengatakannya",
+      "correction": "Koreksi",
+      "correctionNotePlaceholder": "Tambahkan catatan (opsional)",
+      "correctionTab": "Koreksi",
+      "delete": "Hapus",
+      "explanationLabel": "Penjelasan",
+      "explanationPlaceholder": "Kenapa ditulis seperti ini? (opsional)",
+      "hideReplies": "Sembunyikan balasan",
+      "imageFailed": "Komentar berhasil diposting, tapi fotonya gagal dilampirkan.",
+      "loadMoreComments": "Muat komentar lainnya",
+      "loadMoreReplies": "Muat lainnya",
+      "loadingReplies": "Memuat balasan…",
+      "originalLabel": "Asli",
+      "post": "Kirim",
+      "postCorrection": "Kirim koreksi",
+      "postFailed": "Gagal mengirim. Coba lagi.",
+      "react": "Beri reaksi",
+      "reply": "Balas",
+      "replyPlaceholder": "Tulis balasan…",
+      "viewReplies": "Lihat {{count}} balasan"
     }
   },
   "createMoment": {

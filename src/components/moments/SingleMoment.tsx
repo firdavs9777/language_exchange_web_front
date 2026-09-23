@@ -19,7 +19,11 @@ import {
   useShareMomentMutation,
   useSaveMomentMutation,
   useUnsaveMomentMutation,
+  useTranslateMomentMutation,
 } from "../../store/slices/momentsSlice";
+import { useTargetLanguage } from "../../hooks/useTargetLanguage";
+import { useMomentViews } from "./useMomentViews";
+import TranslatableText from "./TranslatableText";
 import MomentReactionRow from "./actions/MomentReactionRow";
 import ShareButton from "../linking/ShareButton";
 import MomentVideoPlayer from "./media/MomentVideoPlayer";
@@ -106,6 +110,9 @@ const SingleMoment: React.FC<MomentProps> = ({
   const [shareMoment] = useShareMomentMutation();
   const [saveMoment] = useSaveMomentMutation();
   const [unsaveMoment] = useUnsaveMomentMutation();
+  const [translateMoment] = useTranslateMomentMutation();
+  const targetLanguage = useTargetLanguage();
+  const momentViewRef = useMomentViews({ momentId: _id, isLoggedIn: Boolean(userId) });
   const isLiking = false;
   const isDisliking = false;
 
@@ -264,6 +271,28 @@ const SingleMoment: React.FC<MomentProps> = ({
     [userId, _id, currentLikeCount, isLoadingLike, navigate, refetch]
   );
 
+  // Translate-on-tap for the moment body. The server answers with
+  // { success, data: { language, translatedText, translatedAt }, cached } --
+  // there is no source language, so TranslatableText infers "already in your
+  // language" from the text coming back unchanged.
+  const handleTranslateBody = useCallback(async () => {
+    const res: any = await translateMoment({
+      momentId: _id,
+      targetLanguage,
+    }).unwrap();
+    return { translatedText: (res && res.data && res.data.translatedText) || "" };
+  }, [translateMoment, _id, targetLanguage]);
+
+  // Same sign-in prompt the like button shows when logged out.
+  const handleRequireLogin = useCallback(() => {
+    toast.error(t("moments_section.moment_login_error"), {
+      autoClose: 3000,
+      hideProgressBar: false,
+      theme: "colored",
+      transition: Bounce,
+    });
+  }, [t]);
+
   const formatDate = (dateString: string): string => {
     return moment(dateString).fromNow();
   };
@@ -298,6 +327,7 @@ const SingleMoment: React.FC<MomentProps> = ({
   return (
     <Link to={`/moment/${_id}`} className="block no-underline">
       <article
+        ref={momentViewRef}
         className={`group relative w-full bg-white shadow-sm border border-gray-200 transition-all duration-300 hover:shadow-md ${
           isHovered ? "shadow-md" : ""
         } rounded-none sm:rounded-lg`}
@@ -363,10 +393,22 @@ const SingleMoment: React.FC<MomentProps> = ({
 
           {description && (
             <div className="text-gray-800 text-xs xs:text-sm sm:text-base md:text-lg leading-normal">
-              <p className="whitespace-pre-wrap break-words no-underline">
-                {displayDescription}
-                {shouldTruncateDescription && !showFullDescription && "..."}
-              </p>
+              {/* Tapping the body translates the moment into the viewer's UI
+                  language, the way the app does. The card shows a 200-char
+                  preview but the server translates the whole moment, so the
+                  translated line can be longer than the preview — and the
+                  same-language check has to compare against the untruncated
+                  `description` (`fullText`), not the preview. */}
+              <TranslatableText
+                as="p"
+                text={`${displayDescription}${
+                  shouldTruncateDescription && !showFullDescription ? "..." : ""
+                }`}
+                fullText={description}
+                onTranslate={handleTranslateBody}
+                isLoggedIn={Boolean(userId)}
+                onRequireLogin={handleRequireLogin}
+              />
 
               {shouldTruncateDescription && (
                 <button

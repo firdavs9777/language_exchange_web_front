@@ -349,6 +349,49 @@
           "body": "배우는 언어를 쓰는 사람이 답글을 남기면 바로 알려드려요. 새로고침할 필요 없어요."
         }
       }
+    },
+    "translate": {
+      "tap": "탭하여 번역",
+      "loading": "번역 중…",
+      "same": "이미 내 언어예요",
+      "error": "번역하지 못했어요. 탭해서 다시 시도하세요."
+    },
+    "tabs": {
+      "forYou": "추천",
+      "following": "팔로잉",
+      "explore": "탐색",
+      "trending": "인기"
+    },
+    "following": {
+      "empty": "팔로우한 사람들의 모멘트가 여기에 표시돼요",
+      "findPeople": "사람 찾기"
+    },
+    "commentEngagement": {
+      "attachImage": "사진 추가",
+      "beFirst": "가장 먼저 생각을 나눠보세요!",
+      "cancel": "취소",
+      "commentTab": "댓글",
+      "correctedLabel": "교정됨",
+      "correctedPlaceholder": "원어민이라면 이렇게 썼을 문장을 적어주세요",
+      "correction": "교정",
+      "correctionNotePlaceholder": "메모 추가 (선택)",
+      "correctionTab": "교정",
+      "delete": "삭제",
+      "explanationLabel": "설명",
+      "explanationPlaceholder": "왜 이렇게 쓰는지 알려주세요 (선택)",
+      "hideReplies": "답글 숨기기",
+      "imageFailed": "댓글은 등록됐지만 사진은 첨부되지 않았어요.",
+      "loadMoreComments": "댓글 더 보기",
+      "loadMoreReplies": "더 보기",
+      "loadingReplies": "답글 불러오는 중…",
+      "originalLabel": "원문",
+      "post": "게시",
+      "postCorrection": "교정 게시",
+      "postFailed": "게시하지 못했어요. 다시 시도해주세요.",
+      "react": "리액션",
+      "reply": "답글",
+      "replyPlaceholder": "답글을 입력하세요…",
+      "viewReplies": "답글 {{count}}개 보기"
     }
   },
   "createMoment": {
