@@ -23,26 +23,30 @@ const LOCALES = path.join(__dirname, "..", "utils", "locales");
 /**
  * The ceiling for the whole first-paint payload, in gzipped kilobytes.
  *
- * NOT the 150 KB the spec asked for, and it never will be until two things
- * that are not route code leave the entrypoint:
+ * Still NOT the 150 KB the spec asked for, but the biggest single reason is
+ * gone: task D1 moved the 17 non-English locales behind `import()`, so only
+ * eng.json is inlined and a visitor downloads their own language, or none.
+ * What is left in the entrypoint and does not belong to any one route:
  *
- *   - ~300 KB gzipped of i18n: all 18 locale JSON files are `import`ed
- *     statically by src/utils/i18n.ts, so every visitor downloads all 18;
  *   - bootstrap + react-bootstrap, used by the shell, the navbar and every
- *     public page (retiring them is spec §5.6, out of scope here).
- *
- * moment, iso-639-1's language table and react-icons make up most of the rest,
- * all pulled in by the *prerendered* /moments feed, which cannot be lazy.
+ *     public page (retiring them is spec §5.6, out of scope here);
+ *   - moment, iso-639-1's language table and react-icons, all pulled in by the
+ *     *prerendered* /moments feed, which cannot be lazy.
  *
  * History, so the next re-baseline is a decision and not a reflex: B6's split
  * took the measured total from 724.5 KB to 559.6 KB and set the budget at
  * 559.6 + 5% = 588. Phase B's 90 marketing strings in 18 locales then added
  * ~45 KB gzipped (610.1 measured), and the budget was raised to 641 rather
- * than defended -- which is exactly why APP_BUDGET_KB below exists. Raising
- * this number a third time without a matching, explained rise in APP_BUDGET_KB
- * means locale growth, and nothing else.
+ * than defended -- which is exactly why APP_BUDGET_KB below exists. D1 then
+ * took 298 KB straight back out: main.js 551.6 -> 253.8 KB, total 608.0 ->
+ * 310.2 KB measured, + 5% = 325.7 -> 326.
+ *
+ * That headroom is now real headroom, not locale slack: with 17 locales out of
+ * the entrypoint this number can only grow if app code grows, so raising it
+ * again is the same decision as raising APP_BUDGET_KB and needs the same
+ * justification.
  */
-export const BUDGET_KB = 641;
+export const BUDGET_KB = 326;
 
 /**
  * The ceiling for everything that is NOT locale JSON, in gzipped kilobytes.
@@ -54,9 +58,16 @@ export const BUDGET_KB = 641;
  * split, so a group collapsing back into the entrypoint fails here even while
  * the total still fits.
  *
- * Measured on this commit: 607.4 KB total − 305.8 KB of locale JSON = 301.5 KB
+ * Measured when it was set: 607.4 KB total − 305.8 KB of locale JSON = 301.5 KB
  * of app code, + 5% = 316.6 → 317. Same rule as BUDGET_KB, applied to the part
  * that is under this repo's control.
+ *
+ * Deliberately NOT re-baselined by task D1: no app code moved, and the number
+ * it guards barely did (310.2 − 15.3 = 294.9 KB measured now, against 301.5
+ * before). The subtraction has simply got much smaller -- eng.json alone
+ * instead of all 18 files -- so this and BUDGET_KB now sit only ~15 KB apart
+ * and the two assertions largely agree, which is the point: after D1 there is
+ * almost no locale weight left for app growth to hide behind.
  */
 export const APP_BUDGET_KB = 317;
 
@@ -66,23 +77,22 @@ const readGzipKb = (assetPath: string): number => {
 };
 
 /**
- * The gzipped weight of the 18 locale files, measured from source.
+ * The gzipped weight of the locale JSON that is *in the entrypoint*.
  *
- * An approximation on purpose, and an honest one: what ships is the JSON
- * inlined into main.js as minified object literals, which no manifest entry
+ * Since task D1 that is eng.json and nothing else: the other 17 files are
+ * `import()`ed by src/utils/i18nLazyBackend.ts and ship as their own chunks,
+ * which this budget never counted and still does not. Measuring all 18 here
+ * would subtract ~306 KB that main.js no longer carries and hand app code a
+ * 290 KB blind spot.
+ *
+ * Still an approximation on purpose, and an honest one: what ships is the JSON
+ * inlined into main.js as a minified object literal, which no manifest entry
  * isolates, so the only way to weigh it exactly would be to parse the bundle.
- * Gzipping the concatenated sources is within a few percent of that and, more
- * to the point, it moves with the locales -- which is all this subtraction
- * needs in order to stop locale growth from masking app growth.
+ * Gzipping the source is within a few percent of that and, more to the point,
+ * it moves with the English copy -- which is all this subtraction needs.
  */
-const localesGzipKb = (): number => {
-  const files = fs
-    .readdirSync(LOCALES)
-    .filter((f) => f.endsWith(".json"))
-    .sort();
-  const buffers = files.map((f) => fs.readFileSync(path.join(LOCALES, f)));
-  return zlib.gzipSync(Buffer.concat(buffers)).length / 1024;
-};
+const localesGzipKb = (): number =>
+  zlib.gzipSync(fs.readFileSync(path.join(LOCALES, "eng.json"))).length / 1024;
 
 const enabled = process.env.BUNDLE_BUDGET === "1";
 const hasBuild = fs.existsSync(MANIFEST);
@@ -139,7 +149,35 @@ describeIfBuilt("marketing bundle budget", () => {
     // the real number is the only one that notices. Twelve chunks of slack
     // absorbs the ordinary churn -- a lazy page added or merged -- without
     // absorbing a whole group.
+    //
+    // Still 47 measured after task D1 added 17 locale chunks, and not by luck:
+    // those carry a `webpackChunkName`, so the manifest keys them by that name
+    // ("locale-ko.js") rather than by an output path, and this key-shaped
+    // filter never sees them. That is the behaviour we want -- a padded count
+    // would let a whole route group fold back into main.js unnoticed -- so the
+    // locale chunks get their own assertion below instead.
     const lazyChunks = Object.keys(manifest.files || {}).filter((f) => /^static\/js\/.*\.chunk\.js$/.test(f));
     expect(lazyChunks.length).toBeGreaterThanOrEqual(35);
+  });
+
+  it("emits one chunk per lazy locale and loads none of them up front", () => {
+    // The other side of the split. Without this, `resources` quietly shrinking
+    // to English with no working backend would read as a 290 KB win here and
+    // as 17 untranslated languages in production.
+    // Keyed by their `webpackChunkName`, one per language (see above).
+    const localeChunks = Object.keys(manifest.files || {}).filter((f) => /^locale-.+\.js$/.test(f));
+    expect(localeChunks.sort()).toEqual(
+      ["ar", "de", "es", "fr", "hi", "id", "it", "ja", "ko", "pt", "ru", "th", "tl", "tr", "vi", "zh", "zh-TW"]
+        .map((c) => `locale-${c}.js`)
+        .sort()
+    );
+    for (const key of localeChunks) {
+      expect(fs.existsSync(path.join(BUILD, (manifest.files[key] as string).replace(/^\//, "")))).toBe(true);
+    }
+
+    // eng.json is inlined, so no chunk for it, and nothing preloads the rest:
+    // the entry HTML must reference only the entrypoint.
+    const html = fs.readFileSync(path.join(BUILD, "index.html"), "utf8");
+    expect(html).not.toMatch(/locale-/);
   });
 });

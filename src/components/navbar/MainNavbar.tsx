@@ -15,6 +15,7 @@ import {
   FaUserShield,
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import { switchLanguage } from "../../utils/switchLanguage";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectIsAdmin } from "../../store/slices/authSlice";
@@ -49,6 +50,7 @@ const LANGUAGES = [
 ];
 
 const MainNavbar = () => {
+  const requestedLanguage = useRef<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
@@ -65,7 +67,13 @@ const MainNavbar = () => {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
 
-  const currentLang = LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0];
+  // `resolvedLanguage`, not `language`: since locales load on demand i18next is
+  // no longer restricted to bare language codes, so `language` can be "ko-KR"
+  // (from navigator) while the bundle actually in force is "ko". resolvedLanguage
+  // is the entry in the resolution hierarchy that really has translations, which
+  // is exactly the one this menu should tick.
+  const activeLang = i18n.resolvedLanguage || i18n.language;
+  const currentLang = LANGUAGES.find((l) => l.code === activeLang) || LANGUAGES[0];
 
   // Unread chat badge. Shares the same RTK Query cache key UsersList uses
   // ({page:1, limit:50}), so no duplicate request when the chat page is also
@@ -128,7 +136,16 @@ const MainNavbar = () => {
 
   const changeLanguage = (lng: string) => {
     const lang = LANGUAGES.find((l) => l.code === lng);
-    i18n.changeLanguage(lng);
+    requestedLanguage.current = lng;
+    // Locales are chunks now, so two clicks inside one load window settle in
+    // *network* order and i18next has no staleness guard: the slower-arriving
+    // language wins and the menu disagrees with the page. Re-apply whatever was
+    // asked for last once a switch settles. Bounded: the re-apply's own callback
+    // finds the two in agreement and stops.
+    void switchLanguage(i18n, lng).then(() => {
+      const wanted = requestedLanguage.current;
+      if (wanted && wanted !== i18n.language) void switchLanguage(i18n, wanted);
+    });
     localStorage.setItem("preferredLanguage", lng);
     setIsLanguageDropdownOpen(false);
     toast.info(`${lang?.flag} ${lang?.name}`, {
@@ -255,7 +272,7 @@ const MainNavbar = () => {
                       <button
                         key={lang.code}
                         onClick={() => changeLanguage(lang.code)}
-                        className={`lang-option ${i18n.language === lang.code ? "active" : ""}`}
+                        className={`lang-option ${activeLang === lang.code ? "active" : ""}`}
                       >
                         <span className="lang-option-flag">{lang.flag}</span>
                         <span className="lang-option-name">{lang.name}</span>
@@ -421,7 +438,7 @@ const MainNavbar = () => {
                       changeLanguage(lang.code);
                       closeMobileMenu();
                     }}
-                    className={`mobile-lang-btn ${i18n.language === lang.code ? "active" : ""}`}
+                    className={`mobile-lang-btn ${activeLang === lang.code ? "active" : ""}`}
                   >
                     <span>{lang.flag}</span>
                     <span>{lang.name}</span>

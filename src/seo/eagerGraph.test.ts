@@ -35,6 +35,14 @@ const ROOTS = [
 const FORBIDDEN_MODULE = path.join(SRC, "lazyIcons.ts");
 const FORBIDDEN_PACKAGE = "bootstrap-icons";
 
+// Task D1's half of the same rule. English is inlined in src/utils/i18n.ts on
+// purpose; the other 17 locales are `import()`ed by src/utils/i18nLazyBackend.ts
+// and must stay behind that boundary. A single static `import ko from
+// "./locales/kor.json"` slipped back in would put ~18 KB gzipped into main.js
+// and, if it were copied for all 17, the ~291 KB this task removed.
+const INLINED_LOCALE = path.join(SRC, "utils", "locales", "eng.json");
+const LAZY_LOCALE = path.join(SRC, "utils", "locales", "kor.json");
+
 // Extensions we parse. Anything else (.css, .scss, .json, images) is a leaf:
 // it has no `import ... from` of its own that could reach further into src/.
 const PARSED = [".ts", ".tsx", ".js", ".jsx"];
@@ -197,4 +205,25 @@ it("proves the guard can fire, on a module that really does import the icons", (
   // stops holding, the two assertions above are guarding nothing.
   const text = fs.readFileSync(FORBIDDEN_MODULE, "utf8");
   expect(staticSpecifiers(text)).toContain("bootstrap-icons/font/bootstrap-icons.css");
+});
+
+it("reaches only eng.json statically; the other 17 locales are chunks", () => {
+  // eng.json being in the graph is the control: it proves the walk really does
+  // resolve .json leaves, so kor.json's absence means something.
+  expect(fs.existsSync(LAZY_LOCALE)).toBe(true);
+  expect(graph.modules.indexOf(INLINED_LOCALE)).toBeGreaterThan(-1);
+  expect(graph.modules.indexOf(LAZY_LOCALE)).toBe(-1);
+
+  const eager = graph.modules.filter((f) => f.indexOf(path.join(SRC, "utils", "locales")) === 0);
+  expect(eager.map((f) => path.basename(f))).toEqual(["eng.json"]);
+});
+
+it("proves the locale guard can fire, on the module that really does load them", () => {
+  // i18nLazyBackend names every locale file, but only inside `import(...)`,
+  // which staticSpecifiers deliberately does not match. If a static form ever
+  // appears there, the assertion above starts failing -- as it should.
+  const backend = path.join(SRC, "utils", "i18nLazyBackend.ts");
+  const text = fs.readFileSync(backend, "utf8");
+  expect(text).toContain("./locales/kor.json");
+  expect(staticSpecifiers(text)).not.toContain("./locales/kor.json");
 });
