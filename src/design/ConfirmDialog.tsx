@@ -19,7 +19,13 @@ export interface ConfirmDialogProps {
   /** The reason is passed through trimmed; `""` when none was asked for. */
   onConfirm: (reason: string) => void;
   onCancel: () => void;
-  /** Mutation in flight: confirm is disabled so nothing is sent twice. */
+  /**
+   * Mutation in flight. Confirm is disabled so nothing is sent twice, and so
+   * is every way out of the dialog — Cancel, the backdrop and Escape. A
+   * dialog that can be dismissed mid-request leaves the caller holding a
+   * promise whose result has nowhere to land: the delete still happens, the
+   * error never shows.
+   */
   busy?: boolean;
   /**
    * The failure from the mutation, shown inside the dialog. The dialog stays
@@ -67,15 +73,16 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     }
   }, [open]);
 
-  // Escape closes. Bound in an effect, never read during render.
+  // Escape closes, unless a mutation is in flight. Bound in an effect, never
+  // read during render.
   useEffect(() => {
-    if (!open) return undefined;
+    if (!open || busy) return undefined;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onCancel();
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, onCancel]);
+  }, [open, busy, onCancel]);
 
   useEffect(() => {
     if (open && firstFieldRef.current) firstFieldRef.current.focus();
@@ -97,7 +104,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
       <div
         data-testid="confirm-dialog-backdrop"
-        onClick={onCancel}
+        onClick={busy ? undefined : onCancel}
         className="absolute inset-0 bg-ink-900/50"
       />
       <div
@@ -160,7 +167,8 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             type="button"
             data-testid="confirm-dialog-cancel"
             onClick={onCancel}
-            className="rounded-chip border border-line px-3 py-1.5 text-sm font-medium text-ink-700 hover:bg-ink-100 dark:border-line-dark dark:text-ink-200 dark:hover:bg-ink-800"
+            disabled={busy}
+            className="rounded-chip border border-line px-3 py-1.5 text-sm font-medium text-ink-700 hover:bg-ink-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-line-dark dark:text-ink-200 dark:hover:bg-ink-800"
           >
             {cancelLabel}
           </button>

@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import ProfileHeader from "./ProfileHeader";
 
 // An empty `t` forces the `|| "English"` fallbacks, so these assertions read
@@ -92,11 +92,10 @@ it("shows the username when there is one", () => {
   expect(screen.getByText("@ada")).toBeInTheDocument();
 });
 
-it("renders the edit control only when onEdit is given", () => {
-  const onEdit = jest.fn();
-  const { rerender } = render(<ProfileHeader name="Ada" />);
+// Editing is reached from the action row below the header (ProfileActions'
+// "Edit profile" link), never from the cover band: the header carried an
+// `onEdit` prop that no caller ever passed.
+it("carries no edit control of its own", () => {
+  render(<ProfileHeader name="Ada" />);
   expect(screen.queryByTestId("profile-header-edit")).not.toBeInTheDocument();
-  rerender(<ProfileHeader name="Ada" onEdit={onEdit} />);
-  fireEvent.click(screen.getByTestId("profile-header-edit"));
-  expect(onEdit).toHaveBeenCalledTimes(1);
 });

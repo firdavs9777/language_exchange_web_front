@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { BadgeCheck, Crown, Pencil } from "lucide-react";
+import { BadgeCheck, Crown } from "lucide-react";
 import Avatar from "../../../design/Avatar";
 import Badge from "../../../design/Badge";
 
@@ -21,7 +21,6 @@ export interface ProfileHeaderProps {
   isEmailVerified?: boolean;
   createdAt?: string;
   lastActive?: string;
-  onEdit?: () => void;
 }
 
 function toNumber(value?: string | number): number {
@@ -125,7 +124,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   isEmailVerified,
   createdAt,
   lastActive,
-  onEdit,
 }) => {
   const { t, i18n } = useTranslation();
   const language = (i18n && i18n.language) || "en";
@@ -145,20 +143,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
     <section className="overflow-hidden rounded-card bg-surface shadow-card dark:bg-cardbg-dark dark:shadow-none">
       <div
         data-testid="profile-cover"
-        className="relative h-28 bg-gradient-to-r from-brand-light via-brand to-brand-deep sm:h-32"
-      >
-        {onEdit && (
-          <button
-            type="button"
-            data-testid="profile-header-edit"
-            onClick={onEdit}
-            aria-label={t("profile.edit_profile") || "Edit profile"}
-            className="absolute right-3 top-3 rounded-full bg-surface/25 p-2 text-white backdrop-blur-sm transition-colors hover:bg-surface/40"
-          >
-            <Pencil className="h-4 w-4" aria-hidden />
-          </button>
-        )}
-      </div>
+        className="h-28 bg-gradient-to-r from-brand-light via-brand to-brand-deep sm:h-32"
+      />
 
       <div className="px-4 pb-5 sm:px-6">
         <div className="-mt-10 flex items-end gap-3">

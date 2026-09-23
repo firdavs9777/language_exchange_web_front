@@ -15,6 +15,7 @@ import ProfileLanguages from "./parts/ProfileLanguages";
 import ProfileAbout from "./parts/ProfileAbout";
 import ProfileLearning from "./parts/ProfileLearning";
 import ProfileMoments from "./parts/ProfileMoments";
+import ProfilePhotos from "./parts/ProfilePhotos";
 
 /**
  * How many moment tiles the profile shows before "See all" takes over. Three
@@ -229,6 +230,10 @@ const ProfilePage: React.FC = () => {
             </div>
 
             <div className="space-y-4">
+              {/* Above the moments: the photo set is the fastest read of who
+                  someone is, and it renders nothing at all when the account
+                  has no photos — so an empty profile shows no empty card. */}
+              <ProfilePhotos images={images} isOwn={isOwn} name={name} />
               <ProfileMoments userId={profileId} isOwn={isOwn} limit={MOMENTS_ON_PROFILE} />
             </div>
           </div>

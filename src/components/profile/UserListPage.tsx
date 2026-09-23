@@ -110,6 +110,58 @@ function idsOf(payload: any): { [id: string]: boolean } {
   return map;
 }
 
+/**
+ * The visitor counters the endpoint sends alongside the list, in display
+ * order. A field the response omits yields no tile — `GET /users/:id/visitors`
+ * has only ever returned `stats` for some accounts, and a zero drawn for a
+ * number the server never sent is a number we made up.
+ */
+const VISITOR_STATS: Array<{ field: string; key: string; fallback: string }> = [
+  { field: "totalVisits", key: "profile.visitors.total_visits", fallback: "Total Visits" },
+  { field: "uniqueVisitors", key: "profile.visitors.unique_visitors", fallback: "Unique Visitors" },
+  { field: "visitsToday", key: "profile.visitors.visits_today", fallback: "Today" },
+  { field: "visitsThisWeek", key: "profile.visitors.visits_week", fallback: "This Week" },
+];
+
+interface VisitorStatsRowProps {
+  /** The visitors response, unvalidated. */
+  payload: any;
+}
+
+/** Total / unique / today / this week, restored from the old visitors page. */
+const VisitorStatsRow: React.FC<VisitorStatsRowProps> = ({ payload }) => {
+  const { t } = useTranslation();
+  const stats = payload && payload.stats;
+  if (!stats || typeof stats !== "object") return null;
+
+  const tiles = VISITOR_STATS.filter(
+    (entry) => typeof stats[entry.field] === "number" && isFinite(stats[entry.field])
+  );
+  if (tiles.length === 0) return null;
+
+  return (
+    <dl
+      data-testid="visitor-stats"
+      className="grid grid-cols-2 gap-2 pb-3 sm:grid-cols-4"
+    >
+      {tiles.map((entry) => (
+        <div
+          key={entry.field}
+          data-testid={`visitor-stat-${entry.field}`}
+          className="rounded-chip bg-ink-100 px-3 py-2 text-center dark:bg-ink-800"
+        >
+          <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-500 dark:text-ink-400">
+            {t(entry.key) || entry.fallback}
+          </dt>
+          <dd className="pt-0.5 font-display text-lg text-ink-900 dark:text-ink-50">
+            {stats[entry.field]}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+};
+
 /** Relative time on the existing moments keys — this page adds none of its own. */
 function timeAgo(t: any, iso?: string): string {
   if (!iso) return "";
@@ -411,6 +463,10 @@ const UserListPage: React.FC = () => {
                   {t("profile.visitors.learnMore") || "Learn More About VIP"}
                 </Link>
               </div>
+            )}
+
+            {activeTab === "visitors" && !locked && !loading && !failed && (
+              <VisitorStatsRow payload={visitors.data} />
             )}
 
             {loading && <ListSkeleton />}

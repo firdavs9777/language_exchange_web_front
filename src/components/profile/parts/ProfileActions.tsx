@@ -85,6 +85,18 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
   const [dialogError, setDialogError] = useState("");
   const menuRef = useRef<HTMLDivElement | null>(null);
 
+  // Block, report and the chat pre-create all await a round trip, and the
+  // block handler navigates away on success — so the component can well be
+  // gone by the time the promise settles. Every post-await setState is gated
+  // on this rather than firing into a torn-down tree.
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
   // Bound in an effect, never read during render.
   useEffect(() => {
     if (!menuOpen) return undefined;
@@ -117,6 +129,7 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
       // The chat screen creates the room itself on first send, so a failed
       // pre-create must not strand the user on the profile.
     }
+    if (!mounted.current) return;
     navigate(`/chat/${userId}`);
   };
 
@@ -128,13 +141,14 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
 
   const handleConfirm = async (reason: string): Promise<void> => {
     setDialogError("");
+    const blocking = dialog === "block";
     try {
-      const blocking = dialog === "block";
       if (blocking) await blockUser(userId).unwrap();
       else await reportUser({ userId, reason }).unwrap();
-      setDialog(null);
+      if (mounted.current) setDialog(null);
       if (blocking && onBlocked) onBlocked();
     } catch (error) {
+      if (!mounted.current) return;
       setDialogError(
         messageOf(error, t("profile.actions.action_failed") || "That didn't work. Try again.")
       );

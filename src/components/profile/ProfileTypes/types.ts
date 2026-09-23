@@ -18,6 +18,8 @@ export interface UserProfileData {
   bloodType?: string;
   topics?: string[];
   languageLevel?: string;
+  occupation?: string;
+  school?: string;
   location?: any;
   isOnline?: boolean;
   lastActive?: string;
@@ -30,11 +32,4 @@ export interface FollowerInterface {
   followers?: UserProfileData[];
   following?: UserProfileData[];
   note: string;
-}
-export interface ImageViewerModalProps {
-  show: boolean;
-  images: string[];
-  currentIndex: number;
-  onClose: () => void;
-  onSelectImage: (index: number) => void;
 }

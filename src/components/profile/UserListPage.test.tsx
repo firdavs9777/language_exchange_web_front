@@ -413,6 +413,51 @@ describe("visitors", () => {
       "/profile/u5",
     );
   });
+
+  it("shows the counters the endpoint sent, and only those", () => {
+    mockGetVipStatus.mockReturnValue({ ...idle, data: { data: { isActive: true } } });
+    mockGetVisitors.mockReturnValue({
+      ...idle,
+      refetch: visitorsRefetch,
+      data: {
+        data: [{ user: person("u5", "Lin"), lastVisit: new Date().toISOString() }],
+        // visitsThisWeek absent on purpose: an omitted field gets no tile.
+        stats: { totalVisits: 42, uniqueVisitors: 17, visitsToday: 3 },
+      },
+    });
+
+    renderList("/visitors", "me");
+
+    expect(screen.getByTestId("visitor-stat-totalVisits")).toHaveTextContent("42");
+    expect(screen.getByTestId("visitor-stat-uniqueVisitors")).toHaveTextContent("17");
+    expect(screen.getByTestId("visitor-stat-visitsToday")).toHaveTextContent("3");
+    expect(screen.queryByTestId("visitor-stat-visitsThisWeek")).not.toBeInTheDocument();
+  });
+
+  it("renders no stats row when the response carries no stats", () => {
+    mockGetVipStatus.mockReturnValue({ ...idle, data: { data: { isActive: true } } });
+    mockGetVisitors.mockReturnValue({
+      ...idle,
+      refetch: visitorsRefetch,
+      data: { data: [{ user: person("u5", "Lin") }] },
+    });
+
+    renderList("/visitors", "me");
+
+    expect(screen.queryByTestId("visitor-stats")).not.toBeInTheDocument();
+  });
+
+  it("keeps the stats row off the followers and following tabs", () => {
+    mockGetFollowers.mockReturnValue({
+      ...idle,
+      refetch: followersRefetch,
+      data: { data: [person("u5", "Lin")], stats: { totalVisits: 42 } },
+    });
+
+    renderList("/followersList", "me");
+
+    expect(screen.queryByTestId("visitor-stats")).not.toBeInTheDocument();
+  });
 });
 
 describe("signed out", () => {

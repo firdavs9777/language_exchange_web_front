@@ -262,6 +262,47 @@ describe("moderation", () => {
   });
 });
 
+describe("photos", () => {
+  it("shows the photo set, and Add photos on an own profile", () => {
+    mockGetUserProfile.mockReturnValue({
+      ...idle,
+      refetch: ownRefetch,
+      data: { data: { _id: "me", name: "Me", imageUrls: ["a.jpg", "b.jpg"] } },
+    });
+
+    renderPage("/profile", "me");
+
+    expect(screen.getByTestId("profile-photos")).toBeInTheDocument();
+    expect(screen.getAllByTestId("photo-tile")).toHaveLength(2);
+    expect(screen.getByTestId("photos-add")).toHaveAttribute("href", "/profile/edit");
+  });
+
+  it("shows another person's photos without the Add link", () => {
+    mockGetCommunityDetails.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", imageUrls: ["a.jpg"] } },
+    });
+
+    renderPage("/profile/u2", "me");
+
+    expect(screen.getAllByTestId("photo-tile")).toHaveLength(1);
+    expect(screen.queryByTestId("photos-add")).not.toBeInTheDocument();
+  });
+
+  it("renders no photos card at all when the account has none", () => {
+    mockGetUserProfile.mockReturnValue({
+      ...idle,
+      refetch: ownRefetch,
+      data: { data: { _id: "me", name: "Me", imageUrls: [] } },
+    });
+
+    renderPage("/profile", "me");
+
+    expect(screen.queryByTestId("profile-photos")).not.toBeInTheDocument();
+  });
+});
+
 describe("moments", () => {
   it("caps the grid and leaves the rest behind See all", () => {
     const many = Array.from({ length: 12 }).map((unused, i) => ({

@@ -134,3 +134,27 @@ it("clears the reason and typed value between openings", () => {
   expect(screen.getByTestId("confirm-dialog-reason")).toHaveValue("");
   expect(screen.getByTestId("confirm-dialog-confirm")).toBeDisabled();
 });
+
+it("refuses every dismissal while busy — cancel, Escape and the backdrop", () => {
+  const props = base();
+  render(<ConfirmDialog {...props} busy />);
+
+  expect(screen.getByTestId("confirm-dialog-cancel")).toBeDisabled();
+  fireEvent.click(screen.getByTestId("confirm-dialog-cancel"));
+  fireEvent.keyDown(document, { key: "Escape" });
+  fireEvent.click(screen.getByTestId("confirm-dialog-backdrop"));
+
+  expect(props.onCancel).not.toHaveBeenCalled();
+  expect(screen.getByRole("dialog")).toBeInTheDocument();
+});
+
+it("takes dismissals again once the mutation settles", () => {
+  const props = base();
+  const { rerender } = render(<ConfirmDialog {...props} busy />);
+  fireEvent.keyDown(document, { key: "Escape" });
+  expect(props.onCancel).not.toHaveBeenCalled();
+
+  rerender(<ConfirmDialog {...props} busy={false} />);
+  fireEvent.keyDown(document, { key: "Escape" });
+  expect(props.onCancel).toHaveBeenCalledTimes(1);
+});
