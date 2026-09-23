@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import CommentItem from "./CommentItem";
 import { CommentType } from "./types";
@@ -8,14 +8,20 @@ import { useGetCommentRepliesQuery } from "../../../store/slices/momentsSlice";
  * The replies under one comment, oldest first, paged the way the backend
  * pages them (GET /api/v1/comments/:id/replies -> { data, total, page, pages }).
  *
- * Pages accumulate instead of replacing: "Load more" appends the next page so
- * an expanded thread never loses what the reader was already looking at. The
- * merge is by `_id` and returns the previous array untouched when a render
- * brings nothing new, which keeps the effect from looping on a fresh query
- * result object.
+ * Pages are kept per page number rather than concatenated: a refetch of an
+ * already-loaded page REPLACES that page's items, so a like count or a
+ * deletion from elsewhere propagates instead of being shadowed by the copy
+ * fetched first. Only a genuinely different payload is written back (the
+ * per-page signature below), which also keeps a query result whose object
+ * identity changes on every render from looping the effect.
  *
  * Replies render with `allowReplies={false}`: `models/Comment.js` stores a
  * single `parentComment` pointer, so one level is all the data supports.
+ *
+ * Known backend gap: `deleteComment` (controllers/comments.js) does not
+ * decrement the parent's `replyCount`, so "View N replies" can over-count
+ * until the parent is re-created. Deleting here removes the reply from the
+ * thread optimistically and lets the `Comments` tag refetch confirm it.
  */
 
 const REPLIES_PAGE_SIZE = 10;
@@ -37,7 +43,8 @@ const RepliesThread: React.FC<RepliesThreadProps> = ({
 }) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
-  const [replies, setReplies] = useState<CommentType[]>([]);
+  const [pagesLoaded, setPagesLoaded] = useState<CommentType[][]>([]);
+  const signatures = useRef<string[]>([]);
 
   const { data, isFetching } = useGetCommentRepliesQuery({
     commentId,
@@ -45,21 +52,37 @@ const RepliesThread: React.FC<RepliesThreadProps> = ({
     limit: REPLIES_PAGE_SIZE,
   });
 
-  const batch: CommentType[] = (data && data.data) || [];
+  useEffect(() => {
+    const batch: CommentType[] = (data && data.data) || [];
+    const signature = JSON.stringify(batch);
+    if (signatures.current[page - 1] === signature) return;
+    signatures.current[page - 1] = signature;
+    setPagesLoaded((prev) => {
+      const next = prev.slice();
+      next[page - 1] = batch;
+      return next;
+    });
+  }, [data, page]);
+
+  const replies = useMemo(() => {
+    const flat: CommentType[] = [];
+    pagesLoaded.forEach((chunk) => {
+      if (chunk) flat.push.apply(flat, chunk);
+    });
+    return flat;
+  }, [pagesLoaded]);
+
   const pages: number = (data && data.pages) || 1;
 
-  useEffect(() => {
-    if (batch.length === 0) return;
-    setReplies((prev) => {
-      const additions = batch.filter(
-        (reply) => !prev.some((existing) => existing._id === reply._id)
-      );
-      if (additions.length === 0) return prev;
-      return prev.concat(additions);
-    });
-    // `batch` is a fresh array on every query result; the merge above is a
-    // no-op once the ids are already in, so this settles after one pass.
-  }, [batch]);
+  const handleDeleted = useCallback((deletedId: string) => {
+    // Drop it now; the refetch the delete triggers confirms it. Signatures
+    // are cleared so that refetch is always written back, even if the server
+    // answers with exactly what we had before this removal.
+    signatures.current = [];
+    setPagesLoaded((prev) =>
+      prev.map((chunk) => (chunk || []).filter((reply) => reply._id !== deletedId))
+    );
+  }, []);
 
   const loadMore = useCallback(() => setPage((p) => p + 1), []);
 
@@ -76,13 +99,15 @@ const RepliesThread: React.FC<RepliesThreadProps> = ({
           myUserId={myUserId}
           isLoggedIn={isLoggedIn}
           onRequireLogin={onRequireLogin}
+          onDeleted={handleDeleted}
           allowReplies={false}
         />
       ))}
 
       {isFetching && replies.length === 0 && (
         <p className="py-2 text-xs text-gray-500">
-          {t("moments_section.comments.loadingReplies") || "Loading replies…"}
+          {t("moments_section.commentEngagement.loadingReplies") ||
+            "Loading replies…"}
         </p>
       )}
 
@@ -94,7 +119,7 @@ const RepliesThread: React.FC<RepliesThreadProps> = ({
           disabled={isFetching}
           className="py-1 text-xs font-semibold text-blue-600 hover:underline disabled:opacity-50"
         >
-          {t("moments_section.comments.loadMoreReplies") || "Load more"}
+          {t("moments_section.commentEngagement.loadMoreReplies") || "Load more"}
         </button>
       )}
     </div>

@@ -40,6 +40,10 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
         url: `${MOMENTS_URL}/${momentId}`,
       }),
       keepUnusedDataFor: 5,
+      // Without this the detail page kept a stale `commentCount` (and like /
+      // share / save counters) after any mutation: they all invalidate
+      // "Moments", but an endpoint that provides no tag is never invalidated.
+      providesTags: ["Moments"],
     }),
     createMoment: builder.mutation({
       query: (data: any) => ({

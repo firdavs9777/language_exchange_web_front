@@ -224,4 +224,27 @@ describe("CommentItem", () => {
     expect(screen.queryByTestId("comment-reply")).not.toBeInTheDocument();
     expect(screen.queryByTestId("comment-replies-toggle")).not.toBeInTheDocument();
   });
+  it("asks a logged-out visitor to sign in instead of opening the reply box", () => {
+    const { onRequireLogin } = renderItem({ isLoggedIn: false, myUserId: undefined });
+    fireEvent.click(screen.getByTestId("comment-reply"));
+    expect(onRequireLogin).toHaveBeenCalled();
+    expect(screen.queryByTestId("comment-composer")).not.toBeInTheDocument();
+  });
+
+  it("tells the thread which reply went away after a delete", async () => {
+    const onDeleted = jest.fn();
+    render(
+      <CommentItem
+        comment={baseComment({ _id: "c-9", user: { _id: "me-1", name: "Me" } }) as any}
+        momentId="moment-1"
+        myUserId="me-1"
+        isLoggedIn
+        onRequireLogin={jest.fn()}
+        onDeleted={onDeleted}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId("comment-delete"));
+    await waitFor(() => expect(onDeleted).toHaveBeenCalledWith("c-9"));
+  });
 });

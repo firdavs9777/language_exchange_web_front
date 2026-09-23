@@ -63,6 +63,8 @@ interface CommentItemProps {
   myUserId?: string;
   isLoggedIn: boolean;
   onRequireLogin: () => void;
+  /** Lets a thread drop this reply from its own list once it's gone. */
+  onDeleted?: (commentId: string) => void;
   allowReplies?: boolean;
 }
 
@@ -72,6 +74,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
   myUserId,
   isLoggedIn,
   onRequireLogin,
+  onDeleted,
   allowReplies = true,
 }) => {
   const { t } = useTranslation();
@@ -93,6 +96,10 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const [showPicker, setShowPicker] = useState(false);
   const [showReplyBox, setShowReplyBox] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
+  // Bumped after posting a reply: remounting the thread drops its paged
+  // state so the new reply is read back from page 1 rather than appended
+  // behind whatever was already loaded.
+  const [repliesVersion, setRepliesVersion] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Re-sync whenever a fetch hands us a newer copy of this comment.
@@ -170,10 +177,19 @@ const CommentItem: React.FC<CommentItemProps> = ({
     deleteMomentComment({ momentId, commentId: comment._id })
       .unwrap()
       .then(
-        () => undefined,
+        () => {
+          if (onDeleted) onDeleted(comment._id);
+        },
         () => setIsDeleting(false)
       );
-  }, [isLoggedIn, onRequireLogin, deleteMomentComment, momentId, comment._id]);
+  }, [
+    isLoggedIn,
+    onRequireLogin,
+    deleteMomentComment,
+    momentId,
+    comment._id,
+    onDeleted,
+  ]);
 
   const handleTranslate = useCallback(async () => {
     const res: any = await translateComment({
@@ -220,7 +236,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               className="mb-2 rounded-xl border border-brand/20 bg-brand/[0.04] p-2.5"
             >
               <div className="mb-1.5">
-                <Badge>{t("moments_section.comments.correction") || "Correction"}</Badge>
+                <Badge>{t("moments_section.commentEngagement.correction") || "Correction"}</Badge>
               </div>
               {correction.originalText && (
                 <p
@@ -298,18 +314,24 @@ const CommentItem: React.FC<CommentItemProps> = ({
             className={actionClass}
           >
             <FaRegSmile className="h-3.5 w-3.5" />
-            <span>{t("moments_section.comments.react") || "React"}</span>
+            <span>{t("moments_section.commentEngagement.react") || "React"}</span>
           </button>
 
           {allowReplies && (
             <button
               type="button"
               data-testid="comment-reply"
-              onClick={() => setShowReplyBox(!showReplyBox)}
+              onClick={() => {
+                if (!isLoggedIn) {
+                  onRequireLogin();
+                  return;
+                }
+                setShowReplyBox(!showReplyBox);
+              }}
               className={actionClass}
             >
               <FaReply className="h-3 w-3" />
-              <span>{t("moments_section.comments.reply") || "Reply"}</span>
+              <span>{t("moments_section.commentEngagement.reply") || "Reply"}</span>
             </button>
           )}
 
@@ -322,7 +344,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               className={`${actionClass} hover:text-red-600`}
             >
               <FaRegTrashAlt className="h-3 w-3" />
-              <span>{t("moments_section.comments.delete") || "Delete"}</span>
+              <span>{t("moments_section.commentEngagement.delete") || "Delete"}</span>
             </button>
           )}
         </div>
@@ -347,6 +369,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               onDone={() => {
                 setShowReplyBox(false);
                 setShowReplies(true);
+                setRepliesVersion((v) => v + 1);
               }}
               onCancel={() => setShowReplyBox(false)}
             />
@@ -362,14 +385,15 @@ const CommentItem: React.FC<CommentItemProps> = ({
             className="mt-1 text-xs font-semibold text-blue-600 hover:underline"
           >
             {showReplies
-              ? t("moments_section.comments.hideReplies") || "Hide replies"
-              : t("moments_section.comments.viewReplies", { count: replyCount }) ||
+              ? t("moments_section.commentEngagement.hideReplies") || "Hide replies"
+              : t("moments_section.commentEngagement.viewReplies", { count: replyCount }) ||
                 `View ${replyCount} replies`}
           </button>
         )}
 
         {allowReplies && showReplies && (
           <RepliesThread
+            key={repliesVersion}
             commentId={comment._id}
             momentId={momentId}
             myUserId={myUserId}

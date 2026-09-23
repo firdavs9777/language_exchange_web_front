@@ -90,9 +90,9 @@ interface MomentDetails {
   audio?: { url: string; duration: number; waveform: number[] };
   backgroundColor?: string;
   /**
-   * Maintained by controllers/comments.js on every create/delete. The comment
-   * list owns the comments themselves now (see <CommentList>), so the header
-   * counters read this rather than fetching the list a second time.
+   * Denormalized by controllers/comments.js on every create/delete. It seeds
+   * the header counter before <CommentList> has fetched; once the list
+   * reports the comments query's `total`, that wins.
    */
   commentCount?: number;
 }
@@ -102,29 +102,6 @@ interface MomentResponse {
 }
 
 // Memoized helper components for better performance
-const TimeAgo = React.memo<{ date: string }>(({ date }) => {
-  const { t } = useTranslation();
-
-  const timeAgoText = useMemo(() => {
-    const now = new Date();
-    const past = new Date(date);
-    const diff = now.getTime() - past.getTime();
-
-    const minutes = Math.floor(diff / (1000 * 60));
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (minutes < 1) return t("moments_section.timeAgo.justNow");
-    if (minutes < 60)
-      return t("moments_section.timeAgo.minutesAgo", { minutes });
-    if (hours < 24) return t("moments_section.timeAgo.hoursAgo", { hours });
-    if (days < 7) return t("moments_section.timeAgo.daysAgo", { days });
-    return new Date(date).toLocaleDateString();
-  }, [date, t]);
-
-  return <span className="text-xs text-gray-500">{timeAgoText}</span>;
-});
-
 const MomentMetadata = React.memo<{ moment: MomentDetails }>(({ moment }) => {
   const metadata = [];
 
@@ -305,6 +282,7 @@ const MomentDetail: React.FC = () => {
 
   // State
   const [saved, setSaved] = useState(false);
+  const [commentTotal, setCommentTotal] = useState<number | null>(null);
   const [localShareCount, setLocalShareCount] = useState(0);
   const [showHeartBurst, setShowHeartBurst] = useState(false);
 
@@ -340,10 +318,11 @@ const MomentDetail: React.FC = () => {
     [momentDetails?.likedUsers, userId]
   );
 
-  // The comment list fetches (and refetches) the comments themselves; the
-  // header counters read the moment's own counter so the page doesn't hold
-  // two copies of the same list.
-  const commentCount = momentDetails?.commentCount || 0;
+  // The comment list owns the comments themselves and reports the server's
+  // `total` as it fetches; until it has, the moment's own denormalized
+  // `commentCount` stands in.
+  const commentCount =
+    commentTotal !== null ? commentTotal : momentDetails?.commentCount || 0;
 
   const formattedDate = useMemo(
     () =>
@@ -431,6 +410,10 @@ const MomentDetail: React.FC = () => {
   }, [translateMoment, momentId, targetLanguage]);
 
   // Same sign-in prompt the like button shows when logged out.
+  const handleCommentTotalChange = useCallback((total: number) => {
+    setCommentTotal(total);
+  }, []);
+
   const handleRequireLogin = useCallback(() => {
     toast.error(t("moments_section.moment_login_error"), {
       autoClose: 3000,
@@ -778,6 +761,7 @@ const MomentDetail: React.FC = () => {
               myUserId={userId}
               isLoggedIn={!!userInfo}
               onRequireLogin={handleRequireLogin}
+              onTotalChange={handleCommentTotalChange}
             />
           </div>
         </div>

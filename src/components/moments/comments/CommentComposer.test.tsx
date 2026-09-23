@@ -193,4 +193,51 @@ describe("CommentComposer", () => {
     );
     expect(screen.getByTestId("comment-composer-text")).toHaveValue("Hi");
   });
+  it("keeps a posted comment when only the photo upload fails", async () => {
+    mockUploadImage.mockReturnValue({
+      unwrap: () => Promise.reject({ data: { error: "Upload failed" } }),
+    });
+    const { onDone } = renderComposer();
+    const file = new File(["x"], "photo.png", { type: "image/png" });
+
+    fireEvent.change(screen.getByTestId("comment-composer-text"), {
+      target: { value: "Look" },
+    });
+    fireEvent.change(screen.getByTestId("comment-composer-image"), {
+      target: { files: [file] },
+    });
+    fireEvent.click(screen.getByTestId("comment-composer-submit"));
+
+    await waitFor(() =>
+      expect(screen.getByTestId("comment-composer-notice")).toHaveTextContent(
+        "Comment posted, but the photo didn't attach."
+      )
+    );
+    // The comment itself exists: no error, the box clears, the list refreshes.
+    expect(screen.queryByTestId("comment-composer-error")).not.toBeInTheDocument();
+    expect(screen.getByTestId("comment-composer-text")).toHaveValue("");
+    expect(onDone).toHaveBeenCalled();
+  });
+
+  it("clears the file input after a successful post so the same file can be picked again", async () => {
+    renderComposer();
+    const file = new File(["x"], "photo.png", { type: "image/png" });
+    const input = screen.getByTestId("comment-composer-image") as HTMLInputElement;
+
+    fireEvent.change(screen.getByTestId("comment-composer-text"), {
+      target: { value: "Look" },
+    });
+    fireEvent.change(input, { target: { files: [file] } });
+    fireEvent.click(screen.getByTestId("comment-composer-submit"));
+
+    await waitFor(() => expect(input.value).toBe(""));
+  });
+
+  it("caps the fields at the lengths models/Comment.js accepts", () => {
+    renderComposer({ mode: "correction", momentText: "original" });
+    expect(screen.getByTestId("comment-composer-text")).toHaveAttribute("maxlength", "500");
+    expect(screen.getByTestId("comment-composer-original")).toHaveAttribute("maxlength", "2000");
+    expect(screen.getByTestId("comment-composer-corrected")).toHaveAttribute("maxlength", "2000");
+    expect(screen.getByTestId("comment-composer-explanation")).toHaveAttribute("maxlength", "500");
+  });
 });

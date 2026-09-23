@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaPaperPlane, FaImage } from "react-icons/fa";
 import {
@@ -18,11 +18,21 @@ import {
  * An image is a second request: `createComment`'s multipart branch needs the
  * file on the create call, which fetchBaseQuery can't do alongside a JSON
  * body, so the image goes up with PUT /api/v1/comments/:id/image once the
- * comment exists.
+ * comment exists. That second request failing does NOT mean the comment
+ * failed -- it is already posted -- so it reports separately and still clears
+ * the box.
+ *
+ * Field limits mirror models/Comment.js (text 500; correction originalText
+ * and correctedText 2000, explanation 500) so an over-long field is stopped
+ * here instead of coming back as a 500-character validation error.
  *
  * Posting is behind `protect`, so a logged-out visitor gets the caller's
  * sign-in prompt instead of a failed request.
  */
+
+const TEXT_MAX = 500;
+const CORRECTION_TEXT_MAX = 2000;
+const EXPLANATION_MAX = 500;
 
 interface CommentComposerProps {
   momentId: string;
@@ -60,7 +70,9 @@ const CommentComposer: React.FC<CommentComposerProps> = ({
   const [explanation, setExplanation] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const isCorrection = mode === "correction";
 
@@ -74,6 +86,16 @@ const CommentComposer: React.FC<CommentComposerProps> = ({
   const handleFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     setFile(files && files.length > 0 ? files[0] : null);
+  }, []);
+
+  const clearComposer = useCallback(() => {
+    setText("");
+    setCorrected("");
+    setExplanation("");
+    setFile(null);
+    // The <input type="file"> keeps its selection (and won't re-fire change
+    // for the same file) until its value is cleared explicitly.
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }, []);
 
   const handleSubmit = useCallback(
@@ -99,30 +121,40 @@ const CommentComposer: React.FC<CommentComposerProps> = ({
       }
 
       setError(null);
+      setNotice(null);
+
+      let created: any;
       try {
-        const created: any = await addMomentComment(payload).unwrap();
-        const commentId = created && created.data && created.data._id;
-        if (file && commentId) {
-          setIsUploading(true);
-          try {
-            await uploadCommentImage({ commentId, file }).unwrap();
-          } finally {
-            setIsUploading(false);
-          }
-        }
-        setText("");
-        setCorrected("");
-        setExplanation("");
-        setFile(null);
-        if (onDone) onDone();
+        created = await addMomentComment(payload).unwrap();
       } catch (err: any) {
         setError(
           (err && err.data && (err.data.error || err.data.message)) ||
             (err && err.message) ||
-            t("moments_section.comments.postFailed") ||
+            t("moments_section.commentEngagement.postFailed") ||
             "Couldn't post that. Try again."
         );
+        return;
       }
+
+      // The comment exists from here on: an image failure is a notice, not a
+      // failed post, and the box still clears.
+      const commentId = created && created.data && created.data._id;
+      if (file && commentId) {
+        setIsUploading(true);
+        try {
+          await uploadCommentImage({ commentId, file }).unwrap();
+        } catch (err) {
+          setNotice(
+            t("moments_section.commentEngagement.imageFailed") ||
+              "Comment posted, but the photo didn't attach."
+          );
+        } finally {
+          setIsUploading(false);
+        }
+      }
+
+      clearComposer();
+      if (onDone) onDone();
     },
     [
       isLoggedIn,
@@ -140,6 +172,7 @@ const CommentComposer: React.FC<CommentComposerProps> = ({
       addMomentComment,
       file,
       uploadCommentImage,
+      clearComposer,
       onDone,
       t,
     ]
@@ -157,41 +190,44 @@ const CommentComposer: React.FC<CommentComposerProps> = ({
       {isCorrection && (
         <div className="space-y-2 rounded-2xl border border-brand/20 bg-brand/[0.04] p-3">
           <label className="block text-xs font-semibold text-gray-500">
-            {t("moments_section.comments.originalLabel") || "Original"}
+            {t("moments_section.commentEngagement.originalLabel") || "Original"}
             <textarea
               data-testid="comment-composer-original"
               value={original}
               onChange={(e) => setOriginal(e.target.value)}
               disabled={pending}
               rows={2}
+              maxLength={CORRECTION_TEXT_MAX}
               className={`mt-1 ${fieldClass}`}
             />
           </label>
           <label className="block text-xs font-semibold text-gray-500">
-            {t("moments_section.comments.correctedLabel") || "Corrected"}
+            {t("moments_section.commentEngagement.correctedLabel") || "Corrected"}
             <textarea
               data-testid="comment-composer-corrected"
               value={corrected}
               onChange={(e) => setCorrected(e.target.value)}
               disabled={pending}
               rows={2}
+              maxLength={CORRECTION_TEXT_MAX}
               placeholder={
-                t("moments_section.comments.correctedPlaceholder") ||
+                t("moments_section.commentEngagement.correctedPlaceholder") ||
                 "Write it the way a native speaker would"
               }
               className={`mt-1 ${fieldClass}`}
             />
           </label>
           <label className="block text-xs font-semibold text-gray-500">
-            {t("moments_section.comments.explanationLabel") || "Explanation"}
+            {t("moments_section.commentEngagement.explanationLabel") || "Explanation"}
             <textarea
               data-testid="comment-composer-explanation"
               value={explanation}
               onChange={(e) => setExplanation(e.target.value)}
               disabled={pending}
               rows={2}
+              maxLength={EXPLANATION_MAX}
               placeholder={
-                t("moments_section.comments.explanationPlaceholder") ||
+                t("moments_section.commentEngagement.explanationPlaceholder") ||
                 "Why is it written this way? (optional)"
               }
               className={`mt-1 ${fieldClass}`}
@@ -207,12 +243,14 @@ const CommentComposer: React.FC<CommentComposerProps> = ({
         onChange={(e) => setText(e.target.value)}
         disabled={pending}
         rows={isCorrection ? 2 : 3}
+        maxLength={TEXT_MAX}
         placeholder={
           isCorrection
-            ? t("moments_section.comments.correctionNotePlaceholder") ||
+            ? t("moments_section.commentEngagement.correctionNotePlaceholder") ||
               "Add a note (optional)"
             : mode === "reply"
-            ? t("moments_section.comments.replyPlaceholder") || "Write a reply…"
+            ? t("moments_section.commentEngagement.replyPlaceholder") ||
+              "Write a reply…"
             : t("moments_section.writeCommentPlaceholder") ||
               "Write a comment…"
         }
@@ -229,15 +267,26 @@ const CommentComposer: React.FC<CommentComposerProps> = ({
         </p>
       )}
 
+      {notice && (
+        <p
+          data-testid="comment-composer-notice"
+          role="status"
+          className="text-xs text-amber-600"
+        >
+          {notice}
+        </p>
+      )}
+
       <div className="flex items-center justify-between gap-2">
         <label className="flex cursor-pointer items-center gap-1.5 text-xs text-gray-500 hover:text-blue-600">
           <FaImage className="h-3.5 w-3.5" />
           <span>
             {file
               ? file.name
-              : t("moments_section.comments.attachImage") || "Add a photo"}
+              : t("moments_section.commentEngagement.attachImage") || "Add a photo"}
           </span>
           <input
+            ref={fileInputRef}
             type="file"
             accept="image/*"
             data-testid="comment-composer-image"
@@ -255,7 +304,7 @@ const CommentComposer: React.FC<CommentComposerProps> = ({
               onClick={onCancel}
               className="rounded-full px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
             >
-              {t("moments_section.comments.cancel") || "Cancel"}
+              {t("moments_section.commentEngagement.cancel") || "Cancel"}
             </button>
           )}
           <button
@@ -267,8 +316,9 @@ const CommentComposer: React.FC<CommentComposerProps> = ({
             <FaPaperPlane className="h-3 w-3" />
             <span>
               {isCorrection
-                ? t("moments_section.comments.postCorrection") || "Post correction"
-                : t("moments_section.comments.post") || "Post"}
+                ? t("moments_section.commentEngagement.postCorrection") ||
+                  "Post correction"
+                : t("moments_section.commentEngagement.post") || "Post"}
             </span>
           </button>
         </div>
