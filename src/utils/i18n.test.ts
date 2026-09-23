@@ -9,17 +9,34 @@
 //     `t()` never returns a raw key or an empty string in between -- the
 //     English fallback holds until the switch completes (no flash);
 //   - a language we do not ship falls through to English rather than erroring.
-import i18n, { SUPPORTED_LANGUAGES } from "./i18n";
-import lazyBackend, { LOCALE_LOADERS } from "./i18nLazyBackend";
-import {
+export {};
+
+// Required rather than imported: i18n.ts configures i18next as an import side
+// effect, and two things have to be true first. A stored language keeps the
+// geo-IP probe (scheduled ~800ms after import) from ever reaching the network,
+// and the fetch stub makes it loud if that reasoning is ever wrong.
+(global as any).fetch = jest.fn(() => Promise.reject(new Error("network disabled in tests")));
+window.localStorage.setItem("i18nextLng", "en");
+
+/* eslint-disable @typescript-eslint/no-var-requires */
+const i18nModule = require("./i18n");
+const i18n = i18nModule.default;
+const SUPPORTED_LANGUAGES: string[] = i18nModule.SUPPORTED_LANGUAGES;
+const lazyBackendModule = require("./i18nLazyBackend");
+const lazyBackend = lazyBackendModule.default;
+const LOCALE_LOADERS = lazyBackendModule.LOCALE_LOADERS;
+const {
   prepareForHydration,
   restoreAfterHydration,
   _resetHydrationLanguageForTests,
-} from "./hydrationLanguage";
+} = require("./hydrationLanguage");
+/* eslint-enable @typescript-eslint/no-var-requires */
 
 const EN_HERO = "Say it badly.";
 const KO_HERO = "서툴러도 괜찮아요.";
 const JA_HERO = "下手でいい。";
+const ZH_TW_HERO = "講得卡卡的也沒關係。";
+const ZH_HERO = "说得磕磕巴巴也没关系。";
 
 beforeAll(async () => {
   if (!i18n.isInitialized) {
@@ -76,9 +93,41 @@ it("serves English from t() until the Korean bundle has loaded, then Korean", as
   expect(i18n.language).toBe("ko");
 });
 
-it("updates <html lang> once the switch resolves", async () => {
+it("gives Traditional Chinese its own file, not the Simplified one", async () => {
+  // `load: "languageOnly"` used to rewrite "_" to "-" and keep only the
+  // language part, collapsing zh_TW to zh: locales/zh_TW.json was unreachable
+  // and every Traditional visitor silently read Simplified text. The previous
+  // version of this test only checked <html lang>, which updateHtmlLang derives
+  // from the *requested* code -- so it passed while the file never loaded.
   await i18n.changeLanguage("zh_TW");
+  expect(i18n.t("home.hero.title")).toBe(ZH_TW_HERO);
+  expect(i18n.resolvedLanguage).toBe("zh_TW");
   expect(document.documentElement.lang).toBe("zh-TW");
+  // zho.json is still behind it, so a key zh_TW happens to miss falls back to
+  // Simplified rather than to English.
+  expect(i18n.languages.indexOf("zh")).toBeGreaterThan(i18n.languages.indexOf("zh_TW"));
+
+  await i18n.changeLanguage("zh");
+  expect(i18n.t("home.hero.title")).toBe(ZH_HERO);
+  expect(i18n.resolvedLanguage).toBe("zh");
+});
+
+it("resolves a region code to its base language's bundle", async () => {
+  // There is no ko-KR.json; the backend answers {} for it and "ko" behind it
+  // carries the text. `resolvedLanguage` is what the UI must compare against --
+  // `language` is the requested code and matches no entry in any menu.
+  await i18n.changeLanguage("ko-KR");
+  expect(i18n.language).toBe("ko-KR");
+  expect(i18n.resolvedLanguage).toBe("ko");
+  expect(i18n.t("home.hero.title")).toBe(KO_HERO);
+  expect(document.documentElement.lang).toBe("ko-KR");
+});
+
+it("updates <html lang> once the switch resolves", async () => {
+  await i18n.changeLanguage("en-US");
+  expect(i18n.t("home.hero.title")).toBe(EN_HERO);
+  expect(i18n.resolvedLanguage).toBe("en");
+  expect(document.documentElement.lang).toBe("en-US");
   await i18n.changeLanguage("en");
   expect(document.documentElement.lang).toBe("en");
 });
@@ -87,6 +136,27 @@ it("falls back to English for a language we do not ship", async () => {
   await i18n.changeLanguage("xx");
   expect(i18n.t("home.hero.title")).toBe(EN_HERO);
 });
+
+it("recovers from a chunk that fails to load the first time", async () => {
+  // `callback(err, true)` is what buys this: i18next retries only when the
+  // callback's data argument is truthy. With `false` the language would be
+  // marked dead for the rest of the tab -- changeLanguage would resolve, <html
+  // lang> would flip, and the text would stay English forever.
+  const real = LOCALE_LOADERS.tr;
+  let attempts = 0;
+  LOCALE_LOADERS.tr = () => {
+    attempts += 1;
+    return attempts === 1 ? Promise.reject(new Error("chunk 404")) : real();
+  };
+  try {
+    await i18n.changeLanguage("tr");
+    expect(attempts).toBeGreaterThan(1);
+    expect(i18n.t("home.hero.title")).toBe("Yanlış söyle.");
+  } finally {
+    LOCALE_LOADERS.tr = real;
+    await i18n.changeLanguage("en");
+  }
+}, 15000);
 
 it("reads an unknown language as an empty bundle rather than an error", (done) => {
   lazyBackend.read("xx", "translation", (err: any, data: any) => {

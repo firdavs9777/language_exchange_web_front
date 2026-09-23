@@ -40,7 +40,13 @@ export const LOCALE_LOADERS: Record<string, LocaleLoader> = {
   vi: () => import(/* webpackChunkName: "locale-vi" */ "./locales/vi.json"),
 };
 
-/** i18next may hand back either spelling of a region code; accept both. */
+/**
+ * i18next may hand back either spelling of a region code; accept both.
+ *
+ * Load-bearing since `load: "languageOnly"` was dropped: a browser reporting
+ * `zh-TW` now reaches the backend with the region intact, and this is what
+ * lands it on zh_TW.json rather than on the Simplified fallback behind it.
+ */
 const loaderFor = (lng: string): LocaleLoader | undefined =>
   LOCALE_LOADERS[lng] || LOCALE_LOADERS[lng.replace(/-/g, "_")];
 
@@ -60,7 +66,16 @@ const i18nLazyBackend: BackendModule = {
     }
     loader().then(
       (mod) => callback(null, ((mod as any) && (mod as any).default) || mod),
-      (err) => callback(err, false)
+      // `true`, not `false`, and the difference is load-bearing: i18next's
+      // BackendConnector retries only when the callback's *data* argument is
+      // truthy. With `false` it marks this lng|ns as -1 and skips it forever,
+      // so one transient failure -- a chunk 404 after a mid-session deploy, a
+      // tunnel, a blocked request -- would leave that language stuck on
+      // English for the rest of the tab with no way back. With `true` it
+      // retries five times with a doubling backoff and then settles at 0, so a
+      // later user-initiated switch tries again (and webpack 5 does re-request
+      // a chunk whose load rejected).
+      (err) => callback(err, true)
     );
   },
 };

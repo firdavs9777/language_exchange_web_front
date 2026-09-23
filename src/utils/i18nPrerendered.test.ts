@@ -19,6 +19,9 @@ export {};
 // A prerendered document: #root already has markup, in English.
 document.body.innerHTML = '<div id="root"><h1>Say it badly.</h1></div>';
 window.localStorage.setItem("i18nextLng", "ko");
+// i18n.ts schedules a geo-IP probe ~800ms after import. A stored language keeps
+// it inert; the stub makes it loud rather than a real request if that changes.
+(global as any).fetch = jest.fn(() => Promise.reject(new Error("network disabled in tests")));
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const i18n = require("./i18n").default;
@@ -62,4 +65,8 @@ it("marks the visitor's language pending and restores it after the commit", asyn
   expect(i18n.language).toBe("ko");
   expect(i18n.t("home.hero.title")).toBe(KO_HERO);
   expect(document.documentElement.lang).toBe("ko");
+});
+
+it("never reaches the network for a geo-IP guess", () => {
+  expect((global as any).fetch).not.toHaveBeenCalled();
 });

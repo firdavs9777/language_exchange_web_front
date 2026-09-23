@@ -166,19 +166,29 @@ const writeStored = (value: string | null): void => {
  * changes under React, and hydrationLanguage.ts runs the detector itself after
  * the first commit. A client-rendered entry (no prerendered markup) has no
  * such contract and keeps ordinary detection.
+ *
+ * The same pin covers Node, where there is no document at all. That is not a
+ * detail: scripts/prerender.js runs `renderRoute` through @babel/register, and
+ * Node >= 21 exposes `navigator.language` derived from LANG/LC_ALL, which the
+ * browser detector happily reads. Left unpinned, a build on a Korean host
+ * detected `ko-KR`, started an async `import("./locales/kor.json")`, and let it
+ * settle *after* renderRoute's `await changeLanguage("en")` -- so the very
+ * first route (`/`, i.e. build/index.html, also the SPA fallback) came out in
+ * Korean inside a template declaring lang="en". The prerender must be English
+ * on every host, so "no document" pins too.
  */
-const PRERENDERED = documentIsPrerendered();
+const PIN_ENGLISH_AT_INIT = typeof document === "undefined" || documentIsPrerendered();
 // i18next calls the detector's cacheUserLanguage() for whatever it initialises
 // with, so pinning to "en" would overwrite the visitor's stored choice before
 // anything has had the chance to read it. Snapshot it here, put it back below.
-const storedBeforeInit = PRERENDERED ? readStored() : null;
+const storedBeforeInit = PIN_ENGLISH_AT_INIT ? readStored() : null;
 
 i18n
   .use(lazyBackend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    lng: PRERENDERED ? "en" : undefined,
+    lng: PIN_ENGLISH_AT_INIT ? "en" : undefined,
     resources: {
       en: { translation: en },
     },
@@ -187,8 +197,16 @@ i18n
     partialBundledLanguages: true,
     fallbackLng: "en",
     supportedLngs: SUPPORTED_LANGUAGES as unknown as string[],
+    // A region code (ko-KR, en-GB) counts as supported: its base language is.
     nonExplicitSupportedLngs: true,
-    load: "languageOnly",
+    // Deliberately NOT `load: "languageOnly"`. That mode rewrites "_" to "-"
+    // and keeps only the language part, which collapses zh_TW to zh -- so
+    // Traditional Chinese visitors silently got Simplified text and
+    // locales/zh_TW.json was unreachable (a 17 KB chunk nothing could fetch).
+    // The default resolves zh_TW as ["zh_TW", "zh", "en"]: the Traditional
+    // file wins and falls back to the Simplified one for anything it misses.
+    // The cost is that a region code adds one `cb(null, {})` round trip
+    // through the backend (there is no ko-KR.json), which costs nothing.
     detection: {
       order: ["querystring", "localStorage", "navigator", "htmlTag"],
       lookupQuerystring: "lang",
@@ -208,7 +226,7 @@ i18n
 
 // `init` above is synchronous for English (it is inlined), so the detector has
 // already cached "en" by the time this runs.
-if (PRERENDERED) writeStored(storedBeforeInit);
+if (PIN_ENGLISH_AT_INIT) writeStored(storedBeforeInit);
 
 // Keep <html lang> in sync with the active language so search engines
 // and screen readers see the right value.

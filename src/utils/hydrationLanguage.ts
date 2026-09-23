@@ -53,14 +53,25 @@ function detectVisitorLanguage(i18n: I18n): string {
 /** Call before hydrateRoot. Returns the language the visitor will get back. */
 export function prepareForHydration(i18n: I18n): string {
   const detected = detectVisitorLanguage(i18n);
+  const stored = safeGet();
   if (detected.split("-")[0] !== "en") {
-    const stored = safeGet();
     // Normally already "en" (i18n.ts pinned the init); a client-rendered entry
     // that somehow got here is put back to English the old way.
     if (i18n.language !== "en") i18n.changeLanguage("en");
     safeSet(stored);
     pending = detected;
   }
+  // Record the resolved language when the visitor has never chosen one.
+  //
+  // Pinning the init to English took away something nothing here asked for:
+  // i18next used to run its own detection at init and hand the result to the
+  // detector's cacheUserLanguage(), so `i18nextLng` was always present
+  // afterwards. src/utils/i18n.ts's geo-IP probe gates on exactly that key, so
+  // without this every first-time visitor to a prerendered page would fire an
+  // ipapi.co request -- on every page view, since a visitor whose country maps
+  // to the language they already have caches nothing. Writing what detection
+  // resolved to restores the pre-split invariant.
+  if (safeGet() === null) safeSet(detected);
   return detected;
 }
 

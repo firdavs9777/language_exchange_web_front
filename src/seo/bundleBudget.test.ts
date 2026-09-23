@@ -38,8 +38,8 @@ const LOCALES = path.join(__dirname, "..", "utils", "locales");
  * 559.6 + 5% = 588. Phase B's 90 marketing strings in 18 locales then added
  * ~45 KB gzipped (610.1 measured), and the budget was raised to 641 rather
  * than defended -- which is exactly why APP_BUDGET_KB below exists. D1 then
- * took 298 KB straight back out: main.js 551.6 -> 253.6 KB, total 608.0 ->
- * 310.0 KB measured, + 5% = 325.5 -> 326.
+ * took 298 KB straight back out: main.js 551.6 -> 253.8 KB, total 608.0 ->
+ * 310.2 KB measured, + 5% = 325.7 -> 326.
  *
  * That headroom is now real headroom, not locale slack: with 17 locales out of
  * the entrypoint this number can only grow if app code grows, so raising it
@@ -63,7 +63,7 @@ export const BUDGET_KB = 326;
  * that is under this repo's control.
  *
  * Deliberately NOT re-baselined by task D1: no app code moved, and the number
- * it guards barely did (310.0 − 15.3 = 294.6 KB measured now, against 301.5
+ * it guards barely did (310.2 − 15.3 = 294.9 KB measured now, against 301.5
  * before). The subtraction has simply got much smaller -- eng.json alone
  * instead of all 18 files -- so this and BUDGET_KB now sit only ~15 KB apart
  * and the two assertions largely agree, which is the point: after D1 there is
