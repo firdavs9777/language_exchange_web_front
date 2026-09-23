@@ -1,0 +1,136 @@
+import "@testing-library/jest-dom";
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import ConfirmDialog from "./ConfirmDialog";
+
+const base = () => ({
+  open: true,
+  title: "Ban user",
+  body: "They lose access immediately.",
+  confirmLabel: "Ban",
+  onConfirm: jest.fn(),
+  onCancel: jest.fn(),
+});
+
+it("renders nothing while closed", () => {
+  const props = base();
+  const { container } = render(<ConfirmDialog {...props} open={false} />);
+  expect(container).toBeEmptyDOMElement();
+});
+
+it("renders the title, body and confirm label in a dialog", () => {
+  const props = base();
+  render(<ConfirmDialog {...props} />);
+  const dialog = screen.getByRole("dialog");
+  expect(dialog).toHaveTextContent("Ban user");
+  expect(dialog).toHaveTextContent("They lose access immediately.");
+  expect(screen.getByTestId("confirm-dialog-confirm")).toHaveTextContent("Ban");
+});
+
+it("confirms straight away when nothing is required", () => {
+  const props = base();
+  render(<ConfirmDialog {...props} />);
+  expect(screen.getByTestId("confirm-dialog-confirm")).not.toBeDisabled();
+  fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
+  expect(props.onConfirm).toHaveBeenCalledWith("");
+});
+
+it("keeps confirm disabled until a reason is entered", () => {
+  const props = base();
+  render(<ConfirmDialog {...props} requireReason />);
+  const confirm = screen.getByTestId("confirm-dialog-confirm");
+  expect(confirm).toBeDisabled();
+
+  // Whitespace is not a reason.
+  fireEvent.change(screen.getByTestId("confirm-dialog-reason"), { target: { value: "   " } });
+  expect(confirm).toBeDisabled();
+
+  fireEvent.change(screen.getByTestId("confirm-dialog-reason"), { target: { value: "spamming" } });
+  expect(confirm).not.toBeDisabled();
+  fireEvent.click(confirm);
+  expect(props.onConfirm).toHaveBeenCalledWith("spamming");
+});
+
+it("keeps confirm disabled until the typed value matches exactly", () => {
+  const props = base();
+  render(
+    <ConfirmDialog
+      {...props}
+      confirmLabel="Delete"
+      requireTypedValue="ada@example.com"
+      danger
+    />
+  );
+  const confirm = screen.getByTestId("confirm-dialog-confirm");
+  expect(confirm).toBeDisabled();
+
+  fireEvent.change(screen.getByTestId("confirm-dialog-typed"), {
+    target: { value: "ada@example.co" },
+  });
+  expect(confirm).toBeDisabled();
+
+  // Case matters: this is a destructive, irreversible action.
+  fireEvent.change(screen.getByTestId("confirm-dialog-typed"), {
+    target: { value: "ADA@EXAMPLE.COM" },
+  });
+  expect(confirm).toBeDisabled();
+
+  fireEvent.change(screen.getByTestId("confirm-dialog-typed"), {
+    target: { value: "ada@example.com" },
+  });
+  expect(confirm).not.toBeDisabled();
+});
+
+it("requires both the reason and the typed value when both are asked for", () => {
+  const props = base();
+  render(<ConfirmDialog {...props} requireReason requireTypedValue="ada@example.com" />);
+  const confirm = screen.getByTestId("confirm-dialog-confirm");
+  fireEvent.change(screen.getByTestId("confirm-dialog-reason"), { target: { value: "gdpr" } });
+  expect(confirm).toBeDisabled();
+  fireEvent.change(screen.getByTestId("confirm-dialog-typed"), {
+    target: { value: "ada@example.com" },
+  });
+  expect(confirm).not.toBeDisabled();
+  fireEvent.click(confirm);
+  expect(props.onConfirm).toHaveBeenCalledWith("gdpr");
+});
+
+it("disables confirm while busy so an action cannot be sent twice", () => {
+  const props = base();
+  render(<ConfirmDialog {...props} busy />);
+  const confirm = screen.getByTestId("confirm-dialog-confirm");
+  expect(confirm).toBeDisabled();
+  expect(confirm).toHaveAttribute("aria-busy", "true");
+  fireEvent.click(confirm);
+  expect(props.onConfirm).not.toHaveBeenCalled();
+});
+
+it("shows the mutation error inline and leaves the dialog open", () => {
+  const props = base();
+  render(<ConfirmDialog {...props} error="You cannot ban yourself" />);
+  expect(screen.getByTestId("confirm-dialog-error")).toHaveTextContent("You cannot ban yourself");
+  expect(screen.getByRole("dialog")).toBeInTheDocument();
+});
+
+it("cancels from the cancel button, Escape and the backdrop", () => {
+  const props = base();
+  render(<ConfirmDialog {...props} />);
+  fireEvent.click(screen.getByTestId("confirm-dialog-cancel"));
+  expect(props.onCancel).toHaveBeenCalledTimes(1);
+
+  fireEvent.keyDown(document, { key: "Escape" });
+  expect(props.onCancel).toHaveBeenCalledTimes(2);
+
+  fireEvent.click(screen.getByTestId("confirm-dialog-backdrop"));
+  expect(props.onCancel).toHaveBeenCalledTimes(3);
+});
+
+it("clears the reason and typed value between openings", () => {
+  const props = base();
+  const { rerender } = render(<ConfirmDialog {...props} requireReason />);
+  fireEvent.change(screen.getByTestId("confirm-dialog-reason"), { target: { value: "spam" } });
+  rerender(<ConfirmDialog {...props} requireReason open={false} />);
+  rerender(<ConfirmDialog {...props} requireReason open />);
+  expect(screen.getByTestId("confirm-dialog-reason")).toHaveValue("");
+  expect(screen.getByTestId("confirm-dialog-confirm")).toBeDisabled();
+});

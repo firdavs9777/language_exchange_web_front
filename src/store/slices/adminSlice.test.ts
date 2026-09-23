@@ -232,3 +232,48 @@ it("banning a user refetches the user list (AdminUserList invalidation)", async 
 
   sub.unsubscribe();
 });
+
+/**
+ * The Overview's counters (total, banned, admins) move the moment a moderator
+ * bans, unbans, promotes or deletes someone. Without `AdminStats` on these
+ * four mutations the console keeps showing the pre-action numbers until a
+ * manual refresh, which reads as "the action didn't work".
+ */
+describe("user moderation refreshes the Overview stats", () => {
+  const cases: Array<[string, any]> = [
+    ["banAdminUser", { id: "u1", reason: "spam" }],
+    ["unbanAdminUser", { id: "u1", reason: "appeal" }],
+    ["changeAdminUserRole", { id: "u1", role: "admin", reason: "mod team" }],
+    ["hardDeleteAdminUser", { id: "u1", reason: "gdpr" }],
+  ];
+
+  for (const [name, arg] of cases) {
+    it(`${name} invalidates AdminStats`, async () => {
+      const calls = mockFetch({ success: true, data: { total: 1 } });
+      const store = makeStore();
+
+      // A live subscription, the way the Overview page holds one.
+      const sub: any = store.dispatch(
+        (adminApiSlice.endpoints as any).getAdminStats.initiate(undefined)
+      );
+      await sub;
+      const statsPath = "/api/v1/admin/stats";
+      expect(calls.filter((c) => new URL(c.url).pathname === statsPath)).toHaveLength(1);
+
+      await store.dispatch((adminApiSlice.endpoints as any)[name].initiate(arg));
+
+      const deadline = Date.now() + 2000;
+      while (
+        calls.filter((c) => new URL(c.url).pathname === statsPath).length < 2 &&
+        Date.now() < deadline
+      ) {
+        await new Promise((r) => setTimeout(r, 10));
+      }
+      expect(
+        calls.filter((c) => new URL(c.url).pathname === statsPath).length
+      ).toBeGreaterThanOrEqual(2);
+
+      sub.unsubscribe();
+    });
+  }
+});

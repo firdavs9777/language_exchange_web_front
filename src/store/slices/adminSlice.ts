@@ -91,7 +91,9 @@ export const adminApiSlice = apiSlice.injectEndpoints({
     // --- User moderation --------------------------------------------------
     // `reason` is required by the backend on ban; the dialogs enforce it before
     // these ever fire. None of the four is retried: a moderation action that
-    // silently repeats is worse than one that visibly failed.
+    // silently repeats is worse than one that visibly failed. All four also
+    // invalidate `AdminStats`: each one moves the Overview's total/banned/
+    // admins counters, and stale counters read as "the action didn't work".
     banAdminUser: builder.mutation({
       query: ({ id, reason }: { id: string; reason: string }) => ({
         url: `${ADMIN_URL}/users/${id}/ban`,
@@ -103,6 +105,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (_r: any, _e: any, arg: { id: string }) => [
         { type: "AdminUser", id: arg.id },
         "AdminUserList",
+        "AdminStats",
       ],
     }),
     unbanAdminUser: builder.mutation({
@@ -116,6 +119,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (_r: any, _e: any, arg: { id: string }) => [
         { type: "AdminUser", id: arg.id },
         "AdminUserList",
+        "AdminStats",
       ],
     }),
     changeAdminUserRole: builder.mutation({
@@ -129,6 +133,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (_r: any, _e: any, arg: { id: string }) => [
         { type: "AdminUser", id: arg.id },
         "AdminUserList",
+        "AdminStats",
       ],
     }),
     hardDeleteAdminUser: builder.mutation({
@@ -142,6 +147,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (_r: any, _e: any, arg: { id: string }) => [
         { type: "AdminUser", id: arg.id },
         "AdminUserList",
+        "AdminStats",
       ],
     }),
 
