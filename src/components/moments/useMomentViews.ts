@@ -98,6 +98,10 @@ function getObserver(): IntersectionObserver | null {
     return null;
   }
   if (!observerInstance) {
+    // Intentionally never disconnected for the life of the SPA session --
+    // one observer serves every moment card that ever mounts, not just the
+    // currently-mounted ones; `_resetMomentViewsForTests()` is the only
+    // thing that tears it down (test isolation only).
     observerInstance = new IntersectionObserver(handleIntersections, {
       threshold: VISIBILITY_THRESHOLD,
     });
@@ -136,6 +140,10 @@ function handleVisibilityChange() {
 
 function ensureGlobalWiring() {
   if (typeof window === "undefined") return;
+  // Both the interval and the listeners below are set up once and kept
+  // running for as long as the SPA tab stays open -- they are shared by
+  // every moment card that mounts over the session, not torn down when any
+  // one card (or even every currently-mounted card) unmounts.
   if (flushIntervalId == null) {
     flushIntervalId = setInterval(flushQueue, FLUSH_INTERVAL_MS);
   }

@@ -41,9 +41,29 @@ function mockFetch(): Captured[] {
   return calls;
 }
 
+// whatwg-fetch's polyfilled Request (loaded by react-app-polyfill/jsdom for
+// every test in this project) never stores `keepalive` on the instance it
+// builds -- the property is silently dropped, so reading `req.keepalive` off
+// a captured Request in `mockFetch` above is always `undefined` regardless of
+// what fetchBaseQuery was asked to send. To prove `keepalive` actually made
+// it into the `RequestInit` fetchBaseQuery builds, this wraps the real
+// `Request` constructor (still fully functional -- it delegates straight to
+// the original) and records the `init` argument each call received.
+function captureRequestInit(): { init: any }[] {
+  const calls: { init: any }[] = [];
+  const OriginalRequest = (global as any).Request;
+  (global as any).Request = jest.fn((...args: any[]) => {
+    calls.push({ init: args[1] });
+    return new OriginalRequest(...args);
+  });
+  return calls;
+}
+
 const originalFetch = global.fetch;
+const originalRequest = global.Request;
 afterEach(() => {
   global.fetch = originalFetch;
+  (global as any).Request = originalRequest;
   jest.restoreAllMocks();
 });
 
@@ -183,6 +203,19 @@ describe("momentsSlice Task 0 endpoints hit the REAL backend routes", () => {
       { momentId: "moment-1", watchedMs: 1500, completed: false },
       { momentId: "moment-2", watchedMs: 6000, completed: true },
     ]);
+  });
+
+  it("recordMomentViews -> sets keepalive:true on the request so pagehide/unload does not cancel the flush", async () => {
+    mockFetch();
+    const requestCalls = captureRequestInit();
+    const store = makeStore();
+    await store.dispatch(
+      (momentsApiSlice.endpoints as any).recordMomentViews.initiate({
+        views: [{ momentId: "moment-1", watchedMs: 1500, completed: false }],
+      })
+    );
+    expect(requestCalls.length).toBeGreaterThan(0);
+    expect(requestCalls[0].init.keepalive).toBe(true);
   });
 
   describe("getMoments feed parameter", () => {

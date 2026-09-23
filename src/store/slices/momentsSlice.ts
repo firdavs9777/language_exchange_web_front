@@ -273,6 +273,11 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
         url: `${MOMENTS_URL}/views`,
         method: "POST",
         body: { views },
+        // Flushed from pagehide/visibilitychange:hidden -- keepalive lets the
+        // browser finish this request past unload instead of cancelling it
+        // (sendBeacon can't be used here since the request needs the
+        // Authorization header fetchBaseQuery attaches).
+        keepalive: true,
       }),
     }),
     // Emoji reactions (distinct from like/dislike)
