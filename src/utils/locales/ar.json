@@ -365,6 +365,33 @@
     "following": {
       "empty": "تابع أشخاصًا لرؤية لحظاتهم هنا",
       "findPeople": "ابحث عن أشخاص"
+    },
+    "commentEngagement": {
+      "attachImage": "إضافة صورة",
+      "beFirst": "كن أول من يشارك رأيه!",
+      "cancel": "إلغاء",
+      "commentTab": "تعليق",
+      "correctedLabel": "تم التصحيح",
+      "correctedPlaceholder": "اكتبها كما سيقولها متحدث أصلي",
+      "correction": "تصحيح",
+      "correctionNotePlaceholder": "أضف ملاحظة (اختياري)",
+      "correctionTab": "تصحيح",
+      "delete": "حذف",
+      "explanationLabel": "الشرح",
+      "explanationPlaceholder": "لماذا تُكتب هكذا؟ (اختياري)",
+      "hideReplies": "إخفاء الردود",
+      "imageFailed": "تم نشر التعليق، لكن تعذّر إرفاق الصورة.",
+      "loadMoreComments": "تحميل المزيد من التعليقات",
+      "loadMoreReplies": "تحميل المزيد",
+      "loadingReplies": "جارٍ تحميل الردود…",
+      "originalLabel": "الأصل",
+      "post": "نشر",
+      "postCorrection": "نشر التصحيح",
+      "postFailed": "تعذّر النشر. حاول مرة أخرى.",
+      "react": "تفاعل",
+      "reply": "رد",
+      "replyPlaceholder": "اكتب ردًا…",
+      "viewReplies": "عرض {{count}} من الردود"
     }
   },
   "createMoment": {

@@ -365,6 +365,33 @@
     "following": {
       "empty": "Follow people to see their moments here",
       "findPeople": "Find people"
+    },
+    "commentEngagement": {
+      "attachImage": "Add a photo",
+      "beFirst": "Be the first to share your thoughts!",
+      "cancel": "Cancel",
+      "commentTab": "Comment",
+      "correctedLabel": "Corrected",
+      "correctedPlaceholder": "Write it the way a native speaker would",
+      "correction": "Correction",
+      "correctionNotePlaceholder": "Add a note (optional)",
+      "correctionTab": "Correction",
+      "delete": "Delete",
+      "explanationLabel": "Explanation",
+      "explanationPlaceholder": "Why is it written this way? (optional)",
+      "hideReplies": "Hide replies",
+      "imageFailed": "Comment posted, but the photo didn't attach.",
+      "loadMoreComments": "Load more comments",
+      "loadMoreReplies": "Load more",
+      "loadingReplies": "Loading replies…",
+      "originalLabel": "Original",
+      "post": "Post",
+      "postCorrection": "Post correction",
+      "postFailed": "Couldn't post that. Try again.",
+      "react": "React",
+      "reply": "Reply",
+      "replyPlaceholder": "Write a reply…",
+      "viewReplies": "View {{count}} replies"
     }
   },
   "createMoment": {

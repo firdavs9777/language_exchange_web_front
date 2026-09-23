@@ -346,6 +346,33 @@
     "following": {
       "empty": "Suivez des personnes pour voir leurs moments ici",
       "findPeople": "Trouver des personnes"
+    },
+    "commentEngagement": {
+      "attachImage": "Ajouter une photo",
+      "beFirst": "Soyez le premier à partager votre avis !",
+      "cancel": "Annuler",
+      "commentTab": "Commentaire",
+      "correctedLabel": "Corrigé",
+      "correctedPlaceholder": "Écrivez-le comme le dirait un locuteur natif",
+      "correction": "Correction",
+      "correctionNotePlaceholder": "Ajoutez une note (facultatif)",
+      "correctionTab": "Correction",
+      "delete": "Supprimer",
+      "explanationLabel": "Explication",
+      "explanationPlaceholder": "Pourquoi est-ce écrit ainsi ? (facultatif)",
+      "hideReplies": "Masquer les réponses",
+      "imageFailed": "Commentaire publié, mais la photo n'a pas pu être jointe.",
+      "loadMoreComments": "Charger plus de commentaires",
+      "loadMoreReplies": "Charger plus",
+      "loadingReplies": "Chargement des réponses…",
+      "originalLabel": "Original",
+      "post": "Publier",
+      "postCorrection": "Publier la correction",
+      "postFailed": "Impossible de publier. Réessayez.",
+      "react": "Réagir",
+      "reply": "Répondre",
+      "replyPlaceholder": "Écrivez une réponse…",
+      "viewReplies": "Voir {{count}} réponses"
     }
   },
   "createMoment": {

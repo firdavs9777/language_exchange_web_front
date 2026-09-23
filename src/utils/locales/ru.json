@@ -365,6 +365,33 @@
     "following": {
       "empty": "Подпишитесь на людей, чтобы видеть их моменты здесь",
       "findPeople": "Найти людей"
+    },
+    "commentEngagement": {
+      "attachImage": "Добавить фото",
+      "beFirst": "Будьте первым, кто поделится мнением!",
+      "cancel": "Отмена",
+      "commentTab": "Комментарий",
+      "correctedLabel": "Исправлено",
+      "correctedPlaceholder": "Напишите так, как сказал бы носитель языка",
+      "correction": "Исправление",
+      "correctionNotePlaceholder": "Добавьте заметку (необязательно)",
+      "correctionTab": "Исправление",
+      "delete": "Удалить",
+      "explanationLabel": "Объяснение",
+      "explanationPlaceholder": "Почему это пишется именно так? (необязательно)",
+      "hideReplies": "Скрыть ответы",
+      "imageFailed": "Комментарий опубликован, но фото не прикрепилось.",
+      "loadMoreComments": "Показать ещё комментарии",
+      "loadMoreReplies": "Показать ещё",
+      "loadingReplies": "Загрузка ответов…",
+      "originalLabel": "Оригинал",
+      "post": "Отправить",
+      "postCorrection": "Отправить исправление",
+      "postFailed": "Не удалось опубликовать. Попробуйте ещё раз.",
+      "react": "Реакция",
+      "reply": "Ответить",
+      "replyPlaceholder": "Напишите ответ…",
+      "viewReplies": "Показать {{count}} ответов"
     }
   },
   "createMoment": {

@@ -365,6 +365,33 @@
     "following": {
       "empty": "ติดตามคนอื่นเพื่อดูโมเมนต์ของพวกเขาที่นี่",
       "findPeople": "ค้นหาคน"
+    },
+    "commentEngagement": {
+      "attachImage": "แนบรูปภาพ",
+      "beFirst": "เป็นคนแรกที่แชร์ความคิดเห็น!",
+      "cancel": "ยกเลิก",
+      "commentTab": "ความคิดเห็น",
+      "correctedLabel": "แก้ไขแล้ว",
+      "correctedPlaceholder": "เขียนแบบที่เจ้าของภาษาจะพูด",
+      "correction": "คำแก้ไข",
+      "correctionNotePlaceholder": "เพิ่มหมายเหตุ (ไม่บังคับ)",
+      "correctionTab": "คำแก้ไข",
+      "delete": "ลบ",
+      "explanationLabel": "คำอธิบาย",
+      "explanationPlaceholder": "ทำไมถึงเขียนแบบนี้ (ไม่บังคับ)",
+      "hideReplies": "ซ่อนการตอบกลับ",
+      "imageFailed": "โพสต์ความคิดเห็นแล้ว แต่แนบรูปภาพไม่สำเร็จ",
+      "loadMoreComments": "โหลดความคิดเห็นเพิ่มเติม",
+      "loadMoreReplies": "โหลดเพิ่มเติม",
+      "loadingReplies": "กำลังโหลดการตอบกลับ…",
+      "originalLabel": "ต้นฉบับ",
+      "post": "โพสต์",
+      "postCorrection": "โพสต์คำแก้ไข",
+      "postFailed": "โพสต์ไม่สำเร็จ ลองใหม่อีกครั้ง",
+      "react": "รีแอกชัน",
+      "reply": "ตอบกลับ",
+      "replyPlaceholder": "เขียนการตอบกลับ…",
+      "viewReplies": "ดู {{count}} การตอบกลับ"
     }
   },
   "createMoment": {

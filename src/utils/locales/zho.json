@@ -365,6 +365,33 @@
     "following": {
       "empty": "关注别人，才能在这里看到他们的动态",
       "findPeople": "找人"
+    },
+    "commentEngagement": {
+      "attachImage": "添加照片",
+      "beFirst": "第一个分享你的想法吧！",
+      "cancel": "取消",
+      "commentTab": "评论",
+      "correctedLabel": "已改",
+      "correctedPlaceholder": "写出母语者会怎么说",
+      "correction": "纠正",
+      "correctionNotePlaceholder": "添加备注（可选）",
+      "correctionTab": "纠正",
+      "delete": "删除",
+      "explanationLabel": "说明",
+      "explanationPlaceholder": "为什么这么写？（可选）",
+      "hideReplies": "隐藏回复",
+      "imageFailed": "评论已发布，但照片未能上传。",
+      "loadMoreComments": "加载更多评论",
+      "loadMoreReplies": "加载更多",
+      "loadingReplies": "正在加载回复…",
+      "originalLabel": "原文",
+      "post": "发布",
+      "postCorrection": "发布纠正",
+      "postFailed": "发布失败，请重试。",
+      "react": "回应",
+      "reply": "回复",
+      "replyPlaceholder": "写下你的回复…",
+      "viewReplies": "查看 {{count}} 条回复"
     }
   },
   "createMoment": {

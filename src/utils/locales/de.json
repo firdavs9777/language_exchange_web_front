@@ -365,6 +365,33 @@
     "following": {
       "empty": "Folge Leuten, um ihre Momente hier zu sehen",
       "findPeople": "Leute finden"
+    },
+    "commentEngagement": {
+      "attachImage": "Foto hinzufügen",
+      "beFirst": "Schreib den ersten Kommentar!",
+      "cancel": "Abbrechen",
+      "commentTab": "Kommentar",
+      "correctedLabel": "Korrigiert",
+      "correctedPlaceholder": "Schreib es so, wie es ein Muttersprachler sagen würde",
+      "correction": "Korrektur",
+      "correctionNotePlaceholder": "Notiz hinzufügen (optional)",
+      "correctionTab": "Korrektur",
+      "delete": "Löschen",
+      "explanationLabel": "Erklärung",
+      "explanationPlaceholder": "Warum wird das so geschrieben? (optional)",
+      "hideReplies": "Antworten ausblenden",
+      "imageFailed": "Kommentar gepostet, aber das Foto konnte nicht angehängt werden.",
+      "loadMoreComments": "Weitere Kommentare laden",
+      "loadMoreReplies": "Mehr laden",
+      "loadingReplies": "Antworten werden geladen…",
+      "originalLabel": "Original",
+      "post": "Posten",
+      "postCorrection": "Korrektur posten",
+      "postFailed": "Konnte nicht gepostet werden. Versuch es noch mal.",
+      "react": "Reagieren",
+      "reply": "Antworten",
+      "replyPlaceholder": "Schreib eine Antwort…",
+      "viewReplies": "{{count}} Antworten ansehen"
     }
   },
   "createMoment": {

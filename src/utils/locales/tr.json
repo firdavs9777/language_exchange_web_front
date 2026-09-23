@@ -365,6 +365,33 @@
     "following": {
       "empty": "İnsanları takip et, anlarını burada gör",
       "findPeople": "İnsanları Bul"
+    },
+    "commentEngagement": {
+      "attachImage": "Fotoğraf ekleyin",
+      "beFirst": "Düşüncenizi paylaşan ilk kişi olun!",
+      "cancel": "İptal",
+      "commentTab": "Yorum",
+      "correctedLabel": "Düzeltildi",
+      "correctedPlaceholder": "Bunu bir anadili konuşanın söyleyeceği gibi yazın",
+      "correction": "Düzeltme",
+      "correctionNotePlaceholder": "Not ekleyin (isteğe bağlı)",
+      "correctionTab": "Düzeltme",
+      "delete": "Sil",
+      "explanationLabel": "Açıklama",
+      "explanationPlaceholder": "Bu neden böyle yazılıyor? (isteğe bağlı)",
+      "hideReplies": "Yanıtları gizle",
+      "imageFailed": "Yorum gönderildi, ancak fotoğraf eklenemedi.",
+      "loadMoreComments": "Daha fazla yorum yükle",
+      "loadMoreReplies": "Daha fazla yükle",
+      "loadingReplies": "Yanıtlar yükleniyor…",
+      "originalLabel": "Orijinal",
+      "post": "Gönder",
+      "postCorrection": "Düzeltmeyi gönder",
+      "postFailed": "Gönderilemedi. Tekrar deneyin.",
+      "react": "Tepki ver",
+      "reply": "Yanıtla",
+      "replyPlaceholder": "Bir yanıt yazın…",
+      "viewReplies": "{{count}} yanıtı görüntüle"
     }
   },
   "createMoment": {

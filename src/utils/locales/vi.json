@@ -365,6 +365,33 @@
     "following": {
       "empty": "Theo dõi mọi người để xem khoảnh khắc của họ ở đây",
       "findPeople": "Tìm Người"
+    },
+    "commentEngagement": {
+      "attachImage": "Thêm ảnh",
+      "beFirst": "Hãy là người đầu tiên chia sẻ suy nghĩ của bạn!",
+      "cancel": "Hủy",
+      "commentTab": "Bình Luận",
+      "correctedLabel": "Đã sửa",
+      "correctedPlaceholder": "Viết theo cách người bản xứ sẽ nói",
+      "correction": "Sửa lỗi",
+      "correctionNotePlaceholder": "Thêm ghi chú (không bắt buộc)",
+      "correctionTab": "Sửa lỗi",
+      "delete": "Xóa",
+      "explanationLabel": "Giải thích",
+      "explanationPlaceholder": "Tại sao lại viết thế này? (không bắt buộc)",
+      "hideReplies": "Ẩn phản hồi",
+      "imageFailed": "Đã đăng bình luận, nhưng ảnh không đính kèm được.",
+      "loadMoreComments": "Xem thêm bình luận",
+      "loadMoreReplies": "Xem thêm",
+      "loadingReplies": "Đang tải phản hồi…",
+      "originalLabel": "Gốc",
+      "post": "Đăng",
+      "postCorrection": "Đăng sửa lỗi",
+      "postFailed": "Không đăng được. Vui lòng thử lại.",
+      "react": "Cảm xúc",
+      "reply": "Phản hồi",
+      "replyPlaceholder": "Viết phản hồi…",
+      "viewReplies": "Xem {{count}} phản hồi"
     }
   },
   "createMoment": {

@@ -365,6 +365,33 @@
     "following": {
       "empty": "Sundan ang mga tao para makita ang kanilang mga sandali dito",
       "findPeople": "Maghanap ng Tao"
+    },
+    "commentEngagement": {
+      "attachImage": "Mag-attach ng Larawan",
+      "beFirst": "Ikaw na ang unang magbahagi ng saloobin!",
+      "cancel": "Kanselahin",
+      "commentTab": "Komento",
+      "correctedLabel": "Naitama",
+      "correctedPlaceholder": "Isulat ito sa paraang sasabihin ng isang katutubong nagsasalita",
+      "correction": "Pagwawasto",
+      "correctionNotePlaceholder": "Magdagdag ng tala (opsyonal)",
+      "correctionTab": "Pagwawasto",
+      "delete": "Burahin",
+      "explanationLabel": "Paliwanag",
+      "explanationPlaceholder": "Bakit ganito ito isinusulat? (opsyonal)",
+      "hideReplies": "Itago ang mga sagot",
+      "imageFailed": "Na-post ang komento, pero hindi na-attach ang larawan.",
+      "loadMoreComments": "Higit pang komento",
+      "loadMoreReplies": "Higit pa",
+      "loadingReplies": "Nilo-load ang mga sagot…",
+      "originalLabel": "Orihinal",
+      "post": "I-post",
+      "postCorrection": "I-post ang pagwawasto",
+      "postFailed": "Hindi na-post. Subukan ulit.",
+      "react": "Mag-react",
+      "reply": "Sagot",
+      "replyPlaceholder": "Sumulat ng sagot…",
+      "viewReplies": "Tingnan ang {{count}} sagot"
     }
   },
   "createMoment": {

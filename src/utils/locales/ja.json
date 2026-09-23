@@ -365,6 +365,33 @@
     "following": {
       "empty": "フォローした人のモーメントがここに表示されます",
       "findPeople": "人を探す"
+    },
+    "commentEngagement": {
+      "attachImage": "写真を追加",
+      "beFirst": "最初に感想をシェアしましょう！",
+      "cancel": "キャンセル",
+      "commentTab": "コメント",
+      "correctedLabel": "添削済み",
+      "correctedPlaceholder": "ネイティブならこう書く、という文を入力してください",
+      "correction": "添削",
+      "correctionNotePlaceholder": "メモを追加（任意）",
+      "correctionTab": "添削",
+      "delete": "削除",
+      "explanationLabel": "説明",
+      "explanationPlaceholder": "なぜこう書くのか教えてください（任意）",
+      "hideReplies": "返信を非表示",
+      "imageFailed": "コメントは投稿されましたが、写真の添付に失敗しました。",
+      "loadMoreComments": "コメントをもっと見る",
+      "loadMoreReplies": "もっと見る",
+      "loadingReplies": "返信を読み込み中…",
+      "originalLabel": "元の文",
+      "post": "投稿",
+      "postCorrection": "添削を投稿",
+      "postFailed": "投稿できませんでした。もう一度お試しください。",
+      "react": "リアクション",
+      "reply": "返信",
+      "replyPlaceholder": "返信を入力…",
+      "viewReplies": "返信を{{count}}件見る"
     }
   },
   "createMoment": {
