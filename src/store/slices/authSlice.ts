@@ -20,7 +20,7 @@ export interface Response {
 }
 
 // Helper to normalize userInfo structure (always use { user, token, refreshToken? })
-const normalizeUserInfo = (stored: any) => {
+export const normalizeUserInfo = (stored: any) => {
   if (!stored) return null;
 
   // If it has 'user' key, it's already normalized — but preserve refreshToken
@@ -44,8 +44,12 @@ const normalizeUserInfo = (stored: any) => {
   return stored;
 };
 
-// Get and normalize stored userInfo, then update localStorage if needed
-const getInitialUserInfo = () => {
+/**
+ * Read and normalize the stored session, rewriting localStorage when the old
+ * `{ data }` shape had to be migrated. Returns null when there is no browser,
+ * nothing stored, or the stored value is unreadable.
+ */
+export function readStoredUserInfo() {
   // No storage without a browser (prerender, node tests): start logged out.
   if (typeof window === "undefined") return null;
   const storedRaw = localStorage.getItem("userInfo");
@@ -64,6 +68,27 @@ const getInitialUserInfo = () => {
   } catch {
     return null;
   }
+}
+
+/**
+ * The initial session for a freshly created store.
+ *
+ * Prerendered pages are rendered logged out (the prerender's store is built in
+ * Node, where there is no localStorage), so a signed-in visitor whose first
+ * client render restored the session would hydrate a logged-in navbar over
+ * logged-out markup — React #418, and a full client re-render of the page. On
+ * such a page we start logged out and App restores the session from storage
+ * right after the first commit (src/utils/hydrationAuth.ts).
+ *
+ * Client-rendered pages have nothing to match, so they keep today's behaviour
+ * and get the session synchronously.
+ */
+const getInitialUserInfo = () => {
+  const prerendered =
+    typeof document !== "undefined" && !!document.getElementById("root")?.hasChildNodes();
+  if (prerendered) return null;
+
+  return readStoredUserInfo();
 };
 
 // Get the initial state from localStorage or use a default value
