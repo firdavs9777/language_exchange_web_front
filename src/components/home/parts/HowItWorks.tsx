@@ -30,19 +30,23 @@ const HowItWorks: React.FC = () => {
           {t("home.howItWorks.title") || "How it works"}
         </h2>
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
-          {STEPS.map((s, i) => (
-            <Reveal key={s.n} delayMs={i * 120}>
-              <SurfaceCard padding="lg">
-              <div data-testid="how-step">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand/[0.12] text-sm font-extrabold text-brand-dark dark:text-brand-light">
-                  {s.n}
-                </span>
-                <h3 className="mt-3 text-sm font-bold text-gray-900 dark:text-gray-50">{s.title}</h3>
-                <p className="mt-1.5 text-xs leading-relaxed text-gray-600 dark:text-gray-300">{s.body}</p>
-              </div>
-              </SurfaceCard>
-            </Reveal>
-          ))}
+          {STEPS.map((s, i) => {
+            const title = t(`home.howItWorks.steps.${s.n}.title`) || s.title;
+            const body = t(`home.howItWorks.steps.${s.n}.body`) || s.body;
+            return (
+              <Reveal key={s.n} delayMs={i * 120}>
+                <SurfaceCard padding="lg">
+                <div data-testid="how-step">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand/[0.12] text-sm font-extrabold text-brand-dark dark:text-brand-light">
+                    {s.n}
+                  </span>
+                  <h3 className="mt-3 text-sm font-bold text-gray-900 dark:text-gray-50">{title}</h3>
+                  <p className="mt-1.5 text-xs leading-relaxed text-gray-600 dark:text-gray-300">{body}</p>
+                </div>
+                </SurfaceCard>
+              </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>

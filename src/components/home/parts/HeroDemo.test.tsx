@@ -4,7 +4,19 @@ import { renderToString } from "react-dom/server";
 import HeroDemo from "./HeroDemo";
 import { APP_STORE_URL, PLAY_STORE_URL } from "../../growth/StoreLink";
 
-jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
+// `mockTMode` toggles the mocked `t` between echoing its key (proves the
+// supporting line is routed through i18n) and returning "" (proves the
+// `t(key) || "English"` fallback idiom). Must be prefixed with "mock" --
+// babel-plugin-jest-hoist only allows referencing such names from inside a
+// jest.mock() factory.
+let mockTMode: "echo" | "fallback" = "fallback";
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({ t: (key: string) => (mockTMode === "echo" ? key : "") }),
+}));
+
+beforeEach(() => {
+  mockTMode = "fallback";
+});
 
 it("renders a headline", () => {
   render(<HeroDemo />);
@@ -88,4 +100,22 @@ it("renders to a string on the server with its content intact", () => {
   expect(html).toContain("안녕하세요");
   expect(html).toContain("hero-flags");
   expect(html).not.toContain("undefined");
+});
+
+// --- i18n --------------------------------------------------------------
+
+// The keyword-led supporting line: the primary phrase for SEO, kept as the
+// fallback so it renders even before a translation exists.
+it("falls back to the keyword-led supporting line when a translation is missing", () => {
+  render(<HeroDemo />);
+  const text = screen.getByTestId("hero-demo").textContent || "";
+  expect(text).toContain(
+    "Free language exchange with native speakers. Write in your language, they read it in theirs, and you learn from the difference."
+  );
+});
+
+it("routes the supporting line through home.hero.subtitle", () => {
+  mockTMode = "echo";
+  render(<HeroDemo />);
+  expect(screen.getByText("home.hero.subtitle")).toBeInTheDocument();
 });

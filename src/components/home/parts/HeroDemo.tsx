@@ -95,7 +95,7 @@ const HeroDemo: React.FC = () => {
           </h1>
           <p className="mt-4 max-w-md text-base leading-relaxed text-gray-600 dark:text-gray-300">
             {t("home.hero.subtitle") ||
-              "Type in your language, they read it in theirs. Tap any message to see how it was really said — that's how you learn."}
+              "Free language exchange with native speakers. Write in your language, they read it in theirs, and you learn from the difference."}
           </p>
 
           <div className="mt-7 flex flex-wrap gap-3">
