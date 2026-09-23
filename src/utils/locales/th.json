@@ -89,6 +89,25 @@
       "deleted": "ลบการสนทนาแล้ว"
     }
   },
+  "newChat": {
+    "title": "แชทใหม่",
+    "subtitle": "เริ่มการสนทนา",
+    "directMessage": "ส่วนตัว",
+    "groupChat": "กลุ่ม",
+    "searchPlaceholder": "ค้นหาด้วยชื่อ, @ชื่อผู้ใช้ หรือ user ID...",
+    "searchHint": "ค้นหาผู้ใช้เพื่อเริ่มแชท",
+    "hintName": "ค้นหาด้วยชื่อ",
+    "hintUsername": "พิมพ์ @ชื่อผู้ใช้เพื่อค้นหาด้วยชื่อผู้ใช้",
+    "hintId": "วาง user ID เพื่อค้นหาโดยตรง",
+    "searchByUsername": "กำลังค้นหาด้วยชื่อผู้ใช้",
+    "searchById": "กำลังค้นหาด้วย user ID",
+    "noResults": "ไม่พบผู้ใช้",
+    "tryDifferent": "ลองชื่อ, @ชื่อผู้ใช้ หรือ user ID อื่น",
+    "createGroup": "สร้างกลุ่ม",
+    "selectMoreUsers": "เลือกผู้ใช้อย่างน้อย 2 คนสำหรับแชทกลุ่ม",
+    "createError": "สร้างแชทไม่สำเร็จ",
+    "recently": "เมื่อเร็วๆ นี้"
+  },
   "notifications": "การแจ้งเตือน",
   "moments": "โมเมนต์",
   "language": "ภาษา",
@@ -378,7 +397,7 @@
   "authentication": {
     "enterEmail": {
       "title": "กรอกอีเมลของคุณ",
-      "subtitle": "We'll send a verification code to your email",
+      "subtitle": "เราจะส่งรหัสยืนยันไปที่อีเมลของคุณ",
       "emailLabel": "ที่อยู่อีเมล",
       "emailPlaceholder": "กรอกอีเมล",
       "sendButton": "ส่งรหัส",
@@ -388,32 +407,32 @@
     },
     "passwordReset": {
       "successMessage": "รีเซ็ตรหัสผ่านสำเร็จ กรุณาเข้าสู่ระบบ!",
-      "backToLogin": "Back to login",
-      "verifyTitle": "Enter verification code",
-      "verifySubtitle": "We've sent a 6-digit code to your email",
-      "codeLabel": "Verification Code",
-      "codePlaceholder": "Enter code",
-      "previousButton": "Previous",
-      "verifyButton": "Verify",
-      "verifyingButton": "Verifying...",
-      "resendButton": "Resend code",
-      "resendingButton": "Resending...",
-      "verifySuccessMessage": "Verification code successfully verified!",
-      "resendSuccessMessage": "A new verification code has been sent!",
-      "verifyErrorDefault": "Invalid verification code",
-      "resendErrorDefault": "Failed to resend the code",
-      "setPasswordTitle": "Set new password",
-      "setPasswordSubtitle": "Choose a strong password for your account",
-      "newPasswordLabel": "New Password",
-      "newPasswordPlaceholder": "New Password",
-      "confirmPasswordLabel": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm Password",
-      "showPassword": "Show password",
-      "hidePassword": "Hide password",
-      "submitButton": "Reset Password",
-      "submittingButton": "Resetting...",
-      "strengthErrorMessage": "Password does not meet the strength requirements",
-      "mismatchErrorMessage": "Passwords do not match"
+      "backToLogin": "กลับไปที่หน้าเข้าสู่ระบบ",
+      "verifyTitle": "กรอกรหัสยืนยัน",
+      "verifySubtitle": "เราได้ส่งรหัส 6 หลักไปที่อีเมลของคุณแล้ว",
+      "codeLabel": "รหัสยืนยัน",
+      "codePlaceholder": "กรอกรหัส",
+      "previousButton": "ก่อนหน้า",
+      "verifyButton": "ยืนยัน",
+      "verifyingButton": "กำลังยืนยัน...",
+      "resendButton": "ส่งรหัสอีกครั้ง",
+      "resendingButton": "กำลังส่งอีกครั้ง...",
+      "verifySuccessMessage": "ยืนยันรหัสสำเร็จ!",
+      "resendSuccessMessage": "ส่งรหัสยืนยันใหม่แล้ว!",
+      "verifyErrorDefault": "รหัสยืนยันไม่ถูกต้อง",
+      "resendErrorDefault": "ส่งรหัสอีกครั้งไม่สำเร็จ",
+      "setPasswordTitle": "ตั้งรหัสผ่านใหม่",
+      "setPasswordSubtitle": "เลือกรหัสผ่านที่แข็งแรงสำหรับบัญชีของคุณ",
+      "newPasswordLabel": "รหัสผ่านใหม่",
+      "newPasswordPlaceholder": "รหัสผ่านใหม่",
+      "confirmPasswordLabel": "ยืนยันรหัสผ่าน",
+      "confirmPasswordPlaceholder": "ยืนยันรหัสผ่าน",
+      "showPassword": "แสดงรหัสผ่าน",
+      "hidePassword": "ซ่อนรหัสผ่าน",
+      "submitButton": "รีเซ็ตรหัสผ่าน",
+      "submittingButton": "กำลังรีเซ็ต...",
+      "strengthErrorMessage": "รหัสผ่านไม่ตรงตามเกณฑ์ความปลอดภัย",
+      "mismatchErrorMessage": "รหัสผ่านไม่ตรงกัน"
     },
     "login": {
       "signInWithGoogle": "เข้าสู่ระบบด้วย Google",
@@ -668,10 +687,6 @@
       "speaks": "พูด",
       "learning": "กำลังเรียน",
       "notSpecified": "ไม่ระบุ"
-    },
-    "suggested": {
-      "title": "สมาชิกอื่นๆ ที่คล้ายกับ {{name}}",
-      "seeAll": "ดูสมาชิกทั้งหมด"
     }
   },
   "communityDetailSection": {
@@ -692,6 +707,10 @@
     "buttons": {
       "tryAgain": "ลองใหม่",
       "backToCommunity": "กลับไปที่ชุมชน"
+    },
+    "suggested": {
+      "title": "สมาชิกอื่นๆ ที่คล้ายกับ {{name}}",
+      "seeAll": "ดูสมาชิกทั้งหมด"
     },
     "stats": {
       "followers": "ผู้ติดตาม",
@@ -924,23 +943,18 @@
   },
   "home": {
     "hero": {
-      "badge": "แลกเปลี่ยนภาษาง่ายๆ",
-      "titlePart1": "เรียนภาษาโดยการ",
-      "titleHighlight": "พูด",
-      "titlePart2": "กับเจ้าของภาษา",
-      "description": "เชื่อมต่อกับผู้เรียนภาษานับล้านทั่วโลก ฝึกพูด พัฒนาความคล่อง และหาเพื่อนจากทุกมุมโลก",
-      "stats": {
-        "users": "ผู้ใช้ที่ใช้งาน",
-        "languages": "ภาษา",
-        "countries": "ประเทศ"
-      },
-      "getStarted": "เริ่มต้นฟรี",
+      "badge": "แลกเปลี่ยนภาษา คนจริง ๆ",
+      "titlePart1": "ฝึกฝน",
+      "titleHighlight": "ภาษาใดก็ได้",
+      "titlePart2": "กับคนที่พูดภาษานั้นจริง ๆ",
+      "description": "BananaTalk จับคู่คุณกับเจ้าของภาษาจากทั่วโลก แชท ส่งข้อความเสียง แปลภาษา และรับการแก้ไข — ทุกบทสนทนาทำให้คุณเก่งขึ้น",
+      "getStarted": "เริ่มต้นเลย — ฟรี",
       "browseCommunity": "เรียกดูชุมชน",
-      "lovedBy": "เป็นที่ชื่นชอบของผู้เรียนกว่า 5 ล้านคน",
+      "lovedBy": "เป็นที่ชื่นชอบของผู้เรียนภาษาบน iOS และ Android",
       "chatPreview": {
-        "message1": "สวัสดี! สบายดีไหม? 👋",
-        "message2": "Hey! I'm practicing Thai!",
-        "message3": "ดีมาก! มาฝึกด้วยกันนะ 🇹🇭"
+        "message1": "안녕하세요! สุดสัปดาห์เป็นยังไงบ้าง",
+        "message2": "주말에 친구들과 등산 갔어요 ⛰️",
+        "message3": "เยี่ยม! 산 → ภูเขา บันทึกไว้ในคิวการเรียนของคุณแล้ว"
       },
       "title": "พูดผิดก็ได้",
       "titleAccent": "เราแปลให้",
@@ -953,90 +967,91 @@
       "pricing": "ราคา"
     },
     "features": {
-      "title": "ทุกอย่างที่คุณต้องการในการเรียน",
-      "subtitle": "เครื่องมือที่ทรงพลังออกแบบมาเพื่อเร่งการเรียนรู้ภาษาของคุณ",
+      "title": "ทุกสิ่งที่คุณต้องการเพื่อพูดภาษานั้นได้จริง",
+      "subtitle": "สร้างจากบทสนทนาจริงกับเจ้าของภาษาตัวจริง ไม่ใช่แบบฝึกหัดคำศัพท์",
       "chat": {
-        "title": "แชทแบบเรียลไทม์",
-        "description": "ฝึกสนทนากับเจ้าของภาษาผ่านข้อความแบบทันที"
+        "title": "แชทพร้อมคำแก้ไข",
+        "description": "ส่งข้อความ เสียง รูปภาพ และสติกเกอร์ แตะข้อความของคู่สนทนาเพื่อแปลหรือแก้ไขได้ในแตะเดียว"
       },
-      "video": {
-        "title": "วิดีโอคอล",
-        "description": "ฝึกภาษาแบบตัวต่อตัวกับคู่ฝึกทั่วโลก"
+      "translate": {
+        "title": "การแปลในตัว",
+        "description": "แปลข้อความใดก็ได้เป็นภาษาแม่ของคุณ บันทึกวลีลงในคิวการเรียนได้ทันที"
       },
-      "lessons": {
-        "title": "บทเรียนแบบโต้ตอบ",
-        "description": "เรียนรู้ด้วยหลักสูตรที่มีโครงสร้างและแบบฝึกหัดรายวัน"
+      "tutor": {
+        "title": "AI Tutor",
+        "description": "สถานการณ์สวมบทบาท คำศัพท์จากรูปภาพ และการฝึกออกเสียง — ทั้งหมดขับเคลื่อนโดย AI คู่เรียนของคุณเอง"
       },
-      "voice": {
-        "title": "ข้อความเสียง",
-        "description": "พัฒนาการออกเสียงของคุณด้วยการแลกเปลี่ยนเสียง"
+      "voice_rooms": {
+        "title": "Voice Rooms",
+        "description": "เข้าร่วมห้องเสียงสดกับเจ้าของภาษาและผู้เรียนภาษาจากทั่วโลก"
+      },
+      "calls": {
+        "title": "โทรเสียงและวิดีโอ",
+        "description": "โทรเสียงและวิดีโอในแตะเดียวกับคู่ฝึกภาษาของคุณ"
       },
       "community": {
-        "title": "ชุมชน",
-        "description": "เข้าร่วมกับผู้เรียนภาษานับล้านทั่วโลก"
-      },
-      "languages": {
-        "title": "กว่า 50 ภาษา",
-        "description": "จากสเปนถึงเกาหลี ค้นหาเส้นทางการเรียนของคุณ"
+        "title": "ชุมชนที่จริงแท้",
+        "description": "เรียกดูคู่ฝึกตามภาษาแม่ ดูว่าใครออนไลน์อยู่ และแชร์โมเมนต์กับคนที่เรียนภาษาเดียวกัน"
       }
     },
     "howItWorks": {
-      "title": "เริ่มเรียนใน 3 ขั้นตอน",
-      "subtitle": "เริ่มต้นในไม่กี่นาทีและเริ่มการเดินทางทางภาษาของคุณวันนี้"
+      "title": "สามขั้นตอนสู่บทสนทนาแรกของคุณ",
+      "subtitle": "ไม่ต้องใช้เบอร์โทร ไม่มีสแปม — มีแค่คนจริง ๆ ที่อยากเรียนรู้"
     },
     "steps": {
       "profile": {
-        "title": "สร้างโปรไฟล์ของคุณ",
-        "description": "บอกเราเกี่ยวกับภาษาแม่ของคุณและสิ่งที่คุณต้องการเรียน"
+        "title": "บอกภาษาของคุณให้เรารู้",
+        "description": "เลือกภาษาที่คุณพูดคล่องและภาษาที่กำลังเรียน เพิ่มหัวข้อที่คุณชอบสักสองสามอย่าง"
       },
       "partners": {
-        "title": "ค้นหาคู่ฝึก",
-        "description": "เรียกดูชุมชนของเราและค้นหาคู่แลกเปลี่ยนภาษาที่สมบูรณ์แบบ"
+        "title": "ค้นหาคู่ฝึกของคุณ",
+        "description": "เรียกดูชุมชนตามภาษา ประเทศ หรือหัวข้อ โบกมือหรือส่งข้อความหาคนที่น่าสนใจ"
       },
       "learn": {
-        "title": "เริ่มเรียน",
-        "description": "แชท โทร และฝึกกับเจ้าของภาษาทุกวัน"
+        "title": "ฝึกฝนทุกวัน",
+        "description": "แชท แลกเปลี่ยนข้อความเสียง รับการแก้ไข และเปลี่ยนคำศัพท์ใหม่ให้เป็นการ์ดทบทวนแบบเว้นระยะ"
       }
     },
     "pricing": {
-      "title": "เลือกแผนของคุณ",
-      "subtitle": "เริ่มต้นฟรีและอัปเกรดเมื่อคุณพร้อม",
-      "mostPopular": "ยอดนิยม",
-      "getStarted": "เริ่มต้น",
+      "title": "เริ่มต้นฟรี อัปเกรดเป็น VIP เมื่อพร้อมเรียนเร็วขึ้น",
+      "subtitle": "BananaTalk ฟรีสำหรับทุกคน อัปเกรดเพื่อยกเลิกขีดจำกัดรายวันของการแปล AI Tutor และอื่น ๆ",
+      "fineprint": "ยกเลิกได้ทุกเมื่อในการตั้งค่า App Store หรือ Google Play ของคุณ การสมัครสมาชิกจะต่ออายุอัตโนมัติจนกว่าจะยกเลิก",
       "free": {
         "name": "ฟรี",
         "period": "ตลอดไป",
+        "cta": "สร้างบัญชีฟรี",
         "features": {
-          "messaging": "ข้อความพื้นฐาน",
-          "connections": "5 การเชื่อมต่อใหม่/วัน",
-          "community": "เข้าถึงชุมชน",
-          "lessons": "บทเรียนพื้นฐาน"
+          "messaging": "แชทแบบตัวต่อตัวไม่จำกัดพร้อมการแปล",
+          "community": "เรียกดูและเชื่อมต่อกับชุมชน",
+          "moments": "โพสต์ Moments และอ่าน Stories",
+          "tutor_trial": "โควตา AI Tutor และการแปลรายวัน"
         },
         "f1": "แชทแบบตัวต่อตัวไม่จำกัดพร้อมการแปล",
         "f2": "ค้นหาและเชื่อมต่อกับคอมมูนิตี้",
         "f3": "โพสต์ Moments และอ่าน Stories"
       },
-      "premium": {
-        "name": "พรีเมียม",
-        "period": "/เดือน",
+      "monthly": {
+        "name": "VIP — รายเดือน",
+        "period": "ต่อเดือน",
+        "highlight": "ยืดหยุ่นที่สุด",
+        "cta": "เริ่มแบบรายเดือน",
         "features": {
-          "messaging": "ข้อความไม่จำกัด",
-          "connections": "การเชื่อมต่อไม่จำกัด",
-          "video": "วิดีโอคอล",
-          "lessons": "บทเรียนขั้นสูง",
-          "noAds": "ไม่มีโฆษณา",
-          "translation": "เครื่องมือแปลภาษา"
+          "unlimited_translation": "แปลและแก้ไขไม่จำกัด",
+          "unlimited_tutor": "เซสชัน AI Tutor และการสวมบทบาทไม่จำกัด",
+          "voice_rooms": "โฮสต์และปักหมุด Voice Rooms",
+          "priority": "จับคู่คู่ฝึกก่อนใคร"
         }
       },
-      "lifetime": {
-        "name": "ตลอดชีพ",
-        "period": "จ่ายครั้งเดียว",
+      "yearly": {
+        "name": "VIP — รายปี",
+        "period": "ต่อปี",
+        "highlight": "ประหยัด 72%",
+        "cta": "ประหยัดด้วยแพ็กเกจรายปี",
         "features": {
-          "everything": "ทุกอย่างในพรีเมียม",
-          "forever": "เข้าถึงตลอดไป",
-          "support": "การสนับสนุนลำดับความสำคัญ",
-          "early": "ฟีเจอร์ล่วงหน้า",
-          "badges": "ตราสัญลักษณ์พิเศษ"
+          "everything_in_monthly": "ทุกอย่างในแพ็กเกจรายเดือน",
+          "equiv": "เท่ากับเพียง $4.16 ต่อเดือน",
+          "early_access": "เข้าถึงฟีเจอร์ใหม่ก่อนใคร",
+          "support": "การสนับสนุนโดยตรงจากทีม BananaTalk"
         }
       },
       "best": "คุ้มค่าที่สุด",
@@ -1047,22 +1062,22 @@
     },
     "download": {
       "badge": "ดาวน์โหลดแอป",
-      "title": "พา BananaTalk ไปทุกที่",
-      "description": "เรียนรู้ขณะเดินทางด้วยแอปมือถือของเรา พร้อมใช้งานบน iOS และ Android พร้อมฟีเจอร์ทั้งหมด การแจ้งเตือนแบบพุช และการเข้าถึงแบบออฟไลน์",
+      "title": "ประสบการณ์เต็มรูปแบบอยู่บนมือถือ",
+      "description": "AI Tutor, Voice Rooms, การโทร และการแจ้งเตือนแบบเรียลไทม์มีเฉพาะบนมือถือเท่านั้น ดาวน์โหลดแอปเพื่อรับประสบการณ์ BananaTalk แบบเต็มรูปแบบ",
       "downloadOn": "ดาวน์โหลดบน",
       "getItOn": "ดาวน์โหลดได้ที่",
       "scanQR": "สแกนเพื่อดาวน์โหลดแอป",
       "or": "หรือ",
       "features": {
-        "offline": "เข้าถึงแบบออฟไลน์",
+        "offline": "แชทได้แม้ไม่มีอินเทอร์เน็ต",
         "push": "การแจ้งเตือนแบบพุช",
-        "fast": "เร็วและเบา"
+        "fast": "ติดตั้งฟรี"
       }
     },
     "cta": {
-      "title": "พร้อมเริ่มต้นการเดินทางทางภาษาของคุณหรือยัง?",
-      "description": "เข้าร่วมกับผู้เรียนนับล้านและเริ่มพูดภาษาใหม่วันนี้",
-      "button": "สร้างบัญชีฟรี",
+      "title": "พร้อมจะพูดคุยกันจริง ๆ หรือยัง",
+      "description": "เข้าร่วมชุมชน BananaTalk และเริ่มฝึกฝนตั้งแต่วันนี้ ไม่ต้องใช้บัตรเครดิต",
+      "button": "สร้างบัญชีฟรีของคุณ",
       "subtitle": "เริ่มต้นฟรี ไม่ต้องใช้บัตร ไม่มีการนับถอยหลังทดลองใช้"
     },
     "stats": {
@@ -1107,6 +1122,19 @@
       "prioritySupport": "การสนับสนุนลำดับความสำคัญ",
       "exclusiveBadge": "ตราสัญลักษณ์ VIP พิเศษ",
       "translationFeature": "การแปลข้อความ"
+    }
+  },
+  "linking": {
+    "share": {
+      "label": "แชร์",
+      "copied": "คัดลอกลิงก์ไปยังคลิปบอร์ดแล้ว!",
+      "copyFailed": "คัดลอกลิงก์ไม่สำเร็จ"
+    },
+    "openInApp": {
+      "label": "เปิดในแอป"
+    },
+    "appBanner": {
+      "text": "เปิดสิ่งนี้ในแอป BananaTalk"
     }
   },
   "seo": {

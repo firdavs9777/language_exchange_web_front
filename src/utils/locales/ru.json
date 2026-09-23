@@ -25,7 +25,7 @@
   "chat": "Чат",
   "chatPage": {
     "messages": "Сообщения",
-    "searchPlaceholder": "Поиск разговоров...",
+    "searchPlaceholder": "Поиск разговоров…",
     "startConversation": "Начать Разговор",
     "emptyDescription": "Выберите чат в боковой панели или начните новый разговор, чтобы связаться с языковыми партнёрами по всему миру.",
     "newConversation": "Новый Разговор",
@@ -38,10 +38,10 @@
     "online": "Онлайн",
     "offline": "Офлайн",
     "lastSeen": "Был(а) в сети",
-    "typing": "печатает...",
-    "loadingConversation": "Загрузка разговора...",
+    "typing": "печатает…",
+    "loadingConversation": "Загрузка разговора…",
     "errorLoading": "Ошибка загрузки разговора",
-    "messagePlaceholder": "Введите сообщение...",
+    "messagePlaceholder": "Введите сообщение…",
     "justNow": "Только что",
     "minutesAgo": "{{count}}м назад",
     "hoursAgo": "{{count}}ч назад",
@@ -67,13 +67,13 @@
       "warning": "Это действие нельзя отменить.",
       "cancel": "Отмена",
       "confirm": "Удалить",
-      "deleting": "Удаление..."
+      "deleting": "Удаление…"
     },
     "gif": {
       "title": "GIF",
       "close": "Закрыть выбор GIF",
-      "searchPlaceholder": "Поиск GIF...",
-      "loading": "Загрузка GIF...",
+      "searchPlaceholder": "Поиск GIF…",
+      "loading": "Загрузка GIF…",
       "noResults": "GIF не найдены",
       "poweredBy": "Powered by GIPHY",
       "altText": "GIF"
@@ -88,6 +88,25 @@
       "deleteFailed": "Не удалось удалить диалог",
       "deleted": "Диалог удалён"
     }
+  },
+  "newChat": {
+    "title": "Новый чат",
+    "subtitle": "Начать разговор",
+    "directMessage": "Личное",
+    "groupChat": "Группа",
+    "searchPlaceholder": "Поиск по имени, @имени пользователя или ID…",
+    "searchHint": "Найдите пользователей, чтобы начать чат",
+    "hintName": "Поиск по имени",
+    "hintUsername": "Введите @имя пользователя для поиска по нику",
+    "hintId": "Вставьте ID пользователя для точного поиска",
+    "searchByUsername": "Поиск по имени пользователя",
+    "searchById": "Поиск по ID пользователя",
+    "noResults": "Пользователи не найдены",
+    "tryDifferent": "Попробуйте другое имя, @имя пользователя или ID",
+    "createGroup": "Создать группу",
+    "selectMoreUsers": "Выберите минимум 2 пользователей для группового чата",
+    "createError": "Не удалось создать чат",
+    "recently": "Недавние"
   },
   "notifications": "Уведомления",
   "moments": "Моменты",
@@ -243,7 +262,7 @@
     "title": "Моменты",
     "question": "О чём вы думаете,",
     "loading": "Загрузка",
-    "loading_moments": "Загрузка Моментов...",
+    "loading_moments": "Загрузка Моментов…",
     "error_loading": "Ошибка загрузки моментов",
     "error_info": "Не удалось загрузить моменты. Пожалуйста, попробуйте позже.",
     "retry_btn": "Повторить",
@@ -257,7 +276,7 @@
     "moment_share": "Поделиться",
     "no_comments": "Комментариев пока нет. Будьте первым!",
     "invalidMomentId": "Недействительный ID момента",
-    "loadingMoment": "Загрузка деталей момента...",
+    "loadingMoment": "Загрузка деталей момента…",
     "noDetailsFound": "Детали не найдены",
     "goBack": "Назад",
     "momentDetails": "Детали Момента",
@@ -268,8 +287,8 @@
     "emptyCommentError": "Пожалуйста, добавьте комментарий",
     "commentAdded": "Комментарий добавлен",
     "failedToAddComment": "Не удалось добавить комментарий",
-    "loadingComments": "Загрузка комментариев...",
-    "writeCommentPlaceholder": "Напишите комментарий...",
+    "loadingComments": "Загрузка комментариев…",
+    "writeCommentPlaceholder": "Напишите комментарий…",
     "signInToComment": "Пожалуйста, войдите, чтобы добавить комментарий",
     "signIn": "войти",
     "noCommentsYet": "Комментариев пока нет. Будьте первым!",
@@ -298,13 +317,13 @@
     },
     "create": {
       "header": "Создать момент",
-      "titlePlaceholder": "Добавить заголовок...",
+      "titlePlaceholder": "Добавить заголовок…",
       "addToMoment": "Добавить к моменту",
       "addPhotos": "Добавить фото",
       "addMood": "Добавить настроение",
       "addLocation": "Добавить место",
       "addTags": "Добавить теги",
-      "tagPlaceholder": "Добавить тег..."
+      "tagPlaceholder": "Добавить тег…"
     },
     "promo": {
       "title": "Моменты теперь в приложении",
@@ -343,7 +362,7 @@
       "maxImagesText": "Максимум 10 изображений",
       "addMoreText": "Добавить Ещё",
       "submitButton": "Опубликовать",
-      "submittingButton": "Публикация...",
+      "submittingButton": "Публикация…",
       "cancelButton": "Отмена"
     },
     "toast": {
@@ -364,56 +383,56 @@
       "titleLabel": "Заголовок",
       "titlePlaceholder": "Введите заголовок для вашего момента",
       "descriptionLabel": "Описание",
-      "descriptionPlaceholder": "Расскажите о вашем моменте...",
+      "descriptionPlaceholder": "Расскажите о вашем моменте…",
       "imagesLabel": "Изображения",
       "maxImagesText": "Вы можете загрузить до 10 изображений (Макс. 5МБ каждое)",
       "existingImagesLabel": "Текущие Изображения",
       "newImagesLabel": "Новые Изображения",
       "addMoreText": "Добавить ещё",
       "updateButton": "Обновить Момент",
-      "updatingButton": "Обновление...",
+      "updatingButton": "Обновление…",
       "cancelButton": "Отмена"
     }
   },
   "authentication": {
     "enterEmail": {
       "title": "Введите вашу эл. почту",
-      "subtitle": "We'll send a verification code to your email",
+      "subtitle": "Мы отправим код подтверждения на вашу почту",
       "emailLabel": "Адрес Электронной Почты",
       "emailPlaceholder": "Введите эл. почту",
       "sendButton": "Отправить Код",
-      "sendingButton": "Отправка...",
+      "sendingButton": "Отправка…",
       "successMessage": "Код подтверждения успешно отправлен!",
       "errorPrefix": "Ошибка: "
     },
     "passwordReset": {
       "successMessage": "Пароль успешно сброшен, пожалуйста, войдите!",
-      "backToLogin": "Back to login",
-      "verifyTitle": "Enter verification code",
-      "verifySubtitle": "We've sent a 6-digit code to your email",
-      "codeLabel": "Verification Code",
-      "codePlaceholder": "Enter code",
-      "previousButton": "Previous",
-      "verifyButton": "Verify",
-      "verifyingButton": "Verifying...",
-      "resendButton": "Resend code",
-      "resendingButton": "Resending...",
-      "verifySuccessMessage": "Verification code successfully verified!",
-      "resendSuccessMessage": "A new verification code has been sent!",
-      "verifyErrorDefault": "Invalid verification code",
-      "resendErrorDefault": "Failed to resend the code",
-      "setPasswordTitle": "Set new password",
-      "setPasswordSubtitle": "Choose a strong password for your account",
-      "newPasswordLabel": "New Password",
-      "newPasswordPlaceholder": "New Password",
-      "confirmPasswordLabel": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm Password",
-      "showPassword": "Show password",
-      "hidePassword": "Hide password",
-      "submitButton": "Reset Password",
-      "submittingButton": "Resetting...",
-      "strengthErrorMessage": "Password does not meet the strength requirements",
-      "mismatchErrorMessage": "Passwords do not match"
+      "backToLogin": "Назад ко входу",
+      "verifyTitle": "Введите код подтверждения",
+      "verifySubtitle": "Мы отправили 6-значный код на вашу почту",
+      "codeLabel": "Код подтверждения",
+      "codePlaceholder": "Введите код",
+      "previousButton": "Назад",
+      "verifyButton": "Подтвердить",
+      "verifyingButton": "Проверка…",
+      "resendButton": "Отправить код повторно",
+      "resendingButton": "Повторная отправка…",
+      "verifySuccessMessage": "Код подтверждения успешно проверен!",
+      "resendSuccessMessage": "Новый код подтверждения отправлен!",
+      "verifyErrorDefault": "Неверный код подтверждения",
+      "resendErrorDefault": "Не удалось отправить код повторно",
+      "setPasswordTitle": "Придумайте новый пароль",
+      "setPasswordSubtitle": "Выберите надёжный пароль для своего аккаунта",
+      "newPasswordLabel": "Новый пароль",
+      "newPasswordPlaceholder": "Новый пароль",
+      "confirmPasswordLabel": "Подтвердите пароль",
+      "confirmPasswordPlaceholder": "Подтвердите пароль",
+      "showPassword": "Показать пароль",
+      "hidePassword": "Скрыть пароль",
+      "submitButton": "Сбросить пароль",
+      "submittingButton": "Сброс…",
+      "strengthErrorMessage": "Пароль не соответствует требованиям к надёжности",
+      "mismatchErrorMessage": "Пароли не совпадают"
     },
     "login": {
       "signInWithGoogle": "Войти через Google",
@@ -424,7 +443,7 @@
       "passwordPlaceholder": "Введите пароль",
       "forgotPassword": "Забыли Пароль?",
       "signInButton": "Войти",
-      "signingInButton": "Вход...",
+      "signingInButton": "Вход…",
       "newUserText": "Новый Пользователь?",
       "registerLink": "Регистрация",
       "successMessage": "Вход выполнен успешно",
@@ -460,7 +479,7 @@
       "uploadPrompt": "Нажмите, чтобы загрузить изображения профиля",
       "selectImages": "Выбрать Изображения",
       "back": "Назад",
-      "processing": "Обработка..."
+      "processing": "Обработка…"
     },
     "verification": {
       "title": "Подтверждение Эл. Почты",
@@ -468,9 +487,9 @@
       "verificationCode": "Код Подтверждения",
       "codePlaceholder": "Введите 6-значный код",
       "verifyButton": "Подтвердить Эл. Почту",
-      "verifying": "Проверка...",
+      "verifying": "Проверка…",
       "resendCode": "Отправить код повторно",
-      "sending": "Отправка...",
+      "sending": "Отправка…",
       "backToProfile": "Вернуться к Профилю",
       "successMessage": "Эл. почта успешно подтверждена!",
       "completePrompt": "Завершите регистрацию, нажав кнопку ниже.",
@@ -506,8 +525,8 @@
       "countries": "Страны"
     },
     "search": {
-      "placeholder": "Поиск по имени, языку или интересам...",
-      "loading": "Поиск языковых партнёров..."
+      "placeholder": "Поиск по имени, языку или интересам…",
+      "loading": "Поиск языковых партнёров…"
     },
     "memberCard": {
       "native": "Родной",
@@ -552,7 +571,7 @@
       "tryAgain": "Попробовать Снова"
     },
     "loadMore": {
-      "loading": "Загрузка...",
+      "loading": "Загрузка…",
       "button": "Загрузить Ещё"
     },
     "cta": {
@@ -628,8 +647,8 @@
       "startConversation": "Начать Разговор"
     },
     "loading": {
-      "loadingProfile": "Загрузка профиля...",
-      "initiatingCall": "Инициализация звонка с {{name}}..."
+      "loadingProfile": "Загрузка профиля…",
+      "initiatingCall": "Инициализация звонка с {{name}}…"
     },
     "notifications": {
       "loginToFollow": "Вам нужно войти, чтобы подписаться на пользователей",
@@ -668,10 +687,6 @@
       "speaks": "Говорит на",
       "learning": "Изучает",
       "notSpecified": "Не указано"
-    },
-    "suggested": {
-      "title": "Другие участники, похожие на {{name}}",
-      "seeAll": "Посмотреть всех"
     }
   },
   "communityDetailSection": {
@@ -687,11 +702,15 @@
       "couldNotLoadProfile": "Не удалось загрузить этот профиль. Пожалуйста, попробуйте позже.",
       "profileNotFound": "Профиль Не Найден",
       "profileDoesNotExist": "Этот профиль пользователя не существует или был удалён.",
-      "loadingProfile": "Загрузка профиля..."
+      "loadingProfile": "Загрузка профиля…"
     },
     "buttons": {
       "tryAgain": "Попробовать Снова",
       "backToCommunity": "Вернуться в Сообщество"
+    },
+    "suggested": {
+      "title": "Другие участники, похожие на {{name}}",
+      "seeAll": "Посмотреть всех участников"
     },
     "stats": {
       "followers": "Подписчики",
@@ -776,7 +795,7 @@
     },
     "vocabulary": {
       "title": "Словарный Запас",
-      "searchPlaceholder": "Поиск слов...",
+      "searchPlaceholder": "Поиск слов…",
       "addWord": "Добавить Слово",
       "noWords": "Слов пока нет",
       "startAdding": "Начните добавлять слова в свой словарный запас",
@@ -924,23 +943,18 @@
   },
   "home": {
     "hero": {
-      "badge": "Языковой Обмен — Это Просто",
-      "titlePart1": "Учите Языки",
-      "titleHighlight": "Разговаривая",
-      "titlePart2": "с Носителями Языка",
-      "description": "Общайтесь с миллионами изучающих языки по всему миру. Практикуйте разговорную речь, улучшайте беглость и заводите друзей со всех уголков мира.",
-      "stats": {
-        "users": "Активные Пользователи",
-        "languages": "Языки",
-        "countries": "Страны"
-      },
-      "getStarted": "Начать Бесплатно",
-      "browseCommunity": "Обзор Сообщества",
-      "lovedBy": "Любим более 5М учеников",
+      "badge": "Языковой обмен с настоящими людьми",
+      "titlePart1": "Практикуйте",
+      "titleHighlight": "любой язык",
+      "titlePart2": "с тем, кто правда на нём говорит.",
+      "description": "BananaTalk знакомит вас с носителями языка со всего мира. Общайтесь в чате, отправляйте голосовые, переводите и получайте исправления — каждый разговор делает вас лучше.",
+      "getStarted": "Начать бесплатно",
+      "browseCommunity": "Посмотреть сообщество",
+      "lovedBy": "Любимое приложение изучающих языки на iOS и Android",
       "chatPreview": {
-        "message1": "Привет! Как дела? 👋",
-        "message2": "Hey! I'm practicing Russian!",
-        "message3": "Отлично! Давай практиковаться вместе 🇷🇺"
+        "message1": "안녕하세요! Как прошли выходные?",
+        "message2": "주말에 친구들과 등산 갔어요 ⛰️",
+        "message3": "Здорово! 산 → гора. Сохранено в ваш список для изучения."
       },
       "title": "Скажи с ошибками.",
       "titleAccent": "Мы переведём.",
@@ -953,90 +967,91 @@
       "pricing": "Цены"
     },
     "features": {
-      "title": "Всё, Что Нужно Для Обучения",
-      "subtitle": "Мощные инструменты, созданные для ускорения вашего языкового обучения",
+      "title": "Всё, что нужно, чтобы по-настоящему заговорить на языке",
+      "subtitle": "В основе — реальные разговоры с реальными носителями языка, а не зубрёжка слов.",
       "chat": {
-        "title": "Чат в Реальном Времени",
-        "description": "Практикуйте разговоры с носителями языка через мгновенные сообщения"
+        "title": "Чат с исправлениями",
+        "description": "Отправляйте текст, голосовые, фото и стикеры. Нажмите на сообщение партнёра, чтобы перевести его, или исправьте его одним касанием."
       },
-      "video": {
-        "title": "Видеозвонки",
-        "description": "Языковая практика лицом к лицу с партнёрами по всему миру"
+      "translate": {
+        "title": "Встроенный перевод",
+        "description": "Переводите любое сообщение на родной язык. Сохраняйте фразы прямо в свой список для изучения."
       },
-      "lessons": {
-        "title": "Интерактивные Уроки",
-        "description": "Учитесь со структурированными курсами и ежедневными упражнениями"
+      "tutor": {
+        "title": "ИИ-репетитор",
+        "description": "Ролевые сценарии, изучение слов по картинкам и работа над произношением — и всё это с вашим личным ИИ-репетитором."
       },
-      "voice": {
-        "title": "Голосовые Сообщения",
-        "description": "Совершенствуйте произношение с помощью аудиообмена"
+      "voice_rooms": {
+        "title": "Голосовые комнаты",
+        "description": "Заходите в живые аудиокомнаты с носителями языка и другими изучающими со всего мира."
+      },
+      "calls": {
+        "title": "Голосовые и видеозвонки",
+        "description": "Аудио- и видеозвонки с языковыми партнёрами в одно касание."
       },
       "community": {
-        "title": "Сообщество",
-        "description": "Присоединяйтесь к миллионам изучающих языки по всему миру"
-      },
-      "languages": {
-        "title": "Более 50 Языков",
-        "description": "От испанского до корейского — найдите свой путь обучения"
+        "title": "Настоящее сообщество",
+        "description": "Ищите партнёров по родному языку, смотрите, кто онлайн, и делитесь моментами с теми, кто изучает тот же язык."
       }
     },
     "howItWorks": {
-      "title": "Начните Учиться за 3 Шага",
-      "subtitle": "Начните за несколько минут и приступите к языковому путешествию уже сегодня"
+      "title": "Три шага до первого разговора",
+      "subtitle": "Никаких номеров телефона и спама — только реальные люди, которые хотят учиться."
     },
     "steps": {
       "profile": {
-        "title": "Создайте Свой Профиль",
-        "description": "Расскажите нам о вашем родном языке и о том, что вы хотите изучать"
+        "title": "Расскажите о своих языках",
+        "description": "Укажите, на каком языке вы говорите свободно, а какой изучаете. Добавьте несколько интересных вам тем."
       },
       "partners": {
-        "title": "Найдите Партнёров",
-        "description": "Просматривайте наше сообщество и находите идеальных партнёров для языкового обмена"
+        "title": "Найдите партнёра",
+        "description": "Просматривайте сообщество по языку, стране или теме. Помашите или напишите тому, кто вас заинтересовал."
       },
       "learn": {
-        "title": "Начните Учиться",
-        "description": "Общайтесь, звоните и практикуйтесь с носителями языка каждый день"
+        "title": "Практикуйтесь каждый день",
+        "description": "Общайтесь, обменивайтесь голосовыми, получайте исправления и превращайте новые слова в карточки для интервального повторения."
       }
     },
     "pricing": {
-      "title": "Выберите Свой План",
-      "subtitle": "Начните бесплатно и перейдите на платный план, когда будете готовы",
-      "mostPopular": "Самый Популярный",
-      "getStarted": "Начать",
+      "title": "Бесплатно для начала. VIP — когда захотите учиться быстрее.",
+      "subtitle": "BananaTalk бесплатен для всех. Оформите VIP, чтобы снять дневные лимиты на переводы, ИИ-репетитора и многое другое.",
+      "fineprint": "Отменить можно в любой момент в настройках App Store или Google Play. Подписка продлевается автоматически, пока вы её не отмените.",
       "free": {
         "name": "Бесплатный",
         "period": "навсегда",
+        "cta": "Создать бесплатный аккаунт",
         "features": {
-          "messaging": "Базовые сообщения",
-          "connections": "5 новых контактов/день",
-          "community": "Доступ к сообществу",
-          "lessons": "Базовые уроки"
+          "messaging": "Безлимитный чат один на один с переводом",
+          "community": "Просматривайте сообщество и находите контакты",
+          "moments": "Публикуйте Moments и читайте Stories",
+          "tutor_trial": "Дневная квота на ИИ-репетитора и переводы"
         },
         "f1": "Безлимитный чат один на один с переводом",
         "f2": "Просматривайте сообщество и находите контакты",
         "f3": "Публикуйте Moments и читайте Stories"
       },
-      "premium": {
-        "name": "Премиум",
-        "period": "/месяц",
+      "monthly": {
+        "name": "VIP — Ежемесячно",
+        "period": "в месяц",
+        "highlight": "Самый гибкий",
+        "cta": "Начать с месячного плана",
         "features": {
-          "messaging": "Безлимитные сообщения",
-          "connections": "Безлимитные контакты",
-          "video": "Видеозвонки",
-          "lessons": "Продвинутые уроки",
-          "noAds": "Без рекламы",
-          "translation": "Инструменты перевода"
+          "unlimited_translation": "Безлимитные переводы и исправления",
+          "unlimited_tutor": "Безлимитные сессии с ИИ-репетитором и ролевые игры",
+          "voice_rooms": "Создавайте и закрепляйте голосовые комнаты",
+          "priority": "Приоритетный подбор партнёров"
         }
       },
-      "lifetime": {
-        "name": "Пожизненный",
-        "period": "единоразово",
+      "yearly": {
+        "name": "VIP — Годовой",
+        "period": "в год",
+        "highlight": "Экономия 72%",
+        "cta": "Сэкономить с годовым планом",
         "features": {
-          "everything": "Всё из Премиум",
-          "forever": "Доступ навсегда",
-          "support": "Приоритетная поддержка",
-          "early": "Ранний доступ к функциям",
-          "badges": "Эксклюзивные значки"
+          "everything_in_monthly": "Всё из месячного плана",
+          "equiv": "Всего 4,16 $ / месяц в среднем",
+          "early_access": "Ранний доступ к новым функциям",
+          "support": "Прямая поддержка от команды BananaTalk"
         }
       },
       "best": "Лучшая цена",
@@ -1047,21 +1062,21 @@
     },
     "download": {
       "badge": "Скачайте Приложение",
-      "title": "Берите BananaTalk с Собой",
-      "description": "Учитесь на ходу с нашим мобильным приложением. Доступно для iOS и Android со всеми функциями, push-уведомлениями и офлайн-доступом.",
+      "title": "Весь опыт доступен только в мобильном приложении",
+      "description": "ИИ-репетитор, голосовые комнаты, звонки и мгновенные уведомления доступны только в приложении. Установите приложение, чтобы получить весь опыт BananaTalk.",
       "downloadOn": "Скачать в",
       "getItOn": "Доступно в",
       "scanQR": "Отсканируйте, чтобы скачать приложение",
       "or": "или",
       "features": {
-        "offline": "Офлайн-доступ",
+        "offline": "Чат работает и офлайн",
         "push": "Push-уведомления",
-        "fast": "Быстрое и лёгкое"
+        "fast": "Бесплатная установка"
       }
     },
     "cta": {
-      "title": "Готовы Начать Своё Языковое Путешествие?",
-      "description": "Присоединяйтесь к миллионам учеников и начните говорить на новом языке уже сегодня",
+      "title": "Готовы к настоящему разговору?",
+      "description": "Присоединяйтесь к сообществу BananaTalk и начните практиковаться уже сегодня. Банковская карта не нужна.",
       "button": "Создать Бесплатный Аккаунт",
       "subtitle": "Бесплатно для начала. Без карты, без обратного отсчёта пробного периода."
     },
@@ -1107,6 +1122,19 @@
       "prioritySupport": "Приоритетная поддержка",
       "exclusiveBadge": "Эксклюзивный значок VIP",
       "translationFeature": "Перевод сообщений"
+    }
+  },
+  "linking": {
+    "share": {
+      "label": "Поделиться",
+      "copied": "Ссылка скопирована в буфер обмена!",
+      "copyFailed": "Не удалось скопировать ссылку"
+    },
+    "openInApp": {
+      "label": "Открыть в приложении"
+    },
+    "appBanner": {
+      "text": "Откройте это в приложении BananaTalk"
     }
   },
   "seo": {

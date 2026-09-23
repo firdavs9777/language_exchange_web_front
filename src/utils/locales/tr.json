@@ -25,7 +25,7 @@
   "chat": "Sohbet",
   "chatPage": {
     "messages": "Mesajlar",
-    "searchPlaceholder": "Konuşmalarda ara...",
+    "searchPlaceholder": "Konuşmalarda ara…",
     "startConversation": "Konuşma Başlat",
     "emptyDescription": "Kenar çubuğundan bir sohbet seçin veya dünya genelindeki dil ortaklarıyla bağlantı kurmak için yeni bir konuşma başlatın.",
     "newConversation": "Yeni Konuşma",
@@ -38,10 +38,10 @@
     "online": "Çevrimiçi",
     "offline": "Çevrimdışı",
     "lastSeen": "Son görülme",
-    "typing": "yazıyor...",
-    "loadingConversation": "Konuşma yükleniyor...",
+    "typing": "yazıyor…",
+    "loadingConversation": "Konuşma yükleniyor…",
     "errorLoading": "Konuşma yüklenirken hata",
-    "messagePlaceholder": "Mesajınızı yazın...",
+    "messagePlaceholder": "Mesajınızı yazın…",
     "justNow": "Az önce",
     "minutesAgo": "{{count}}dk önce",
     "hoursAgo": "{{count}}sa önce",
@@ -67,13 +67,13 @@
       "warning": "Bu işlem geri alınamaz.",
       "cancel": "İptal",
       "confirm": "Sil",
-      "deleting": "Siliniyor..."
+      "deleting": "Siliniyor…"
     },
     "gif": {
       "title": "GIF",
       "close": "GIF seçiciyi kapat",
-      "searchPlaceholder": "GIF ara...",
-      "loading": "GIF'ler yükleniyor...",
+      "searchPlaceholder": "GIF ara…",
+      "loading": "GIF'ler yükleniyor…",
       "noResults": "GIF bulunamadı",
       "poweredBy": "GIPHY ile destekleniyor",
       "altText": "GIF"
@@ -88,6 +88,25 @@
       "deleteFailed": "Sohbet silinemedi",
       "deleted": "Sohbet silindi"
     }
+  },
+  "newChat": {
+    "title": "Yeni Sohbet",
+    "subtitle": "Bir konuşma başlatın",
+    "directMessage": "Birebir",
+    "groupChat": "Grup",
+    "searchPlaceholder": "İsim, @kullanıcı adı veya kullanıcı ID'sine göre arayın…",
+    "searchHint": "Sohbet başlatmak için kullanıcı arayın",
+    "hintName": "İsme göre arayın",
+    "hintUsername": "Kullanıcı adına göre bulmak için @kullaniciadi yazın",
+    "hintId": "Doğrudan bulmak için bir kullanıcı ID'si yapıştırın",
+    "searchByUsername": "Kullanıcı adına göre aranıyor",
+    "searchById": "Kullanıcı ID'sine göre aranıyor",
+    "noResults": "Kullanıcı bulunamadı",
+    "tryDifferent": "Farklı bir isim, @kullanıcı adı veya kullanıcı ID'si deneyin",
+    "createGroup": "Grup Oluştur",
+    "selectMoreUsers": "Grup sohbeti için en az 2 kullanıcı seçin",
+    "createError": "Sohbet oluşturulamadı",
+    "recently": "Son zamanlarda"
   },
   "notifications": "Bildirimler",
   "moments": "Anlar",
@@ -243,7 +262,7 @@
     "title": "Anlar",
     "question": "Aklında ne var,",
     "loading": "Yükleniyor",
-    "loading_moments": "Anlar Yükleniyor...",
+    "loading_moments": "Anlar Yükleniyor…",
     "error_loading": "Anlar yüklenirken hata",
     "error_info": "Anları yükleyemedik. Lütfen daha sonra tekrar deneyin.",
     "retry_btn": "Tekrar Dene",
@@ -257,7 +276,7 @@
     "moment_share": "Paylaş",
     "no_comments": "Henüz yorum yok. İlk yorumu yapan siz olun!",
     "invalidMomentId": "Geçersiz an ID'si",
-    "loadingMoment": "An detayları yükleniyor...",
+    "loadingMoment": "An detayları yükleniyor…",
     "noDetailsFound": "Detay bulunamadı",
     "goBack": "Geri Dön",
     "momentDetails": "An Detayları",
@@ -268,8 +287,8 @@
     "emptyCommentError": "Lütfen bir yorum ekleyin",
     "commentAdded": "Yorum eklendi",
     "failedToAddComment": "Yorum eklenemedi",
-    "loadingComments": "Yorumlar yükleniyor...",
-    "writeCommentPlaceholder": "Bir yorum yazın...",
+    "loadingComments": "Yorumlar yükleniyor…",
+    "writeCommentPlaceholder": "Bir yorum yazın…",
     "signInToComment": "Yorum yapmak için lütfen giriş yapın",
     "signIn": "giriş yap",
     "noCommentsYet": "Henüz yorum yok. İlk yorumu yapan siz olun!",
@@ -298,13 +317,13 @@
     },
     "create": {
       "header": "Moment oluştur",
-      "titlePlaceholder": "Başlık ekle...",
+      "titlePlaceholder": "Başlık ekle…",
       "addToMoment": "Moment'inize ekleyin",
       "addPhotos": "Fotoğraf ekle",
       "addMood": "Ruh hali ekle",
       "addLocation": "Konum ekle",
       "addTags": "Etiket ekle",
-      "tagPlaceholder": "Etiket ekle..."
+      "tagPlaceholder": "Etiket ekle…"
     },
     "promo": {
       "title": "Anlar artık uygulamada",
@@ -343,7 +362,7 @@
       "maxImagesText": "En fazla 10 resim yüklenebilir",
       "addMoreText": "Daha Fazla Ekle",
       "submitButton": "Paylaş",
-      "submittingButton": "Paylaşılıyor...",
+      "submittingButton": "Paylaşılıyor…",
       "cancelButton": "İptal"
     },
     "toast": {
@@ -364,56 +383,56 @@
       "titleLabel": "Başlık",
       "titlePlaceholder": "Anınız için bir başlık girin",
       "descriptionLabel": "Açıklama",
-      "descriptionPlaceholder": "Anınız hakkında bize anlatın...",
+      "descriptionPlaceholder": "Anınız hakkında bize anlatın…",
       "imagesLabel": "Resimler",
       "maxImagesText": "En fazla 10 resim yükleyebilirsiniz (Maks 5MB)",
       "existingImagesLabel": "Mevcut Resimler",
       "newImagesLabel": "Yeni Resimler",
       "addMoreText": "Daha fazla ekle",
       "updateButton": "Anı Güncelle",
-      "updatingButton": "Güncelleniyor...",
+      "updatingButton": "Güncelleniyor…",
       "cancelButton": "İptal"
     }
   },
   "authentication": {
     "enterEmail": {
       "title": "E-postanızı girin",
-      "subtitle": "We'll send a verification code to your email",
+      "subtitle": "E-postanıza bir doğrulama kodu göndereceğiz",
       "emailLabel": "E-posta Adresi",
       "emailPlaceholder": "E-posta girin",
       "sendButton": "Kod Gönder",
-      "sendingButton": "Gönderiliyor...",
+      "sendingButton": "Gönderiliyor…",
       "successMessage": "Doğrulama kodu başarıyla gönderildi!",
       "errorPrefix": "Hata: "
     },
     "passwordReset": {
       "successMessage": "Şifre başarıyla sıfırlandı, lütfen giriş yapın!",
-      "backToLogin": "Back to login",
-      "verifyTitle": "Enter verification code",
-      "verifySubtitle": "We've sent a 6-digit code to your email",
-      "codeLabel": "Verification Code",
-      "codePlaceholder": "Enter code",
-      "previousButton": "Previous",
-      "verifyButton": "Verify",
-      "verifyingButton": "Verifying...",
-      "resendButton": "Resend code",
-      "resendingButton": "Resending...",
-      "verifySuccessMessage": "Verification code successfully verified!",
-      "resendSuccessMessage": "A new verification code has been sent!",
-      "verifyErrorDefault": "Invalid verification code",
-      "resendErrorDefault": "Failed to resend the code",
-      "setPasswordTitle": "Set new password",
-      "setPasswordSubtitle": "Choose a strong password for your account",
-      "newPasswordLabel": "New Password",
-      "newPasswordPlaceholder": "New Password",
-      "confirmPasswordLabel": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm Password",
-      "showPassword": "Show password",
-      "hidePassword": "Hide password",
-      "submitButton": "Reset Password",
-      "submittingButton": "Resetting...",
-      "strengthErrorMessage": "Password does not meet the strength requirements",
-      "mismatchErrorMessage": "Passwords do not match"
+      "backToLogin": "Girişe dön",
+      "verifyTitle": "Doğrulama kodunu girin",
+      "verifySubtitle": "E-postanıza 6 haneli bir kod gönderdik",
+      "codeLabel": "Doğrulama Kodu",
+      "codePlaceholder": "Kodu girin",
+      "previousButton": "Geri",
+      "verifyButton": "Doğrula",
+      "verifyingButton": "Doğrulanıyor…",
+      "resendButton": "Kodu tekrar gönder",
+      "resendingButton": "Tekrar gönderiliyor…",
+      "verifySuccessMessage": "Doğrulama kodu başarıyla onaylandı!",
+      "resendSuccessMessage": "Yeni bir doğrulama kodu gönderildi!",
+      "verifyErrorDefault": "Geçersiz doğrulama kodu",
+      "resendErrorDefault": "Kod tekrar gönderilemedi",
+      "setPasswordTitle": "Yeni şifre belirleyin",
+      "setPasswordSubtitle": "Hesabınız için güçlü bir şifre seçin",
+      "newPasswordLabel": "Yeni Şifre",
+      "newPasswordPlaceholder": "Yeni Şifre",
+      "confirmPasswordLabel": "Şifreyi Onayla",
+      "confirmPasswordPlaceholder": "Şifreyi Onayla",
+      "showPassword": "Şifreyi göster",
+      "hidePassword": "Şifreyi gizle",
+      "submitButton": "Şifreyi Sıfırla",
+      "submittingButton": "Sıfırlanıyor…",
+      "strengthErrorMessage": "Şifre güvenlik gereksinimlerini karşılamıyor",
+      "mismatchErrorMessage": "Şifreler eşleşmiyor"
     },
     "login": {
       "signInWithGoogle": "Google ile Giriş Yap",
@@ -424,10 +443,11 @@
       "passwordPlaceholder": "Şifre girin",
       "forgotPassword": "Şifremi Unuttum?",
       "signInButton": "Giriş Yap",
-      "signingInButton": "Giriş Yapılıyor...",
+      "signingInButton": "Giriş Yapılıyor…",
       "newUserText": "Yeni Kullanıcı?",
       "registerLink": "Kayıt Ol",
-      "successMessage": "Başarıyla giriş yapıldı"
+      "successMessage": "Başarıyla giriş yapıldı",
+      "invalidCredentialsError": "Geçersiz kimlik bilgileri"
     },
     "account": {
       "title": "Hesabınızı Oluşturun",
@@ -459,7 +479,7 @@
       "uploadPrompt": "Profil resimleri yüklemek için tıklayın",
       "selectImages": "Resim Seç",
       "back": "Geri",
-      "processing": "İşleniyor..."
+      "processing": "İşleniyor…"
     },
     "verification": {
       "title": "E-posta Doğrulama",
@@ -467,9 +487,9 @@
       "verificationCode": "Doğrulama Kodu",
       "codePlaceholder": "6 haneli kodu girin",
       "verifyButton": "E-postayı Doğrula",
-      "verifying": "Doğrulanıyor...",
+      "verifying": "Doğrulanıyor…",
       "resendCode": "Doğrulama kodunu tekrar gönder",
-      "sending": "Gönderiliyor...",
+      "sending": "Gönderiliyor…",
       "backToProfile": "Profile Dön",
       "successMessage": "E-posta başarıyla doğrulandı!",
       "completePrompt": "Aşağıdaki butona tıklayarak kaydınızı tamamlayın.",
@@ -505,8 +525,8 @@
       "countries": "Ülkeler"
     },
     "search": {
-      "placeholder": "İsim, dil veya ilgi alanlarına göre ara...",
-      "loading": "Dil ortakları aranıyor..."
+      "placeholder": "İsim, dil veya ilgi alanlarına göre ara…",
+      "loading": "Dil ortakları aranıyor…"
     },
     "memberCard": {
       "native": "Anadil",
@@ -551,7 +571,7 @@
       "tryAgain": "Tekrar Dene"
     },
     "loadMore": {
-      "loading": "Yükleniyor...",
+      "loading": "Yükleniyor…",
       "button": "Daha Fazla Üye Yükle"
     },
     "cta": {
@@ -627,8 +647,8 @@
       "startConversation": "Konuşma Başlat"
     },
     "loading": {
-      "loadingProfile": "Profil yükleniyor...",
-      "initiatingCall": "{{name}} ile arama başlatılıyor..."
+      "loadingProfile": "Profil yükleniyor…",
+      "initiatingCall": "{{name}} ile arama başlatılıyor…"
     },
     "notifications": {
       "loginToFollow": "Kullanıcıları takip etmek için giriş yapmanız gerekiyor",
@@ -667,10 +687,6 @@
       "speaks": "Konuşuyor",
       "learning": "Öğreniyor",
       "notSpecified": "Belirtilmedi"
-    },
-    "suggested": {
-      "title": "{{name}} gibi diğer üyeler",
-      "seeAll": "Tüm üyeleri gör"
     }
   },
   "communityDetailSection": {
@@ -686,11 +702,15 @@
       "couldNotLoadProfile": "Bu profili yükleyemedik. Lütfen daha sonra tekrar deneyin.",
       "profileNotFound": "Profil Bulunamadı",
       "profileDoesNotExist": "Bu kullanıcı profili mevcut değil veya kaldırılmış.",
-      "loadingProfile": "Profil yükleniyor..."
+      "loadingProfile": "Profil yükleniyor…"
     },
     "buttons": {
       "tryAgain": "Tekrar Dene",
       "backToCommunity": "Topluluğa Dön"
+    },
+    "suggested": {
+      "title": "{{name}} gibi diğer üyeler",
+      "seeAll": "Tüm üyeleri gör"
     },
     "stats": {
       "followers": "Takipçiler",
@@ -775,7 +795,7 @@
     },
     "vocabulary": {
       "title": "Kelime Hazinesi",
-      "searchPlaceholder": "Kelime ara...",
+      "searchPlaceholder": "Kelime ara…",
       "addWord": "Kelime Ekle",
       "noWords": "Henüz kelime yok",
       "startAdding": "Kelime hazinenize kelime eklemeye başlayın",
@@ -923,23 +943,18 @@
   },
   "home": {
     "hero": {
-      "badge": "Dil Değişimi Kolaylaştırıldı",
-      "titlePart1": "Dilleri",
-      "titleHighlight": "Konuşarak",
-      "titlePart2": "Anadil Konuşmacılarıyla Öğrenin",
-      "description": "Dünya genelinde milyonlarca dil öğreneniyle bağlantı kurun. Konuşma pratiği yapın, akıcılığınızı artırın ve dünyanın her köşesinden arkadaşlar edinin.",
-      "stats": {
-        "users": "Aktif Kullanıcılar",
-        "languages": "Diller",
-        "countries": "Ülkeler"
-      },
-      "getStarted": "Ücretsiz Başla",
-      "browseCommunity": "Topluluğa Göz At",
-      "lovedBy": "5M+ öğrenen tarafından seviliyor",
+      "badge": "Dil değişimi, gerçek insanlarla",
+      "titlePart1": "İstediğin dili",
+      "titleHighlight": "gerçekten konuşan biriyle",
+      "titlePart2": "pratik yap.",
+      "description": "BananaTalk seni dünyanın dört bir yanından anadil konuşanlarla buluşturur. Sohbet et, sesli mesaj at, çevir ve düzeltmeler al — her konuşma seni geliştirir.",
+      "getStarted": "Hemen başla — ücretsiz",
+      "browseCommunity": "Topluluğa göz at",
+      "lovedBy": "iOS ve Android'de dil öğrenenlerin gözdesi",
       "chatPreview": {
-        "message1": "Merhaba! Nasılsın? 👋",
-        "message2": "Hey! I'm practicing Turkish!",
-        "message3": "Harika! Birlikte pratik yapalım 🇹🇷"
+        "message1": "안녕하세요! Hafta sonun nasıldı?",
+        "message2": "주말에 친구들과 등산 갔어요 ⛰️",
+        "message3": "Süper! 산 → dağ. Çalışma listene kaydedildi."
       },
       "title": "Yanlış söyle.",
       "titleAccent": "Biz çevireceğiz.",
@@ -952,90 +967,91 @@
       "pricing": "Fiyatlandırma"
     },
     "features": {
-      "title": "Öğrenmek İçin İhtiyacınız Olan Her Şey",
-      "subtitle": "Dil öğrenme yolculuğunuzu hızlandırmak için tasarlanmış güçlü araçlar",
+      "title": "Dili gerçekten konuşmak için ihtiyacın olan her şey",
+      "subtitle": "Kelime ezberi değil, gerçek anadil konuşanlarla yapılan gerçek sohbetler üzerine kurulu.",
       "chat": {
-        "title": "Gerçek Zamanlı Sohbet",
-        "description": "Anlık mesajlaşma yoluyla anadil konuşmacılarıyla konuşma pratiği yapın"
+        "title": "Düzeltmeli sohbet",
+        "description": "Metin, sesli mesaj, fotoğraf ve çıkartma gönder. Partnerinin mesajına dokunarak çevir ya da tek dokunuşla düzelt."
       },
-      "video": {
-        "title": "Görüntülü Aramalar",
-        "description": "Dünya genelindeki ortaklarla yüz yüze dil pratiği"
+      "translate": {
+        "title": "Yerleşik çeviri",
+        "description": "Herhangi bir mesajı anadiline çevir. İfadeleri doğrudan çalışma listene kaydet."
       },
-      "lessons": {
-        "title": "İnteraktif Dersler",
-        "description": "Yapılandırılmış kurslar ve günlük alıştırmalarla öğrenin"
+      "tutor": {
+        "title": "Yapay Zeka Öğretmeni",
+        "description": "Rol yapma senaryoları, görsellerle kelime öğrenme ve telaffuz koçluğu — hepsi kendi yapay zeka çalışma partnerinle."
       },
-      "voice": {
-        "title": "Sesli Mesajlar",
-        "description": "Ses alışverişleriyle telaffuzunuzu mükemmelleştirin"
+      "voice_rooms": {
+        "title": "Sesli Odalar",
+        "description": "Dünyanın her yerinden anadil konuşanlar ve dil öğrenenlerle canlı sesli odalara katıl."
+      },
+      "calls": {
+        "title": "Sesli ve görüntülü aramalar",
+        "description": "Dil partnerlerinle tek dokunuşla sesli ve görüntülü ara."
       },
       "community": {
-        "title": "Topluluk",
-        "description": "Dünya genelinde milyonlarca dil öğrenenine katılın"
-      },
-      "languages": {
-        "title": "50+ Dil",
-        "description": "İspanyolcadan Koreceye, öğrenme yolunuzu bulun"
+        "title": "Gerçek topluluk",
+        "description": "Partnerleri anadillerine göre keşfet, kimin çevrimiçi olduğunu gör ve aynı dili öğrenenlerle anları paylaş."
       }
     },
     "howItWorks": {
-      "title": "3 Adımda Öğrenmeye Başlayın",
-      "subtitle": "Dakikalar içinde başlayın ve bugün dil yolculuğunuza başlayın"
+      "title": "İlk sohbetine kadar üç adım",
+      "subtitle": "Telefon numarası yok, spam yok — sadece öğrenmek isteyen gerçek insanlar."
     },
     "steps": {
       "profile": {
-        "title": "Profilinizi Oluşturun",
-        "description": "Bize anadilinizi ve ne öğrenmek istediğinizi anlatın"
+        "title": "Dillerini anlat",
+        "description": "Akıcı konuştuğun ve öğrenmek istediğin dilleri seç. İlgini çeken birkaç konu ekle."
       },
       "partners": {
-        "title": "Ortaklar Bulun",
-        "description": "Topluluğumuza göz atın ve mükemmel dil değişim ortakları bulun"
+        "title": "Partnerini bul",
+        "description": "Topluluğu dile, ülkeye veya konuya göre keşfet. İlgini çeken birine el salla ya da mesaj at."
       },
       "learn": {
-        "title": "Öğrenmeye Başlayın",
-        "description": "Her gün anadil konuşmacılarıyla sohbet edin, arayın ve pratik yapın"
+        "title": "Her gün pratik yap",
+        "description": "Sohbet et, sesli notlar paylaş, düzeltmeler al ve yeni kelimeleri aralıklı tekrar kartlarına dönüştür."
       }
     },
     "pricing": {
-      "title": "Planınızı Seçin",
-      "subtitle": "Ücretsiz başlayın ve hazır olduğunuzda yükseltin",
-      "mostPopular": "En Popüler",
-      "getStarted": "Başla",
+      "title": "Başlaması ücretsiz. Daha hızlı öğrenmeye hazır olduğunda VIP'e geç.",
+      "subtitle": "BananaTalk herkes için ücretsiz. Çeviri, Yapay Zeka Öğretmeni ve daha fazlasındaki günlük sınırları kaldırmak için VIP'e yükselt.",
+      "fineprint": "App Store veya Google Play ayarlarından istediğin zaman iptal edebilirsin. Abonelikler iptal edilene kadar otomatik olarak yenilenir.",
       "free": {
         "name": "Ücretsiz",
         "period": "sonsuza kadar",
+        "cta": "Ücretsiz hesap oluştur",
         "features": {
-          "messaging": "Temel mesajlaşma",
-          "connections": "Günde 5 yeni bağlantı",
-          "community": "Topluluk erişimi",
-          "lessons": "Temel dersler"
+          "messaging": "Çeviriyle sınırsız birebir sohbet",
+          "community": "Topluluğa göz at ve bağlantı kur",
+          "moments": "Moments paylaş ve Stories oku",
+          "tutor_trial": "Günlük Yapay Zeka Öğretmeni ve çeviri kotası"
         },
         "f1": "Çeviriyle sınırsız birebir sohbet",
         "f2": "Topluluğa göz atın ve bağlantı kurun",
         "f3": "Moments paylaşın ve Stories okuyun"
       },
-      "premium": {
-        "name": "Premium",
-        "period": "/ay",
+      "monthly": {
+        "name": "VIP — Aylık",
+        "period": "aylık",
+        "highlight": "En esnek",
+        "cta": "Aylık planla başla",
         "features": {
-          "messaging": "Sınırsız mesajlaşma",
-          "connections": "Sınırsız bağlantı",
-          "video": "Görüntülü aramalar",
-          "lessons": "İleri düzey dersler",
-          "noAds": "Reklamsız",
-          "translation": "Çeviri araçları"
+          "unlimited_translation": "Sınırsız çeviri ve düzeltme",
+          "unlimited_tutor": "Sınırsız Yapay Zeka Öğretmeni seansı ve rol yapma",
+          "voice_rooms": "Sesli Odaları başlat ve sabitle",
+          "priority": "Öncelikli partner eşleştirme"
         }
       },
-      "lifetime": {
-        "name": "Ömür Boyu",
-        "period": "tek seferlik",
+      "yearly": {
+        "name": "VIP — Yıllık",
+        "period": "yıllık",
+        "highlight": "%72 tasarruf",
+        "cta": "Yıllık planla tasarruf et",
         "features": {
-          "everything": "Premium'daki her şey",
-          "forever": "Sonsuza kadar erişim",
-          "support": "Öncelikli destek",
-          "early": "Erken erişim özellikleri",
-          "badges": "Özel rozetler"
+          "everything_in_monthly": "Aylık plandaki her şey",
+          "equiv": "Ayda ortalama sadece 4,16 $",
+          "early_access": "Yeni özelliklere erken erişim",
+          "support": "BananaTalk ekibinden doğrudan destek"
         }
       },
       "best": "En iyi değer",
@@ -1046,23 +1062,23 @@
     },
     "download": {
       "badge": "Uygulamayı İndir",
-      "title": "BananaTalk'u Her Yere Götürün",
-      "description": "Mobil uygulamamızla hareket halinde öğrenin. Tüm özellikler, anlık bildirimler ve çevrimdışı erişimle iOS ve Android'de mevcuttur.",
+      "title": "Tam deneyim yalnızca mobilde",
+      "description": "Yapay Zeka Öğretmeni, Sesli Odalar, aramalar ve anlık bildirimler yalnızca mobilde. Eksiksiz BananaTalk deneyimi için uygulamayı indir.",
       "downloadOn": "Şuradan indirin",
       "getItOn": "Şuradan edinin",
       "scanQR": "Uygulamayı indirmek için tarayın",
       "or": "veya",
       "features": {
-        "offline": "Çevrimdışı erişim",
+        "offline": "Çevrimdışıyken de sohbet et",
         "push": "Anlık bildirimler",
-        "fast": "Hızlı ve hafif"
+        "fast": "Ücretsiz kurulum"
       }
     },
     "cta": {
-      "title": "Dil Yolculuğunuza Başlamaya Hazır Mısınız?",
-      "description": "Milyonlarca öğrenenin arasına katılın ve bugün yeni bir dil konuşmaya başlayın",
-      "button": "Ücretsiz Hesap Oluştur",
-      "subtitle": "Ücretsiz başlayın. Kart yok, deneme süresi geri sayımı yok."
+      "title": "Gerçek bir sohbete hazır mısın?",
+      "description": "BananaTalk topluluğuna katıl ve bugün pratik yapmaya başla. Kredi kartı gerekmez.",
+      "button": "Ücretsiz hesabını oluştur",
+      "subtitle": "Başlaması ücretsiz. Kart yok, deneme süresi geri sayımı yok."
     },
     "stats": {
       "languages": "dil",
@@ -1106,6 +1122,19 @@
       "prioritySupport": "Öncelikli destek",
       "exclusiveBadge": "Özel VIP rozeti",
       "translationFeature": "Mesaj çevirisi"
+    }
+  },
+  "linking": {
+    "share": {
+      "label": "Paylaş",
+      "copied": "Bağlantı panoya kopyalandı!",
+      "copyFailed": "Bağlantı kopyalanamadı"
+    },
+    "openInApp": {
+      "label": "Uygulamada aç"
+    },
+    "appBanner": {
+      "text": "Bunu BananaTalk uygulamasında açın"
     }
   },
   "seo": {
