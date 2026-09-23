@@ -11,7 +11,9 @@
       "pricing": "Preços",
       "contact": "Contato",
       "communities": "Comunidades",
-      "download": "Baixe o App"
+      "download": "Baixe o App",
+      "meet": "Conheça gente",
+      "learnKorean": "Aprenda coreano"
     },
     "contactInfo": "Informações de Contato",
     "address": "Seul, Coreia do Sul, Gangnam-gu",
@@ -982,7 +984,7 @@
       },
       "title": "Fale errado.",
       "titleAccent": "A gente traduz.",
-      "subtitle": "Escreva no seu idioma, a outra pessoa lê no dela. Toque em qualquer mensagem para ver como ela foi dita de verdade — é assim que se aprende.",
+      "subtitle": "Intercâmbio de idiomas grátis com falantes nativos. Escreva no seu idioma, eles leem no deles, e é da diferença que você aprende.",
       "trust": "Plano grátis para sempre · 137 idiomas · Tutor de IA 24 horas"
     },
     "sections": {
@@ -1016,11 +1018,52 @@
       "calls": {
         "title": "Chamadas de voz e vídeo",
         "description": "Chamadas de áudio e vídeo com um toque, direto com seus parceiros de idioma."
+      },
+      "inApp": "No app",
+      "items": {
+        "findPartner": {
+          "title": "Encontre um parceiro",
+          "body": "O match acontece pela dupla de idiomas que você realmente quer trocar."
+        },
+        "chatTranslate": {
+          "title": "Um chat que traduz",
+          "body": "Nos dois sentidos, dentro da mensagem, enquanto você digita."
+        },
+        "moments": {
+          "title": "Momentos",
+          "body": "Mostre como é o seu dia e receba correções de nativos."
+        },
+        "aiTutor": {
+          "title": "Tutor de IA",
+          "body": "Pratique às 3 da manhã sem passar vergonha."
+        },
+        "voiceRooms": {
+          "title": "Salas de voz",
+          "body": "Entre em uma sala ao vivo e só escute, se quiser."
+        },
+        "gatherings": {
+          "title": "Encontros",
+          "body": "Conheça gente perto de você que está aprendendo o seu idioma."
+        }
       }
     },
     "howItWorks": {
       "title": "Três passos até sua primeira conversa",
-      "subtitle": "Sem número de telefone, sem spam — só gente de verdade querendo aprender."
+      "subtitle": "Sem número de telefone, sem spam — só gente de verdade querendo aprender.",
+      "steps": {
+        "1": {
+          "title": "Conte o que você fala e o que você quer",
+          "body": "Escolha seu idioma nativo e o que está aprendendo. É essa dupla que usamos para achar seu par."
+        },
+        "2": {
+          "title": "Encontre alguém que valha a conversa",
+          "body": "Explore quem está aprendendo o seu idioma. Acene ou simplesmente puxe assunto."
+        },
+        "3": {
+          "title": "Fale errado, melhore rápido",
+          "body": "Toda mensagem é traduzida nos dois sentidos, e o tutor de IA corrige você sem ninguém vendo."
+        }
+      }
     },
     "steps": {
       "profile": {
@@ -1110,6 +1153,15 @@
       "AI tutor": "tutor de IA",
       "forever tier": "nível gratuito",
       "learners": "alunos"
+    },
+    "marquee": {
+      "title": "Falantes nativos de todos os idiomas que você quer aprender",
+      "caption": "137 idiomas, e crescendo"
+    },
+    "earlyAdopter": {
+      "badge": "Lançado em dezembro de 2025",
+      "title": "Seja um dos primeiros",
+      "body": "O BananaTalk é novo. As pessoas que você encontra aqui são as que estão construindo o que essa comunidade vai ser — um motivo para chegar cedo melhor do que qualquer avaliação."
     }
   },
   "vip": {
@@ -1177,6 +1229,18 @@
     "dataDeletion": {
       "title": "Solicitação de Exclusão de Dados | BananaTalk",
       "description": "Como excluir sua conta e dados pessoais do BananaTalk, e o que acontece após o pedido."
+    },
+    "meet": {
+      "title": "Conheça gente de outros países | BananaTalk",
+      "description": "Conheça gente de outros países e faça amizades internacionais conversando. Cada mensagem é traduzida nos dois sentidos, sem precisar ser fluente."
+    },
+    "learnKorean": {
+      "title": "Aprenda coreano conversando com nativos",
+      "description": "Aprenda coreano de graça conversando com coreanos nativos. Você escreve em português, eles em hangul, e um tutor de IA explica 존댓말 vs. 반말."
+    },
+    "communities": {
+      "title": "Comunidades de intercâmbio de idiomas | BananaTalk",
+      "description": "Entre nas comunidades de intercâmbio de idiomas do BananaTalk: grupos reais praticando coreano, espanhol, japonês e mais, juntos, de graça, todo dia."
     }
   },
   "notFound": {
@@ -1382,6 +1446,131 @@
       "page": "Página {{page}}",
       "previous": "Anterior",
       "next": "Próxima"
+    }
+  },
+  "download": {
+    "title": "Baixe o BananaTalk",
+    "subtitle": "Intercâmbio de idiomas grátis com falantes nativos em 137 idiomas, no iPhone e no Android.",
+    "free": "Grátis. Sem cartão.",
+    "scan": "Escaneie com a câmera do celular",
+    "qrAlt": "Código QR para baixar o BananaTalk",
+    "reasons": {
+      "tutor": {
+        "title": "Um tutor de IA em cada conversa",
+        "body": "Correções e explicações nas mensagens que você realmente envia."
+      },
+      "voice": {
+        "title": "Salas de voz e chamadas",
+        "body": "Pratique em voz alta com gente que está aprendendo o seu idioma agora mesmo."
+      },
+      "translate": {
+        "title": "Tradução instantânea",
+        "body": "Escreva no seu idioma, eles leem no deles, e é da diferença que você aprende."
+      }
+    }
+  },
+  "meet": {
+    "hero": {
+      "title": "Conheça gente de outros países",
+      "titleAccent": "que responde de verdade.",
+      "subtitle": "O BananaTalk é onde você faz amizades internacionais conversando com falantes nativos. Escolha um idioma, diga oi, e cada mensagem chega traduzida — assim nenhum dos dois precisa ser fluente antes.",
+      "trust": "Plano grátis para sempre · 137 idiomas · Cada mensagem traduzida nos dois sentidos",
+      "demo": {
+        "1": {
+          "text": "Andiamo a vedere il tramonto sabato?",
+          "translation": "Vamos ver o pôr do sol no sábado?"
+        },
+        "2": {
+          "text": "Sim! Ainda faz calor aí em setembro?",
+          "translation": "Sì! Fa ancora caldo lì a settembre?"
+        }
+      },
+      "note": {
+        "label": "✦ TRADUZIDO NOS DOIS SENTIDOS",
+        "body": "Ela escreveu em italiano e você leu em português. Você escreveu em português e ela leu em italiano. Nenhum dos dois precisou trocar de idioma."
+      }
+    },
+    "howItWorks": {
+      "title": "Fazer um amigo aqui leva três passos",
+      "steps": {
+        "1": {
+          "title": "Escolha um idioma, não um perfil",
+          "body": "Escolha o idioma ou o país que desperta sua curiosidade. A gente mostra quem já está aprendendo o seu — é um intercâmbio de idiomas, então os dois saem ganhando."
+        },
+        "2": {
+          "title": "Diga oi com as suas palavras",
+          "body": "Escreva no idioma em que você pensa. Chega no dela na hora, então a primeira mensagem nunca é a parte difícil."
+        },
+        "3": {
+          "title": "Continuem conversando",
+          "body": "Áudios, fotos, Momentos, chamadas. As conversas que ficam são as que sobrevivem à prática."
+        }
+      }
+    },
+    "features": {
+      "title": "Feito para conversas que não param"
+    },
+    "cta": {
+      "title": "Tem gente acordada em outro país agora mesmo",
+      "subtitle": "Grátis para começar. Sem cartão, sem contagem regressiva de teste."
+    }
+  },
+  "learnKorean": {
+    "hero": {
+      "title": "Aprenda coreano conversando",
+      "titleAccent": "com coreanos de verdade.",
+      "subtitle": "Troque idiomas com coreanos nativos que querem o seu em troca. Você tenta em 한국어, eles respondem no coreano que as pessoas usam de verdade, e o tutor de IA corrige o que saiu errado — em particular.",
+      "trust": "Plano grátis para sempre · Coreanos nativos · Tutor de IA 24 horas",
+      "demo": {
+        "1": {
+          "text": "주말에 뭐 했어요?",
+          "translation": "O que você fez neste fim de semana?"
+        },
+        "2": {
+          "text": "친구 만났다! 진짜 재미있었어",
+          "translation": "Encontrei um amigo! Foi muito divertido"
+        }
+      },
+      "note": {
+        "label": "✦ TUTOR DE IA",
+        "body": "존댓말 vs. 반말: ela perguntou com 했어요, a forma polida. Você respondeu em 반말, que é para amigos próximos. Por enquanto, acompanhe o tom dela: 친구 만났어요! 진짜 재미있었어요."
+      }
+    },
+    "howItWorks": {
+      "title": "Por que o coreano gruda quando você conversa",
+      "steps": {
+        "1": {
+          "title": "O coreano que aparece nas conversas reais",
+          "body": "Seu livro didático ensina 합니다. Seu parceiro digita 했어요, ㅋㅋ e 헐 — o coreano que espera por você numa conversa de verdade."
+        },
+        "2": {
+          "title": "존댓말 e 반말, sentidos em vez de decorados",
+          "body": "A formalidade é uma escolha que você faz em cada frase. Ler as escolhas de um nativo ensina isso mais rápido do que qualquer tabela de terminações."
+        },
+        "3": {
+          "title": "Corrigido sem a vergonha",
+          "body": "O tutor de IA marca o seu coreano onde só você vê, então o intercâmbio de idiomas nunca vira prova. Seu parceiro só vê você tentando, que é justamente o que faz ele continuar respondendo."
+        }
+      }
+    },
+    "features": {
+      "title": "Três coisas que um livro didático não consegue te dar"
+    },
+    "cta": {
+      "title": "Tem coreano aprendendo o seu idioma agora mesmo",
+      "subtitle": "Grátis para começar. Sem cartão, sem contagem regressiva de teste."
+    }
+  },
+  "communities": {
+    "public": {
+      "title": "Comunidades de intercâmbio de idiomas",
+      "intro": "Grupos reais dentro do BananaTalk, onde todo dia se pratica um idioma junto. Ache o seu aqui, abra no app e comece a conversar.",
+      "members": "membros",
+      "join": "Entrar pelo app",
+      "empty": {
+        "title": "Novas comunidades abrem toda semana",
+        "body": "Ainda não há nada para mostrar aqui. Baixe o app e cada comunidade aparece no momento em que abre."
+      }
     }
   }
 }

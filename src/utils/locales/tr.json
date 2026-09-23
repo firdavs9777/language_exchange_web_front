@@ -11,7 +11,9 @@
       "pricing": "Fiyatlandırma",
       "contact": "İletişim",
       "communities": "Topluluklar",
-      "download": "Uygulamayı İndir"
+      "download": "Uygulamayı İndir",
+      "meet": "İnsanlarla tanış",
+      "learnKorean": "Korece öğren"
     },
     "contactInfo": "İletişim Bilgileri",
     "address": "Seoul, Güney Kore, Gangnam-gu",
@@ -1001,7 +1003,7 @@
       },
       "title": "Yanlış söyle.",
       "titleAccent": "Biz çevireceğiz.",
-      "subtitle": "Kendi dilinde yaz, karşı taraf kendi dilinde okusun. Nasıl gerçekten söylendiğini görmek için herhangi bir mesaja dokun — öğrenmenin yolu bu.",
+      "subtitle": "Anadil konuşanlarla ücretsiz dil değişimi. Kendi dilinde yaz, onlar kendi dilinde okusun; aradaki farktan öğren.",
       "trust": "Sonsuza kadar ücretsiz katman · 137 dil · 7/24 yapay zeka öğretmeni"
     },
     "sections": {
@@ -1035,11 +1037,52 @@
       "community": {
         "title": "Gerçek topluluk",
         "description": "Partnerleri anadillerine göre keşfet, kimin çevrimiçi olduğunu gör ve aynı dili öğrenenlerle anları paylaş."
+      },
+      "inApp": "Uygulamada",
+      "items": {
+        "findPartner": {
+          "title": "Partner bul",
+          "body": "Gerçekten değiş tokuş etmek istediğin dil çiftine göre eşleş."
+        },
+        "chatTranslate": {
+          "title": "Çeviren sohbet",
+          "body": "Her iki yönde, mesajın içinde, sen yazarken."
+        },
+        "moments": {
+          "title": "Moments",
+          "body": "Gününün nasıl geçtiğini paylaş, anadil konuşanlardan düzeltme al."
+        },
+        "aiTutor": {
+          "title": "Yapay Zeka Öğretmeni",
+          "body": "Sabahın üçünde, rezil olmadan pratik yap."
+        },
+        "voiceRooms": {
+          "title": "Sesli Odalar",
+          "body": "Canlı bir odaya gir ve istersen sadece dinle."
+        },
+        "gatherings": {
+          "title": "Buluşmalar",
+          "body": "Yakınında senin dilini öğrenen insanlarla tanış."
+        }
       }
     },
     "howItWorks": {
       "title": "İlk sohbetine kadar üç adım",
-      "subtitle": "Telefon numarası yok, spam yok — sadece öğrenmek isteyen gerçek insanlar."
+      "subtitle": "Telefon numarası yok, spam yok — sadece öğrenmek isteyen gerçek insanlar.",
+      "steps": {
+        "1": {
+          "title": "Hangi dili konuştuğunu ve ne istediğini söyle",
+          "body": "Anadilini ve öğrendiğin dili seç. Seni eşleştirdiğimiz şey bu ikili."
+        },
+        "2": {
+          "title": "Konuşmaya değer birini bul",
+          "body": "Senin dilini öğrenenlere göz at. El salla ya da doğrudan sohbete başla."
+        },
+        "3": {
+          "title": "Kötü konuş, hızlı ilerle",
+          "body": "Her mesaj iki yönde de çevrilir, yapay zeka öğretmeni de kimse görmeden seni düzeltir."
+        }
+      }
     },
     "steps": {
       "profile": {
@@ -1129,6 +1172,15 @@
       "AI tutor": "yapay zeka öğretmeni",
       "forever tier": "ücretsiz katman",
       "learners": "öğrenciler"
+    },
+    "marquee": {
+      "title": "Öğrenmek istediğin her dilin anadil konuşanları",
+      "caption": "137 dil ve artmaya devam ediyor"
+    },
+    "earlyAdopter": {
+      "badge": "Aralık 2025'te yayında",
+      "title": "İlklerden biri ol",
+      "body": "BananaTalk yeni. Burada tanıştığın insanlar, bu topluluğun ne olacağını şekillendiren insanlar — erken katılmak için bu, her yorumdan daha iyi bir sebep."
     }
   },
   "vip": {
@@ -1209,6 +1261,18 @@
     "dataDeletion": {
       "title": "Veri Silme Talebi | BananaTalk",
       "description": "BananaTalk hesabınızı ve kişisel verilerinizi nasıl sileceğiniz ve talep sonrasında neler olacağı."
+    },
+    "meet": {
+      "title": "Başka Ülkelerden İnsanlarla Tanış | BananaTalk",
+      "description": "Başka ülkelerden insanlarla tanış, sohbet ederek uluslararası arkadaşlıklar kur. Her mesaj iki yönde çevrilir; ikinizin de akıcı olması gerekmez."
+    },
+    "learnKorean": {
+      "title": "Anadili Korece Olanlarla Sohbet Ederek Korece Öğren",
+      "description": "Koreli anadil konuşanlarla sohbet ederek ücretsiz Korece öğren. Sen Türkçe yaz, onlar Hangul yazsın; yapay zeka öğretmeni 존댓말 ve 반말 farkını anlatsın."
+    },
+    "communities": {
+      "title": "Dil Değişimi Toplulukları | BananaTalk",
+      "description": "BananaTalk'taki dil değişimi topluluklarına katıl: her gün birlikte Korece, İspanyolca, Japonca ve daha fazlasını pratik eden gerçek gruplar, ücretsiz."
     }
   },
   "notFound": {
@@ -1382,6 +1446,131 @@
       "page": "Sayfa {{page}}",
       "previous": "Önceki",
       "next": "Sonraki"
+    }
+  },
+  "download": {
+    "title": "BananaTalk'u indir",
+    "subtitle": "137 dilde anadil konuşanlarla ücretsiz dil değişimi — iPhone ve Android'de.",
+    "free": "Ücretsiz. Kart yok.",
+    "scan": "Telefon kameranla tara",
+    "qrAlt": "BananaTalk'u indirmek için QR kod",
+    "reasons": {
+      "tutor": {
+        "title": "Her sohbette bir yapay zeka öğretmeni",
+        "body": "Gerçekten gönderdiğin mesajlar üzerinden düzeltmeler ve açıklamalar."
+      },
+      "voice": {
+        "title": "Sesli Odalar ve aramalar",
+        "body": "Şu anda senin dilini öğrenen insanlarla sesli pratik yap."
+      },
+      "translate": {
+        "title": "Anında çeviri",
+        "body": "Kendi dilinde yaz, onlar kendi dilinde okusun; aradaki farktan öğren."
+      }
+    }
+  },
+  "meet": {
+    "hero": {
+      "title": "Başka ülkelerden insanlarla tanış",
+      "titleAccent": "hem de gerçekten cevap verenlerle.",
+      "subtitle": "BananaTalk, anadil konuşanlarla konuşarak uluslararası arkadaşlıklar kurduğun yer. Bir dil seç, merhaba de; her mesaj çevrilmiş olarak ulaşsın — ikinizin de baştan akıcı olması gerekmez.",
+      "trust": "Sonsuza kadar ücretsiz katman · 137 dil · Her mesaj iki yönde çevrilir",
+      "demo": {
+        "1": {
+          "text": "Bora ver o pôr do sol no sábado?",
+          "translation": "Cumartesi günbatımını izlemeye gidelim mi?"
+        },
+        "2": {
+          "text": "Evet! Eylülde orası hâlâ sıcak mı?",
+          "translation": "Sim! Ainda faz calor aí em setembro?"
+        }
+      },
+      "note": {
+        "label": "✦ İKİ YÖNDE DE ÇEVRİLDİ",
+        "body": "O Portekizce yazdı, sen Türkçe okudun. Sen Türkçe yazdın, o Portekizce okudu. İkiniz de dil değiştirmek zorunda kalmadınız."
+      }
+    },
+    "howItWorks": {
+      "title": "Burada arkadaş edinmek üç adım",
+      "steps": {
+        "1": {
+          "title": "Profil değil, dil seç",
+          "body": "Merak ettiğin dili ya da ülkeyi seç. Biz de sana senin dilini öğrenenleri gösterelim — bu bir dil değişimi, yani ikiniz de kazanıyorsunuz."
+        },
+        "2": {
+          "title": "Kendi kelimelerinle merhaba de",
+          "body": "Düşündüğün dilde yaz. Karşı tarafa anında kendi dilinde ulaşır; ilk mesaj asla zor kısım değil."
+        },
+        "3": {
+          "title": "Konuşmaya devam edin",
+          "body": "Sesli mesajlar, fotoğraflar, Moments, aramalar. Kalıcı olan sohbetler, pratiğin ötesine geçenlerdir."
+        }
+      }
+    },
+    "features": {
+      "title": "Devam eden sohbetler için tasarlandı"
+    },
+    "cta": {
+      "title": "Şu anda başka bir ülkede biri uyanık",
+      "subtitle": "Başlaması ücretsiz. Kart yok, deneme süresi geri sayımı yok."
+    }
+  },
+  "learnKorean": {
+    "hero": {
+      "title": "Sohbet ederek Korece öğren",
+      "titleAccent": "hem de gerçek Korelilerle.",
+      "subtitle": "Karşılığında seninkini isteyen Koreli anadil konuşanlarla dil değiş tokuşu yap. Sen 한국어 ile dene, onlar Korelilerin gerçekten kullandığı Koreceyle cevaplasın, yapay zeka öğretmeni de yanlışlarını düzeltsin — hem de sadece senin göreceğin şekilde.",
+      "trust": "Sonsuza kadar ücretsiz katman · Koreli anadil konuşanlar · 7/24 yapay zeka öğretmeni",
+      "demo": {
+        "1": {
+          "text": "주말에 뭐 했어요?",
+          "translation": "Hafta sonu ne yaptın?"
+        },
+        "2": {
+          "text": "친구 만났다! 진짜 재미있었어",
+          "translation": "Arkadaşımla buluştum! Gerçekten çok eğlenceliydi"
+        }
+      },
+      "note": {
+        "label": "✦ YAPAY ZEKA ÖĞRETMENİ",
+        "body": "존댓말 ve 반말: o, kibar biçim olan 했어요 ile sordu. Sen ise yakın arkadaşlar için kullanılan 반말 ile cevap verdin. Şimdilik sen de ona uy: 친구 만났어요! 진짜 재미있었어요."
+      }
+    },
+    "howItWorks": {
+      "title": "Sohbet edince Korece neden aklında kalır",
+      "steps": {
+        "1": {
+          "title": "Gerçek sohbetlerde karşına çıkan Korece",
+          "body": "Ders kitabın 합니다 öğretir. Partnerin ise 했어요, ㅋㅋ ve 헐 yazar — gerçek bir sohbette seni bekleyen Korece bu."
+        },
+        "2": {
+          "title": "존댓말 ve 반말: ezberlemek değil, hissetmek",
+          "body": "Nezaket, her cümlede verdiğin bir karar. Bir anadil konuşanın kararlarını okumak bunu, herhangi bir ek tablosundan çok daha hızlı öğretir."
+        },
+        "3": {
+          "title": "Utanmadan düzeltilmek",
+          "body": "Yapay zeka öğretmeni Koreceni yalnızca senin görebileceğin yerde düzeltir, böylece dil değişimi asla sınava dönüşmez. Partnerin sadece çabaladığını görür; zaten cevap yazmayı sürdürmesini sağlayan da bu."
+        }
+      }
+    },
+    "features": {
+      "title": "Bir ders kitabının sana veremeyeceği üç şey"
+    },
+    "cta": {
+      "title": "Koreliler şu anda senin dilini öğreniyor",
+      "subtitle": "Başlaması ücretsiz. Kart yok, deneme süresi geri sayımı yok."
+    }
+  },
+  "communities": {
+    "public": {
+      "title": "Dil değişimi toplulukları",
+      "intro": "BananaTalk içindeki gerçek gruplar; her gün birlikte tek bir dili pratik ediyorlar. Kendine uygun olanı burada bul, sonra uygulamada aç ve konuşmaya başla.",
+      "members": "üye",
+      "join": "Uygulamada katıl",
+      "empty": {
+        "title": "Her hafta yeni topluluklar açılıyor",
+        "body": "Burada henüz gösterilecek bir şey yok. Uygulamayı indir; her topluluk açıldığı anda karşına çıksın."
+      }
     }
   }
 }

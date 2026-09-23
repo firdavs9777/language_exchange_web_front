@@ -11,7 +11,9 @@
       "pricing": "Presyo",
       "contact": "Kontak",
       "communities": "Mga Komunidad",
-      "download": "I-download ang App"
+      "download": "I-download ang App",
+      "meet": "Makilala ang iba",
+      "learnKorean": "Matuto ng Korean"
     },
     "contactInfo": "Impormasyon sa Kontak",
     "address": "Seoul, South Korea, Gangnam-gu",
@@ -1001,7 +1003,7 @@
       },
       "title": "Sabihin mo lang, kahit mali.",
       "titleAccent": "Kami na ang bahalang magsalin.",
-      "subtitle": "Mag-type sa sarili mong wika, babasahin nila ito sa kanila. I-tap ang anumang mensahe para makita kung paano ito talaga sinabi — ganito ka matuto.",
+      "subtitle": "Libreng language exchange kasama ang mga native speaker. Isulat mo sa sarili mong wika, babasahin nila sa kanila — at sa pagkakaiba ka matututo.",
       "trust": "Libre habambuhay · 137 wika · AI tutor 24/7"
     },
     "sections": {
@@ -1035,11 +1037,52 @@
       "community": {
         "title": "Tunay na komunidad",
         "description": "Mag-browse ng mga kasama ayon sa katutubong wika, tingnan kung sino ang online, at magbahagi ng mga sandali kasama ang mga taong nag-aaral din ng parehong wika."
+      },
+      "inApp": "Sa app",
+      "items": {
+        "findPartner": {
+          "title": "Maghanap ng partner",
+          "body": "Mag-match base sa language pair na talagang gusto mong ipagpalit."
+        },
+        "chatTranslate": {
+          "title": "Chat na nagsasalin",
+          "body": "Dalawang direksyon, nasa mismong mensahe, habang nagta-type ka."
+        },
+        "moments": {
+          "title": "Moments",
+          "body": "I-share kung ano ang itsura ng araw mo; itama ka ng mga native speaker."
+        },
+        "aiTutor": {
+          "title": "AI Tutor",
+          "body": "Mag-practice ng alas-3 ng madaling araw nang walang hiya-hiya."
+        },
+        "voiceRooms": {
+          "title": "Voice Rooms",
+          "body": "Pumasok sa live room at makinig lang, kung gusto mo."
+        },
+        "gatherings": {
+          "title": "Gatherings",
+          "body": "Makilala ang mga taong nag-aaral ng wika mo na malapit sa iyo."
+        }
       }
     },
     "howItWorks": {
       "title": "Tatlong hakbang papunta sa unang usapan mo",
-      "subtitle": "Walang phone number, walang spam — mga totoong taong gustong matuto lang."
+      "subtitle": "Walang phone number, walang spam — mga totoong taong gustong matuto lang.",
+      "steps": {
+        "1": {
+          "title": "Sabihin mo kung ano ang sinasalita mo, at kung ano ang gusto mo",
+          "body": "Piliin ang katutubong wika mo at ang pinag-aaralan mo. Sa pares na iyon kami nagbabase ng match mo."
+        },
+        "2": {
+          "title": "Maghanap ng taong sulit kausapin",
+          "body": "Mag-browse ng mga partner na nag-aaral ng wika mo. Kumaway, o simulan na agad ang usapan."
+        },
+        "3": {
+          "title": "Magsalita kahit mali, bumilis ang galing",
+          "body": "Isinasalin ang bawat mensahe sa dalawang direksyon, at itinatama ka ng AI Tutor nang walang ibang nakakakita."
+        }
+      }
     },
     "steps": {
       "profile": {
@@ -1129,6 +1172,15 @@
       "AI tutor": "AI tutor",
       "forever tier": "libreng bersyon",
       "learners": "mga nag-aaral"
+    },
+    "marquee": {
+      "title": "May native speaker sa bawat wikang gusto mong matutunan",
+      "caption": "137 na wika, at patuloy pang dumarami"
+    },
+    "earlyAdopter": {
+      "badge": "Inilunsad noong Disyembre 2025",
+      "title": "Maging isa sa mga nauna",
+      "body": "Bago pa lang ang BananaTalk. Ang mga taong makikilala mo dito ang mismong bumubuo kung ano ang magiging komunidad na ito — mas magandang dahilan iyon para sumali nang maaga kaysa sa kahit anong review."
     }
   },
   "vip": {
@@ -1209,6 +1261,18 @@
     "dataDeletion": {
       "title": "Kahilingan sa Pagbura ng Data | BananaTalk",
       "description": "Kung paano burahin ang iyong BananaTalk account at personal na data, at kung ano ang mangyayari pagkatapos mong humiling."
+    },
+    "meet": {
+      "title": "Makilala ang mga Taga-ibang Bansa | BananaTalk",
+      "description": "Makilala ang mga taga-ibang bansa at magkaibigan sa buong mundo sa chat. Isinasalin ang bawat mensahe sa dalawang direksyon, kaya hindi kailangang magaling."
+    },
+    "learnKorean": {
+      "title": "Matuto ng Korean Kasama ang Native Speakers",
+      "description": "Matuto ng Korean nang libre kasama ang mga native speaker. Sumulat sa wika mo, Hangul ang sagot nila, at ipapaliwanag ng AI Tutor ang 존댓말 vs 반말."
+    },
+    "communities": {
+      "title": "Mga Language Exchange Community | BananaTalk",
+      "description": "Sumali sa mga language exchange community sa BananaTalk: totoong grupong sabay-sabay nagsasanay ng Korean, Spanish, Japanese at iba pa, libre, araw-araw."
     }
   },
   "notFound": {
@@ -1382,6 +1446,131 @@
       "page": "Pahina {{page}}",
       "previous": "Nakaraan",
       "next": "Susunod"
+    }
+  },
+  "download": {
+    "title": "I-download ang BananaTalk",
+    "subtitle": "Libreng language exchange kasama ang mga native speaker sa 137 wika, sa iPhone at Android.",
+    "free": "Libre. Walang card.",
+    "scan": "I-scan gamit ang camera ng phone mo",
+    "qrAlt": "QR code para i-download ang BananaTalk",
+    "reasons": {
+      "tutor": {
+        "title": "AI Tutor sa bawat chat",
+        "body": "Mga correction at paliwanag sa mga mensaheng talagang ipinadala mo."
+      },
+      "voice": {
+        "title": "Voice Rooms at calls",
+        "body": "Mag-practice nang malakas kasama ang mga taong nag-aaral ng wika mo ngayon."
+      },
+      "translate": {
+        "title": "Instant na pagsasalin",
+        "body": "Isulat mo sa sarili mong wika, babasahin nila sa kanila — at sa pagkakaiba ka matututo."
+      }
+    }
+  },
+  "meet": {
+    "hero": {
+      "title": "Makilala ang mga taga-ibang bansa",
+      "titleAccent": "na talagang sumasagot.",
+      "subtitle": "Sa BananaTalk ka nagkakaroon ng mga kaibigan sa ibang bansa sa pamamagitan ng pakikipag-usap sa mga native speaker. Pumili ng wika, mag-hi, at dumarating nang nakasalin ang bawat mensahe — kaya hindi kailangang magaling muna ang kahit sino sa inyo.",
+      "trust": "Libre habambuhay · 137 wika · Bawat mensahe isinasalin sa dalawang direksyon",
+      "demo": {
+        "1": {
+          "text": "Bora ver o pôr do sol no sábado?",
+          "translation": "Gusto mong manood ng sunset sa Sabado?"
+        },
+        "2": {
+          "text": "Oo! Mainit pa ba diyan sa September?",
+          "translation": "Sim! Ainda faz calor aí em setembro?"
+        }
+      },
+      "note": {
+        "label": "✦ ISINALIN SA DALAWANG DIREKSYON",
+        "body": "Portuges ang isinulat niya at Filipino ang nabasa mo. Filipino ang isinulat mo at Portuges ang nabasa niya. Wala sa inyong dalawa ang kinailangang magpalit ng wika."
+      }
+    },
+    "howItWorks": {
+      "title": "Tatlong hakbang lang ang pagkakaibigan dito",
+      "steps": {
+        "1": {
+          "title": "Wika ang piliin, hindi profile",
+          "body": "Piliin ang wika o bansang gusto mong makilala. Ipapakita namin ang mga taong nag-aaral na ng wika mo — language exchange ito, kaya pareho kayong may makukuha."
+        },
+        "2": {
+          "title": "Mag-hi sa sarili mong salita",
+          "body": "Isulat sa wikang iniisip mo. Darating ito sa kanila sa wika nila, agad, kaya hindi na kailanman mahirap ang unang mensahe."
+        },
+        "3": {
+          "title": "Ituloy ang usapan",
+          "body": "Voice note, litrato, Moments, calls. Ang mga usapang tumatagal ay iyong hindi natatapos sa practice lang."
+        }
+      }
+    },
+    "features": {
+      "title": "Gawa para sa mga usapang hindi natatapos"
+    },
+    "cta": {
+      "title": "May taong gising ngayon sa ibang bansa",
+      "subtitle": "Libre magsimula. Walang card, walang trial countdown."
+    }
+  },
+  "learnKorean": {
+    "hero": {
+      "title": "Matuto ng Korean sa pamamagitan ng chat",
+      "titleAccent": "kasama ang totoong mga Koreano.",
+      "subtitle": "Magpalitan ng wika kasama ang mga native Korean speaker na gusto rin ang wika mo. Susubukan mo sa 한국어, sasagot sila sa Korean na talagang ginagamit ng mga tao, at itatama ng AI Tutor ang mga mali mo — nang pribado.",
+      "trust": "Libre habambuhay · Mga native Korean speaker · AI Tutor 24/7",
+      "demo": {
+        "1": {
+          "text": "주말에 뭐 했어요?",
+          "translation": "Ano'ng ginawa mo nitong weekend?"
+        },
+        "2": {
+          "text": "친구 만났다! 진짜 재미있었어",
+          "translation": "Nakipagkita ako sa kaibigan! Ang saya talaga"
+        }
+      },
+      "note": {
+        "label": "✦ AI TUTOR",
+        "body": "존댓말 vs 반말: nagtanong siya gamit ang 했어요, ang magalang na anyo. Sumagot ka sa 반말, na para sa malalapit na kaibigan. Tumapat ka muna sa kanya: 친구 만났어요! 진짜 재미있었어요."
+      }
+    },
+    "howItWorks": {
+      "title": "Bakit kumakapit ang Korean kapag nagcha-chat ka",
+      "steps": {
+        "1": {
+          "title": "Ang Korean na lumalabas sa totoong chat",
+          "body": "합니다 ang itinuturo ng textbook mo. 했어요, ㅋㅋ at 헐 ang tina-type ng partner mo — ito ang Korean na naghihintay sa iyo sa totoong usapan."
+        },
+        "2": {
+          "title": "존댓말 at 반말, nararamdaman imbes na kabisaduhin",
+          "body": "Ang pagiging magalang ay desisyong ginagawa mo sa bawat pangungusap. Mas mabilis itong matututunan sa pagbabasa ng mga pinipili ng native speaker kaysa sa kahit anong talahanayan ng mga ending."
+        },
+        "3": {
+          "title": "Naitatama nang walang hiya",
+          "body": "Minamarkahan ng AI Tutor ang Korean mo sa lugar na ikaw lang ang nakakakita, kaya hindi nagiging pagsusulit ang language exchange. Ang nakikita lang ng partner mo ay nagsisikap ka — at iyon ang dahilan kung bakit patuloy silang sumasagot."
+        }
+      }
+    },
+    "features": {
+      "title": "Tatlong bagay na hindi kayang ibigay ng textbook"
+    },
+    "cta": {
+      "title": "May mga Korean na nag-aaral ng wika mo ngayon",
+      "subtitle": "Libre magsimula. Walang card, walang trial countdown."
+    }
+  },
+  "communities": {
+    "public": {
+      "title": "Mga language exchange community",
+      "intro": "Totoong mga grupo sa loob ng BananaTalk, kung saan sabay-sabay nagsasanay ng iisang wika ang mga tao araw-araw. Hanapin ang sa iyo dito, buksan ito sa app, at magsimulang makipag-usap.",
+      "members": "miyembro",
+      "join": "Sumali sa app",
+      "empty": {
+        "title": "May bagong community kada linggo",
+        "body": "Wala pang maipapakita dito. Kunin ang app at agad na lalabas ang bawat community sa sandaling magbukas ito."
+      }
     }
   }
 }

@@ -121,7 +121,7 @@ it("falls back to the English early-adopter copy when a translation is missing",
   expect(text).toContain("Launched December 2025");
   expect(text).toContain("Be one of the first");
   expect(text).toContain(
-    "BanaTalk is new. The people you meet here are the ones building what this community becomes — which is a better reason to join early than any review."
+    "BananaTalk is new. The people you meet here are the ones building what this community becomes — which is a better reason to join early than any review."
   );
 });
 

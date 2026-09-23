@@ -15,7 +15,7 @@ const EarlyAdopterBand: React.FC = () => {
         </h2>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-gray-600 dark:text-gray-300">
           {t("home.earlyAdopter.body") ||
-            "BanaTalk is new. The people you meet here are the ones building what this community becomes — which is a better reason to join early than any review."}
+            "BananaTalk is new. The people you meet here are the ones building what this community becomes — which is a better reason to join early than any review."}
         </p>
       </div>
     </section>
