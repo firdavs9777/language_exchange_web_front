@@ -16,7 +16,7 @@ import router from "./router/AppRouter";
 import store from "./store";
 import i18n from "./utils/i18n";
 import { prepareForHydration } from "./utils/hydrationLanguage";
-import { markPrerendered } from "./seo/prerender/hydrationFlag";
+import { documentIsPrerendered, markPrerendered } from "./seo/prerender/hydrationFlag";
 
 const container = document.getElementById("root") as HTMLElement;
 
@@ -30,7 +30,7 @@ const app = (
   </React.StrictMode>
 );
 
-if (container.hasChildNodes()) {
+if (documentIsPrerendered()) {
   // Prerendered page: hydrate over the English markup; App switches to the
   // visitor's language after the first commit.
   markPrerendered();

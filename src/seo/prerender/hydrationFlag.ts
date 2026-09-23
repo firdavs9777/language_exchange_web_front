@@ -22,3 +22,19 @@ export function isPrerendered(): boolean {
 export function clearPrerendered(): void {
   prerendered = false;
 }
+
+/**
+ * Whether *this document* was served with prerendered markup, read straight
+ * from the DOM rather than from the flag above.
+ *
+ * The flag is set by index.tsx, and index.tsx is too late for one caller:
+ * src/utils/i18n.ts configures i18next as a side effect of being imported, and
+ * ES imports run before any statement in the importing module. It has to know
+ * at that moment whether the first render must be English, so it asks the DOM
+ * the same question index.tsx asks -- does #root already have children.
+ */
+export function documentIsPrerendered(): boolean {
+  if (typeof document === "undefined") return false;
+  const root = document.getElementById("root");
+  return Boolean(root && root.hasChildNodes());
+}

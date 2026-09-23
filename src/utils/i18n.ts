@@ -4,6 +4,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 
 import lazyBackend from "./i18nLazyBackend";
+import { documentIsPrerendered } from "../seo/prerender/hydrationFlag";
 
 // The only locale that ships inside the entrypoint. The other 17 are
 // `import()`ed by src/utils/i18nLazyBackend.ts, one webpack chunk each --
@@ -133,11 +134,51 @@ export const COUNTRY_TO_LANGUAGE: Record<string, string> = {
 const STORAGE_KEY = "i18nextLng";
 const GEO_CACHE_KEY = "i18nextGeoLng";
 
+const readStored = (): string | null => {
+  try {
+    return window.localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return null;
+  }
+};
+const writeStored = (value: string | null): void => {
+  try {
+    if (value === null) window.localStorage.removeItem(STORAGE_KEY);
+    else window.localStorage.setItem(STORAGE_KEY, value);
+  } catch {
+    /* storage unavailable */
+  }
+};
+
+/**
+ * On a prerendered page the first client render must be English, because that
+ * is what the server wrote into the HTML.
+ *
+ * Before the 17 locales became chunks this took care of itself: a Korean
+ * visitor's resources were inlined, so `init` resolved synchronously and
+ * hydrationLanguage.ts could snapshot "ko", flip to "en" for the first render
+ * and put it back in an effect. Now "ko" has to be fetched, so detection at
+ * init would leave `i18n.language` unset at hydrate time -- and i18next would
+ * then switch languages *during* hydration, which React reports as a text
+ * mismatch (#418/#425) and recovers from by throwing the markup away.
+ *
+ * So: pin the init to the inlined English. No background load starts, nothing
+ * changes under React, and hydrationLanguage.ts runs the detector itself after
+ * the first commit. A client-rendered entry (no prerendered markup) has no
+ * such contract and keeps ordinary detection.
+ */
+const PRERENDERED = documentIsPrerendered();
+// i18next calls the detector's cacheUserLanguage() for whatever it initialises
+// with, so pinning to "en" would overwrite the visitor's stored choice before
+// anything has had the chance to read it. Snapshot it here, put it back below.
+const storedBeforeInit = PRERENDERED ? readStored() : null;
+
 i18n
   .use(lazyBackend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    lng: PRERENDERED ? "en" : undefined,
     resources: {
       en: { translation: en },
     },
@@ -164,6 +205,10 @@ i18n
     saveMissing: false,
     returnEmptyString: true,
   });
+
+// `init` above is synchronous for English (it is inlined), so the detector has
+// already cached "en" by the time this runs.
+if (PRERENDERED) writeStored(storedBeforeInit);
 
 // Keep <html lang> in sync with the active language so search engines
 // and screen readers see the right value.
