@@ -1572,5 +1572,12 @@
         "body": "Belum ada yang bisa ditampilkan di sini. Download aplikasinya dan setiap komunitas langsung muncul begitu dibuka."
       }
     }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Terjadi kesalahan saat memuat halaman ini",
+      "body": "Sebagian aplikasi gagal dimuat. Ini biasanya terjadi tepat setelah pembaruan — memuat ulang biasanya sudah cukup.",
+      "reload": "Muat ulang"
+    }
   }
 }

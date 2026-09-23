@@ -1572,5 +1572,12 @@
         "body": "Ainda não há nada para mostrar aqui. Baixe o app e cada comunidade aparece no momento em que abre."
       }
     }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Algo deu errado ao carregar esta página",
+      "body": "Parte do aplicativo não carregou. Isso costuma acontecer logo depois de uma atualização — recarregar deve resolver.",
+      "reload": "Recarregar"
+    }
   }
 }

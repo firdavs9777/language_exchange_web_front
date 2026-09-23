@@ -1572,5 +1572,12 @@
         "body": "Todavía no hay nada que mostrar aquí. Descarga la app y cada comunidad aparecerá en cuanto se abra."
       }
     }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Algo salió mal al cargar esta página",
+      "body": "Una parte de la aplicación no se cargó. Suele ocurrir justo después de una actualización; recargar debería solucionarlo.",
+      "reload": "Recargar"
+    }
   }
 }

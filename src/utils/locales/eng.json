@@ -1572,5 +1572,12 @@
         "body": "There is nothing to show here just yet. Get the app and every community shows up the moment it opens."
       }
     }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Something went wrong loading this page",
+      "body": "Part of the app didn't load. This usually happens right after an update — reloading should fix it.",
+      "reload": "Reload"
+    }
   }
 }

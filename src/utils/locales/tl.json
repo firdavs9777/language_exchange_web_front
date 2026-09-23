@@ -1572,5 +1572,12 @@
         "body": "Wala pang maipapakita dito. Kunin ang app at agad na lalabas ang bawat community sa sandaling magbukas ito."
       }
     }
+  },
+  "errors": {
+    "chunk": {
+      "title": "May nangyaring mali habang ini-load ang page na ito",
+      "body": "May bahagi ng app na hindi na-load. Madalas itong mangyari pagkatapos ng update — kadalasan ay sapat na ang pag-reload.",
+      "reload": "I-reload"
+    }
   }
 }

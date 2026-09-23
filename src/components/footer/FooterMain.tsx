@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 // tree-shaken out of lucide, so they cost bytes instead of a webfont.
 import {
   Instagram,
-  Twitter,
   Facebook,
   Linkedin,
   Youtube,
@@ -16,6 +15,24 @@ import {
 } from "lucide-react";
 import StoreLink from "../growth/StoreLink";
 import "./FooterMain.scss";
+
+// lucide 0.511 has no X glyph -- its `Twitter` export is still the pre-2023
+// bird, and the markup this footer replaced used `bi-twitter-x`. Rather than
+// regress that one brand mark, the logo is inlined: 24 bytes of path data,
+// sized and coloured exactly like the five lucide siblings (currentColor,
+// 18px) so `.footer-social a`'s hover rule keeps working.
+const XLogo: React.FC = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z" />
+  </svg>
+);
 
 const FooterMain: React.FC = () => {
   const { t } = useTranslation();
@@ -38,8 +55,8 @@ const FooterMain: React.FC = () => {
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                 <Instagram size={18} aria-hidden="true" />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                <Twitter size={18} aria-hidden="true" />
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter)">
+                <XLogo />
               </a>
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                 <Facebook size={18} aria-hidden="true" />

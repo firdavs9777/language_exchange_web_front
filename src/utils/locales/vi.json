@@ -1572,5 +1572,12 @@
         "body": "Hiện chưa có gì để hiển thị ở đây. Tải ứng dụng và mọi cộng đồng sẽ xuất hiện ngay khi mở."
       }
     }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Đã xảy ra lỗi khi tải trang này",
+      "body": "Một phần của ứng dụng không tải được. Điều này thường xảy ra ngay sau khi cập nhật — tải lại trang sẽ khắc phục.",
+      "reload": "Tải lại"
+    }
   }
 }

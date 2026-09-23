@@ -1572,5 +1572,12 @@
         "body": "Qui non c'è ancora nulla da mostrare. Scarica l'app: ogni community compare nel momento in cui apre."
       }
     }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Si è verificato un errore durante il caricamento di questa pagina",
+      "body": "Una parte dell'app non è stata caricata. Di solito succede subito dopo un aggiornamento: ricaricare dovrebbe risolvere.",
+      "reload": "Ricarica"
+    }
   }
 }

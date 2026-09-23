@@ -1572,5 +1572,12 @@
         "body": "Il n'y a encore rien à afficher ici. Téléchargez l'application : chaque communauté y apparaît dès son ouverture."
       }
     }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Une erreur s'est produite lors du chargement de cette page",
+      "body": "Une partie de l'application ne s'est pas chargée. Cela arrive généralement juste après une mise à jour ; recharger devrait suffire.",
+      "reload": "Recharger"
+    }
   }
 }

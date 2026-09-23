@@ -1572,5 +1572,12 @@
         "body": "Hier gibt es noch nichts zu sehen. Hol dir die App – jede Community erscheint, sobald sie öffnet."
       }
     }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Beim Laden dieser Seite ist etwas schiefgelaufen",
+      "body": "Ein Teil der App wurde nicht geladen. Das passiert meist direkt nach einem Update – ein Neuladen behebt es in der Regel.",
+      "reload": "Neu laden"
+    }
   }
 }

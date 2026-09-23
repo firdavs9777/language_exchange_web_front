@@ -1572,5 +1572,12 @@
         "body": "Burada henüz gösterilecek bir şey yok. Uygulamayı indir; her topluluk açıldığı anda karşına çıksın."
       }
     }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Bu sayfa yüklenirken bir sorun oluştu",
+      "body": "Uygulamanın bir bölümü yüklenemedi. Bu genellikle bir güncellemeden hemen sonra olur; sayfayı yenilemek sorunu çözer.",
+      "reload": "Yeniden yükle"
+    }
   }
 }

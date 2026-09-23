@@ -49,7 +49,7 @@
     "build:spa": "react-scripts build",
     "prerender": "node scripts/prerender.js",
     "test": "react-scripts test",
-    "test:budget": "CI=true react-scripts test --testPathPattern=bundleBudget --watchAll=false",
+    "test:budget": "BUNDLE_BUDGET=1 CI=true react-scripts test --testPathPattern=bundleBudget --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

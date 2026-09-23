@@ -6,14 +6,21 @@ import {
 } from "react-router-dom";
 import App from "../App";
 import Loader from "../components/Loader";
+import RouteError from "../components/errors/RouteError";
+import { lazyWithRetry } from "./lazyWithRetry";
 
 // --- Eager: the prerendered public pages ------------------------------------
 //
 // Everything in this block is reachable from src/seo/publicRoutes.ts, i.e.
-// scripts/prerender.js renders it to static HTML in plain Node. React.lazy
-// THROWS inside renderToString unless the chunk is already resolved, so a
-// prerendered page can never be lazy. It is also the right call for weight:
-// these are exactly the modules a first-time visitor needs at first paint.
+// scripts/prerender.js renders it to static HTML in plain Node. A prerendered
+// page must never be lazy -- but note *why*, because it is not a crash: under
+// React 18 a suspended component inside a Suspense boundary renders its
+// fallback, so making one of these lazy would quietly emit a spinner-only page
+// instead of failing the build. What actually catches that is
+// src/seo/prerender/renderRoute.test.tsx, which drives every PRERENDER_PATHS
+// entry through renderToString and asserts >500 bytes with exactly one <h1>.
+// Eager is also the right call for weight: these are exactly the modules a
+// first-time visitor needs at first paint.
 //
 // PRERENDER_PATHS today: / /download /meet /learn-korean /communities
 // /moments /privacy-policy /terms-of-use /support /data-deletion /404.
@@ -40,72 +47,80 @@ import MomentDetail from "../components/moments/MomentDetail";
 //
 // None of these routes is prerendered and none of them is on a path a crawler
 // or a first-time visitor walks, so their code has no business in the main
-// bundle. React.lazy also keeps this module importable in plain Node: the
-// import only runs when something renders the element.
+// bundle. The import only runs when something renders the element, which also
+// keeps this module requirable in plain Node.
+//
+// Every one of them goes through lazyWithRetry rather than React.lazy: a chunk
+// fetch can fail (flaky network, or a tab left open across a deploy asking for
+// hashed chunks that no longer exist), and the retry has to wrap the
+// *importer*. lazyRoute() below only ever receives an already-created element,
+// so this call site is the one place the retry can live. The first argument is
+// the sessionStorage key that keeps the one-shot reload to one per chunk.
+// Whatever still fails after that lands on the root route's errorElement.
 
 // Auth
-const Login = React.lazy(() => import("../components/auth/Login"));
-const Register = React.lazy(() => import("../components/auth/Register"));
-const ForgetPassword = React.lazy(() => import("../components/auth/ForgetPassword"));
-const AuthCallback = React.lazy(() => import("../components/auth/AuthCallback"));
+const Login = lazyWithRetry("../components/auth/Login", () => import("../components/auth/Login"));
+const Register = lazyWithRetry("../components/auth/Register", () => import("../components/auth/Register"));
+const ForgetPassword = lazyWithRetry("../components/auth/ForgetPassword", () => import("../components/auth/ForgetPassword"));
+const AuthCallback = lazyWithRetry("../components/auth/AuthCallback", () => import("../components/auth/AuthCallback"));
 
 // Profile
-const ProfileScreen = React.lazy(() => import("../components/profile/Profile"));
-const PublicProfile = React.lazy(() => import("../components/profile/PublicProfile"));
-const EditProfile = React.lazy(() => import("../components/profile/EditProfile"));
-const UserFollowersList = React.lazy(() => import("../components/profile/UserFollowers"));
-const UserFollowingList = React.lazy(() => import("../components/profile/UserFollowing"));
-const UserVisitorsList = React.lazy(() => import("../components/profile/UserVisitors"));
-const MyMoments = React.lazy(() => import("../components/profile/MyMoments"));
-const EditMyMoment = React.lazy(() => import("../components/profile/EditMyMoment"));
+const ProfileScreen = lazyWithRetry("../components/profile/Profile", () => import("../components/profile/Profile"));
+const PublicProfile = lazyWithRetry("../components/profile/PublicProfile", () => import("../components/profile/PublicProfile"));
+const EditProfile = lazyWithRetry("../components/profile/EditProfile", () => import("../components/profile/EditProfile"));
+const UserFollowersList = lazyWithRetry("../components/profile/UserFollowers", () => import("../components/profile/UserFollowers"));
+const UserFollowingList = lazyWithRetry("../components/profile/UserFollowing", () => import("../components/profile/UserFollowing"));
+const UserVisitorsList = lazyWithRetry("../components/profile/UserVisitors", () => import("../components/profile/UserVisitors"));
+const MyMoments = lazyWithRetry("../components/profile/MyMoments", () => import("../components/profile/MyMoments"));
+const EditMyMoment = lazyWithRetry("../components/profile/EditMyMoment", () => import("../components/profile/EditMyMoment"));
 
 // Moments composer and the saved list (the feed and the detail stay eager)
-const CreateMoment = React.lazy(() => import("../components/moments/CreateMoment"));
-const SavedMoments = React.lazy(() => import("../components/moments/SavedMoments"));
+const CreateMoment = lazyWithRetry("../components/moments/CreateMoment", () => import("../components/moments/CreateMoment"));
+const SavedMoments = lazyWithRetry("../components/moments/SavedMoments", () => import("../components/moments/SavedMoments"));
 
 // Chat. The heaviest group: socket plumbing, media galleries, emoji.
-const MainChat = React.lazy(() => import("../components/chat/MainChat"));
-const NewChat = React.lazy(() => import("../components/chat/NewChat"));
-const ChatSettings = React.lazy(() => import("../components/chat/ChatSettings"));
-const MediaGallery = React.lazy(() => import("../components/chat/MediaGallery"));
+const MainChat = lazyWithRetry("../components/chat/MainChat", () => import("../components/chat/MainChat"));
+const NewChat = lazyWithRetry("../components/chat/NewChat", () => import("../components/chat/NewChat"));
+const ChatSettings = lazyWithRetry("../components/chat/ChatSettings", () => import("../components/chat/ChatSettings"));
+const MediaGallery = lazyWithRetry("../components/chat/MediaGallery", () => import("../components/chat/MediaGallery"));
 
 // Stories / reels
-const MainStories = React.lazy(() => import("../components/stories/MainStories"));
-const Highlights = React.lazy(() => import("../components/stories/Highlights"));
-const CreateStory = React.lazy(() => import("../components/stories/CreateStory"));
-const StoryViewer = React.lazy(() => import("../components/stories/StoryViewer"));
+const MainStories = lazyWithRetry("../components/stories/MainStories", () => import("../components/stories/MainStories"));
+const Highlights = lazyWithRetry("../components/stories/Highlights", () => import("../components/stories/Highlights"));
+const CreateStory = lazyWithRetry("../components/stories/CreateStory", () => import("../components/stories/CreateStory"));
+const StoryViewer = lazyWithRetry("../components/stories/StoryViewer", () => import("../components/stories/StoryViewer"));
 
 // Settings
-const Settings = React.lazy(() => import("../components/settings/Settings"));
-const PrivacySettings = React.lazy(() => import("../components/settings/PrivacySettings"));
-const NotificationSettings = React.lazy(() => import("../components/settings/NotificationSettings"));
-const VipSettings = React.lazy(() => import("../components/settings/VipSettings"));
-const LanguageSettings = React.lazy(() => import("../components/settings/LanguageSettings"));
-const BlockedUsers = React.lazy(() => import("../components/settings/BlockedUsers"));
-const CloseFriends = React.lazy(() => import("../components/settings/CloseFriends"));
+const Settings = lazyWithRetry("../components/settings/Settings", () => import("../components/settings/Settings"));
+const PrivacySettings = lazyWithRetry("../components/settings/PrivacySettings", () => import("../components/settings/PrivacySettings"));
+const NotificationSettings = lazyWithRetry("../components/settings/NotificationSettings", () => import("../components/settings/NotificationSettings"));
+const VipSettings = lazyWithRetry("../components/settings/VipSettings", () => import("../components/settings/VipSettings"));
+const LanguageSettings = lazyWithRetry("../components/settings/LanguageSettings", () => import("../components/settings/LanguageSettings"));
+const BlockedUsers = lazyWithRetry("../components/settings/BlockedUsers", () => import("../components/settings/BlockedUsers"));
+const CloseFriends = lazyWithRetry("../components/settings/CloseFriends", () => import("../components/settings/CloseFriends"));
 
 // Community, authenticated. /communities itself (MainCommnity, which renders
 // PublicCommunities for logged-out visitors) is prerendered and stays eager.
-const CommunityDetail = React.lazy(() => import("../components/community/CommunityDetail"));
-const NearbyUsers = React.lazy(() => import("../components/community/NearbyUsers"));
-const Waves = React.lazy(() => import("../components/community/Waves"));
-const Topics = React.lazy(() => import("../components/community/Topics"));
+const CommunityDetail = lazyWithRetry("../components/community/CommunityDetail", () => import("../components/community/CommunityDetail"));
+const NearbyUsers = lazyWithRetry("../components/community/NearbyUsers", () => import("../components/community/NearbyUsers"));
+const Waves = lazyWithRetry("../components/community/Waves", () => import("../components/community/Waves"));
+const Topics = lazyWithRetry("../components/community/Topics", () => import("../components/community/Topics"));
 
 // Courses
-const CoursesMain = React.lazy(() => import("../components/courses/CoursesMain"));
+const CoursesMain = lazyWithRetry("../components/courses/CoursesMain", () => import("../components/courses/CoursesMain"));
 
 // Admin console. Lazy on purpose, and lazy is load-bearing twice over: this
 // module is required by scripts/prerender.js in plain Node, and the console
 // pulls in charts, tables and the whole admin slice that no visitor of a
 // public page should download. React.lazy defers the import until a route
 // actually renders, so /admin costs nothing to anyone who never opens it.
-const AdminLayout = React.lazy(() => import("../components/admin/AdminLayout"));
-const AdminOverview = React.lazy(() => import("../components/admin/pages/AdminOverview"));
-const AdminReach = React.lazy(() => import("../components/admin/pages/AdminReach"));
-const AdminUsers = React.lazy(() => import("../components/admin/pages/AdminUsers"));
-const AdminContent = React.lazy(() => import("../components/admin/pages/AdminContent"));
-const AdminAiUsage = React.lazy(() => import("../components/admin/pages/AdminAiUsage"));
-const AdminAudit = React.lazy(() => import("../components/admin/pages/AdminAudit"));
+const AdminLayout = lazyWithRetry("../components/admin/AdminLayout", () => import("../components/admin/AdminLayout"));
+const AdminOverview = lazyWithRetry("../components/admin/pages/AdminOverview", () => import("../components/admin/pages/AdminOverview"));
+const AdminReach = lazyWithRetry("../components/admin/pages/AdminReach", () => import("../components/admin/pages/AdminReach"));
+const AdminUsers = lazyWithRetry("../components/admin/pages/AdminUsers", () => import("../components/admin/pages/AdminUsers"));
+const AdminContent = lazyWithRetry("../components/admin/pages/AdminContent", () => import("../components/admin/pages/AdminContent"));
+const AdminAiUsage = lazyWithRetry("../components/admin/pages/AdminAiUsage", () => import("../components/admin/pages/AdminAiUsage"));
+const AdminAudit = lazyWithRetry("../components/admin/pages/AdminAudit", () => import("../components/admin/pages/AdminAudit"));
 
 // The one fallback every lazy group shares: the app's existing spinner in a
 // block tall enough that the footer does not jump up and then back down while
@@ -145,7 +160,13 @@ const MainChatWrapper = () => {
 // for the browser; scripts/prerender.js feeds it to createStaticHandler. Keep
 // this module free of anything that touches window at import time.
 export const routes = createRoutesFromElements(
-  <Route path="/" element={<App />}>
+  // errorElement on the root route, so a rejected chunk import (or any other
+  // render error below it) shows RouteError's reload prompt instead of
+  // react-router's default stack-trace screen. RouteError touches no browser
+  // global at import time or during render, so this stays prerender-safe --
+  // and it is never rendered during a prerender anyway, since nothing throws
+  // on the happy path.
+  <Route path="/" element={<App />} errorElement={<RouteError />}>
     <Route index element={<HomeScreen />} />
     <Route path="login" element={lazyRoute(<Login />)} />
     <Route path="auth/callback" element={lazyRoute(<AuthCallback />)} />
@@ -166,7 +187,16 @@ export const routes = createRoutesFromElements(
         (no auth guard) so logged-out visitors can view it; react-router v6
         ranks the static "profile/edit" segment above this dynamic
         "profile/:userId" segment regardless of declaration order, so
-        there's no conflict between the two. */}
+        there's no conflict between the two.
+
+        Lazy, unlike the equally-public /moment/:id above, and the difference
+        is what it costs to make it eager: PublicProfile pulls in the whole
+        profile group (the followers/following lists, the moments grid, the
+        image viewer) and shares almost nothing with the eager pages, so
+        keeping it in main.js taxes every marketing visitor for a page few of
+        them open. MomentDetail is the opposite -- it is built out of modules
+        /moments already ships. A shared profile link pays one round trip; a
+        shared moment link would have paid it for nothing. */}
     <Route path="profile/:userId" element={lazyRoute(<PublicProfile />)} />
     <Route path="followersList" element={lazyRoute(<UserFollowersList />)} />
     <Route path="followingsList" element={lazyRoute(<UserFollowingList />)} />
