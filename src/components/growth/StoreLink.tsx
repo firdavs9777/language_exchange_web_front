@@ -18,13 +18,12 @@ export type StorePlacement =
   | "download-page"
   | "sticky-banner"
   | "popup"
-  | "promo-carousel"
   | "footer"
   | "meet"
   | "learn-korean"
   | "communities";
 
-export type StoreVariant = "badge" | "button" | "text";
+export type StoreVariant = "badge" | "button";
 
 export interface StoreLinkProps {
   store: StoreId;
@@ -80,7 +79,6 @@ const StoreGlyph: React.FC<{ store: StoreId }> = ({ store }) => (
 const BASE_CLASS: Record<StoreVariant, string> = {
   badge: "inline-flex items-center gap-3",
   button: "inline-flex items-center justify-center",
-  text: "",
 };
 
 const StoreLink: React.FC<StoreLinkProps> = ({

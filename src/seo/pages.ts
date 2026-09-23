@@ -20,15 +20,6 @@ export interface SeoPage {
   secondary: string[];
   jsonLd?: (ctx: SeoContext) => object | object[];
   ogImage?: string;
-  /**
-   * English title/description for an entry whose keys are not in the locale
-   * files yet. New pages ship their copy here and the locale pass (task B7)
-   * merges the keys into all 18 files; `seoTitleEn` prefers eng.json the
-   * moment they land, so these become a harmless safety net rather than a
-   * second source of truth.
-   */
-  titleEn?: string;
-  descriptionEn?: string;
 }
 
 // The keyword map. One entry per indexed route. Phase B adds /meet,
@@ -73,9 +64,6 @@ export const SEO_PAGES: SeoPage[] = [
     descriptionKey: "seo.meet.description",
     primary: "meet people from other countries",
     secondary: ["international friends app", "make friends from other countries", "language exchange partners"],
-    titleEn: "Meet People From Other Countries | BananaTalk",
-    descriptionEn:
-      "Meet people from other countries and make international friends by chatting. Every message is translated both ways, so neither of you has to be fluent.",
   },
   {
     path: "/learn-korean",
@@ -83,9 +71,15 @@ export const SEO_PAGES: SeoPage[] = [
     descriptionKey: "seo.learnKorean.description",
     primary: "learn Korean by chatting",
     secondary: ["talk to Korean native speakers", "Korean language exchange", "practice Korean online"],
-    titleEn: "Learn Korean by Chatting With Native Speakers",
-    descriptionEn:
-      "Learn Korean by chatting with native Korean speakers for free. You write English, they write Hangul, and an AI tutor explains 존댓말 vs 반말 as you go.",
+    // Spec §5.4: a plain WebPage so the landing page is typed at all.
+    jsonLd: (ctx) => ({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      url: ctx.url,
+      name: englishFallback("seo.learnKorean.title"),
+      description: englishFallback("seo.learnKorean.description"),
+      inLanguage: "en",
+    }),
   },
   {
     path: "/communities",
@@ -93,9 +87,6 @@ export const SEO_PAGES: SeoPage[] = [
     descriptionKey: "seo.communities.description",
     primary: "language exchange communities",
     secondary: ["language exchange groups", "practice a language with a group", "find a language partner group"],
-    titleEn: "Language Exchange Communities | BananaTalk",
-    descriptionEn:
-      "Join language exchange communities on BananaTalk: real groups practicing Korean, Spanish, Japanese and more together, free, every day.",
   },
   {
     path: "/moments",
@@ -110,14 +101,14 @@ export const SEO_PAGES: SeoPage[] = [
   { path: "/data-deletion", titleKey: "seo.dataDeletion.title", descriptionKey: "seo.dataDeletion.description", primary: "data deletion", secondary: [] },
 ];
 
-/** The English title: from eng.json when the key is there, else the entry's own. */
+/** The English title, from eng.json. Empty means the key is missing there -- pages.test.ts fails on it. */
 export function seoTitleEn(page: SeoPage): string {
-  return englishFallback(page.titleKey) || page.titleEn || "";
+  return englishFallback(page.titleKey) || "";
 }
 
 /** The English description, resolved the same way. */
 export function seoDescriptionEn(page: SeoPage): string {
-  return englishFallback(page.descriptionKey) || page.descriptionEn || "";
+  return englishFallback(page.descriptionKey) || "";
 }
 
 export function normalizePath(pathname: string): string {

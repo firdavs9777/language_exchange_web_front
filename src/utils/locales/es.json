@@ -1579,5 +1579,13 @@
       "body": "Una parte de la aplicación no se cargó. Suele ocurrir justo después de una actualización; recargar debería solucionarlo.",
       "reload": "Recargar"
     }
+  },
+  "growth": {
+    "store": {
+      "appStore": "App Store",
+      "googlePlay": "Google Play",
+      "downloadOnThe": "Descárgalo en el",
+      "getItOn": "Disponible en"
+    }
   }
 }

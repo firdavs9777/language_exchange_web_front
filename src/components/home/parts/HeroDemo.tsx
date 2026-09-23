@@ -88,8 +88,8 @@ const DEFAULT_MESSAGES: HeroDemoMessage[] = [
 
 const DEFAULT_NOTE = (
   <>
-    "I want to practise" — <b>practise</b> takes <i>to</i>. Try:{" "}
-    <i>I want to practise Korean.</i>
+    "I want to practice" — <b>practice</b> takes <i>to</i>. Try:{" "}
+    <i>I want to practice Korean.</i>
   </>
 );
 
@@ -206,7 +206,7 @@ const HeroDemo: React.FC<HeroDemoProps> = ({
             })}
 
             <div
-              data-testid="demo-tutor-note"
+              data-testid="demo-note"
               style={{ animationDelay: `${tutorSlotMs}ms` }}
               className="relative max-w-[94%] self-start rounded-card border-2 border-banana bg-surface p-3 shadow-card motion-safe:animate-bt-msg-in dark:bg-cardbg-dark"
             >

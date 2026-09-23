@@ -1579,5 +1579,13 @@
       "body": "应用的一部分未能加载。这通常发生在更新之后，刷新页面即可解决。",
       "reload": "刷新"
     }
+  },
+  "growth": {
+    "store": {
+      "appStore": "App Store",
+      "googlePlay": "Google Play",
+      "downloadOnThe": "立即下载",
+      "getItOn": "立即获取"
+    }
   }
 }

@@ -455,6 +455,10 @@ const ModernCommunity: React.FC = () => {
  * that none of its authenticated queries (members, topics, visitors) and none
  * of its localStorage reads happen for someone who is not signed in.
  */
+// A signed-in visitor arriving on the prerendered page sees PublicCommunities
+// for exactly one commit: auth is restored after hydration (hydrationAuth.ts)
+// so the first client render matches the server HTML, then this flips. The
+// one public-communities request that commit starts is cheap and cached.
 const MainCommunity: React.FC = () => {
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
   if (!userInfo) return <PublicCommunities />;

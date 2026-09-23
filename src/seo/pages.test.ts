@@ -57,9 +57,8 @@ describe("SEO map", () => {
     expect(() => JSON.stringify(ld)).not.toThrow();
   });
 
-  // The two landing pages of task B4. Their strings live on the entry until
-  // the locale pass (task B7) merges seo.meet.* / seo.learnKorean.* into all
-  // 18 files; seoTitleEn prefers eng.json the moment they land there.
+  // The two landing pages of task B4. seoTitleEn reads eng.json only, so the
+  // length test above doubles as the guard that every seo.* key exists there.
   it("carries the two landing pages with the phrases they own", () => {
     const meet = findSeoPage("/meet")!;
     const korean = findSeoPage("/learn-korean")!;

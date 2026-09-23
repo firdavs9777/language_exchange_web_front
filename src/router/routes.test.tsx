@@ -5,10 +5,9 @@
 // plain Node, so importing it must never touch window, document or storage.
 import { matchRoutes } from "react-router-dom";
 
-const PUBLIC_PATHS = [
-  "/", "/download", "/meet", "/learn-korean", "/moments", "/privacy-policy", "/terms-of-use",
-  "/support", "/data-deletion",
-];
+// The prerender list is the source of truth for what counts as public; a
+// hand-kept copy here drifted the moment /communities landed.
+const PUBLIC_PATHS: string[] = require("../seo/pages").SEO_PAGES.map((p: { path: string }) => p.path);
 
 it("imports without a DOM", () => {
   expect(typeof window).toBe("undefined");

@@ -1579,5 +1579,13 @@
       "body": "May bahagi ng app na hindi na-load. Madalas itong mangyari pagkatapos ng update — kadalasan ay sapat na ang pag-reload.",
       "reload": "I-reload"
     }
+  },
+  "growth": {
+    "store": {
+      "appStore": "App Store",
+      "googlePlay": "Google Play",
+      "downloadOnThe": "I-download sa",
+      "getItOn": "Available sa"
+    }
   }
 }

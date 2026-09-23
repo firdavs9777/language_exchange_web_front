@@ -1579,5 +1579,13 @@
       "body": "Sebagian aplikasi gagal dimuat. Ini biasanya terjadi tepat setelah pembaruan — memuat ulang biasanya sudah cukup.",
       "reload": "Muat ulang"
     }
+  },
+  "growth": {
+    "store": {
+      "appStore": "App Store",
+      "googlePlay": "Google Play",
+      "downloadOnThe": "Unduh di",
+      "getItOn": "Dapatkan di"
+    }
   }
 }

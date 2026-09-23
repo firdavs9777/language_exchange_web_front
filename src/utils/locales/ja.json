@@ -1579,5 +1579,13 @@
       "body": "アプリの一部を読み込めませんでした。アップデート直後によく起こります。再読み込みすると直ります。",
       "reload": "再読み込み"
     }
+  },
+  "growth": {
+    "store": {
+      "appStore": "App Store",
+      "googlePlay": "Google Play",
+      "downloadOnThe": "ダウンロード",
+      "getItOn": "ダウンロード"
+    }
   }
 }

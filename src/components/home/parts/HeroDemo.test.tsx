@@ -36,7 +36,7 @@ it("links to both stores, tagged as the hero", () => {
 it("shows the exchange, its translation and a tutor correction", () => {
   render(<HeroDemo />);
   expect(screen.getAllByTestId("demo-message").length).toBeGreaterThanOrEqual(2);
-  expect(screen.getByTestId("demo-tutor-note")).toBeInTheDocument();
+  expect(screen.getByTestId("demo-note")).toBeInTheDocument();
 });
 
 // Content must never depend on an animation having run.
@@ -66,7 +66,7 @@ it("keeps every bubble's text in the DOM regardless of the cycle", () => {
   const bubbles = screen.getAllByTestId("demo-message");
   expect((bubbles[0].textContent || "")).toContain("안녕하세요");
   expect((bubbles[1].textContent || "")).toContain("practice Korean");
-  expect((screen.getByTestId("demo-tutor-note").textContent || "")).toContain("practise");
+  expect((screen.getByTestId("demo-note").textContent || "")).toContain("practice");
 });
 
 it("drifts eight flags behind the hero, out of the accessibility tree", () => {

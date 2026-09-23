@@ -34,7 +34,7 @@ it("shows Hangul, its translation, and a tutor note on 존댓말 vs 반말", () 
   const hero = screen.getByTestId("hero-demo").textContent || "";
   expect(hero).toContain("주말에 뭐 했어요?");
   expect(hero).toContain("What did you do this weekend?");
-  const note = screen.getByTestId("demo-tutor-note").textContent || "";
+  const note = screen.getByTestId("demo-note").textContent || "";
   expect(note).toContain("존댓말");
   expect(note).toContain("반말");
 });

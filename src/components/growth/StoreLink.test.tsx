@@ -128,16 +128,6 @@ it("lets a caller supply its own label", () => {
   expect(screen.getByRole("link", { name: /install/i })).toBeInTheDocument();
 });
 
-it("renders plain text with children", () => {
-  render(
-    <StoreLink store="ios" placement="communities" variant="text">
-      Get BananaTalk
-    </StoreLink>
-  );
-  const a = screen.getByTestId("store-link-ios");
-  expect(a.textContent).toBe("Get BananaTalk");
-  expect(a.querySelector("svg")).toBeNull();
-});
 
 // Every public page is prerendered in Node: nothing here may read a browser
 // global during render.

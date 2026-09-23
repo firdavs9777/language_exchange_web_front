@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { detectPlatform } from "../../utils/platform";
 import StoreLink, { StoreId, storeHref } from "../growth/StoreLink";
+import { trackEvent } from "../../analytics/track";
+import { gaEvent } from "../../analytics/ga";
 import SurfaceCard from "../../design/SurfaceCard";
 import { SITE_ORIGIN } from "../../seo/pages";
 
@@ -35,6 +37,14 @@ const DownloadApp: React.FC = () => {
   useEffect(() => {
     if (!/(^|[?&])go=1(&|$)/.test(search)) return;
     if (platform === "ios" || platform === "android") {
+      // The hop is a store tap too -- a QR scan or a carousel CTA must count
+      // like a badge click, or the funnel under-reports its best sources.
+      try {
+        trackEvent("store_tap", { placement: "download-page", platform });
+        gaEvent("store_tap", { placement: "download-page", platform });
+      } catch {
+        // never let a tracker cost the install
+      }
       window.location.assign(storeHref(platform, "download-page"));
     }
   }, [search, platform]);
