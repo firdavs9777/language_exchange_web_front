@@ -95,6 +95,12 @@ it("charts page views and store taps as two lines", () => {
   expect(((paths[0].getAttribute("d") || "").match(/L/g) || []).length).toBe(3);
 });
 
+it("strokes the two series in the readable brand tokens", () => {
+  render(<AdminReach />);
+  const strokes = screen.getAllByTestId("line-series").map((p) => p.getAttribute("stroke"));
+  expect(strokes).toEqual(["#00BFA5", "#C9A415"]);
+});
+
 it("tables taps by placement and platform, highest first", () => {
   render(<AdminReach />);
   const table = screen.getByTestId("taps-by-placement");

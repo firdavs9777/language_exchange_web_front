@@ -24,13 +24,18 @@ export interface LineChartProps {
 /**
  * The console's two reach series, in tokens from tailwind.config.js.
  *
- * Teal and banana separate well for every kind of colour vision (OKLab ΔE 17
- * protanopia, 24 tritanopia), but banana on a white card is a 1.4:1 stroke —
- * under the 3:1 a mark should clear. The relief is secondary encoding, which
- * this chart and the Reach page around it both carry: the legend states each
- * series' total, and every number in the chart also exists in a table below it.
+ * Taps use `banana.dark`, not `banana` DEFAULT: #FFD54F is a 1.4:1 stroke on a
+ * white card — all but invisible — where #C9A415 is 2.3:1 and sits inside the
+ * palette validator's lightness band. The two still separate for every kind of
+ * colour vision (OKLab ΔE 14 protanopia, 21 tritanopia, 19 normal), and the
+ * pair passes every check in light mode.
+ *
+ * Neither clears 3:1 against a light surface, so the relief is secondary
+ * encoding, which this chart and the Reach page around it both carry: the
+ * legend states each series' total, and every number in the chart also exists
+ * in a table below it.
  */
-export const CHART_COLORS = { pageViews: "#00BFA5", storeTaps: "#FFD54F" };
+export const CHART_COLORS = { pageViews: "#00BFA5", storeTaps: "#C9A415" };
 
 const VIEW_W = 720;
 const PAD = { left: 44, right: 14, top: 12, bottom: 26 };

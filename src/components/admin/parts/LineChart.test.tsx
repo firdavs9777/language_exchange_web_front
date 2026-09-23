@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import LineChart from "./LineChart";
+import LineChart, { CHART_COLORS } from "./LineChart";
 
 const teal = "#00BFA5";
 const banana = "#FFD54F";
@@ -118,4 +118,12 @@ it("strokes each series with the colour it was given", () => {
   );
   const strokes = screen.getAllByTestId("line-series").map((p) => p.getAttribute("stroke"));
   expect(strokes).toEqual([teal, banana]);
+});
+
+it("uses brand tokens that stay readable on a light surface", () => {
+  // Teal is the brand; taps use banana.dark rather than banana DEFAULT --
+  // #FFD54F is a 1.4:1 stroke on a white card, #C9A415 is 2.3:1 and clears
+  // the palette validator's lightness band in light mode.
+  expect(CHART_COLORS.pageViews).toBe("#00BFA5");
+  expect(CHART_COLORS.storeTaps).toBe("#C9A415");
 });
