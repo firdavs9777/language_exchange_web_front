@@ -102,6 +102,30 @@ it("does not log out on 403 even when no refresh token is stored", async () => {
   expect((store.getState() as any).auth.userInfo).toBeTruthy();
 });
 
+it("logs out on a 403 tagged ACCOUNT_BANNED, without refreshing or re-sending", async () => {
+  const calls = mockFetch([
+    { status: 403, body: { success: false, message: "Your account has been suspended.", code: "ACCOUNT_BANNED" } },
+  ]);
+  const store = makeStore();
+
+  const result: any = await store.dispatch(probeSlice.endpoints.probeAction.initiate({}));
+
+  // One request. Not a refresh, and above all not a second PUT.
+  expect(calls).toHaveLength(1);
+  expect(result.error.status).toBe(403);
+  expect((result.error.data as any).code).toBe("ACCOUNT_BANNED");
+  expect((store.getState() as any).auth.userInfo).toBeNull();
+});
+
+it("does not log out on a 403 without the ACCOUNT_BANNED code", async () => {
+  mockFetch([{ status: 403, body: { success: false, message: "Not authorized" } }]);
+  const store = makeStore();
+
+  await store.dispatch(probeSlice.endpoints.probeAction.initiate({}));
+
+  expect((store.getState() as any).auth.userInfo).toBeTruthy();
+});
+
 it("refreshes and re-sends exactly once on 401", async () => {
   const calls = mockFetch([
     { status: 401, body: { success: false, message: "Not authorized" } },

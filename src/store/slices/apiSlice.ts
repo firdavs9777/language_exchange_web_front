@@ -67,6 +67,12 @@ const baseQueryWithReauth: BaseQueryFn<
   // token in the body) and re-send the original request once. With no refresh
   // token stored (older session, an OAuth flow that didn't return one) there is
   // nothing to refresh with, so the session is over: log out.
+  //
+  // The one 403 that IS a session problem: the account was banned mid-session.
+  // `protect`/`optionalAuth` tag that case with `code: "ACCOUNT_BANNED"` in the
+  // body (a refresh can't fix it either — the token is fine, the account
+  // isn't), so we log out on it below but still return the error unchanged so
+  // the caller can show it.
   if (result.error && result.error.status === 401) {
     const userInfo = (api.getState() as RootState).auth.userInfo as any;
     const refreshToken = userInfo?.refreshToken;
@@ -103,6 +109,15 @@ const baseQueryWithReauth: BaseQueryFn<
     } else {
       api.dispatch(logout());
     }
+  }
+
+  if (
+    result.error &&
+    result.error.status === 403 &&
+    (result.error.data as any)?.code === "ACCOUNT_BANNED"
+  ) {
+    api.dispatch(logout());
+    return result;
   }
 
   return result;
