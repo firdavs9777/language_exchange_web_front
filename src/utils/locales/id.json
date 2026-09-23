@@ -89,6 +89,25 @@
       "deleted": "Percakapan dihapus"
     }
   },
+  "newChat": {
+    "title": "Obrolan Baru",
+    "subtitle": "Mulai percakapan",
+    "directMessage": "Langsung",
+    "groupChat": "Grup",
+    "searchPlaceholder": "Cari berdasarkan nama, @username, atau ID pengguna...",
+    "searchHint": "Cari pengguna untuk memulai obrolan",
+    "hintName": "Cari berdasarkan nama",
+    "hintUsername": "Ketik @username untuk mencari berdasarkan nama pengguna",
+    "hintId": "Tempel ID pengguna untuk menemukannya langsung",
+    "searchByUsername": "Mencari berdasarkan username",
+    "searchById": "Mencari berdasarkan ID pengguna",
+    "noResults": "Tidak ada pengguna yang ditemukan",
+    "tryDifferent": "Coba nama, @username, atau ID pengguna lain",
+    "createGroup": "Buat Grup",
+    "selectMoreUsers": "Pilih minimal 2 pengguna untuk obrolan grup",
+    "createError": "Gagal membuat obrolan",
+    "recently": "Baru-baru ini"
+  },
   "notifications": "Notifikasi",
   "moments": "Momen",
   "language": "Bahasa",
@@ -378,7 +397,7 @@
   "authentication": {
     "enterEmail": {
       "title": "Masukkan email Anda",
-      "subtitle": "We'll send a verification code to your email",
+      "subtitle": "Kami akan mengirim kode verifikasi ke email Anda",
       "emailLabel": "Alamat Email",
       "emailPlaceholder": "Masukkan email",
       "sendButton": "Kirim Kode",
@@ -388,32 +407,32 @@
     },
     "passwordReset": {
       "successMessage": "Kata sandi berhasil direset, silakan masuk!",
-      "backToLogin": "Back to login",
-      "verifyTitle": "Enter verification code",
-      "verifySubtitle": "We've sent a 6-digit code to your email",
-      "codeLabel": "Verification Code",
-      "codePlaceholder": "Enter code",
-      "previousButton": "Previous",
-      "verifyButton": "Verify",
-      "verifyingButton": "Verifying...",
-      "resendButton": "Resend code",
-      "resendingButton": "Resending...",
-      "verifySuccessMessage": "Verification code successfully verified!",
-      "resendSuccessMessage": "A new verification code has been sent!",
-      "verifyErrorDefault": "Invalid verification code",
-      "resendErrorDefault": "Failed to resend the code",
-      "setPasswordTitle": "Set new password",
-      "setPasswordSubtitle": "Choose a strong password for your account",
-      "newPasswordLabel": "New Password",
-      "newPasswordPlaceholder": "New Password",
-      "confirmPasswordLabel": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm Password",
-      "showPassword": "Show password",
-      "hidePassword": "Hide password",
-      "submitButton": "Reset Password",
-      "submittingButton": "Resetting...",
-      "strengthErrorMessage": "Password does not meet the strength requirements",
-      "mismatchErrorMessage": "Passwords do not match"
+      "backToLogin": "Kembali ke halaman masuk",
+      "verifyTitle": "Masukkan kode verifikasi",
+      "verifySubtitle": "Kami telah mengirim kode 6 digit ke email Anda",
+      "codeLabel": "Kode Verifikasi",
+      "codePlaceholder": "Masukkan kode",
+      "previousButton": "Sebelumnya",
+      "verifyButton": "Verifikasi",
+      "verifyingButton": "Memverifikasi...",
+      "resendButton": "Kirim ulang kode",
+      "resendingButton": "Mengirim ulang...",
+      "verifySuccessMessage": "Kode verifikasi berhasil diverifikasi!",
+      "resendSuccessMessage": "Kode verifikasi baru telah dikirim!",
+      "verifyErrorDefault": "Kode verifikasi tidak valid",
+      "resendErrorDefault": "Gagal mengirim ulang kode",
+      "setPasswordTitle": "Atur kata sandi baru",
+      "setPasswordSubtitle": "Pilih kata sandi yang kuat untuk akun Anda",
+      "newPasswordLabel": "Kata Sandi Baru",
+      "newPasswordPlaceholder": "Kata Sandi Baru",
+      "confirmPasswordLabel": "Konfirmasi Kata Sandi",
+      "confirmPasswordPlaceholder": "Konfirmasi Kata Sandi",
+      "showPassword": "Tampilkan kata sandi",
+      "hidePassword": "Sembunyikan kata sandi",
+      "submitButton": "Reset Kata Sandi",
+      "submittingButton": "Mereset...",
+      "strengthErrorMessage": "Kata sandi tidak memenuhi syarat keamanan",
+      "mismatchErrorMessage": "Kata sandi tidak cocok"
     },
     "login": {
       "signInWithGoogle": "Masuk dengan Google",
@@ -668,10 +687,6 @@
       "speaks": "Berbicara",
       "learning": "Sedang Belajar",
       "notSpecified": "Tidak ditentukan"
-    },
-    "suggested": {
-      "title": "Lebih banyak anggota seperti {{name}}",
-      "seeAll": "Lihat semua anggota"
     }
   },
   "communityDetailSection": {
@@ -692,6 +707,10 @@
     "buttons": {
       "tryAgain": "Coba Lagi",
       "backToCommunity": "Kembali ke Komunitas"
+    },
+    "suggested": {
+      "title": "Lebih banyak anggota seperti {{name}}",
+      "seeAll": "Lihat semua anggota"
     },
     "stats": {
       "followers": "Pengikut",
@@ -924,23 +943,18 @@
   },
   "home": {
     "hero": {
-      "badge": "Pertukaran Bahasa Jadi Mudah",
-      "titlePart1": "Belajar Bahasa dengan",
-      "titleHighlight": "Berbicara",
-      "titlePart2": "bersama Penutur Asli",
-      "description": "Terhubung dengan jutaan pelajar bahasa di seluruh dunia. Latih berbicara, tingkatkan kefasihan, dan berteman dari seluruh penjuru dunia.",
-      "stats": {
-        "users": "Pengguna Aktif",
-        "languages": "Bahasa",
-        "countries": "Negara"
-      },
-      "getStarted": "Mulai Gratis",
-      "browseCommunity": "Jelajahi Komunitas",
-      "lovedBy": "Dicintai 5 juta+ pelajar",
+      "badge": "Pertukaran bahasa, orang sungguhan",
+      "titlePart1": "Latihan",
+      "titleHighlight": "bahasa apa pun",
+      "titlePart2": "dengan orang yang benar-benar menggunakannya.",
+      "description": "BananaTalk menghubungkanmu dengan penutur asli dari seluruh dunia. Chat, kirim pesan suara, terjemahkan, dan dapatkan koreksi — setiap percakapan membuatmu makin baik.",
+      "getStarted": "Mulai sekarang — gratis",
+      "browseCommunity": "Jelajahi komunitas",
+      "lovedBy": "Disukai pelajar bahasa di iOS dan Android",
       "chatPreview": {
-        "message1": "Halo! Apa kabar? 👋",
-        "message2": "Hey! I'm practicing Indonesian!",
-        "message3": "Bagus! Ayo berlatih bersama 🇮🇩"
+        "message1": "안녕하세요! Gimana akhir pekanmu?",
+        "message2": "주말에 친구들과 등산 갔어요 ⛰️",
+        "message3": "Bagus! 산 → gunung. Tersimpan di antrean belajarmu."
       },
       "title": "Ucapkan saja meski salah.",
       "titleAccent": "Kami yang terjemahkan.",
@@ -953,90 +967,91 @@
       "pricing": "Harga"
     },
     "features": {
-      "title": "Semua yang Anda Butuhkan untuk Belajar",
-      "subtitle": "Alat canggih yang dirancang untuk mempercepat perjalanan belajar bahasa Anda",
+      "title": "Semua yang kamu butuhkan untuk benar-benar bisa bicara",
+      "subtitle": "Dibangun dari percakapan nyata dengan penutur asli sungguhan — bukan latihan kosakata.",
       "chat": {
-        "title": "Obrolan Real-time",
-        "description": "Latih percakapan dengan penutur asli melalui pesan instan"
+        "title": "Chat dengan koreksi",
+        "description": "Kirim teks, suara, foto, dan stiker. Ketuk pesan partner untuk menerjemahkannya atau mengoreksinya dalam satu ketukan."
       },
-      "video": {
-        "title": "Panggilan Video",
-        "description": "Latihan bahasa tatap muka dengan mitra di seluruh dunia"
+      "translate": {
+        "title": "Terjemahan bawaan",
+        "description": "Terjemahkan pesan apa pun ke bahasa ibumu. Simpan frasa langsung ke antrean belajarmu."
       },
-      "lessons": {
-        "title": "Pelajaran Interaktif",
-        "description": "Belajar dengan kursus terstruktur dan latihan harian"
+      "tutor": {
+        "title": "AI Tutor",
+        "description": "Skenario roleplay, kosakata berbasis gambar, dan pelatihan pengucapan — semuanya didukung oleh AI study partner-mu sendiri."
       },
-      "voice": {
-        "title": "Pesan Suara",
-        "description": "Sempurnakan pengucapan Anda dengan pertukaran audio"
+      "voice_rooms": {
+        "title": "Voice Rooms",
+        "description": "Gabung ke ruang audio langsung bersama penutur asli dan pelajar bahasa dari seluruh dunia."
+      },
+      "calls": {
+        "title": "Panggilan suara & video",
+        "description": "Panggilan suara dan video sekali ketuk dengan mitra bahasamu."
       },
       "community": {
-        "title": "Komunitas",
-        "description": "Bergabung dengan jutaan pelajar bahasa secara global"
-      },
-      "languages": {
-        "title": "50+ Bahasa",
-        "description": "Dari Spanyol hingga Korea, temukan jalur belajar Anda"
+        "title": "Komunitas sungguhan",
+        "description": "Jelajahi mitra berdasarkan bahasa ibu, lihat siapa yang online, dan bagikan momen dengan orang yang belajar bahasa yang sama."
       }
     },
     "howItWorks": {
-      "title": "Mulai Belajar dalam 3 Langkah",
-      "subtitle": "Mulai dalam hitungan menit dan mulai perjalanan bahasa Anda hari ini"
+      "title": "Tiga langkah menuju percakapan pertamamu",
+      "subtitle": "Tanpa nomor telepon, tanpa spam — hanya orang sungguhan yang ingin belajar."
     },
     "steps": {
       "profile": {
-        "title": "Buat Profil Anda",
-        "description": "Ceritakan tentang bahasa ibu Anda dan apa yang ingin Anda pelajari"
+        "title": "Beri tahu kami bahasamu",
+        "description": "Pilih bahasa yang kamu kuasai dan yang sedang kamu pelajari. Tambahkan beberapa topik favoritmu."
       },
       "partners": {
-        "title": "Temukan Mitra",
-        "description": "Jelajahi komunitas kami dan temukan mitra pertukaran bahasa yang sempurna"
+        "title": "Temukan mitramu",
+        "description": "Jelajahi komunitas berdasarkan bahasa, negara, atau topik. Sapa atau kirim pesan ke orang yang menarik."
       },
       "learn": {
-        "title": "Mulai Belajar",
-        "description": "Mengobrol, menelepon, dan berlatih dengan penutur asli setiap hari"
+        "title": "Berlatih setiap hari",
+        "description": "Chat, tukar catatan suara, dapatkan koreksi, dan ubah kata baru jadi kartu spaced-repetition."
       }
     },
     "pricing": {
-      "title": "Pilih Paket Anda",
-      "subtitle": "Mulai gratis dan upgrade saat Anda siap",
-      "mostPopular": "Paling Populer",
-      "getStarted": "Mulai",
+      "title": "Gratis untuk memulai. VIP saat kamu siap belajar lebih cepat.",
+      "subtitle": "BananaTalk gratis untuk semua orang. Upgrade untuk menghapus batas harian pada terjemahan, AI Tutor, dan lainnya.",
+      "fineprint": "Batalkan kapan saja di pengaturan App Store atau Google Play-mu. Langganan diperpanjang otomatis sampai dibatalkan.",
       "free": {
         "name": "Gratis",
         "period": "selamanya",
+        "cta": "Buat akun gratis",
         "features": {
-          "messaging": "Pesan dasar",
-          "connections": "5 koneksi baru/hari",
-          "community": "Akses komunitas",
-          "lessons": "Pelajaran dasar"
+          "messaging": "Chat 1-lawan-1 tanpa batas dengan terjemahan",
+          "community": "Jelajahi dan terhubung dengan komunitas",
+          "moments": "Posting Moments dan baca Stories",
+          "tutor_trial": "Kuota harian AI Tutor dan terjemahan"
         },
         "f1": "Obrolan 1-lawan-1 tanpa batas dengan terjemahan",
         "f2": "Jelajahi dan terhubung dengan komunitas",
         "f3": "Posting Moments dan baca Stories"
       },
-      "premium": {
-        "name": "Premium",
-        "period": "/bulan",
+      "monthly": {
+        "name": "VIP — Bulanan",
+        "period": "per bulan",
+        "highlight": "Paling fleksibel",
+        "cta": "Mulai bulanan",
         "features": {
-          "messaging": "Pesan tanpa batas",
-          "connections": "Koneksi tanpa batas",
-          "video": "Panggilan video",
-          "lessons": "Pelajaran lanjutan",
-          "noAds": "Tanpa iklan",
-          "translation": "Alat terjemahan"
+          "unlimited_translation": "Terjemahan dan koreksi tanpa batas",
+          "unlimited_tutor": "Sesi AI Tutor dan roleplay tanpa batas",
+          "voice_rooms": "Host dan pin Voice Rooms",
+          "priority": "Prioritas pencocokan mitra"
         }
       },
-      "lifetime": {
-        "name": "Seumur Hidup",
-        "period": "sekali bayar",
+      "yearly": {
+        "name": "VIP — Tahunan",
+        "period": "per tahun",
+        "highlight": "Hemat 72%",
+        "cta": "Hemat dengan paket tahunan",
         "features": {
-          "everything": "Semua yang ada di Premium",
-          "forever": "Akses selamanya",
-          "support": "Dukungan prioritas",
-          "early": "Fitur awal",
-          "badges": "Lencana eksklusif"
+          "everything_in_monthly": "Semua yang ada di paket Bulanan",
+          "equiv": "Setara hanya $4,16 / bulan",
+          "early_access": "Akses awal ke fitur baru",
+          "support": "Dukungan langsung dari tim BananaTalk"
         }
       },
       "best": "Nilai terbaik",
@@ -1047,22 +1062,22 @@
     },
     "download": {
       "badge": "Unduh Aplikasi",
-      "title": "Bawa BananaTalk ke Mana Saja",
-      "description": "Belajar di mana saja dengan aplikasi mobile kami. Tersedia di iOS dan Android dengan semua fitur, notifikasi push, dan akses offline.",
+      "title": "Pengalaman lengkap ada di ponsel",
+      "description": "AI Tutor, Voice Rooms, panggilan, dan notifikasi langsung hanya tersedia di ponsel. Unduh aplikasinya untuk pengalaman BananaTalk yang lengkap.",
       "downloadOn": "Unduh di",
       "getItOn": "Dapatkan di",
       "scanQR": "Pindai untuk mengunduh aplikasi",
       "or": "atau",
       "features": {
-        "offline": "Akses offline",
+        "offline": "Chat yang tetap nyaman offline",
         "push": "Notifikasi push",
-        "fast": "Cepat & ringan"
+        "fast": "Gratis dipasang"
       }
     },
     "cta": {
-      "title": "Siap Memulai Perjalanan Bahasa Anda?",
-      "description": "Bergabung dengan jutaan pelajar dan mulai berbicara bahasa baru hari ini",
-      "button": "Buat Akun Gratis",
+      "title": "Siap untuk mengobrol yang sesungguhnya?",
+      "description": "Gabung komunitas BananaTalk dan mulai berlatih hari ini. Tidak perlu kartu kredit.",
+      "button": "Buat akun gratismu",
       "subtitle": "Gratis untuk memulai. Tanpa kartu, tanpa hitung mundur masa percobaan."
     },
     "stats": {
@@ -1107,6 +1122,19 @@
       "prioritySupport": "Dukungan prioritas",
       "exclusiveBadge": "Lencana VIP eksklusif",
       "translationFeature": "Terjemahan pesan"
+    }
+  },
+  "linking": {
+    "share": {
+      "label": "Bagikan",
+      "copied": "Tautan disalin ke clipboard!",
+      "copyFailed": "Gagal menyalin tautan"
+    },
+    "openInApp": {
+      "label": "Buka di aplikasi"
+    },
+    "appBanner": {
+      "text": "Buka ini di aplikasi BananaTalk"
     }
   },
   "seo": {

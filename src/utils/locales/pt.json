@@ -63,7 +63,7 @@
     },
     "deleteModal": {
       "title": "Excluir conversa",
-      "bodyPrefix": "Excluir sua conversa com:",
+      "bodyPrefix": "Excluir sua conversa com",
       "warning": "Esta ação não pode ser desfeita.",
       "cancel": "Cancelar",
       "confirm": "Excluir",
@@ -137,7 +137,7 @@
       "error_loading_profile": "Erro ao carregar perfil do usuário",
       "no_profile_data": "Nenhum dado de perfil disponível",
       "unknown_error": "Ocorreu um erro desconhecido",
-      "no_bio": "Nenhuma informação de bio fornecida",
+      "no_bio": "Ainda não há informações na bio",
       "not_specified": "Não especificado"
     },
     "stats": {
@@ -378,7 +378,7 @@
   "authentication": {
     "enterEmail": {
       "title": "Digite seu e-mail",
-      "subtitle": "We'll send a verification code to your email",
+      "subtitle": "Enviaremos um código de verificação para o seu e-mail",
       "emailLabel": "Endereço de E-mail",
       "emailPlaceholder": "Digite o e-mail",
       "sendButton": "Enviar Código",
@@ -388,32 +388,32 @@
     },
     "passwordReset": {
       "successMessage": "Senha redefinida com sucesso, por favor faça login!",
-      "backToLogin": "Back to login",
-      "verifyTitle": "Enter verification code",
-      "verifySubtitle": "We've sent a 6-digit code to your email",
-      "codeLabel": "Verification Code",
-      "codePlaceholder": "Enter code",
-      "previousButton": "Previous",
-      "verifyButton": "Verify",
-      "verifyingButton": "Verifying...",
-      "resendButton": "Resend code",
-      "resendingButton": "Resending...",
-      "verifySuccessMessage": "Verification code successfully verified!",
-      "resendSuccessMessage": "A new verification code has been sent!",
-      "verifyErrorDefault": "Invalid verification code",
-      "resendErrorDefault": "Failed to resend the code",
-      "setPasswordTitle": "Set new password",
-      "setPasswordSubtitle": "Choose a strong password for your account",
-      "newPasswordLabel": "New Password",
-      "newPasswordPlaceholder": "New Password",
-      "confirmPasswordLabel": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm Password",
-      "showPassword": "Show password",
-      "hidePassword": "Hide password",
-      "submitButton": "Reset Password",
-      "submittingButton": "Resetting...",
-      "strengthErrorMessage": "Password does not meet the strength requirements",
-      "mismatchErrorMessage": "Passwords do not match"
+      "backToLogin": "Voltar para o login",
+      "verifyTitle": "Digite o código de verificação",
+      "verifySubtitle": "Enviamos um código de 6 dígitos para o seu e-mail",
+      "codeLabel": "Código de verificação",
+      "codePlaceholder": "Digite o código",
+      "previousButton": "Anterior",
+      "verifyButton": "Verificar",
+      "verifyingButton": "Verificando...",
+      "resendButton": "Reenviar código",
+      "resendingButton": "Reenviando...",
+      "verifySuccessMessage": "Código de verificação verificado com sucesso!",
+      "resendSuccessMessage": "Um novo código de verificação foi enviado!",
+      "verifyErrorDefault": "Código de verificação inválido",
+      "resendErrorDefault": "Falha ao reenviar o código",
+      "setPasswordTitle": "Crie uma nova senha",
+      "setPasswordSubtitle": "Escolha uma senha forte para sua conta",
+      "newPasswordLabel": "Nova senha",
+      "newPasswordPlaceholder": "Nova senha",
+      "confirmPasswordLabel": "Confirmar senha",
+      "confirmPasswordPlaceholder": "Confirmar senha",
+      "showPassword": "Mostrar senha",
+      "hidePassword": "Ocultar senha",
+      "submitButton": "Redefinir senha",
+      "submittingButton": "Redefinindo...",
+      "strengthErrorMessage": "A senha não atende aos requisitos de segurança",
+      "mismatchErrorMessage": "As senhas não coincidem"
     },
     "login": {
       "signInWithGoogle": "Entrar com Google",
@@ -538,7 +538,7 @@
       "clear": "Limpar"
     },
     "results": {
-      "showing": "Mostrando {{count}} parceiro{{plural}} de idiomas incrível(is)",
+      "showing": "Mostrando {{count}} parceiro{{plural}} de idiomas incríveis",
       "membersFound": "{{count}} membros encontrados",
       "noneFound": {
         "title": "Nenhum membro encontrado",
@@ -668,10 +668,6 @@
       "speaks": "Fala",
       "learning": "Aprendendo",
       "notSpecified": "Não especificado"
-    },
-    "suggested": {
-      "title": "Mais membros como {{name}}",
-      "seeAll": "Ver todos os membros"
     }
   },
   "communityDetailSection": {
@@ -743,6 +739,10 @@
     },
     "fallbacks": {
       "defaultUser": "Usuário"
+    },
+    "suggested": {
+      "title": "Mais membros como {{name}}",
+      "seeAll": "Ver todos os membros"
     }
   },
   "learning": {
@@ -924,28 +924,23 @@
   },
   "home": {
     "hero": {
-      "badge": "Intercâmbio de Idiomas Simplificado",
-      "titlePart1": "Aprenda Idiomas",
-      "titleHighlight": "Falando",
-      "titlePart2": "com Falantes Nativos",
-      "description": "Conecte-se com milhões de estudantes de idiomas em todo o mundo. Pratique a fala, melhore a fluência e faça amigos de todos os cantos do mundo.",
-      "stats": {
-        "users": "Usuários Ativos",
-        "languages": "Idiomas",
-        "countries": "Países"
-      },
-      "getStarted": "Comece Grátis",
-      "browseCommunity": "Explorar Comunidade",
-      "lovedBy": "Amado por mais de 5M de estudantes",
+      "badge": "Intercâmbio de idiomas com gente de verdade",
+      "titlePart1": "Pratique",
+      "titleHighlight": "qualquer idioma",
+      "titlePart2": "com alguém que realmente fala.",
+      "description": "O BananaTalk conecta você a falantes nativos do mundo todo. Converse, envie áudios, traduza e receba correções — cada conversa deixa você melhor.",
+      "getStarted": "Comece grátis",
+      "browseCommunity": "Conheça a comunidade",
+      "lovedBy": "A escolha de quem estuda idiomas no iOS e Android",
       "chatPreview": {
-        "message1": "Olá! Como vai? 👋",
-        "message2": "Hey! I'm practicing Portuguese!",
-        "message3": "Ótimo! Vamos praticar juntos 🇧🇷"
+        "message1": "안녕하세요! Como foi o seu fim de semana?",
+        "message2": "주말에 친구들과 등산 갔어요 ⛰️",
+        "message3": "Legal! 산 → montanha. Salvo na sua lista de estudos."
       },
-      "title": "Diga errado.",
-      "titleAccent": "Nós traduzimos.",
-      "subtitle": "Digite no seu idioma, a outra pessoa lê no dela. Toque em qualquer mensagem para ver como foi realmente dito — é assim que você aprende.",
-      "trust": "Nível gratuito para sempre · 137 idiomas · Tutor de IA 24/7"
+      "title": "Fale errado.",
+      "titleAccent": "A gente traduz.",
+      "subtitle": "Escreva no seu idioma, a outra pessoa lê no dela. Toque em qualquer mensagem para ver como ela foi dita de verdade — é assim que se aprende.",
+      "trust": "Plano grátis para sempre · 137 idiomas · Tutor de IA 24 horas"
     },
     "sections": {
       "features": "Recursos",
@@ -953,116 +948,117 @@
       "pricing": "Preços"
     },
     "features": {
-      "title": "Tudo o Que Você Precisa para Aprender",
-      "subtitle": "Ferramentas poderosas projetadas para acelerar sua jornada de aprendizado de idiomas",
+      "title": "Tudo que você precisa para falar o idioma de verdade",
+      "subtitle": "Baseado em conversas reais com falantes nativos de verdade — nada de exercícios de vocabulário decorados.",
       "chat": {
-        "title": "Chat em Tempo Real",
-        "description": "Pratique conversas com falantes nativos através de mensagens instantâneas"
-      },
-      "video": {
-        "title": "Chamadas de Vídeo",
-        "description": "Prática de idiomas presencial com parceiros do mundo todo"
-      },
-      "lessons": {
-        "title": "Lições Interativas",
-        "description": "Aprenda com cursos estruturados e exercícios diários"
-      },
-      "voice": {
-        "title": "Mensagens de Voz",
-        "description": "Aperfeiçoe sua pronúncia com trocas de áudio"
+        "title": "Chat com correções",
+        "description": "Mande texto, áudio, fotos e figurinhas. Toque na mensagem de um parceiro para traduzir, ou corrija a dele com um toque."
       },
       "community": {
-        "title": "Comunidade",
-        "description": "Junte-se a milhões de estudantes de idiomas globalmente"
+        "title": "Comunidade de verdade",
+        "description": "Explore parceiros por idioma nativo, veja quem está online e compartilhe momentos com quem aprende o mesmo idioma."
       },
-      "languages": {
-        "title": "Mais de 50 Idiomas",
-        "description": "Do espanhol ao coreano, encontre seu caminho de aprendizado"
+      "translate": {
+        "title": "Tradução integrada",
+        "description": "Traduza qualquer mensagem para o seu idioma nativo. Salve frases direto na sua lista de estudos."
+      },
+      "tutor": {
+        "title": "Tutor de IA",
+        "description": "Cenários de interpretação, vocabulário com imagens e treino de pronúncia — tudo com o seu próprio parceiro de estudos com IA."
+      },
+      "voice_rooms": {
+        "title": "Salas de voz",
+        "description": "Entre em salas de áudio ao vivo com falantes nativos e outros estudantes de idiomas do mundo todo."
+      },
+      "calls": {
+        "title": "Chamadas de voz e vídeo",
+        "description": "Chamadas de áudio e vídeo com um toque, direto com seus parceiros de idioma."
       }
     },
     "howItWorks": {
-      "title": "Comece a Aprender em 3 Passos",
-      "subtitle": "Comece em minutos e inicie sua jornada de idiomas hoje"
+      "title": "Três passos até sua primeira conversa",
+      "subtitle": "Sem número de telefone, sem spam — só gente de verdade querendo aprender."
     },
     "steps": {
       "profile": {
-        "title": "Crie Seu Perfil",
-        "description": "Conte-nos sobre seu idioma nativo e o que deseja aprender"
+        "title": "Conte quais idiomas você fala",
+        "description": "Escolha o que você fala fluentemente e o que está aprendendo. Adicione alguns tópicos que você gosta."
       },
       "partners": {
-        "title": "Encontre Parceiros",
-        "description": "Navegue pela nossa comunidade e encontre parceiros perfeitos de intercâmbio de idiomas"
+        "title": "Encontre seu parceiro",
+        "description": "Explore a comunidade por idioma, país ou tópico. Acene ou mande mensagem para alguém interessante."
       },
       "learn": {
-        "title": "Comece a Aprender",
-        "description": "Converse, ligue e pratique com falantes nativos todos os dias"
+        "title": "Pratique todos os dias",
+        "description": "Converse, troque áudios, receba correções e transforme palavras novas em cartões de repetição espaçada."
       }
     },
     "pricing": {
-      "title": "Escolha Seu Plano",
-      "subtitle": "Comece grátis e faça upgrade quando estiver pronto",
-      "mostPopular": "Mais Popular",
-      "getStarted": "Começar",
+      "title": "Grátis para começar. VIP quando quiser aprender mais rápido.",
+      "subtitle": "O BananaTalk é grátis para todo mundo. Faça upgrade para remover os limites diários de traduções, Tutor de IA e mais.",
       "free": {
         "name": "Grátis",
         "period": "para sempre",
+        "cta": "Criar conta grátis",
         "features": {
-          "messaging": "Mensagens básicas",
-          "connections": "5 novas conexões/dia",
-          "community": "Acesso à comunidade",
-          "lessons": "Lições básicas"
+          "messaging": "Chat 1 a 1 ilimitado com tradução",
+          "community": "Explore e conecte-se com a comunidade",
+          "moments": "Publique Momentos e leia Stories",
+          "tutor_trial": "Cota diária de Tutor de IA e tradução"
         },
         "f1": "Chat 1 a 1 ilimitado com tradução",
         "f2": "Explore e conecte-se com a comunidade",
-        "f3": "Publique Moments e leia Stories"
+        "f3": "Publique Momentos e leia Stories"
       },
-      "premium": {
-        "name": "Premium",
-        "period": "/mês",
-        "features": {
-          "messaging": "Mensagens ilimitadas",
-          "connections": "Conexões ilimitadas",
-          "video": "Chamadas de vídeo",
-          "lessons": "Lições avançadas",
-          "noAds": "Sem anúncios",
-          "translation": "Ferramentas de tradução"
-        }
-      },
-      "lifetime": {
-        "name": "Vitalício",
-        "period": "pagamento único",
-        "features": {
-          "everything": "Tudo do Premium",
-          "forever": "Acesso permanente",
-          "support": "Suporte prioritário",
-          "early": "Recursos antecipados",
-          "badges": "Emblemas exclusivos"
-        }
-      },
-      "best": "Melhor valor",
+      "best": "Melhor custo-benefício",
       "perMonth": "por mês",
       "every": "a cada",
       "save": "Economize",
-      "getVip": "Obter VIP no app"
+      "getVip": "Assine o VIP no app",
+      "fineprint": "Cancele quando quiser nas configurações da App Store ou do Google Play. As assinaturas renovam automaticamente até serem canceladas.",
+      "monthly": {
+        "name": "VIP — Mensal",
+        "period": "por mês",
+        "highlight": "Mais flexível",
+        "cta": "Começar mensal",
+        "features": {
+          "unlimited_translation": "Traduções e correções ilimitadas",
+          "unlimited_tutor": "Sessões ilimitadas de Tutor de IA e interpretação de papéis",
+          "voice_rooms": "Crie e fixe Salas de voz",
+          "priority": "Prioridade no pareamento de parceiros"
+        }
+      },
+      "yearly": {
+        "name": "VIP — Anual",
+        "period": "por ano",
+        "highlight": "Economize 72%",
+        "cta": "Economize no plano anual",
+        "features": {
+          "everything_in_monthly": "Tudo do plano Mensal",
+          "equiv": "Equivale a apenas US$ 4,16 por mês",
+          "early_access": "Acesso antecipado a novos recursos",
+          "support": "Suporte direto da equipe do BananaTalk"
+        }
+      }
     },
     "download": {
-      "badge": "Baixe o App",
-      "title": "Leve o BananaTalk para Todos os Lugares",
-      "description": "Aprenda em qualquer lugar com nosso app mobile. Disponível para iOS e Android com todos os recursos, notificações push e acesso offline.",
+      "badge": "Baixe o app",
+      "title": "A experiência completa mora no celular",
+      "description": "Tutor de IA, Salas de voz, chamadas e notificações em tempo real são exclusivas do app. Baixe o app para viver a experiência completa do BananaTalk.",
       "downloadOn": "Baixe no",
       "getItOn": "Disponível no",
       "scanQR": "Escaneie para baixar o app",
       "or": "ou",
       "features": {
-        "offline": "Acesso offline",
+        "offline": "Chat que funciona sem internet",
         "push": "Notificações push",
-        "fast": "Rápido e leve"
+        "fast": "Grátis para instalar"
       }
     },
     "cta": {
-      "title": "Pronto para Começar Sua Jornada de Idiomas?",
-      "description": "Junte-se a milhões de estudantes e comece a falar um novo idioma hoje",
-      "button": "Criar Conta Grátis",
+      "title": "Pronto para ter uma conversa de verdade?",
+      "description": "Entre para a comunidade do BananaTalk e comece a praticar hoje. Sem necessidade de cartão de crédito.",
+      "button": "Crie sua conta grátis",
       "subtitle": "Grátis para começar. Sem cartão, sem contagem regressiva de teste."
     },
     "stats": {
@@ -1117,7 +1113,7 @@
     },
     "download": {
       "title": "Baixe o BananaTalk para iPhone e Android",
-      "description": "Obtenha o app gratuito de intercâmbio de idiomas BananaTalk para iPhone e Android. Converse com nativos com traduções instantâneas e correções de um tutor de IA."
+      "description": "App gratuito de intercâmbio de idiomas BananaTalk para iPhone e Android. Converse com nativos, traduções instantâneas e correções de um tutor de IA."
     },
     "moments": {
       "title": "Moments do BananaTalk: histórias no seu idioma-alvo",
@@ -1152,5 +1148,37 @@
     "message": "Usamos cookies de análise para entender o que traz as pessoas até aqui.",
     "accept": "OK",
     "decline": "Não, obrigado"
+  },
+  "linking": {
+    "share": {
+      "label": "Compartilhar",
+      "copied": "Link copiado para a área de transferência!",
+      "copyFailed": "Falha ao copiar o link"
+    },
+    "openInApp": {
+      "label": "Abrir no app"
+    },
+    "appBanner": {
+      "text": "Abra isso no app do BananaTalk"
+    }
+  },
+  "newChat": {
+    "title": "Novo chat",
+    "subtitle": "Inicie uma conversa",
+    "directMessage": "Direto",
+    "groupChat": "Grupo",
+    "searchPlaceholder": "Busque por nome, @usuário ou ID do usuário...",
+    "searchHint": "Busque usuários para iniciar um chat",
+    "hintName": "Busque por nome",
+    "hintUsername": "Digite @usuário para buscar pelo nome de usuário",
+    "hintId": "Cole um ID de usuário para encontrar diretamente",
+    "searchByUsername": "Buscando por nome de usuário",
+    "searchById": "Buscando por ID de usuário",
+    "noResults": "Nenhum usuário encontrado",
+    "tryDifferent": "Tente outro nome, @usuário ou ID de usuário",
+    "createGroup": "Criar grupo",
+    "selectMoreUsers": "Selecione pelo menos 2 usuários para um chat em grupo",
+    "createError": "Falha ao criar o chat",
+    "recently": "Recentes"
   }
 }

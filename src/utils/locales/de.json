@@ -25,7 +25,7 @@
   "chat": "Chat",
   "chatPage": {
     "messages": "Nachrichten",
-    "searchPlaceholder": "Unterhaltungen durchsuchen...",
+    "searchPlaceholder": "Unterhaltungen durchsuchen…",
     "startConversation": "Unterhaltung starten",
     "emptyDescription": "Wähle einen Chat aus der Seitenleiste oder starte eine neue Unterhaltung, um dich mit Sprachpartnern auf der ganzen Welt zu verbinden.",
     "newConversation": "Neue Unterhaltung",
@@ -38,10 +38,10 @@
     "online": "Online",
     "offline": "Offline",
     "lastSeen": "Zuletzt gesehen",
-    "typing": "tippt...",
-    "loadingConversation": "Unterhaltung wird geladen...",
+    "typing": "tippt…",
+    "loadingConversation": "Unterhaltung wird geladen…",
     "errorLoading": "Fehler beim Laden der Unterhaltung",
-    "messagePlaceholder": "Schreibe deine Nachricht...",
+    "messagePlaceholder": "Schreibe deine Nachricht…",
     "justNow": "Gerade eben",
     "minutesAgo": "vor {{count}} Min.",
     "hoursAgo": "vor {{count}} Std.",
@@ -67,13 +67,13 @@
       "warning": "Das kann nicht rückgängig gemacht werden.",
       "cancel": "Abbrechen",
       "confirm": "Löschen",
-      "deleting": "Löschen..."
+      "deleting": "Löschen…"
     },
     "gif": {
       "title": "GIFs",
       "close": "GIF-Auswahl schließen",
-      "searchPlaceholder": "GIFs suchen...",
-      "loading": "GIFs werden geladen...",
+      "searchPlaceholder": "GIFs suchen…",
+      "loading": "GIFs werden geladen…",
       "noResults": "Keine GIFs gefunden",
       "poweredBy": "Powered by GIPHY",
       "altText": "GIF"
@@ -88,6 +88,25 @@
       "deleteFailed": "Konversation konnte nicht gelöscht werden",
       "deleted": "Konversation gelöscht"
     }
+  },
+  "newChat": {
+    "title": "Neuer Chat",
+    "subtitle": "Unterhaltung starten",
+    "directMessage": "Direkt",
+    "groupChat": "Gruppe",
+    "searchPlaceholder": "Suche nach Name, @Benutzername oder Nutzer-ID…",
+    "searchHint": "Suche nach Nutzern, um einen Chat zu starten",
+    "hintName": "Suche nach Name",
+    "hintUsername": "Gib @Benutzername ein, um per Benutzername zu suchen",
+    "hintId": "Füge eine Nutzer-ID ein, um direkt zu suchen",
+    "searchByUsername": "Suche nach Benutzername",
+    "searchById": "Suche nach Nutzer-ID",
+    "noResults": "Keine Nutzer gefunden",
+    "tryDifferent": "Versuche einen anderen Namen, @Benutzernamen oder eine andere Nutzer-ID",
+    "createGroup": "Gruppe erstellen",
+    "selectMoreUsers": "Wähle mindestens 2 Nutzer für den Gruppenchat aus",
+    "createError": "Chat konnte nicht erstellt werden",
+    "recently": "Zuletzt"
   },
   "notifications": "Benachrichtigungen",
   "moments": "Momente",
@@ -243,7 +262,7 @@
     "title": "Momente",
     "question": "Was beschäftigt dich,",
     "loading": "Laden",
-    "loading_moments": "Momente werden geladen...",
+    "loading_moments": "Momente werden geladen…",
     "error_loading": "Fehler beim Laden der Momente",
     "error_info": "Die Momente konnten nicht geladen werden. Bitte versuche es später erneut.",
     "retry_btn": "Erneut versuchen",
@@ -257,7 +276,7 @@
     "moment_share": "Teilen",
     "no_comments": "Noch keine Kommentare. Sei der Erste, der kommentiert!",
     "invalidMomentId": "Ungültige Moment-ID",
-    "loadingMoment": "Moment-Details werden geladen...",
+    "loadingMoment": "Moment-Details werden geladen…",
     "noDetailsFound": "Keine Details gefunden",
     "goBack": "Zurück",
     "momentDetails": "Moment-Details",
@@ -268,8 +287,8 @@
     "emptyCommentError": "Bitte füge einen Kommentar hinzu",
     "commentAdded": "Kommentar hinzugefügt",
     "failedToAddComment": "Kommentar konnte nicht hinzugefügt werden",
-    "loadingComments": "Kommentare werden geladen...",
-    "writeCommentPlaceholder": "Schreibe einen Kommentar...",
+    "loadingComments": "Kommentare werden geladen…",
+    "writeCommentPlaceholder": "Schreibe einen Kommentar…",
     "signInToComment": "Bitte melde dich an, um einen Kommentar hinzuzufügen",
     "signIn": "Anmelden",
     "noCommentsYet": "Noch keine Kommentare. Sei der Erste, der kommentiert!",
@@ -298,13 +317,13 @@
     },
     "create": {
       "header": "Moment erstellen",
-      "titlePlaceholder": "Titel hinzufügen...",
+      "titlePlaceholder": "Titel hinzufügen…",
       "addToMoment": "Zu deinem Moment hinzufügen",
       "addPhotos": "Fotos hinzufügen",
       "addMood": "Stimmung hinzufügen",
       "addLocation": "Ort hinzufügen",
       "addTags": "Tags hinzufügen",
-      "tagPlaceholder": "Tag hinzufügen..."
+      "tagPlaceholder": "Tag hinzufügen…"
     },
     "promo": {
       "title": "Momente gibt es jetzt in der App",
@@ -343,7 +362,7 @@
       "maxImagesText": "Maximal 10 Bilder erlaubt",
       "addMoreText": "Weitere hinzufügen",
       "submitButton": "Veröffentlichen",
-      "submittingButton": "Wird veröffentlicht...",
+      "submittingButton": "Wird veröffentlicht…",
       "cancelButton": "Abbrechen"
     },
     "toast": {
@@ -364,56 +383,56 @@
       "titleLabel": "Titel",
       "titlePlaceholder": "Gib einen Titel für deinen Moment ein",
       "descriptionLabel": "Beschreibung",
-      "descriptionPlaceholder": "Erzähle uns von deinem Moment...",
+      "descriptionPlaceholder": "Erzähle uns von deinem Moment…",
       "imagesLabel": "Bilder",
       "maxImagesText": "Du kannst bis zu 10 Bilder hochladen (max. 5 MB pro Bild)",
       "existingImagesLabel": "Aktuelle Bilder",
       "newImagesLabel": "Neue Bilder",
       "addMoreText": "Weitere hinzufügen",
       "updateButton": "Moment aktualisieren",
-      "updatingButton": "Wird aktualisiert...",
+      "updatingButton": "Wird aktualisiert…",
       "cancelButton": "Abbrechen"
     }
   },
   "authentication": {
     "enterEmail": {
       "title": "E-Mail eingeben",
-      "subtitle": "We'll send a verification code to your email",
+      "subtitle": "Wir senden dir einen Bestätigungscode per E-Mail",
       "emailLabel": "E-Mail-Adresse",
       "emailPlaceholder": "E-Mail eingeben",
       "sendButton": "Code senden",
-      "sendingButton": "Wird gesendet...",
+      "sendingButton": "Wird gesendet…",
       "successMessage": "Bestätigungscode erfolgreich gesendet!",
       "errorPrefix": "Fehler: "
     },
     "passwordReset": {
       "successMessage": "Passwort erfolgreich zurückgesetzt, bitte melde dich an!",
-      "backToLogin": "Back to login",
-      "verifyTitle": "Enter verification code",
-      "verifySubtitle": "We've sent a 6-digit code to your email",
-      "codeLabel": "Verification Code",
-      "codePlaceholder": "Enter code",
-      "previousButton": "Previous",
-      "verifyButton": "Verify",
-      "verifyingButton": "Verifying...",
-      "resendButton": "Resend code",
-      "resendingButton": "Resending...",
-      "verifySuccessMessage": "Verification code successfully verified!",
-      "resendSuccessMessage": "A new verification code has been sent!",
-      "verifyErrorDefault": "Invalid verification code",
-      "resendErrorDefault": "Failed to resend the code",
-      "setPasswordTitle": "Set new password",
-      "setPasswordSubtitle": "Choose a strong password for your account",
-      "newPasswordLabel": "New Password",
-      "newPasswordPlaceholder": "New Password",
-      "confirmPasswordLabel": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm Password",
-      "showPassword": "Show password",
-      "hidePassword": "Hide password",
-      "submitButton": "Reset Password",
-      "submittingButton": "Resetting...",
-      "strengthErrorMessage": "Password does not meet the strength requirements",
-      "mismatchErrorMessage": "Passwords do not match"
+      "backToLogin": "Zurück zur Anmeldung",
+      "verifyTitle": "Bestätigungscode eingeben",
+      "verifySubtitle": "Wir haben dir einen 6-stelligen Code per E-Mail geschickt",
+      "codeLabel": "Bestätigungscode",
+      "codePlaceholder": "Code eingeben",
+      "previousButton": "Zurück",
+      "verifyButton": "Bestätigen",
+      "verifyingButton": "Wird geprüft…",
+      "resendButton": "Code erneut senden",
+      "resendingButton": "Wird erneut gesendet…",
+      "verifySuccessMessage": "Bestätigungscode erfolgreich verifiziert!",
+      "resendSuccessMessage": "Ein neuer Bestätigungscode wurde gesendet!",
+      "verifyErrorDefault": "Ungültiger Bestätigungscode",
+      "resendErrorDefault": "Der Code konnte nicht erneut gesendet werden",
+      "setPasswordTitle": "Neues Passwort festlegen",
+      "setPasswordSubtitle": "Wähle ein sicheres Passwort für dein Konto",
+      "newPasswordLabel": "Neues Passwort",
+      "newPasswordPlaceholder": "Neues Passwort",
+      "confirmPasswordLabel": "Passwort bestätigen",
+      "confirmPasswordPlaceholder": "Passwort bestätigen",
+      "showPassword": "Passwort anzeigen",
+      "hidePassword": "Passwort verbergen",
+      "submitButton": "Passwort zurücksetzen",
+      "submittingButton": "Wird zurückgesetzt…",
+      "strengthErrorMessage": "Das Passwort erfüllt nicht die Sicherheitsanforderungen",
+      "mismatchErrorMessage": "Die Passwörter stimmen nicht überein"
     },
     "login": {
       "signInWithGoogle": "Mit Google anmelden",
@@ -424,7 +443,7 @@
       "passwordPlaceholder": "Passwort eingeben",
       "forgotPassword": "Passwort vergessen?",
       "signInButton": "Anmelden",
-      "signingInButton": "Anmeldung läuft...",
+      "signingInButton": "Anmeldung läuft…",
       "newUserText": "Neu hier?",
       "registerLink": "Registrieren",
       "successMessage": "Erfolgreich angemeldet",
@@ -460,7 +479,7 @@
       "uploadPrompt": "Klicke, um Profilbilder hochzuladen",
       "selectImages": "Bilder auswählen",
       "back": "Zurück",
-      "processing": "Wird verarbeitet..."
+      "processing": "Wird verarbeitet…"
     },
     "verification": {
       "title": "E-Mail-Verifizierung",
@@ -468,9 +487,9 @@
       "verificationCode": "Bestätigungscode",
       "codePlaceholder": "6-stelligen Code eingeben",
       "verifyButton": "E-Mail verifizieren",
-      "verifying": "Wird verifiziert...",
+      "verifying": "Wird verifiziert…",
       "resendCode": "Bestätigungscode erneut senden",
-      "sending": "Wird gesendet...",
+      "sending": "Wird gesendet…",
       "backToProfile": "Zurück zum Profil",
       "successMessage": "E-Mail erfolgreich verifiziert!",
       "completePrompt": "Schließe deine Registrierung ab, indem du auf die Schaltfläche unten klickst.",
@@ -506,8 +525,8 @@
       "countries": "Länder"
     },
     "search": {
-      "placeholder": "Nach Name, Sprache oder Interessen suchen...",
-      "loading": "Sprachpartner werden gesucht..."
+      "placeholder": "Nach Name, Sprache oder Interessen suchen…",
+      "loading": "Sprachpartner werden gesucht…"
     },
     "memberCard": {
       "native": "Muttersprache",
@@ -552,7 +571,7 @@
       "tryAgain": "Erneut versuchen"
     },
     "loadMore": {
-      "loading": "Wird geladen...",
+      "loading": "Wird geladen…",
       "button": "Mehr Mitglieder laden"
     },
     "cta": {
@@ -628,8 +647,8 @@
       "startConversation": "Unterhaltung starten"
     },
     "loading": {
-      "loadingProfile": "Profil wird geladen...",
-      "initiatingCall": "Anruf mit {{name}} wird gestartet..."
+      "loadingProfile": "Profil wird geladen…",
+      "initiatingCall": "Anruf mit {{name}} wird gestartet…"
     },
     "notifications": {
       "loginToFollow": "Du musst angemeldet sein, um Nutzern zu folgen",
@@ -668,10 +687,6 @@
       "speaks": "Spricht",
       "learning": "Lernt",
       "notSpecified": "Nicht angegeben"
-    },
-    "suggested": {
-      "title": "Mehr Mitglieder wie {{name}}",
-      "seeAll": "Alle Mitglieder anzeigen"
     }
   },
   "communityDetailSection": {
@@ -687,11 +702,15 @@
       "couldNotLoadProfile": "Dieses Profil konnte nicht geladen werden. Bitte versuche es später erneut.",
       "profileNotFound": "Profil nicht gefunden",
       "profileDoesNotExist": "Dieses Benutzerprofil existiert nicht oder wurde entfernt.",
-      "loadingProfile": "Profil wird geladen..."
+      "loadingProfile": "Profil wird geladen…"
     },
     "buttons": {
       "tryAgain": "Erneut versuchen",
       "backToCommunity": "Zurück zur Community"
+    },
+    "suggested": {
+      "title": "Mehr Mitglieder wie {{name}}",
+      "seeAll": "Alle Mitglieder anzeigen"
     },
     "stats": {
       "followers": "Follower",
@@ -776,7 +795,7 @@
     },
     "vocabulary": {
       "title": "Wortschatz",
-      "searchPlaceholder": "Wörter suchen...",
+      "searchPlaceholder": "Wörter suchen…",
       "addWord": "Wort hinzufügen",
       "noWords": "Noch keine Wörter",
       "startAdding": "Beginne, Wörter zu deinem Wortschatz hinzuzufügen",
@@ -924,23 +943,18 @@
   },
   "home": {
     "hero": {
-      "badge": "Sprachaustausch leicht gemacht",
-      "titlePart1": "Lerne Sprachen durch",
-      "titleHighlight": "Sprechen",
-      "titlePart2": "mit Muttersprachlern",
-      "description": "Verbinde dich mit Millionen von Sprachlernenden weltweit. Übe das Sprechen, verbessere deine Sprachkompetenz und finde Freunde aus aller Welt.",
-      "stats": {
-        "users": "Aktive Nutzer",
-        "languages": "Sprachen",
-        "countries": "Länder"
-      },
-      "getStarted": "Kostenlos starten",
+      "badge": "Sprachaustausch mit echten Menschen",
+      "titlePart1": "Übe",
+      "titleHighlight": "jede Sprache",
+      "titlePart2": "mit jemandem, der sie wirklich spricht.",
+      "description": "BananaTalk bringt dich mit Muttersprachlern aus aller Welt zusammen. Chatte, schick Sprachnachrichten, übersetze und lass dich korrigieren – jedes Gespräch macht dich besser.",
+      "getStarted": "Jetzt starten – kostenlos",
       "browseCommunity": "Community durchsuchen",
-      "lovedBy": "Beliebt bei über 5 Mio. Lernenden",
+      "lovedBy": "Beliebt bei Sprachlernenden auf iOS und Android",
       "chatPreview": {
-        "message1": "Hallo! Wie geht es dir? 👋",
-        "message2": "Hey! Ich übe gerade mein Deutsch!",
-        "message3": "Super! Lass uns zusammen üben 🇩🇪"
+        "message1": "안녕하세요! Wie war dein Wochenende?",
+        "message2": "주말에 친구들과 등산 갔어요 ⛰️",
+        "message3": "Schön! 산 → Berg. In deiner Lernliste gespeichert."
       },
       "title": "Sag es ruhig falsch.",
       "titleAccent": "Wir übersetzen.",
@@ -953,90 +967,91 @@
       "pricing": "Preise"
     },
     "features": {
-      "title": "Alles, was du zum Lernen brauchst",
-      "subtitle": "Leistungsstarke Tools, die deine Sprachlernreise beschleunigen",
+      "title": "Alles, was du brauchst, um die Sprache wirklich zu sprechen",
+      "subtitle": "Gebaut auf echten Gesprächen mit echten Muttersprachlern – keine Vokabel-Drills.",
       "chat": {
-        "title": "Echtzeit-Chat",
-        "description": "Übe Unterhaltungen mit Muttersprachlern per Sofortnachricht"
+        "title": "Chat mit Korrekturen",
+        "description": "Schick Text, Sprachnachrichten, Fotos und Sticker. Tippe auf die Nachricht deines Partners, um sie zu übersetzen, oder korrigiere seine mit einem Tipp."
       },
-      "video": {
-        "title": "Videoanrufe",
-        "description": "Sprachübungen von Angesicht zu Angesicht mit Partnern weltweit"
+      "translate": {
+        "title": "Eingebaute Übersetzung",
+        "description": "Übersetze jede Nachricht in deine Muttersprache. Speichere Ausdrücke direkt in deiner Lernliste."
       },
-      "lessons": {
-        "title": "Interaktive Lektionen",
-        "description": "Lerne mit strukturierten Kursen und täglichen Übungen"
+      "tutor": {
+        "title": "KI-Tutor",
+        "description": "Rollenspiel-Szenarien, bildbasiertes Vokabeltraining und Ausspracheübungen – alles mit deinem eigenen KI-Lernpartner."
       },
-      "voice": {
-        "title": "Sprachnachrichten",
-        "description": "Perfektioniere deine Aussprache mit Audioaustausch"
+      "voice_rooms": {
+        "title": "Sprachräume",
+        "description": "Steig in Live-Audioräume mit Muttersprachlern und Sprachlernenden aus aller Welt ein."
+      },
+      "calls": {
+        "title": "Sprach- & Videoanrufe",
+        "description": "Ein Tipp genügt für Audio- und Videoanrufe mit deinen Sprachpartnern."
       },
       "community": {
-        "title": "Community",
-        "description": "Tritt Millionen von Sprachlernenden weltweit bei"
-      },
-      "languages": {
-        "title": "50+ Sprachen",
-        "description": "Von Spanisch bis Koreanisch – finde deinen Lernweg"
+        "title": "Echte Community",
+        "description": "Durchsuche Partner nach Muttersprache, sieh, wer online ist, und teile Momente mit Leuten, die dieselbe Sprache lernen."
       }
     },
     "howItWorks": {
-      "title": "In 3 Schritten loslegen",
-      "subtitle": "Starte in wenigen Minuten und beginne deine Sprachreise noch heute"
+      "title": "Drei Schritte zu deinem ersten Gespräch",
+      "subtitle": "Keine Telefonnummern, kein Spam – nur echte Menschen, die lernen wollen."
     },
     "steps": {
       "profile": {
-        "title": "Erstelle dein Profil",
-        "description": "Erzähle uns von deiner Muttersprache und was du lernen möchtest"
+        "title": "Erzähl uns deine Sprachen",
+        "description": "Wähle, was du fließend sprichst und was du lernst. Füge ein paar Themen hinzu, die dich interessieren."
       },
       "partners": {
-        "title": "Finde Partner",
-        "description": "Durchsuche unsere Community und finde perfekte Sprachaustauschpartner"
+        "title": "Finde deinen Partner",
+        "description": "Durchsuche die Community nach Sprache, Land oder Thema. Wink oder schreib jemandem, der dich interessiert."
       },
       "learn": {
-        "title": "Fang an zu lernen",
-        "description": "Chatte, telefoniere und übe jeden Tag mit Muttersprachlern"
+        "title": "Übe jeden Tag",
+        "description": "Chatte, tausch Sprachnachrichten aus, lass dich korrigieren und verwandle neue Wörter in Lernkarten mit Spaced Repetition."
       }
     },
     "pricing": {
-      "title": "Wähle deinen Plan",
-      "subtitle": "Starte kostenlos und upgrade, wenn du bereit bist",
-      "mostPopular": "Am beliebtesten",
-      "getStarted": "Jetzt starten",
+      "title": "Kostenlos starten. VIP, wenn du schneller lernen willst.",
+      "subtitle": "BananaTalk ist für alle kostenlos. Upgrade auf VIP, um die täglichen Limits für Übersetzungen, KI-Tutor und mehr aufzuheben.",
+      "fineprint": "Jederzeit kündbar in deinen App Store- oder Google Play-Einstellungen. Abos verlängern sich automatisch bis zur Kündigung.",
       "free": {
         "name": "Kostenlos",
         "period": "für immer",
+        "cta": "Kostenloses Konto erstellen",
         "features": {
-          "messaging": "Einfache Nachrichten",
-          "connections": "5 neue Verbindungen/Tag",
-          "community": "Community-Zugang",
-          "lessons": "Grundlegende Lektionen"
+          "messaging": "Unbegrenzter 1-zu-1-Chat mit Übersetzung",
+          "community": "Community durchsuchen und Kontakte knüpfen",
+          "moments": "Moments posten und Storys lesen",
+          "tutor_trial": "Tägliches Kontingent für KI-Tutor und Übersetzung"
         },
         "f1": "Unbegrenzter 1-zu-1-Chat mit Übersetzung",
         "f2": "Community durchsuchen und Kontakte knüpfen",
         "f3": "Moments posten und Storys lesen"
       },
-      "premium": {
-        "name": "Premium",
-        "period": "/Monat",
+      "monthly": {
+        "name": "VIP – Monatlich",
+        "period": "pro Monat",
+        "highlight": "Am flexibelsten",
+        "cta": "Monatlich starten",
         "features": {
-          "messaging": "Unbegrenzte Nachrichten",
-          "connections": "Unbegrenzte Verbindungen",
-          "video": "Videoanrufe",
-          "lessons": "Fortgeschrittene Lektionen",
-          "noAds": "Keine Werbung",
-          "translation": "Übersetzungstools"
+          "unlimited_translation": "Unbegrenzte Übersetzungen und Korrekturen",
+          "unlimited_tutor": "Unbegrenzte KI-Tutor-Sessions und Rollenspiele",
+          "voice_rooms": "Sprachräume hosten und anheften",
+          "priority": "Bevorzugtes Partner-Matching"
         }
       },
-      "lifetime": {
-        "name": "Lebenslang",
-        "period": "einmalig",
+      "yearly": {
+        "name": "VIP – Jährlich",
+        "period": "pro Jahr",
+        "highlight": "72 % sparen",
+        "cta": "Mit Jahresplan sparen",
         "features": {
-          "everything": "Alles aus Premium",
-          "forever": "Zugang für immer",
-          "support": "Prioritäts-Support",
-          "early": "Frühzeitiger Zugang zu neuen Funktionen",
-          "badges": "Exklusive Abzeichen"
+          "everything_in_monthly": "Alles aus dem Monatsplan",
+          "equiv": "Nur 4,16 $ pro Monat im Schnitt",
+          "early_access": "Früher Zugang zu neuen Funktionen",
+          "support": "Direkter Support vom BananaTalk-Team"
         }
       },
       "best": "Bester Wert",
@@ -1047,23 +1062,23 @@
     },
     "download": {
       "badge": "App herunterladen",
-      "title": "Nimm BananaTalk überallhin mit",
-      "description": "Lerne unterwegs mit unserer mobilen App. Verfügbar für iOS und Android mit allen Funktionen, Push-Benachrichtigungen und Offline-Zugang.",
+      "title": "Das volle Erlebnis gibt's nur mobil",
+      "description": "KI-Tutor, Sprachräume, Anrufe und Live-Benachrichtigungen gibt es nur in der App. Hol dir die App für das komplette BananaTalk-Erlebnis.",
       "downloadOn": "Laden im",
       "getItOn": "Jetzt bei",
       "scanQR": "Scannen, um die App herunterzuladen",
       "or": "oder",
       "features": {
-        "offline": "Offline-Zugang",
+        "offline": "Offline-freundlicher Chat",
         "push": "Push-Benachrichtigungen",
-        "fast": "Schnell & leichtgewichtig"
+        "fast": "Kostenlose Installation"
       }
     },
     "cta": {
-      "title": "Bereit, deine Sprachreise zu beginnen?",
-      "description": "Schließe dich Millionen von Lernenden an und beginne noch heute, eine neue Sprache zu sprechen",
+      "title": "Bereit für ein echtes Gespräch?",
+      "description": "Tritt der BananaTalk-Community bei und leg noch heute los. Keine Kreditkarte nötig.",
       "button": "Kostenloses Konto erstellen",
-      "subtitle": "Kostenlos starten. Keine Karte, kein Testzeitraum-Countdown."
+      "subtitle": "Kostenlos starten. Keine Karte, kein Test-Countdown."
     },
     "stats": {
       "languages": "Sprachen",
@@ -1107,6 +1122,19 @@
       "prioritySupport": "Prioritäts-Support",
       "exclusiveBadge": "Exklusives VIP-Abzeichen",
       "translationFeature": "Nachrichtenübersetzung"
+    }
+  },
+  "linking": {
+    "share": {
+      "label": "Teilen",
+      "copied": "Link in die Zwischenablage kopiert!",
+      "copyFailed": "Link konnte nicht kopiert werden"
+    },
+    "openInApp": {
+      "label": "In der App öffnen"
+    },
+    "appBanner": {
+      "text": "In der BananaTalk-App öffnen"
     }
   },
   "seo": {

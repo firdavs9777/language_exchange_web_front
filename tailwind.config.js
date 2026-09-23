@@ -15,7 +15,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        brand: { DEFAULT: "#00BFA5", light: "#5DF2D6", dark: "#008E76" }, // AppColors.primary
+        // `deep` is the accessible member of the family: white text on
+        // #00BFA5 is 2.33:1 and on #008E76 is 4.09:1, both under AA. #00806A
+        // clears it at 4.89:1, so any brand fill that carries small white
+        // text uses `deep`; DEFAULT and `dark` stay for large or decorative
+        // fills.
+        brand: { DEFAULT: "#00BFA5", light: "#5DF2D6", dark: "#008E76", deep: "#00806A", deepest: "#00654F" }, // AppColors.primary
         banana: { DEFAULT: "#FFD54F", light: "#FFFF81", dark: "#C9A415" }, // AppColors.secondary
         surface: { DEFAULT: "#FFFFFF", dark: "#1E1E1E" },
         canvas: { DEFAULT: "#F8F9FA", dark: "#121212" },

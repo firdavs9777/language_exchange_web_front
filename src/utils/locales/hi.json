@@ -89,6 +89,25 @@
       "deleted": "बातचीत हटा दी गई"
     }
   },
+  "newChat": {
+    "title": "नई चैट",
+    "subtitle": "बातचीत शुरू करें",
+    "directMessage": "डायरेक्ट",
+    "groupChat": "ग्रुप",
+    "searchPlaceholder": "नाम, @यूज़रनेम या यूज़र ID से खोजें...",
+    "searchHint": "चैट शुरू करने के लिए उपयोगकर्ता खोजें",
+    "hintName": "नाम से खोजें",
+    "hintUsername": "यूज़रनेम से खोजने के लिए @यूज़रनेम टाइप करें",
+    "hintId": "सीधे खोजने के लिए यूज़र ID पेस्ट करें",
+    "searchByUsername": "यूज़रनेम से खोजा जा रहा है",
+    "searchById": "यूज़र ID से खोजा जा रहा है",
+    "noResults": "कोई उपयोगकर्ता नहीं मिला",
+    "tryDifferent": "कोई और नाम, @यूज़रनेम या यूज़र ID आज़माएँ",
+    "createGroup": "ग्रुप बनाएँ",
+    "selectMoreUsers": "ग्रुप चैट के लिए कम से कम 2 उपयोगकर्ता चुनें",
+    "createError": "चैट बनाने में विफल",
+    "recently": "हाल ही में"
+  },
   "notifications": "सूचनाएँ",
   "moments": "मोमेंट्स",
   "language": "भाषा",
@@ -378,7 +397,7 @@
   "authentication": {
     "enterEmail": {
       "title": "अपना ईमेल दर्ज करें",
-      "subtitle": "We'll send a verification code to your email",
+      "subtitle": "हम आपके ईमेल पर एक सत्यापन कोड भेजेंगे",
       "emailLabel": "ईमेल पता",
       "emailPlaceholder": "ईमेल दर्ज करें",
       "sendButton": "कोड भेजें",
@@ -388,32 +407,32 @@
     },
     "passwordReset": {
       "successMessage": "पासवर्ड सफलतापूर्वक रीसेट किया गया, कृपया लॉगिन करें!",
-      "backToLogin": "Back to login",
-      "verifyTitle": "Enter verification code",
-      "verifySubtitle": "We've sent a 6-digit code to your email",
-      "codeLabel": "Verification Code",
-      "codePlaceholder": "Enter code",
-      "previousButton": "Previous",
-      "verifyButton": "Verify",
-      "verifyingButton": "Verifying...",
-      "resendButton": "Resend code",
-      "resendingButton": "Resending...",
-      "verifySuccessMessage": "Verification code successfully verified!",
-      "resendSuccessMessage": "A new verification code has been sent!",
-      "verifyErrorDefault": "Invalid verification code",
-      "resendErrorDefault": "Failed to resend the code",
-      "setPasswordTitle": "Set new password",
-      "setPasswordSubtitle": "Choose a strong password for your account",
-      "newPasswordLabel": "New Password",
-      "newPasswordPlaceholder": "New Password",
-      "confirmPasswordLabel": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm Password",
-      "showPassword": "Show password",
-      "hidePassword": "Hide password",
-      "submitButton": "Reset Password",
-      "submittingButton": "Resetting...",
-      "strengthErrorMessage": "Password does not meet the strength requirements",
-      "mismatchErrorMessage": "Passwords do not match"
+      "backToLogin": "लॉगिन पर वापस जाएँ",
+      "verifyTitle": "सत्यापन कोड दर्ज करें",
+      "verifySubtitle": "हमने आपके ईमेल पर 6 अंकों का कोड भेजा है",
+      "codeLabel": "सत्यापन कोड",
+      "codePlaceholder": "कोड दर्ज करें",
+      "previousButton": "पिछला",
+      "verifyButton": "सत्यापित करें",
+      "verifyingButton": "सत्यापित हो रहा है...",
+      "resendButton": "कोड फिर से भेजें",
+      "resendingButton": "फिर से भेजा जा रहा है...",
+      "verifySuccessMessage": "सत्यापन कोड सफलतापूर्वक सत्यापित हुआ!",
+      "resendSuccessMessage": "एक नया सत्यापन कोड भेजा गया है!",
+      "verifyErrorDefault": "अमान्य सत्यापन कोड",
+      "resendErrorDefault": "कोड फिर से भेजने में विफल",
+      "setPasswordTitle": "नया पासवर्ड सेट करें",
+      "setPasswordSubtitle": "अपने अकाउंट के लिए एक मज़बूत पासवर्ड चुनें",
+      "newPasswordLabel": "नया पासवर्ड",
+      "newPasswordPlaceholder": "नया पासवर्ड",
+      "confirmPasswordLabel": "पासवर्ड की पुष्टि करें",
+      "confirmPasswordPlaceholder": "पासवर्ड की पुष्टि करें",
+      "showPassword": "पासवर्ड दिखाएँ",
+      "hidePassword": "पासवर्ड छिपाएँ",
+      "submitButton": "पासवर्ड रीसेट करें",
+      "submittingButton": "रीसेट हो रहा है...",
+      "strengthErrorMessage": "पासवर्ड मज़बूती की शर्तें पूरी नहीं करता",
+      "mismatchErrorMessage": "पासवर्ड मेल नहीं खाते"
     },
     "login": {
       "signInWithGoogle": "Google से साइन इन करें",
@@ -668,10 +687,6 @@
       "speaks": "बोलते हैं",
       "learning": "सीख रहे हैं",
       "notSpecified": "निर्दिष्ट नहीं"
-    },
-    "suggested": {
-      "title": "{{name}} जैसे और सदस्य",
-      "seeAll": "सभी सदस्य देखें"
     }
   },
   "communityDetailSection": {
@@ -692,6 +707,10 @@
     "buttons": {
       "tryAgain": "पुनः प्रयास करें",
       "backToCommunity": "समुदाय पर वापस जाएँ"
+    },
+    "suggested": {
+      "title": "{{name}} जैसे और सदस्य",
+      "seeAll": "सभी सदस्य देखें"
     },
     "stats": {
       "followers": "फॉलोअर्स",
@@ -924,23 +943,18 @@
   },
   "home": {
     "hero": {
-      "badge": "भाषा विनिमय आसान बना",
-      "titlePart1": "भाषाएँ सीखें",
-      "titleHighlight": "बोलकर",
-      "titlePart2": "मूल भाषी लोगों के साथ",
-      "description": "दुनिया भर के लाखों भाषा सीखने वालों से जुड़ें। बोलने का अभ्यास करें, प्रवाह में सुधार करें और दुनिया के हर कोने से दोस्त बनाएँ।",
-      "stats": {
-        "users": "सक्रिय उपयोगकर्ता",
-        "languages": "भाषाएँ",
-        "countries": "देश"
-      },
-      "getStarted": "मुफ़्त में शुरू करें",
+      "badge": "भाषा विनिमय, असली लोग",
+      "titlePart1": "अभ्यास करें",
+      "titleHighlight": "किसी भी भाषा का",
+      "titlePart2": "किसी ऐसे व्यक्ति के साथ जो उसे सच में बोलता है।",
+      "description": "BananaTalk आपको दुनिया भर के मूल भाषियों से जोड़ता है। चैट करें, वॉइस मैसेज भेजें, अनुवाद करें, और सुधार पाएं — हर बातचीत आपको बेहतर बनाती है।",
+      "getStarted": "शुरू करें — यह मुफ़्त है",
       "browseCommunity": "समुदाय ब्राउज़ करें",
-      "lovedBy": "50 लाख+ शिक्षार्थियों का प्रिय",
+      "lovedBy": "iOS और Android पर भाषा सीखने वालों की पसंद",
       "chatPreview": {
-        "message1": "नमस्ते! कैसे हो? 👋",
-        "message2": "Hey! I'm practicing my Hindi!",
-        "message3": "बहुत अच्छा! चलो साथ में अभ्यास करते हैं 🇮🇳"
+        "message1": "안녕하세요! तुम्हारा वीकेंड कैसा रहा?",
+        "message2": "주말에 친구들과 등산 갔어요 ⛰️",
+        "message3": "बढ़िया! 산 ← पहाड़। आपकी स्टडी क्यू में सेव हो गया।"
       },
       "title": "गलत बोलो, कोई बात नहीं।",
       "titleAccent": "अनुवाद हम करेंगे।",
@@ -953,90 +967,91 @@
       "pricing": "मूल्य निर्धारण"
     },
     "features": {
-      "title": "सीखने के लिए सब कुछ जो आपको चाहिए",
-      "subtitle": "आपकी भाषा सीखने की यात्रा को तेज़ करने के लिए डिज़ाइन किए गए शक्तिशाली उपकरण",
+      "title": "भाषा को असल में बोलने के लिए जो कुछ भी चाहिए, वो सब",
+      "subtitle": "असली मूल भाषियों के साथ असली बातचीत पर आधारित — शब्दावली अभ्यास नहीं।",
       "chat": {
-        "title": "रियल-टाइम चैट",
-        "description": "इंस्टेंट मैसेजिंग के माध्यम से मूल भाषी लोगों के साथ बातचीत का अभ्यास करें"
+        "title": "सुधार के साथ चैट",
+        "description": "टेक्स्ट, वॉइस, फ़ोटो और स्टिकर भेजें। पार्टनर के मैसेज को अनुवाद करने या एक टैप में सुधारने के लिए उस पर टैप करें।"
       },
-      "video": {
-        "title": "वीडियो कॉल",
-        "description": "दुनिया भर के साथियों के साथ आमने-सामने भाषा अभ्यास"
+      "translate": {
+        "title": "अंतर्निर्मित अनुवाद",
+        "description": "किसी भी मैसेज को अपनी मातृभाषा में अनुवाद करें। वाक्यांशों को सीधे अपनी स्टडी क्यू में सेव करें।"
       },
-      "lessons": {
-        "title": "इंटरैक्टिव पाठ",
-        "description": "संरचित पाठ्यक्रमों और दैनिक अभ्यासों से सीखें"
+      "tutor": {
+        "title": "AI ट्यूटर",
+        "description": "रोलप्ले सिनेरियो, इमेज-आधारित शब्दावली, और उच्चारण कोचिंग — सब आपके अपने AI स्टडी पार्टनर द्वारा संचालित।"
       },
-      "voice": {
-        "title": "वॉइस संदेश",
-        "description": "ऑडियो आदान-प्रदान से अपना उच्चारण सुधारें"
+      "voice_rooms": {
+        "title": "वॉइस रूम्स",
+        "description": "दुनिया भर के मूल भाषियों और भाषा सीखने वालों के साथ लाइव ऑडियो रूम्स में शामिल हों।"
+      },
+      "calls": {
+        "title": "वॉइस और वीडियो कॉल",
+        "description": "अपने भाषा साथियों के साथ एक-टैप ऑडियो और वीडियो कॉल।"
       },
       "community": {
-        "title": "समुदाय",
-        "description": "दुनिया भर के लाखों भाषा सीखने वालों से जुड़ें"
-      },
-      "languages": {
-        "title": "50+ भाषाएँ",
-        "description": "स्पेनिश से कोरियाई तक, अपना सीखने का रास्ता खोजें"
+        "title": "असली समुदाय",
+        "description": "मातृभाषा के अनुसार साथी ब्राउज़ करें, देखें कौन ऑनलाइन है, और एक ही भाषा सीख रहे लोगों के साथ पल साझा करें।"
       }
     },
     "howItWorks": {
-      "title": "3 चरणों में सीखना शुरू करें",
-      "subtitle": "कुछ ही मिनटों में शुरू करें और आज ही अपनी भाषा यात्रा शुरू करें"
+      "title": "आपकी पहली बातचीत तक के तीन कदम",
+      "subtitle": "कोई फ़ोन नंबर नहीं, कोई स्पैम नहीं — बस असली लोग जो सीखना चाहते हैं।"
     },
     "steps": {
       "profile": {
-        "title": "अपनी प्रोफ़ाइल बनाएँ",
-        "description": "हमें बताएँ कि आपकी मातृभाषा क्या है और आप क्या सीखना चाहते हैं"
+        "title": "हमें अपनी भाषाएँ बताएँ",
+        "description": "चुनें कि आप कौन सी भाषा धाराप्रवाह बोलते हैं और कौन सी सीख रहे हैं। कुछ पसंदीदा विषय जोड़ें।"
       },
       "partners": {
-        "title": "साथी खोजें",
-        "description": "हमारे समुदाय में ब्राउज़ करें और सही भाषा विनिमय साथी खोजें"
+        "title": "अपना साथी खोजें",
+        "description": "भाषा, देश या विषय के अनुसार समुदाय ब्राउज़ करें। किसी दिलचस्प व्यक्ति को वेव करें या मैसेज करें।"
       },
       "learn": {
-        "title": "सीखना शुरू करें",
-        "description": "हर दिन मूल भाषी लोगों के साथ चैट करें, कॉल करें और अभ्यास करें"
+        "title": "हर दिन अभ्यास करें",
+        "description": "चैट करें, वॉइस नोट्स भेजें, सुधार पाएं, और नए शब्दों को स्पेस्ड-रिपिटिशन कार्ड्स में बदलें।"
       }
     },
     "pricing": {
-      "title": "अपना प्लान चुनें",
-      "subtitle": "मुफ़्त में शुरू करें और तैयार होने पर अपग्रेड करें",
-      "mostPopular": "सबसे लोकप्रिय",
-      "getStarted": "शुरू करें",
+      "title": "शुरू करना मुफ़्त। तेज़ी से सीखने के लिए तैयार होने पर VIP।",
+      "subtitle": "BananaTalk सभी के लिए मुफ़्त है। अनुवाद, AI ट्यूटर और अन्य पर दैनिक सीमाएँ हटाने के लिए अपग्रेड करें।",
+      "fineprint": "अपने App Store या Google Play सेटिंग्स में कभी भी रद्द करें। रद्द होने तक सदस्यता अपने आप नवीनीकृत होती रहती है।",
       "free": {
         "name": "मुफ़्त",
         "period": "हमेशा के लिए",
+        "cta": "मुफ़्त अकाउंट बनाएँ",
         "features": {
-          "messaging": "बुनियादी मैसेजिंग",
-          "connections": "प्रतिदिन 5 नए कनेक्शन",
-          "community": "समुदाय एक्सेस",
-          "lessons": "बुनियादी पाठ"
+          "messaging": "अनुवाद के साथ असीमित 1-on-1 चैट",
+          "community": "समुदाय को ब्राउज़ करें और जुड़ें",
+          "moments": "Moments पोस्ट करें और Stories पढ़ें",
+          "tutor_trial": "रोज़ाना AI ट्यूटर और अनुवाद कोटा"
         },
         "f1": "अनुवाद के साथ असीमित 1-on-1 चैट",
         "f2": "समुदाय को ब्राउज़ करें और जुड़ें",
         "f3": "Moments पोस्ट करें और Stories पढ़ें"
       },
-      "premium": {
-        "name": "प्रीमियम",
-        "period": "/माह",
+      "monthly": {
+        "name": "VIP — मासिक",
+        "period": "प्रति माह",
+        "highlight": "सबसे लचीला",
+        "cta": "मासिक शुरू करें",
         "features": {
-          "messaging": "असीमित मैसेजिंग",
-          "connections": "असीमित कनेक्शन",
-          "video": "वीडियो कॉल",
-          "lessons": "उन्नत पाठ",
-          "noAds": "कोई विज्ञापन नहीं",
-          "translation": "अनुवाद उपकरण"
+          "unlimited_translation": "असीमित अनुवाद और सुधार",
+          "unlimited_tutor": "असीमित AI ट्यूटर सत्र और रोलप्ले",
+          "voice_rooms": "वॉइस रूम्स होस्ट और पिन करें",
+          "priority": "प्राथमिकता वाली पार्टनर मैचिंग"
         }
       },
-      "lifetime": {
-        "name": "आजीवन",
-        "period": "एक बार",
+      "yearly": {
+        "name": "VIP — वार्षिक",
+        "period": "प्रति वर्ष",
+        "highlight": "72% बचाएँ",
+        "cta": "वार्षिक के साथ बचाएँ",
         "features": {
-          "everything": "प्रीमियम में सब कुछ",
-          "forever": "हमेशा के लिए एक्सेस",
-          "support": "प्राथमिकता सहायता",
-          "early": "जल्दी सुविधाएँ",
-          "badges": "विशेष बैज"
+          "everything_in_monthly": "मासिक की हर चीज़",
+          "equiv": "बस $4.16 / माह के बराबर",
+          "early_access": "नई सुविधाओं तक जल्दी पहुँच",
+          "support": "BananaTalk टीम से सीधा सहयोग"
         }
       },
       "best": "सबसे अच्छा मूल्य",
@@ -1047,22 +1062,22 @@
     },
     "download": {
       "badge": "ऐप डाउनलोड करें",
-      "title": "BananaTalk को हर जगह ले जाएँ",
-      "description": "हमारे मोबाइल ऐप से चलते-फिरते सीखें। iOS और Android पर सभी सुविधाओं, पुश सूचनाओं और ऑफ़लाइन एक्सेस के साथ उपलब्ध।",
+      "title": "पूरा अनुभव मोबाइल पर मिलता है",
+      "description": "AI ट्यूटर, वॉइस रूम्स, कॉल्स और लाइव नोटिफ़िकेशन सिर्फ़ मोबाइल पर उपलब्ध हैं। पूरा BananaTalk अनुभव पाने के लिए ऐप डाउनलोड करें।",
       "downloadOn": "इस पर डाउनलोड करें",
       "getItOn": "इस पर प्राप्त करें",
       "scanQR": "ऐप डाउनलोड करने के लिए स्कैन करें",
       "or": "या",
       "features": {
-        "offline": "ऑफ़लाइन एक्सेस",
+        "offline": "ऑफ़लाइन-फ्रेंडली चैट",
         "push": "पुश सूचनाएँ",
-        "fast": "तेज़ और हल्का"
+        "fast": "मुफ़्त इंस्टॉल"
       }
     },
     "cta": {
-      "title": "अपनी भाषा यात्रा शुरू करने के लिए तैयार हैं?",
-      "description": "लाखों शिक्षार्थियों से जुड़ें और आज ही नई भाषा बोलना शुरू करें",
-      "button": "मुफ़्त अकाउंट बनाएँ",
+      "title": "एक असली बातचीत करने के लिए तैयार हैं?",
+      "description": "BananaTalk समुदाय से जुड़ें और आज ही अभ्यास शुरू करें। किसी क्रेडिट कार्ड की ज़रूरत नहीं।",
+      "button": "अपना मुफ़्त अकाउंट बनाएँ",
       "subtitle": "शुरू करने के लिए मुफ़्त। कोई कार्ड नहीं, कोई ट्रायल काउंटडाउन नहीं।"
     },
     "stats": {
@@ -1107,6 +1122,19 @@
       "prioritySupport": "प्राथमिकता सहायता",
       "exclusiveBadge": "विशेष VIP बैज",
       "translationFeature": "संदेश अनुवाद"
+    }
+  },
+  "linking": {
+    "share": {
+      "label": "शेयर करें",
+      "copied": "लिंक क्लिपबोर्ड पर कॉपी हो गया!",
+      "copyFailed": "लिंक कॉपी करने में विफल"
+    },
+    "openInApp": {
+      "label": "ऐप में खोलें"
+    },
+    "appBanner": {
+      "text": "इसे BananaTalk ऐप में खोलें"
     }
   },
   "seo": {

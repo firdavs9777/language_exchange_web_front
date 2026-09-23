@@ -11,6 +11,11 @@ $ink-950: #0d131c;
 $ink-900: #171e29;
 $ink-400: #98a3b4;
 $ink-500: #6b7686;
+// Muted text that still clears AA on the footer's two grounds: #7c8696 is
+// 4.54:1 on $ink-900 and #78828f is 4.78:1 on $ink-950. $ink-500 itself was
+// 3.64:1 and the old #5a6473 was 3.11:1.
+$ink-muted-on-900: #7c8696;
+$ink-muted-on-950: #78828f;
 $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 .footer-modern {
@@ -120,7 +125,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .footer-tagline {
-  color: $ink-500;
+  color: $ink-muted-on-900;
   font-size: 0.875rem;
   line-height: 1.75;
   margin: 0;
@@ -277,7 +282,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 .footer-copyright {
   font-size: 0.8125rem;
-  color: #5a6473;
+  color: $ink-muted-on-950;
   margin: 0;
 }
 
@@ -287,7 +292,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   a {
     font-size: 0.8125rem;
-    color: #5a6473;
+    color: $ink-muted-on-950;
     text-decoration: none;
     transition: color 200ms $ease;
 

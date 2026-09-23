@@ -13,6 +13,11 @@ $tandem-border: #e5e9f0; // line
 $tandem-bg: #f7f8fa;     // ink-50
 $brand: #00bfa5;
 $brand-dark: #008e76;
+/* White text on $brand is 2.33:1 and on $brand-dark is 4.09:1 -- both under
+   AA for the 14px type these pills use. This pair is 4.89:1 and 7.06:1, so
+   every brand fill that carries white text or a white glyph uses it. */
+$brand-deep: #00806a;
+$brand-deepest: #00654f;
 $tandem-pink: #ff5a5f;
 $tandem-pink-soft: #fef2f2;
 $tandem-pro: #f5a623;
@@ -33,10 +38,6 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   max-width: 1180px;
   margin: 0 auto;
   padding: 0 20px 8px;
-
-  @media (max-width: 640px) {
-    padding: 0 14px 8px;
-  }
 }
 
 /* ===== Sub Navbar ===== */
@@ -49,13 +50,6 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid rgba(23, 30, 41, 0.07);
   transition: box-shadow 240ms $ease;
-
-  /* Only once content has scrolled under it does the bar need a shadow;
-     until then the hairline is enough. */
-  &:not(:first-child),
-  &--stuck {
-    box-shadow: 0 6px 24px -18px rgba(13, 19, 28, 0.45);
-  }
 }
 
 .community-subnav__container {
@@ -67,10 +61,6 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   gap: 12px;
   align-items: center;
   justify-content: space-between;
-
-  @media (max-width: 640px) {
-    padding: 12px 14px;
-  }
 }
 
 .community-subnav__buttons {
@@ -104,7 +94,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   &--active {
     /* Brand-filled rather than near-black: the selected tab is the one place
        on this page the brand colour earns a solid fill. */
-    background: linear-gradient(135deg, $brand 0%, $brand-dark 100%);
+    background: linear-gradient(135deg, $brand-deep 0%, $brand-deepest 100%);
     color: #fff;
     border-color: transparent;
     box-shadow: 0 6px 16px -8px rgba(0, 191, 165, 0.75);
@@ -164,7 +154,9 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   input {
     border: none;
     background: transparent;
-    outline: none;
+    /* The outline suppression that used to sit here also suppressed the
+       app-wide :focus-visible ring, leaving keyboard users with only the
+       :focus-within glow on the wrapper -- a 1px border change. */
     font-family: inherit;
     font-size: 0.875rem;
     font-weight: 500;
@@ -218,7 +210,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   &--active {
-    background: linear-gradient(135deg, $brand 0%, $brand-dark 100%);
+    background: linear-gradient(135deg, $brand-deep 0%, $brand-deepest 100%);
     color: #fff;
     border-color: transparent;
     box-shadow: 0 6px 16px -8px rgba(0, 191, 165, 0.75);
@@ -405,8 +397,9 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
       font-size: 0.9375rem;
       color: $tandem-text;
 
+      /* Keeps the app-wide :focus-visible ring; this rule only adds the
+         field's own filled-and-bordered focus state on top of it. */
       &:focus {
-        outline: none;
         border-color: $tandem-text;
         background: #fff;
       }
@@ -917,7 +910,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   padding: 11px 26px;
   border: none;
   border-radius: 999px;
-  background: linear-gradient(135deg, $brand 0%, $brand-dark 100%);
+  background: linear-gradient(135deg, $brand-deep 0%, $brand-deepest 100%);
   color: #fff;
   font-family: var(--bt-font-display);
   font-size: 0.875rem;
@@ -980,14 +973,17 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (max-width: 640px) {
+  /* One place for the narrow-viewport gutters. They used to be declared
+     twice -- nested in each block and again here -- and the nested pair was
+     dead, being earlier in the cascade at equal specificity. */
   .community-page__container {
-    padding: 0 12px;
+    padding: 0 14px 8px;
   }
 
   .community-subnav__container {
     flex-direction: column;
     align-items: stretch;
-    padding: 10px 12px;
+    padding: 12px 14px;
   }
 
   .community-subnav__buttons {
@@ -1157,6 +1153,38 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
     h3 {
       color: #e5e7eb;
+    }
+  }
+
+  /* The empty/error card and the load-more button were re-skinned white in
+     the light theme and never got dark counterparts, so both stayed white
+     slabs on a #0f172a page. */
+  .community-empty {
+    background: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+
+    h3 {
+      color: #e5e7eb;
+    }
+
+    svg {
+      color: #334155;
+    }
+  }
+
+  .community-empty__icon {
+    color: #475569;
+  }
+
+  .community-loadmore button {
+    background: #1e293b;
+    color: #e5e7eb;
+    border-color: #334155;
+
+    &:hover:not(:disabled) {
+      border-color: rgba(0, 191, 165, 0.45);
+      color: $brand;
     }
   }
 }

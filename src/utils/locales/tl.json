@@ -89,6 +89,25 @@
       "deleted": "Naburas ang usapan"
     }
   },
+  "newChat": {
+    "title": "Bagong Chat",
+    "subtitle": "Magsimula ng usapan",
+    "directMessage": "Direct",
+    "groupChat": "Grupo",
+    "searchPlaceholder": "Maghanap gamit ang pangalan, @username, o user ID...",
+    "searchHint": "Maghanap ng user para magsimula ng chat",
+    "hintName": "Maghanap gamit ang pangalan",
+    "hintUsername": "I-type ang @username para maghanap gamit ang username",
+    "hintId": "I-paste ang user ID para hanapin agad",
+    "searchByUsername": "Naghahanap gamit ang username",
+    "searchById": "Naghahanap gamit ang user ID",
+    "noResults": "Walang nahanap na user",
+    "tryDifferent": "Subukan ang ibang pangalan, @username, o user ID",
+    "createGroup": "Gumawa ng Grupo",
+    "selectMoreUsers": "Pumili ng hindi bababa sa 2 user para sa group chat",
+    "createError": "Hindi nagawa ang chat",
+    "recently": "Kamakailan"
+  },
   "notifications": "Mga Abiso",
   "moments": "Mga Sandali",
   "language": "Wika",
@@ -378,7 +397,7 @@
   "authentication": {
     "enterEmail": {
       "title": "Ilagay ang iyong email",
-      "subtitle": "We'll send a verification code to your email",
+      "subtitle": "Magpapadala kami ng verification code sa iyong email",
       "emailLabel": "Email Address",
       "emailPlaceholder": "Ilagay ang email",
       "sendButton": "Ipadala ang Code",
@@ -388,32 +407,32 @@
     },
     "passwordReset": {
       "successMessage": "Matagumpay na na-reset ang password, mangyaring mag-login!",
-      "backToLogin": "Back to login",
-      "verifyTitle": "Enter verification code",
-      "verifySubtitle": "We've sent a 6-digit code to your email",
+      "backToLogin": "Bumalik sa pag-login",
+      "verifyTitle": "Ilagay ang verification code",
+      "verifySubtitle": "Nagpadala kami ng 6-digit na code sa iyong email",
       "codeLabel": "Verification Code",
-      "codePlaceholder": "Enter code",
-      "previousButton": "Previous",
-      "verifyButton": "Verify",
-      "verifyingButton": "Verifying...",
-      "resendButton": "Resend code",
-      "resendingButton": "Resending...",
-      "verifySuccessMessage": "Verification code successfully verified!",
-      "resendSuccessMessage": "A new verification code has been sent!",
-      "verifyErrorDefault": "Invalid verification code",
-      "resendErrorDefault": "Failed to resend the code",
-      "setPasswordTitle": "Set new password",
-      "setPasswordSubtitle": "Choose a strong password for your account",
-      "newPasswordLabel": "New Password",
-      "newPasswordPlaceholder": "New Password",
-      "confirmPasswordLabel": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm Password",
-      "showPassword": "Show password",
-      "hidePassword": "Hide password",
-      "submitButton": "Reset Password",
-      "submittingButton": "Resetting...",
-      "strengthErrorMessage": "Password does not meet the strength requirements",
-      "mismatchErrorMessage": "Passwords do not match"
+      "codePlaceholder": "Ilagay ang code",
+      "previousButton": "Bumalik",
+      "verifyButton": "I-verify",
+      "verifyingButton": "Bini-verify...",
+      "resendButton": "Ipadala muli ang code",
+      "resendingButton": "Ipinapadala muli...",
+      "verifySuccessMessage": "Matagumpay na na-verify ang code!",
+      "resendSuccessMessage": "May naipadala nang bagong verification code!",
+      "verifyErrorDefault": "Hindi valid na verification code",
+      "resendErrorDefault": "Hindi naipadala muli ang code",
+      "setPasswordTitle": "Mag-set ng bagong password",
+      "setPasswordSubtitle": "Pumili ng malakas na password para sa iyong account",
+      "newPasswordLabel": "Bagong Password",
+      "newPasswordPlaceholder": "Bagong Password",
+      "confirmPasswordLabel": "Kumpirmahin ang Password",
+      "confirmPasswordPlaceholder": "Kumpirmahin ang Password",
+      "showPassword": "Ipakita ang password",
+      "hidePassword": "Itago ang password",
+      "submitButton": "I-reset ang Password",
+      "submittingButton": "Nire-reset...",
+      "strengthErrorMessage": "Hindi natutugunan ng password ang mga kinakailangan sa lakas",
+      "mismatchErrorMessage": "Hindi magkatugma ang mga password"
     },
     "login": {
       "signInWithGoogle": "Mag-sign In gamit ang Google",
@@ -427,7 +446,8 @@
       "signingInButton": "Nagsa-sign In...",
       "newUserText": "Bagong User?",
       "registerLink": "Mag-rehistro",
-      "successMessage": "Matagumpay na naka-login"
+      "successMessage": "Matagumpay na naka-login",
+      "invalidCredentialsError": "Hindi valid na kredensyal"
     },
     "account": {
       "title": "Gumawa ng Iyong Account",
@@ -667,10 +687,6 @@
       "speaks": "Nagsasalita ng",
       "learning": "Nag-aaral ng",
       "notSpecified": "Hindi tinukoy"
-    },
-    "suggested": {
-      "title": "Mga miyembrong katulad ni {{name}}",
-      "seeAll": "Tingnan lahat ng miyembro"
     }
   },
   "communityDetailSection": {
@@ -691,6 +707,10 @@
     "buttons": {
       "tryAgain": "Subukan Muli",
       "backToCommunity": "Bumalik sa Komunidad"
+    },
+    "suggested": {
+      "title": "Mga miyembrong katulad ni {{name}}",
+      "seeAll": "Tingnan lahat ng miyembro"
     },
     "stats": {
       "followers": "Mga Tagasunod",
@@ -923,23 +943,18 @@
   },
   "home": {
     "hero": {
-      "badge": "Pinadali ang Palitan ng Wika",
-      "titlePart1": "Matuto ng mga Wika sa pamamagitan ng",
-      "titleHighlight": "Pagsasalita",
-      "titlePart2": "kasama ang mga Katutubong Nagsasalita",
-      "description": "Kumonekta sa milyun-milyong nag-aaral ng wika sa buong mundo. Mag-practice ng pagsasalita, pagbutihin ang fluency, at makipagkaibigan mula sa bawat sulok ng mundo.",
-      "stats": {
-        "users": "Aktibong mga User",
-        "languages": "Mga Wika",
-        "countries": "Mga Bansa"
-      },
-      "getStarted": "Magsimula nang Libre",
+      "badge": "Language exchange, totoong tao",
+      "titlePart1": "Mag-practice ng",
+      "titleHighlight": "kahit anong wika",
+      "titlePart2": "kasama ang taong talagang nagsasalita nito.",
+      "description": "Ipinapares ka ng BananaTalk sa mga native speaker sa buong mundo. Mag-chat, magpadala ng voice message, magsalin, at makatanggap ng correction — bawat usapan ay nagpapahusay sa iyo.",
+      "getStarted": "Magsimula na — libre ito",
       "browseCommunity": "Mag-browse ng Komunidad",
-      "lovedBy": "Minamahal ng 5M+ na mga nag-aaral",
+      "lovedBy": "Paboritong app ng mga nag-aaral ng wika sa iOS at Android",
       "chatPreview": {
-        "message1": "Kumusta! Kamusta ka? 👋",
-        "message2": "Hey! I'm practicing Tagalog!",
-        "message3": "Magaling! Mag-practice tayo 🇵🇭"
+        "message1": "안녕하세요! Kumusta ang weekend mo?",
+        "message2": "주말에 친구들과 등산 갔어요 ⛰️",
+        "message3": "Ang galing! 산 → bundok. Na-save na sa study queue mo."
       },
       "title": "Sabihin mo lang, kahit mali.",
       "titleAccent": "Kami na ang bahalang magsalin.",
@@ -952,90 +967,91 @@
       "pricing": "Presyo"
     },
     "features": {
-      "title": "Lahat ng Kailangan Mo para Matuto",
-      "subtitle": "Mga makapangyarihang tool na idinisenyo upang pabilisin ang iyong paglalakbay sa pag-aaral ng wika",
+      "title": "Lahat ng kailangan mo para talagang masalita ang wika",
+      "subtitle": "Base sa tunay na usapan kasama ang totoong native speaker — hindi drills ng bokabularyo.",
       "chat": {
-        "title": "Real-time na Chat",
-        "description": "Mag-practice ng mga pag-uusap kasama ang mga katutubong nagsasalita sa pamamagitan ng instant messaging"
+        "title": "Chat na may correction",
+        "description": "Magpadala ng text, voice, larawan, at sticker. I-tap ang mensahe ng partner para isalin o iwasto ito sa isang tap lang."
       },
-      "video": {
-        "title": "Mga Video Call",
-        "description": "Harapang pag-practice ng wika kasama ang mga kasama sa buong mundo"
+      "translate": {
+        "title": "Built-in na pagsasalin",
+        "description": "Isalin ang anumang mensahe sa sarili mong wika. I-save ang mga parirala diretso sa study queue mo."
       },
-      "lessons": {
-        "title": "Mga Interactive na Aralin",
-        "description": "Matuto gamit ang mga structured na kurso at pang-araw-araw na ehersisyo"
+      "tutor": {
+        "title": "AI Tutor",
+        "description": "Mga roleplay scenario, bokabularyong nakabatay sa larawan, at pagsasanay sa pagbigkas — lahat pinapatakbo ng sarili mong AI study partner."
       },
-      "voice": {
-        "title": "Mga Voice Message",
-        "description": "Perpektuhin ang iyong pagbigkas gamit ang mga audio exchange"
+      "voice_rooms": {
+        "title": "Voice Rooms",
+        "description": "Sumali sa live audio room kasama ang mga native speaker at kapwa nag-aaral ng wika sa buong mundo."
+      },
+      "calls": {
+        "title": "Voice at video call",
+        "description": "One-tap na audio at video call kasama ang mga kasama mo sa wika."
       },
       "community": {
-        "title": "Komunidad",
-        "description": "Sumali sa milyun-milyong nag-aaral ng wika sa buong mundo"
-      },
-      "languages": {
-        "title": "50+ Wika",
-        "description": "Mula sa Espanyol hanggang Koreano, hanapin ang iyong landas sa pag-aaral"
+        "title": "Tunay na komunidad",
+        "description": "Mag-browse ng mga kasama ayon sa katutubong wika, tingnan kung sino ang online, at magbahagi ng mga sandali kasama ang mga taong nag-aaral din ng parehong wika."
       }
     },
     "howItWorks": {
-      "title": "Magsimulang Matuto sa 3 Hakbang",
-      "subtitle": "Magsimula sa ilang minuto at simulan ang iyong paglalakbay sa wika ngayon"
+      "title": "Tatlong hakbang papunta sa unang usapan mo",
+      "subtitle": "Walang phone number, walang spam — mga totoong taong gustong matuto lang."
     },
     "steps": {
       "profile": {
-        "title": "Gumawa ng Iyong Profile",
-        "description": "Sabihin sa amin ang tungkol sa iyong katutubong wika at kung ano ang gusto mong matutunan"
+        "title": "Sabihin sa amin ang iyong mga wika",
+        "description": "Piliin kung ano ang matatas mong sinasalita at kung ano ang iyong pinag-aaralan. Magdagdag ng ilang paksang gusto mo."
       },
       "partners": {
-        "title": "Maghanap ng mga Kasama",
-        "description": "Mag-browse sa aming komunidad at maghanap ng perpektong mga kasama sa palitan ng wika"
+        "title": "Hanapin ang kasama mo",
+        "description": "Mag-browse sa komunidad ayon sa wika, bansa, o paksa. Kumaway o mag-message sa taong nakakatuwang kilalanin."
       },
       "learn": {
-        "title": "Magsimulang Matuto",
-        "description": "Mag-chat, tumawag, at mag-practice kasama ang mga katutubong nagsasalita araw-araw"
+        "title": "Mag-practice araw-araw",
+        "description": "Mag-chat, magpalitan ng voice note, makatanggap ng correction, at gawing spaced-repetition card ang mga bagong salita."
       }
     },
     "pricing": {
-      "title": "Piliin ang Iyong Plano",
-      "subtitle": "Magsimula nang libre at mag-upgrade kapag handa ka na",
-      "mostPopular": "Pinakasikat",
-      "getStarted": "Magsimula",
+      "title": "Libre magsimula. VIP kapag handa ka nang matuto nang mas mabilis.",
+      "subtitle": "Libre ang BananaTalk para sa lahat. Mag-upgrade para alisin ang pang-araw-araw na limitasyon sa pagsasalin, AI Tutor, at marami pa.",
+      "fineprint": "Kanselahin anumang oras sa settings ng App Store o Google Play mo. Awtomatikong nag-re-renew ang subscription hanggang kanselahin.",
       "free": {
         "name": "Libre",
         "period": "magpakailanman",
+        "cta": "Gumawa ng libreng account",
         "features": {
-          "messaging": "Basic na pagmemensahe",
-          "connections": "5 bagong koneksyon/araw",
-          "community": "Access sa komunidad",
-          "lessons": "Basic na mga aralin"
+          "messaging": "Walang limitasyong 1-on-1 chat na may salin",
+          "community": "Mag-browse at kumonekta sa komunidad",
+          "moments": "Mag-post ng Moments at magbasa ng Stories",
+          "tutor_trial": "Araw-araw na quota ng AI Tutor at pagsasalin"
         },
         "f1": "Walang limitasyong 1-on-1 chat na may salin",
         "f2": "Mag-browse at kumonekta sa komunidad",
         "f3": "Mag-post ng Moments at magbasa ng Stories"
       },
-      "premium": {
-        "name": "Premium",
-        "period": "/buwan",
+      "monthly": {
+        "name": "VIP — Buwanan",
+        "period": "kada buwan",
+        "highlight": "Pinaka-flexible",
+        "cta": "Magsimula ng buwanan",
         "features": {
-          "messaging": "Walang limitasyong pagmemensahe",
-          "connections": "Walang limitasyong koneksyon",
-          "video": "Mga video call",
-          "lessons": "Advanced na mga aralin",
-          "noAds": "Walang ads",
-          "translation": "Mga tool sa pagsasalin"
+          "unlimited_translation": "Walang limitasyong pagsasalin at correction",
+          "unlimited_tutor": "Walang limitasyong AI Tutor session at roleplay",
+          "voice_rooms": "Mag-host at mag-pin ng Voice Rooms",
+          "priority": "Priyoridad sa pagtugma ng kasama"
         }
       },
-      "lifetime": {
-        "name": "Panghabambuhay",
-        "period": "isang beses",
+      "yearly": {
+        "name": "VIP — Taunan",
+        "period": "kada taon",
+        "highlight": "Makatipid ng 72%",
+        "cta": "Makatipid sa taunang plano",
         "features": {
-          "everything": "Lahat sa Premium",
-          "forever": "Access magpakailanman",
-          "support": "Priority na suporta",
-          "early": "Maagang mga feature",
-          "badges": "Eksklusibong mga badge"
+          "everything_in_monthly": "Lahat ng nasa Buwanan",
+          "equiv": "Katumbas lang ng $4.16 / buwan",
+          "early_access": "Maagang access sa mga bagong feature",
+          "support": "Direktang suporta mula sa team ng BananaTalk"
         }
       },
       "best": "Pinakamahusay na halaga",
@@ -1046,22 +1062,22 @@
     },
     "download": {
       "badge": "I-download ang App",
-      "title": "Dalhin ang BananaTalk Kahit Saan",
-      "description": "Matuto habang naglalakbay gamit ang aming mobile app. Available sa iOS at Android na may lahat ng feature, push notification, at offline access.",
+      "title": "Nasa mobile ang buong karanasan",
+      "description": "Ang AI Tutor, Voice Rooms, calls, at live notification ay mobile-only lang. Kunin ang app para sa kumpletong karanasan ng BananaTalk.",
       "downloadOn": "I-download sa",
       "getItOn": "Kunin sa",
       "scanQR": "I-scan para i-download ang app",
       "or": "o",
       "features": {
-        "offline": "Offline access",
+        "offline": "Chat na gumagana kahit offline",
         "push": "Mga push notification",
-        "fast": "Mabilis at magaan"
+        "fast": "Libreng i-install"
       }
     },
     "cta": {
-      "title": "Handa Ka Na Bang Simulan ang Iyong Paglalakbay sa Wika?",
-      "description": "Sumali sa milyun-milyong nag-aaral at magsimulang magsalita ng bagong wika ngayon",
-      "button": "Gumawa ng Libreng Account",
+      "title": "Handa ka na bang magkaroon ng tunay na usapan?",
+      "description": "Sumali sa komunidad ng BananaTalk at magsimulang mag-practice ngayon. Walang kailangang credit card.",
+      "button": "Gumawa ng libre mong account",
       "subtitle": "Libre para magsimula. Walang kard, walang countdown ng trial."
     },
     "stats": {
@@ -1106,6 +1122,19 @@
       "prioritySupport": "Priority na suporta",
       "exclusiveBadge": "Eksklusibong VIP badge",
       "translationFeature": "Pagsasalin ng mensahe"
+    }
+  },
+  "linking": {
+    "share": {
+      "label": "Ibahagi",
+      "copied": "Nakopya ang link sa clipboard!",
+      "copyFailed": "Hindi makopya ang link"
+    },
+    "openInApp": {
+      "label": "Buksan sa app"
+    },
+    "appBanner": {
+      "text": "Buksan ito sa BananaTalk app"
     }
   },
   "seo": {

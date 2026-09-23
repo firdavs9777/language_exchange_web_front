@@ -89,6 +89,25 @@
       "deleted": "Đã xóa cuộc trò chuyện"
     }
   },
+  "newChat": {
+    "title": "Trò Chuyện Mới",
+    "subtitle": "Bắt đầu cuộc trò chuyện",
+    "directMessage": "Riêng tư",
+    "groupChat": "Nhóm",
+    "searchPlaceholder": "Tìm theo tên, @username hoặc ID người dùng...",
+    "searchHint": "Tìm người dùng để bắt đầu trò chuyện",
+    "hintName": "Tìm theo tên",
+    "hintUsername": "Nhập @username để tìm theo tên người dùng",
+    "hintId": "Dán ID người dùng để tìm trực tiếp",
+    "searchByUsername": "Đang tìm theo tên người dùng",
+    "searchById": "Đang tìm theo ID người dùng",
+    "noResults": "Không tìm thấy người dùng",
+    "tryDifferent": "Hãy thử tên, @username hoặc ID người dùng khác",
+    "createGroup": "Tạo Nhóm",
+    "selectMoreUsers": "Chọn ít nhất 2 người dùng để trò chuyện nhóm",
+    "createError": "Không thể tạo cuộc trò chuyện",
+    "recently": "Gần đây"
+  },
   "notifications": "Thông Báo",
   "moments": "Khoảnh Khắc",
   "language": "Ngôn Ngữ",
@@ -378,7 +397,7 @@
   "authentication": {
     "enterEmail": {
       "title": "Nhập email của bạn",
-      "subtitle": "We'll send a verification code to your email",
+      "subtitle": "Chúng tôi sẽ gửi mã xác minh đến email của bạn",
       "emailLabel": "Địa Chỉ Email",
       "emailPlaceholder": "Nhập email",
       "sendButton": "Gửi Mã",
@@ -388,32 +407,32 @@
     },
     "passwordReset": {
       "successMessage": "Đã đặt lại mật khẩu thành công, vui lòng đăng nhập!",
-      "backToLogin": "Back to login",
-      "verifyTitle": "Enter verification code",
-      "verifySubtitle": "We've sent a 6-digit code to your email",
-      "codeLabel": "Verification Code",
-      "codePlaceholder": "Enter code",
-      "previousButton": "Previous",
-      "verifyButton": "Verify",
-      "verifyingButton": "Verifying...",
-      "resendButton": "Resend code",
-      "resendingButton": "Resending...",
-      "verifySuccessMessage": "Verification code successfully verified!",
-      "resendSuccessMessage": "A new verification code has been sent!",
-      "verifyErrorDefault": "Invalid verification code",
-      "resendErrorDefault": "Failed to resend the code",
-      "setPasswordTitle": "Set new password",
-      "setPasswordSubtitle": "Choose a strong password for your account",
-      "newPasswordLabel": "New Password",
-      "newPasswordPlaceholder": "New Password",
-      "confirmPasswordLabel": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm Password",
-      "showPassword": "Show password",
-      "hidePassword": "Hide password",
-      "submitButton": "Reset Password",
-      "submittingButton": "Resetting...",
-      "strengthErrorMessage": "Password does not meet the strength requirements",
-      "mismatchErrorMessage": "Passwords do not match"
+      "backToLogin": "Quay lại đăng nhập",
+      "verifyTitle": "Nhập mã xác minh",
+      "verifySubtitle": "Chúng tôi đã gửi mã gồm 6 chữ số đến email của bạn",
+      "codeLabel": "Mã Xác Minh",
+      "codePlaceholder": "Nhập mã",
+      "previousButton": "Quay lại",
+      "verifyButton": "Xác minh",
+      "verifyingButton": "Đang xác minh...",
+      "resendButton": "Gửi lại mã",
+      "resendingButton": "Đang gửi lại...",
+      "verifySuccessMessage": "Đã xác minh mã thành công!",
+      "resendSuccessMessage": "Đã gửi mã xác minh mới!",
+      "verifyErrorDefault": "Mã xác minh không hợp lệ",
+      "resendErrorDefault": "Không thể gửi lại mã",
+      "setPasswordTitle": "Đặt mật khẩu mới",
+      "setPasswordSubtitle": "Chọn một mật khẩu mạnh cho tài khoản của bạn",
+      "newPasswordLabel": "Mật Khẩu Mới",
+      "newPasswordPlaceholder": "Mật Khẩu Mới",
+      "confirmPasswordLabel": "Xác Nhận Mật Khẩu",
+      "confirmPasswordPlaceholder": "Xác Nhận Mật Khẩu",
+      "showPassword": "Hiện mật khẩu",
+      "hidePassword": "Ẩn mật khẩu",
+      "submitButton": "Đặt Lại Mật Khẩu",
+      "submittingButton": "Đang đặt lại...",
+      "strengthErrorMessage": "Mật khẩu chưa đáp ứng yêu cầu về độ mạnh",
+      "mismatchErrorMessage": "Mật khẩu không khớp"
     },
     "login": {
       "signInWithGoogle": "Đăng Nhập bằng Google",
@@ -668,10 +687,6 @@
       "speaks": "Nói",
       "learning": "Đang Học",
       "notSpecified": "Chưa xác định"
-    },
-    "suggested": {
-      "title": "Thành viên khác giống {{name}}",
-      "seeAll": "Xem tất cả thành viên"
     }
   },
   "communityDetailSection": {
@@ -692,6 +707,10 @@
     "buttons": {
       "tryAgain": "Thử Lại",
       "backToCommunity": "Quay Lại Cộng Đồng"
+    },
+    "suggested": {
+      "title": "Thành viên khác giống {{name}}",
+      "seeAll": "Xem tất cả thành viên"
     },
     "stats": {
       "followers": "Người Theo Dõi",
@@ -924,23 +943,18 @@
   },
   "home": {
     "hero": {
-      "badge": "Trao Đổi Ngôn Ngữ Đơn Giản",
-      "titlePart1": "Học Ngôn Ngữ bằng cách",
-      "titleHighlight": "Nói Chuyện",
-      "titlePart2": "với Người Bản Ngữ",
-      "description": "Kết nối với hàng triệu người học ngôn ngữ trên toàn thế giới. Luyện nói, cải thiện sự lưu loát và kết bạn từ mọi nơi trên thế giới.",
-      "stats": {
-        "users": "Người Dùng Tích Cực",
-        "languages": "Ngôn Ngữ",
-        "countries": "Quốc Gia"
-      },
-      "getStarted": "Bắt Đầu Miễn Phí",
+      "badge": "Trao đổi ngôn ngữ, người thật",
+      "titlePart1": "Luyện tập",
+      "titleHighlight": "bất kỳ ngôn ngữ nào",
+      "titlePart2": "với người thực sự nói ngôn ngữ đó.",
+      "description": "BananaTalk ghép bạn với người bản ngữ trên khắp thế giới. Trò chuyện, gửi tin nhắn thoại, dịch, và nhận sửa lỗi — mỗi cuộc trò chuyện đều giúp bạn giỏi hơn.",
+      "getStarted": "Bắt đầu ngay — miễn phí",
       "browseCommunity": "Duyệt Cộng Đồng",
-      "lovedBy": "Được 5M+ người học yêu thích",
+      "lovedBy": "Được người học ngôn ngữ trên iOS và Android yêu thích",
       "chatPreview": {
-        "message1": "Xin chào! Bạn khỏe không? 👋",
-        "message2": "Hey! I'm practicing Vietnamese!",
-        "message3": "Tuyệt vời! Hãy cùng luyện tập 🇻🇳"
+        "message1": "안녕하세요! Cuối tuần của bạn thế nào?",
+        "message2": "주말에 친구들과 등산 갔어요 ⛰️",
+        "message3": "Tuyệt! 산 → núi. Đã lưu vào hàng đợi học tập của bạn."
       },
       "title": "Cứ nói sai đi.",
       "titleAccent": "Chúng tôi sẽ dịch.",
@@ -953,90 +967,91 @@
       "pricing": "Bảng Giá"
     },
     "features": {
-      "title": "Mọi Thứ Bạn Cần Để Học",
-      "subtitle": "Các công cụ mạnh mẽ được thiết kế để đẩy nhanh hành trình học ngôn ngữ của bạn",
+      "title": "Mọi thứ bạn cần để thực sự nói được ngôn ngữ đó",
+      "subtitle": "Xây dựng từ những cuộc trò chuyện thật với người bản ngữ thật — không phải bài tập từ vựng.",
       "chat": {
-        "title": "Trò Chuyện Thời Gian Thực",
-        "description": "Luyện hội thoại với người bản ngữ qua tin nhắn tức thời"
+        "title": "Trò chuyện kèm sửa lỗi",
+        "description": "Gửi văn bản, giọng nói, ảnh và sticker. Chạm vào tin nhắn của đối tác để dịch hoặc sửa lỗi chỉ trong một chạm."
       },
-      "video": {
-        "title": "Gọi Video",
-        "description": "Luyện ngôn ngữ trực tiếp với đối tác trên toàn thế giới"
+      "translate": {
+        "title": "Dịch tích hợp",
+        "description": "Dịch bất kỳ tin nhắn nào sang tiếng mẹ đẻ của bạn. Lưu các cụm từ trực tiếp vào hàng đợi học tập của bạn."
       },
-      "lessons": {
-        "title": "Bài Học Tương Tác",
-        "description": "Học với các khóa học có cấu trúc và bài tập hàng ngày"
+      "tutor": {
+        "title": "Gia Sư AI",
+        "description": "Các tình huống nhập vai, từ vựng qua hình ảnh, và huấn luyện phát âm — tất cả được hỗ trợ bởi gia sư AI của riêng bạn."
       },
-      "voice": {
-        "title": "Tin Nhắn Thoại",
-        "description": "Hoàn thiện phát âm với trao đổi âm thanh"
+      "voice_rooms": {
+        "title": "Voice Rooms",
+        "description": "Tham gia phòng âm thanh trực tiếp cùng người bản ngữ và người học ngôn ngữ trên khắp thế giới."
+      },
+      "calls": {
+        "title": "Cuộc gọi thoại & video",
+        "description": "Gọi thoại và video chỉ với một chạm cùng các đối tác ngôn ngữ của bạn."
       },
       "community": {
-        "title": "Cộng Đồng",
-        "description": "Tham gia cùng hàng triệu người học ngôn ngữ trên toàn cầu"
-      },
-      "languages": {
-        "title": "50+ Ngôn Ngữ",
-        "description": "Từ tiếng Tây Ban Nha đến tiếng Hàn, tìm con đường học tập của bạn"
+        "title": "Cộng đồng thực sự",
+        "description": "Duyệt đối tác theo tiếng mẹ đẻ, xem ai đang trực tuyến, và chia sẻ khoảnh khắc với những người đang học cùng ngôn ngữ."
       }
     },
     "howItWorks": {
-      "title": "Bắt Đầu Học Trong 3 Bước",
-      "subtitle": "Bắt đầu trong vài phút và khởi đầu hành trình ngôn ngữ ngay hôm nay"
+      "title": "Ba bước đến cuộc trò chuyện đầu tiên của bạn",
+      "subtitle": "Không cần số điện thoại, không spam — chỉ có những người thật muốn học."
     },
     "steps": {
       "profile": {
-        "title": "Tạo Hồ Sơ",
-        "description": "Cho chúng tôi biết về tiếng mẹ đẻ và ngôn ngữ bạn muốn học"
+        "title": "Cho chúng tôi biết ngôn ngữ của bạn",
+        "description": "Chọn ngôn ngữ bạn nói thành thạo và ngôn ngữ bạn đang học. Thêm vài chủ đề bạn thích."
       },
       "partners": {
-        "title": "Tìm Đối Tác",
-        "description": "Duyệt qua cộng đồng và tìm đối tác trao đổi ngôn ngữ hoàn hảo"
+        "title": "Tìm đối tác của bạn",
+        "description": "Duyệt cộng đồng theo ngôn ngữ, quốc gia hoặc chủ đề. Vẫy tay hoặc nhắn tin cho người bạn thấy thú vị."
       },
       "learn": {
-        "title": "Bắt Đầu Học",
-        "description": "Trò chuyện, gọi điện và luyện tập với người bản ngữ mỗi ngày"
+        "title": "Luyện tập mỗi ngày",
+        "description": "Trò chuyện, trao đổi ghi âm giọng nói, nhận sửa lỗi, và biến từ mới thành thẻ ôn tập theo phương pháp lặp lại ngắt quãng."
       }
     },
     "pricing": {
-      "title": "Chọn Gói Của Bạn",
-      "subtitle": "Bắt đầu miễn phí và nâng cấp khi bạn sẵn sàng",
-      "mostPopular": "Phổ Biến Nhất",
-      "getStarted": "Bắt Đầu",
+      "title": "Miễn phí để bắt đầu. VIP khi bạn sẵn sàng học nhanh hơn.",
+      "subtitle": "BananaTalk miễn phí cho tất cả mọi người. Nâng cấp để bỏ giới hạn hằng ngày cho bản dịch, Gia sư AI, và hơn thế nữa.",
+      "fineprint": "Hủy bất cứ lúc nào trong cài đặt App Store hoặc Google Play của bạn. Gói đăng ký sẽ tự động gia hạn cho đến khi bị hủy.",
       "free": {
         "name": "Miễn Phí",
         "period": "mãi mãi",
+        "cta": "Tạo tài khoản miễn phí",
         "features": {
-          "messaging": "Nhắn tin cơ bản",
-          "connections": "5 kết nối mới/ngày",
-          "community": "Truy cập cộng đồng",
-          "lessons": "Bài học cơ bản"
+          "messaging": "Trò chuyện 1-1 không giới hạn kèm dịch thuật",
+          "community": "Duyệt và kết nối với cộng đồng",
+          "moments": "Đăng Moments và đọc Stories",
+          "tutor_trial": "Hạn mức Gia sư AI và dịch thuật hằng ngày"
         },
         "f1": "Trò chuyện 1-1 không giới hạn kèm dịch thuật",
         "f2": "Duyệt và kết nối với cộng đồng",
         "f3": "Đăng Moments và đọc Stories"
       },
-      "premium": {
-        "name": "Premium",
-        "period": "/tháng",
+      "monthly": {
+        "name": "VIP — Hàng Tháng",
+        "period": "mỗi tháng",
+        "highlight": "Linh hoạt nhất",
+        "cta": "Bắt đầu gói tháng",
         "features": {
-          "messaging": "Nhắn tin không giới hạn",
-          "connections": "Kết nối không giới hạn",
-          "video": "Gọi video",
-          "lessons": "Bài học nâng cao",
-          "noAds": "Không quảng cáo",
-          "translation": "Công cụ dịch thuật"
+          "unlimited_translation": "Dịch thuật và sửa lỗi không giới hạn",
+          "unlimited_tutor": "Phiên học với Gia sư AI và nhập vai không giới hạn",
+          "voice_rooms": "Tổ chức và ghim Voice Rooms",
+          "priority": "Ưu tiên ghép đối tác"
         }
       },
-      "lifetime": {
-        "name": "Trọn Đời",
-        "period": "một lần",
+      "yearly": {
+        "name": "VIP — Hàng Năm",
+        "period": "mỗi năm",
+        "highlight": "Tiết kiệm 72%",
+        "cta": "Tiết kiệm với gói năm",
         "features": {
-          "everything": "Mọi thứ trong Premium",
-          "forever": "Truy cập mãi mãi",
-          "support": "Hỗ trợ ưu tiên",
-          "early": "Tính năng sớm",
-          "badges": "Huy hiệu độc quyền"
+          "everything_in_monthly": "Mọi thứ trong gói Hàng Tháng",
+          "equiv": "Chỉ tương đương 4,16 đô la / tháng",
+          "early_access": "Truy cập sớm các tính năng mới",
+          "support": "Hỗ trợ trực tiếp từ đội ngũ BananaTalk"
         }
       },
       "best": "Giá trị tốt nhất",
@@ -1047,22 +1062,22 @@
     },
     "download": {
       "badge": "Tải Ứng Dụng",
-      "title": "Mang BananaTalk Đi Khắp Nơi",
-      "description": "Học mọi lúc mọi nơi với ứng dụng di động. Có sẵn trên iOS và Android với đầy đủ tính năng, thông báo đẩy và truy cập ngoại tuyến.",
+      "title": "Trải nghiệm đầy đủ chỉ có trên di động",
+      "description": "Gia sư AI, Voice Rooms, cuộc gọi và thông báo tức thì chỉ có trên di động. Tải ứng dụng để có trải nghiệm BananaTalk trọn vẹn.",
       "downloadOn": "Tải về trên",
       "getItOn": "Tải về trên",
       "scanQR": "Quét để tải ứng dụng",
       "or": "hoặc",
       "features": {
-        "offline": "Truy cập ngoại tuyến",
+        "offline": "Trò chuyện thân thiện khi ngoại tuyến",
         "push": "Thông báo đẩy",
-        "fast": "Nhanh và nhẹ"
+        "fast": "Cài đặt miễn phí"
       }
     },
     "cta": {
-      "title": "Bạn Đã Sẵn Sàng Bắt Đầu Hành Trình Ngôn Ngữ Chưa?",
-      "description": "Tham gia cùng hàng triệu người học và bắt đầu nói ngôn ngữ mới ngay hôm nay",
-      "button": "Tạo Tài Khoản Miễn Phí",
+      "title": "Sẵn sàng có một cuộc trò chuyện thực sự chưa?",
+      "description": "Tham gia cộng đồng BananaTalk và bắt đầu luyện tập ngay hôm nay. Không cần thẻ tín dụng.",
+      "button": "Tạo tài khoản miễn phí của bạn",
       "subtitle": "Miễn phí để bắt đầu. Không cần thẻ, không đếm ngược dùng thử."
     },
     "stats": {
@@ -1107,6 +1122,19 @@
       "prioritySupport": "Hỗ trợ ưu tiên",
       "exclusiveBadge": "Huy hiệu VIP độc quyền",
       "translationFeature": "Dịch tin nhắn"
+    }
+  },
+  "linking": {
+    "share": {
+      "label": "Chia sẻ",
+      "copied": "Đã sao chép liên kết vào bộ nhớ tạm!",
+      "copyFailed": "Không thể sao chép liên kết"
+    },
+    "openInApp": {
+      "label": "Mở trong ứng dụng"
+    },
+    "appBanner": {
+      "text": "Mở nội dung này trong ứng dụng BananaTalk"
     }
   },
   "seo": {

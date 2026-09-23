@@ -89,6 +89,25 @@
       "deleted": "تم حذف المحادثة"
     }
   },
+  "newChat": {
+    "title": "دردشة جديدة",
+    "subtitle": "ابدأ محادثة",
+    "directMessage": "مباشرة",
+    "groupChat": "مجموعة",
+    "searchPlaceholder": "ابحث بالاسم، أو @اسم_المستخدم، أو معرّف المستخدم...",
+    "searchHint": "ابحث عن مستخدمين لبدء محادثة",
+    "hintName": "ابحث بالاسم",
+    "hintUsername": "اكتب @اسم_المستخدم للبحث باسم المستخدم",
+    "hintId": "الصق معرّف المستخدم للعثور عليه مباشرة",
+    "searchByUsername": "البحث باسم المستخدم",
+    "searchById": "البحث بمعرّف المستخدم",
+    "noResults": "لا يوجد مستخدمون",
+    "tryDifferent": "جرّب اسمًا مختلفًا، أو @اسم_مستخدم، أو معرّف مستخدم",
+    "createGroup": "إنشاء مجموعة",
+    "selectMoreUsers": "اختر مستخدمَين على الأقل لإنشاء محادثة جماعية",
+    "createError": "فشل إنشاء المحادثة",
+    "recently": "مؤخرًا"
+  },
   "notifications": "الإشعارات",
   "moments": "اللحظات",
   "language": "اللغة",
@@ -378,7 +397,7 @@
   "authentication": {
     "enterEmail": {
       "title": "أدخل بريدك الإلكتروني",
-      "subtitle": "We'll send a verification code to your email",
+      "subtitle": "سنرسل رمز تحقق إلى بريدك الإلكتروني",
       "emailLabel": "عنوان البريد الإلكتروني",
       "emailPlaceholder": "أدخل البريد الإلكتروني",
       "sendButton": "إرسال الرمز",
@@ -388,32 +407,32 @@
     },
     "passwordReset": {
       "successMessage": "تمت إعادة تعيين كلمة المرور بنجاح، يرجى تسجيل الدخول!",
-      "backToLogin": "Back to login",
-      "verifyTitle": "Enter verification code",
-      "verifySubtitle": "We've sent a 6-digit code to your email",
-      "codeLabel": "Verification Code",
-      "codePlaceholder": "Enter code",
-      "previousButton": "Previous",
-      "verifyButton": "Verify",
-      "verifyingButton": "Verifying...",
-      "resendButton": "Resend code",
-      "resendingButton": "Resending...",
-      "verifySuccessMessage": "Verification code successfully verified!",
-      "resendSuccessMessage": "A new verification code has been sent!",
-      "verifyErrorDefault": "Invalid verification code",
-      "resendErrorDefault": "Failed to resend the code",
-      "setPasswordTitle": "Set new password",
-      "setPasswordSubtitle": "Choose a strong password for your account",
-      "newPasswordLabel": "New Password",
-      "newPasswordPlaceholder": "New Password",
-      "confirmPasswordLabel": "Confirm Password",
-      "confirmPasswordPlaceholder": "Confirm Password",
-      "showPassword": "Show password",
-      "hidePassword": "Hide password",
-      "submitButton": "Reset Password",
-      "submittingButton": "Resetting...",
-      "strengthErrorMessage": "Password does not meet the strength requirements",
-      "mismatchErrorMessage": "Passwords do not match"
+      "backToLogin": "العودة إلى تسجيل الدخول",
+      "verifyTitle": "أدخل رمز التحقق",
+      "verifySubtitle": "أرسلنا رمزًا مكونًا من 6 أرقام إلى بريدك الإلكتروني",
+      "codeLabel": "رمز التحقق",
+      "codePlaceholder": "أدخل الرمز",
+      "previousButton": "السابق",
+      "verifyButton": "تحقق",
+      "verifyingButton": "جارٍ التحقق...",
+      "resendButton": "إعادة إرسال الرمز",
+      "resendingButton": "جارٍ إعادة الإرسال...",
+      "verifySuccessMessage": "تم التحقق من الرمز بنجاح!",
+      "resendSuccessMessage": "تم إرسال رمز تحقق جديد!",
+      "verifyErrorDefault": "رمز التحقق غير صحيح",
+      "resendErrorDefault": "فشل في إعادة إرسال الرمز",
+      "setPasswordTitle": "عيّن كلمة مرور جديدة",
+      "setPasswordSubtitle": "اختر كلمة مرور قوية لحسابك",
+      "newPasswordLabel": "كلمة المرور الجديدة",
+      "newPasswordPlaceholder": "كلمة المرور الجديدة",
+      "confirmPasswordLabel": "تأكيد كلمة المرور",
+      "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
+      "showPassword": "إظهار كلمة المرور",
+      "hidePassword": "إخفاء كلمة المرور",
+      "submitButton": "إعادة تعيين كلمة المرور",
+      "submittingButton": "جارٍ إعادة التعيين...",
+      "strengthErrorMessage": "كلمة المرور لا تفي بمتطلبات القوة",
+      "mismatchErrorMessage": "كلمتا المرور غير متطابقتين"
     },
     "login": {
       "signInWithGoogle": "تسجيل الدخول بحساب Google",
@@ -668,10 +687,6 @@
       "speaks": "يتحدث",
       "learning": "يتعلم",
       "notSpecified": "غير محدد"
-    },
-    "suggested": {
-      "title": "أعضاء آخرون مثل {{name}}",
-      "seeAll": "عرض كل الأعضاء"
     }
   },
   "communityDetailSection": {
@@ -692,6 +707,10 @@
     "buttons": {
       "tryAgain": "حاول مرة أخرى",
       "backToCommunity": "العودة إلى المجتمع"
+    },
+    "suggested": {
+      "title": "أعضاء آخرون مثل {{name}}",
+      "seeAll": "عرض كل الأعضاء"
     },
     "stats": {
       "followers": "المتابعون",
@@ -924,28 +943,23 @@
   },
   "home": {
     "hero": {
-      "badge": "تبادل لغوي بكل بساطة",
-      "titlePart1": "تعلّم اللغات من خلال",
-      "titleHighlight": "التحدث",
-      "titlePart2": "مع متحدثين أصليين",
-      "description": "تواصل مع ملايين متعلمي اللغات حول العالم. تدرّب على المحادثة، وحسّن طلاقتك، وكوّن صداقات من كل أنحاء العالم.",
-      "stats": {
-        "users": "مستخدمون نشطون",
-        "languages": "لغات",
-        "countries": "دول"
-      },
-      "getStarted": "ابدأ مجاناً",
+      "badge": "تبادل لغوي، أشخاص حقيقيون",
+      "titlePart1": "تدرّب على",
+      "titleHighlight": "أي لغة",
+      "titlePart2": "مع شخص يتحدثها بالفعل.",
+      "description": "يربطك BananaTalk بمتحدثين أصليين حول العالم. تحدث، وأرسل رسائل صوتية، وترجم، واحصل على تصحيحات — كل محادثة تجعلك أفضل.",
+      "getStarted": "ابدأ الآن — الأمر مجاني",
       "browseCommunity": "تصفح المجتمع",
-      "lovedBy": "محبوب من أكثر من 5 ملايين متعلم",
+      "lovedBy": "يحبه متعلمو اللغات على iOS وAndroid",
       "chatPreview": {
-        "message1": "مرحباً! كيف حالك؟ 👋",
-        "message2": "Hey! I'm practicing my Arabic!",
-        "message3": "ممتاز! هيا نتدرب معاً 🇸🇦"
+        "message1": "안녕하세요! كيف كانت عطلة نهاية أسبوعك؟",
+        "message2": "주말에 친구들과 등산 갔어요 ⛰️",
+        "message3": "رائع! 산 ← جبل. تم الحفظ في قائمة دراستك."
       },
       "title": "قلها بشكل خاطئ.",
       "titleAccent": "نحن سنترجم.",
       "subtitle": "اكتب بلغتك، وهم يقرؤونها بلغتهم. اضغط على أي رسالة لترى كيف قيلت فعلاً — هكذا تتعلم.",
-      "trust": "خطة مجانية للأبد · 137 لغة · مدرّس ذكاء اصطناعي على مدار الساعة"
+      "trust": "خطة مجانية للأبد · 137 لغة · مدرّس AI على مدار الساعة"
     },
     "sections": {
       "features": "الميزات",
@@ -953,90 +967,91 @@
       "pricing": "الأسعار"
     },
     "features": {
-      "title": "كل ما تحتاجه للتعلم",
-      "subtitle": "أدوات قوية مصممة لتسريع رحلتك في تعلم اللغات",
+      "title": "كل ما تحتاجه لتتحدث اللغة فعلاً",
+      "subtitle": "مبني على محادثات حقيقية مع متحدثين أصليين حقيقيين — لا تمارين مفردات.",
       "chat": {
-        "title": "دردشة فورية",
-        "description": "تدرّب على المحادثة مع متحدثين أصليين عبر الرسائل الفورية"
+        "title": "دردشة مع تصحيحات",
+        "description": "أرسل نصوصًا ورسائل صوتية وصورًا وملصقات. اضغط على رسالة شريكك لترجمتها أو لتصحيحها بلمسة واحدة."
       },
-      "video": {
-        "title": "مكالمات فيديو",
-        "description": "ممارسة لغوية وجهاً لوجه مع شركاء حول العالم"
+      "translate": {
+        "title": "ترجمة مدمجة",
+        "description": "ترجم أي رسالة إلى لغتك الأم. احفظ العبارات مباشرة في قائمة دراستك."
       },
-      "lessons": {
-        "title": "دروس تفاعلية",
-        "description": "تعلّم من خلال دورات منظمة وتمارين يومية"
+      "tutor": {
+        "title": "مدرّس AI",
+        "description": "سيناريوهات تمثيل أدوار، ومفردات من الصور، وتدريب على النطق — كلها بدعم من شريك دراسة AI خاص بك."
       },
-      "voice": {
-        "title": "رسائل صوتية",
-        "description": "حسّن نطقك من خلال تبادل الرسائل الصوتية"
+      "voice_rooms": {
+        "title": "غرف صوتية",
+        "description": "انضم إلى غرف صوتية مباشرة مع متحدثين أصليين ومتعلمي لغات حول العالم."
+      },
+      "calls": {
+        "title": "مكالمات صوتية ومرئية",
+        "description": "مكالمات صوتية ومرئية بلمسة واحدة مع شركائك اللغويين."
       },
       "community": {
-        "title": "مجتمع",
-        "description": "انضم إلى ملايين متعلمي اللغات حول العالم"
-      },
-      "languages": {
-        "title": "أكثر من 50 لغة",
-        "description": "من الإسبانية إلى الكورية، اعثر على مسارك التعليمي"
+        "title": "مجتمع حقيقي",
+        "description": "تصفح الشركاء حسب لغتهم الأم، وتعرف من متصل الآن، وشارك اللحظات مع أشخاص يتعلمون نفس اللغة."
       }
     },
     "howItWorks": {
-      "title": "ابدأ التعلم في 3 خطوات",
-      "subtitle": "ابدأ في دقائق وانطلق في رحلتك اللغوية اليوم"
+      "title": "ثلاث خطوات نحو محادثتك الأولى",
+      "subtitle": "بلا أرقام هواتف، ولا رسائل مزعجة — فقط أشخاص حقيقيون يريدون التعلم."
     },
     "steps": {
       "profile": {
-        "title": "أنشئ ملفك الشخصي",
-        "description": "أخبرنا عن لغتك الأم وما تريد تعلمه"
+        "title": "أخبرنا بلغاتك",
+        "description": "اختر اللغة التي تتحدثها بطلاقة واللغة التي تتعلمها. أضف بعض المواضيع التي تهمك."
       },
       "partners": {
-        "title": "اعثر على شركاء",
-        "description": "تصفح مجتمعنا واعثر على شركاء التبادل اللغوي المثاليين"
+        "title": "اعثر على شريكك",
+        "description": "تصفح المجتمع حسب اللغة أو البلد أو الموضوع. لوّح أو راسل شخصًا يثير اهتمامك."
       },
       "learn": {
-        "title": "ابدأ التعلم",
-        "description": "تحدث واتصل وتدرّب مع متحدثين أصليين كل يوم"
+        "title": "تدرّب كل يوم",
+        "description": "تحدث، وتبادل الملاحظات الصوتية، واحصل على تصحيحات، وحوّل الكلمات الجديدة إلى بطاقات مراجعة متباعدة."
       }
     },
     "pricing": {
-      "title": "اختر خطتك",
-      "subtitle": "ابدأ مجاناً وقم بالترقية عندما تكون مستعداً",
-      "mostPopular": "الأكثر شعبية",
-      "getStarted": "ابدأ الآن",
+      "title": "مجاني للبدء. وVIP عندما تكون مستعدًا للتعلم أسرع.",
+      "subtitle": "BananaTalk مجاني للجميع. رقّ إلى VIP لإزالة الحدود اليومية على الترجمات، ومدرّس AI، والمزيد.",
+      "fineprint": "ألغِ في أي وقت من إعدادات App Store أو Google Play. تتجدد الاشتراكات تلقائيًا حتى يتم إلغاؤها.",
       "free": {
         "name": "مجاني",
         "period": "للأبد",
+        "cta": "أنشئ حسابًا مجانيًا",
         "features": {
-          "messaging": "مراسلة أساسية",
-          "connections": "5 اتصالات جديدة/يوم",
-          "community": "الوصول إلى المجتمع",
-          "lessons": "دروس أساسية"
+          "messaging": "دردشة فردية غير محدودة مع الترجمة",
+          "community": "تصفح المجتمع وتواصل معه",
+          "moments": "انشر اللحظات (Moments) واقرأ القصص (Stories)",
+          "tutor_trial": "حصة يومية من مدرّس AI والترجمة"
         },
         "f1": "محادثة فردية غير محدودة مع الترجمة",
         "f2": "تصفح المجتمع وتواصل معه",
         "f3": "انشر لحظات (Moments) واقرأ القصص (Stories)"
       },
-      "premium": {
-        "name": "مميز",
-        "period": "/شهر",
+      "monthly": {
+        "name": "VIP — شهري",
+        "period": "شهريًا",
+        "highlight": "الأكثر مرونة",
+        "cta": "ابدأ الاشتراك الشهري",
         "features": {
-          "messaging": "مراسلة غير محدودة",
-          "connections": "اتصالات غير محدودة",
-          "video": "مكالمات فيديو",
-          "lessons": "دروس متقدمة",
-          "noAds": "بدون إعلانات",
-          "translation": "أدوات الترجمة"
+          "unlimited_translation": "ترجمات وتصحيحات غير محدودة",
+          "unlimited_tutor": "جلسات غير محدودة مع مدرّس AI وتمثيل الأدوار",
+          "voice_rooms": "استضف وثبّت الغرف الصوتية",
+          "priority": "أولوية في مطابقة الشركاء"
         }
       },
-      "lifetime": {
-        "name": "مدى الحياة",
-        "period": "دفعة واحدة",
+      "yearly": {
+        "name": "VIP — سنوي",
+        "period": "سنويًا",
+        "highlight": "وفّر 72%",
+        "cta": "وفّر مع الخطة السنوية",
         "features": {
-          "everything": "كل شيء في المميز",
-          "forever": "وصول دائم",
-          "support": "دعم ذو أولوية",
-          "early": "ميزات مبكرة",
-          "badges": "شارات حصرية"
+          "everything_in_monthly": "كل ما في الخطة الشهرية",
+          "equiv": "بما يعادل 4.16$ فقط شهريًا",
+          "early_access": "وصول مبكر إلى الميزات الجديدة",
+          "support": "دعم مباشر من فريق BananaTalk"
         }
       },
       "best": "أفضل قيمة",
@@ -1047,28 +1062,28 @@
     },
     "download": {
       "badge": "حمّل التطبيق",
-      "title": "خذ BananaTalk معك أينما ذهبت",
-      "description": "تعلّم أثناء التنقل مع تطبيقنا للهاتف. متوفر على iOS و Android مع جميع الميزات والإشعارات الفورية والوصول بدون إنترنت.",
+      "title": "التجربة الكاملة على الهاتف",
+      "description": "مدرّس AI، والغرف الصوتية، والمكالمات، والإشعارات الفورية متاحة فقط عبر الهاتف. حمّل التطبيق للحصول على تجربة BananaTalk الكاملة.",
       "downloadOn": "حمّل من",
       "getItOn": "احصل عليه من",
       "scanQR": "امسح لتحميل التطبيق",
       "or": "أو",
       "features": {
-        "offline": "وصول بدون إنترنت",
+        "offline": "دردشة تعمل بدون إنترنت",
         "push": "إشعارات فورية",
-        "fast": "سريع وخفيف"
+        "fast": "التثبيت مجاني"
       }
     },
     "cta": {
-      "title": "هل أنت مستعد لبدء رحلتك اللغوية؟",
-      "description": "انضم إلى ملايين المتعلمين وابدأ التحدث بلغة جديدة اليوم",
-      "button": "أنشئ حساباً مجانياً",
+      "title": "مستعد لخوض محادثة حقيقية؟",
+      "description": "انضم إلى مجتمع BananaTalk وابدأ التدرب اليوم. لا حاجة لبطاقة ائتمان.",
+      "button": "أنشئ حسابك المجاني",
       "subtitle": "مجاني للبدء. بدون بطاقة، وبدون عد تنازلي لفترة تجريبية."
     },
     "stats": {
       "languages": "لغة",
       "app languages": "لغات التطبيق",
-      "AI tutor": "مدرّس الذكاء الاصطناعي",
+      "AI tutor": "مدرّس AI",
       "forever tier": "الخطة المجانية",
       "learners": "متعلم"
     }
@@ -1107,6 +1122,19 @@
       "prioritySupport": "دعم ذو أولوية",
       "exclusiveBadge": "شارة VIP حصرية",
       "translationFeature": "ترجمة الرسائل"
+    }
+  },
+  "linking": {
+    "share": {
+      "label": "مشاركة",
+      "copied": "تم نسخ الرابط إلى الحافظة!",
+      "copyFailed": "فشل نسخ الرابط"
+    },
+    "openInApp": {
+      "label": "فتح في التطبيق"
+    },
+    "appBanner": {
+      "text": "افتح هذا في تطبيق BananaTalk"
     }
   },
   "seo": {
