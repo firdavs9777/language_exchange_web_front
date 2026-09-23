@@ -81,6 +81,28 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ userId, onClose }) 
     if (panelRef.current) panelRef.current.focus();
   }, []);
 
+  /**
+   * Open one action's dialog, clearing that mutation's previous failure first.
+   *
+   * RTK Query keeps `error` on the hook result until something resets it, so a
+   * dialog reopened after a failed attempt would otherwise greet the moderator
+   * with a message describing something that is no longer happening. Reset runs
+   * in the click handler rather than an effect so it batches with `setPending`
+   * and the dialog never renders the stale error, not even for a frame.
+   */
+  const openDialog = (next: Exclude<Pending, null>) => {
+    const state: any =
+      next === "ban"
+        ? banState
+        : next === "unban"
+        ? unbanState
+        : next === "role"
+        ? roleState
+        : deleteState;
+    if (typeof state.reset === "function") state.reset();
+    setPending(next);
+  };
+
   const run = useCallback(
     async (call: () => any, after?: () => void) => {
       try {
@@ -268,7 +290,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ userId, onClose }) 
                   type="button"
                   data-testid="drawer-unban"
                   disabled={busy}
-                  onClick={() => setPending("unban")}
+                  onClick={() => openDialog("unban")}
                   className={actionButton}
                 >
                   {t("admin.users.unban") || "Unban"}
@@ -278,7 +300,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ userId, onClose }) 
                   type="button"
                   data-testid="drawer-ban"
                   disabled={busy}
-                  onClick={() => setPending("ban")}
+                  onClick={() => openDialog("ban")}
                   className={actionButton}
                 >
                   {t("admin.users.ban") || "Ban"}
@@ -288,7 +310,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ userId, onClose }) 
                 type="button"
                 data-testid="drawer-role"
                 disabled={busy}
-                onClick={() => setPending("role")}
+                onClick={() => openDialog("role")}
                 className={actionButton}
               >
                 {isAdmin
@@ -299,7 +321,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ userId, onClose }) 
                 type="button"
                 data-testid="drawer-delete"
                 disabled={busy}
-                onClick={() => setPending("delete")}
+                onClick={() => openDialog("delete")}
                 className={`${actionButton} border-red-300 text-red-700 hover:bg-red-50 dark:border-red-500/40 dark:text-red-300 dark:hover:bg-red-500/10`}
               >
                 {t("admin.users.delete") || "Delete"}

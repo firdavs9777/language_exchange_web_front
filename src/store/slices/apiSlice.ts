@@ -54,11 +54,20 @@ const baseQueryWithReauth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   let result = await loggedBaseQuery(args, api, extraOptions);
 
-  // If we get a 401 or 403, try to refresh the access token using the stored
-  // refresh token. Backend route is /auth/refresh-token and requires the
-  // refresh token in the body. If we don't have one stored (older session,
-  // OAuth flow that didn't return one), fall straight through to logout.
-  if (result.error && (result.error.status === 401 || result.error.status === 403)) {
+  // 401 ONLY, never 403. The backend's `protect` middleware answers 401 for a
+  // missing or expired token and 403 only for an authorization failure —
+  // `authorize('admin')`, "you cannot ban yourself", "you cannot revoke your
+  // own admin role". A refresh cannot turn a 403 into a 200 (the token was
+  // fine, the action was not), so re-sending on 403 silently retries an action
+  // the server already rejected, and logging out on 403 throws an admin out of
+  // the console for pressing a button the backend declined. A 403 passes
+  // straight through to the caller, which shows it.
+  //
+  // On 401 we refresh with the stored refresh token (POST /auth/refresh-token,
+  // token in the body) and re-send the original request once. With no refresh
+  // token stored (older session, an OAuth flow that didn't return one) there is
+  // nothing to refresh with, so the session is over: log out.
+  if (result.error && result.error.status === 401) {
     const userInfo = (api.getState() as RootState).auth.userInfo as any;
     const refreshToken = userInfo?.refreshToken;
 

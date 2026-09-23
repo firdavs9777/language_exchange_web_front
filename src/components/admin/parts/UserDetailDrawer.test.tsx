@@ -10,10 +10,14 @@ const mockBan = jest.fn();
 const mockUnban = jest.fn();
 const mockRole = jest.fn();
 const mockDelete = jest.fn();
-const mockBanState = { isLoading: false, error: undefined as any };
-const mockUnbanState = { isLoading: false, error: undefined as any };
-const mockRoleState = { isLoading: false, error: undefined as any };
-const mockDeleteState = { isLoading: false, error: undefined as any };
+// RTK Query's mutation result carries `reset`, which clears `error`/`isLoading`.
+// The default spies here do NOT clear: that emulates the ordinary case where
+// the reset happened when the dialog opened and the failure arrived after it.
+// The stale-error test below swaps in a reset with the real semantics.
+const mockBanState = { isLoading: false, error: undefined as any, reset: jest.fn() };
+const mockUnbanState = { isLoading: false, error: undefined as any, reset: jest.fn() };
+const mockRoleState = { isLoading: false, error: undefined as any, reset: jest.fn() };
+const mockDeleteState = { isLoading: false, error: undefined as any, reset: jest.fn() };
 
 jest.mock("../../../store/slices/adminSlice", () => ({
   useGetAdminUserQuery: (...args: any[]) => mockGetUser(...args),
@@ -71,6 +75,10 @@ beforeEach(() => {
   mockBanState.isLoading = false;
   mockBanState.error = undefined;
   mockRoleState.error = undefined;
+  mockBanState.reset = jest.fn();
+  mockUnbanState.reset = jest.fn();
+  mockRoleState.reset = jest.fn();
+  mockDeleteState.reset = jest.fn();
 });
 
 it("shows the user's identity, activity summary and recent actions", () => {
@@ -206,4 +214,41 @@ it("reads a detail payload that nests the user under `user`", () => {
   mockGetUser.mockReturnValue(ok({ user, recentActions, activitySummary }));
   render(<UserDetailDrawer userId="u1" onClose={jest.fn()} />);
   expect(screen.getByRole("dialog")).toHaveTextContent("ada@example.com");
+});
+
+it("clears a previous failure's error when the dialog is reopened", async () => {
+  // A real `reset()` clears the mutation's error; emulate that here.
+  mockBanState.reset = jest.fn(() => {
+    mockBanState.error = undefined;
+  });
+  mockBan.mockImplementation(() => ({
+    unwrap: () => {
+      // What RTK Query does on a rejected mutation: the hook result carries
+      // the error until something resets it.
+      mockBanState.error = { data: { message: "Reason is required" } };
+      return Promise.reject(mockBanState.error);
+    },
+  }));
+
+  render(<UserDetailDrawer userId="u1" onClose={jest.fn()} />);
+  fireEvent.click(screen.getByTestId("drawer-ban"));
+  fireEvent.change(screen.getByTestId("confirm-dialog-reason"), { target: { value: "spam" } });
+  fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
+  await waitFor(() => expect(mockBan).toHaveBeenCalled());
+
+  // Give up and come back: the last attempt's message describes something that
+  // is no longer happening, so it must not greet the next one.
+  fireEvent.click(screen.getByTestId("confirm-dialog-cancel"));
+  fireEvent.click(screen.getByTestId("drawer-ban"));
+
+  expect(mockBanState.reset).toHaveBeenCalled();
+  expect(screen.queryByTestId("confirm-dialog-error")).not.toBeInTheDocument();
+});
+
+it("resets only the mutation whose dialog is opening", () => {
+  render(<UserDetailDrawer userId="u1" onClose={jest.fn()} />);
+  fireEvent.click(screen.getByTestId("drawer-role"));
+  expect(mockRoleState.reset).toHaveBeenCalled();
+  expect(mockBanState.reset).not.toHaveBeenCalled();
+  expect(mockDeleteState.reset).not.toHaveBeenCalled();
 });
