@@ -32,6 +32,8 @@ import DataDeletion from "../components/navbar/DataDeletion";
 import SupportPage from "../components/support/SupportMain";
 import TermsOfUse from "../components/navbar/TermsOfUse";
 import DownloadApp from "../components/download/DownloadApp";
+import MeetLanding from "../components/landing/MeetLanding";
+import LearnKoreanLanding from "../components/landing/LearnKoreanLanding";
 
 // Settings
 import Settings from "../components/settings/Settings";
@@ -129,6 +131,8 @@ export const routes = createRoutesFromElements(
     <Route path="privacy-policy/" element={<PrivacyPolicy />} />
     <Route path="terms-of-use/" element={<TermsOfUse />} />
     <Route path="download" element={<DownloadApp />} />
+    <Route path="meet" element={<MeetLanding />} />
+    <Route path="learn-korean" element={<LearnKoreanLanding />} />
 
     {/* Settings */}
     <Route path="settings" element={<Settings />} />

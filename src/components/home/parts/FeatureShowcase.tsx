@@ -16,17 +16,29 @@ const FEATURES = [
   { key: "gatherings", icon: "📍", title: "Gatherings", body: "Meet people learning your language nearby.", appOnly: true },
 ];
 
-const FeatureShowcase: React.FC = () => {
+export interface FeatureShowcaseProps {
+  /** Section heading. Defaults to the homepage's, through i18n. */
+  title?: string;
+  /**
+   * Feature keys to show, in FEATURES' own order. A landing page shows the
+   * subset it is actually arguing for; the homepage shows all six. An unknown
+   * key simply matches nothing.
+   */
+  only?: string[];
+}
+
+const FeatureShowcase: React.FC<FeatureShowcaseProps> = ({ title, only }) => {
   const { t } = useTranslation();
+  const shown = only ? FEATURES.filter((f) => only.indexOf(f.key) >= 0) : FEATURES;
   return (
     <section data-testid="feature-showcase" className="px-4 py-16 bg-canvas dark:bg-canvas-dark">
       <div className="mx-auto max-w-5xl">
         <h2 className="text-center text-3xl font-extrabold tracking-tight text-gray-900 dark:text-gray-50">
-          {t("home.features.title") || "Everything you need to actually practise"}
+          {title || t("home.features.title") || "Everything you need to actually practise"}
         </h2>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((f, i) => {
-            const title = t(`home.features.items.${f.key}.title`) || f.title;
+          {shown.map((f, i) => {
+            const cardTitle = t(`home.features.items.${f.key}.title`) || f.title;
             const body = t(`home.features.items.${f.key}.body`) || f.body;
             return (
               <Reveal key={f.key} delayMs={(i % 3) * 110}>
@@ -37,7 +49,7 @@ const FeatureShowcase: React.FC = () => {
                 <div data-testid="feature-card">
                   <span aria-hidden className="text-2xl">{f.icon}</span>
                   <div className="mt-2 flex items-center gap-2">
-                    <h3 className="text-sm font-bold text-gray-900 dark:text-gray-50">{title}</h3>
+                    <h3 className="text-sm font-bold text-gray-900 dark:text-gray-50">{cardTitle}</h3>
                     {f.appOnly && (
                       <span data-testid="feature-mobile-only">
                         <Badge tone="banana">{t("home.features.inApp") || "In the app"}</Badge>

@@ -1,9 +1,14 @@
 import { matchRoutes } from "react-router-dom";
-import en from "../utils/locales/eng.json";
 import { routes } from "../router/routes";
-import { SEO_PAGES, findSeoPage, canonicalUrl, normalizePath } from "./pages";
+import {
+  SEO_PAGES,
+  findSeoPage,
+  canonicalUrl,
+  normalizePath,
+  seoTitleEn,
+  seoDescriptionEn,
+} from "./pages";
 import { APP_STORE_URL, PLAY_STORE_URL } from "../components/growth/StoreLink";
-import { getByPath } from "./i18nFallback";
 
 describe("SEO map", () => {
   it("every entry is a real route", () => {
@@ -16,8 +21,8 @@ describe("SEO map", () => {
 
   it("titles fit a result line and descriptions fit a snippet", () => {
     for (const page of SEO_PAGES) {
-      const title = getByPath(en, page.titleKey);
-      const description = getByPath(en, page.descriptionKey);
+      const title = seoTitleEn(page);
+      const description = seoDescriptionEn(page);
       expect(title.length).toBeGreaterThan(0);
       expect(title.length).toBeLessThanOrEqual(60);
       expect(description.length).toBeGreaterThan(0);
@@ -26,13 +31,13 @@ describe("SEO map", () => {
   });
 
   it("no two pages share a title", () => {
-    const titles = SEO_PAGES.map((p) => getByPath(en, p.titleKey));
+    const titles = SEO_PAGES.map(seoTitleEn);
     expect(new Set(titles).size).toBe(titles.length);
   });
 
   it("each title carries the phrase it targets", () => {
     for (const page of SEO_PAGES) {
-      expect(getByPath(en, page.titleKey).toLowerCase()).toContain(page.primary.toLowerCase());
+      expect(seoTitleEn(page).toLowerCase()).toContain(page.primary.toLowerCase());
     }
   });
 
@@ -50,6 +55,20 @@ describe("SEO map", () => {
     expect(ld.offers.price).toBe("0");
     expect(ld.offers.description).toBe("Free, VIP from $9.99");
     expect(() => JSON.stringify(ld)).not.toThrow();
+  });
+
+  // The two landing pages of task B4. Their strings live on the entry until
+  // the locale pass (task B7) merges seo.meet.* / seo.learnKorean.* into all
+  // 18 files; seoTitleEn prefers eng.json the moment they land there.
+  it("carries the two landing pages with the phrases they own", () => {
+    const meet = findSeoPage("/meet")!;
+    const korean = findSeoPage("/learn-korean")!;
+    expect(meet.primary).toBe("meet people from other countries");
+    expect(korean.primary).toBe("learn Korean by chatting");
+    expect(meet.titleKey).toBe("seo.meet.title");
+    expect(korean.titleKey).toBe("seo.learnKorean.title");
+    expect(seoDescriptionEn(meet).toLowerCase()).toContain("meet people from other countries");
+    expect(seoDescriptionEn(korean).toLowerCase()).toContain("learn korean by chatting");
   });
 
   it("normalizes trailing slashes and builds canonical URLs", () => {

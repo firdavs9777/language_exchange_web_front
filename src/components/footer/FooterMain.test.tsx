@@ -36,12 +36,14 @@ it("every internal link leads to a real route, never the catch-all", () => {
   }
 });
 
-it("links to the download page and the communities page", () => {
+it("links to the download, communities and landing pages", () => {
   const { container } = render(<MemoryRouter><FooterMain /></MemoryRouter>);
   const hrefs = Array.from(container.querySelectorAll("a[href^='/']")).map((a) => a.getAttribute("href"));
   expect(hrefs).toContain("/download");
   expect(hrefs).toContain("/communities");
   expect(hrefs).toContain("/support");
+  expect(hrefs).toContain("/meet");
+  expect(hrefs).toContain("/learn-korean");
   expect(hrefs).not.toContain("/pricing");
   expect(hrefs).not.toContain("/contact");
 });

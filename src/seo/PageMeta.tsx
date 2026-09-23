@@ -1,7 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import { useTranslation } from "react-i18next";
-import { SEO_PAGES, canonicalUrl, DEFAULT_OG_IMAGE } from "./pages";
+import { SEO_PAGES, canonicalUrl, DEFAULT_OG_IMAGE, seoTitleEn, seoDescriptionEn } from "./pages";
 import { englishFallback } from "./i18nFallback";
 
 export interface PageMetaProps {
@@ -33,8 +33,11 @@ const PageMeta: React.FC<PageMetaProps> = ({ route, noindex = false, title, valu
     );
   }
 
-  const resolvedTitle = title || tr(page.titleKey);
-  const description = tr(page.descriptionKey);
+  // A page whose keys have not reached the locale files yet falls back to the
+  // English on its SEO entry -- never to an empty <title>, which would fail
+  // the prerender.
+  const resolvedTitle = title || tr(page.titleKey) || seoTitleEn(page);
+  const description = tr(page.descriptionKey) || seoDescriptionEn(page);
   const url = canonicalUrl(page.path);
   const image = page.ogImage || DEFAULT_OG_IMAGE;
   const jsonLd = page.jsonLd ? page.jsonLd({ url }) : null;

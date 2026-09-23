@@ -6,7 +6,8 @@
 import { matchRoutes } from "react-router-dom";
 
 const PUBLIC_PATHS = [
-  "/", "/download", "/moments", "/privacy-policy", "/terms-of-use", "/support", "/data-deletion",
+  "/", "/download", "/meet", "/learn-korean", "/moments", "/privacy-policy", "/terms-of-use",
+  "/support", "/data-deletion",
 ];
 
 it("imports without a DOM", () => {

@@ -48,6 +48,8 @@ const FooterMain: React.FC = () => {
                 <li><Link to="/">{t("footer.links.home")}</Link></li>
                 <li><Link to="/communities">{t("footer.links.communities") || "Communities"}</Link></li>
                 <li><Link to="/#pricing">{t("footer.links.pricing")}</Link></li>
+                <li><Link to="/meet">{t("footer.links.meet") || "Meet people"}</Link></li>
+                <li><Link to="/learn-korean">{t("footer.links.learnKorean") || "Learn Korean"}</Link></li>
                 <li><Link to="/download">{t("footer.links.download") || "Download the app"}</Link></li>
                 <li><Link to="/support">{t("footer.links.contact")}</Link></li>
               </ul>

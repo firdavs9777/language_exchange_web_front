@@ -61,6 +61,28 @@ it("prerenders /download with the QR box reserved and the app's JSON-LD", async 
   expect(out.head).toContain("Free, VIP from $9.99");
 });
 
+// The two landing pages are compositions of homepage parts, so what is worth
+// asserting here is that their own copy -- the phrase each page targets -- is
+// in the crawler's HTML, under the right canonical.
+it("prerenders /meet with its own headline and canonical", async () => {
+  const out = await renderRoute("/meet", { prefetch: false });
+  expect(out.html).toContain("Meet people from other countries");
+  expect(out.html).toContain("utm_campaign=meet");
+  expect((out.html.match(/<h1[\s>]/g) || []).length).toBe(1);
+  expect(out.head).toContain('href="https://banatalk.com/meet"');
+  expect(out.head).not.toContain("noindex");
+});
+
+it("prerenders /learn-korean with Hangul and the tutor note in the DOM", async () => {
+  const out = await renderRoute("/learn-korean", { prefetch: false });
+  expect(out.html).toContain("Learn Korean by chatting");
+  expect(out.html).toContain("주말에 뭐 했어요?");
+  expect(out.html).toContain("존댓말");
+  expect(out.html).toContain("utm_campaign=learn-korean");
+  expect((out.html.match(/<h1[\s>]/g) || []).length).toBe(1);
+  expect(out.head).toContain('href="https://banatalk.com/learn-korean"');
+});
+
 it("logs a warning per failed prefetch instead of swallowing the failure", async () => {
   const log = jest.fn();
   const out = await renderRoute("/", { prefetch: true, fetchTimeoutMs: 2000, log });
