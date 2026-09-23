@@ -2,6 +2,7 @@ import { AppStore } from "../../store";
 import { plansApiSlice } from "../../store/slices/plansSlice";
 import { publicStatsApiSlice } from "../../store/slices/publicStatsSlice";
 import { momentsApiSlice } from "../../store/slices/momentsSlice";
+import { publicCommunitiesApiSlice } from "../../store/slices/publicCommunitiesSlice";
 
 export type Prefetcher = (store: AppStore) => Promise<unknown>;
 
@@ -32,6 +33,15 @@ export function prefetchersFor(path: string): Prefetcher[] {
     );
     list.push((store) =>
       (store.dispatch(momentsApiSlice.endpoints.getPromptOfDay.initiate({ language: undefined })) as any).unwrap()
+    );
+  }
+  if (path === "/communities") {
+    // The logged-out /communities page IS the indexed page, so its cards have
+    // to be in the static HTML. A failure here is logged and the page falls
+    // back to its empty state (renderRoute catches it) rather than failing
+    // the build over a backend that is briefly unreachable.
+    list.push((store) =>
+      (store.dispatch(publicCommunitiesApiSlice.endpoints.getPublicCommunities.initiate()) as any).unwrap()
     );
   }
   return list;

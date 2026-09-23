@@ -5,9 +5,9 @@
 // plain Node, so importing it must never touch window, document or storage.
 import { matchRoutes } from "react-router-dom";
 
-const PUBLIC_PATHS = [
-  "/", "/download", "/moments", "/privacy-policy", "/terms-of-use", "/support", "/data-deletion",
-];
+// The prerender list is the source of truth for what counts as public; a
+// hand-kept copy here drifted the moment /communities landed.
+const PUBLIC_PATHS: string[] = require("../seo/pages").SEO_PAGES.map((p: { path: string }) => p.path);
 
 it("imports without a DOM", () => {
   expect(typeof window).toBe("undefined");
@@ -30,6 +30,18 @@ it("sends unknown paths to the catch-all route", () => {
   const matches = matchRoutes(routes, "/no-such-page");
   expect(matches && matches.length).toBe(2);
   expect(matches![1].route.path).toBe("*");
+});
+
+// Since the app is split into route chunks, a navigation can fail: a chunk
+// fetch that 404s (a tab left open across a deploy) rejects inside Suspense.
+// Without an errorElement react-router replaces the whole app with its default
+// stack-trace screen. This asserts the boundary is actually wired to the root
+// route, where it catches every route below it.
+it("puts an error boundary on the root route", () => {
+  const { routes } = require("./routes");
+  const RouteError = require("../components/errors/RouteError").default;
+  expect(routes[0].errorElement).toBeTruthy();
+  expect(routes[0].errorElement.type).toBe(RouteError);
 });
 
 // The admin console is a lazy child tree. It must resolve to real routes (not

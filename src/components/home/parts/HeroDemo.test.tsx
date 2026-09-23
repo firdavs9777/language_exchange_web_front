@@ -2,29 +2,41 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import HeroDemo from "./HeroDemo";
+import { APP_STORE_URL, PLAY_STORE_URL } from "../../growth/StoreLink";
 
-jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
+// `mockTMode` toggles the mocked `t` between echoing its key (proves the
+// supporting line is routed through i18n) and returning "" (proves the
+// `t(key) || "English"` fallback idiom). Must be prefixed with "mock" --
+// babel-plugin-jest-hoist only allows referencing such names from inside a
+// jest.mock() factory.
+let mockTMode: "echo" | "fallback" = "fallback";
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({ t: (key: string) => (mockTMode === "echo" ? key : "") }),
+}));
+
+beforeEach(() => {
+  mockTMode = "fallback";
+});
 
 it("renders a headline", () => {
   render(<HeroDemo />);
   expect(screen.getByTestId("hero-headline")).toBeInTheDocument();
 });
 
-it("links to both stores", () => {
+it("links to both stores, tagged as the hero", () => {
   render(<HeroDemo />);
-  expect(screen.getByTestId("hero-store-ios")).toHaveAttribute(
-    "href", expect.stringContaining("apps.apple.com")
-  );
-  expect(screen.getByTestId("hero-store-android")).toHaveAttribute(
-    "href", expect.stringContaining("play.google.com")
-  );
+  const ios = screen.getByTestId("store-link-ios").getAttribute("href") || "";
+  const android = screen.getByTestId("store-link-android").getAttribute("href") || "";
+  expect(ios).toContain(APP_STORE_URL);
+  expect(android).toContain(PLAY_STORE_URL);
+  [ios, android].forEach((href) => expect(href).toContain("utm_campaign=hero"));
 });
 
 // The mechanic is the argument: a message, its translation, and a correction.
 it("shows the exchange, its translation and a tutor correction", () => {
   render(<HeroDemo />);
   expect(screen.getAllByTestId("demo-message").length).toBeGreaterThanOrEqual(2);
-  expect(screen.getByTestId("demo-tutor-note")).toBeInTheDocument();
+  expect(screen.getByTestId("demo-note")).toBeInTheDocument();
 });
 
 // Content must never depend on an animation having run.
@@ -54,7 +66,7 @@ it("keeps every bubble's text in the DOM regardless of the cycle", () => {
   const bubbles = screen.getAllByTestId("demo-message");
   expect((bubbles[0].textContent || "")).toContain("안녕하세요");
   expect((bubbles[1].textContent || "")).toContain("practice Korean");
-  expect((screen.getByTestId("demo-tutor-note").textContent || "")).toContain("practise");
+  expect((screen.getByTestId("demo-note").textContent || "")).toContain("practice");
 });
 
 it("drifts eight flags behind the hero, out of the accessibility tree", () => {
@@ -88,4 +100,22 @@ it("renders to a string on the server with its content intact", () => {
   expect(html).toContain("안녕하세요");
   expect(html).toContain("hero-flags");
   expect(html).not.toContain("undefined");
+});
+
+// --- i18n --------------------------------------------------------------
+
+// The keyword-led supporting line: the primary phrase for SEO, kept as the
+// fallback so it renders even before a translation exists.
+it("falls back to the keyword-led supporting line when a translation is missing", () => {
+  render(<HeroDemo />);
+  const text = screen.getByTestId("hero-demo").textContent || "";
+  expect(text).toContain(
+    "Free language exchange with native speakers. Write in your language, they read it in theirs, and you learn from the difference."
+  );
+});
+
+it("routes the supporting line through home.hero.subtitle", () => {
+  mockTMode = "echo";
+  render(<HeroDemo />);
+  expect(screen.getByText("home.hero.subtitle")).toBeInTheDocument();
 });

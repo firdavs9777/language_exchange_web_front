@@ -5,6 +5,11 @@ import { useSelector } from "react-redux";
 import { Card, Col, Row, Container, Badge, Spinner, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+// The bootstrap-icons stylesheet, pulled in by this chunk rather than by the
+// main bundle: this screen renders `bi-*` glyphs and only ever loads behind
+// React.lazy. See src/lazyIcons.ts.
+import "../../lazyIcons";
+
 // Define proper TypeScript interfaces for your data
 interface Location {
   type: string;

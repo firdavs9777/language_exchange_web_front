@@ -6,6 +6,7 @@
     "@reduxjs/toolkit": "^2.2.5",
     "@types/jest": "24.0.23",
     "@types/node": "12.12.8",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^18.3.2",
     "@types/react-redux": "^7.1.33",
     "@types/react-toastify": "^4.1.0",
@@ -22,6 +23,7 @@
     "lucide-react": "^0.511.0",
     "moment": "^2.30.1",
     "npm": "^10.8.1",
+    "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.3",
     "react-datepicker": "^8.1.0",
@@ -41,12 +43,13 @@
     "webpack": "^4.41.0"
   },
   "scripts": {
-    "deploy": "NODE_OPTIONS='--max-old-space-size=1024' GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 npm run build && sudo nginx -s reload && echo '✅ Deployed!'",
+    "deploy": "NODE_OPTIONS='--max-old-space-size=1024' GENERATE_SOURCEMAP=false INLINE_RUNTIME_CHUNK=false IMAGE_INLINE_SIZE_LIMIT=0 npm run build && npm run test:budget && sudo nginx -s reload && echo '✅ Deployed!'",
     "start": "react-scripts start",
     "build": "react-scripts build && node scripts/prerender.js",
     "build:spa": "react-scripts build",
     "prerender": "node scripts/prerender.js",
     "test": "react-scripts test",
+    "test:budget": "BUNDLE_BUDGET=1 CI=true react-scripts test --testPathPattern=bundleBudget --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

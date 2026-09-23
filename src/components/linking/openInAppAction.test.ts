@@ -32,7 +32,7 @@ describe('openInApp', () => {
   it('on android: falls back to play store', () => {
     const h = harness('Android', true);
     h.run();
-    expect(h.navigations[1]).toContain('play.google.com');
+    expect(h.navigations[1]).toBe(PLAY_STORE_URL);
   });
 
   it('does NOT fall back to store if app took over (page hidden)', () => {

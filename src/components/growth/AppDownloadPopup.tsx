@@ -2,11 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { isSuppressed, recordDismissal } from "./growthGate";
 import { openSurface, closeSurface } from "./surfaceRegistry";
-
-const APP_STORE_URL =
-  "https://apps.apple.com/us/app/bananatalk-learn-meet-or-date/id6755862146";
-const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.bananatalk.app";
+import StoreLink from "./StoreLink";
 
 const DWELL_MS = 20000;
 const SCROLL_TRIGGER_PX = 600;
@@ -98,22 +94,16 @@ const AppDownloadPopup: React.FC = () => {
         </p>
 
         <div className="mt-5 flex gap-2">
-          <a
-            href={APP_STORE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <StoreLink
+            store="ios"
+            placement="popup"
             className="flex-1 rounded-full bg-brand px-4 py-2 text-center text-xs font-extrabold text-white shadow-brand"
-          >
-            App Store
-          </a>
-          <a
-            href={PLAY_STORE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          />
+          <StoreLink
+            store="android"
+            placement="popup"
             className="flex-1 rounded-full bg-brand px-4 py-2 text-center text-xs font-extrabold text-white shadow-brand"
-          >
-            Google Play
-          </a>
+          />
         </div>
       </div>
     </div>

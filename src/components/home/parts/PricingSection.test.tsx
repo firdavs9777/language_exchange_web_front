@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import PricingSection from "./PricingSection";
 import { FALLBACK_PLANS } from "../../../store/slices/plansSlice";
+import { APP_STORE_URL, PLAY_STORE_URL } from "../../growth/StoreLink";
 
 const mockQuery = jest.fn();
 jest.mock("../../../store/slices/plansSlice", () => ({
@@ -51,6 +52,14 @@ it("highlights the recommended plan", () => {
   expect(screen.getAllByTestId("plan-recommended")).toHaveLength(1);
 });
 
+it("tags every VIP call to action as the pricing placement", () => {
+  mockQuery.mockReturnValue({ data: FALLBACK_PLANS, isError: false, isLoading: false });
+  const { container } = render(<PricingSection />);
+  const links = Array.from(container.querySelectorAll('[data-testid^="store-link-"]'));
+  expect(links.length).toBe(FALLBACK_PLANS.length);
+  links.forEach((a) => expect(a.getAttribute("href")).toContain("utm_campaign=pricing"));
+});
+
 it("renders the free tier alongside the paid plans", () => {
   mockQuery.mockReturnValue({ data: FALLBACK_PLANS, isError: false, isLoading: false });
   render(<PricingSection />);
@@ -70,8 +79,8 @@ it("renders the same store link on the server whatever the user agent is", () =>
   });
   try {
     const markup = renderToString(<PricingSection />);
-    expect(markup).toContain("apps.apple.com");
-    expect(markup).not.toContain("play.google.com");
+    expect(markup).toContain(APP_STORE_URL);
+    expect(markup).not.toContain(PLAY_STORE_URL);
   } finally {
     Object.defineProperty(window.navigator, "userAgent", { value: original, configurable: true });
   }
@@ -88,10 +97,10 @@ it("points Android visitors at Google Play once the platform is known", () => {
     // The first render is always the prerendered iOS one; the mount effect
     // swaps in the real platform, and render() flushes it before returning.
     const { container } = render(<PricingSection />);
-    const stores = Array.from(container.querySelectorAll('a[rel="noopener noreferrer"]'));
+    const stores = Array.from(container.querySelectorAll('[data-testid="store-link-android"]'));
     expect(stores.length).toBe(FALLBACK_PLANS.length);
-    stores.forEach((a) => expect(a.getAttribute("href")).toContain("play.google.com"));
-    expect(container.innerHTML).not.toContain("apps.apple.com");
+    stores.forEach((a) => expect(a.getAttribute("href")).toContain(PLAY_STORE_URL));
+    expect(container.querySelectorAll('[data-testid="store-link-ios"]')).toHaveLength(0);
   } finally {
     Object.defineProperty(window.navigator, "userAgent", { value: original, configurable: true });
   }

@@ -1,3 +1,6 @@
+import { APP_STORE_URL, PLAY_STORE_URL } from "../components/growth/storeUrls";
+import { englishFallback } from "./i18nFallback";
+
 export const SITE_ORIGIN = "https://banatalk.com";
 export const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/og-image.png`;
 
@@ -36,6 +39,54 @@ export const SEO_PAGES: SeoPage[] = [
     descriptionKey: "seo.download.description",
     primary: "download bananatalk",
     secondary: ["language exchange app for iphone", "language exchange app for android"],
+    // The store URLs come from StoreLink, the one file allowed to spell them
+    // (storeUrls.test.ts), and without a campaign: this is the app's identity
+    // for a search engine, not a tap we want to attribute.
+    jsonLd: (ctx) => ({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "BananaTalk",
+      applicationCategory: "SocialNetworkingApplication",
+      operatingSystem: "iOS, Android",
+      url: ctx.url,
+      sameAs: [APP_STORE_URL, PLAY_STORE_URL],
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+        description: "Free, VIP from $9.99",
+      },
+    }),
+  },
+  {
+    path: "/meet",
+    titleKey: "seo.meet.title",
+    descriptionKey: "seo.meet.description",
+    primary: "meet people from other countries",
+    secondary: ["international friends app", "make friends from other countries", "language exchange partners"],
+  },
+  {
+    path: "/learn-korean",
+    titleKey: "seo.learnKorean.title",
+    descriptionKey: "seo.learnKorean.description",
+    primary: "learn Korean by chatting",
+    secondary: ["talk to Korean native speakers", "Korean language exchange", "practice Korean online"],
+    // Spec §5.4: a plain WebPage so the landing page is typed at all.
+    jsonLd: (ctx) => ({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      url: ctx.url,
+      name: englishFallback("seo.learnKorean.title"),
+      description: englishFallback("seo.learnKorean.description"),
+      inLanguage: "en",
+    }),
+  },
+  {
+    path: "/communities",
+    titleKey: "seo.communities.title",
+    descriptionKey: "seo.communities.description",
+    primary: "language exchange communities",
+    secondary: ["language exchange groups", "practice a language with a group", "find a language partner group"],
   },
   {
     path: "/moments",
@@ -49,6 +100,16 @@ export const SEO_PAGES: SeoPage[] = [
   { path: "/support", titleKey: "seo.support.title", descriptionKey: "seo.support.description", primary: "support", secondary: ["contact bananatalk"] },
   { path: "/data-deletion", titleKey: "seo.dataDeletion.title", descriptionKey: "seo.dataDeletion.description", primary: "data deletion", secondary: [] },
 ];
+
+/** The English title, from eng.json. Empty means the key is missing there -- pages.test.ts fails on it. */
+export function seoTitleEn(page: SeoPage): string {
+  return englishFallback(page.titleKey) || "";
+}
+
+/** The English description, resolved the same way. */
+export function seoDescriptionEn(page: SeoPage): string {
+  return englishFallback(page.descriptionKey) || "";
+}
 
 export function normalizePath(pathname: string): string {
   const trimmed = pathname.replace(/\/+$/, "");

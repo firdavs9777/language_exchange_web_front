@@ -8,11 +8,7 @@ import {
   FALLBACK_PLANS,
   VipPlan,
 } from "../../../store/slices/plansSlice";
-
-const APP_STORE_URL =
-  "https://apps.apple.com/us/app/bananatalk-learn-meet-or-date/id6755862146";
-const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.bananatalk.app";
+import StoreLink from "../../growth/StoreLink";
 
 const PricingSection: React.FC = () => {
   const { t } = useTranslation();
@@ -31,7 +27,6 @@ const PricingSection: React.FC = () => {
 
   // A pricing section that renders nothing is worse than one slightly stale.
   const plans: VipPlan[] = isError || !data || data.length === 0 ? FALLBACK_PLANS : data;
-  const storeUrl = platform === "android" ? PLAY_STORE_URL : APP_STORE_URL;
 
   return (
     <section data-testid="pricing-section" className="px-4 py-16 bg-canvas dark:bg-canvas-dark">
@@ -123,14 +118,13 @@ const PricingSection: React.FC = () => {
                   ))}
                 </ul>
 
-                <a
-                  href={storeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <StoreLink
+                  store={platform}
+                  placement="pricing"
                   className="mt-5 rounded-full bg-brand px-4 py-2 text-center text-xs font-bold text-white shadow-brand"
                 >
                   {t("home.pricing.getVip") || "Get VIP in the app"}
-                </a>
+                </StoreLink>
               </div>
             </SurfaceCard>
           ))}

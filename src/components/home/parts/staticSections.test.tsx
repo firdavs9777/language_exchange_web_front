@@ -4,8 +4,17 @@ import StatStrip from "./StatStrip";
 import HowItWorks from "./HowItWorks";
 import EarlyAdopterBand from "./EarlyAdopterBand";
 import FinalCta from "./FinalCta";
+import { APP_STORE_URL, PLAY_STORE_URL } from "../../growth/StoreLink";
 
-jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
+// `mockTMode` toggles the mocked `t` between echoing its key (proves every
+// visible string in these sections is routed through i18n) and returning ""
+// (proves the `t(key) || "English"` fallback idiom). Must be prefixed with
+// "mock" -- babel-plugin-jest-hoist only allows referencing such names from
+// inside a jest.mock() factory.
+let mockTMode: "echo" | "fallback" = "fallback";
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({ t: (key: string) => (mockTMode === "echo" ? key : "") }),
+}));
 jest.mock("../../../store/slices/publicStatsSlice", () => ({
   ...jest.requireActual("../../../store/slices/publicStatsSlice"),
   useGetPublicStatsQuery: () => ({ data: undefined }),
@@ -18,6 +27,7 @@ jest.mock("../../../store/slices/publicStatsSlice", () => ({
 // target synchronously, which is both deterministic and exercises the
 // reduced-motion path the spec requires.
 beforeEach(() => {
+  mockTMode = "fallback";
   Object.defineProperty(window, "matchMedia", {
     writable: true,
     configurable: true,
@@ -67,6 +77,28 @@ it("walks through three steps", () => {
   expect(screen.getAllByTestId("how-step")).toHaveLength(3);
 });
 
+// Every step's title and body must resolve through i18n, not a hardcoded
+// string -- proven by making `t` echo the key it was called with.
+it("routes every step's copy through home.howItWorks.steps.<n>", () => {
+  mockTMode = "echo";
+  render(<HowItWorks />);
+  [1, 2, 3].forEach((n) => {
+    expect(screen.getByText(`home.howItWorks.steps.${n}.title`)).toBeInTheDocument();
+    expect(screen.getByText(`home.howItWorks.steps.${n}.body`)).toBeInTheDocument();
+  });
+});
+
+// With no translation available, the English copy embedded as the fallback
+// must still render.
+it("falls back to the English step copy when a translation is missing", () => {
+  render(<HowItWorks />);
+  const steps = screen.getAllByTestId("how-step").map((s) => s.textContent || "");
+  expect(steps[0]).toContain("Tell us what you speak, and what you want");
+  expect(steps[0]).toContain("Pick your native language and the one you're learning. That pair is how we match you.");
+  expect(steps[1]).toContain("Find someone worth talking to");
+  expect(steps[2]).toContain("Talk badly, improve fast");
+});
+
 it("frames the launch honestly rather than borrowing credibility", () => {
   render(<EarlyAdopterBand />);
   const text = screen.getByTestId("early-adopter-band").textContent || "";
@@ -74,11 +106,33 @@ it("frames the launch honestly rather than borrowing credibility", () => {
   expect(text.toLowerCase()).not.toContain("trusted by");
 });
 
-it("closes with both store links", () => {
+it("routes every early-adopter string through home.earlyAdopter.*", () => {
+  mockTMode = "echo";
+  render(<EarlyAdopterBand />);
+  const band = screen.getByTestId("early-adopter-band");
+  expect(band).toHaveTextContent("home.earlyAdopter.badge");
+  expect(band).toHaveTextContent("home.earlyAdopter.title");
+  expect(band).toHaveTextContent("home.earlyAdopter.body");
+});
+
+it("falls back to the English early-adopter copy when a translation is missing", () => {
+  render(<EarlyAdopterBand />);
+  const text = screen.getByTestId("early-adopter-band").textContent || "";
+  expect(text).toContain("Launched December 2025");
+  expect(text).toContain("Be one of the first");
+  expect(text).toContain(
+    "BananaTalk is new. The people you meet here are the ones building what this community becomes — which is a better reason to join early than any review."
+  );
+});
+
+it("closes with both store links, tagged as the closing CTA", () => {
   render(<FinalCta />);
   const cta = screen.getByTestId("final-cta");
-  expect(cta.querySelector('a[href*="apps.apple.com"]')).toBeTruthy();
-  expect(cta.querySelector('a[href*="play.google.com"]')).toBeTruthy();
+  const ios = cta.querySelector('[data-testid="store-link-ios"]');
+  const android = cta.querySelector('[data-testid="store-link-android"]');
+  expect((ios as Element).getAttribute("href")).toContain(APP_STORE_URL);
+  expect((android as Element).getAttribute("href")).toContain(PLAY_STORE_URL);
+  expect((ios as Element).getAttribute("href")).toContain("utm_campaign=final-cta");
 });
 
 // The closing CTA breathes rather than sitting flat -- a background-position

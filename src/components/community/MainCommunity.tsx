@@ -1,6 +1,6 @@
 import { Fragment, useState, useMemo, useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { Loader2, Search } from "lucide-react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -20,6 +20,7 @@ import CommunityFilterSheet from "./CommunityFilterSheet";
 import ActiveFilterChips from "./ActiveFilterChips";
 import QuickFilterChips from "./QuickFilterChips";
 import WaveSheet from "./WaveSheet";
+import PublicCommunities from "./PublicCommunities";
 import AdUnit from "../ads/AdUnit";
 import { AD_SLOTS } from "../ads/adsenseConfig";
 import { CommunityFilters, buildCommunityQuery } from "./lib/buildCommunityQuery";
@@ -318,10 +319,6 @@ const ModernCommunity: React.FC = () => {
 
   const activeFilterCount = useMemo(() => countActiveFilters(filters), [filters]);
 
-  if (!userInfo) {
-    return <Navigate to="/login?redirect=/communities" replace />;
-  }
-
   if (errorInfo) {
     return (
       <div className="community-page">
@@ -445,4 +442,27 @@ const ModernCommunity: React.FC = () => {
   );
 };
 
-export default ModernCommunity;
+/**
+ * /communities has two audiences now.
+ *
+ * A signed-in member gets the discovery page below. A logged-out visitor --
+ * and every crawler, and the prerender, which builds its store in Node with no
+ * localStorage -- gets the public page instead of the redirect to /login this
+ * route used to answer with: the page is indexed (src/seo/pages.ts), so the
+ * logged-out branch IS the crawlable page.
+ *
+ * The split is a wrapper rather than an early return inside ModernCommunity so
+ * that none of its authenticated queries (members, topics, visitors) and none
+ * of its localStorage reads happen for someone who is not signed in.
+ */
+// A signed-in visitor arriving on the prerendered page sees PublicCommunities
+// for exactly one commit: auth is restored after hydration (hydrationAuth.ts)
+// so the first client render matches the server HTML, then this flips. The
+// one public-communities request that commit starts is cheap and cached.
+const MainCommunity: React.FC = () => {
+  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
+  if (!userInfo) return <PublicCommunities />;
+  return <ModernCommunity />;
+};
+
+export default MainCommunity;

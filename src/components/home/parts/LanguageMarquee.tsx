@@ -1,8 +1,10 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { languageFlag, displayCode } from "../../../utils/languages";
 import { MARQUEE_LANGUAGES } from "../../../data/marqueeLanguages";
 
 const LanguageMarquee: React.FC = () => {
+  const { t } = useTranslation();
   // Rendered twice so the -50% translate loops seamlessly.
   const loop = [...MARQUEE_LANGUAGES, ...MARQUEE_LANGUAGES];
 
@@ -11,8 +13,11 @@ const LanguageMarquee: React.FC = () => {
       data-testid="language-marquee"
       className="overflow-hidden py-10 [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]"
     >
-      <p className="mb-5 text-center text-xs font-bold uppercase tracking-widest text-gray-400">
-        137 languages, and counting
+      <h2 className="mb-1 text-center text-xs font-bold uppercase tracking-widest text-gray-900 dark:text-gray-50">
+        {t("home.marquee.title") || "Native speakers of every language you want to learn"}
+      </h2>
+      <p className="mb-5 text-center text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+        {t("home.marquee.caption") || "137 languages, and counting"}
       </p>
       <div className="flex w-max gap-2 motion-safe:animate-bt-marquee hover:[animation-play-state:paused]">
         {loop.map((name, i) => (

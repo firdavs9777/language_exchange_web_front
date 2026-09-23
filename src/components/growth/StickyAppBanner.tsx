@@ -1,15 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { isSuppressed, recordDismissal } from "./growthGate";
-
-const storeUrlForUserAgent = (): string =>
-  /Android/i.test(typeof navigator === "undefined" ? "" : navigator.userAgent)
-    ? "https://play.google.com/store/apps/details?id=com.bananatalk.app"
-    : "https://apps.apple.com/us/app/bananatalk-learn-meet-or-date/id6755862146";
+import StoreLink, { StoreId } from "./StoreLink";
 
 const StickyAppBanner: React.FC = () => {
   // Hidden until mounted, for the same reason as PromoCarousel.
   const [hidden, setHidden] = useState(true);
+
+  // "ios" until the user agent says otherwise, and it only says so after
+  // mount: reading navigator during render would bake one store into the
+  // prerendered HTML, and React 18 does not patch a mismatched attribute
+  // while hydrating (the bug PricingSection documents at length).
+  const [platform, setPlatform] = useState<StoreId>("ios");
 
   useEffect(() => {
     setHidden(
@@ -19,8 +21,8 @@ const StickyAppBanner: React.FC = () => {
         viewportWidth: window.innerWidth,
       })
     );
+    if (/Android/i.test(navigator.userAgent)) setPlatform("android");
   }, []);
-  const [storeUrl] = useState(storeUrlForUserAgent);
 
   const dismiss = useCallback(() => {
     recordDismissal("sticky-banner");
@@ -46,14 +48,13 @@ const StickyAppBanner: React.FC = () => {
           AI tutor, voice rooms, reels
         </p>
       </div>
-      <a
-        href={storeUrl}
-        target="_blank"
-        rel="noopener noreferrer"
+      <StoreLink
+        store={platform}
+        placement="sticky-banner"
         className="shrink-0 whitespace-nowrap rounded-full bg-brand-deep px-4 py-1.5 text-xs font-extrabold text-white"
       >
         Install
-      </a>
+      </StoreLink>
       <button
         type="button"
         data-testid="sticky-banner-dismiss"

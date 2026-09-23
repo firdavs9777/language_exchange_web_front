@@ -11,7 +11,9 @@
       "pricing": "Tarifs",
       "contact": "Contact",
       "communities": "Communautés",
-      "download": "Télécharger l'application"
+      "download": "Télécharger l'application",
+      "meet": "Rencontrer des gens",
+      "learnKorean": "Apprendre le coréen"
     },
     "contactInfo": "Coordonnées",
     "address": "Séoul, Corée du Sud, Gangnam-gu",
@@ -982,7 +984,7 @@
       },
       "title": "Dites-le mal.",
       "titleAccent": "Nous traduisons.",
-      "subtitle": "Écrivez dans votre langue, l'autre personne le lit dans la sienne. Appuyez sur un message pour voir comment il a vraiment été dit — c'est comme ça qu'on apprend.",
+      "subtitle": "Échange linguistique gratuit avec des locuteurs natifs. Écrivez dans votre langue, ils le lisent dans la leur, et c'est de la différence que vous apprenez.",
       "trust": "Offre gratuite à vie · 137 langues · Tuteur IA 24 h/24"
     },
     "sections": {
@@ -1016,11 +1018,52 @@
       "calls": {
         "title": "Appels audio et vidéo",
         "description": "Appels audio et vidéo en un geste avec vos partenaires linguistiques."
+      },
+      "inApp": "Dans l'application",
+      "items": {
+        "findPartner": {
+          "title": "Trouvez un partenaire",
+          "body": "Soyez mis en relation sur la combinaison de langues que vous voulez vraiment échanger."
+        },
+        "chatTranslate": {
+          "title": "Une discussion qui traduit",
+          "body": "Dans les deux sens, dans le message, pendant que vous écrivez."
+        },
+        "moments": {
+          "title": "Moments",
+          "body": "Montrez à quoi ressemble votre journée et faites-vous corriger par des natifs."
+        },
+        "aiTutor": {
+          "title": "Tuteur IA",
+          "body": "Entraînez-vous à 3 h du matin sans vous ridiculiser."
+        },
+        "voiceRooms": {
+          "title": "Salons vocaux",
+          "body": "Entrez dans un salon en direct et contentez-vous d'écouter, si vous voulez."
+        },
+        "gatherings": {
+          "title": "Événements",
+          "body": "Rencontrez près de chez vous des gens qui apprennent votre langue."
+        }
       }
     },
     "howItWorks": {
       "title": "Trois étapes avant votre première conversation",
-      "subtitle": "Pas de numéro de téléphone, pas de spam — juste de vraies personnes qui veulent apprendre."
+      "subtitle": "Pas de numéro de téléphone, pas de spam — juste de vraies personnes qui veulent apprendre.",
+      "steps": {
+        "1": {
+          "title": "Dites-nous ce que vous parlez, et ce que vous voulez",
+          "body": "Choisissez votre langue maternelle et celle que vous apprenez. C'est ce duo qui sert à vous mettre en relation."
+        },
+        "2": {
+          "title": "Trouvez quelqu'un à qui vous aurez envie de parler",
+          "body": "Parcourez les personnes qui apprennent votre langue. Faites un signe, ou lancez directement la conversation."
+        },
+        "3": {
+          "title": "Parlez mal, progressez vite",
+          "body": "Chaque message est traduit dans les deux sens, et le tuteur IA vous corrige sans que personne ne regarde."
+        }
+      }
     },
     "steps": {
       "profile": {
@@ -1110,6 +1153,15 @@
       "AI tutor": "tuteur IA",
       "forever tier": "offre gratuite",
       "learners": "apprenants"
+    },
+    "marquee": {
+      "title": "Des locuteurs natifs de toutes les langues que vous voulez apprendre",
+      "caption": "137 langues, et ça continue"
+    },
+    "earlyAdopter": {
+      "badge": "Lancé en décembre 2025",
+      "title": "Soyez parmi les premiers",
+      "body": "BananaTalk est tout nouveau. Les personnes que vous croisez ici sont celles qui façonnent ce que cette communauté va devenir — une bien meilleure raison d'arriver tôt que n'importe quel avis."
     }
   },
   "vip": {
@@ -1177,6 +1229,18 @@
     "dataDeletion": {
       "title": "Demande de suppression des données | BananaTalk",
       "description": "Comment supprimer votre compte BananaTalk et vos données personnelles, et ce qui se passe après votre demande."
+    },
+    "meet": {
+      "title": "Rencontrer des gens d'autres pays | BananaTalk",
+      "description": "Rencontrez des gens d'autres pays et faites-vous des amis à l'étranger en discutant. Chaque message est traduit dans les deux sens : inutile d'être bilingue."
+    },
+    "learnKorean": {
+      "title": "Apprendre le coréen en discutant avec des natifs",
+      "description": "Apprenez le coréen gratuitement avec des Coréens natifs. Vous écrivez en français, ils écrivent en hangeul, et un tuteur IA explique 존댓말 vs. 반말."
+    },
+    "communities": {
+      "title": "Communautés d'échange linguistique | BananaTalk",
+      "description": "Rejoignez les communautés d'échange linguistique de BananaTalk : de vrais groupes qui pratiquent le coréen, l'espagnol, le japonais et plus, gratuitement."
     }
   },
   "notFound": {
@@ -1382,6 +1446,146 @@
       "page": "Page {{page}}",
       "previous": "Précédent",
       "next": "Suivant"
+    }
+  },
+  "download": {
+    "title": "Téléchargez BananaTalk",
+    "subtitle": "Échange linguistique gratuit avec des locuteurs natifs dans 137 langues, sur iPhone et Android.",
+    "free": "Gratuit. Sans carte.",
+    "scan": "Scannez avec l'appareil photo de votre téléphone",
+    "qrAlt": "QR code pour télécharger BananaTalk",
+    "reasons": {
+      "tutor": {
+        "title": "Un tuteur IA dans chaque discussion",
+        "body": "Des corrections et des explications sur les messages que vous envoyez vraiment."
+      },
+      "voice": {
+        "title": "Salons vocaux et appels",
+        "body": "Pratiquez à voix haute avec des personnes qui apprennent votre langue en ce moment même."
+      },
+      "translate": {
+        "title": "Traduction instantanée",
+        "body": "Écrivez dans votre langue, ils le lisent dans la leur, et c'est de la différence que vous apprenez."
+      }
+    }
+  },
+  "meet": {
+    "hero": {
+      "title": "Rencontrez des gens d'autres pays",
+      "titleAccent": "qui vous répondent vraiment.",
+      "subtitle": "BananaTalk, c'est là que vous vous faites des amis à l'étranger en parlant avec des locuteurs natifs. Choisissez une langue, dites bonjour, et chaque message arrive traduit — aucun de vous n'a besoin d'être bilingue au départ.",
+      "trust": "Offre gratuite à vie · 137 langues · Chaque message traduit dans les deux sens",
+      "demo": {
+        "1": {
+          "text": "Bora ver o pôr do sol no sábado?",
+          "translation": "On va voir le coucher de soleil samedi ?"
+        },
+        "2": {
+          "text": "Oui ! Il fait encore chaud là-bas en septembre ?",
+          "translation": "Sim! Ainda faz calor aí em setembro?"
+        }
+      },
+      "note": {
+        "label": "✦ TRADUIT DANS LES DEUX SENS",
+        "body": "Elle a écrit en portugais et vous avez lu en français. Vous avez écrit en français et elle a lu en portugais. Aucun de vous n'a eu à changer de langue."
+      }
+    },
+    "howItWorks": {
+      "title": "Se faire un ami ici tient en trois étapes",
+      "steps": {
+        "1": {
+          "title": "Choisissez une langue, pas un profil",
+          "body": "Choisissez la langue ou le pays qui vous intrigue. On vous montre les personnes qui apprennent déjà la vôtre — c'est un échange linguistique, donc vous y gagnez tous les deux."
+        },
+        "2": {
+          "title": "Dites bonjour avec vos propres mots",
+          "body": "Écrivez dans la langue dans laquelle vous pensez. Elle arrive dans la leur, instantanément : le premier message n'est jamais le plus dur."
+        },
+        "3": {
+          "title": "Continuez à parler",
+          "body": "Messages vocaux, photos, Moments, appels. Les conversations qui durent sont celles qui survivent à l'entraînement."
+        }
+      }
+    },
+    "features": {
+      "title": "Conçu pour les conversations qui ne s'arrêtent pas"
+    },
+    "cta": {
+      "title": "Quelqu'un est réveillé dans un autre pays en ce moment",
+      "subtitle": "Gratuit pour commencer. Sans carte, sans compte à rebours d'essai."
+    }
+  },
+  "learnKorean": {
+    "hero": {
+      "title": "Apprenez le coréen en discutant",
+      "titleAccent": "avec de vrais Coréens.",
+      "subtitle": "Échangez vos langues avec des Coréens natifs qui veulent apprendre la vôtre. Vous essayez en 한국어, ils répondent dans le coréen que les gens utilisent vraiment, et le tuteur IA corrige vos erreurs — en privé.",
+      "trust": "Offre gratuite à vie · Coréens natifs · Tuteur IA 24 h/24",
+      "demo": {
+        "1": {
+          "text": "주말에 뭐 했어요?",
+          "translation": "Qu'est-ce que vous avez fait ce week-end ?"
+        },
+        "2": {
+          "text": "친구 만났다! 진짜 재미있었어",
+          "translation": "J'ai vu un ami ! C'était vraiment sympa"
+        }
+      },
+      "note": {
+        "label": "✦ TUTEUR IA",
+        "body": "존댓말 vs. 반말 : elle a demandé avec 했어요, la forme polie. Vous avez répondu en 반말, réservé aux amis proches. Alignez-vous sur elle pour l'instant : 친구 만났어요! 진짜 재미있었어요."
+      }
+    },
+    "howItWorks": {
+      "title": "Pourquoi le coréen rentre quand on discute",
+      "steps": {
+        "1": {
+          "title": "Le coréen qu'on croise dans les vraies conversations",
+          "body": "Votre manuel enseigne 합니다. Votre partenaire, lui, tape 했어요, ㅋㅋ et 헐 — le coréen qui vous attend dans une vraie conversation."
+        },
+        "2": {
+          "title": "존댓말 et 반말, ressentis plutôt qu'appris par cœur",
+          "body": "La politesse est un choix que vous faites à chaque phrase. Lire les choix d'un natif vous l'apprend bien plus vite que n'importe quel tableau de terminaisons."
+        },
+        "3": {
+          "title": "Corrigé sans la gêne",
+          "body": "Le tuteur IA annote votre coréen là où vous seul pouvez le voir : l'échange linguistique ne se transforme jamais en examen. Votre partenaire voit simplement que vous essayez, et c'est exactement ce qui lui donne envie de répondre."
+        }
+      }
+    },
+    "features": {
+      "title": "Trois choses qu'un manuel ne peut pas vous donner"
+    },
+    "cta": {
+      "title": "Des Coréens apprennent votre langue en ce moment même",
+      "subtitle": "Gratuit pour commencer. Sans carte, sans compte à rebours d'essai."
+    }
+  },
+  "communities": {
+    "public": {
+      "title": "Communautés d'échange linguistique",
+      "intro": "De vrais groupes au sein de BananaTalk, où l'on pratique une même langue tous les jours. Trouvez le vôtre ici, puis ouvrez-le dans l'application et lancez-vous.",
+      "members": "membres",
+      "join": "Rejoindre dans l'appli",
+      "empty": {
+        "title": "De nouvelles communautés ouvrent chaque semaine",
+        "body": "Il n'y a encore rien à afficher ici. Téléchargez l'application : chaque communauté y apparaît dès son ouverture."
+      }
+    }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Une erreur s'est produite lors du chargement de cette page",
+      "body": "Une partie de l'application ne s'est pas chargée. Cela arrive généralement juste après une mise à jour ; recharger devrait suffire.",
+      "reload": "Recharger"
+    }
+  },
+  "growth": {
+    "store": {
+      "appStore": "App Store",
+      "googlePlay": "Google Play",
+      "downloadOnThe": "Télécharger dans l'",
+      "getItOn": "Disponible sur"
     }
   }
 }

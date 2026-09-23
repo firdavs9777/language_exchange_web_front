@@ -11,7 +11,9 @@
       "pricing": "Bảng Giá",
       "contact": "Liên Hệ",
       "communities": "Cộng Đồng",
-      "download": "Tải Ứng Dụng"
+      "download": "Tải Ứng Dụng",
+      "meet": "Gặp gỡ mọi người",
+      "learnKorean": "Học tiếng Hàn"
     },
     "contactInfo": "Thông Tin Liên Hệ",
     "address": "Seoul, Hàn Quốc, Gangnam-gu",
@@ -1001,7 +1003,7 @@
       },
       "title": "Cứ nói sai đi.",
       "titleAccent": "Chúng tôi sẽ dịch.",
-      "subtitle": "Gõ bằng ngôn ngữ của bạn, họ đọc bằng ngôn ngữ của họ. Chạm vào bất kỳ tin nhắn nào để xem nó thực sự được nói như thế nào — đó là cách bạn học.",
+      "subtitle": "Trao đổi ngôn ngữ miễn phí với người bản ngữ. Bạn viết bằng tiếng của mình, họ đọc bằng tiếng của họ, và bạn học từ chính khác biệt đó.",
       "trust": "Gói miễn phí trọn đời · 137 ngôn ngữ · Gia sư AI 24/7"
     },
     "sections": {
@@ -1035,11 +1037,52 @@
       "community": {
         "title": "Cộng đồng thực sự",
         "description": "Duyệt đối tác theo tiếng mẹ đẻ, xem ai đang trực tuyến, và chia sẻ khoảnh khắc với những người đang học cùng ngôn ngữ."
+      },
+      "inApp": "Trong ứng dụng",
+      "items": {
+        "findPartner": {
+          "title": "Tìm đối tác",
+          "body": "Ghép đúng cặp ngôn ngữ mà bạn thực sự muốn trao đổi."
+        },
+        "chatTranslate": {
+          "title": "Trò chuyện có dịch sẵn",
+          "body": "Hai chiều, ngay trong tin nhắn, ngay khi bạn gõ."
+        },
+        "moments": {
+          "title": "Moments",
+          "body": "Đăng một mẩu ngày của bạn, người bản ngữ sẽ sửa giúp."
+        },
+        "aiTutor": {
+          "title": "Gia sư AI",
+          "body": "Luyện lúc 3 giờ sáng mà không ngại ai nhìn."
+        },
+        "voiceRooms": {
+          "title": "Voice Rooms",
+          "body": "Ghé vào một phòng đang nói chuyện, chỉ ngồi nghe cũng được."
+        },
+        "gatherings": {
+          "title": "Gặp gỡ",
+          "body": "Gặp những người đang học tiếng của bạn ở ngay gần đây."
+        }
       }
     },
     "howItWorks": {
       "title": "Ba bước đến cuộc trò chuyện đầu tiên của bạn",
-      "subtitle": "Không cần số điện thoại, không spam — chỉ có những người thật muốn học."
+      "subtitle": "Không cần số điện thoại, không spam — chỉ có những người thật muốn học.",
+      "steps": {
+        "1": {
+          "title": "Cho chúng tôi biết bạn nói gì và muốn học gì",
+          "body": "Chọn tiếng mẹ đẻ và ngôn ngữ bạn đang học. Chúng tôi ghép đôi dựa trên cặp đó."
+        },
+        "2": {
+          "title": "Tìm một người đáng để trò chuyện",
+          "body": "Xem những người đang học tiếng của bạn. Vẫy tay chào, hoặc nhắn luôn."
+        },
+        "3": {
+          "title": "Cứ nói vụng về, rồi giỏi lên thật nhanh",
+          "body": "Mọi tin nhắn đều được dịch hai chiều, còn gia sư AI sửa cho bạn mà không ai thấy."
+        }
+      }
     },
     "steps": {
       "profile": {
@@ -1129,6 +1172,15 @@
       "AI tutor": "gia sư AI",
       "forever tier": "gói miễn phí",
       "learners": "người học"
+    },
+    "marquee": {
+      "title": "Ngôn ngữ nào bạn muốn học cũng có người bản ngữ ở đây",
+      "caption": "137 ngôn ngữ, và vẫn đang tăng"
+    },
+    "earlyAdopter": {
+      "badge": "Ra mắt tháng 12 năm 2025",
+      "title": "Hãy là một trong những người đầu tiên",
+      "body": "BananaTalk vẫn còn mới. Những người bạn gặp ở đây chính là những người đang định hình cộng đồng này — đó là lý do vào sớm đáng giá hơn bất kỳ bài đánh giá nào."
     }
   },
   "vip": {
@@ -1209,6 +1261,18 @@
     "dataDeletion": {
       "title": "Yêu Cầu Xóa Dữ Liệu | BananaTalk",
       "description": "Cách xóa tài khoản BananaTalk và dữ liệu cá nhân của bạn, và điều gì xảy ra sau khi bạn yêu cầu."
+    },
+    "meet": {
+      "title": "Gặp Gỡ Người Từ Các Nước Khác | BananaTalk",
+      "description": "Gặp gỡ người từ các nước khác và kết bạn quốc tế bằng cách trò chuyện. Mọi tin nhắn đều được dịch hai chiều, nên không ai phải giỏi trước."
+    },
+    "learnKorean": {
+      "title": "Học Tiếng Hàn Qua Trò Chuyện Với Người Bản Ngữ",
+      "description": "Học tiếng Hàn miễn phí bằng cách trò chuyện với người Hàn bản ngữ. Bạn viết bằng tiếng của mình, họ viết Hangul, gia sư AI giải thích 존댓말 và 반말."
+    },
+    "communities": {
+      "title": "Cộng Đồng Trao Đổi Ngôn Ngữ | BananaTalk",
+      "description": "Tham gia cộng đồng trao đổi ngôn ngữ trên BananaTalk: những nhóm thật cùng luyện tiếng Hàn, tiếng Tây Ban Nha, tiếng Nhật mỗi ngày, miễn phí."
     }
   },
   "notFound": {
@@ -1382,6 +1446,146 @@
       "page": "Trang {{page}}",
       "previous": "Trước",
       "next": "Tiếp theo"
+    }
+  },
+  "download": {
+    "title": "Tải BananaTalk",
+    "subtitle": "Trao đổi ngôn ngữ miễn phí với người bản ngữ của 137 ngôn ngữ, trên iPhone và Android.",
+    "free": "Miễn phí. Không cần thẻ.",
+    "scan": "Quét bằng camera điện thoại",
+    "qrAlt": "Mã QR để tải BananaTalk",
+    "reasons": {
+      "tutor": {
+        "title": "Gia sư AI trong mọi cuộc trò chuyện",
+        "body": "Sửa lỗi và giải thích ngay trên những tin nhắn bạn thật sự gửi đi."
+      },
+      "voice": {
+        "title": "Voice Rooms và cuộc gọi",
+        "body": "Luyện nói thành tiếng với người đang học tiếng của bạn ngay lúc này."
+      },
+      "translate": {
+        "title": "Dịch tức thì",
+        "body": "Bạn viết bằng tiếng của mình, họ đọc bằng tiếng của họ, và bạn học từ chính khác biệt đó."
+      }
+    }
+  },
+  "meet": {
+    "hero": {
+      "title": "Gặp gỡ người ở những đất nước khác",
+      "titleAccent": "và họ thật sự nhắn lại.",
+      "subtitle": "BananaTalk là nơi bạn kết bạn quốc tế bằng cách trò chuyện với người bản ngữ. Chọn một ngôn ngữ, chào một câu, và mọi tin nhắn đều đến nơi đã được dịch — không ai phải giỏi trước cả.",
+      "trust": "Gói miễn phí trọn đời · 137 ngôn ngữ · Mọi tin nhắn đều dịch hai chiều",
+      "demo": {
+        "1": {
+          "text": "Bora ver o pôr do sol no sábado?",
+          "translation": "Thứ Bảy đi ngắm hoàng hôn không?"
+        },
+        "2": {
+          "text": "Có chứ! Tháng 9 bên đó còn ấm không?",
+          "translation": "Sim! Ainda faz calor aí em setembro?"
+        }
+      },
+      "note": {
+        "label": "✦ DỊCH CẢ HAI CHIỀU",
+        "body": "Cô ấy viết tiếng Bồ Đào Nha còn bạn đọc bằng tiếng Việt. Bạn viết tiếng Việt còn cô ấy đọc bằng tiếng Bồ Đào Nha. Không ai phải đổi ngôn ngữ cả."
+      }
+    },
+    "howItWorks": {
+      "title": "Kết bạn ở đây chỉ mất ba bước",
+      "steps": {
+        "1": {
+          "title": "Chọn một ngôn ngữ, đừng chọn một trang cá nhân",
+          "body": "Chọn ngôn ngữ hoặc quốc gia bạn tò mò. Chúng tôi sẽ cho bạn thấy những người đang học tiếng của bạn — đây là trao đổi ngôn ngữ, nên cả hai đều nhận được gì đó."
+        },
+        "2": {
+          "title": "Chào bằng chính lời của bạn",
+          "body": "Cứ viết bằng ngôn ngữ bạn dùng để suy nghĩ. Nó đến với họ bằng tiếng của họ, ngay lập tức, nên tin nhắn đầu tiên không còn là phần khó nữa."
+        },
+        "3": {
+          "title": "Cứ nói chuyện tiếp",
+          "body": "Tin nhắn thoại, ảnh, Moments, cuộc gọi. Những cuộc trò chuyện ở lại là những cuộc trò chuyện sống lâu hơn cả việc luyện tập."
+        }
+      }
+    },
+    "features": {
+      "title": "Được tạo ra cho những cuộc trò chuyện không dừng lại"
+    },
+    "cta": {
+      "title": "Ngay lúc này có người ở một đất nước khác đang thức",
+      "subtitle": "Miễn phí để bắt đầu. Không cần thẻ, không đếm ngược dùng thử."
+    }
+  },
+  "learnKorean": {
+    "hero": {
+      "title": "Học tiếng Hàn bằng cách trò chuyện",
+      "titleAccent": "với chính người Hàn.",
+      "subtitle": "Trao đổi ngôn ngữ với người Hàn bản ngữ đang muốn học tiếng của bạn. Bạn thử viết bằng 한국어, họ trả lời bằng thứ tiếng Hàn người Hàn thật sự dùng, còn gia sư AI sửa chỗ sai cho riêng bạn.",
+      "trust": "Gói miễn phí trọn đời · Người Hàn bản ngữ · Gia sư AI 24/7",
+      "demo": {
+        "1": {
+          "text": "주말에 뭐 했어요?",
+          "translation": "Cuối tuần này bạn làm gì thế?"
+        },
+        "2": {
+          "text": "친구 만났다! 진짜 재미있었어",
+          "translation": "Tớ gặp bạn! Vui thật sự luôn"
+        }
+      },
+      "note": {
+        "label": "✦ GIA SƯ AI",
+        "body": "존댓말 và 반말: cô ấy hỏi bằng 했어요, dạng lịch sự. Bạn trả lời bằng 반말, dạng dành cho bạn thân. Giờ cứ đáp lại cùng dạng với cô ấy: 친구 만났어요! 진짜 재미있었어요."
+      }
+    },
+    "howItWorks": {
+      "title": "Vì sao trò chuyện giúp tiếng Hàn ở lại lâu",
+      "steps": {
+        "1": {
+          "title": "Thứ tiếng Hàn xuất hiện trong tin nhắn thật",
+          "body": "Sách giáo khoa dạy bạn 합니다. Đối tác của bạn gõ 했어요, ㅋㅋ và 헐 — thứ tiếng Hàn đang chờ bạn trong một cuộc trò chuyện thật."
+        },
+        "2": {
+          "title": "존댓말 và 반말, cảm được thay vì học thuộc",
+          "body": "Mức lịch sự là lựa chọn bạn phải đưa ra ở từng câu. Đọc cách người bản ngữ chọn sẽ nhanh hơn mọi bảng đuôi câu."
+        },
+        "3": {
+          "title": "Được sửa mà không phải ngượng",
+          "body": "Gia sư AI ghi chú lên tiếng Hàn của bạn ở nơi chỉ mình bạn thấy, nên buổi trao đổi ngôn ngữ không bao giờ thành bài kiểm tra. Đối tác chỉ thấy bạn đang cố gắng — và đó mới là điều khiến họ nhắn tiếp."
+        }
+      }
+    },
+    "features": {
+      "title": "Ba thứ sách giáo khoa không thể cho bạn"
+    },
+    "cta": {
+      "title": "Người Hàn đang học tiếng của bạn ngay lúc này",
+      "subtitle": "Miễn phí để bắt đầu. Không cần thẻ, không đếm ngược dùng thử."
+    }
+  },
+  "communities": {
+    "public": {
+      "title": "Cộng đồng trao đổi ngôn ngữ",
+      "intro": "Những nhóm thật bên trong BananaTalk, nơi mọi người cùng luyện một ngôn ngữ mỗi ngày. Tìm nhóm của bạn ở đây, rồi mở trong ứng dụng và bắt đầu trò chuyện.",
+      "members": "thành viên",
+      "join": "Tham gia trong ứng dụng",
+      "empty": {
+        "title": "Tuần nào cũng có cộng đồng mới",
+        "body": "Hiện chưa có gì để hiển thị ở đây. Tải ứng dụng và mọi cộng đồng sẽ xuất hiện ngay khi mở."
+      }
+    }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Đã xảy ra lỗi khi tải trang này",
+      "body": "Một phần của ứng dụng không tải được. Điều này thường xảy ra ngay sau khi cập nhật — tải lại trang sẽ khắc phục.",
+      "reload": "Tải lại"
+    }
+  },
+  "growth": {
+    "store": {
+      "appStore": "App Store",
+      "googlePlay": "Google Play",
+      "downloadOnThe": "Tải về trên",
+      "getItOn": "Tải trên"
     }
   }
 }

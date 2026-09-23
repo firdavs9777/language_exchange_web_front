@@ -11,7 +11,9 @@
       "pricing": "Prezzi",
       "contact": "Contatti",
       "communities": "Comunità",
-      "download": "Scarica l'App"
+      "download": "Scarica l'App",
+      "meet": "Conosci persone",
+      "learnKorean": "Impara il coreano"
     },
     "contactInfo": "Informazioni di Contatto",
     "address": "Seoul, Corea del Sud, Gangnam-gu",
@@ -982,7 +984,7 @@
       },
       "title": "Dillo male.",
       "titleAccent": "Ci pensiamo noi a tradurre.",
-      "subtitle": "Scrivi nella tua lingua, l'altra persona la legge nella sua. Tocca un messaggio per vedere come è stato detto davvero — è così che si impara.",
+      "subtitle": "Scambio linguistico gratuito con madrelingua. Scrivi nella tua lingua, loro la leggono nella loro, e impari dalla differenza.",
       "trust": "Livello gratis per sempre · 137 lingue · Tutor IA 24/7"
     },
     "sections": {
@@ -1016,11 +1018,52 @@
       "calls": {
         "title": "Chiamate vocali e video",
         "description": "Chiamate audio e video con un tocco con i tuoi partner linguistici."
+      },
+      "inApp": "Nell'app",
+      "items": {
+        "findPartner": {
+          "title": "Trova un partner",
+          "body": "L'abbinamento nasce dalla combinazione di lingue che vuoi davvero scambiare."
+        },
+        "chatTranslate": {
+          "title": "Una chat che traduce",
+          "body": "In entrambe le direzioni, dentro il messaggio, mentre scrivi."
+        },
+        "moments": {
+          "title": "Momenti",
+          "body": "Mostra com'è la tua giornata e fatti correggere dai madrelingua."
+        },
+        "aiTutor": {
+          "title": "Tutor IA",
+          "body": "Esercitati alle 3 di notte senza fare brutte figure."
+        },
+        "voiceRooms": {
+          "title": "Stanze vocali",
+          "body": "Entra in una stanza dal vivo e, se vuoi, limitati ad ascoltare."
+        },
+        "gatherings": {
+          "title": "Incontri",
+          "body": "Conosci persone vicino a te che stanno imparando la tua lingua."
+        }
       }
     },
     "howItWorks": {
       "title": "Tre passi per la tua prima conversazione",
-      "subtitle": "Niente numeri di telefono, niente spam — solo persone vere che vogliono imparare."
+      "subtitle": "Niente numeri di telefono, niente spam — solo persone vere che vogliono imparare.",
+      "steps": {
+        "1": {
+          "title": "Dicci cosa parli e cosa vuoi",
+          "body": "Scegli la tua lingua madre e quella che stai imparando. È da questa coppia che nascono gli abbinamenti."
+        },
+        "2": {
+          "title": "Trova qualcuno con cui valga la pena parlare",
+          "body": "Sfoglia chi sta imparando la tua lingua. Fai un saluto, oppure attacca subito discorso."
+        },
+        "3": {
+          "title": "Parla male, migliora in fretta",
+          "body": "Ogni messaggio viene tradotto in entrambe le direzioni e il tutor IA ti corregge senza che nessuno ti veda."
+        }
+      }
     },
     "steps": {
       "profile": {
@@ -1110,6 +1153,15 @@
       "AI tutor": "tutor IA",
       "forever tier": "livello gratuito",
       "learners": "studenti"
+    },
+    "marquee": {
+      "title": "Madrelingua di ogni lingua che vuoi imparare",
+      "caption": "137 lingue, e continuano a crescere"
+    },
+    "earlyAdopter": {
+      "badge": "Lanciato a dicembre 2025",
+      "title": "Sii tra i primi",
+      "body": "BananaTalk è appena nato. Le persone che incontri qui sono quelle che stanno costruendo ciò che questa community diventerà — un motivo per arrivare presto migliore di qualsiasi recensione."
     }
   },
   "vip": {
@@ -1177,6 +1229,18 @@
     "dataDeletion": {
       "title": "Richiesta di Cancellazione Dati | BananaTalk",
       "description": "Come eliminare il tuo account BananaTalk e i tuoi dati personali, e cosa succede dopo la richiesta."
+    },
+    "meet": {
+      "title": "Conosci persone di altri paesi | BananaTalk",
+      "description": "Conosci persone di altri paesi e fatti amici in tutto il mondo chattando. Ogni messaggio è tradotto in entrambe le direzioni: non serve essere fluenti."
+    },
+    "learnKorean": {
+      "title": "Impara il coreano chattando con madrelingua",
+      "description": "Impara il coreano gratis chattando con madrelingua coreani. Tu scrivi in italiano, loro in hangul, e un tutor IA ti spiega 존댓말 vs. 반말 strada facendo."
+    },
+    "communities": {
+      "title": "Community di scambio linguistico | BananaTalk",
+      "description": "Entra nelle community di scambio linguistico di BananaTalk: gruppi veri che praticano insieme coreano, spagnolo, giapponese e altro, gratis, ogni giorno."
     }
   },
   "notFound": {
@@ -1382,6 +1446,146 @@
       "page": "Pagina {{page}}",
       "previous": "Precedente",
       "next": "Successiva"
+    }
+  },
+  "download": {
+    "title": "Scarica BananaTalk",
+    "subtitle": "Scambio linguistico gratuito con madrelingua in 137 lingue, su iPhone e Android.",
+    "free": "Gratis. Senza carta.",
+    "scan": "Inquadra con la fotocamera del telefono",
+    "qrAlt": "Codice QR per scaricare BananaTalk",
+    "reasons": {
+      "tutor": {
+        "title": "Un tutor IA in ogni chat",
+        "body": "Correzioni e spiegazioni sui messaggi che mandi davvero."
+      },
+      "voice": {
+        "title": "Stanze vocali e chiamate",
+        "body": "Esercitati ad alta voce con chi sta imparando la tua lingua proprio adesso."
+      },
+      "translate": {
+        "title": "Traduzione istantanea",
+        "body": "Scrivi nella tua lingua, loro la leggono nella loro, e impari dalla differenza."
+      }
+    }
+  },
+  "meet": {
+    "hero": {
+      "title": "Conosci persone di altri paesi",
+      "titleAccent": "che ti rispondono davvero.",
+      "subtitle": "BananaTalk è il posto dove ti fai amici in tutto il mondo parlando con madrelingua. Scegli una lingua, saluta, e ogni messaggio arriva tradotto — così nessuno dei due deve già essere fluente.",
+      "trust": "Livello gratis per sempre · 137 lingue · Ogni messaggio tradotto in entrambe le direzioni",
+      "demo": {
+        "1": {
+          "text": "Bora ver o pôr do sol no sábado?",
+          "translation": "Andiamo a vedere il tramonto sabato?"
+        },
+        "2": {
+          "text": "Sì! Fa ancora caldo lì a settembre?",
+          "translation": "Sim! Ainda faz calor aí em setembro?"
+        }
+      },
+      "note": {
+        "label": "✦ TRADOTTO IN ENTRAMBE LE DIREZIONI",
+        "body": "Lei ha scritto in portoghese e tu hai letto in italiano. Tu hai scritto in italiano e lei ha letto in portoghese. Nessuno dei due ha dovuto cambiare lingua."
+      }
+    },
+    "howItWorks": {
+      "title": "Farsi un amico qui richiede tre passi",
+      "steps": {
+        "1": {
+          "title": "Scegli una lingua, non un profilo",
+          "body": "Scegli la lingua o il paese che ti incuriosisce. Ti mostriamo le persone che stanno già imparando la tua — è uno scambio linguistico, quindi ci guadagnate entrambi."
+        },
+        "2": {
+          "title": "Saluta con parole tue",
+          "body": "Scrivi nella lingua in cui pensi. Arriva nella loro, all'istante: il primo messaggio non è mai la parte difficile."
+        },
+        "3": {
+          "title": "Continuate a parlare",
+          "body": "Messaggi vocali, foto, Momenti, chiamate. Le conversazioni che restano sono quelle che sopravvivono all'esercizio."
+        }
+      }
+    },
+    "features": {
+      "title": "Fatto per le conversazioni che non si fermano"
+    },
+    "cta": {
+      "title": "In un altro paese c'è qualcuno sveglio proprio ora",
+      "subtitle": "Gratis per iniziare. Nessuna carta, nessun conto alla rovescia di prova."
+    }
+  },
+  "learnKorean": {
+    "hero": {
+      "title": "Impara il coreano chattando",
+      "titleAccent": "con veri coreani.",
+      "subtitle": "Scambia lingue con madrelingua coreani che in cambio vogliono la tua. Tu ci provi in 한국어, loro rispondono nel coreano che si usa davvero, e il tutor IA corregge quello che hai sbagliato — in privato.",
+      "trust": "Livello gratis per sempre · Madrelingua coreani · Tutor IA 24/7",
+      "demo": {
+        "1": {
+          "text": "주말에 뭐 했어요?",
+          "translation": "Che cosa hai fatto questo weekend?"
+        },
+        "2": {
+          "text": "친구 만났다! 진짜 재미있었어",
+          "translation": "Ho visto un amico! È stato davvero divertente"
+        }
+      },
+      "note": {
+        "label": "✦ TUTOR IA",
+        "body": "존댓말 vs. 반말: lei ha chiesto con 했어요, la forma di cortesia. Tu hai risposto in 반말, che si usa con gli amici stretti. Per ora mettiti in pari con lei: 친구 만났어요! 진짜 재미있었어요."
+      }
+    },
+    "howItWorks": {
+      "title": "Perché il coreano ti resta quando chatti",
+      "steps": {
+        "1": {
+          "title": "Il coreano che compare nelle chat vere",
+          "body": "Il tuo libro di testo insegna 합니다. Il tuo partner scrive 했어요, ㅋㅋ e 헐 — il coreano che ti aspetta in una conversazione vera."
+        },
+        "2": {
+          "title": "존댓말 e 반말, sentiti invece che memorizzati",
+          "body": "La cortesia è una scelta che fai in ogni frase. Leggere le scelte di un madrelingua te la insegna più in fretta di qualsiasi tabella di desinenze."
+        },
+        "3": {
+          "title": "Corretto senza l'imbarazzo",
+          "body": "Il tutor IA segna il tuo coreano dove puoi vederlo solo tu, così lo scambio linguistico non diventa mai un esame. Il tuo partner vede solo che ci stai provando, ed è proprio questo che lo fa continuare a risponderti."
+        }
+      }
+    },
+    "features": {
+      "title": "Tre cose che un libro di testo non può darti"
+    },
+    "cta": {
+      "title": "In questo momento dei coreani stanno imparando la tua lingua",
+      "subtitle": "Gratis per iniziare. Nessuna carta, nessun conto alla rovescia di prova."
+    }
+  },
+  "communities": {
+    "public": {
+      "title": "Community di scambio linguistico",
+      "intro": "Gruppi veri dentro BananaTalk, dove ogni giorno si pratica insieme una lingua. Trova il tuo qui, poi aprilo nell'app e inizia a parlare.",
+      "members": "membri",
+      "join": "Entra nell'app",
+      "empty": {
+        "title": "Ogni settimana aprono nuove community",
+        "body": "Qui non c'è ancora nulla da mostrare. Scarica l'app: ogni community compare nel momento in cui apre."
+      }
+    }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Si è verificato un errore durante il caricamento di questa pagina",
+      "body": "Una parte dell'app non è stata caricata. Di solito succede subito dopo un aggiornamento: ricaricare dovrebbe risolvere.",
+      "reload": "Ricarica"
+    }
+  },
+  "growth": {
+    "store": {
+      "appStore": "App Store",
+      "googlePlay": "Google Play",
+      "downloadOnThe": "Scarica su",
+      "getItOn": "Disponibile su"
     }
   }
 }

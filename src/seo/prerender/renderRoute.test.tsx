@@ -50,6 +50,39 @@ it("shows the curated stat values, not a count-up starting at zero", async () =>
   expect(out.html).toContain(">18<");
 });
 
+// The download page decides its store and draws its QR after mount; what the
+// crawler gets is the readable page with the box already reserved.
+it("prerenders /download with the QR box reserved and the app's JSON-LD", async () => {
+  const out = await renderRoute("/download", { prefetch: false });
+  expect(out.html).toContain('data-testid="download-qr"');
+  expect(out.html).toContain("Download BananaTalk");
+  expect(out.html).toContain("utm_campaign=download-page");
+  expect(out.head).toContain("SoftwareApplication");
+  expect(out.head).toContain("Free, VIP from $9.99");
+});
+
+// The two landing pages are compositions of homepage parts, so what is worth
+// asserting here is that their own copy -- the phrase each page targets -- is
+// in the crawler's HTML, under the right canonical.
+it("prerenders /meet with its own headline and canonical", async () => {
+  const out = await renderRoute("/meet", { prefetch: false });
+  expect(out.html).toContain("Meet people from other countries");
+  expect(out.html).toContain("utm_campaign=meet");
+  expect((out.html.match(/<h1[\s>]/g) || []).length).toBe(1);
+  expect(out.head).toContain('href="https://banatalk.com/meet"');
+  expect(out.head).not.toContain("noindex");
+});
+
+it("prerenders /learn-korean with Hangul and the tutor note in the DOM", async () => {
+  const out = await renderRoute("/learn-korean", { prefetch: false });
+  expect(out.html).toContain("Learn Korean by chatting");
+  expect(out.html).toContain("주말에 뭐 했어요?");
+  expect(out.html).toContain("존댓말");
+  expect(out.html).toContain("utm_campaign=learn-korean");
+  expect((out.html.match(/<h1[\s>]/g) || []).length).toBe(1);
+  expect(out.head).toContain('href="https://banatalk.com/learn-korean"');
+});
+
 it("logs a warning per failed prefetch instead of swallowing the failure", async () => {
   const log = jest.fn();
   const out = await renderRoute("/", { prefetch: true, fetchTimeoutMs: 2000, log });
@@ -76,4 +109,27 @@ it("returns the api slice state so the client can hydrate from it", async () => 
   // which are client-only, must never cross the wire.
   expect(api.queries).toEqual({});
   expect(api.subscriptions).toEqual({});
+});
+
+// /communities is the first indexed page behind an auth-gated route: the
+// logged-out branch is what a crawler (and the prerender, which has no
+// localStorage) must get, and it must render without any data at all.
+it("prerenders /communities as the public page, falling back to its empty state", async () => {
+  const out = await renderRoute("/communities", { prefetch: false });
+  expect(out.status).toBe(200);
+  expect((out.html.match(/<h1[\s>]/g) || []).length).toBe(1);
+  expect(out.html).toContain("Language exchange communities");
+  expect(out.html).toContain("utm_campaign=communities");
+  expect(out.head).toContain('href="https://banatalk.com/communities"');
+  expect(out.head).not.toContain("noindex");
+});
+
+it("logs the failed /communities prefetch, still renders, and transfers the store state", async () => {
+  const { apiSlice } = require("../../store/slices/apiSlice");
+  const log = jest.fn();
+  const out = await renderRoute("/communities", { prefetch: true, fetchTimeoutMs: 2000, log });
+  expect(log).toHaveBeenCalledTimes(1);
+  expect(log.mock.calls.every(([m]: [string]) => /prefetch for \/communities failed/.test(m))).toBe(true);
+  expect((out.html.match(/<h1[\s>]/g) || []).length).toBe(1);
+  expect(typeof out.state[apiSlice.reducerPath].queries).toBe("object");
 });

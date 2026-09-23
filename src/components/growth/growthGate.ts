@@ -5,6 +5,8 @@
 // interrupted, they are the easiest thing here to get wrong, and they are
 // painful to verify through a rendered component.
 
+import { STORE_HOSTS } from "./storeUrls";
+
 export type GateKey = "download-popup" | "promo-carousel" | "sticky-banner";
 
 export interface GateContext {
@@ -24,7 +26,10 @@ export const SUPPRESSION_DAYS: Record<GateKey, number> = {
 /** Below this width the sticky banner owns the screen and the popup stands down. */
 export const MOBILE_MAX_WIDTH = 768;
 
-const APP_STORE_HOSTS = ["apps.apple.com", "play.google.com", "itunes.apple.com"];
+// The two live hostnames come from StoreLink, the one file allowed to spell
+// them out; itunes.apple.com is the legacy redirect, which is not a link we
+// ever emit but is still a referrer worth honouring.
+const APP_STORE_HOSTS = STORE_HOSTS.concat(["itunes.apple.com"]);
 const EXCLUDED_PATHS = ["/register", "/login"];
 const DAY_MS = 24 * 60 * 60 * 1000;
 

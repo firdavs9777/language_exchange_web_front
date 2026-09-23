@@ -11,7 +11,9 @@
       "pricing": "Harga",
       "contact": "Kontak",
       "communities": "Komunitas",
-      "download": "Unduh Aplikasi"
+      "download": "Unduh Aplikasi",
+      "meet": "Temui orang baru",
+      "learnKorean": "Belajar bahasa Korea"
     },
     "contactInfo": "Info Kontak",
     "address": "Seoul, Korea Selatan, Gangnam-gu",
@@ -1001,7 +1003,7 @@
       },
       "title": "Ucapkan saja meski salah.",
       "titleAccent": "Kami yang terjemahkan.",
-      "subtitle": "Ketik dalam bahasamu, mereka membaca dalam bahasa mereka. Ketuk pesan apa pun untuk melihat cara pengucapan yang sebenarnya — begitulah cara belajar.",
+      "subtitle": "Pertukaran bahasa gratis dengan penutur asli. Kamu menulis dalam bahasamu, mereka membacanya dalam bahasa mereka, dan kamu belajar dari bedanya.",
       "trust": "Paket gratis selamanya · 137 bahasa · Tutor AI 24/7"
     },
     "sections": {
@@ -1035,11 +1037,52 @@
       "community": {
         "title": "Komunitas sungguhan",
         "description": "Jelajahi mitra berdasarkan bahasa ibu, lihat siapa yang online, dan bagikan momen dengan orang yang belajar bahasa yang sama."
+      },
+      "inApp": "Di aplikasi",
+      "items": {
+        "findPartner": {
+          "title": "Temukan partner",
+          "body": "Dipasangkan lewat pasangan bahasa yang memang ingin kamu tukar."
+        },
+        "chatTranslate": {
+          "title": "Chat yang menerjemahkan",
+          "body": "Dua arah, langsung di pesannya, sambil kamu mengetik."
+        },
+        "moments": {
+          "title": "Moments",
+          "body": "Bagikan keseharianmu; dapatkan koreksi dari penutur asli."
+        },
+        "aiTutor": {
+          "title": "AI Tutor",
+          "body": "Latihan jam 3 pagi tanpa perlu malu."
+        },
+        "voiceRooms": {
+          "title": "Voice Rooms",
+          "body": "Masuk ke room langsung dan cukup mendengarkan, kalau mau."
+        },
+        "gatherings": {
+          "title": "Gatherings",
+          "body": "Temui orang-orang di dekatmu yang sedang belajar bahasamu."
+        }
       }
     },
     "howItWorks": {
       "title": "Tiga langkah menuju percakapan pertamamu",
-      "subtitle": "Tanpa nomor telepon, tanpa spam — hanya orang sungguhan yang ingin belajar."
+      "subtitle": "Tanpa nomor telepon, tanpa spam — hanya orang sungguhan yang ingin belajar.",
+      "steps": {
+        "1": {
+          "title": "Beri tahu kami bahasamu dan apa yang kamu mau",
+          "body": "Pilih bahasa ibumu dan bahasa yang sedang kamu pelajari. Pasangan itulah yang kami pakai untuk mencarikan partner."
+        },
+        "2": {
+          "title": "Cari orang yang seru diajak ngobrol",
+          "body": "Lihat partner yang sedang belajar bahasamu. Lambaikan tangan, atau langsung mulai percakapan."
+        },
+        "3": {
+          "title": "Ngomong berantakan, maju cepat",
+          "body": "Setiap pesan diterjemahkan dua arah, dan AI Tutor mengoreksimu tanpa ada yang melihat."
+        }
+      }
     },
     "steps": {
       "profile": {
@@ -1129,6 +1172,15 @@
       "AI tutor": "tutor AI",
       "forever tier": "paket gratis",
       "learners": "pelajar"
+    },
+    "marquee": {
+      "title": "Penutur asli dari setiap bahasa yang ingin kamu pelajari",
+      "caption": "137 bahasa, dan terus bertambah"
+    },
+    "earlyAdopter": {
+      "badge": "Diluncurkan Desember 2025",
+      "title": "Jadilah salah satu yang pertama",
+      "body": "BananaTalk masih baru. Orang-orang yang kamu temui di sini adalah yang sedang membentuk komunitas ini — dan itu alasan untuk gabung lebih awal yang jauh lebih bagus daripada ulasan mana pun."
     }
   },
   "vip": {
@@ -1209,6 +1261,18 @@
     "dataDeletion": {
       "title": "Permintaan Penghapusan Data | BananaTalk",
       "description": "Cara menghapus akun BananaTalk dan data pribadimu, serta yang terjadi setelah kamu mengajukan permintaan."
+    },
+    "meet": {
+      "title": "Kenalan dengan Orang dari Negara Lain | BananaTalk",
+      "description": "Kenalan dengan orang dari negara lain dan punya teman internasional lewat chat. Setiap pesan diterjemahkan dua arah, jadi tidak ada yang harus lancar dulu."
+    },
+    "learnKorean": {
+      "title": "Belajar Bahasa Korea Lewat Chat dengan Penutur Asli",
+      "description": "Belajar bahasa Korea gratis lewat chat dengan penutur asli Korea. Kamu menulis bahasamu, mereka menulis Hangul, dan AI Tutor menjelaskan 존댓말 vs 반말."
+    },
+    "communities": {
+      "title": "Komunitas Pertukaran Bahasa | BananaTalk",
+      "description": "Gabung komunitas pertukaran bahasa di BananaTalk: grup nyata yang latihan bahasa Korea, Spanyol, Jepang, dan lainnya bersama, gratis, setiap hari."
     }
   },
   "notFound": {
@@ -1382,6 +1446,146 @@
       "page": "Halaman {{page}}",
       "previous": "Sebelumnya",
       "next": "Berikutnya"
+    }
+  },
+  "download": {
+    "title": "Download BananaTalk",
+    "subtitle": "Pertukaran bahasa gratis dengan penutur asli dalam 137 bahasa, di iPhone dan Android.",
+    "free": "Gratis. Tanpa kartu.",
+    "scan": "Pindai dengan kamera ponselmu",
+    "qrAlt": "Kode QR untuk download BananaTalk",
+    "reasons": {
+      "tutor": {
+        "title": "AI Tutor di setiap chat",
+        "body": "Koreksi dan penjelasan untuk pesan yang benar-benar kamu kirim."
+      },
+      "voice": {
+        "title": "Voice Rooms dan panggilan",
+        "body": "Latihan bicara langsung dengan orang yang sedang belajar bahasamu sekarang."
+      },
+      "translate": {
+        "title": "Terjemahan instan",
+        "body": "Kamu menulis dalam bahasamu, mereka membacanya dalam bahasa mereka, dan kamu belajar dari bedanya."
+      }
+    }
+  },
+  "meet": {
+    "hero": {
+      "title": "Kenalan dengan orang dari negara lain",
+      "titleAccent": "yang benar-benar membalas.",
+      "subtitle": "BananaTalk adalah tempat kamu punya teman dari luar negeri lewat obrolan dengan penutur asli. Pilih bahasa, sapa duluan, dan setiap pesan datang sudah diterjemahkan — jadi tidak ada yang harus lancar lebih dulu.",
+      "trust": "Paket gratis selamanya · 137 bahasa · Setiap pesan diterjemahkan dua arah",
+      "demo": {
+        "1": {
+          "text": "Bora ver o pôr do sol no sábado?",
+          "translation": "Mau lihat matahari terbenam hari Sabtu?"
+        },
+        "2": {
+          "text": "Boleh! Di sana masih hangat nggak bulan September?",
+          "translation": "Sim! Ainda faz calor aí em setembro?"
+        }
+      },
+      "note": {
+        "label": "✦ DITERJEMAHKAN DUA ARAH",
+        "body": "Dia menulis dalam bahasa Portugis dan kamu membacanya dalam bahasa Indonesia. Kamu menulis dalam bahasa Indonesia dan dia membacanya dalam bahasa Portugis. Tidak ada yang perlu ganti bahasa."
+      }
+    },
+    "howItWorks": {
+      "title": "Bikin teman di sini cuma tiga langkah",
+      "steps": {
+        "1": {
+          "title": "Pilih bahasa, bukan profil",
+          "body": "Pilih bahasa atau negara yang bikin kamu penasaran. Kami tunjukkan orang-orang yang sudah belajar bahasamu — ini pertukaran bahasa, jadi kalian berdua sama-sama dapat."
+        },
+        "2": {
+          "title": "Sapa pakai kata-katamu sendiri",
+          "body": "Tulis dalam bahasa yang kamu pakai berpikir. Pesannya sampai dalam bahasa mereka, seketika, jadi pesan pertama tidak pernah jadi bagian yang sulit."
+        },
+        "3": {
+          "title": "Terus ngobrol",
+          "body": "Voice note, foto, Moments, panggilan. Percakapan yang bertahan adalah yang umurnya lebih panjang dari sesi latihannya."
+        }
+      }
+    },
+    "features": {
+      "title": "Dibuat untuk percakapan yang terus jalan"
+    },
+    "cta": {
+      "title": "Ada orang di negara lain yang sedang bangun sekarang",
+      "subtitle": "Gratis untuk memulai. Tanpa kartu, tanpa hitung mundur masa coba."
+    }
+  },
+  "learnKorean": {
+    "hero": {
+      "title": "Belajar bahasa Korea sambil chatting",
+      "titleAccent": "dengan orang Korea asli.",
+      "subtitle": "Tukar bahasa dengan penutur asli Korea yang juga ingin belajar bahasamu. Kamu coba pakai 한국어, mereka menjawab dengan bahasa Korea yang benar-benar dipakai sehari-hari, dan AI Tutor membetulkan yang salah — diam-diam, cuma kamu yang lihat.",
+      "trust": "Paket gratis selamanya · Penutur asli Korea · AI Tutor 24/7",
+      "demo": {
+        "1": {
+          "text": "주말에 뭐 했어요?",
+          "translation": "Akhir pekan kemarin kamu ngapain?"
+        },
+        "2": {
+          "text": "친구 만났다! 진짜 재미있었어",
+          "translation": "Ketemu teman! Seru banget"
+        }
+      },
+      "note": {
+        "label": "✦ AI TUTOR",
+        "body": "존댓말 vs 반말: dia bertanya pakai 했어요, bentuk sopan. Kamu menjawab dengan 반말, yang dipakai ke teman dekat. Ikuti dulu gayanya: 친구 만났어요! 진짜 재미있었어요."
+      }
+    },
+    "howItWorks": {
+      "title": "Kenapa bahasa Korea nempel kalau lewat chat",
+      "steps": {
+        "1": {
+          "title": "Bahasa Korea yang muncul di chat sungguhan",
+          "body": "Buku pelajaranmu mengajarkan 합니다. Partnermu mengetik 했어요, ㅋㅋ dan 헐 — bahasa Korea yang benar-benar menunggumu di percakapan nyata."
+        },
+        "2": {
+          "title": "존댓말 dan 반말, dirasakan bukan dihafalkan",
+          "body": "Kesopanan adalah pilihan yang kamu ambil di setiap kalimat. Membaca pilihan penutur asli mengajarkannya jauh lebih cepat daripada tabel akhiran mana pun."
+        },
+        "3": {
+          "title": "Dikoreksi tanpa malu",
+          "body": "AI Tutor menandai bahasa Koreamu di tempat yang cuma kamu yang bisa lihat, jadi pertukaran bahasa tidak pernah berubah jadi ujian. Partnermu cuma melihat kamu berusaha — dan justru itu yang bikin dia terus membalas."
+        }
+      }
+    },
+    "features": {
+      "title": "Tiga hal yang tidak bisa diberikan buku pelajaran"
+    },
+    "cta": {
+      "title": "Orang Korea sedang belajar bahasamu sekarang",
+      "subtitle": "Gratis untuk memulai. Tanpa kartu, tanpa hitung mundur masa coba."
+    }
+  },
+  "communities": {
+    "public": {
+      "title": "Komunitas pertukaran bahasa",
+      "intro": "Grup nyata di dalam BananaTalk, tempat orang-orang latihan satu bahasa bareng setiap hari. Temukan grupmu di sini, lalu buka di aplikasi dan mulai ngobrol.",
+      "members": "anggota",
+      "join": "Gabung di aplikasi",
+      "empty": {
+        "title": "Komunitas baru dibuka setiap minggu",
+        "body": "Belum ada yang bisa ditampilkan di sini. Download aplikasinya dan setiap komunitas langsung muncul begitu dibuka."
+      }
+    }
+  },
+  "errors": {
+    "chunk": {
+      "title": "Terjadi kesalahan saat memuat halaman ini",
+      "body": "Sebagian aplikasi gagal dimuat. Ini biasanya terjadi tepat setelah pembaruan — memuat ulang biasanya sudah cukup.",
+      "reload": "Muat ulang"
+    }
+  },
+  "growth": {
+    "store": {
+      "appStore": "App Store",
+      "googlePlay": "Google Play",
+      "downloadOnThe": "Unduh di",
+      "getItOn": "Dapatkan di"
     }
   }
 }
