@@ -23,6 +23,7 @@ import MomentReactionRow from "./actions/MomentReactionRow";
 import MomentVideoPlayer from "./media/MomentVideoPlayer";
 import VoiceNotePlayer from "./media/VoiceNotePlayer";
 import GradientMomentCard from "./media/GradientMomentCard";
+import TranslatableText from "./TranslatableText";
 import AdUnit from "../ads/AdUnit";
 import { AD_SLOTS } from "../ads/adsenseConfig";
 
@@ -40,7 +41,9 @@ import {
   useShareMomentMutation,
   useSaveMomentMutation,
   useUnsaveMomentMutation,
+  useTranslateMomentMutation,
 } from "../../store/slices/momentsSlice";
+import { useTargetLanguage } from "../../hooks/useTargetLanguage";
 
 // Types (updated to match the new MomentType interface)
 interface User {
@@ -368,6 +371,8 @@ const MomentDetail: React.FC = () => {
   const [saveMoment] = useSaveMomentMutation();
   const [unsaveMoment] = useUnsaveMomentMutation();
   const [addComment] = useAddCommentMutation();
+  const [translateMoment] = useTranslateMomentMutation();
+  const targetLanguage = useTargetLanguage();
 
   const {
     data: commentsData,
@@ -466,6 +471,28 @@ const MomentDetail: React.FC = () => {
   const handleGoBack = useCallback(() => {
     navigate('/moments');
   }, [navigate]);
+
+  // Translate-on-tap for the moment body (the comments get their own in the
+  // comment work). The server answers with { success, data: { language,
+  // translatedText, translatedAt }, cached } -- no source language, so
+  // TranslatableText infers "already in your language" from unchanged text.
+  const handleTranslateBody = useCallback(async () => {
+    const res: any = await translateMoment({
+      momentId: momentId || "",
+      targetLanguage,
+    }).unwrap();
+    return { translatedText: (res && res.data && res.data.translatedText) || "" };
+  }, [translateMoment, momentId, targetLanguage]);
+
+  // Same sign-in prompt the like button shows when logged out.
+  const handleRequireLogin = useCallback(() => {
+    toast.error(t("moments_section.moment_login_error"), {
+      autoClose: 3000,
+      hideProgressBar: false,
+      theme: "dark",
+      transition: Bounce,
+    });
+  }, [t]);
 
   // Share handled by the shared <ShareButton> component (uses shareUrl +
   // shareContent), rendered in the action bar below.
@@ -710,9 +737,14 @@ const MomentDetail: React.FC = () => {
               </h1>
             )}
             {momentDetails.description && (
-              <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 whitespace-pre-wrap break-words">
-                {momentDetails.description}
-              </p>
+              <TranslatableText
+                as="p"
+                className="text-gray-700 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6"
+                text={momentDetails.description}
+                onTranslate={handleTranslateBody}
+                isLoggedIn={Boolean(userId)}
+                onRequireLogin={handleRequireLogin}
+              />
             )}
 
             {/* Enhanced metadata display */}

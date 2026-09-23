@@ -19,7 +19,10 @@ import {
   useShareMomentMutation,
   useSaveMomentMutation,
   useUnsaveMomentMutation,
+  useTranslateMomentMutation,
 } from "../../store/slices/momentsSlice";
+import { useTargetLanguage } from "../../hooks/useTargetLanguage";
+import TranslatableText from "./TranslatableText";
 import MomentReactionRow from "./actions/MomentReactionRow";
 import ShareButton from "../linking/ShareButton";
 import MomentVideoPlayer from "./media/MomentVideoPlayer";
@@ -106,6 +109,8 @@ const SingleMoment: React.FC<MomentProps> = ({
   const [shareMoment] = useShareMomentMutation();
   const [saveMoment] = useSaveMomentMutation();
   const [unsaveMoment] = useUnsaveMomentMutation();
+  const [translateMoment] = useTranslateMomentMutation();
+  const targetLanguage = useTargetLanguage();
   const isLiking = false;
   const isDisliking = false;
 
@@ -264,6 +269,28 @@ const SingleMoment: React.FC<MomentProps> = ({
     [userId, _id, currentLikeCount, isLoadingLike, navigate, refetch]
   );
 
+  // Translate-on-tap for the moment body. The server answers with
+  // { success, data: { language, translatedText, translatedAt }, cached } --
+  // there is no source language, so TranslatableText infers "already in your
+  // language" from the text coming back unchanged.
+  const handleTranslateBody = useCallback(async () => {
+    const res: any = await translateMoment({
+      momentId: _id,
+      targetLanguage,
+    }).unwrap();
+    return { translatedText: (res && res.data && res.data.translatedText) || "" };
+  }, [translateMoment, _id, targetLanguage]);
+
+  // Same sign-in prompt the like button shows when logged out.
+  const handleRequireLogin = useCallback(() => {
+    toast.error(t("moments_section.moment_login_error"), {
+      autoClose: 3000,
+      hideProgressBar: false,
+      theme: "colored",
+      transition: Bounce,
+    });
+  }, [t]);
+
   const formatDate = (dateString: string): string => {
     return moment(dateString).fromNow();
   };
@@ -363,10 +390,19 @@ const SingleMoment: React.FC<MomentProps> = ({
 
           {description && (
             <div className="text-gray-800 text-xs xs:text-sm sm:text-base md:text-lg leading-normal">
-              <p className="whitespace-pre-wrap break-words no-underline">
-                {displayDescription}
-                {shouldTruncateDescription && !showFullDescription && "..."}
-              </p>
+              {/* Tapping the body translates the moment into the viewer's UI
+                  language, the way the app does. When the body is truncated
+                  the server still translates the whole moment, so the
+                  translated line can be longer than the preview. */}
+              <TranslatableText
+                as="p"
+                text={`${displayDescription}${
+                  shouldTruncateDescription && !showFullDescription ? "..." : ""
+                }`}
+                onTranslate={handleTranslateBody}
+                isLoggedIn={Boolean(userId)}
+                onRequireLogin={handleRequireLogin}
+              />
 
               {shouldTruncateDescription && (
                 <button
