@@ -31,12 +31,14 @@ const MANIFEST = path.join(BUILD, "asset-manifest.json");
  *   - moment, iso-639-1's language table and react-icons, all pulled in by
  *     the *prerendered* /moments feed, which cannot be lazy.
  *
- * So the assertion is the measured total + 5% (559.6 * 1.05 = 587.6): a
- * ratchet against regression rather than the target. Lower it when the locale
- * bundles start loading on demand and when Bootstrap goes -- those two moves,
- * not more code splitting, are what gets this near 150 KB.
+ * So the assertion is the measured total + 5%: a ratchet against regression
+ * rather than the target. Re-baselined once already in Phase B: the 90 new
+ * marketing strings in 18 locales added ~45 KB gzipped to main.js (553.0 JS +
+ * 57.1 CSS = 610.1 * 1.05 = 640.6). Lower it when the locale bundles start
+ * loading on demand and when Bootstrap goes -- those two moves, not more code
+ * splitting, are what gets this near 150 KB.
  */
-export const BUDGET_KB = 588;
+export const BUDGET_KB = 641;
 
 const readGzipKb = (assetPath: string): number => {
   const file = path.join(BUILD, assetPath.replace(/^\//, ""));
