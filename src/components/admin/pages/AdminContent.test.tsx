@@ -43,6 +43,19 @@ const CLUBS = {
   pagination: { total: 2, count: 2 },
 };
 
+/** A full page of clubs, for the pagination tests that need `rows.length === LIMIT`. */
+const fullClubPage = (n = 20) =>
+  Array.from({ length: n }, (_, i) => ({
+    _id: `page-club-${i}`,
+    name: `Club ${i}`,
+    language: "en",
+    languageLabel: "English",
+    memberCount: 10,
+    status: "active",
+    openReports: 0,
+    createdAt: "2026-09-01T00:00:00.000Z",
+  }));
+
 const GATHERINGS = {
   data: [
     {
@@ -121,14 +134,26 @@ it("does not send a reported filter by default", () => {
   expect(lastCall.reported).toBeFalsy();
 });
 
-it("opens the reason dialog for Archive and confirms with the mutation", async () => {
+it("opens the confirm dialog for Archive and confirms with the mutation", async () => {
   render(<AdminContent />);
   fireEvent.click(screen.getAllByRole("button", { name: "Archive" })[0]);
-  expect(screen.getByTestId("reason-dialog")).toBeInTheDocument();
-  fireEvent.change(screen.getByTestId("reason-input"), { target: { value: "spam" } });
-  fireEvent.click(screen.getByTestId("reason-confirm"));
+  expect(screen.getByTestId("confirm-dialog")).toBeInTheDocument();
+  expect(screen.getByTestId("confirm-dialog-confirm")).toBeDisabled();
+  fireEvent.change(screen.getByTestId("confirm-dialog-reason"), { target: { value: "spam" } });
+  expect(screen.getByTestId("confirm-dialog-confirm")).not.toBeDisabled();
+  fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
   expect(archiveTrigger).toHaveBeenCalledWith({ id: "c1", archived: true, reason: "spam" });
-  await waitFor(() => expect(screen.queryByTestId("reason-dialog")).not.toBeInTheDocument());
+  await waitFor(() => expect(screen.queryByTestId("confirm-dialog")).not.toBeInTheDocument());
+});
+
+it("cancels a gathering through the confirm dialog", async () => {
+  render(<AdminContent />);
+  fireEvent.click(screen.getByRole("tab", { name: "Gatherings" }));
+  fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+  fireEvent.change(screen.getByTestId("confirm-dialog-reason"), { target: { value: "abuse" } });
+  fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
+  expect(cancelTrigger).toHaveBeenCalledWith({ id: "g1", reason: "abuse" });
+  await waitFor(() => expect(screen.queryByTestId("confirm-dialog")).not.toBeInTheDocument());
 });
 
 it("shows Restore for an already-archived club", () => {
@@ -146,14 +171,27 @@ it("hides the cancel action for an already-cancelled gathering", () => {
   expect(rows[1].querySelector("button")).toBeNull();
 });
 
-it("derives hasMore from page and total rather than reading a backend flag", () => {
-  mockClubs.mockReturnValue(ok({ data: CLUBS.data, pagination: { total: 45, count: 20 } }));
+it("derives hasMore from a full page and total rather than reading a backend flag", () => {
+  mockClubs.mockReturnValue(ok({ data: fullClubPage(20), pagination: { total: 45, count: 20 } }));
   render(<AdminContent />);
   expect(screen.getByTestId("data-table-next")).not.toBeDisabled();
 });
 
 it("disables Next when the current page already covers the total", () => {
   render(<AdminContent />);
+  expect(screen.getByTestId("data-table-next")).toBeDisabled();
+});
+
+it("disables Next on a short reported-only page even when total says there is more", () => {
+  // The backend's `total` ignores the `reported` filter (it counts the
+  // unfiltered match, then filters the current page in memory), so a
+  // reported-only view can return far fewer than LIMIT rows while `total`
+  // still looks big. A short page must never offer a next one.
+  mockClubs.mockReturnValue(
+    ok({ data: [CLUBS.data[0]], pagination: { total: 45, count: 1 } })
+  );
+  render(<AdminContent />);
+  fireEvent.click(screen.getByRole("checkbox", { name: "Reported only" }));
   expect(screen.getByTestId("data-table-next")).toBeDisabled();
 });
 

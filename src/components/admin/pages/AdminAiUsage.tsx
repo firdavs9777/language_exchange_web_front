@@ -79,9 +79,27 @@ const AdminAiUsage: React.FC = () => {
 
   const byFeature = (usage.data && usage.data.byFeature) || [];
   const byDay = (usage.data && usage.data.byDay) || [];
-  const featureOptions = byFeature
-    .map((row: any) => rowLabel(row, "feature"))
-    .filter((value: string, index: number, all: string[]) => value !== "—" && all.indexOf(value) === index);
+
+  // The select's options must never shrink while a feature filter is active:
+  // `byFeature` only ever lists what the CURRENT filter matched, so once a
+  // feature is chosen every other feature's row disappears from it. This
+  // accumulates every feature name ever seen (across filter changes) into a
+  // stable, sorted set, and only updates state when that set actually grows —
+  // never on a render where it would just be the same array again.
+  const [knownFeatures, setKnownFeatures] = React.useState<string[]>([]);
+  React.useEffect(() => {
+    const seen = byFeature
+      .map((row: any) => rowLabel(row, "feature"))
+      .filter((value: string) => value !== "—");
+    if (seen.length === 0) return;
+    setKnownFeatures((prev) => {
+      const merged = Array.from(new Set([...prev, ...seen])).sort();
+      const unchanged =
+        merged.length === prev.length && merged.every((value, index) => value === prev[index]);
+      return unchanged ? prev : merged;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [usage.data]);
 
   const logRows = (logs.data && logs.data.data) || [];
   const logsHasMore = Boolean(logs.data && logs.data.pagination && logs.data.pagination.hasMore);
@@ -125,7 +143,7 @@ const AdminAiUsage: React.FC = () => {
             className="mt-1 rounded-chip border border-line bg-transparent px-2.5 py-1.5 text-sm dark:border-line-dark"
           >
             <option value="">{t("admin.aiUsage.allFeatures") || "All features"}</option>
-            {featureOptions.map((value: string) => (
+            {knownFeatures.map((value: string) => (
               <option key={value} value={value}>
                 {value}
               </option>

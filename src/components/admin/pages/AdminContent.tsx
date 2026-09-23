@@ -9,7 +9,7 @@ import {
 import { Badge } from "../../../design";
 import DataTable from "../parts/DataTable";
 import RefreshButton from "../parts/RefreshButton";
-import ReasonDialog from "../parts/ReasonDialog";
+import ConfirmDialog from "../parts/ConfirmDialog";
 
 /**
  * Clubs and gatherings moderation. Two lists behind one tab strip: the
@@ -68,7 +68,12 @@ const AdminContent: React.FC = () => {
   const active = tab === "clubs" ? clubs : gatherings;
   const rows = (active.data && active.data.data) || [];
   const total = (active.data && active.data.pagination && active.data.pagination.total) || 0;
-  const hasMore = page * LIMIT < total;
+  // The backend's `total` is computed before the `reported` filter is applied
+  // (it counts the unfiltered match, then filters the current page in
+  // memory), so `page * LIMIT < total` alone overclaims a next page once a
+  // filtered view runs dry. A short page — fewer rows than we asked for — is
+  // itself proof there is nothing more to fetch, filtered or not.
+  const hasMore = rows.length === LIMIT && page * LIMIT < total;
 
   const loadError = t("admin.common.loadError") || "Couldn't load this section.";
   const loadingText = t("admin.common.loading") || "Loading…";
@@ -298,10 +303,12 @@ const AdminContent: React.FC = () => {
         />
       )}
 
-      <ReasonDialog
+      <ConfirmDialog
         open={pending !== null}
         title={pending ? dialogTitle(pending.kind) : ""}
         confirmLabel={pending ? actionLabel(pending.kind) : ""}
+        cancelLabel={t("admin.common.cancel") || "Cancel"}
+        requireReason
         busy={busy}
         error={actionError}
         onConfirm={handleConfirm}

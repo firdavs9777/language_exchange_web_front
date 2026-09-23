@@ -101,6 +101,26 @@ it("changes the feature filter and updates both query args", () => {
   expect(lastLogsCall.feature).toBe("translate");
 });
 
+it("keeps every feature seen so far in the select, even after filtering narrows byFeature", () => {
+  mockUsage.mockImplementation((arg: any) => {
+    if (arg && arg.feature === "translate") {
+      return ok({ ...USAGE, byFeature: [{ feature: "translate", count: 60 }] });
+    }
+    return ok(USAGE);
+  });
+  render(<AdminAiUsage />);
+  const select = screen.getByLabelText("Feature") as HTMLSelectElement;
+  const optionValues = () => Array.from(select.options).map((o) => o.value);
+  expect(optionValues()).toEqual(expect.arrayContaining(["translate", "chat-assist"]));
+
+  fireEvent.change(select, { target: { value: "translate" } });
+
+  // The mock now returns only "translate" in byFeature (as the real backend
+  // would once the filter is applied), but the select must not have shed
+  // "chat-assist" — that would make it impossible to filter back to it.
+  expect(optionValues()).toEqual(expect.arrayContaining(["translate", "chat-assist"]));
+});
+
 it("changes the from/to filters and updates the query args", () => {
   render(<AdminAiUsage />);
   fireEvent.change(screen.getByLabelText("From"), { target: { value: "2026-08-01" } });
