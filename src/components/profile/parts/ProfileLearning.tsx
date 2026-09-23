@@ -18,7 +18,7 @@ function positive(value: any): number | null {
 function formatCount(value: number, language: string): string {
   try {
     return new Intl.NumberFormat(language).format(value);
-  } catch (e) {
+  } catch {
     return String(value);
   }
 }

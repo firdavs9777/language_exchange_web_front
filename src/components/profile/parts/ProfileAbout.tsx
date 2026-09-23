@@ -81,6 +81,7 @@ const ProfileAbout: React.FC<ProfileAboutProps> = ({ user }) => {
         {bio && (
           <div className="mb-4">
             <p
+              id="about-bio"
               data-testid="about-bio"
               className="whitespace-pre-wrap break-words text-sm leading-relaxed text-ink-800 dark:text-ink-100"
             >
@@ -90,6 +91,8 @@ const ProfileAbout: React.FC<ProfileAboutProps> = ({ user }) => {
               <button
                 type="button"
                 data-testid="about-bio-toggle"
+                aria-expanded={expanded}
+                aria-controls="about-bio"
                 onClick={() => setExpanded(!expanded)}
                 className="mt-1 text-xs font-extrabold text-brand-deep hover:underline dark:text-brand-light"
               >
@@ -132,9 +135,9 @@ const ProfileAbout: React.FC<ProfileAboutProps> = ({ user }) => {
               {t("profile.sections.topics") || "Topics & Interests"}
             </p>
             <div className="flex flex-wrap gap-2">
-              {topics.map((topic) => (
+              {topics.map((topic, index) => (
                 <span
-                  key={topic}
+                  key={`${topic}-${index}`}
                   data-testid="about-topic"
                   className="inline-flex items-center gap-1 rounded-chip bg-brand/[0.09] px-2.5 py-1 text-xs font-semibold text-brand-dark dark:bg-brand/[0.18] dark:text-brand-light"
                 >

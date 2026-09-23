@@ -9,6 +9,12 @@ export interface ProfileMomentsProps {
   /** Whose moments to show. Absent while the own profile is still loading. */
   userId?: string;
   isOwn: boolean;
+  /**
+   * Cap the grid at this many tiles. `GET /moments/user/:id` is unpaginated,
+   * so a profile that embeds the section asks for a cap and leaves the rest
+   * behind "See all"; the standalone uses pass nothing and show everything.
+   */
+  limit?: number;
 }
 
 /** How many skeleton tiles stand in for the grid while it loads. */
@@ -45,7 +51,7 @@ function captionOf(moment: any): string {
  * only, and an empty square would read as a broken image. Counts are drawn
  * with `lucide-react`, never with emoji glyphs (inventory §3).
  */
-const ProfileMoments: React.FC<ProfileMomentsProps> = ({ userId, isOwn }) => {
+const ProfileMoments: React.FC<ProfileMomentsProps> = ({ userId, isOwn, limit }) => {
   const { t } = useTranslation();
 
   const { data, isLoading } = useGetMyMomentsQuery(
@@ -53,7 +59,8 @@ const ProfileMoments: React.FC<ProfileMomentsProps> = ({ userId, isOwn }) => {
     { skip: !userId }
   );
 
-  const moments: any[] = Array.isArray(data && (data as any).data) ? (data as any).data : [];
+  const all: any[] = Array.isArray(data && (data as any).data) ? (data as any).data : [];
+  const moments = limit && limit > 0 ? all.slice(0, limit) : all;
   const showSkeleton = isLoading && moments.length === 0;
 
   return (
@@ -115,7 +122,7 @@ const ProfileMoments: React.FC<ProfileMomentsProps> = ({ userId, isOwn }) => {
                   {image ? (
                     <img
                       src={image}
-                      alt={caption}
+                      alt={caption || t("profile.moments.photo_alt") || "Moment photo"}
                       loading="lazy"
                       data-testid="moment-tile-image"
                       className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
