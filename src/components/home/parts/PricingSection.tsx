@@ -45,7 +45,10 @@ const PricingSection: React.FC = () => {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {/* Free is not a store product and has no plan record. */}
-          <SurfaceCard padding="lg" className="flex flex-col">
+          <SurfaceCard
+            padding="lg"
+            className="flex flex-col transition-transform duration-300 motion-safe:hover:-translate-y-1 hover:shadow-float"
+          >
             <div data-testid="plan-card" className="flex h-full flex-col">
               <h3 className="text-sm font-bold text-gray-900 dark:text-gray-50">
                 {t("home.pricing.free.name") || "Free"}
@@ -81,7 +84,7 @@ const PricingSection: React.FC = () => {
             <SurfaceCard
               key={plan.id}
               padding="lg"
-              className={plan.recommended ? "ring-2 ring-brand" : undefined}
+              className={`transition-transform duration-300 motion-safe:hover:-translate-y-1 hover:shadow-float${plan.recommended ? " ring-2 ring-brand" : ""}`}
             >
               <div data-testid="plan-card" className="flex h-full flex-col">
                 <div className="flex items-center gap-2">

@@ -110,12 +110,68 @@ module.exports = {
           from: { backgroundPosition: "200% 0" },
           to: { backgroundPosition: "-200% 0" },
         },
+        // --- Homepage hero cycle -------------------------------------------
+        // One 14s loop drives the whole demo. Each element gets the same
+        // keyframes and a different `animationDelay`, so the sequence is a
+        // property of the tokens rather than of a JS timer -- the page is
+        // prerendered, and a timer would mean markup that differs between
+        // server and first client paint.
+        //
+        // The typing indicator covers its bubble's text (bg-inherit) until
+        // 8.5% -- 1.19s of the 14s cycle -- and then clears for good, which
+        // is what makes the text look typed rather than merely faded in.
+        // Opacity stays at 1 for the whole window on purpose: the indicator
+        // is opaque (bg-inherit) and masks the bubble's text until it clears.
+        // The dots' own pulse is Tailwind's `animate-pulse`, staggered.
+        "bt-type-dots": {
+          "0%": { opacity: "1", visibility: "visible" },
+          "7%": { opacity: "1", visibility: "visible" },
+          "8.5%": { opacity: "0", visibility: "hidden" },
+          "100%": { opacity: "0", visibility: "hidden" },
+        },
+        // The bubble rises in at 3% (0.42s) carrying the typing indicator,
+        // rests, then fades with the rest of the conversation so the cycle can
+        // start over. It must NOT stay transparent through the typing window:
+        // the indicator is its child, and a parent at opacity 0 takes its
+        // whole subtree with it -- which would mean the dots never showed.
+        "bt-msg-in": {
+          "0%": { opacity: "0", transform: "translateY(6px)" },
+          "3%": { opacity: "1", transform: "none" },
+          "86%": { opacity: "1", transform: "none" },
+          "100%": { opacity: "0", transform: "none" },
+        },
+        // The translation line unrolls under the dashed rule. max-height, not
+        // height: the line's real height depends on how the text wraps.
+        "bt-line-in": {
+          "0%": { opacity: "0", maxHeight: "0" },
+          "6%": { opacity: "0", maxHeight: "0" },
+          "11%": { opacity: "1", maxHeight: "2.5rem" },
+          "86%": { opacity: "1", maxHeight: "2.5rem" },
+          "100%": { opacity: "0", maxHeight: "2.5rem" },
+        },
+        "bt-drift": {
+          "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
+          "50%": { transform: "translateY(-18px) rotate(4deg)" },
+        },
+        "bt-gradient": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+        },
       },
       animation: {
         "bt-rise": "bt-rise .5s ease-out both",
         "bt-marquee": "bt-marquee 28s linear infinite",
         "bt-float": "bt-float 4s ease-in-out infinite",
         "bt-shimmer": "bt-shimmer 3s linear infinite",
+        // `both` fill mode: during its delay an element sits at the 0% frame
+        // (invisible) instead of its static state, so nothing flashes before
+        // its slot. Every one of these loops -- they are ambience, not an
+        // entrance, and `motion-safe:` is what switches them off.
+        "bt-type-dots": "bt-type-dots 14s ease-in-out infinite both",
+        "bt-msg-in": "bt-msg-in 14s ease-out infinite both",
+        "bt-line-in": "bt-line-in 14s ease-out infinite both",
+        "bt-drift": "bt-drift 24s ease-in-out infinite",
+        "bt-gradient": "bt-gradient 12s ease-in-out infinite",
       },
     },
   },

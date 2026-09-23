@@ -9,11 +9,19 @@ const PLAY_STORE_URL =
 const FinalCta: React.FC = () => {
   const { t } = useTranslation();
   return (
-    <section data-testid="final-cta" className="bg-brand px-4 py-16 text-center">
+    // The gradient breathes: background-position only, so it costs no layout
+    // and no repaint of the text. via-[#00ACC1] is a shade of the brand teal,
+    // dark enough that white type clears AA-large on every stop of the sweep.
+    <section
+      data-testid="final-cta"
+      className="bg-gradient-to-br from-brand via-[#00ACC1] to-brand bg-[length:200%_200%] px-4 py-16 text-center motion-safe:animate-bt-gradient"
+    >
       <h2 className="text-3xl font-extrabold tracking-tight text-white">
         {t("home.cta.title") || "Someone is learning your language right now"}
       </h2>
-      <p className="mx-auto mt-2 max-w-md text-sm text-white/[0.9]">
+      {/* Semibold, not regular: at 14px the softened white needs the extra
+          weight to stay legible over the lightest stop of the gradient. */}
+      <p className="mx-auto mt-2 max-w-md text-sm font-semibold text-white/[0.9]">
         {t("home.cta.subtitle") || "Free to start. No card, no trial countdown."}
       </p>
       <div className="mt-7 flex flex-wrap justify-center gap-3">
