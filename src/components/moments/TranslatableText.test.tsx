@@ -17,6 +17,7 @@ const setup = (props: any = {}) => {
   render(
     <TranslatableText
       text={props.text || ORIGINAL}
+      fullText={props.fullText}
       onTranslate={onTranslate}
       isLoggedIn={props.isLoggedIn !== false}
       onRequireLogin={onRequireLogin}
@@ -123,6 +124,62 @@ describe("TranslatableText", () => {
     await waitFor(() =>
       expect(screen.getByTestId("translatable-translation")).toHaveTextContent(
         "Already in your language"
+      )
+    );
+  });
+
+  // The feed card renders a 200-character preview while the server translates
+  // the whole moment, so the same-language check has to compare against the
+  // untruncated body.
+  it("compares against fullText, so a truncated same-language body is recognised", async () => {
+    const full = `${ORIGINAL} 그리고 더 긴 이야기가 이어집니다.`;
+    const onTranslate = jest.fn().mockResolvedValue({ translatedText: full });
+    setup({ text: `${ORIGINAL}...`, fullText: full, onTranslate });
+
+    fireEvent.click(screen.getByTestId("translatable-text"));
+    await waitFor(() =>
+      expect(screen.getByTestId("translatable-translation")).toHaveTextContent(
+        "Already in your language"
+      )
+    );
+  });
+
+  it("still recognises a match on the rendered preview when fullText is given", async () => {
+    const onTranslate = jest.fn().mockResolvedValue({ translatedText: ORIGINAL });
+    setup({ text: ORIGINAL, fullText: `${ORIGINAL} plus a tail`, onTranslate });
+
+    fireEvent.click(screen.getByTestId("translatable-text"));
+    await waitFor(() =>
+      expect(screen.getByTestId("translatable-translation")).toHaveTextContent(
+        "Already in your language"
+      )
+    );
+  });
+
+  it("shows the translation when fullText differs from what came back", async () => {
+    const onTranslate = jest
+      .fn()
+      .mockResolvedValue({ translatedText: TRANSLATED });
+    setup({ text: `${ORIGINAL}...`, fullText: `${ORIGINAL} more`, onTranslate });
+
+    fireEvent.click(screen.getByTestId("translatable-text"));
+    await waitFor(() =>
+      expect(screen.getByTestId("translatable-translation")).toHaveTextContent(
+        TRANSLATED
+      )
+    );
+  });
+
+  it("without fullText, compares against the rendered text as before", async () => {
+    const onTranslate = jest
+      .fn()
+      .mockResolvedValue({ translatedText: `${ORIGINAL} and a longer tail` });
+    setup({ text: ORIGINAL, onTranslate });
+
+    fireEvent.click(screen.getByTestId("translatable-text"));
+    await waitFor(() =>
+      expect(screen.getByTestId("translatable-translation")).toHaveTextContent(
+        "and a longer tail"
       )
     );
   });

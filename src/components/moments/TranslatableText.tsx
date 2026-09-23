@@ -13,6 +13,14 @@ import { useTranslation } from "react-i18next";
  * Translation is a write endpoint behind `protect`, so logged-out visitors get
  * the caller's sign-in prompt (`onRequireLogin`) and nothing else happens.
  *
+ * The API never reports a source language, so "already in your language" is
+ * inferred from the translator handing back what it was given. Callers that
+ * render a *preview* of a longer body (the feed card truncates at 200
+ * characters) must pass the untruncated body as `fullText`: the server
+ * translates the whole moment, so comparing its answer against the truncated
+ * `text` alone could never match and every same-language long moment would
+ * re-display its own text as a "translation".
+ *
  * Nothing here reads `window`/`document` during render: `/moments` and
  * `/moment/:id` are prerendered in Node, where only the original text renders.
  */
@@ -25,8 +33,15 @@ type TranslationState =
   | { kind: "done"; translatedText: string };
 
 interface TranslatableTextProps {
+  /** What is rendered — may be a truncated preview of a longer body. */
   text: string;
-  /** Resolves with the server's translation of `text`. */
+  /**
+   * The untruncated source the server actually translates. Used only for the
+   * same-language comparison; rendering always shows `text`. Defaults to
+   * `text` when the caller renders the whole body.
+   */
+  fullText?: string;
+  /** Resolves with the server's translation of `fullText ?? text`. */
   onTranslate: () => Promise<{ translatedText: string }>;
   isLoggedIn: boolean;
   onRequireLogin: () => void;
@@ -36,6 +51,7 @@ interface TranslatableTextProps {
 
 const TranslatableText: React.FC<TranslatableTextProps> = ({
   text,
+  fullText,
   onTranslate,
   isLoggedIn,
   onRequireLogin,
@@ -58,7 +74,14 @@ const TranslatableText: React.FC<TranslatableTextProps> = ({
         }
         // The API never says what language the text was in, so "already in
         // your language" is inferred: the translator handed back what it got.
-        if (translated === (text || "").trim()) {
+        // Compare against the untruncated source when there is one — and
+        // still accept a match on the rendered preview, since a short moment
+        // and its preview are the same string.
+        const source = (fullText === undefined ? text : fullText) || "";
+        if (
+          translated === source.trim() ||
+          (fullText !== undefined && translated === (text || "").trim())
+        ) {
           setState({ kind: "same" });
           return;
         }
@@ -66,7 +89,7 @@ const TranslatableText: React.FC<TranslatableTextProps> = ({
       },
       () => setState({ kind: "error" })
     );
-  }, [onTranslate, text]);
+  }, [onTranslate, text, fullText]);
 
   const activate = useCallback(() => {
     if (!isLoggedIn) {
