@@ -1,4 +1,9 @@
 import { isSuppressed, recordDismissal, SUPPRESSION_DAYS } from "./growthGate";
+import { STORE_HOSTS } from "./StoreLink";
+
+// Spelled out nowhere: the store hostnames live only in StoreLink.tsx
+// (src/components/growth/storeUrls.test.ts greps for copies of them).
+const [IOS_HOST, ANDROID_HOST] = STORE_HOSTS;
 
 const base = {
   pathname: "/",
@@ -32,10 +37,10 @@ it("keeps each key's dismissal separate", () => {
 
 it("suppresses the popup for visitors arriving from an app store", () => {
   expect(
-    isSuppressed("download-popup", { ...base, referrer: "https://apps.apple.com/us/app/x" })
+    isSuppressed("download-popup", { ...base, referrer: `https://${IOS_HOST}/us/app/x` })
   ).toBe(true);
   expect(
-    isSuppressed("download-popup", { ...base, referrer: "https://play.google.com/store/apps/x" })
+    isSuppressed("download-popup", { ...base, referrer: `https://${ANDROID_HOST}/store/apps/x` })
   ).toBe(true);
 });
 
@@ -81,26 +86,26 @@ it("uses hostname parsing for app store detection, not substring matching", () =
   );
 
   // Genuine store referrers should suppress
-  expect(isSuppressed("download-popup", { ...base, referrer: "https://apps.apple.com/" })).toBe(
+  expect(isSuppressed("download-popup", { ...base, referrer: `https://${IOS_HOST}/` })).toBe(
     true
   );
   expect(
-    isSuppressed("download-popup", { ...base, referrer: "https://subdomain.apps.apple.com/" })
+    isSuppressed("download-popup", { ...base, referrer: `https://subdomain.${IOS_HOST}/` })
   ).toBe(true);
 
-  // Substring match false positive: apps.apple.com in query parameter should NOT suppress
+  // Substring match false positive: a store host in a query parameter must NOT suppress
   expect(
     isSuppressed("download-popup", {
       ...base,
-      referrer: "https://www.example.com/?redirect=https://apps.apple.com/",
+      referrer: `https://www.example.com/?redirect=https://${IOS_HOST}/`,
     })
   ).toBe(false);
 
-  // Lookalike domain (notapps.apple.com.example.com) should NOT suppress
+  // A lookalike domain that merely ends with the host's text must NOT suppress
   expect(
     isSuppressed("download-popup", {
       ...base,
-      referrer: "https://notapps.apple.com.example.com/x",
+      referrer: `https://not${IOS_HOST}.example.com/x`,
     })
   ).toBe(false);
 });

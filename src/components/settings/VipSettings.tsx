@@ -4,6 +4,10 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../store";
 import { useGetVipStatusQuery } from "../../store/slices/usersSlice";
+// Not a marketing surface (this screen is behind auth, so it has no
+// placement), but the URLs it used to hard-code had drifted to a stale app
+// id and a stale package name. They come from the one source now.
+import { APP_STORE_URL, PLAY_STORE_URL } from "../../utils/platform";
 import {
   ArrowLeft,
   Crown,
@@ -189,7 +193,7 @@ const VipSettings: React.FC = () => {
             </div>
             <div className="flex gap-3">
               <a
-                href="https://apps.apple.com/app/bananatalk"
+                href={APP_STORE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 bg-black text-white py-3 rounded-xl font-medium text-center hover:bg-gray-900 transition-colors flex items-center justify-center gap-2"
@@ -200,7 +204,7 @@ const VipSettings: React.FC = () => {
                 App Store
               </a>
               <a
-                href="https://play.google.com/store/apps/details?id=com.bananatalk"
+                href={PLAY_STORE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 bg-black text-white py-3 rounded-xl font-medium text-center hover:bg-gray-900 transition-colors flex items-center justify-center gap-2"

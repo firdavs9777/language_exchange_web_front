@@ -253,8 +253,32 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   transition: all 220ms $ease;
   border: 1px solid rgba(255, 255, 255, 0.08);
 
+  /* StoreLink's badge glyph ships at 24px for the download page; the footer
+     chip wants the smaller mark it has always had. */
   svg {
     flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+  }
+
+  /* The badge's two-line lockup ("Download on the" / "App Store"), scaled to
+     a footer chip rather than a hero button. */
+  div {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+    text-align: left;
+  }
+
+  .btn-label {
+    font-size: 0.625rem;
+    font-weight: 500;
+    opacity: 0.75;
+  }
+
+  .btn-store {
+    font-size: 0.8125rem;
+    font-weight: 600;
   }
 
   &:hover {

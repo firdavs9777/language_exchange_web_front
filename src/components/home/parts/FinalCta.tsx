@@ -1,10 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-
-const APP_STORE_URL =
-  "https://apps.apple.com/us/app/bananatalk-learn-meet-or-date/id6755862146";
-const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.bananatalk.app";
+import StoreLink from "../../growth/StoreLink";
 
 const FinalCta: React.FC = () => {
   const { t } = useTranslation();
@@ -25,14 +21,16 @@ const FinalCta: React.FC = () => {
         {t("home.cta.subtitle") || "Free to start. No card, no trial countdown."}
       </p>
       <div className="mt-7 flex flex-wrap justify-center gap-3">
-        <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer"
-           className="rounded-xl bg-white px-6 py-3 text-sm font-extrabold text-brand-dark">
-          App Store
-        </a>
-        <a href={PLAY_STORE_URL} target="_blank" rel="noopener noreferrer"
-           className="rounded-xl bg-gray-900 px-6 py-3 text-sm font-extrabold text-white">
-          Google Play
-        </a>
+        <StoreLink
+          store="ios"
+          placement="final-cta"
+          className="rounded-xl bg-white px-6 py-3 text-sm font-extrabold text-brand-dark"
+        />
+        <StoreLink
+          store="android"
+          placement="final-cta"
+          className="rounded-xl bg-gray-900 px-6 py-3 text-sm font-extrabold text-white"
+        />
       </div>
     </section>
   );

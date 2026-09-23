@@ -2,6 +2,7 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import HeroDemo from "./HeroDemo";
+import { APP_STORE_URL, PLAY_STORE_URL } from "../../growth/StoreLink";
 
 jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
 
@@ -10,14 +11,13 @@ it("renders a headline", () => {
   expect(screen.getByTestId("hero-headline")).toBeInTheDocument();
 });
 
-it("links to both stores", () => {
+it("links to both stores, tagged as the hero", () => {
   render(<HeroDemo />);
-  expect(screen.getByTestId("hero-store-ios")).toHaveAttribute(
-    "href", expect.stringContaining("apps.apple.com")
-  );
-  expect(screen.getByTestId("hero-store-android")).toHaveAttribute(
-    "href", expect.stringContaining("play.google.com")
-  );
+  const ios = screen.getByTestId("store-link-ios").getAttribute("href") || "";
+  const android = screen.getByTestId("store-link-android").getAttribute("href") || "";
+  expect(ios).toContain(APP_STORE_URL);
+  expect(android).toContain(PLAY_STORE_URL);
+  [ios, android].forEach((href) => expect(href).toContain("utm_campaign=hero"));
 });
 
 // The mechanic is the argument: a message, its translation, and a correction.

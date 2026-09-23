@@ -4,6 +4,7 @@ import StatStrip from "./StatStrip";
 import HowItWorks from "./HowItWorks";
 import EarlyAdopterBand from "./EarlyAdopterBand";
 import FinalCta from "./FinalCta";
+import { APP_STORE_URL, PLAY_STORE_URL } from "../../growth/StoreLink";
 
 jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
 jest.mock("../../../store/slices/publicStatsSlice", () => ({
@@ -74,11 +75,14 @@ it("frames the launch honestly rather than borrowing credibility", () => {
   expect(text.toLowerCase()).not.toContain("trusted by");
 });
 
-it("closes with both store links", () => {
+it("closes with both store links, tagged as the closing CTA", () => {
   render(<FinalCta />);
   const cta = screen.getByTestId("final-cta");
-  expect(cta.querySelector('a[href*="apps.apple.com"]')).toBeTruthy();
-  expect(cta.querySelector('a[href*="play.google.com"]')).toBeTruthy();
+  const ios = cta.querySelector('[data-testid="store-link-ios"]');
+  const android = cta.querySelector('[data-testid="store-link-android"]');
+  expect((ios as Element).getAttribute("href")).toContain(APP_STORE_URL);
+  expect((android as Element).getAttribute("href")).toContain(PLAY_STORE_URL);
+  expect((ios as Element).getAttribute("href")).toContain("utm_campaign=final-cta");
 });
 
 // The closing CTA breathes rather than sitting flat -- a background-position

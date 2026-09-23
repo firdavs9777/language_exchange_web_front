@@ -2,6 +2,7 @@ import "@testing-library/jest-dom";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import AppDownloadPopup from "./AppDownloadPopup";
 import StickyAppBanner from "./StickyAppBanner";
+import { APP_STORE_URL, PLAY_STORE_URL, STORE_HOSTS } from "./StoreLink";
 
 const setViewport = (w: number) => {
   Object.defineProperty(window, "innerWidth", { writable: true, configurable: true, value: w });
@@ -44,7 +45,7 @@ it("appears once the visitor scrolls past the hero", () => {
 it("never appears for a visitor who came from an app store", () => {
   Object.defineProperty(document, "referrer", {
     writable: true, configurable: true,
-    value: "https://apps.apple.com/us/app/bananatalk/id6755862146",
+    value: `https://${STORE_HOSTS[0]}/us/app/bananatalk/id6755862146`,
   });
   render(<AppDownloadPopup />);
   act(() => { jest.advanceTimersByTime(20000); });
@@ -107,7 +108,7 @@ describe("StickyAppBanner store link", () => {
     );
     render(<StickyAppBanner />);
     const href = screen.getByRole("link", { name: /install/i }).getAttribute("href");
-    expect(href).toContain("play.google.com");
+    expect(href).toContain(PLAY_STORE_URL);
   });
 
   it("points at the App Store for an iOS user agent", () => {
@@ -117,6 +118,22 @@ describe("StickyAppBanner store link", () => {
     );
     render(<StickyAppBanner />);
     const href = screen.getByRole("link", { name: /install/i }).getAttribute("href");
-    expect(href).toContain("apps.apple.com");
+    expect(href).toContain(APP_STORE_URL);
   });
+
+  it("tags the install link as the sticky banner", () => {
+    setViewport(390);
+    render(<StickyAppBanner />);
+    const href = screen.getByRole("link", { name: /install/i }).getAttribute("href") || "";
+    expect(href).toContain("utm_campaign=sticky-banner");
+  });
+});
+
+it("offers both stores in the popup, tagged as the popup", () => {
+  render(<AppDownloadPopup />);
+  act(() => { jest.advanceTimersByTime(20000); });
+  const popup = screen.getByTestId("download-popup");
+  const links = Array.from(popup.querySelectorAll('[data-testid^="store-link-"]'));
+  expect(links).toHaveLength(2);
+  links.forEach((a) => expect(a.getAttribute("href")).toContain("utm_campaign=popup"));
 });

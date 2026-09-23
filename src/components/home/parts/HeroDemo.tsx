@@ -2,11 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { languageFlag } from "../../../utils/languages";
 import { MARQUEE_LANGUAGES } from "../../../data/marqueeLanguages";
-
-const APP_STORE_URL =
-  "https://apps.apple.com/us/app/bananatalk-learn-meet-or-date/id6755862146";
-const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.bananatalk.app";
+import StoreLink from "../../growth/StoreLink";
 
 // The 14s hero cycle, as slot offsets. One set of keyframes (tailwind.config.js)
 // serves all three bubbles; the delay is what makes it a conversation. A JS
@@ -103,24 +99,16 @@ const HeroDemo: React.FC = () => {
           </p>
 
           <div className="mt-7 flex flex-wrap gap-3">
-            <a
-              data-testid="hero-store-ios"
-              href={APP_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+            <StoreLink
+              store="ios"
+              placement="hero"
               className="rounded-xl bg-gray-900 px-5 py-3 text-sm font-bold text-white"
-            >
-              App Store
-            </a>
-            <a
-              data-testid="hero-store-android"
-              href={PLAY_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+            />
+            <StoreLink
+              store="android"
+              placement="hero"
               className="rounded-xl bg-gray-900 px-5 py-3 text-sm font-bold text-white"
-            >
-              Google Play
-            </a>
+            />
           </div>
 
           <p className="mt-5 text-xs font-medium text-gray-400">
