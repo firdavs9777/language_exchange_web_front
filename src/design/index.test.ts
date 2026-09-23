@@ -9,4 +9,5 @@ it("re-exports every design primitive", () => {
   expect(Design.SurfaceCard).toBeDefined();
   expect(Design.Badge).toBeDefined();
   expect(Design.FollowButton).toBeDefined();
+  expect(Design.ConfirmDialog).toBeDefined();
 });
