@@ -4,17 +4,22 @@
 // A guard on what a first-time visitor downloads before anything on a
 // marketing page paints.
 //
-// Task B6 moved the bootstrap-icons stylesheet out of the entrypoint: only
-// modules that sit *behind* a React.lazy boundary may import src/lazyIcons.ts
-// (or the package directly). Nothing enforces that, and the bundle budget
-// cannot: the icon CSS is ~13.5 KB gzipped and the budget's headroom is wider
-// than that, so a regression would slip through as a number nobody reads.
+// Task B6 moved the bootstrap-icons stylesheet out of the entrypoint and into
+// src/lazyIcons.ts, which only modules behind a React.lazy boundary were
+// allowed to import. The profile redesign (task P4) rewrote the last three
+// screens that spelled `bi-*` -- followers, following and visitors -- onto
+// lucide, so lazyIcons.ts is gone and nothing in src/ names the package at
+// all. What is still worth guarding is the rule that outlives it: the icon
+// font must never be reachable from the entrypoint. Nothing else enforces
+// that, and the bundle budget cannot: the icon CSS is ~13.5 KB gzipped and
+// the budget's headroom is wider than that, so a regression would slip
+// through as a number nobody reads.
 //
 // So: build the static import graph the way webpack does for the entrypoint --
 // start at the three real roots, follow only *static* `import`/`export ... from`
 // declarations, and stop at `import()`, which is exactly where a chunk begins.
-// If lazyIcons or bootstrap-icons turns up in that graph, something eager
-// imported it and the font is back in main.css.
+// If bootstrap-icons (or a re-exporting module like the old lazyIcons) turns
+// up in that graph, something eager imported it and the font is in main.css.
 //
 // Same idea as src/components/growth/storeUrls.test.ts: a cheap source-level
 // rule, checked by reading files rather than by building.
@@ -32,8 +37,10 @@ const ROOTS = [
   path.join(SRC, "seo", "prerender", "renderRoute.tsx"),
 ];
 
-const FORBIDDEN_MODULE = path.join(SRC, "lazyIcons.ts");
 const FORBIDDEN_PACKAGE = "bootstrap-icons";
+// The module that used to carry the stylesheet. Deleted with the last `bi-*`
+// screen; asserted below so a re-introduced copy cannot sneak the font back.
+const RETIRED_MODULE = path.join(SRC, "lazyIcons.ts");
 
 // Extensions we parse. Anything else (.css, .scss, .json, images) is a leaf:
 // it has no `import ... from` of its own that could reach further into src/.
@@ -180,9 +187,12 @@ it("walks a real graph from all three eager roots", () => {
   expect(graph.unresolved).toEqual([]);
 });
 
-it("never reaches src/lazyIcons.ts without crossing a React.lazy boundary", () => {
-  expect(fs.existsSync(FORBIDDEN_MODULE)).toBe(true);
-  const offenders = graph.modules.filter((f) => f === FORBIDDEN_MODULE);
+it("has no lazyIcons module left to reach", () => {
+  // P4 deleted it along with the last screens that rendered `bi-*` glyphs. If
+  // it comes back, it must come back behind a React.lazy boundary -- the
+  // graph assertion below covers that case too.
+  expect(fs.existsSync(RETIRED_MODULE)).toBe(false);
+  const offenders = graph.modules.filter((f) => f === RETIRED_MODULE);
   expect(offenders.map((f) => path.relative(SRC, f))).toEqual([]);
 });
 
@@ -192,9 +202,11 @@ it("never statically imports bootstrap-icons from an eager module", () => {
   expect(graph.packageHits).toEqual([]);
 });
 
-it("proves the guard can fire, on a module that really does import the icons", () => {
-  // lazyIcons.ts is the only file allowed to name the package. If this ever
-  // stops holding, the two assertions above are guarding nothing.
-  const text = fs.readFileSync(FORBIDDEN_MODULE, "utf8");
-  expect(staticSpecifiers(text)).toContain("bootstrap-icons/font/bootstrap-icons.css");
+it("proves the guard can fire, on a source that really does import the icons", () => {
+  // With lazyIcons.ts gone there is no file left in src/ that names the
+  // package, so the proof runs on the import it used to hold. Without this,
+  // a scanner that silently stopped matching side-effect imports would make
+  // the assertions above pass for the wrong reason.
+  const source = '// a comment\nimport "bootstrap-icons/font/bootstrap-icons.css";\n';
+  expect(staticSpecifiers(source)).toContain("bootstrap-icons/font/bootstrap-icons.css");
 });

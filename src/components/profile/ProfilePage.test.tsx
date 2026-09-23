@@ -72,6 +72,7 @@ function page(path: string, viewerId: string | null) {
           <Routes>
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/profile/:userId" element={<ProfilePage />} />
+            <Route path="/login" element={<div data-testid="login-screen" />} />
           </Routes>
         </MemoryRouter>
       </HelmetProvider>
@@ -213,6 +214,26 @@ describe("states", () => {
     expect(screen.getByTestId("profile-back-to-community")).toHaveAttribute("href", "/communities");
   });
 
+  it("sends a signed-out visitor to the login page instead of a not-found card", () => {
+    renderPage("/profile", null);
+
+    expect(screen.getByTestId("login-screen")).toBeInTheDocument();
+    expect(screen.queryByTestId("profile-not-found")).not.toBeInTheDocument();
+  });
+
+  it("still shows another person's profile to a signed-out visitor", () => {
+    mockGetCommunityDetails.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada" } },
+    });
+
+    renderPage("/profile/u2", null);
+
+    expect(screen.queryByTestId("login-screen")).not.toBeInTheDocument();
+    expect(screen.getByTestId("profile-body")).toBeInTheDocument();
+  });
+
   it("is not found when the request succeeded with no user", () => {
     mockGetCommunityDetails.mockReturnValue({ ...idle, refetch: otherRefetch, data: { data: null } });
 
@@ -287,6 +308,7 @@ it("titles the page after the person and keeps it out of the index", () => {
         <MemoryRouter initialEntries={["/profile/u2"]}>
           <Routes>
             <Route path="/profile/:userId" element={<ProfilePage />} />
+            <Route path="/login" element={<div data-testid="login-screen" />} />
           </Routes>
         </MemoryRouter>
       </Provider>

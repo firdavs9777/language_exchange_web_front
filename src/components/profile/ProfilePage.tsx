@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { RefreshCw, UserX } from "lucide-react";
 import PageMeta from "../../seo/PageMeta";
@@ -87,7 +88,18 @@ const ProfilePage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const viewerId = useSelector(
+    (state: any) => state.auth.userInfo?.user?._id || state.auth.userInfo?._id
+  );
+
   const { isOwn, user, stats, isFollowing, loading, error, refetch } = useProfileData(userId);
+
+  // /profile is the signed-in user's own page, and routes.tsx guards nothing
+  // itself (there is no RequireAuth in this app). With no session there is no
+  // "me" to fetch, and the not-found card is the wrong answer to "you are
+  // signed out" -- /profile/:userId stays public, so only the own route
+  // redirects.
+  const signedOut = !userId && !viewerId;
 
   const name = (user && (user.name || user.username)) || "";
   const displayName = name || t("profile.page.title") || "Profile";
@@ -100,6 +112,8 @@ const ProfilePage: React.FC = () => {
   const failed = !loading && !notFound && Boolean(error);
 
   const meta = <PageMeta noindex title={`${displayName} · BananaTalk`} />;
+
+  if (signedOut) return <Navigate to="/login" replace />;
 
   if (loading) {
     return (

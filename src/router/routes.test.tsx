@@ -92,6 +92,30 @@ it("renders the one profile page on both /profile and /profile/:userId", () => {
   expect(edit).toBe("../components/profile/EditProfile");
 });
 
+// Followers, following and visitors are one page behind five paths: the three
+// own-list paths every existing link already points at, and the two per-user
+// paths the profile's stat tiles link to.
+it("puts every follower/following/visitor path on the one list page", () => {
+  const keys = chunkKeysFor([
+    "/followersList",
+    "/followingsList",
+    "/visitors",
+    "/profile/abc123/followers",
+    "/profile/abc123/following",
+  ]);
+  for (const key of keys) {
+    expect(key).toBe("../components/profile/UserListPage");
+  }
+});
+
+// The per-user list paths are longer than "profile/:userId", so they must win
+// over it -- otherwise /profile/abc123/followers renders the profile page.
+it("ranks the per-user list paths above the profile route", () => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, "/profile/abc123/followers");
+  expect(matches![matches!.length - 1].route.path).toBe("profile/:userId/followers");
+});
+
 // /profile/:userId used to mount CommunityDetail through PublicProfile. The
 // community route keeps it; the profile route must not.
 it("leaves /community/:id on CommunityDetail", () => {

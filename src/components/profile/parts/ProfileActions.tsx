@@ -4,11 +4,10 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Ban, Flag, MessageCircle, MoreHorizontal, Pencil, Settings } from "lucide-react";
 import ConfirmDialog from "../../../design/ConfirmDialog";
+import useFollowToggle from "../useFollowToggle";
 import {
   useBlockUserMutation,
-  useFollowUserMutation,
   useReportUserMutation,
-  useUnFollowUserMutation,
 } from "../../../store/slices/usersSlice";
 import { useCreateChatRoomMutation } from "../../../store/slices/chatSlice";
 
@@ -68,23 +67,23 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
     (state: any) => state.auth.userInfo?.user?._id || state.auth.userInfo?._id
   );
 
-  const [followUser, { isLoading: isFollowLoading }] = useFollowUserMutation();
-  const [unFollowUser, { isLoading: isUnfollowLoading }] = useUnFollowUserMutation();
   const [blockUser, { isLoading: isBlocking }] = useBlockUserMutation();
   const [reportUser, { isLoading: isReporting }] = useReportUserMutation();
   const [createChatRoom, { isLoading: isCreatingChat }] = useCreateChatRoomMutation();
 
-  const [following, setFollowing] = useState(Boolean(isFollowing));
+  // Optimistic follow, rollback and the signed-out bounce all live in the
+  // hook the list rows use, so the button here and a row in /followersList
+  // cannot behave differently.
+  const { following, busy: followBusy, toggle: handleFollowToggle } = useFollowToggle(
+    userId,
+    isFollowing,
+    onFollowChanged
+  );
+
   const [menuOpen, setMenuOpen] = useState(false);
   const [dialog, setDialog] = useState<"block" | "report" | null>(null);
   const [dialogError, setDialogError] = useState("");
   const menuRef = useRef<HTMLDivElement | null>(null);
-
-  // The follow state is the caller's; local state only holds the optimistic
-  // flip until the query behind it catches up.
-  useEffect(() => {
-    setFollowing(Boolean(isFollowing));
-  }, [isFollowing]);
 
   // Bound in an effect, never read during render.
   useEffect(() => {
@@ -106,7 +105,6 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
   }, [menuOpen]);
 
   const personName = name || t("profile.actions.this_person") || "this person";
-  const followBusy = isFollowLoading || isUnfollowLoading;
 
   const handleMessage = async (): Promise<void> => {
     if (!viewerId) {
@@ -120,23 +118,6 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
       // pre-create must not strand the user on the profile.
     }
     navigate(`/chat/${userId}`);
-  };
-
-  const handleFollowToggle = async (): Promise<void> => {
-    if (!viewerId) {
-      navigate("/login");
-      return;
-    }
-    if (followBusy) return;
-    const next = !following;
-    setFollowing(next);
-    try {
-      if (next) await followUser({ userId: viewerId, targetUserId: userId }).unwrap();
-      else await unFollowUser({ userId: viewerId, targetUserId: userId }).unwrap();
-      if (onFollowChanged) onFollowChanged(next);
-    } catch (error) {
-      setFollowing(!next);
-    }
   };
 
   const openDialog = (which: "block" | "report"): void => {

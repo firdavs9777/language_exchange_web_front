@@ -70,9 +70,9 @@ const AuthCallback = lazyWithRetry("../components/auth/AuthCallback", () => impo
 // the store, so the two paths can never drift apart again.
 const ProfilePage = lazyWithRetry("../components/profile/ProfilePage", () => import("../components/profile/ProfilePage"));
 const EditProfile = lazyWithRetry("../components/profile/EditProfile", () => import("../components/profile/EditProfile"));
-const UserFollowersList = lazyWithRetry("../components/profile/UserFollowers", () => import("../components/profile/UserFollowers"));
-const UserFollowingList = lazyWithRetry("../components/profile/UserFollowing", () => import("../components/profile/UserFollowing"));
-const UserVisitorsList = lazyWithRetry("../components/profile/UserVisitors", () => import("../components/profile/UserVisitors"));
+// Followers, following and visitors are three tabs of one page. It reads the
+// tab off the path, so every route below points at the same component.
+const UserListPage = lazyWithRetry("../components/profile/UserListPage", () => import("../components/profile/UserListPage"));
 const MyMoments = lazyWithRetry("../components/profile/MyMoments", () => import("../components/profile/MyMoments"));
 const EditMyMoment = lazyWithRetry("../components/profile/EditMyMoment", () => import("../components/profile/EditMyMoment"));
 
@@ -199,9 +199,15 @@ export const routes = createRoutesFromElements(
         /moments already ships. A shared profile link pays one round trip; a
         shared moment link would have paid it for nothing. */}
     <Route path="profile/:userId" element={lazyRoute(<ProfilePage />)} />
-    <Route path="followersList" element={lazyRoute(<UserFollowersList />)} />
-    <Route path="followingsList" element={lazyRoute(<UserFollowingList />)} />
-    <Route path="visitors" element={lazyRoute(<UserVisitorsList />)} />
+    {/* The three own-list paths predate the list page and are kept verbatim:
+        every link already pointing at them still works, and each one selects
+        its own tab. The two per-user paths are what the profile's stat tiles
+        link to. */}
+    <Route path="followersList" element={lazyRoute(<UserListPage />)} />
+    <Route path="followingsList" element={lazyRoute(<UserListPage />)} />
+    <Route path="visitors" element={lazyRoute(<UserListPage />)} />
+    <Route path="profile/:userId/followers" element={lazyRoute(<UserListPage />)} />
+    <Route path="profile/:userId/following" element={lazyRoute(<UserListPage />)} />
     <Route path="chat/new" element={lazyRoute(<NewChat />)} />
     <Route path="chat/:conversationId/settings" element={lazyRoute(<ChatSettings />)} />
     <Route path="chat/:conversationId/media" element={lazyRoute(<MediaGallery />)} />

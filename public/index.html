@@ -216,11 +216,11 @@
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" />
     </noscript>
     <!-- The bootstrap-icons stylesheet used to be fetched from jsdelivr right
-         here, render-blocking, on every page. No prerendered marketing page
-         uses a `bi-*` glyph; the authenticated screens that do now import
-         src/lazyIcons.ts, so the font ships with their lazy chunk and a
-         first-time visitor never pays for it -- nor for the round trip to a
-         third-party CDN before first paint. -->
+         here, render-blocking, on every page. Nothing renders a `bi-*` glyph
+         any more -- the last three screens that did moved to lucide with the
+         profile redesign -- so neither this link nor the on-demand import
+         that replaced it exists, and no visitor pays for the webfont or for
+         the round trip to a third-party CDN before first paint. -->
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />    <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
