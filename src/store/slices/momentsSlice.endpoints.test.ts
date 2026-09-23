@@ -234,4 +234,59 @@ describe("momentsSlice Task 0 endpoints hit the REAL backend routes", () => {
       expect(keyA).toBe(keyB);
     });
   });
+  describe("addMomentComment sends the field names models/Comment.js stores", () => {
+    it("posts { text } for a plain comment", async () => {
+      const calls = mockFetch();
+      const store = makeStore();
+      await store.dispatch(
+        (momentsApiSlice.endpoints as any).addMomentComment.initiate({
+          momentId: "moment-1",
+          text: "Nice one",
+        })
+      );
+      expect(calls).toHaveLength(1);
+      expect(new URL(calls[0].url).pathname).toBe(`${MOMENTS_URL}/moment-1/comments`);
+      expect(calls[0].method).toBe("POST");
+      expect(JSON.parse(calls[0].body as string)).toEqual({ text: "Nice one" });
+    });
+
+    it("posts { text, parentComment } for a reply", async () => {
+      const calls = mockFetch();
+      const store = makeStore();
+      await store.dispatch(
+        (momentsApiSlice.endpoints as any).addMomentComment.initiate({
+          momentId: "moment-1",
+          text: "Agreed",
+          parentComment: "comment-1",
+        })
+      );
+      expect(JSON.parse(calls[0].body as string)).toEqual({
+        text: "Agreed",
+        parentComment: "comment-1",
+      });
+    });
+
+    it("posts { text: '', correction } for a correction with no note -- the server labels it itself", async () => {
+      const calls = mockFetch();
+      const store = makeStore();
+      await store.dispatch(
+        (momentsApiSlice.endpoints as any).addMomentComment.initiate({
+          momentId: "moment-1",
+          correction: {
+            originalText: "I go to school yesterday",
+            correctedText: "I went to school yesterday",
+            explanation: "Past tense.",
+          },
+        })
+      );
+      expect(JSON.parse(calls[0].body as string)).toEqual({
+        text: "",
+        correction: {
+          originalText: "I go to school yesterday",
+          correctedText: "I went to school yesterday",
+          explanation: "Past tense.",
+        },
+      });
+    });
+  });
 });

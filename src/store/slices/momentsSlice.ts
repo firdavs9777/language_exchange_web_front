@@ -150,12 +150,38 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ['Moments', 'Comments'],
     }),
+    // Create a comment, a reply or a correction -- POST
+    // /api/v1/moments/:momentId/comments (routes/moments.js mounts
+    // routes/comment.js at `/:momentId/comments`, so `createComment` reads the
+    // moment from the URL and everything else from the body).
+    //
+    // The field names are the model's (models/Comment.js): `text`,
+    // `parentComment`, `correction`. This used to send `{ content, parentId }`,
+    // which Mongoose silently dropped -- every comment was stored with the
+    // schema default of an empty string. Optional fields are omitted rather
+    // than sent as undefined: `createComment` branches on `req.body.correction`
+    // being present at all.
     addMomentComment: builder.mutation({
-      query: ({ momentId, content, parentId }: { momentId: string; content: string; parentId?: string }) => ({
-        url: `${MOMENTS_URL}/${momentId}/comments`,
-        method: "POST",
-        body: { content, parentId },
-      }),
+      query: ({
+        momentId,
+        text,
+        parentComment,
+        correction,
+      }: {
+        momentId: string;
+        text?: string;
+        parentComment?: string;
+        correction?: { originalText?: string; correctedText: string; explanation?: string };
+      }) => {
+        const body: any = { text: text || "" };
+        if (parentComment) body.parentComment = parentComment;
+        if (correction) body.correction = correction;
+        return {
+          url: `${MOMENTS_URL}/${momentId}/comments`,
+          method: "POST",
+          body,
+        };
+      },
       invalidatesTags: ["Moments", "Comments"],
     }),
     deleteMomentComment: builder.mutation({
