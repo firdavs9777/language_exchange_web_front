@@ -349,6 +349,22 @@
           "body": "Tahu seketika saat seseorang dari bahasa targetmu membalas, tanpa menyegarkan tab browser."
         }
       }
+    },
+    "translate": {
+      "tap": "Ketuk untuk menerjemahkan",
+      "loading": "Menerjemahkan…",
+      "same": "Sudah dalam bahasamu",
+      "error": "Gagal menerjemahkan. Ketuk untuk mencoba lagi."
+    },
+    "tabs": {
+      "forYou": "Untukmu",
+      "following": "Mengikuti",
+      "explore": "Jelajahi",
+      "trending": "Trending"
+    },
+    "following": {
+      "empty": "Ikuti orang lain untuk melihat momen mereka di sini",
+      "findPeople": "Cari orang"
     }
   },
   "createMoment": {

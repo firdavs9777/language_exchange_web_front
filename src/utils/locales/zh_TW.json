@@ -349,6 +349,22 @@
           "body": "目標語言的夥伴一回覆你就知道，不用一直重新整理瀏覽器分頁。"
         }
       }
+    },
+    "translate": {
+      "tap": "點一下翻譯",
+      "loading": "翻譯中…",
+      "same": "已經是你的語言了",
+      "error": "翻譯失敗，點一下重試"
+    },
+    "tabs": {
+      "forYou": "為你推薦",
+      "following": "追蹤中",
+      "explore": "探索",
+      "trending": "熱門"
+    },
+    "following": {
+      "empty": "追蹤別人，才能在這裡看到他們的動態",
+      "findPeople": "找人"
     }
   },
   "createMoment": {

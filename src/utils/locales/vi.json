@@ -349,6 +349,22 @@
           "body": "Biết ngay khi có người nói ngôn ngữ bạn đang học trả lời — không cần tải lại tab trình duyệt."
         }
       }
+    },
+    "translate": {
+      "tap": "Chạm để dịch",
+      "loading": "Đang dịch…",
+      "same": "Đã ở ngôn ngữ của bạn rồi",
+      "error": "Không dịch được. Chạm để thử lại."
+    },
+    "tabs": {
+      "forYou": "Dành Cho Bạn",
+      "following": "Đang Theo Dõi",
+      "explore": "Khám Phá",
+      "trending": "Thịnh Hành"
+    },
+    "following": {
+      "empty": "Theo dõi mọi người để xem khoảnh khắc của họ ở đây",
+      "findPeople": "Tìm Người"
     }
   },
   "createMoment": {

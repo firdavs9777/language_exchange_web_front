@@ -349,6 +349,22 @@
           "body": "Know the moment someone from your target language replies — no refreshing a browser tab."
         }
       }
+    },
+    "translate": {
+      "tap": "Tap to translate",
+      "loading": "Translating…",
+      "same": "Already in your language",
+      "error": "Couldn't translate. Tap to retry."
+    },
+    "tabs": {
+      "forYou": "For You",
+      "following": "Following",
+      "explore": "Explore",
+      "trending": "Trending"
+    },
+    "following": {
+      "empty": "Follow people to see their moments here",
+      "findPeople": "Find people"
     }
   },
   "createMoment": {

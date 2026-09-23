@@ -349,6 +349,22 @@
           "body": "Malaman sa sandaling sumagot ang isang tao mula sa target na wika mo — walang pag-refresh ng browser tab."
         }
       }
+    },
+    "translate": {
+      "tap": "I-tap para isalin",
+      "loading": "Isinasalin…",
+      "same": "Nasa wika mo na ito",
+      "error": "Hindi na-translate. I-tap para subukan ulit."
+    },
+    "tabs": {
+      "forYou": "Para Sa'yo",
+      "following": "Sinusundan",
+      "explore": "Tuklasin",
+      "trending": "Trending"
+    },
+    "following": {
+      "empty": "Sundan ang mga tao para makita ang kanilang mga sandali dito",
+      "findPeople": "Maghanap ng Tao"
     }
   },
   "createMoment": {

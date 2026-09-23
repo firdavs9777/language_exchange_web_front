@@ -330,6 +330,22 @@
           "body": "Entérate al instante cuando alguien de tu idioma objetivo responde, sin recargar una pestaña del navegador."
         }
       }
+    },
+    "translate": {
+      "tap": "Toca para traducir",
+      "loading": "Traduciendo…",
+      "same": "Ya está en tu idioma",
+      "error": "No se pudo traducir. Toca para reintentar."
+    },
+    "tabs": {
+      "forYou": "Para ti",
+      "following": "Siguiendo",
+      "explore": "Explorar",
+      "trending": "Tendencias"
+    },
+    "following": {
+      "empty": "Sigue a personas para ver sus momentos aquí",
+      "findPeople": "Buscar personas"
     }
   },
   "createMoment": {

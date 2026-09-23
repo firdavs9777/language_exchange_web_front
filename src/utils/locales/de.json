@@ -349,6 +349,22 @@
           "body": "Erfahre sofort, wenn jemand aus deiner Zielsprache antwortet – ohne einen Browser-Tab zu aktualisieren."
         }
       }
+    },
+    "translate": {
+      "tap": "Tippen zum Übersetzen",
+      "loading": "Wird übersetzt …",
+      "same": "Schon in deiner Sprache",
+      "error": "Übersetzung fehlgeschlagen. Zum Wiederholen tippen."
+    },
+    "tabs": {
+      "forYou": "Für dich",
+      "following": "Folge ich",
+      "explore": "Entdecken",
+      "trending": "Trends"
+    },
+    "following": {
+      "empty": "Folge Leuten, um ihre Momente hier zu sehen",
+      "findPeople": "Leute finden"
     }
   },
   "createMoment": {

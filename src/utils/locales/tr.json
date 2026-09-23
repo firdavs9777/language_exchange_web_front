@@ -349,6 +349,22 @@
           "body": "Hedef dilinden biri yanıt verdiği anda haberin olsun; tarayıcı sekmesini yenilemeye gerek yok."
         }
       }
+    },
+    "translate": {
+      "tap": "Çevirmek için dokun",
+      "loading": "Çevriliyor…",
+      "same": "Zaten senin dilinde",
+      "error": "Çevrilemedi. Yeniden denemek için dokun."
+    },
+    "tabs": {
+      "forYou": "Senin İçin",
+      "following": "Takip Edilenler",
+      "explore": "Keşfet",
+      "trending": "Gündem"
+    },
+    "following": {
+      "empty": "İnsanları takip et, anlarını burada gör",
+      "findPeople": "İnsanları Bul"
     }
   },
   "createMoment": {

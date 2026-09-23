@@ -349,6 +349,22 @@
           "body": "目标语言的伙伴一回复你就知道，不用再刷新浏览器标签页。"
         }
       }
+    },
+    "translate": {
+      "tap": "点一下翻译",
+      "loading": "翻译中…",
+      "same": "已经是你的语言了",
+      "error": "翻译失败，点一下重试"
+    },
+    "tabs": {
+      "forYou": "推荐",
+      "following": "关注",
+      "explore": "发现",
+      "trending": "热门"
+    },
+    "following": {
+      "empty": "关注别人，才能在这里看到他们的动态",
+      "findPeople": "找人"
     }
   },
   "createMoment": {

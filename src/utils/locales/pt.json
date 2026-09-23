@@ -330,6 +330,22 @@
           "body": "Saiba na hora quando alguém do seu idioma-alvo responder, sem atualizar uma aba do navegador."
         }
       }
+    },
+    "translate": {
+      "tap": "Toque para traduzir",
+      "loading": "Traduzindo…",
+      "same": "Já está no seu idioma",
+      "error": "Não foi possível traduzir. Toque para tentar novamente."
+    },
+    "tabs": {
+      "forYou": "Para você",
+      "following": "Seguindo",
+      "explore": "Explorar",
+      "trending": "Tendências"
+    },
+    "following": {
+      "empty": "Siga pessoas para ver os momentos delas aqui",
+      "findPeople": "Encontrar pessoas"
     }
   },
   "createMoment": {
