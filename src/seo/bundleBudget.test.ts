@@ -44,12 +44,23 @@ const LOCALES = path.join(__dirname, "..", "utils", "locales");
  * use): main.js 262.6 -> 251.4 KB, total 320.3 -> 309.1 KB measured,
  * + 5% = 324.6 -> 325.
  *
+ * Task D3 is the one re-baseline in this list that raises the number, and it
+ * buys something with it: self-hosting Inter and Plus Jakarta Sans put 14
+ * @font-face rules into this stylesheet -- main.css 57.6 -> 58.4 KB gzipped
+ * (376.7 -> 380.7 KB raw), +0.8 KB -- and took two render-path round trips to
+ * fonts.googleapis.com and fonts.gstatic.com off every prerendered page. The
+ * woff2 files themselves are separate assets under static/media and are NOT
+ * counted here, the same way no other image or font ever has been; each rule
+ * carries a unicode-range, so a visitor fetches only the subsets their page
+ * paints (latin Inter 400 is 23.1 KB, Plus Jakarta Sans 700 is 12.0 KB).
+ * Total 309.1 -> 310.0 KB measured, + 5% = 325.5 -> 326.
+ *
  * That headroom is now real headroom, not locale slack: with 17 locales out of
  * the entrypoint this number can only grow if app code grows, so raising it
  * again is the same decision as raising APP_BUDGET_KB and needs the same
  * justification.
  */
-export const BUDGET_KB = 325;
+export const BUDGET_KB = 326;
 
 /**
  * The ceiling for everything that is NOT locale JSON, in gzipped kilobytes.
@@ -79,8 +90,14 @@ export const BUDGET_KB = 325;
  * + 5% = 305.2 → 306. Measured on a tree that also carried task D4's consent
  * UI in progress, so a KB or so of that 290.7 is D4's, not the shell's --
  * which only makes this ceiling tighter, never looser.
+ *
+ * Task D3 re-baselines it by exactly the @font-face delta and nothing else:
+ * the font rules live in main.css, main.css is inside this subtraction, and
+ * main.js did not move (251.5 -> 251.6 KB). 310.0 − 18.5 = 291.5 KB measured,
+ * + 5% = 306.1 → 307. The 0.8 KB is the whole of the change; if a future
+ * measurement here has grown by more than that, it is app code, not fonts.
  */
-export const APP_BUDGET_KB = 306;
+export const APP_BUDGET_KB = 307;
 
 const readGzipKb = (assetPath: string): number => {
   const file = path.join(BUILD, assetPath.replace(/^\//, ""));

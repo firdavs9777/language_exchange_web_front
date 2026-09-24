@@ -3,7 +3,8 @@ import path from "path";
 import resolveConfig from "tailwindcss/resolveConfig";
 
 // The type system is one decision, made in three places that have to agree:
-// the font files are requested by public/index.html, the families are named by
+// the font files are requested by src/fonts.css (self-hosted since task D3 --
+// public/index.html asks a third party for nothing), the families are named by
 // tailwind.config.js (so `font-sans` / `font-display` work), and src/index.css
 // exposes them as CSS variables for the .scss files that don't use Tailwind
 // (navbar, footer, community). Drift between the three is invisible in review
@@ -19,6 +20,7 @@ const legacyCss = fs.readFileSync(
   "utf8"
 );
 const indexHtml = fs.readFileSync(path.resolve(__dirname, "../../public/index.html"), "utf8");
+const fontsCss = fs.readFileSync(path.resolve(__dirname, "../fonts.css"), "utf8");
 
 const UI_FAMILY = "Inter";
 const DISPLAY_FAMILY = "Plus Jakarta Sans";
@@ -35,35 +37,29 @@ it("always falls back to a system stack, never to the browser default serif", ()
   }
 });
 
-it("loads both families, non-blocking, with the weights the UI uses", () => {
-  const link = (indexHtml.match(/<link[^>]+fonts\.googleapis\.com\/css2[^>]*>/) || [""])[0];
-  expect(link).toContain(UI_FAMILY.replace(/ /g, "+"));
-  expect(link).toContain(DISPLAY_FAMILY.replace(/ /g, "+"));
-  // A blocking font request delays first paint on the prerendered pages.
-  expect(link).toContain("display=swap");
-  expect(indexHtml).toContain('rel="preconnect" href="https://fonts.gstatic.com"');
+// Task D3: both families are served from this origin. The entry HTML asks a
+// third party for nothing -- no stylesheet, no preload, no preconnect -- and
+// the @font-face rules come in through src/fonts.css. src/fonts.test.ts owns
+// the exact import list; this file only checks that the third place of the
+// three still names both families.
+it("loads both families from this origin, not from a third party", () => {
+  expect(indexHtml).not.toContain("fonts.googleapis.com");
+  expect(indexHtml).not.toContain("fonts.gstatic.com");
+  expect(fontsCss).toContain("@fontsource/inter/");
+  expect(fontsCss).toContain("@fontsource/plus-jakarta-sans/");
 });
 
-// rel="stylesheet" in <head> is render-blocking, and this one is a round trip
-// to a third party on every prerendered page. Preload it and promote it on
-// load instead, with a <noscript> copy so the fonts survive scripting-off.
-it("requests the fonts without blocking first paint", () => {
-  const link = (indexHtml.match(/<link[^>]+fonts\.googleapis\.com\/css2[^>]*>/) || [""])[0];
-  expect(link).toContain('rel="preload"');
-  expect(link).toContain('as="style"');
-  expect(link).toContain("this.rel='stylesheet'");
-  expect(indexHtml).toMatch(
-    /<noscript>[\s\S]*fonts\.googleapis\.com\/css2[\s\S]*<\/noscript>/
+// Weight 500 is the most-used non-default weight in the app; dropping it makes
+// the browser synthesise it, which thickens every label. 300 is gone on
+// purpose: nothing in src/ renders it any more (see src/fonts.css).
+it("ships every Inter weight the app actually asks for", () => {
+  const weights = (fontsCss.match(/@fontsource\/inter\/latin-(\d{3})\.css/g) || []).map(
+    (line) => (line.match(/(\d{3})/) || [])[1]
   );
-});
-
-// Weight 500 is the most-used non-default weight in the app; dropping it from
-// the request makes the browser synthesise it, which thickens every label.
-it("requests every Inter weight the app actually asks for", () => {
-  const weights = (indexHtml.match(/family=Inter:wght@([\d;]+)/) || ["", ""])[1].split(";");
-  for (const w of ["300", "400", "500", "600", "700", "800"]) {
+  for (const w of ["400", "500", "600", "700", "800"]) {
     expect(weights).toContain(w);
   }
+  expect(weights).not.toContain("300");
 });
 
 it("exposes the families to the .scss files as CSS variables", () => {

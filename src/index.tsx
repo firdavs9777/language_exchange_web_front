@@ -1,5 +1,9 @@
 import React from "react";
 
+// Self-hosted Inter and Plus Jakarta Sans. First, and before index.css:
+// the @font-face rules have to be in the stylesheet ahead of the rules
+// that name the families. See src/fonts.css for which weights ship.
+import "./fonts.css";
 import "./index.css";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
