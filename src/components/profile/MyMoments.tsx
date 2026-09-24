@@ -79,8 +79,9 @@ const MyMoments: React.FC = () => {
 
   const [pending, setPending] = useState<MomentType | null>(null);
   const [deleteError, setDeleteError] = useState("");
-  // Ids the server has already accepted a delete for. The list query is
-  // invalidated too, but the tile must not linger while that round trip runs.
+  // Ids the server has already accepted a delete for. `deleteMoment`
+  // invalidates the "Moments" tag and `getMyMoments` provides it, so the list
+  // does refetch — but the tile must not linger through that round trip.
   const [removed, setRemoved] = useState<{ [id: string]: boolean }>({});
 
   const mounted = useRef(true);

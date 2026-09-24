@@ -31,10 +31,27 @@ it("renders one tile per photo", () => {
   );
 });
 
-it("gives every tile alt text naming the person", () => {
+it("names each tile once — on the button, with the image decorative", () => {
   renderPhotos();
-  const images = screen.getAllByTestId("photo-tile-image");
-  expect(images[0].getAttribute("alt")).toBeTruthy();
+  // A described image inside an aria-labelled button is read twice.
+  expect(screen.getAllByTestId("photo-tile-image")[0]).toHaveAttribute("alt", "");
+  expect(screen.getAllByTestId("photo-tile")[0].getAttribute("aria-label")).toBeTruthy();
+});
+
+it("names the lightbox image, where it is the only accessible name", () => {
+  renderPhotos();
+  fireEvent.click(screen.getAllByTestId("photo-tile")[1]);
+  expect(
+    screen.getByTestId("photo-lightbox-image").getAttribute("alt")
+  ).toBeTruthy();
+});
+
+it("locks the page behind the lightbox and gives the scroll back on close", () => {
+  renderPhotos();
+  fireEvent.click(screen.getAllByTestId("photo-tile")[0]);
+  expect(document.body.style.overflow).toBe("hidden");
+  fireEvent.keyDown(document, { key: "Escape" });
+  expect(document.body.style.overflow).not.toBe("hidden");
 });
 
 it("renders nothing at all when there are no photos", () => {

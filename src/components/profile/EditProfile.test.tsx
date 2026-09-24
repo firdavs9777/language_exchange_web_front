@@ -15,6 +15,7 @@ const mockGetUserProfile = jest.fn();
 const mockUpdate = jest.fn();
 const mockUpload = jest.fn();
 const mockDeletePhoto = jest.fn();
+const mockUpdateUserById = jest.fn();
 const mockNavigate = jest.fn();
 const mockToastSuccess = jest.fn();
 const mockToastError = jest.fn();
@@ -49,16 +50,26 @@ jest.mock("../../store/slices/usersSlice", () => ({
   useUpdateUserInfoMutation: () => [mockUpdate, { isLoading: false }],
   useUploadUserPhotoMutation: () => [mockUpload, { isLoading: false }],
   useDeleteUserPhotoMutation: () => [mockDeletePhoto, { isLoading: false }],
+  useUpdateUserByIdMutation: () => [mockUpdateUserById, { isLoading: false }],
 }));
 
 jest.mock("../../store/slices/authSlice", () => ({
   setCredentials: (payload: any) => ({ type: "auth/setCredentials", payload }),
 }));
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useNavigate: () => mockNavigate,
-}));
+// `useNavigate` is stubbed for most cases so the redirect is a plain
+// assertion, but the unsaved-changes guard has to be proved against the REAL
+// router too: a save's own redirect must not be blocked by the form it just
+// saved. `mockNavigation` is flipped before a render and never during one, so
+// the hook count stays stable across that component's renders.
+let mockNavigation = true;
+jest.mock("react-router-dom", () => {
+  const actual = jest.requireActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => (mockNavigation ? mockNavigate : actual.useNavigate()),
+  };
+});
 
 const refetch = jest.fn();
 const resolved = (value: any = { success: true }) => ({
@@ -111,7 +122,9 @@ function renderEditor(data: any = { data: USER }, loading = false) {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockNavigation = true;
   mockUpdate.mockReturnValue(resolved());
+  mockUpdateUserById.mockReturnValue(resolved());
   mockUpload.mockReturnValue(resolved());
   mockDeletePhoto.mockReturnValue(resolved());
 });
@@ -160,6 +173,34 @@ describe("layout", () => {
   });
 });
 
+describe("accessibility", () => {
+  it("names every toggle group programmatically", () => {
+    renderEditor();
+    const groups = screen.getAllByRole("group");
+    expect(groups).toHaveLength(5);
+    groups.forEach((group) => {
+      const id = group.getAttribute("aria-labelledby") || "";
+      expect(id).toBeTruthy();
+      expect(document.getElementById(id)).toBeTruthy();
+    });
+  });
+
+  it("points the hints and counters at the controls they describe", () => {
+    renderEditor();
+    expect(screen.getByTestId("edit-bio")).toHaveAttribute(
+      "aria-describedby",
+      "edit-bio-count"
+    );
+    expect(screen.getByTestId("edit-username")).toHaveAttribute(
+      "aria-describedby",
+      "edit-username-hint"
+    );
+    expect(document.getElementById("edit-bio-count")).toBeTruthy();
+    expect(document.getElementById("edit-username-hint")).toBeTruthy();
+    expect(document.getElementById("edit-level-hint")).toBeTruthy();
+  });
+});
+
 describe("saving", () => {
   it("keeps Save disabled until something actually changes", () => {
     renderEditor();
@@ -194,10 +235,74 @@ describe("saving", () => {
     const payload = mockUpdate.mock.calls[0][0];
     expect(payload.school).toBe("SNU");
     expect(payload.occupation).toBe("Engineer");
-    expect(payload.languageLevel).toBe("C1");
+    // The level is not part of this body — it has its own endpoint.
+    expect(payload.languageLevel).toBeUndefined();
+    expect(mockUpdateUserById).toHaveBeenCalledWith({
+      id: "me",
+      body: { languageLevel: "C1" },
+    });
     expect(payload.topics).toEqual(["music", "travel"]);
     expect(payload.gender).toBe("female");
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/profile"));
+  });
+
+  it("posts exactly the owned fields — never image, images or createdAt", async () => {
+    renderEditor({
+      // The API document carries fields the editor neither shows nor owns.
+      data: { ...USER, image: "avatar.jpg", images: ["raw.jpg"], createdAt: "2025-01-01" },
+    });
+    fireEvent.change(screen.getByTestId("edit-name"), {
+      target: { name: "name", value: "Ada L" },
+    });
+    fireEvent.click(screen.getByTestId("edit-save"));
+
+    await waitFor(() => expect(mockUpdate).toHaveBeenCalledTimes(1));
+    expect(Object.keys(mockUpdate.mock.calls[0][0]).sort()).toEqual(
+      [
+        "_id",
+        "bio",
+        "birth_day",
+        "birth_month",
+        "birth_year",
+        "bloodType",
+        "email",
+        "gender",
+        "imageUrls",
+        "language_to_learn",
+        "mbti",
+        "name",
+        "native_language",
+        "occupation",
+        "school",
+        "topics",
+        "username",
+      ].sort()
+    );
+  });
+
+  it("persists a changed CEFR level through the endpoint that accepts it", async () => {
+    renderEditor();
+    fireEvent.click(screen.getByTestId("edit-level-C1"));
+    fireEvent.click(screen.getByTestId("edit-save"));
+
+    await waitFor(() => expect(mockUpdateUserById).toHaveBeenCalledTimes(1));
+    expect(mockUpdateUserById).toHaveBeenCalledWith({
+      id: "me",
+      body: { languageLevel: "C1" },
+    });
+    // /auth/updatedetails does not whitelist it, so it is not sent there.
+    expect(mockUpdate.mock.calls[0][0].languageLevel).toBeUndefined();
+  });
+
+  it("leaves the level endpoint alone when the level did not move", async () => {
+    renderEditor();
+    fireEvent.change(screen.getByTestId("edit-school"), {
+      target: { name: "school", value: "SNU" },
+    });
+    fireEvent.click(screen.getByTestId("edit-save"));
+
+    await waitFor(() => expect(mockUpdate).toHaveBeenCalledTimes(1));
+    expect(mockUpdateUserById).not.toHaveBeenCalled();
   });
 
   it("stays on the form and says so when the save is rejected", async () => {
@@ -294,6 +399,20 @@ describe("unsaved changes", () => {
 
     fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
     await waitFor(() => expect(screen.getByTestId("profile-screen")).toBeInTheDocument());
+  });
+
+  it("does not block the redirect the save itself performs", async () => {
+    // No useNavigate stub here: the save drives the real router, past the
+    // guard, with the form still dirty at the moment navigate() is called.
+    mockNavigation = false;
+    renderEditor();
+    fireEvent.change(screen.getByTestId("edit-name"), {
+      target: { name: "name", value: "Ada L" },
+    });
+    fireEvent.click(screen.getByTestId("edit-save"));
+
+    await waitFor(() => expect(screen.getByTestId("profile-screen")).toBeInTheDocument());
+    expect(screen.queryByTestId("confirm-dialog")).not.toBeInTheDocument();
   });
 
   it("warns before the tab is closed only while there are changes", () => {

@@ -108,14 +108,18 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
       providesTags: ["User"],
     }),
+    // A mutation cannot *provide* tags -- it invalidates them. This carried
+    // `providesTags` (and a meaningless `keepUnusedDataFor`) for as long as it
+    // existed, which meant a successful profile save never refetched
+    // `getUserProfile`: the profile page could read a document up to five
+    // seconds stale straight after an edit.
     updateUserInfo: builder.mutation({
       query: (data: any) => ({
         url: `${USER_PROFILE_UPDATE}`,
         method: "PUT",
         body: data,
       }),
-      keepUnusedDataFor: 5,
-      providesTags: ["User"],
+      invalidatesTags: ["User"],
     }),
     // Update a user by id (hits /auth/users/:id). Unlike updateUserInfo
     // (/auth/updatedetails), this endpoint accepts `languageLevel` — used to

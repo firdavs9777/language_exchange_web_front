@@ -91,6 +91,17 @@ const ProfilePhotos: React.FC<ProfilePhotosProps> = ({ images, isOwn, name }) =>
     if (open && closeRef.current) closeRef.current.focus();
   }, [open]);
 
+  // The page behind the overlay must not scroll under a wheel or trackpad
+  // gesture. Touched in an effect, restored to whatever it was on close.
+  useEffect(() => {
+    if (!open) return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
+
   /** Tab and Shift+Tab wrap inside the dialog instead of escaping behind it. */
   const trapTab = (event: React.KeyboardEvent): void => {
     if (event.key !== "Tab" || !dialogRef.current) return;
@@ -151,7 +162,9 @@ const ProfilePhotos: React.FC<ProfilePhotosProps> = ({ images, isOwn, name }) =>
               >
                 <img
                   src={url}
-                  alt={altFor(index)}
+                  /* Decorative: the button around it already carries the
+                     accessible name, and a second one would be read twice. */
+                  alt=""
                   loading="lazy"
                   data-testid="photo-tile-image"
                   className="h-full w-full object-cover transition-transform duration-200 hover:scale-[1.03]"

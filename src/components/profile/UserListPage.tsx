@@ -33,9 +33,12 @@ interface PersonRowData {
 const SKELETONS = [0, 1, 2, 3, 4, 5];
 
 const PAGE = "min-h-screen bg-canvas dark:bg-canvas-dark";
-const COLUMN = "mx-auto w-full max-w-3xl px-3 pb-16 pt-4 sm:px-4 sm:pt-6";
+const COLUMN = "mx-auto w-full min-w-0 max-w-3xl px-3 pb-16 pt-4 sm:px-4 sm:pt-6";
+// `shrink-0` + `whitespace-nowrap` keeps a tab's label on one line; the nav
+// scrolls instead of widening the document, which is what three tabs did at
+// 390px. `flex-1` still spreads them across the bar when there is room.
 const TAB =
-  "flex flex-1 items-center justify-center gap-1.5 rounded-chip px-3 py-2 text-sm font-semibold transition-colors";
+  "flex flex-1 shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-chip px-3 py-2 text-sm font-semibold transition-colors";
 const TAB_ON = "bg-surface text-brand-deep shadow-card dark:bg-cardbg-dark dark:text-brand-light";
 const TAB_OFF = "text-ink-500 hover:text-ink-700 dark:text-ink-400 dark:hover:text-ink-200";
 const CTA =
@@ -410,7 +413,8 @@ const UserListPage: React.FC = () => {
 
           <nav
             aria-label={heading}
-            className="flex gap-1 rounded-chip bg-ink-100 p-1 dark:bg-ink-800"
+            data-testid="list-tabs"
+            className="flex gap-1 overflow-x-auto rounded-chip bg-ink-100 p-1 dark:bg-ink-800"
           >
             {tabs.map((entry) => {
               const Icon = entry.icon;

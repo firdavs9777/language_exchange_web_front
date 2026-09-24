@@ -188,6 +188,15 @@ describe("tabs", () => {
   });
 });
 
+it("lets the tab bar scroll instead of widening the page on a phone", () => {
+  renderList("/visitors", "me");
+  const nav = screen.getByTestId("list-tabs");
+  expect(nav.className).toContain("overflow-x-auto");
+  // A tab that can shrink wraps its label and pushes the row wider instead.
+  expect(screen.getByTestId("tab-visitors").className).toContain("shrink-0");
+  expect(screen.getByTestId("tab-visitors").className).toContain("whitespace-nowrap");
+});
+
 describe("rows", () => {
   it("links each person to their profile and shows their language pair", () => {
     mockGetFollowers.mockReturnValue({

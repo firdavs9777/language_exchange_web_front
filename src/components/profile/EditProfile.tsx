@@ -6,6 +6,7 @@ import {
   useGetUserProfileQuery,
   useUploadUserPhotoMutation,
   useUpdateUserInfoMutation,
+  useUpdateUserByIdMutation,
   useDeleteUserPhotoMutation,
 } from "../../store/slices/usersSlice";
 import { setCredentials } from "../../store/slices/authSlice";
@@ -89,7 +90,7 @@ const CLEAR_LINK =
 
 interface SectionProps {
   title: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   children: React.ReactNode;
   testId: string;
 }
@@ -106,7 +107,36 @@ const Section: React.FC<SectionProps> = ({ title, icon: Icon, children, testId }
   </SurfaceCard>
 );
 
-/** The fields the editor owns, in the shape the update endpoint expects. */
+/**
+ * Exactly the fields `PUT /auth/updatedetails` is sent, in order. The form
+ * state carries a couple more (`email` and `username` are read-only, shown
+ * but never edited; `languageLevel` goes to a different endpoint), so the
+ * payload is an explicit pick rather than a spread of the whole form: an
+ * earlier draft posted `{...formData}` and sent `image: ""`, `images: []` and
+ * `createdAt: ""` along with it, which would blank the avatar on any server
+ * that took the body at its word.
+ */
+const SAVED_FIELDS = [
+  "_id",
+  "name",
+  "username",
+  "gender",
+  "email",
+  "bio",
+  "birth_year",
+  "birth_month",
+  "birth_day",
+  "native_language",
+  "language_to_learn",
+  "imageUrls",
+  "mbti",
+  "bloodType",
+  "topics",
+  "occupation",
+  "school",
+];
+
+/** The blank form. Fields the editor does not own are absent, not empty. */
 const EMPTY: UserProfileData = {
   _id: "",
   name: "",
@@ -117,9 +147,6 @@ const EMPTY: UserProfileData = {
   birth_year: "",
   birth_month: "",
   birth_day: "",
-  image: "",
-  createdAt: "",
-  images: [],
   native_language: "",
   language_to_learn: "",
   languageLevel: "",
@@ -181,6 +208,10 @@ const EditProfile: React.FC = () => {
   const { data, isLoading, refetch } = useGetUserProfileQuery({});
   const [uploadUserPhoto, { isLoading: isUploading }] = useUploadUserPhotoMutation();
   const [updateUserProfile, { isLoading: isSaving }] = useUpdateUserInfoMutation();
+  // CEFR does not go with the rest: `/auth/updatedetails` does not whitelist
+  // `languageLevel`, so it is persisted through `PUT /auth/users/:id` exactly
+  // as Register.uploadPhotoAndPersistCefr does.
+  const [updateUserById, { isLoading: isSavingLevel }] = useUpdateUserByIdMutation();
   const [deleteUserPhoto, { isLoading: isDeletingPhoto }] = useDeleteUserPhotoMutation();
 
   const [formData, setFormData] = useState<UserProfileData>(EMPTY);
@@ -293,20 +324,35 @@ const EditProfile: React.FC = () => {
   }, []);
 
   const handleSave = async (): Promise<void> => {
-    const payload = {
-      ...formData,
-      // The backend validates gender lowercase.
-      gender: (formData.gender || "").toLowerCase(),
-    };
+    // The backend validates gender lowercase, so the form and the payload
+    // agree on the lowercased value -- otherwise the render after a save is
+    // still "dirty" and the beforeunload listener stays bound.
+    const next: any = { ...formData, gender: (formData.gender || "").toLowerCase() };
+    const payload: any = {};
+    SAVED_FIELDS.forEach((field) => {
+      payload[field] = next[field];
+    });
+
     try {
       const result = await updateUserProfile(payload).unwrap();
       dispatch(setCredentials({ ...result }));
+
+      // Only when it actually moved: the endpoint is a different one, and an
+      // unchanged level is not worth a second round trip.
+      if (userId && next.languageLevel !== baseline.languageLevel) {
+        await updateUserById({
+          id: userId,
+          body: { languageLevel: next.languageLevel },
+        }).unwrap();
+      }
+
       toast.success(
         t("profile.messages.profile_update_success") || "Profile updated successfully",
         TOAST
       );
       if (!mounted.current) return;
-      setBaseline(payload);
+      setFormData(next);
+      setBaseline(next);
       // The guard reads a ref rather than the state just set: the navigation
       // below runs before React has re-rendered with the new baseline, so a
       // state-only check would still see a dirty form and block the save.
@@ -489,13 +535,14 @@ const EditProfile: React.FC = () => {
                   </label>
                   <input
                     id="edit-username"
-                  data-testid="edit-username"
+                    data-testid="edit-username"
                     type="text"
                     value={`@${formData.username}`}
                     disabled
+                    aria-describedby="edit-username-hint"
                     className={FIELD_LOCKED}
                   />
-                  <p className={HINT}>
+                  <p id="edit-username-hint" className={HINT}>
                     {t("profile.hints.username_readonly") || "Username cannot be changed"}
                   </p>
                 </div>
@@ -517,8 +564,10 @@ const EditProfile: React.FC = () => {
               </div>
 
               <div>
-                <span className={LABEL}>{t("profile.labels.gender") || "Gender"}</span>
-                <div className="flex gap-2">
+                <span id="edit-gender-label" className={LABEL}>
+                  {t("profile.labels.gender") || "Gender"}
+                </span>
+                <div role="group" aria-labelledby="edit-gender-label" className="flex gap-2">
                   {["male", "female"].map((option) => {
                     const on = (formData.gender || "").toLowerCase() === option;
                     return (
@@ -615,8 +664,15 @@ const EditProfile: React.FC = () => {
               </div>
 
               <div>
-                <span className={LABEL}>{t("profile.edit.level") || "Level"}</span>
-                <div className="grid grid-cols-6 gap-2">
+                <span id="edit-level-label" className={LABEL}>
+                  {t("profile.edit.level") || "Level"}
+                </span>
+                <div
+                  role="group"
+                  aria-labelledby="edit-level-label"
+                  aria-describedby="edit-level-hint"
+                  className="grid grid-cols-6 gap-2"
+                >
                   {LEVELS.map((level) => {
                     const on = formData.languageLevel === level;
                     return (
@@ -633,7 +689,7 @@ const EditProfile: React.FC = () => {
                     );
                   })}
                 </div>
-                <p className={HINT}>
+                <p id="edit-level-hint" className={HINT}>
                   {t("profile.edit.level_hint") ||
                     "Your level in the language you are learning."}
                 </p>
@@ -671,9 +727,10 @@ const EditProfile: React.FC = () => {
                   maxLength={BIO_LIMIT}
                   placeholder={t("profile.placeholders.bio") || "Tell people about yourself"}
                   rows={4}
+                  aria-describedby="edit-bio-count"
                   className={`${FIELD} resize-none`}
                 />
-                <p data-testid="edit-bio-count" className={`${HINT} text-right`}>
+                <p id="edit-bio-count" data-testid="edit-bio-count" className={`${HINT} text-right`}>
                   {bio.length}/{BIO_LIMIT}
                 </p>
               </div>
@@ -713,14 +770,19 @@ const EditProfile: React.FC = () => {
               </div>
 
               <div>
-                <span className={LABEL}>
+                <span id="edit-topics-label" className={LABEL}>
                   {t("profile.sections.topics") || "Topics & interests"}
                 </span>
-                <p className="pb-2 text-xs text-ink-400 dark:text-ink-500">
+                <p id="edit-topics-hint" className="pb-2 text-xs text-ink-400 dark:text-ink-500">
                   {t("profile.labels.topics_hint") ||
                     "Select topics you're interested in (max 10)"}
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div
+                  role="group"
+                  aria-labelledby="edit-topics-label"
+                  aria-describedby="edit-topics-hint edit-topic-count"
+                  className="flex flex-wrap gap-2"
+                >
                   {TOPIC_OPTIONS.map((topic) => {
                     const on = topics.indexOf(topic) > -1;
                     const locked = !on && topics.length >= MAX_TOPICS;
@@ -743,14 +805,16 @@ const EditProfile: React.FC = () => {
                     );
                   })}
                 </div>
-                <p data-testid="edit-topic-count" className={`${HINT} text-right`}>
+                <p id="edit-topic-count" data-testid="edit-topic-count" className={`${HINT} text-right`}>
                   {topics.length}/{MAX_TOPICS} {t("profile.labels.selected") || "selected"}
                 </p>
               </div>
 
               <div>
-                <span className={LABEL}>{t("profile.labels.mbti") || "MBTI"}</span>
-                <div className="grid grid-cols-4 gap-2">
+                <span id="edit-mbti-label" className={LABEL}>
+                  {t("profile.labels.mbti") || "MBTI"}
+                </span>
+                <div role="group" aria-labelledby="edit-mbti-label" className="grid grid-cols-4 gap-2">
                   {MBTI_TYPES.map((type) => {
                     const on = formData.mbti === type;
                     return (
@@ -780,10 +844,10 @@ const EditProfile: React.FC = () => {
               </div>
 
               <div>
-                <span className={LABEL}>
+                <span id="edit-blood-label" className={LABEL}>
                   {t("profile.labels.blood_type") || "Blood type"}
                 </span>
-                <div className="flex gap-2">
+                <div role="group" aria-labelledby="edit-blood-label" className="flex gap-2">
                   {BLOOD_TYPES.map((type) => {
                     const on = formData.bloodType === type;
                     return (
@@ -839,15 +903,15 @@ const EditProfile: React.FC = () => {
             type="button"
             data-testid="edit-save"
             onClick={handleSave}
-            disabled={!dirty || isSaving}
+            disabled={!dirty || isSaving || isSavingLevel}
             className="inline-flex items-center gap-1.5 rounded-chip bg-brand-deep px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isSaving ? (
+            {isSaving || isSavingLevel ? (
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
             ) : (
               <Save className="h-4 w-4" aria-hidden />
             )}
-            {isSaving
+            {isSaving || isSavingLevel
               ? t("profile.edit.saving") || "Saving"
               : t("profile.actions.save") || "Save"}
           </button>
