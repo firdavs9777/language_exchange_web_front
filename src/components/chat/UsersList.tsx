@@ -267,7 +267,7 @@ const UsersList: React.FC<UsersListProps> = ({
   }, [openMenuFor]);
 
   // Shared socket
-  const { socket, isConnected } = useSocket();
+  const { socket } = useSocket();
   const activeUserIdRef = useRef<string | null | undefined>(activeUserId);
 
   // State

@@ -231,7 +231,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const draftSeededRef = useRef(false);
 
   // Shared socket
-  const { socket, isConnected, emit } = useSocket();
+  const { socket, emit } = useSocket();
 
   // Keep selectedUserRef in sync
   useEffect(() => {
