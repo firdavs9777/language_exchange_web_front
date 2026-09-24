@@ -1,6 +1,6 @@
 import { Fragment, useState, useMemo, useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { Loader2, Search } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -26,6 +26,14 @@ import { AD_SLOTS } from "../ads/adsenseConfig";
 import { CommunityFilters, buildCommunityQuery } from "./lib/buildCommunityQuery";
 import * as filterStorage from "./lib/filterStorage";
 import { DEFAULT_FILTERS } from "./lib/filterStorage";
+import {
+  CommunityUrlState,
+  decodeCommunityState,
+  encodeCommunityState,
+  hasCommunityUrlState,
+  mergeCommunityParams,
+} from "./lib/communityUrlState";
+import notify from "../../design/notify";
 import "./tandem/tandem-community.scss";
 
 const PAGE_LIMIT = 20;
@@ -50,15 +58,41 @@ const countActiveFilters = (f: CommunityFilters): number => {
 const ModernCommunity: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // Search + sort live outside `filters` (search is the SubNav box, sort is a
-  // quick chip) but are folded into the query so BOTH hit the DB.
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<"recently_active" | undefined>(undefined);
-  const [filters, setFilters] = useState<CommunityFilters>(() => filterStorage.load());
+  // The filters this browser remembered from last time. Read once, in a lazy
+  // initializer guarded for the prerender — never during render, and never as
+  // the source of truth. It is the fallback for a bare /communities; a URL
+  // that carries state outranks it, so a shared link never silently picks up
+  // the recipient's own saved filters.
+  const [storedFilters] = useState<CommunityFilters>(() =>
+    typeof window === "undefined" ? { ...DEFAULT_FILTERS } : filterStorage.load()
+  );
+
+  // THE state of the list, derived from the query string on every render
+  // rather than mirrored into React state. That is what makes Back, Forward
+  // and a pasted link work without a single extra line: the browser changes
+  // the URL and this recomputes.
+  const listState = useMemo<CommunityUrlState>(() => {
+    const decoded = decodeCommunityState(searchParams);
+    const fromUrl = hasCommunityUrlState(searchParams);
+    return {
+      filters: fromUrl
+        ? { ...DEFAULT_FILTERS, ...(decoded.filters || {}) }
+        : { ...storedFilters },
+      search: decoded.search || "",
+      sort: decoded.sort,
+      tab: decoded.tab || "all",
+    };
+  }, [searchParams, storedFilters]);
+
+  const filters = listState.filters;
+  const sort = listState.sort;
+  const search = listState.search;
+  const activeTab: CommunityNavTab = listState.tab;
+
   const [draftFilters, setDraftFilters] = useState<CommunityFilters>(filters);
-
-  const [activeTab, setActiveTab] = useState<CommunityNavTab>("all");
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [waveTarget, setWaveTarget] = useState<CommunityMemberCard | null>(null);
   const [page, setPage] = useState(1);
@@ -68,7 +102,55 @@ const ModernCommunity: React.FC = () => {
   // instead of flashing the empty state.
   const [extraPages, setExtraPages] = useState<CommunityMemberCard[]>([]);
 
+  // The box updates the URL on every keystroke (so a link always matches what
+  // is on screen); only the *query* waits for the typing to settle.
   const debouncedSearch = useDebounce(search, 300);
+
+  /**
+   * Write a list state into the query string, keeping any param this page does
+   * not own (campaign tags, a stray `ref`). `replace` because a filter toggle
+   * is a correction of where you are, not a place you went: Back should leave
+   * the list, not walk you through twelve half-built filter combinations.
+   */
+  const writeUrl = useCallback(
+    (next: CommunityUrlState) => {
+      const merged = mergeCommunityParams(searchParams, encodeCommunityState(next));
+      if (merged.toString() === searchParams.toString()) return;
+      setSearchParams(merged, { replace: true });
+    },
+    [searchParams, setSearchParams]
+  );
+
+  /**
+   * The single write path. Every control — the sheet, the quick chips, the
+   * active-filter chips, the search box, the tabs — hands it a patch; it folds
+   * that into the current state, puts the result in the URL and mirrors the
+   * filters to localStorage so a later visit with no link still opens where
+   * the member left off.
+   */
+  const applyState = useCallback(
+    (patch: Partial<CommunityUrlState>) => {
+      const next: CommunityUrlState = {
+        filters,
+        search,
+        sort,
+        tab: activeTab,
+        ...patch,
+      };
+      if (patch.filters) filterStorage.save(patch.filters);
+      writeUrl(next);
+    },
+    [filters, search, sort, activeTab, writeUrl]
+  );
+
+  // Two jobs, both idempotent: put the stored filters into the URL on a bare
+  // /communities (so "Copy link" always has something to copy), and normalise
+  // a hand-edited query into its canonical spelling. `writeUrl` compares the
+  // encoded string first, so a URL that already says this does nothing.
+  useEffect(() => {
+    writeUrl({ filters, search, sort, tab: activeTab });
+  }, [filters, search, sort, activeTab, writeUrl]);
+
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
 
   const currentUser = useMemo(
@@ -157,12 +239,14 @@ const ModernCommunity: React.FC = () => {
     });
   }, [communityData, page]);
 
-  // Reset pagination whenever the server query changes (filters / search /
-  // sort). Skip the first run so a fresh mount (back-nav from /community/:id)
-  // doesn't clobber restored state.
+  // Reset pagination whenever the URL state that feeds the query changes
+  // (filters / search / sort / tab) -- including a change that arrived via
+  // Back. Skip the first run so a fresh mount (back-nav from /community/:id)
+  // doesn't clobber restored state. Keyed on the *value*, not the object
+  // identity, which changes on every query-string edit.
   const filterKey = useMemo(
-    () => JSON.stringify({ filters, debouncedSearch, sort }),
-    [filters, debouncedSearch, sort]
+    () => JSON.stringify({ filters, debouncedSearch, sort, activeTab }),
+    [filters, debouncedSearch, sort, activeTab]
   );
   const skipFilterReset = useRef(true);
   useEffect(() => {
@@ -252,50 +336,103 @@ const ModernCommunity: React.FC = () => {
     setIsFilterSheetOpen(true);
   }, [filters]);
 
-  const applyFilters = useCallback((next: CommunityFilters) => {
-    setFilters(next);
-    filterStorage.save(next);
-    setIsFilterSheetOpen(false);
-  }, []);
+  const applyFilters = useCallback(
+    (next: CommunityFilters) => {
+      applyState({ filters: next });
+      setIsFilterSheetOpen(false);
+    },
+    [applyState]
+  );
 
   // Reset ALL discovery filters back to defaults (used by the sheet's
   // "Clear all" and the ActiveFilterChips "Clear"). Persisted immediately.
   const clearAllFilters = useCallback(() => {
     const next = { ...DEFAULT_FILTERS };
     setDraftFilters(next);
-    setFilters(next);
-    filterStorage.save(next);
-  }, []);
+    applyState({ filters: next });
+  }, [applyState]);
 
-  // Remove a single active filter chip (or one topic within `topics[]`).
+  // Remove a single active filter chip (or one topic within `topics[]`) --
+  // the same write path as everything else, so the chip disappears from the
+  // URL and not only from the screen.
   const removeFilter = useCallback(
     (key: keyof CommunityFilters, topicValue?: string) => {
-      setFilters((prev) => {
-        const next: CommunityFilters = { ...prev };
-        if (key === "topics" && topicValue) {
-          const remaining = (prev.topics || []).filter((topic) => topic !== topicValue);
-          if (remaining.length) next.topics = remaining;
-          else delete next.topics;
-        } else if (key === "minAge") {
-          next.minAge = DEFAULT_FILTERS.minAge;
-        } else if (key === "maxAge") {
-          next.maxAge = DEFAULT_FILTERS.maxAge;
-        } else {
-          delete next[key];
-        }
-        filterStorage.save(next);
-        return next;
-      });
+      const next: CommunityFilters = { ...filters };
+      if (key === "topics" && topicValue) {
+        const remaining = (filters.topics || []).filter((topic) => topic !== topicValue);
+        if (remaining.length) next.topics = remaining;
+        else delete next.topics;
+      } else if (key === "minAge") {
+        next.minAge = DEFAULT_FILTERS.minAge;
+      } else if (key === "maxAge") {
+        next.maxAge = DEFAULT_FILTERS.maxAge;
+      } else {
+        delete next[key];
+      }
+      if (key === "search") applyState({ filters: next, search: "" });
+      else applyState({ filters: next });
     },
-    []
+    [filters, applyState]
   );
 
-  // Quick chips replace the filter object wholesale — persist + reset via the
-  // shared applyFilters-style path (no sheet to close, so update inline).
-  const handleQuickChange = useCallback((next: CommunityFilters) => {
-    setFilters(next);
-    filterStorage.save(next);
-  }, []);
+  // Quick chips replace the filter object wholesale.
+  const handleQuickChange = useCallback(
+    (next: CommunityFilters) => {
+      applyState({ filters: next });
+    },
+    [applyState]
+  );
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      applyState({ search: value });
+    },
+    [applyState]
+  );
+
+  const handleSortChange = useCallback(
+    (next?: "recently_active") => {
+      applyState({ sort: next });
+    },
+    [applyState]
+  );
+
+  const handleTabChange = useCallback(
+    (tab: CommunityNavTab) => {
+      applyState({ tab });
+    },
+    [applyState]
+  );
+
+  /**
+   * Hand the member a link to exactly what they are looking at. The sheet's
+   * draft is used rather than the applied filters, because the draft is what
+   * is on screen when the button is pressed.
+   *
+   * Every browser global here is read inside the handler, never during render.
+   */
+  const handleCopyLink = useCallback(() => {
+    const params = mergeCommunityParams(
+      searchParams,
+      encodeCommunityState({ filters: draftFilters, search, sort, tab: activeTab })
+    );
+    const query = params.toString();
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const url = `${origin}${location.pathname}${query ? `?${query}` : ""}`;
+    const clipboard: any =
+      typeof navigator !== "undefined" ? (navigator as any).clipboard : undefined;
+    const failed = () =>
+      notify.error(t("communityMain.filterSheet.linkCopyFailed") || "Couldn't copy the link");
+
+    if (!clipboard || typeof clipboard.writeText !== "function") {
+      failed();
+      return;
+    }
+    Promise.resolve(clipboard.writeText(url)).then(
+      () => notify.success(t("communityMain.filterSheet.linkCopied") || "Link copied"),
+      failed
+    );
+  }, [searchParams, draftFilters, search, sort, activeTab, location.pathname, t]);
 
   const handleOpenMember = useCallback(
     (user: CommunityMemberCard) => {
@@ -311,11 +448,10 @@ const ModernCommunity: React.FC = () => {
   }, []);
 
   const handleResetAll = useCallback(() => {
-    setSearch("");
-    setSort(undefined);
-    clearAllFilters();
-    setActiveTab("all");
-  }, [clearAllFilters]);
+    const next = { ...DEFAULT_FILTERS };
+    setDraftFilters(next);
+    applyState({ filters: next, search: "", sort: undefined, tab: "all" });
+  }, [applyState]);
 
   const activeFilterCount = useMemo(() => countActiveFilters(filters), [filters]);
 
@@ -339,9 +475,9 @@ const ModernCommunity: React.FC = () => {
     <div className="community-page">
       <CommunitySubNav
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         searchValue={search}
-        onSearchChange={setSearch}
+        onSearchChange={handleSearchChange}
         onOpenFilters={openFilterSheet}
         hasActiveFilters={activeFilterCount > 0}
         activeFilterCount={activeFilterCount}
@@ -353,6 +489,7 @@ const ModernCommunity: React.FC = () => {
         onChange={setDraftFilters}
         onApply={applyFilters}
         onClear={clearAllFilters}
+        onCopyLink={handleCopyLink}
         onClose={() => setIsFilterSheetOpen(false)}
       />
 
@@ -368,7 +505,7 @@ const ModernCommunity: React.FC = () => {
           sort={sort}
           me={me}
           onChange={handleQuickChange}
-          onSortChange={setSort}
+          onSortChange={handleSortChange}
         />
 
         <ActiveFilterChips
