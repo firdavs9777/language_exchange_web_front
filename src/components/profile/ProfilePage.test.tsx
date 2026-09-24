@@ -23,6 +23,7 @@ const mockReport = jest.fn();
 const mockCreateChatRoom = jest.fn();
 const mockGetCommunityMembers = jest.fn();
 const mockSendWave = jest.fn();
+const mockGetUserHighlights = jest.fn();
 const mockNavigate = jest.fn();
 
 jest.mock("react-i18next", () => ({
@@ -54,6 +55,12 @@ jest.mock("../../store/slices/momentsSlice", () => ({
 
 jest.mock("../../store/slices/chatSlice", () => ({
   useCreateChatRoomMutation: () => [mockCreateChatRoom, { isLoading: false }],
+}));
+
+// The highlights rail is a real child here (it is what decides whether the
+// section appears at all), so only its one query is stubbed.
+jest.mock("../../store/slices/storiesSlice", () => ({
+  useGetUserHighlightsQuery: (arg: any, opts: any) => mockGetUserHighlights(arg, opts),
 }));
 
 const ownRefetch = jest.fn();
@@ -100,6 +107,7 @@ beforeEach(() => {
   mockGetPublicProfile.mockReturnValue({ ...idle, refetch: otherRefetch });
   mockGetMyMoments.mockReturnValue({ ...idle, refetch: momentsRefetch });
   mockGetCommunityMembers.mockReturnValue({ ...idle });
+  mockGetUserHighlights.mockReturnValue({ ...idle });
   mockBlock.mockReturnValue(resolved());
   mockFollow.mockReturnValue(resolved());
   mockUnfollow.mockReturnValue(resolved());
@@ -582,5 +590,70 @@ describe("the phone tab switcher", () => {
 
     expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("aria-selected", "true");
     expect(screen.getByTestId("location-search")).not.toHaveTextContent("tab=");
+  });
+});
+
+describe("the story highlights rail", () => {
+  const viewer = { _id: "me", name: "Me" };
+  const other = { _id: "u2", name: "Ada" };
+
+  const HIGHLIGHTS = {
+    success: true,
+    data: [
+      {
+        _id: "h-1",
+        title: "Seoul",
+        coverImage: "https://cdn/cover-1.jpg",
+        storyCount: 1,
+        stories: [
+          { story: { _id: "s-1", mediaType: "image", mediaUrls: ["https://cdn/s1.jpg"] } },
+        ],
+      },
+    ],
+  };
+
+  beforeEach(() => {
+    mockGetUserProfile.mockReturnValue({ ...idle, refetch: ownRefetch, data: { data: viewer } });
+    mockGetPublicProfile.mockReturnValue({ ...idle, refetch: otherRefetch, data: { data: other } });
+  });
+
+  it("shows another person's highlights above their moments", () => {
+    mockGetUserHighlights.mockReturnValue({ ...idle, data: HIGHLIGHTS });
+
+    renderPage("/profile/u2", "me");
+
+    const rail = screen.getByTestId("highlights-rail");
+    expect(rail).toBeInTheDocument();
+    expect(within(rail).getByTestId("highlight-rail-item")).toBeInTheDocument();
+    expect(mockGetUserHighlights).toHaveBeenCalledWith("u2", { skip: false });
+
+    // Above the moments, not below them.
+    const moments = screen.getByTestId("profile-moments");
+    expect(rail.compareDocumentPosition(moments) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it("renders no rail when the person has no highlights", () => {
+    mockGetUserHighlights.mockReturnValue({ ...idle, data: { success: true, data: [] } });
+    renderPage("/profile/u2", "me");
+    expect(screen.queryByTestId("highlights-rail")).not.toBeInTheDocument();
+  });
+
+  it("stays off your own profile, which manages highlights on /highlights", () => {
+    mockGetUserHighlights.mockReturnValue({ ...idle, data: HIGHLIGHTS });
+    renderPage("/profile", "me");
+    expect(screen.queryByTestId("highlights-rail")).not.toBeInTheDocument();
+  });
+
+  it("opens the highlight's own stories in a viewer overlay", () => {
+    mockGetUserHighlights.mockReturnValue({ ...idle, data: HIGHLIGHTS });
+    renderPage("/profile/u2", "me");
+
+    fireEvent.click(screen.getByTestId("highlight-rail-item"));
+
+    expect(screen.getByTestId("highlight-story-viewer")).toBeInTheDocument();
+    expect(screen.getByTestId("highlight-story-image")).toHaveAttribute(
+      "src",
+      "https://cdn/s1.jpg"
+    );
   });
 });
