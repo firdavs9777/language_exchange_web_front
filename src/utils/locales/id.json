@@ -164,6 +164,7 @@
       "image_delete_failure": "Gagal menghapus foto",
       "profile_update_success": "Profil berhasil diperbarui",
       "profile_update_failure": "Gagal memperbarui profil",
+      "level_update_failure": "Profil kamu tersimpan, tetapi level bahasa tidak diperbarui",
       "error_loading_profile": "Gagal memuat profil pengguna",
       "no_profile_data": "Data profil pengguna tidak tersedia",
       "unknown_error": "Terjadi kesalahan yang tidak diketahui",

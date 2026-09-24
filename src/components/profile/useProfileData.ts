@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useGetUserProfileQuery } from "../../store/slices/usersSlice";
-import { useGetCommunityDetailsQuery } from "../../store/slices/communitySlice";
+import { useGetPublicUserProfileQuery } from "../../store/slices/communitySlice";
 import { useGetMyMomentsQuery } from "../../store/slices/momentsSlice";
 
 export interface ProfileStatsData {
@@ -45,10 +45,13 @@ function idOf(entry: any): string {
  * Everything the profile page needs about one person, own or other.
  *
  * Own profiles read `/auth/me` (the whole user document — `isEmailVerified`
- * and `learningStats` only exist here); other people read
- * `/auth/users/:id`, the same endpoint the community detail page has always
- * used, whose response is narrowed to `USER_PUBLIC_FIELDS`. Both return
- * `{ success, data }`, so a single parser covers them.
+ * and `learningStats` only exist here); other people read the PUBLIC
+ * `/auth/users/:id/public`, never the protected `/auth/users/:id`. The route
+ * `/profile/:userId` is public: the protected endpoint 401s for an anonymous
+ * visitor, so every shared profile link would break, and it skips the privacy
+ * redaction `getUserPublic` applies (age, city/country, online status and
+ * gifting level are dropped when the owner turned them off). Both endpoints
+ * return `{ success, data }`, so a single parser covers them.
  *
  * Follow state is derived from the target's own `followers` array rather than
  * from a second request: the array is already in the response, and a separate
@@ -63,7 +66,7 @@ export default function useProfileData(userId?: string): ProfileData {
   const profileUserId = isOwn ? viewerId : userId;
 
   const own = useGetUserProfileQuery({}, { skip: !isOwn || !viewerId });
-  const other = useGetCommunityDetailsQuery(userId || "", { skip: isOwn || !userId });
+  const other = useGetPublicUserProfileQuery(userId || "", { skip: isOwn || !userId });
   const moments = useGetMyMomentsQuery(
     { userId: profileUserId || "" },
     { skip: !profileUserId }

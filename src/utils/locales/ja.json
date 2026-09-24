@@ -164,6 +164,7 @@
       "image_delete_failure": "写真を削除できませんでした",
       "profile_update_success": "プロフィールを保存しました",
       "profile_update_failure": "プロフィールを保存できませんでした",
+      "level_update_failure": "プロフィールは保存されましたが、語学レベルは更新されませんでした",
       "error_loading_profile": "プロフィールを読み込めませんでした",
       "no_profile_data": "プロフィール情報がありません",
       "unknown_error": "エラーが発生しました",

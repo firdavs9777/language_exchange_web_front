@@ -164,6 +164,7 @@
       "image_delete_failure": "فشل في حذف الصورة",
       "profile_update_success": "تم تحديث الملف الشخصي بنجاح",
       "profile_update_failure": "فشل في تحديث الملف الشخصي",
+      "level_update_failure": "تم حفظ ملفك الشخصي، لكن لم يتم تحديث مستوى اللغة",
       "error_loading_profile": "خطأ في تحميل الملف الشخصي",
       "no_profile_data": "لا تتوفر بيانات الملف الشخصي",
       "unknown_error": "حدث خطأ غير معروف",

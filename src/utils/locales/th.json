@@ -164,6 +164,7 @@
       "image_delete_failure": "ไม่สามารถลบรูปภาพ",
       "profile_update_success": "อัปเดตโปรไฟล์สำเร็จ",
       "profile_update_failure": "ไม่สามารถอัปเดตโปรไฟล์",
+      "level_update_failure": "บันทึกโปรไฟล์แล้ว แต่ระดับภาษายังไม่อัปเดต",
       "error_loading_profile": "เกิดข้อผิดพลาดในการโหลดโปรไฟล์ผู้ใช้",
       "no_profile_data": "ไม่มีข้อมูลโปรไฟล์ผู้ใช้",
       "unknown_error": "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ",

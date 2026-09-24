@@ -164,6 +164,7 @@
       "image_delete_failure": "Failed to delete photo",
       "profile_update_success": "Profile updated successfully",
       "profile_update_failure": "Failed to update profile",
+      "level_update_failure": "Your profile was saved, but the language level didn't update",
       "error_loading_profile": "Error loading user profile",
       "no_profile_data": "No user profile data available",
       "unknown_error": "An unknown error occurred",

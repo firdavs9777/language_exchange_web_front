@@ -164,6 +164,7 @@
       "image_delete_failure": "Не удалось удалить фото",
       "profile_update_success": "Профиль успешно обновлён",
       "profile_update_failure": "Не удалось обновить профиль",
+      "level_update_failure": "Профиль сохранён, но уровень языка не обновился",
       "error_loading_profile": "Ошибка загрузки профиля пользователя",
       "no_profile_data": "Данные профиля пользователя недоступны",
       "unknown_error": "Произошла неизвестная ошибка",

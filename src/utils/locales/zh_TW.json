@@ -164,6 +164,7 @@
       "image_delete_failure": "相片刪除失敗",
       "profile_update_success": "個人檔案已更新",
       "profile_update_failure": "個人檔案更新失敗",
+      "level_update_failure": "個人資料已儲存，但語言程度未更新",
       "error_loading_profile": "個人檔案載入失敗",
       "no_profile_data": "目前沒有個人檔案資料",
       "unknown_error": "發生了未知的錯誤",

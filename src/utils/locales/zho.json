@@ -164,6 +164,7 @@
       "image_delete_failure": "照片删除失败",
       "profile_update_success": "资料已更新",
       "profile_update_failure": "资料更新失败",
+      "level_update_failure": "个人资料已保存，但语言水平未更新",
       "error_loading_profile": "用户资料加载失败",
       "no_profile_data": "暂无用户资料",
       "unknown_error": "发生了未知错误",

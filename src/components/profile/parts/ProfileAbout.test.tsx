@@ -3,9 +3,17 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import ProfileAbout from "./ProfileAbout";
 
+// Translation is off by default (every `t()` returns "", so the components'
+// English fallbacks render); one test swaps in a real lookup.
+let mockTranslate: (key: string) => string = () => "";
+
 jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
+  useTranslation: () => ({ t: (key: string) => mockTranslate(key), i18n: { language: "en" } }),
 }));
+
+beforeEach(() => {
+  mockTranslate = () => "";
+});
 
 const LONG_BIO = "a".repeat(300);
 
@@ -40,6 +48,16 @@ it("renders one chip per topic and drops the blank ones", () => {
   render(<ProfileAbout user={{ topics: ["Music", "  ", "Travel"] }} />);
   expect(screen.getAllByTestId("about-topic")).toHaveLength(2);
   expect(screen.getByText("Music")).toBeInTheDocument();
+});
+
+// The editor renders the same interests through `profile.topics.<key>`; the
+// profile used to print the raw key, so "K-Pop" on the form read "kpop" here
+// and stayed English in all 18 locales.
+it("translates a known topic and falls back to the raw value for a free-text one", () => {
+  mockTranslate = (key: string) => (key === "profile.topics.kpop" ? "K-Pop" : "");
+  render(<ProfileAbout user={{ topics: ["kpop", "Backgammon"] }} />);
+  expect(screen.getByText("K-Pop")).toBeInTheDocument();
+  expect(screen.getByText("Backgammon")).toBeInTheDocument();
 });
 
 it("shows MBTI and blood type as small facts", () => {

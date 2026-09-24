@@ -158,3 +158,51 @@ it("takes dismissals again once the mutation settles", () => {
   fireEvent.keyDown(document, { key: "Escape" });
   expect(props.onCancel).toHaveBeenCalledTimes(1);
 });
+
+// The same chrome the profile lightbox has always had. With this dialog now
+// gating Block, Report, photo deletion and moment deletion, two overlays on
+// one page must not disagree about what Tab does.
+describe("dialog chrome", () => {
+  it("wraps Tab and Shift+Tab inside the dialog", () => {
+    const props = base();
+    render(<ConfirmDialog {...props} />);
+    const dialog = screen.getByTestId("confirm-dialog");
+    const cancel = screen.getByTestId("confirm-dialog-cancel");
+    const confirm = screen.getByTestId("confirm-dialog-confirm");
+
+    confirm.focus();
+    fireEvent.keyDown(dialog, { key: "Tab" });
+    expect(document.activeElement).toBe(cancel);
+
+    fireEvent.keyDown(dialog, { key: "Tab", shiftKey: true });
+    expect(document.activeElement).toBe(confirm);
+  });
+
+  it("keeps the reason field inside the trap", () => {
+    const props = base();
+    render(<ConfirmDialog {...props} requireReason />);
+    const dialog = screen.getByTestId("confirm-dialog");
+    const reason = screen.getByTestId("confirm-dialog-reason");
+    const cancel = screen.getByTestId("confirm-dialog-cancel");
+
+    // Confirm is disabled until a reason is typed, so Cancel is the last stop.
+    cancel.focus();
+    fireEvent.keyDown(dialog, { key: "Tab" });
+    expect(document.activeElement).toBe(reason);
+  });
+
+  it("locks the page behind it and restores the scroll on close", () => {
+    const props = base();
+    document.body.style.overflow = "";
+    const { rerender, unmount } = render(<ConfirmDialog {...props} />);
+    expect(document.body.style.overflow).toBe("hidden");
+
+    rerender(<ConfirmDialog {...props} open={false} />);
+    expect(document.body.style.overflow).toBe("");
+
+    rerender(<ConfirmDialog {...props} open />);
+    expect(document.body.style.overflow).toBe("hidden");
+    unmount();
+    expect(document.body.style.overflow).toBe("");
+  });
+});

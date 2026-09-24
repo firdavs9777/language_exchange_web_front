@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, ImagePlus, X } from "lucide-react";
 import SurfaceCard from "../../../design/SurfaceCard";
+import { trapTab, useBodyScrollLock } from "../../../design/dialogChrome";
 
 export interface ProfilePhotosProps {
   /** `user.imageUrls` as the API returns it — unvalidated. */
@@ -22,8 +23,6 @@ function cleanImages(images: any): string[] {
   }
   return urls;
 }
-
-const FOCUSABLE = "button:not([disabled]), a[href]";
 
 /**
  * The person's photos, own profile and anyone else's alike.
@@ -91,33 +90,10 @@ const ProfilePhotos: React.FC<ProfilePhotosProps> = ({ images, isOwn, name }) =>
     if (open && closeRef.current) closeRef.current.focus();
   }, [open]);
 
-  // The page behind the overlay must not scroll under a wheel or trackpad
-  // gesture. Touched in an effect, restored to whatever it was on close.
-  useEffect(() => {
-    if (!open) return undefined;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [open]);
-
-  /** Tab and Shift+Tab wrap inside the dialog instead of escaping behind it. */
-  const trapTab = (event: React.KeyboardEvent): void => {
-    if (event.key !== "Tab" || !dialogRef.current) return;
-    const nodes = dialogRef.current.querySelectorAll(FOCUSABLE);
-    if (nodes.length === 0) return;
-    const first = nodes[0] as HTMLElement;
-    const last = nodes[nodes.length - 1] as HTMLElement;
-    const active = document.activeElement;
-    if (event.shiftKey && (active === first || !dialogRef.current.contains(active))) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && active === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  };
+  // Body-scroll lock and the Tab trap are the shared dialog chrome
+  // (design/dialogChrome), which ConfirmDialog uses too -- two overlays on the
+  // same page must not behave differently under Tab.
+  useBodyScrollLock(open);
 
   if (count === 0) return null;
 
@@ -187,7 +163,7 @@ const ProfilePhotos: React.FC<ProfilePhotosProps> = ({ images, isOwn, name }) =>
               aria-modal="true"
               aria-label={t("profile.photos.title") || "Photos"}
               data-testid="photo-lightbox"
-              onKeyDown={trapTab}
+              onKeyDown={(event) => trapTab(dialogRef.current, event)}
               className="relative flex w-full max-w-3xl flex-col items-center gap-3"
             >
               <img

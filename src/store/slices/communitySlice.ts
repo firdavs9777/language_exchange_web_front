@@ -95,6 +95,14 @@ export const communityApiSlice = apiSlice.injectEndpoints({
         url: `${COMMUNITY_URL}/${userId}/public`,
       }),
       keepUnusedDataFor: 5,
+      // The profile page reads this one (useProfileData), so it carries the
+      // same "User" tags as getCommunityDetails above -- followUser /
+      // unFollowUser invalidate "User", and without the tag the follower count
+      // and the derived isFollowing keep showing the state from before the tap.
+      providesTags: (_result: any, _error: any, id: string) => [
+        { type: "User", id },
+        "User",
+      ],
     }),
 
     // Nearby Users (Discovery)

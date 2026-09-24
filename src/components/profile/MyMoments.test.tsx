@@ -55,6 +55,7 @@ function renderPage(viewerId: string | null = "me") {
           <Routes>
             <Route path="/my-moments" element={<MyMoments />} />
             <Route path="/login" element={<div data-testid="login-screen" />} />
+            <Route path="/add-moment" element={<div data-testid="add-moment-screen" />} />
           </Routes>
         </MemoryRouter>
       </HelmetProvider>
@@ -102,6 +103,22 @@ it("offers the empty state with a way to post", () => {
   mockGetMyMoments.mockReturnValue({ ...idle, refetch, data: { data: [] } });
   renderPage();
   expect(screen.getByTestId("my-moments-empty")).toBeInTheDocument();
+});
+
+// The composer lives at /add-moment (routes.tsx). /create-moment is not a
+// route and fell through to the catch-all, so the only action on a brand-new
+// account's My Moments page rendered NotFound.
+it("points both composer links at the real /add-moment route", () => {
+  mockGetMyMoments.mockReturnValue({ ...idle, refetch, data: { data: [] } });
+  renderPage();
+
+  expect(screen.getByTestId("my-moments-create")).toHaveAttribute("href", "/add-moment");
+  const empty = screen.getByTestId("my-moments-empty");
+  const link = empty.querySelector("a") as HTMLAnchorElement;
+  expect(link).toHaveAttribute("href", "/add-moment");
+
+  fireEvent.click(link);
+  expect(screen.getByTestId("add-moment-screen")).toBeInTheDocument();
 });
 
 it("offers a retry when the list fails to load", () => {

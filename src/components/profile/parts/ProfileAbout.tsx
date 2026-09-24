@@ -142,7 +142,10 @@ const ProfileAbout: React.FC<ProfileAboutProps> = ({ user }) => {
                   className="inline-flex items-center gap-1 rounded-chip bg-brand/[0.09] px-2.5 py-1 text-xs font-semibold text-brand-dark dark:bg-brand/[0.18] dark:text-brand-light"
                 >
                   <Hash className="h-3 w-3" aria-hidden />
-                  {topic}
+                  {/* Same lookup the editor uses, so an interest reads the
+                      same on the form and on the profile in all 18 locales.
+                      The fallback keeps free-text topics from older records. */}
+                  {t(`profile.topics.${topic}`) || topic}
                 </span>
               ))}
             </div>

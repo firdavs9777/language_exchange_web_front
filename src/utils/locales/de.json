@@ -164,6 +164,7 @@
       "image_delete_failure": "Foto konnte nicht gelöscht werden",
       "profile_update_success": "Profil erfolgreich aktualisiert",
       "profile_update_failure": "Profil konnte nicht aktualisiert werden",
+      "level_update_failure": "Dein Profil wurde gespeichert, aber das Sprachniveau wurde nicht aktualisiert",
       "error_loading_profile": "Fehler beim Laden des Benutzerprofils",
       "no_profile_data": "Keine Benutzerprofildaten verfügbar",
       "unknown_error": "Ein unbekannter Fehler ist aufgetreten",

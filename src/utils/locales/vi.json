@@ -164,6 +164,7 @@
       "image_delete_failure": "Không thể xóa ảnh",
       "profile_update_success": "Đã cập nhật hồ sơ thành công",
       "profile_update_failure": "Không thể cập nhật hồ sơ",
+      "level_update_failure": "Hồ sơ của bạn đã được lưu, nhưng trình độ ngôn ngữ chưa được cập nhật",
       "error_loading_profile": "Lỗi khi tải hồ sơ người dùng",
       "no_profile_data": "Không có dữ liệu hồ sơ người dùng",
       "unknown_error": "Đã xảy ra lỗi không xác định",

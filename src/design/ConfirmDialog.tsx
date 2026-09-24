@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { trapTab, useBodyScrollLock } from "./dialogChrome";
 
 export interface ConfirmDialogProps {
   open: boolean;
@@ -63,6 +64,11 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   const [reason, setReason] = useState("");
   const [typed, setTyped] = useState("");
   const firstFieldRef = useRef<HTMLTextAreaElement | HTMLButtonElement | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+
+  // Same chrome as the profile lightbox: the page behind does not scroll, and
+  // Tab wraps inside the dialog instead of walking out into it.
+  useBodyScrollLock(open);
 
   // A reopened dialog starts empty: the previous action's reason must never be
   // carried into the next one.
@@ -108,10 +114,12 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
         className="absolute inset-0 bg-ink-900/50"
       />
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label={title}
         data-testid="confirm-dialog"
+        onKeyDown={(event) => trapTab(dialogRef.current, event)}
         className={[
           "relative w-full max-w-md rounded-card border border-line bg-surface p-5 shadow-lg",
           "dark:border-line-dark dark:bg-cardbg-dark",

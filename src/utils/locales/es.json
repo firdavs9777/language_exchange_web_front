@@ -145,6 +145,7 @@
       "image_delete_failure": "Error al eliminar la foto",
       "profile_update_success": "Perfil actualizado correctamente",
       "profile_update_failure": "Error al actualizar el perfil",
+      "level_update_failure": "Tu perfil se guardó, pero el nivel de idioma no se actualizó",
       "error_loading_profile": "Error al cargar el perfil de usuario",
       "no_profile_data": "No hay datos de perfil disponibles",
       "unknown_error": "Ocurrió un error desconocido",

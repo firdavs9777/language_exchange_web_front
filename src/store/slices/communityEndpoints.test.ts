@@ -177,3 +177,46 @@ describe("getCommunityDetails cache invalidation", () => {
     expect(profileCalls()).toBe(2);
   });
 });
+
+// /profile/:userId reads this endpoint (useProfileData), because the route is
+// public and the protected /auth/users/:id 401s for an anonymous visitor and
+// skips the backend's privacy redaction. It therefore needs the same "User"
+// tags getCommunityDetails carries, or a follow leaves the page stale.
+describe("getPublicUserProfile", () => {
+  it("requests the PUBLIC /auth/users/:id/public URL", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+
+    await store.dispatch(
+      (communityApiSlice.endpoints as any).getPublicUserProfile.initiate("user-1")
+    );
+
+    expect(calls).toHaveLength(1);
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/auth/users/user-1/public");
+  });
+
+  it("is refetched after a follow", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    const { usersApiSlice } = require("./usersSlice");
+
+    await store.dispatch(
+      (communityApiSlice.endpoints as any).getPublicUserProfile.initiate("user-1")
+    );
+    const profileCalls = () =>
+      calls.filter(
+        (c) => new URL(c.url).pathname === "/api/v1/auth/users/user-1/public"
+      ).length;
+    expect(profileCalls()).toBe(1);
+
+    await store.dispatch(
+      (usersApiSlice.endpoints as any).followUser.initiate({
+        userId: "me",
+        targetUserId: "user-1",
+      })
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(profileCalls()).toBe(2);
+  });
+});

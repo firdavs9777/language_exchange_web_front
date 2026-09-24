@@ -14,7 +14,7 @@ import ProfilePage from "./ProfilePage";
 HelmetProvider.canUseDOM = false;
 
 const mockGetUserProfile = jest.fn();
-const mockGetCommunityDetails = jest.fn();
+const mockGetPublicProfile = jest.fn();
 const mockGetMyMoments = jest.fn();
 const mockFollow = jest.fn();
 const mockUnfollow = jest.fn();
@@ -41,7 +41,7 @@ jest.mock("../../store/slices/usersSlice", () => ({
 }));
 
 jest.mock("../../store/slices/communitySlice", () => ({
-  useGetCommunityDetailsQuery: (arg: any, opts: any) => mockGetCommunityDetails(arg, opts),
+  useGetPublicUserProfileQuery: (arg: any, opts: any) => mockGetPublicProfile(arg, opts),
 }));
 
 jest.mock("../../store/slices/momentsSlice", () => ({
@@ -86,7 +86,7 @@ function renderPage(path: string = "/profile", viewerId: string | null = "me") {
 
 beforeEach(() => {
   mockGetUserProfile.mockReturnValue({ ...idle, refetch: ownRefetch });
-  mockGetCommunityDetails.mockReturnValue({ ...idle, refetch: otherRefetch });
+  mockGetPublicProfile.mockReturnValue({ ...idle, refetch: otherRefetch });
   mockGetMyMoments.mockReturnValue({ ...idle, refetch: momentsRefetch });
   mockBlock.mockReturnValue(resolved());
   mockFollow.mockReturnValue(resolved());
@@ -114,7 +114,7 @@ describe("own profile", () => {
     expect(screen.getByTestId("action-edit-profile")).toBeInTheDocument();
     expect(screen.queryByTestId("action-follow")).not.toBeInTheDocument();
     // The other-user endpoint is never asked.
-    expect(mockGetCommunityDetails.mock.calls[0][1].skip).toBe(true);
+    expect(mockGetPublicProfile.mock.calls[0][1].skip).toBe(true);
   });
 
   it("feeds the header badge row from the user document", () => {
@@ -142,7 +142,7 @@ describe("own profile", () => {
 
 describe("another person's profile", () => {
   it("renders from the route param with the social actions", () => {
-    mockGetCommunityDetails.mockReturnValue({
+    mockGetPublicProfile.mockReturnValue({
       ...idle,
       refetch: otherRefetch,
       data: { data: { _id: "u2", name: "Ada", followers: ["me"] } },
@@ -158,7 +158,7 @@ describe("another person's profile", () => {
   });
 
   it("asks for the profile's moments with the same argument the hook uses", () => {
-    mockGetCommunityDetails.mockReturnValue({
+    mockGetPublicProfile.mockReturnValue({
       ...idle,
       refetch: otherRefetch,
       data: { data: { _id: "u2", name: "Ada" } },
@@ -201,7 +201,7 @@ describe("states", () => {
   });
 
   it("treats a 404 as not found and points back at the community", () => {
-    mockGetCommunityDetails.mockReturnValue({
+    mockGetPublicProfile.mockReturnValue({
       ...idle,
       refetch: otherRefetch,
       error: { status: 404 },
@@ -222,7 +222,7 @@ describe("states", () => {
   });
 
   it("still shows another person's profile to a signed-out visitor", () => {
-    mockGetCommunityDetails.mockReturnValue({
+    mockGetPublicProfile.mockReturnValue({
       ...idle,
       refetch: otherRefetch,
       data: { data: { _id: "u2", name: "Ada" } },
@@ -235,7 +235,7 @@ describe("states", () => {
   });
 
   it("is not found when the request succeeded with no user", () => {
-    mockGetCommunityDetails.mockReturnValue({ ...idle, refetch: otherRefetch, data: { data: null } });
+    mockGetPublicProfile.mockReturnValue({ ...idle, refetch: otherRefetch, data: { data: null } });
 
     renderPage("/profile/u2", "me");
 
@@ -245,7 +245,7 @@ describe("states", () => {
 
 describe("moderation", () => {
   it("leaves the blocked person's profile for the community", async () => {
-    mockGetCommunityDetails.mockReturnValue({
+    mockGetPublicProfile.mockReturnValue({
       ...idle,
       refetch: otherRefetch,
       data: { data: { _id: "u2", name: "Ada" } },
@@ -278,7 +278,7 @@ describe("photos", () => {
   });
 
   it("shows another person's photos without the Add link", () => {
-    mockGetCommunityDetails.mockReturnValue({
+    mockGetPublicProfile.mockReturnValue({
       ...idle,
       refetch: otherRefetch,
       data: { data: { _id: "u2", name: "Ada", imageUrls: ["a.jpg"] } },
@@ -328,7 +328,7 @@ describe("moments", () => {
 });
 
 it("titles the page after the person and keeps it out of the index", () => {
-  mockGetCommunityDetails.mockReturnValue({
+  mockGetPublicProfile.mockReturnValue({
     ...idle,
     refetch: otherRefetch,
     data: { data: { _id: "u2", name: "Ada" } },

@@ -6,14 +6,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import useProfileData from "./useProfileData";
 
 const mockGetUserProfile = jest.fn();
-const mockGetCommunityDetails = jest.fn();
+const mockGetPublicProfile = jest.fn();
 const mockGetMyMoments = jest.fn();
 
 jest.mock("../../store/slices/usersSlice", () => ({
   useGetUserProfileQuery: (arg: any, opts: any) => mockGetUserProfile(arg, opts),
 }));
 jest.mock("../../store/slices/communitySlice", () => ({
-  useGetCommunityDetailsQuery: (arg: any, opts: any) => mockGetCommunityDetails(arg, opts),
+  useGetPublicUserProfileQuery: (arg: any, opts: any) => mockGetPublicProfile(arg, opts),
 }));
 jest.mock("../../store/slices/momentsSlice", () => ({
   useGetMyMomentsQuery: (arg: any, opts: any) => mockGetMyMoments(arg, opts),
@@ -34,13 +34,13 @@ function wrapper(viewerId?: string) {
 
 beforeEach(() => {
   mockGetUserProfile.mockReturnValue(idle);
-  mockGetCommunityDetails.mockReturnValue(idle);
+  mockGetPublicProfile.mockReturnValue(idle);
   mockGetMyMoments.mockReturnValue(idle);
 });
 
 afterEach(() => {
   mockGetUserProfile.mockReset();
-  mockGetCommunityDetails.mockReset();
+  mockGetPublicProfile.mockReset();
   mockGetMyMoments.mockReset();
 });
 
@@ -52,31 +52,31 @@ it("treats a missing userId as the signed-in user's own profile", () => {
   expect(result.current.isOwn).toBe(true);
   expect(result.current.user && result.current.user.name).toBe("Me");
   // The other-user query never fires for an own profile.
-  expect(mockGetCommunityDetails.mock.calls[0][1].skip).toBe(true);
+  expect(mockGetPublicProfile.mock.calls[0][1].skip).toBe(true);
   expect(mockGetUserProfile.mock.calls[0][1].skip).toBe(false);
 });
 
 it("treats a userId equal to the viewer as own too", () => {
   renderHook(() => useProfileData("me"), { wrapper: wrapper("me") });
   expect(mockGetUserProfile.mock.calls[0][1].skip).toBe(false);
-  expect(mockGetCommunityDetails.mock.calls[0][1].skip).toBe(true);
+  expect(mockGetPublicProfile.mock.calls[0][1].skip).toBe(true);
 });
 
-it("reads another user from the community detail endpoint", () => {
-  mockGetCommunityDetails.mockReturnValue({ ...idle, data: { data: { _id: "u2", name: "Ada" } } });
+it("reads another user from the PUBLIC profile endpoint, not the protected one", () => {
+  mockGetPublicProfile.mockReturnValue({ ...idle, data: { data: { _id: "u2", name: "Ada" } } });
 
   const { result } = renderHook(() => useProfileData("u2"), { wrapper: wrapper("me") });
 
   expect(result.current.isOwn).toBe(false);
   expect(result.current.user && result.current.user.name).toBe("Ada");
-  expect(mockGetCommunityDetails).toHaveBeenCalledWith("u2", { skip: false });
+  expect(mockGetPublicProfile).toHaveBeenCalledWith("u2", { skip: false });
   expect(mockGetUserProfile.mock.calls[0][1].skip).toBe(true);
   // Moments are fetched for the profile being viewed, not for the viewer.
   expect(mockGetMyMoments.mock.calls[0][0]).toEqual({ userId: "u2" });
 });
 
 it("counts followers and following from the arrays the API returns", () => {
-  mockGetCommunityDetails.mockReturnValue({
+  mockGetPublicProfile.mockReturnValue({
     ...idle,
     data: { data: { _id: "u2", followers: ["me", "a"], following: ["b"] } },
   });
@@ -94,7 +94,7 @@ it("falls back to the moment list length when no total is returned", () => {
 });
 
 it("derives isFollowing from the target's followers, including populated objects", () => {
-  mockGetCommunityDetails.mockReturnValue({
+  mockGetPublicProfile.mockReturnValue({
     ...idle,
     data: { data: { _id: "u2", followers: [{ _id: "me" }] } },
   });
@@ -110,7 +110,7 @@ it("is never following on an own profile", () => {
 
 it("reports loading and error from the active query only", () => {
   mockGetUserProfile.mockReturnValue({ ...idle, isLoading: true });
-  mockGetCommunityDetails.mockReturnValue({ ...idle, error: { status: 404 } });
+  mockGetPublicProfile.mockReturnValue({ ...idle, error: { status: 404 } });
 
   const own = renderHook(() => useProfileData(), { wrapper: wrapper("me") });
   expect(own.result.current.loading).toBe(true);
@@ -124,7 +124,7 @@ it("reports loading and error from the active query only", () => {
 it("refetches the profile and the moments together", () => {
   const refetchProfile = jest.fn();
   const refetchMoments = jest.fn();
-  mockGetCommunityDetails.mockReturnValue({ ...idle, refetch: refetchProfile });
+  mockGetPublicProfile.mockReturnValue({ ...idle, refetch: refetchProfile });
   mockGetMyMoments.mockReturnValue({ ...idle, refetch: refetchMoments });
 
   const { result } = renderHook(() => useProfileData("u2"), { wrapper: wrapper("me") });

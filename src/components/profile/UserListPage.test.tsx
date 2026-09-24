@@ -217,6 +217,40 @@ describe("rows", () => {
     expect(screen.getAllByTestId("avatar-initials").length).toBe(2);
   });
 
+  // `aria-hidden` on something that can still be focused or clicked is a WCAG
+  // 4.1.2 violation. The avatar link stays in the accessibility tree and out of
+  // the tab order instead.
+  it("keeps the avatar link out of the tab order without hiding it", () => {
+    mockGetFollowers.mockReturnValue({
+      ...idle,
+      refetch: followersRefetch,
+      data: { count: 1, data: [person("u2", "Ada")] },
+    });
+
+    renderList("/followersList", "me");
+    const row = screen.getByTestId("list-row-u2");
+    const links = row.querySelectorAll('a[href="/profile/u2"]');
+    expect(links.length).toBe(2);
+    links.forEach((link) => expect(link).not.toHaveAttribute("aria-hidden"));
+    expect(links[0]).toHaveAttribute("tabindex", "-1");
+    expect(screen.getByTestId("list-name-u2")).not.toHaveAttribute("tabindex");
+  });
+
+  // The followers/following/visitors populate does not select `languageLevel`,
+  // so the rows must not pretend to know it: the pill renders its language
+  // pair without CEFR dots.
+  it("draws no CEFR dots on a list row", () => {
+    mockGetFollowers.mockReturnValue({
+      ...idle,
+      refetch: followersRefetch,
+      data: { count: 1, data: [person("u2", "Ada", { languageLevel: "C1" })] },
+    });
+
+    renderList("/followersList", "me");
+    expect(screen.getByTestId("language-pill")).toBeInTheDocument();
+    expect(screen.queryAllByTestId("language-pill-dot")).toHaveLength(0);
+  });
+
   it("gives the viewer's own row no follow button", () => {
     mockGetFollowers.mockReturnValue({
       ...idle,
@@ -308,6 +342,24 @@ describe("search", () => {
     ).toEqual({
       userId: "me",
     });
+  });
+
+  // The heading counter sits next to the list it counts; with a filter active
+  // the unfiltered total contradicts the rows on screen.
+  it("counts what the list actually shows while a search is active", () => {
+    mockGetFollowers.mockReturnValue({
+      ...idle,
+      refetch: followersRefetch,
+      data: { count: 2, data: [person("u2", "Ada"), person("u3", "Grace")] },
+    });
+
+    renderList("/followersList", "me");
+    expect(screen.getByTestId("list-count")).toHaveTextContent("2");
+
+    fireEvent.change(screen.getByTestId("list-search"), {
+      target: { value: "gra" },
+    });
+    expect(screen.getByTestId("list-count")).toHaveTextContent("1");
   });
 
   it("says so when the search matches nobody, without claiming the list is empty", () => {

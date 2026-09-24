@@ -134,7 +134,7 @@ const MyMoments: React.FC = () => {
             <h1 className="font-display text-xl text-ink-900 dark:text-ink-50">
               {t("profile.myMoments.title") || "My moments"}
             </h1>
-            <Link to="/create-moment" data-testid="my-moments-create" className={CTA}>
+            <Link to="/add-moment" data-testid="my-moments-create" className={CTA}>
               <Plus className="h-4 w-4" aria-hidden />
               {t("profile.myMoments.create") || "Share a moment"}
             </Link>
@@ -185,7 +185,7 @@ const MyMoments: React.FC = () => {
                   {t("profile.myMoments.empty_body") ||
                     "Share your first moment with the community."}
                 </p>
-                <Link to="/create-moment" className={`mt-4 ${CTA}`}>
+                <Link to="/add-moment" className={`mt-4 ${CTA}`}>
                   <Plus className="h-4 w-4" aria-hidden />
                   {t("profile.myMoments.create") || "Share a moment"}
                 </Link>

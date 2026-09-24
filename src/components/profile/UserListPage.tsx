@@ -24,7 +24,6 @@ interface PersonRowData {
   avatar: string;
   native: string;
   learning: string;
-  level?: string | null;
   /** Visitors only: when they last came by. */
   visitedAt?: string;
 }
@@ -94,7 +93,6 @@ function rowsOf(payload: any): PersonRowData[] {
       avatar: firstImage(person),
       native: person.native_language || person.nativeLanguage || "",
       learning: person.language_to_learn || person.languageToLearn || "",
-      level: person.languageLevel,
       visitedAt: entry && typeof entry.lastVisit === "string" ? entry.lastVisit : undefined,
     });
   }
@@ -194,7 +192,12 @@ const PersonRow: React.FC<PersonRowProps> = ({ row, viewerId, isFollowing }) => 
 
   return (
     <li data-testid={`list-row-${row.id}`} className="flex items-center gap-3 py-2.5">
-      <Link to={`/profile/${row.id}`} tabIndex={-1} aria-hidden className="shrink-0">
+      {/* Out of the tab order, but NOT `aria-hidden`: an element that is still
+          focusable and clickable must stay in the accessibility tree (WCAG
+          4.1.2, axe `aria-hidden-focus`). The Avatar's alt/label names the
+          link, so it is announced rather than being an anonymous link; the
+          keyboard still reaches the row exactly once, through the name. */}
+      <Link to={`/profile/${row.id}`} tabIndex={-1} className="shrink-0">
         <Avatar src={row.avatar || undefined} name={row.name} size={40} />
       </Link>
 
@@ -208,10 +211,14 @@ const PersonRow: React.FC<PersonRowProps> = ({ row, viewerId, isFollowing }) => 
         </Link>
         <div className="flex items-center gap-2 pt-1">
           {row.native && row.learning && (
+            // No `languageLevel`: the followers/following/visitors populate
+            // selects `name images bio gender mbti location language_to_learn
+            // native_language` (controllers/users.js) and never sends it, so
+            // reading it here only ever produced `undefined`. The pill renders
+            // without its CEFR dots, which is the truthful list row.
             <LanguageExchangePill
               nativeLanguage={row.native}
               learningLanguage={row.learning}
-              languageLevel={row.level}
               dense
             />
           )}
@@ -406,7 +413,9 @@ const UserListPage: React.FC = () => {
             <h1 className="font-display text-xl text-ink-900 dark:text-ink-50">{heading}</h1>
             {!loading && !failed && rows.length > 0 && (
               <span data-testid="list-count" className="text-sm text-ink-500 dark:text-ink-400">
-                {rows.length}
+                {/* What the list below actually shows: with a search active
+                    the unfiltered total contradicts the rows on screen. */}
+                {visible.length}
               </span>
             )}
           </div>

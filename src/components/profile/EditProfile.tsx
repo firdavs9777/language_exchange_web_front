@@ -339,11 +339,30 @@ const EditProfile: React.FC = () => {
 
       // Only when it actually moved: the endpoint is a different one, and an
       // unchanged level is not worth a second round trip.
+      //
+      // Its own try/catch on purpose. The 17 fields above are already saved by
+      // the time this runs, so a rejection here must not report the whole save
+      // as failed -- the user would be told nothing persisted while everything
+      // but the level did. The level gets its own, secondary message and the
+      // save still finishes: success toast, clean baseline, redirect.
       if (userId && next.languageLevel !== baseline.languageLevel) {
-        await updateUserById({
-          id: userId,
-          body: { languageLevel: next.languageLevel },
-        }).unwrap();
+        try {
+          await updateUserById({
+            id: userId,
+            body: { languageLevel: next.languageLevel },
+          }).unwrap();
+        } catch (levelError) {
+          toast.error(
+            t("profile.messages.level_update_failure") ||
+              "Your profile was saved, but the language level did not update",
+            TOAST
+          );
+          // The level did not persist, so neither the form nor the new
+          // baseline may claim it did: both go back to the stored value.
+          // (`updateUserById` invalidates "User", so a level that DID save is
+          // picked up by the profile's own query on the next render.)
+          next.languageLevel = baseline.languageLevel;
+        }
       }
 
       toast.success(

@@ -164,6 +164,7 @@
       "image_delete_failure": "Hindi natanggal ang larawan",
       "profile_update_success": "Matagumpay na na-update ang profile",
       "profile_update_failure": "Hindi na-update ang profile",
+      "level_update_failure": "Na-save ang profile mo, pero hindi na-update ang language level",
       "error_loading_profile": "Error sa pag-load ng profile ng user",
       "no_profile_data": "Walang available na data ng profile ng user",
       "unknown_error": "May naganap na hindi kilalang error",

@@ -164,6 +164,7 @@
       "image_delete_failure": "Fotoğraf silinemedi",
       "profile_update_success": "Profil başarıyla güncellendi",
       "profile_update_failure": "Profil güncellenemedi",
+      "level_update_failure": "Profilin kaydedildi ancak dil seviyesi güncellenmedi",
       "error_loading_profile": "Kullanıcı profili yüklenirken hata",
       "no_profile_data": "Kullanıcı profil verisi mevcut değil",
       "unknown_error": "Bilinmeyen bir hata oluştu",

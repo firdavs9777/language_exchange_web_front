@@ -294,6 +294,20 @@ describe("saving", () => {
     expect(mockUpdate.mock.calls[0][0].languageLevel).toBeUndefined();
   });
 
+  // The 17 fields are already persisted by the time the level call runs, so a
+  // rejection there must not report the whole save as failed.
+  it("still reports success when only the level call is rejected", async () => {
+    mockUpdateUserById.mockReturnValue(rejected());
+    renderEditor();
+    fireEvent.click(screen.getByTestId("edit-level-C1"));
+    fireEvent.click(screen.getByTestId("edit-save"));
+
+    await waitFor(() => expect(mockToastSuccess).toHaveBeenCalledTimes(1));
+    // A secondary, non-blocking message about the level alone.
+    expect(mockToastError).toHaveBeenCalledTimes(1);
+    expect(mockNavigate).toHaveBeenCalledWith("/profile");
+  });
+
   it("leaves the level endpoint alone when the level did not move", async () => {
     renderEditor();
     fireEvent.change(screen.getByTestId("edit-school"), {
