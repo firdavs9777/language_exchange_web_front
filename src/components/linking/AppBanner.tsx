@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, matchPath } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { X } from 'lucide-react';
 import { detectPlatform, MobilePlatform } from '../../utils/platform';
 import OpenInApp from './OpenInApp';
 import { ShareType } from '../../utils/shareUrl';
-import './AppBanner.scss';
 
 const PATTERNS: { pattern: string; type: ShareType }[] = [
   { pattern: '/moment/:id', type: 'moment' },
@@ -44,10 +44,30 @@ const AppBanner: React.FC = () => {
       const id = (m.params as any).id ?? (m.params as any).userId;
       if (!id || EXCLUDED_IDS[type].includes(id)) continue;
       return (
-        <div className="app-banner">
-          <span>{t('linking.appBanner.text', 'Open this in the BananaTalk app')}</span>
-          <OpenInApp type={type} id={id} className="app-banner__open" />
-          <button className="app-banner__close" onClick={() => setDismissed(true)}>×</button>
+        // `brand-deep` (#00806A), not `brand` (#00BFA5): this strip carries
+        // small white text, and white on the lighter brand is 2.33:1 -- well
+        // under AA. The stylesheet this replaces hardcoded #14b8a6, which was
+        // not even a brand colour, so the banner every deep link surfaces was
+        // simultaneously off-palette and unreadable.
+        <div className="flex items-center gap-3 bg-brand-deep px-4 py-2 text-white">
+          <span className="min-w-0 flex-1 text-sm leading-snug">
+            {t('linking.appBanner.text', 'Open this in the BananaTalk app')}
+          </span>
+          <OpenInApp
+            type={type}
+            id={id}
+            className="shrink-0 whitespace-nowrap rounded-full bg-white px-4 py-1.5 text-[13px] font-bold text-brand-deep transition-colors hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          />
+          <button
+            type="button"
+            onClick={() => setDismissed(true)}
+            aria-label={t('linking.appBanner.dismiss', 'Dismiss')}
+            className="shrink-0 rounded-full p-1 text-white/80 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            {/* Was a bare `×` glyph on a button with no accessible name: a
+                screen reader announced "multiplication sign, button". */}
+            <X className="h-4 w-4" aria-hidden />
+          </button>
         </div>
       );
     }
