@@ -6,7 +6,7 @@ import DialogShell from "../../design/DialogShell";
 import Avatar from "../../design/Avatar";
 import { useGetQuestionResponsesQuery } from "../../store/slices/storiesSlice";
 import { QuestionResponse } from "./types";
-import timeAgo from "./timeAgo";
+import timeAgo from "../../utils/timeAgo";
 
 export interface QuestionResponsesSheetProps {
   storyId: string;
@@ -142,7 +142,7 @@ const QuestionResponsesSheet: React.FC<QuestionResponsesSheetProps> = ({
                       </span>
                     )}
                     <span className="shrink-0 text-xs text-gray-500">
-                      {timeAgo(response.respondedAt, t)}
+                      {timeAgo(response.respondedAt, t, { withAgo: true })}
                     </span>
                   </div>
                   <p className="whitespace-pre-wrap break-words text-sm">

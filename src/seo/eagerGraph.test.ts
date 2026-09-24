@@ -273,6 +273,46 @@ it("reaches only eng.json statically; the other 17 locales are chunks", () => {
   expect(eager.map((f) => path.basename(f))).toEqual(["eng.json"]);
 });
 
+// Task S4's half of the rule. `/moments` is prerendered and imports
+// `StoriesFeed` statically -- the ring row is on the eager path by design and
+// has to stay tiny. Everything a ring LEADS to is a lazy route in
+// src/router/routes.tsx: the viewer, the composer, My stories, highlights and
+// the three sheets. The viewer is the one that would hurt most (it drags in
+// the sheets, the chat slice behind the share sheet and the overlay renderer),
+// so it is the canary: a `import StoryViewer from "./StoryViewer"` anywhere in
+// the shell -- a convenience re-export, a modal opened from the feed -- puts
+// all of it in main.js, and the bundle budget's headroom is wide enough to
+// hide it.
+const EAGER_STORIES_MODULE = path.join(SRC, "components", "stories", "StoriesFeed.tsx");
+const LAZY_STORY_MODULES = [
+  path.join(SRC, "components", "stories", "StoryViewer.tsx"),
+  path.join(SRC, "components", "stories", "CreateStory.tsx"),
+  path.join(SRC, "components", "stories", "MyStories.tsx"),
+  path.join(SRC, "components", "stories", "Highlights.tsx"),
+];
+
+it("reaches the story ring row but never the story viewer", () => {
+  // The ring row in the graph is the control: it proves the walk really does
+  // get into components/stories, so the viewer's absence means something.
+  expect(fs.existsSync(EAGER_STORIES_MODULE)).toBe(true);
+  expect(graph.modules.indexOf(EAGER_STORIES_MODULE)).toBeGreaterThan(-1);
+
+  LAZY_STORY_MODULES.forEach((file) => expect(fs.existsSync(file)).toBe(true));
+  const eager = LAZY_STORY_MODULES.filter((f) => graph.modules.indexOf(f) > -1);
+  expect(eager.map((f) => path.relative(SRC, f))).toEqual([]);
+});
+
+it("proves the story guard can fire, on the module that really does load the viewer", () => {
+  // routes.tsx names StoryViewer, but only inside `import(...)` behind
+  // lazyWithRetry -- the form staticSpecifiers deliberately does not match.
+  const routes = fs.readFileSync(path.join(SRC, "router", "routes.tsx"), "utf8");
+  expect(routes).toContain("components/stories/StoryViewer");
+  expect(staticSpecifiers(routes)).not.toContain("../components/stories/StoryViewer");
+  expect(
+    staticSpecifiers('import StoryViewer from "../components/stories/StoryViewer";\n')
+  ).toContain("../components/stories/StoryViewer");
+});
+
 it("proves the locale guard can fire, on the module that really does load them", () => {
   // i18nLazyBackend names every locale file, but only inside `import(...)`,
   // which staticSpecifiers deliberately does not match. If a static form ever

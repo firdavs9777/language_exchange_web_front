@@ -13,17 +13,23 @@ import {
 } from "../../store/slices/storiesSlice";
 import { useTranslation } from "react-i18next";
 import {
-  FaTimes,
-  FaChevronLeft,
-  FaChevronRight,
-  FaHeart,
-  FaComment,
-  FaShare,
-  FaEllipsisH,
-  FaTrash,
-} from "react-icons/fa";
-import { Check, Eye, MessageCircleQuestion, Send, Share2 } from "lucide-react";
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  Heart,
+  MessageCircle,
+  MessageCircleQuestion,
+  MoreHorizontal,
+  Send,
+  Share2,
+  Trash2,
+  X,
+} from "lucide-react";
+import Avatar from "../../design/Avatar";
+import ConfirmDialog from "../../design/ConfirmDialog";
 import notify from "../../design/notify";
+import timeAgo from "../../utils/timeAgo";
 import StoryViewersSheet from "./StoryViewersSheet";
 import QuestionResponsesSheet from "./QuestionResponsesSheet";
 import StoryShareSheet from "./StoryShareSheet";
@@ -35,7 +41,6 @@ import {
   overlayPositionStyle,
   overlayScaleClass,
 } from "./storyOverlays";
-import "./StoryViewer.scss";
 
 interface RootState {
   auth: {
@@ -59,6 +64,39 @@ type OpenSheet = "viewers" | "responses" | "share" | null;
 
 const PILL =
   "flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-2 text-sm font-medium text-white backdrop-blur transition hover:bg-white/25";
+/** The frosted card the poll and the question sticker share. */
+const STICKER_CARD =
+  "absolute inset-x-4 bottom-28 z-[5] rounded-card bg-black/60 p-5 text-white backdrop-blur";
+const ICON_BUTTON =
+  "flex items-center justify-center rounded-full border-0 bg-transparent p-2 text-white transition hover:bg-white/10";
+const NAV_BUTTON =
+  "pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full border-0 bg-black/40 text-white backdrop-blur transition hover:bg-black/60 disabled:opacity-30";
+
+/**
+ * The poll's own fill bar, snapped to ten-percent steps.
+ *
+ * Tailwind cannot build a class out of a runtime number, and a percentage in
+ * an inline `style` is what `storiesStyling.test.ts` forbids -- inline style
+ * in this directory is reserved for story DATA (an overlay's position and
+ * colour, a text story's palette) so that a reader can tell the two apart at
+ * a glance. Ten buckets is plenty for a bar that sits behind the exact figure,
+ * which is printed next to it.
+ */
+const FILL_STEPS = [
+  "w-0",
+  "w-[10%]",
+  "w-[20%]",
+  "w-[30%]",
+  "w-[40%]",
+  "w-[50%]",
+  "w-[60%]",
+  "w-[70%]",
+  "w-[80%]",
+  "w-[90%]",
+  "w-full",
+];
+const fillClass = (percentage: number): string =>
+  FILL_STEPS[Math.max(0, Math.min(10, Math.round(percentage / 10)))];
 
 const StoryViewer: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -73,8 +111,10 @@ const StoryViewer: React.FC = () => {
   );
 
   const [currentStoryIndex, setCurrentStoryIndex] = useState(startIndex);
-  const [progress, setProgress] = useState(0);
   const [isHeld, setIsHeld] = useState(false);
+  // Space toggles this; a finger held on the picture sets `isHeld`. Two
+  // states, because releasing the mouse must not undo a deliberate pause.
+  const [isKeyPaused, setIsKeyPaused] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [showReplyInput, setShowReplyInput] = useState(false);
@@ -87,8 +127,8 @@ const StoryViewer: React.FC = () => {
   const [answerAnonymously, setAnswerAnonymously] = useState(false);
   const [answerSent, setAnswerSent] = useState(false);
   const [openSheet, setOpenSheet] = useState<OpenSheet>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const storyRef = useRef<HTMLDivElement>(null);
 
   // Fetch user's stories
@@ -115,41 +155,12 @@ const StoryViewer: React.FC = () => {
   const currentStory = stories[currentStoryIndex];
   const isOwner = currentStory?.user._id === currentUserId;
 
-  // Three reasons to stand still: a finger held on the story, an answer being
-  // typed, or a sheet covering it. Anything that takes the reader's attention
-  // off the picture stops the clock, or the story they come back to is not
-  // the one they left.
-  const isPaused = isHeld || showAnswerBox || openSheet !== null;
-
-  // Progress bar animation
-  useEffect(() => {
-    if (!currentStory || isPaused || currentStory.mediaType === "text") {
-      if (progressIntervalRef.current) {
-        clearInterval(progressIntervalRef.current);
-      }
-      return;
-    }
-
-    const duration = 5000; // 5 seconds per story
-    const interval = 100; // Update every 100ms
-    const increment = (interval / duration) * 100;
-
-    progressIntervalRef.current = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          handleNextStory();
-          return 0;
-        }
-        return prev + increment;
-      });
-    }, interval);
-
-    return () => {
-      if (progressIntervalRef.current) {
-        clearInterval(progressIntervalRef.current);
-      }
-    };
-  }, [currentStory, isPaused]);
+  // Five reasons to stand still: a finger held on the story, Space, an answer
+  // being typed, a sheet covering it, or a confirmation waiting. Anything
+  // that takes the reader's attention off the picture stops the clock, or the
+  // story they come back to is not the one they left.
+  const isPaused =
+    isHeld || isKeyPaused || showAnswerBox || openSheet !== null || confirmDelete;
 
   // Mark story as viewed
   useEffect(() => {
@@ -171,8 +182,9 @@ const StoryViewer: React.FC = () => {
   }, [currentStory, currentUserId]);
 
   // Everything below belongs to one story and nothing else: a half-typed
-  // answer must not follow the reader to the next one, and "sent" must not
-  // make the next question sticker look already answered.
+  // answer must not follow the reader to the next one, "sent" must not make
+  // the next question sticker look already answered, and a pause is about the
+  // picture the reader was looking at.
   useEffect(() => {
     setShowAnswerBox(false);
     setAnswerText("");
@@ -181,27 +193,26 @@ const StoryViewer: React.FC = () => {
     setOpenSheet(null);
     setShowReactions(false);
     setShowMenu(false);
+    setIsKeyPaused(false);
   }, [currentStory?._id]);
+
+  const handleClose = useCallback(() => {
+    navigate("/stories");
+  }, [navigate]);
 
   const handleNextStory = useCallback(() => {
     if (currentStoryIndex < stories.length - 1) {
       setCurrentStoryIndex(currentStoryIndex + 1);
-      setProgress(0);
     } else {
       handleClose();
     }
-  }, [currentStoryIndex, stories.length]);
+  }, [currentStoryIndex, stories.length, handleClose]);
 
   const handlePrevStory = useCallback(() => {
     if (currentStoryIndex > 0) {
       setCurrentStoryIndex(currentStoryIndex - 1);
-      setProgress(0);
     }
   }, [currentStoryIndex]);
-
-  const handleClose = () => {
-    navigate("/stories");
-  };
 
   const handleReaction = async (emoji: string) => {
     if (!currentStory) return;
@@ -237,7 +248,7 @@ const StoryViewer: React.FC = () => {
       setReplyText("");
       setShowReplyInput(false);
     } catch (error) {
-      console.error("Failed to send reply:", error);
+      notify.error(t("stories.reply_failed") || "Couldn't send your message");
     }
   };
 
@@ -275,75 +286,107 @@ const StoryViewer: React.FC = () => {
         optionIndex,
       }).unwrap();
     } catch (error) {
-      console.error("Failed to vote:", error);
+      notify.error(t("stories.vote_failed") || "Couldn't save your vote");
     }
   };
 
   const handleDeleteStory = async () => {
     if (!currentStory || !isOwner) return;
 
-    if (window.confirm(t("stories.delete_story") || "Delete this story?")) {
-      try {
-        await deleteStory(currentStory._id).unwrap();
-        if (stories.length === 1) {
-          handleClose();
-        } else {
-          handleNextStory();
-        }
-      } catch (error) {
-        console.error("Failed to delete story:", error);
+    try {
+      await deleteStory(currentStory._id).unwrap();
+      setConfirmDelete(false);
+      if (stories.length === 1) {
+        handleClose();
+      } else {
+        handleNextStory();
       }
+    } catch (error) {
+      notify.error(t("stories.delete_failed") || "Couldn't delete this story");
     }
     setShowMenu(false);
   };
 
-  const handleKeyPress = (e: KeyboardEvent) => {
-    // While an answer is being typed or a sheet is open the keyboard belongs
-    // to them: arrows move the caret, and Escape closes the dialog (which
-    // DialogShell handles itself) rather than the whole viewer.
-    if (showAnswerBox || openSheet !== null) return;
-    if (e.key === "ArrowLeft") handlePrevStory();
-    if (e.key === "ArrowRight") handleNextStory();
-    if (e.key === "Escape") handleClose();
-  };
+  /**
+   * The viewer's keyboard: ← / → step, Space pauses and resumes, Escape
+   * leaves.
+   *
+   * It stands down whenever something else has a better claim on the keys: an
+   * answer being typed, a reply being typed, an open sheet or confirmation
+   * (whose Escape belongs to `DialogShell`), or a focused field of any kind.
+   * Space inside a text box is a space, not a pause.
+   */
+  const handleKeyPress = useCallback(
+    (e: KeyboardEvent) => {
+      if (showAnswerBox || showReplyInput || openSheet !== null || confirmDelete) return;
+      const tag = String((e.target as any) && (e.target as any).tagName).toLowerCase();
+      if (tag === "input" || tag === "textarea" || tag === "select") return;
+
+      if (e.key === "ArrowLeft") handlePrevStory();
+      if (e.key === "ArrowRight") handleNextStory();
+      if (e.key === " " || e.key === "Spacebar" || e.key === "Space") {
+        // Otherwise the page scrolls under the fixed viewer.
+        e.preventDefault();
+        setIsKeyPaused((paused) => !paused);
+      }
+      if (e.key === "Escape") handleClose();
+    },
+    [
+      showAnswerBox,
+      showReplyInput,
+      openSheet,
+      confirmDelete,
+      handlePrevStory,
+      handleNextStory,
+      handleClose,
+    ]
+  );
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress as any);
     return () => window.removeEventListener("keydown", handleKeyPress as any);
-  }, [currentStoryIndex, stories.length, showAnswerBox, openSheet]);
+  }, [handleKeyPress]);
 
   if (isLoading) {
     return (
-      <div className="story-viewer">
-        <div className="story-viewer-loading">
-          <div className="spinner"></div>
-        </div>
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black">
+        <div
+          data-testid="story-loading"
+          className="h-12 w-12 animate-spin rounded-full border-4 border-white/30 border-t-white"
+        />
       </div>
     );
   }
 
   if (error || !stories.length || !currentStory) {
     return (
-      <div className="story-viewer">
-        <div className="story-viewer-error">
-          <button className="close-btn" onClick={handleClose}>
-            <FaTimes />
-          </button>
-          <p>{t("stories.error_loading") || "Error loading story"}</p>
-        </div>
+      <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-4 bg-black text-white">
+        <button
+          type="button"
+          className={`${ICON_BUTTON} absolute right-4 top-4`}
+          onClick={handleClose}
+          aria-label={t("stories.close") || "Close"}
+        >
+          <X size={24} aria-hidden />
+        </button>
+        <p>{t("stories.error_loading") || "Error loading story"}</p>
       </div>
     );
   }
 
-  const userImage =
-    currentStory.user.imageUrls?.[0] ||
-    currentStory.user.images?.[0] ||
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(currentStory.user.name)}&background=667eea&color=fff&size=200`;
+  const isVideo =
+    currentStory.mediaType === "video" ||
+    /\.(mp4|webm|mov|m4v|ogg)$/i.test(
+      currentStory.mediaUrls?.[0] || currentStory.mediaUrl || ""
+    );
+  // A video runs to its own length and says when it is done (`onEnded`);
+  // everything else gets the five-second clock the segment bar draws.
+  const isTimed = !isVideo;
 
   return (
     <>
       <div
-        className="story-viewer"
+        className="fixed inset-0 z-[9999] flex flex-col overflow-hidden bg-black"
         data-testid="story-viewer"
         data-paused={isPaused ? "true" : "false"}
         ref={storyRef}
@@ -352,73 +395,101 @@ const StoryViewer: React.FC = () => {
         onTouchStart={() => setIsHeld(true)}
         onTouchEnd={() => setIsHeld(false)}
       >
-        {/* Progress Bars */}
-        <div className="story-progress-bars">
-          {stories.map((_, index) => (
-            <div key={index} className="progress-bar-container">
-              <div
-                className={`progress-bar ${
-                  index < currentStoryIndex ? "completed" : ""
-                }`}
-                style={{
-                  width:
-                    index === currentStoryIndex
-                      ? `${progress}%`
-                      : index < currentStoryIndex
-                      ? "100%"
-                      : "0%",
-                }}
-              />
+        {/* Segment bar. The current segment IS the clock: a CSS animation
+            draws the fill, `animation-play-state: paused` is the whole of
+            hold-to-pause, and `animationend` is the whole of auto-advance --
+            one source of truth instead of a 100ms interval writing an inline
+            width that could drift out of step with it. Keyed by story id so
+            a new story restarts the run. */}
+        <div className="absolute inset-x-0 top-0 z-10 flex gap-1 px-2 pb-2 pt-3">
+          {stories.map((segment, index) => (
+            <div
+              key={segment._id || index}
+              className="h-[3px] flex-1 overflow-hidden rounded-full bg-white/30"
+            >
+              {index < currentStoryIndex && (
+                <div className="h-full w-full rounded-full bg-white/50" />
+              )}
+              {index === currentStoryIndex &&
+                (isTimed ? (
+                  <div
+                    key={currentStory._id}
+                    data-testid="story-progress-active"
+                    data-running={isPaused ? "false" : "true"}
+                    onAnimationEnd={handleNextStory}
+                    className={[
+                      "h-full w-0 rounded-full bg-white motion-safe:animate-bt-story-progress",
+                      isPaused ? "[animation-play-state:paused]" : "",
+                    ].join(" ")}
+                  />
+                ) : (
+                  <div
+                    data-testid="story-progress-active"
+                    className="h-full w-full rounded-full bg-white/70"
+                  />
+                ))}
             </div>
           ))}
         </div>
 
         {/* Header */}
-        <div className="story-header">
-          <div className="story-user-info">
-            <img src={userImage} alt={currentStory.user.name} />
-            <span>{currentStory.user.name}</span>
-            <span className="story-time">
-              {new Date(currentStory.createdAt).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+        <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between bg-gradient-to-b from-black/50 to-transparent px-4 pb-4 pt-12">
+          <div className="flex min-w-0 items-center gap-3 text-white">
+            <Avatar
+              src={currentStory.user.imageUrls?.[0] || currentStory.user.images?.[0]}
+              name={currentStory.user.name}
+              size={40}
+            />
+            <span className="truncate text-sm font-semibold">{currentStory.user.name}</span>
+            <span className="shrink-0 text-xs text-white/80">
+              {timeAgo(currentStory.createdAt, t, { withAgo: true })}
             </span>
           </div>
-          <div className="story-header-actions">
+          <div className="flex shrink-0 items-center gap-1">
             {isOwner && (
               <button
-                className="menu-btn"
+                type="button"
+                className={ICON_BUTTON}
+                data-testid="story-menu-toggle"
                 onClick={() => setShowMenu(!showMenu)}
+                aria-label={t("stories.more") || "More"}
               >
-                <FaEllipsisH />
+                <MoreHorizontal size={20} aria-hidden />
               </button>
             )}
-            <button className="close-btn" onClick={handleClose}>
-              <FaTimes />
+            <button
+              type="button"
+              className={ICON_BUTTON}
+              data-testid="story-close"
+              onClick={handleClose}
+              aria-label={t("stories.close") || "Close"}
+            >
+              <X size={20} aria-hidden />
             </button>
           </div>
         </div>
 
         {/* Story Content */}
-        <div className="story-content">
+        <div className="relative flex flex-1 items-center justify-center overflow-hidden">
           {currentStory.mediaType === "text" ? (
             <div
-              className="story-text"
+              data-testid="story-text"
+              // The author's own palette: story DATA, the way an overlay's
+              // colour is. The classes carry the fallback for a story that
+              // arrives without one.
               style={{
-                backgroundColor: currentStory.backgroundColor || "#000",
-                color: currentStory.textColor || "#fff",
+                backgroundColor: currentStory.backgroundColor,
+                color: currentStory.textColor,
               }}
+              className="flex h-full w-full items-center justify-center break-words bg-black p-10 text-center text-2xl font-semibold text-white sm:text-3xl"
             >
-              <p>{currentStory.text}</p>
+              <p className="m-0 max-w-[90%]">{currentStory.text}</p>
             </div>
-          ) : currentStory.mediaType === "video" ||
-            /\.(mp4|webm|mov|m4v|ogg)$/i.test(
-              currentStory.mediaUrls?.[0] || currentStory.mediaUrl || ""
-            ) ? (
+          ) : isVideo ? (
             <video
               src={currentStory.mediaUrls?.[0] || currentStory.mediaUrl}
-              className="story-media"
+              className="h-full w-full object-contain"
+              onEnded={handleNextStory}
               controls
               playsInline
             />
@@ -426,44 +497,48 @@ const StoryViewer: React.FC = () => {
             <img
               src={currentStory.mediaUrls?.[0] || currentStory.mediaUrl}
               alt="Story"
-              className="story-media"
+              className="h-full w-full object-contain"
             />
           )}
 
           {/* Poll Overlay */}
           {currentStory.poll && (
-            <div className="story-poll-overlay">
-              <h3>{currentStory.poll.question}</h3>
+            <div className={STICKER_CARD}>
+              <h3 className="mb-4 text-lg font-semibold">{currentStory.poll.question}</h3>
               {currentStory.poll.options.map((option, index) => {
-                const percentage = currentStory.poll!.options.reduce(
+                const total = currentStory.poll!.options.reduce(
                   (sum, opt) => sum + opt.voteCount,
                   0
-                ) > 0
-                  ? (option.voteCount /
-                      currentStory.poll!.options.reduce(
-                        (sum, opt) => sum + opt.voteCount,
-                        0
-                      )) *
-                    100
-                  : 0;
+                );
+                const percentage = total > 0 ? (option.voteCount / total) * 100 : 0;
                 const hasVoted = (option.votes || []).includes(currentUserId || "");
 
                 return (
                   <button
                     key={index}
-                    className={`poll-option ${hasVoted ? "voted" : ""}`}
+                    type="button"
+                    data-testid={`story-poll-option-${index}`}
+                    className={[
+                      "relative mb-2 flex w-full items-center justify-between overflow-hidden",
+                      "rounded-chip border-2 px-4 py-3 text-left text-base font-medium text-white transition",
+                      hasVoted
+                        ? "border-white bg-white/30"
+                        : "border-white/30 bg-white/20 hover:border-white/50 hover:bg-white/30",
+                    ].join(" ")}
                     onClick={() => !hasVoted && handlePollVote(index)}
                     disabled={hasVoted}
                   >
+                    {hasVoted && (
+                      <span
+                        aria-hidden
+                        className={`absolute inset-y-0 left-0 -z-10 bg-white/40 ${fillClass(
+                          percentage
+                        )}`}
+                      />
+                    )}
                     <span>{option.text}</span>
                     {hasVoted && (
-                      <span className="poll-percentage">{percentage.toFixed(0)}%</span>
-                    )}
-                    {hasVoted && (
-                      <div
-                        className="poll-progress"
-                        style={{ width: `${percentage}%` }}
-                      />
+                      <span className="text-sm font-semibold">{percentage.toFixed(0)}%</span>
                     )}
                   </button>
                 );
@@ -473,8 +548,8 @@ const StoryViewer: React.FC = () => {
 
           {/* Question Box Overlay */}
           {currentStory.questionBox && !isOwner && (
-            <div className="story-question-overlay">
-              <p>{currentStory.questionBox.prompt}</p>
+            <div className={`${STICKER_CARD} text-center`}>
+              <p className="mb-4 text-base">{currentStory.questionBox.prompt}</p>
 
               {answerSent ? (
                 <p
@@ -538,6 +613,7 @@ const StoryViewer: React.FC = () => {
                   type="button"
                   data-testid="story-question-answer"
                   onClick={() => setShowAnswerBox(true)}
+                  className="rounded-full border-0 bg-white px-6 py-3 font-semibold text-ink-900 transition hover:opacity-90"
                 >
                   {t("stories.answer_question") || "Answer Question"}
                 </button>
@@ -618,25 +694,31 @@ const StoryViewer: React.FC = () => {
         </div>
 
         {/* Navigation */}
-        <div className="story-navigation">
+        <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] flex -translate-y-1/2 justify-between px-4">
           <button
-            className="nav-btn prev"
+            type="button"
+            className={NAV_BUTTON}
+            data-testid="story-prev"
             onClick={handlePrevStory}
             disabled={currentStoryIndex === 0}
+            aria-label={t("stories.previous") || "Previous"}
           >
-            <FaChevronLeft />
+            <ChevronLeft size={20} aria-hidden />
           </button>
           <button
-            className="nav-btn next"
+            type="button"
+            className={NAV_BUTTON}
+            data-testid="story-next"
             onClick={handleNextStory}
             disabled={currentStoryIndex === stories.length - 1}
+            aria-label={t("stories.next") || "Next"}
           >
-            <FaChevronRight />
+            <ChevronRight size={20} aria-hidden />
           </button>
         </div>
 
         {/* Bottom Actions */}
-        <div className="story-actions">
+        <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/50 to-transparent p-4">
           {isOwner ? (
             // Tools, not a reply box: there is nobody to DM on your own story.
             <div className="flex flex-wrap items-center justify-center gap-2">
@@ -674,20 +756,33 @@ const StoryViewer: React.FC = () => {
               </button>
             </div>
           ) : showReplyInput ? (
-            <div className="reply-input-container">
+            <div className="flex items-center gap-2">
               <input
                 type="text"
+                data-testid="story-reply-input"
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
                 placeholder={t("stories.reply_placeholder") || "Send a message..."}
                 onKeyPress={(e) => e.key === "Enter" && handleReply()}
                 autoFocus
+                className="min-w-0 flex-1 rounded-full border border-white/30 bg-white/20 px-4 py-3 text-sm text-white outline-none backdrop-blur placeholder:text-white/70 focus:border-white/50 focus:bg-white/30"
               />
-              <button onClick={handleReply}>
-                {t("stories.send_reply") || "Send"}
+              <button
+                type="button"
+                className={ICON_BUTTON}
+                data-testid="story-reply-send"
+                onClick={handleReply}
+                aria-label={t("stories.send_reply") || "Send"}
+              >
+                <Send size={18} aria-hidden />
               </button>
-              <button onClick={() => setShowReplyInput(false)}>
-                <FaTimes />
+              <button
+                type="button"
+                className={ICON_BUTTON}
+                onClick={() => setShowReplyInput(false)}
+                aria-label={t("stories.cancel") || "Cancel"}
+              >
+                <X size={18} aria-hidden />
               </button>
             </div>
           ) : (
@@ -697,29 +792,37 @@ const StoryViewer: React.FC = () => {
                 placeholder={t("stories.reply_placeholder") || "Send a message..."}
                 onFocus={() => setShowReplyInput(true)}
                 readOnly
+                className="mb-3 w-full rounded-full border border-white/30 bg-white/20 px-4 py-3 text-sm text-white outline-none backdrop-blur placeholder:text-white/70"
               />
-              <div className="action-buttons">
+              <div className="flex items-center justify-center gap-6">
                 <button
-                  className={`reaction-btn ${userReaction ? "active" : ""}`}
+                  type="button"
+                  className={`${ICON_BUTTON} relative ${userReaction ? "text-red-500" : ""}`}
                   data-testid="story-reaction-toggle"
                   onClick={() => setShowReactions(!showReactions)}
                   aria-label={t("stories.react") || "React"}
                 >
-                  <FaHeart />
-                  {userReaction && <span className="reaction-emoji">{userReaction}</span>}
+                  <Heart size={24} aria-hidden />
+                  {userReaction && (
+                    <span className="absolute -right-2 -top-2 text-base">{userReaction}</span>
+                  )}
                 </button>
                 <button
+                  type="button"
+                  className={ICON_BUTTON}
                   onClick={() => setShowReplyInput(true)}
                   aria-label={t("stories.reply_placeholder") || "Send a message..."}
                 >
-                  <FaComment />
+                  <MessageCircle size={24} aria-hidden />
                 </button>
                 <button
+                  type="button"
+                  className={ICON_BUTTON}
                   data-testid="story-share-button"
                   onClick={() => setOpenSheet("share")}
                   aria-label={t("stories.share_story") || "Share"}
                 >
-                  <FaShare />
+                  <Share2 size={24} aria-hidden />
                 </button>
               </div>
             </>
@@ -727,11 +830,15 @@ const StoryViewer: React.FC = () => {
 
           {/* Reaction Picker */}
           {showReactions && (
-            <div className="reaction-picker">
+            <div className="mt-3 flex justify-center gap-3 rounded-sheet bg-black/80 p-4 backdrop-blur motion-safe:animate-bt-rise">
               {STORY_REACTIONS.map((emoji) => (
                 <button
                   key={emoji}
-                  className={`reaction-option ${userReaction === emoji ? "active" : ""}`}
+                  type="button"
+                  className={[
+                    "rounded-full border-0 bg-transparent p-2 text-3xl transition hover:scale-110 hover:bg-white/10",
+                    userReaction === emoji ? "scale-110 bg-white/20" : "",
+                  ].join(" ")}
                   data-testid={`story-reaction-${emoji}`}
                   onClick={() => handleReaction(emoji)}
                 >
@@ -744,9 +851,15 @@ const StoryViewer: React.FC = () => {
 
         {/* Menu (Owner Only) */}
         {showMenu && isOwner && (
-          <div className="story-menu">
-            <button onClick={handleDeleteStory}>
-              <FaTrash /> {t("stories.delete_story") || "Delete Story"}
+          <div className="absolute bottom-20 right-4 z-[15] rounded-chip bg-black/90 p-2 backdrop-blur motion-safe:animate-bt-rise">
+            <button
+              type="button"
+              data-testid="story-delete"
+              onClick={() => setConfirmDelete(true)}
+              className="flex w-full items-center gap-3 rounded-chip border-0 bg-transparent px-4 py-3 text-left text-white transition hover:bg-white/10"
+            >
+              <Trash2 size={16} aria-hidden />
+              {t("stories.delete_story") || "Delete Story"}
             </button>
           </div>
         )}
@@ -773,6 +886,22 @@ const StoryViewer: React.FC = () => {
           onClose={() => setOpenSheet(null)}
         />
       )}
+
+      {/* `window.confirm()` used to ask this: a browser dialog on top of a
+          full-screen viewer, unstyleable and, on a phone, barely readable. */}
+      <ConfirmDialog
+        open={confirmDelete}
+        danger
+        title={t("stories.delete_story") || "Delete Story"}
+        body={
+          t("stories.delete_story_confirm") ||
+          "This story and its views are removed for everyone."
+        }
+        confirmLabel={t("stories.delete") || "Delete"}
+        cancelLabel={t("stories.cancel") || "Cancel"}
+        onConfirm={handleDeleteStory}
+        onCancel={() => setConfirmDelete(false)}
+      />
     </>
   );
 };

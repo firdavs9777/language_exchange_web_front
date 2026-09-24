@@ -263,6 +263,83 @@ describe("owner tools and sharing", () => {
   });
 });
 
+describe("keyboard", () => {
+  const twoStories = () =>
+    renderViewer([
+      story({ _id: "story-1", text: "One" }),
+      story({ _id: "story-2", text: "Two" }),
+    ]);
+
+  it("steps forward and back with the arrow keys", () => {
+    twoStories();
+    expect(screen.getByTestId("story-text")).toHaveTextContent("One");
+
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    expect(screen.getByTestId("story-text")).toHaveTextContent("Two");
+
+    fireEvent.keyDown(window, { key: "ArrowLeft" });
+    expect(screen.getByTestId("story-text")).toHaveTextContent("One");
+  });
+
+  it("pauses and resumes on Space", () => {
+    twoStories();
+    expect(screen.getByTestId("story-viewer")).toHaveAttribute("data-paused", "false");
+
+    fireEvent.keyDown(window, { key: " " });
+    expect(screen.getByTestId("story-viewer")).toHaveAttribute("data-paused", "true");
+    // The bar is the clock, so a pause has to reach it.
+    expect(screen.getByTestId("story-progress-active")).toHaveAttribute("data-running", "false");
+
+    fireEvent.keyDown(window, { key: " " });
+    expect(screen.getByTestId("story-viewer")).toHaveAttribute("data-paused", "false");
+  });
+
+  it("forgets a pause when the reader moves to the next story", () => {
+    twoStories();
+    fireEvent.keyDown(window, { key: " " });
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    expect(screen.getByTestId("story-viewer")).toHaveAttribute("data-paused", "false");
+  });
+
+  it("closes the viewer on Escape", () => {
+    twoStories();
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(mockNavigate).toHaveBeenCalledWith("/stories");
+  });
+
+  it("closes only the sheet when Escape arrives with a sheet open", () => {
+    mockCurrentUserId = "author-1";
+    renderViewer([story()]);
+    fireEvent.click(screen.getByTestId("story-viewers-button"));
+    expect(screen.getByTestId("viewers-sheet-stub")).toBeInTheDocument();
+
+    fireEvent.keyDown(window, { key: "Escape" });
+    // The viewer stands down and lets DialogShell (which owns the sheet's own
+    // Escape) handle it; leaving the whole viewer would throw away the story
+    // the owner was looking at along with the list they opened.
+    expect(mockNavigate).not.toHaveBeenCalled();
+    expect(screen.getByTestId("story-viewer")).toBeInTheDocument();
+  });
+
+  it("leaves Escape to the answer box while one is being typed", () => {
+    renderViewer([story({ questionBox: { prompt: "Ask me anything", responses: [] } })]);
+    fireEvent.click(screen.getByTestId("story-question-answer"));
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it("types a space into a field instead of pausing", () => {
+    renderViewer([story({ questionBox: { prompt: "Ask me anything", responses: [] } })]);
+    fireEvent.click(screen.getByTestId("story-question-answer"));
+    const input = screen.getByTestId("story-answer-input");
+    fireEvent.keyDown(input, { key: " " });
+    // Still paused because the box is open -- not because Space toggled it;
+    // the proof is that a second Space does not un-pause the story.
+    fireEvent.keyDown(input, { key: " " });
+    expect(screen.getByTestId("story-viewer")).toHaveAttribute("data-paused", "true");
+  });
+});
+
 describe("structured stickers", () => {
   it("paints overlays at their normalized positions with their own styling", () => {
     renderViewer([

@@ -6,7 +6,7 @@ import DialogShell from "../../design/DialogShell";
 import Avatar from "../../design/Avatar";
 import { useGetStoryViewersQuery } from "../../store/slices/storiesSlice";
 import { StoryView } from "./types";
-import timeAgo from "./timeAgo";
+import timeAgo from "../../utils/timeAgo";
 
 export interface StoryViewersSheetProps {
   storyId: string;
@@ -119,7 +119,7 @@ const StoryViewersSheet: React.FC<StoryViewersSheetProps> = ({
                   {user.name}
                 </span>
                 <span className="shrink-0 text-xs text-gray-500">
-                  {timeAgo(view.viewedAt, t)}
+                  {timeAgo(view.viewedAt, t, { withAgo: true })}
                 </span>
               </Link>
             );

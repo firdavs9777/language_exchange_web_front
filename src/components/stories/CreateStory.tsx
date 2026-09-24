@@ -22,7 +22,8 @@ import {
   useGetVideoConfigQuery,
   useGetCloseFriendsQuery,
 } from "../../store/slices/storiesSlice";
-import { useSearchUsersQuery } from "../../store/slices/usersSlice";
+import { useGetFollowingsQuery } from "../../store/slices/usersSlice";
+import { useSelector } from "react-redux";
 import SurfaceCard from "../../design/SurfaceCard";
 import notify from "../../design/notify";
 import {
@@ -107,9 +108,25 @@ const QUICK_EMOJI = ["😂", "❤️", "🔥", "🎉", "👏", "😮"];
 
 const BG_COLORS = OVERLAY_COLORS.map((c) => c.hex);
 
+interface RootState {
+  auth: {
+    userInfo?: {
+      user?: { _id: string };
+      data?: { _id: string };
+    };
+  };
+}
+
 const CreateStory: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  // Locally typed rather than imported from ../../store: TS 3.7 has no
+  // `import type`, so importing RootState would pull the whole store --
+  // apiSlice, every reducer -- into this chunk and into this file's tests.
+  const currentUserId = useSelector(
+    (state: RootState) =>
+      state.auth.userInfo?.user?._id || state.auth.userInfo?.data?._id || null
+  );
 
   const [step, setStep] = useState<Step>("media");
   const [mediaFiles, setMediaFiles] = useState<File[]>([]);
@@ -166,17 +183,33 @@ const CreateStory: React.FC = () => {
     return Array.isArray(list) ? list.length : null;
   }, [closeFriendsData]);
 
-  const mentionSearch = mentionQuery.trim();
-  const { data: searchData, isFetching: isSearching } = useSearchUsersQuery(
-    { query: mentionSearch, limit: 8 },
-    { skip: mentionSearch.length < 2 }
+  // Mentions come from the people the author FOLLOWS, not from a search of
+  // every member -- app parity (`mention_sheet.dart` lists followings) and a
+  // privacy fix. `POST /stories` drops a mention of a user that does not
+  // exist but does not check that the author may tag them, so a member
+  // search here meant anyone could push a notification at a stranger.
+  // One request, filtered in the browser: the followings list is small, the
+  // endpoint takes no query, and typing then costs nothing.
+  const { data: followingsData, isFetching: isLoadingFollowings } = useGetFollowingsQuery(
+    { userId: currentUserId || "" },
+    { skip: !currentUserId || panel !== "mention" }
   );
-  const searchResults = useMemo(() => {
-    const payload = searchData as any;
+  const followings = useMemo(() => {
+    const payload = followingsData as any;
     if (!payload) return [];
     const list = Array.isArray(payload) ? payload : payload.data;
     return Array.isArray(list) ? list : [];
-  }, [searchData]);
+  }, [followingsData]);
+
+  const mentionSearch = mentionQuery.trim().toLowerCase();
+  const searchResults = useMemo(() => {
+    if (!mentionSearch) return followings;
+    return followings.filter((user: any) => {
+      const name = String((user && user.name) || "").toLowerCase();
+      const username = String((user && user.username) || "").toLowerCase();
+      return name.indexOf(mentionSearch) > -1 || username.indexOf(mentionSearch) > -1;
+    });
+  }, [followings, mentionSearch]);
 
   useEffect(
     () => () => {
@@ -380,7 +413,11 @@ const CreateStory: React.FC = () => {
   // ----------------------------------------------------------------- submit
 
   const handleSubmit = useCallback(async () => {
-    if (mediaType === "text" && !text.trim() && overlays.length === 0) {
+    // A text story must carry text. Overlays are NOT a substitute: the
+    // backend rejects a story with neither media nor `text` (400 "Story must
+    // have media or text"), so an overlay-only submit could only ever fail
+    // after the upload -- better to say so before it.
+    if (mediaType === "text" && !text.trim()) {
       notify.error(t("stories.add_text") || "Please add text to your story");
       return;
     }
@@ -922,15 +959,29 @@ const CreateStory: React.FC = () => {
                     data-testid="mention-search"
                     value={mentionQuery}
                     onChange={(e) => setMentionQuery(e.target.value)}
-                    placeholder={t("stories.search_people") || "Search people"}
-                    aria-label={t("stories.search_people") || "Search people"}
+                    placeholder={t("stories.search_followings") || "Search people you follow"}
+                    aria-label={t("stories.search_followings") || "Search people you follow"}
                     className={FIELD}
                   />
                   <p className="text-xs text-ink-500 dark:text-ink-400">
                     {mentions.length}/{MENTION_MAX_COUNT}
                   </p>
-                  {isSearching && (
+                  {isLoadingFollowings && (
                     <p className="text-xs text-ink-500">{t("stories.loading") || "Loading…"}</p>
+                  )}
+                  {/* Two different silences, and telling them apart is the
+                      whole point of the hint: nobody followed yet, or nobody
+                      matching what was typed. */}
+                  {!isLoadingFollowings && followings.length === 0 && (
+                    <p data-testid="mention-empty" className="text-xs text-ink-500 dark:text-ink-400">
+                      {t("stories.mention_followings_only") ||
+                        "You can only tag people you follow. Follow someone first."}
+                    </p>
+                  )}
+                  {!isLoadingFollowings && followings.length > 0 && searchResults.length === 0 && (
+                    <p data-testid="mention-no-match" className="text-xs text-ink-500 dark:text-ink-400">
+                      {t("stories.mention_no_match") || "Nobody you follow matches that"}
+                    </p>
                   )}
                   <ul className="space-y-1">
                     {searchResults.map((user: any) => (

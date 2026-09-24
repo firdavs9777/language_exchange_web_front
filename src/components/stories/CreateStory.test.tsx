@@ -2,6 +2,7 @@ import React from "react";
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import CreateStory from "./CreateStory";
+import notify from "../../design/notify";
 import {
   serializeOverlays,
   serializeMentions,
@@ -46,9 +47,14 @@ jest.mock("../../store/slices/storiesSlice", () => ({
   useGetCloseFriendsQuery: () => mockCloseFriends,
 }));
 
-let mockSearchState: any;
+// The mention picker lists the author's followings, not a member search.
+let mockFollowingsState: any;
+let mockFollowingsArgs: any[] = [];
 jest.mock("../../store/slices/usersSlice", () => ({
-  useSearchUsersQuery: (_arg: any, _opts: any) => mockSearchState,
+  useGetFollowingsQuery: (arg: any, opts: any) => {
+    mockFollowingsArgs.push([arg, opts]);
+    return mockFollowingsState;
+  },
 }));
 
 jest.mock("../../design/notify", () => ({
@@ -78,7 +84,8 @@ beforeEach(() => {
   mockCreateVideoStory.mockReturnValue(resolved());
   mockVideoConfig = { data: VIDEO_CONFIG };
   mockCloseFriends = { data: { success: true, data: [{ _id: "cf-1", name: "Ann" }] } };
-  mockSearchState = { data: undefined, isFetching: false };
+  mockFollowingsState = { data: undefined, isFetching: false };
+  mockFollowingsArgs = [];
   (global as any).URL.createObjectURL = jest.fn(() => "blob:preview");
   (global as any).URL.revokeObjectURL = jest.fn();
 });
@@ -290,6 +297,22 @@ describe("the composer", () => {
     expect(add).toBeDisabled();
   });
 
+  it("refuses a text story that has only an overlay and no text", async () => {
+    // The backend 400s on a story with neither media nor `text`, so an
+    // overlay is not a substitute for the caption -- it is drawn on top of a
+    // story that must exist first. The composer used to let this through and
+    // the author lost the upload.
+    openTextEditor();
+    fireEvent.click(screen.getByTestId("add-text-overlay"));
+    fireEvent.change(screen.getByTestId("overlay-content-0"), {
+      target: { value: "Seoul, 6am" },
+    });
+    fireEvent.click(screen.getByTestId("share-story"));
+
+    expect(notify.error).toHaveBeenCalled();
+    await waitFor(() => expect(mockCreateStory).not.toHaveBeenCalled());
+  });
+
   it("deletes an overlay", () => {
     openTextEditor();
     fireEvent.click(screen.getByTestId("add-text-overlay"));
@@ -298,14 +321,20 @@ describe("the composer", () => {
     expect(screen.queryByTestId("overlay-node-0")).toBeNull();
   });
 
-  it("searches users, places up to five mentions and uploads them", async () => {
-    mockSearchState = {
+  it("lists the people the author follows, filters them and uploads the mention", async () => {
+    mockFollowingsState = {
       data: { success: true, data: [{ _id: "u-1", name: "Ann" }, { _id: "u-2", name: "Bo" }] },
       isFetching: false,
     };
     openTextEditor();
     fireEvent.click(screen.getByTestId("open-mentions"));
+    // No query yet: the whole list, because it is already in hand.
+    expect(screen.getByTestId("mention-result-u-1")).toBeInTheDocument();
+    expect(screen.getByTestId("mention-result-u-2")).toBeInTheDocument();
+
+    // Filtering happens in the browser, on name or username.
     fireEvent.change(screen.getByTestId("mention-search"), { target: { value: "an" } });
+    expect(screen.queryByTestId("mention-result-u-2")).toBeNull();
     fireEvent.click(screen.getByTestId("mention-result-u-1"));
     expect(screen.getByTestId("mention-node-0")).toBeInTheDocument();
 
@@ -315,8 +344,53 @@ describe("the composer", () => {
     expect(sentField(mockCreateStory, "mentions")).toEqual([{ user: "u-1", x: 50, y: 80 }]);
   });
 
+  it("asks for the followings of the signed-in author, and only with the picker open", () => {
+    mockFollowingsState = { data: { success: true, data: [] }, isFetching: false };
+    openTextEditor();
+    // Closed picker: the query is skipped, so opening the composer costs no
+    // request at all.
+    expect(mockFollowingsArgs.every(([, opts]: any) => opts.skip)).toBe(true);
+
+    fireEvent.click(screen.getByTestId("open-mentions"));
+    const live = mockFollowingsArgs.filter(([, opts]: any) => !opts.skip);
+    expect(live.length).toBeGreaterThan(0);
+    expect(live[0][0]).toEqual({ userId: "me" });
+  });
+
+  it("matches a username as well as a name", () => {
+    mockFollowingsState = {
+      data: { success: true, data: [{ _id: "u-1", name: "Ann", username: "seoulcat" }] },
+      isFetching: false,
+    };
+    openTextEditor();
+    fireEvent.click(screen.getByTestId("open-mentions"));
+    fireEvent.change(screen.getByTestId("mention-search"), { target: { value: "cat" } });
+    expect(screen.getByTestId("mention-result-u-1")).toBeInTheDocument();
+  });
+
+  it("explains the empty picker instead of showing a blank list", () => {
+    mockFollowingsState = { data: { success: true, data: [] }, isFetching: false };
+    openTextEditor();
+    fireEvent.click(screen.getByTestId("open-mentions"));
+    // Nobody followed yet -- a different silence from "nobody matches".
+    expect(screen.getByTestId("mention-empty")).toBeInTheDocument();
+    expect(screen.queryByTestId("mention-no-match")).toBeNull();
+  });
+
+  it("says so when nobody the author follows matches the query", () => {
+    mockFollowingsState = {
+      data: { success: true, data: [{ _id: "u-1", name: "Ann" }] },
+      isFetching: false,
+    };
+    openTextEditor();
+    fireEvent.click(screen.getByTestId("open-mentions"));
+    fireEvent.change(screen.getByTestId("mention-search"), { target: { value: "zzz" } });
+    expect(screen.getByTestId("mention-no-match")).toBeInTheDocument();
+    expect(screen.queryByTestId("mention-empty")).toBeNull();
+  });
+
   it("will not take a sixth mention", () => {
-    mockSearchState = {
+    mockFollowingsState = {
       data: {
         success: true,
         data: [1, 2, 3, 4, 5, 6].map((n) => ({ _id: "u-" + n, name: "U" + n })),
@@ -325,7 +399,6 @@ describe("the composer", () => {
     };
     openTextEditor();
     fireEvent.click(screen.getByTestId("open-mentions"));
-    fireEvent.change(screen.getByTestId("mention-search"), { target: { value: "u" } });
     for (const n of [1, 2, 3, 4, 5]) fireEvent.click(screen.getByTestId("mention-result-u-" + n));
     expect(screen.getAllByTestId(/^mention-node-/).length).toBe(MENTION_MAX_COUNT);
     expect(screen.getByTestId("mention-result-u-6")).toBeDisabled();

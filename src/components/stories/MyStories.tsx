@@ -29,7 +29,7 @@ import {
 import StoryViewersSheet from "./StoryViewersSheet";
 import { Story } from "./types";
 import { coverOf, countOf, mediaOf } from "./highlightStories";
-import timeAgo from "./timeAgo";
+import timeAgo from "../../utils/timeAgo";
 
 interface RootState {
   auth: {
@@ -301,7 +301,7 @@ const MyStories: React.FC = () => {
                             {story.reactionCount}
                           </span>
                         )}
-                        <span className="ml-auto">{timeAgo(story.createdAt, t)}</span>
+                        <span className="ml-auto">{timeAgo(story.createdAt, t, { withAgo: true })}</span>
                       </span>
                     </button>
 
