@@ -2068,32 +2068,34 @@
         "title": "Korrigiert dein Koreanisch beim Tippen",
         "body": "Persönliche Korrekturen bei jeder Nachricht, dazu Quizze und Grammatikübungen zwischen den Chats.",
         "cta": "App herunterladen",
-        "alt": "Der BananaTalk Study Hub auf einem Smartphone, mit Übungen mit KI, Wiederholung und täglichen Herausforderungen"
+        "alt": "Illustration einer Sprechblase mit einem durchgestrichenen Wort und der Korrektur, die darüber schwebt, daneben ein Häkchen"
       },
       "voice": {
         "eyebrow": "Sprachnachrichten & -räume",
         "title": "Hör, wie es wirklich klingt",
         "body": "Sende Sprachnachrichten, teile deinen Standort und tritt Live-Sprachräumen mit Muttersprachlern bei.",
         "cta": "App herunterladen",
-        "alt": "Ein BananaTalk-Chat auf einem Smartphone, mit Sprachnachrichten und einer geteilten Standortkarte"
+        "alt": "Illustration eines Mikrofons, über das eine Schallwelle läuft, mit einer geteilten Standortkarte im Hintergrund"
       },
       "moments": {
         "eyebrow": "Moments & Storys",
         "title": "Teile deine Woche in zwei Sprachen",
         "body": "Poste Fotos und Gedanken; Freunde lesen sie übersetzt und korrigieren dich freundlich.",
         "cta": "App herunterladen",
-        "alt": "Der BananaTalk Moments-Feed auf einem Smartphone, mit Fotos von anderen Lernenden"
+        "alt": "Illustration von drei überlappenden Fotokarten mit einem Herz und einer Übersetzungsmarkierung, die A zu 가 zeigt"
       },
       "inbox": {
         "eyebrow": "Echte Gespräche",
         "title": "Leute, die wirklich zurückschreiben",
         "body": "Chats, Winken und Reaktionen in einem Posteingang — gelesen, übersetzt, beantwortet.",
         "cta": "App herunterladen",
-        "alt": "Der BananaTalk Posteingang auf einem Smartphone, mit einer Liste aktueller Unterhaltungen mit Muttersprachlern"
+        "alt": "Illustration von drei gestapelten Unterhaltungen in einem Posteingang, von denen eine ungelesen ist, mit einer winkenden Hand"
       },
       "dismiss": "App-Werbung schließen",
       "label": "Was die BananaTalk-App kann",
-      "slideLabel": "Folie {{n}} von {{total}}"
+      "slideLabel": "Folie {{n}} von {{total}}",
+      "prev": "Vorherige Folie",
+      "next": "Nächste Folie"
     }
   },
   "stories": {
