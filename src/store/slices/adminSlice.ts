@@ -1,5 +1,125 @@
-import { ADMIN_URL } from "../../constants";
+import { ADMIN_URL, ADMIN_REPORTS_URL } from "../../constants";
 import { apiSlice } from "./apiSlice";
+
+/** `GET /admin/content/stats` — the content desk's stat strip. */
+export interface ContentStats {
+  moments: { total: number; today: number; last7d: number; hidden: number };
+  comments: { total: number; last7d: number };
+  clubs: { active: number; archived: number; membersTotal: number };
+  gatherings: { upcoming: number; past: number; cancelled: number };
+  reports: {
+    pending: number;
+    underReview: number;
+    byType: {
+      moment: number;
+      comment: number;
+      user: number;
+      club: number;
+      gathering: number;
+      message: number;
+      story: number;
+    };
+  };
+}
+
+/** One row of `GET /admin/content/moments` — a projection, not the document. */
+export interface AdminMomentRow {
+  id: string;
+  title: string;
+  description: string;
+  imageUrl: string | null;
+  language: string;
+  category: string;
+  user: { id: string; name: string; image: string | null } | null;
+  likeCount: number;
+  commentCount: number;
+  viewCount: number;
+  shareCount: number;
+  openReports: number;
+  isDeleted: boolean;
+  createdAt: string;
+}
+
+/** `POST /admin/users` body. Mirrors `validateRegistration` in the backend. */
+export interface CreateUserBody {
+  name: string;
+  email: string;
+  password: string;
+  gender: string;
+  birth_year: number;
+  birth_month: number;
+  birth_day: number;
+  native_language: string;
+  language_to_learn: string;
+  role?: "user" | "admin";
+  bio?: string;
+  markVerified?: boolean;
+}
+
+/** `PUT /admin/users/:id` body — a whitelist; anything absent is unchanged. */
+export interface UpdateUserBody {
+  name?: string;
+  bio?: string;
+  native_language?: string;
+  language_to_learn?: string;
+  gender?: string;
+  vip?: { grant: boolean; days?: number };
+}
+
+/**
+ * A row from `GET /api/v1/reports` (routes/report.js, mounted standalone in
+ * server.js — NOT nested under ADMIN_URL). `reportedBy`/`reportedUser`/
+ * `moderatedBy` come back populated; a string id is what an unpopulated
+ * document would carry, kept here only as a defensive fallback.
+ */
+export interface AdminReportRow {
+  _id: string;
+  type: "user" | "moment" | "comment" | "message" | "story" | "gathering" | "club";
+  reportId: string;
+  reportedBy:
+    | { _id: string; name: string; email: string; images?: string[] }
+    | string;
+  reportedUser:
+    | {
+        _id: string;
+        name: string;
+        email: string;
+        images?: string[];
+        imageUrls?: string[];
+        native_language?: string;
+        language_to_learn?: string;
+        location?: any;
+        createdAt?: string;
+        isBanned?: boolean;
+      }
+    | string;
+  reason:
+    | "spam"
+    | "harassment"
+    | "hate_speech"
+    | "violence"
+    | "nudity"
+    | "false_information"
+    | "copyright"
+    | "other";
+  description?: string;
+  status: "pending" | "under_review" | "resolved" | "dismissed";
+  moderatorAction?:
+    | "pending"
+    | "content_removed"
+    | "user_warned"
+    | "user_suspended"
+    | "user_banned"
+    | "no_violation";
+  moderatedBy?: { _id: string; name: string; email: string } | string | null;
+  moderatorNotes?: string;
+  reviewedAt?: string | null;
+  resolvedAt?: string | null;
+  priority?: "low" | "medium" | "high" | "urgent";
+  contentHidden?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
 /**
  * The admin console's data layer: one endpoint per route in the backend's
@@ -228,6 +348,143 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["AdminContent"],
     }),
 
+    // --- Content desk: moments moderation -----------------------------------
+    // Separate tags from `AdminContent` (clubs/gatherings) on purpose: hiding
+    // a moment has no reason to refetch the club and gathering tables, and a
+    // club archive has no reason to refetch the moments table.
+    getContentStats: builder.query({
+      query: () => ({ url: `${ADMIN_URL}/content/stats` }),
+      transformResponse: unwrap,
+      providesTags: ["AdminContentStats"],
+    }),
+    listMoments: builder.query({
+      query: (
+        arg: {
+          page?: number;
+          limit?: number;
+          q?: string;
+          reported?: boolean;
+          hidden?: boolean;
+        } = {}
+      ) => ({
+        url: `${ADMIN_URL}/content/moments`,
+        params: params(arg),
+      }),
+      transformResponse: unwrapList,
+      providesTags: ["AdminMoments"],
+    }),
+    setMomentHidden: builder.mutation({
+      // `hidden` defaults to true server-side, but the button drives both
+      // directions explicitly (Hide / Unhide), so it's always sent here.
+      query: ({ id, hidden, reason }: { id: string; hidden: boolean; reason?: string }) => ({
+        url: `${ADMIN_URL}/content/moments/${id}/hide`,
+        method: "POST",
+        body: { hidden, reason },
+      }),
+      transformResponse: unwrap,
+      extraOptions: { maxRetries: 0 },
+      // Both the moments table (isDeleted/openReports badge) and the stat
+      // strip's "hidden" counter move when this succeeds.
+      invalidatesTags: ["AdminMoments", "AdminContentStats"],
+    }),
+
+    // --- User management: create and edit -----------------------------------
+    createUser: builder.mutation({
+      query: (body: CreateUserBody) => ({
+        url: `${ADMIN_URL}/users`,
+        method: "POST",
+        body,
+      }),
+      transformResponse: unwrap,
+      extraOptions: { maxRetries: 0 },
+      // A brand-new user belongs in whichever list the moderator has open
+      // (search results, or the page after a refresh) — same list tag a
+      // ban/unban/role-change/delete already invalidates.
+      invalidatesTags: ["AdminUserList"],
+    }),
+    updateUser: builder.mutation({
+      query: ({ id, ...body }: { id: string } & UpdateUserBody) => ({
+        url: `${ADMIN_URL}/users/${id}`,
+        method: "PUT",
+        body,
+      }),
+      transformResponse: unwrap,
+      extraOptions: { maxRetries: 0 },
+      invalidatesTags: (_r: any, _e: any, arg: { id: string }) => [
+        { type: "AdminUser", id: arg.id },
+        "AdminUserList",
+      ],
+    }),
+
+    // --- Reports queue -------------------------------------------------------
+    // routes/report.js is mounted standalone (`/api/v1/reports`), not nested
+    // under ADMIN_URL — see ADMIN_REPORTS_URL. The backend's query param is
+    // `type` (controllers/report.js `getAllReports`), not `targetType`; the
+    // arg is named `targetType` here to read clearly next to `AdminMomentRow`/
+    // `AdminReportRow`'s own `type` field. `page`/`limit` are accepted by this
+    // call but NOT read by `getAllReports` today (it always returns the newest
+    // 100) — sent anyway so the list doesn't need a shape change if the
+    // backend adds real pagination later.
+    listReports: builder.query({
+      query: (
+        arg: {
+          status?: string;
+          targetType?: string;
+          page?: number;
+          limit?: number;
+        } = {}
+      ) => ({
+        url: ADMIN_REPORTS_URL,
+        params: params({
+          status: arg.status,
+          type: arg.targetType,
+          page: arg.page,
+          limit: arg.limit,
+        }),
+      }),
+      transformResponse: unwrap,
+      providesTags: ["AdminReports"],
+    }),
+    reviewReport: builder.mutation({
+      query: (id: string) => ({
+        url: `${ADMIN_REPORTS_URL}/${id}/review`,
+        method: "PUT",
+      }),
+      transformResponse: unwrap,
+      extraOptions: { maxRetries: 0 },
+      // A report resolution can hide a moment or ban a user, so the moments
+      // table and the stat strip's counters are invalidated alongside the
+      // reports queue itself on all three actions below.
+      invalidatesTags: ["AdminReports", "AdminContentStats", "AdminMoments"],
+    }),
+    resolveReport: builder.mutation({
+      query: ({
+        id,
+        ...body
+      }: {
+        id: string;
+        action: "content_removed" | "user_warned" | "user_suspended" | "user_banned" | "no_violation";
+        notes?: string;
+      }) => ({
+        url: `${ADMIN_REPORTS_URL}/${id}/resolve`,
+        method: "PUT",
+        body,
+      }),
+      transformResponse: unwrap,
+      extraOptions: { maxRetries: 0 },
+      invalidatesTags: ["AdminReports", "AdminContentStats", "AdminMoments"],
+    }),
+    dismissReport: builder.mutation({
+      query: ({ id, ...body }: { id: string; notes?: string }) => ({
+        url: `${ADMIN_REPORTS_URL}/${id}/dismiss`,
+        method: "PUT",
+        body,
+      }),
+      transformResponse: unwrap,
+      extraOptions: { maxRetries: 0 },
+      invalidatesTags: ["AdminReports", "AdminContentStats", "AdminMoments"],
+    }),
+
     // --- Reach analytics -----------------------------------------------------
     getAnalyticsEvents: builder.query({
       query: (arg: { days?: number } = {}) => ({
@@ -260,6 +517,15 @@ export const {
   useGetAdminGatheringsQuery,
   useArchiveAdminClubMutation,
   useCancelAdminGatheringMutation,
+  useGetContentStatsQuery,
+  useListMomentsQuery,
+  useSetMomentHiddenMutation,
+  useCreateUserMutation,
+  useUpdateUserMutation,
+  useListReportsQuery,
+  useReviewReportMutation,
+  useResolveReportMutation,
+  useDismissReportMutation,
   useGetAnalyticsEventsQuery,
   useGetAnalyticsVisitsQuery,
 } = adminApiSlice;

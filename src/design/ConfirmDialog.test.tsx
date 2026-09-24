@@ -206,3 +206,27 @@ describe("dialog chrome", () => {
     expect(document.body.style.overflow).toBe("");
   });
 });
+
+// From the admin branch: the dialog now renders through design/DialogShell,
+// which names it from the caller's own heading instead of a duplicated string.
+it("is named by its visible heading", () => {
+  const props = base();
+  render(<ConfirmDialog {...props} />);
+  const dialog = screen.getByRole("dialog");
+  expect(dialog).toHaveAttribute("aria-labelledby", "confirm-dialog-title");
+  expect(document.getElementById("confirm-dialog-title")).toHaveTextContent("Ban user");
+});
+
+it("offers an optional note under showReason without gating confirm on it", () => {
+  const props = base();
+  render(<ConfirmDialog {...props} showReason />);
+  const confirm = screen.getByTestId("confirm-dialog-confirm");
+  expect(screen.getByTestId("confirm-dialog-reason")).toBeInTheDocument();
+  expect(confirm).not.toBeDisabled();
+
+  fireEvent.change(screen.getByTestId("confirm-dialog-reason"), {
+    target: { value: "  duplicate report " },
+  });
+  fireEvent.click(confirm);
+  expect(props.onConfirm).toHaveBeenCalledWith("duplicate report");
+});

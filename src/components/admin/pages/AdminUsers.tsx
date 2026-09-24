@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { BadgeCheck, UserPlus } from "lucide-react";
 import {
   useSearchAdminUsersQuery,
   useGetBannedUsersQuery,
 } from "../../../store/slices/adminSlice";
-import { SurfaceCard, Avatar, Badge } from "../../../design";
+import { SurfaceCard, Avatar, Badge, LanguageExchangePill } from "../../../design";
 import DataTable from "../parts/DataTable";
 import RefreshButton from "../parts/RefreshButton";
 import UserDetailDrawer from "../parts/UserDetailDrawer";
+import RegisterUserDialog from "../parts/RegisterUserDialog";
 
 /**
  * Find a user, then act on them.
@@ -30,14 +32,69 @@ const formatDate = (value: any): string => {
   return isNaN(date.getTime()) ? String(value) : date.toLocaleDateString();
 };
 
+const MINUTE = 60 * 1000;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+
+// `Intl.RelativeTimeFormat` has no typing in the repo's typescript@3.7.2 lib,
+// so the constructor is reached through an `any` view of Intl rather than
+// declared -- a `declare global` block here would fight the next TS upgrade.
+// Mirrors the shape of `formatRelative` in
+// `src/components/profile/parts/ProfileHeader.tsx` on the profile-redesign
+// branch.
+
+/**
+ * "3d ago" — how long since a timestamp, in the largest unit that still says
+ * something. A moderator scanning this column asks "recently or not", and a
+ * date they have to subtract from today does not answer it. Anything past a
+ * month falls back to the date, where the exact day starts mattering again.
+ *
+ * Formatted through `Intl.RelativeTimeFormat(language)` when the runtime has
+ * it, so a moderator reading the console in their own locale gets "il y a 3
+ * jours" rather than an English string wearing their UI; falls back to the
+ * plain English strings below when `Intl.RelativeTimeFormat` is unavailable
+ * or throws (an unrecognized language tag, say).
+ */
+export const relativeTime = (
+  value: any,
+  now: number = Date.now(),
+  language: string = "en"
+): string => {
+  if (!value) return "—";
+  const then = new Date(value).getTime();
+  if (isNaN(then)) return String(value);
+
+  const elapsed = now - then;
+  if (elapsed >= 30 * DAY) return formatDate(value);
+
+  const RelativeTimeFormat = (Intl as any).RelativeTimeFormat;
+  if (RelativeTimeFormat) {
+    try {
+      const rtf = new RelativeTimeFormat(language, { numeric: "auto" });
+      if (elapsed < MINUTE) return rtf.format(0, "second");
+      if (elapsed < HOUR) return rtf.format(-Math.floor(elapsed / MINUTE), "minute");
+      if (elapsed < DAY) return rtf.format(-Math.floor(elapsed / HOUR), "hour");
+      return rtf.format(-Math.floor(elapsed / DAY), "day");
+    } catch {
+      // Fall through to the English strings below.
+    }
+  }
+
+  if (elapsed < MINUTE) return "just now";
+  if (elapsed < HOUR) return `${Math.floor(elapsed / MINUTE)}m ago`;
+  if (elapsed < DAY) return `${Math.floor(elapsed / HOUR)}h ago`;
+  return `${Math.floor(elapsed / DAY)}d ago`;
+};
+
 const AdminUsers: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [tab, setTab] = useState<"all" | "banned">("all");
   const [text, setText] = useState("");
   const [query, setQuery] = useState("");
   const [adminsOnly, setAdminsOnly] = useState(false);
   const [page, setPage] = useState(1);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [registering, setRegistering] = useState(false);
 
   // Debounce the box into `query`; the queries below read only `query`.
   useEffect(() => {
@@ -93,11 +150,22 @@ const AdminUsers: React.FC = () => {
         <h1 className="font-display text-display-sm text-ink-900 dark:text-ink-50">
           {t("admin.nav.users") || "Users"}
         </h1>
-        <RefreshButton
-          label={t("admin.common.refresh") || "Refresh"}
-          isFetching={!!active.isFetching}
-          onRefresh={() => active.refetch()}
-        />
+        <div className="flex items-center gap-2">
+          <RefreshButton
+            label={t("admin.common.refresh") || "Refresh"}
+            isFetching={!!active.isFetching}
+            onRefresh={() => active.refetch()}
+          />
+          <button
+            type="button"
+            data-testid="admin-users-add"
+            onClick={() => setRegistering(true)}
+            className="inline-flex items-center gap-1.5 rounded-chip bg-brand-deep px-3 py-1.5 text-sm font-semibold text-white hover:bg-brand-dark"
+          >
+            <UserPlus className="h-4 w-4" aria-hidden />
+            {t("admin.users.addUser") || "Add user"}
+          </button>
+        </div>
       </header>
 
       <SurfaceCard padding="lg">
@@ -191,6 +259,20 @@ const AdminUsers: React.FC = () => {
               render: (row: any) => row?.email || "—",
             },
             {
+              key: "languages",
+              header: t("admin.users.languages") || "Languages",
+              render: (row: any) =>
+                row?.native_language && row?.language_to_learn ? (
+                  <LanguageExchangePill
+                    nativeLanguage={row.native_language}
+                    learningLanguage={row.language_to_learn}
+                    dense
+                  />
+                ) : (
+                  "—"
+                ),
+            },
+            {
               key: "role",
               header: t("admin.users.role") || "Role",
               render: (row: any) => (
@@ -198,6 +280,34 @@ const AdminUsers: React.FC = () => {
                   {row?.role || "user"}
                 </Badge>
               ),
+            },
+            {
+              key: "userMode",
+              header: t("admin.users.mode") || "Mode",
+              render: (row: any) =>
+                row?.userMode === "vip" ? (
+                  <Badge tone="banana">{t("admin.users.vip") || "VIP"}</Badge>
+                ) : (
+                  <span className="text-ink-500 dark:text-ink-400">
+                    {t("admin.users.regular") || "Regular"}
+                  </span>
+                ),
+            },
+            {
+              key: "isEmailVerified",
+              header: t("admin.users.verified") || "Verified",
+              // An icon only when it is true: a column of "no" markers reads as
+              // a problem, and an unverified account is the ordinary case.
+              render: (row: any) =>
+                row?.isEmailVerified ? (
+                  <BadgeCheck
+                    data-testid="admin-users-verified"
+                    aria-label={t("admin.users.verified") || "Verified"}
+                    className="h-4 w-4 text-brand"
+                  />
+                ) : (
+                  <span className="text-ink-400 dark:text-ink-500">—</span>
+                ),
             },
             {
               key: "isBanned",
@@ -214,6 +324,12 @@ const AdminUsers: React.FC = () => {
                 ),
             },
             {
+              key: "lastActive",
+              header: t("admin.users.lastActive") || "Last active",
+              className: "whitespace-nowrap",
+              render: (row: any) => relativeTime(row?.lastActive, Date.now(), i18n.language),
+            },
+            {
               key: "createdAt",
               header: t("admin.users.joined") || "Joined",
               className: "whitespace-nowrap tabular-nums",
@@ -226,6 +342,8 @@ const AdminUsers: React.FC = () => {
       {selectedId ? (
         <UserDetailDrawer userId={selectedId} onClose={() => setSelectedId(null)} />
       ) : null}
+
+      {registering ? <RegisterUserDialog onClose={() => setRegistering(false)} /> : null}
     </div>
   );
 };

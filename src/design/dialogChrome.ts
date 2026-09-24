@@ -5,7 +5,9 @@
 // (parts/ProfilePhotos.tsx) and not at all in ConfirmDialog, which is now the
 // primitive behind Block, Report, photo deletion and moment deletion. Two
 // overlays on the same page behaving differently under Tab is the bug this
-// module exists to prevent.
+// module exists to prevent. DialogShell — the shell every admin modal renders
+// through, ConfirmDialog included — calls straight into this too, so there is
+// exactly one Tab loop in the codebase.
 import React, { useEffect } from "react";
 
 /**
@@ -26,15 +28,30 @@ export const FOCUSABLE = [
 /**
  * Tab and Shift+Tab wrap inside `container` instead of walking out into the
  * page behind it. Bind it as the dialog's `onKeyDown`.
+ *
+ * `hidden` and `aria-hidden` nodes are dropped: a collapsed field still
+ * matches the selector, and wrapping onto something the moderator cannot see
+ * looks exactly like focus having escaped.
  */
 export function trapTab(container: HTMLElement | null, event: React.KeyboardEvent): void {
   if (event.key !== "Tab" || !container) return;
-  const nodes = container.querySelectorAll(FOCUSABLE);
+  const nodes = Array.prototype.slice
+    .call(container.querySelectorAll(FOCUSABLE))
+    .filter(
+      (node: Element) =>
+        !node.hasAttribute("hidden") && node.getAttribute("aria-hidden") !== "true"
+    );
   if (nodes.length === 0) return;
   const first = nodes[0] as HTMLElement;
   const last = nodes[nodes.length - 1] as HTMLElement;
   const active = document.activeElement;
-  if (event.shiftKey && (active === first || !container.contains(active))) {
+  // The container itself counts as "before the first stop": a dialog opened
+  // with no field to nominate focuses its own panel (tabIndex -1), and
+  // Shift+Tab from there must land on the last control, not on the page.
+  if (
+    event.shiftKey &&
+    (active === first || active === container || !container.contains(active))
+  ) {
     event.preventDefault();
     last.focus();
   } else if (!event.shiftKey && active === last) {

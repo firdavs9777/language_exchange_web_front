@@ -73,3 +73,7 @@ export const ANALYTICS_EVENTS_URL = "/api/v1/analytics/events";
 // Admin console. Every route below lives under `protect` + `authorize('admin')`
 // server-side (routes/admin.js); the client-side guard is cosmetic.
 export const ADMIN_URL = "/api/v1/admin";
+// The reports router (routes/report.js) is mounted separately from `/admin`
+// in server.js (`app.use('/api/v1/reports', reports)`), not nested under
+// ADMIN_URL — its admin-only routes still sit behind `authorizeRole('admin')`.
+export const ADMIN_REPORTS_URL = "/api/v1/reports";

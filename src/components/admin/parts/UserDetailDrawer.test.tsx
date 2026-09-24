@@ -18,9 +18,12 @@ const mockBanState = { isLoading: false, error: undefined as any, reset: jest.fn
 const mockUnbanState = { isLoading: false, error: undefined as any, reset: jest.fn() };
 const mockRoleState = { isLoading: false, error: undefined as any, reset: jest.fn() };
 const mockDeleteState = { isLoading: false, error: undefined as any, reset: jest.fn() };
+const mockUpdate = jest.fn();
+const mockUpdateState = { isLoading: false, error: undefined as any, reset: jest.fn() };
 
 jest.mock("../../../store/slices/adminSlice", () => ({
   useGetAdminUserQuery: (...args: any[]) => mockGetUser(...args),
+  useUpdateUserMutation: () => [mockUpdate, mockUpdateState],
   useBanAdminUserMutation: () => [mockBan, mockBanState],
   useUnbanAdminUserMutation: () => [mockUnban, mockUnbanState],
   useChangeAdminUserRoleMutation: () => [mockRole, mockRoleState],
@@ -38,6 +41,11 @@ const USER = {
   bannedAt: null,
   createdAt: "2025-01-02T00:00:00.000Z",
   imageUrls: ["https://cdn.example.com/ada.jpg"],
+  native_language: "English",
+  language_to_learn: "Korean",
+  isEmailVerified: true,
+  userMode: "vip",
+  vipSubscription: { isActive: true, endDate: "2026-12-01T00:00:00.000Z" },
   recentActions: [
     {
       _id: "a1",
@@ -251,4 +259,64 @@ it("resets only the mutation whose dialog is opening", () => {
   expect(mockRoleState.reset).toHaveBeenCalled();
   expect(mockBanState.reset).not.toHaveBeenCalled();
   expect(mockDeleteState.reset).not.toHaveBeenCalled();
+});
+
+// --- v2: VIP, verified and the edit dialog ----------------------------------
+
+it("shows the VIP subscription and when it ends", () => {
+  render(<UserDetailDrawer userId="u1" onClose={jest.fn()} />);
+  const vip = screen.getByTestId("drawer-vip");
+  expect(vip).toHaveTextContent("VIP");
+  expect(vip.textContent).toContain(new Date("2026-12-01T00:00:00.000Z").toLocaleDateString());
+});
+
+it("says so when the account is not VIP", () => {
+  mockGetUser.mockReturnValue(
+    ok({ ...USER, userMode: "regular", vipSubscription: { isActive: false, endDate: null } })
+  );
+  render(<UserDetailDrawer userId="u1" onClose={jest.fn()} />);
+  expect(screen.getByTestId("drawer-vip")).not.toHaveTextContent("VIP");
+});
+
+it("shows whether the email is verified", () => {
+  render(<UserDetailDrawer userId="u1" onClose={jest.fn()} />);
+  expect(screen.getByTestId("drawer-verified")).toHaveTextContent(/yes/i);
+
+  mockGetUser.mockReturnValue(ok({ ...USER, isEmailVerified: false }));
+  render(<UserDetailDrawer userId="u1" onClose={jest.fn()} />);
+  expect(screen.getAllByTestId("drawer-verified")[1]).toHaveTextContent(/no/i);
+});
+
+it("pills the two languages", () => {
+  render(<UserDetailDrawer userId="u1" onClose={jest.fn()} />);
+  const pill = screen.getByTestId("language-pill");
+  expect(pill).toHaveTextContent("EN");
+  expect(pill).toHaveTextContent("KO");
+});
+
+it("opens the edit dialog from Edit, prefilled with this user", () => {
+  render(<UserDetailDrawer userId="u1" onClose={jest.fn()} />);
+  expect(screen.queryByTestId("edit-user-dialog")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByTestId("drawer-edit"));
+  expect(screen.getByTestId("edit-user-dialog")).toBeInTheDocument();
+  expect((screen.getByTestId("edit-user-name") as HTMLInputElement).value).toBe("Ada Lovelace");
+});
+
+it("keeps the drawer open when Escape closes the edit dialog's own layer", () => {
+  const onClose = jest.fn();
+  render(<UserDetailDrawer userId="u1" onClose={onClose} />);
+  fireEvent.click(screen.getByTestId("drawer-edit"));
+  fireEvent.keyDown(document, { key: "Escape" });
+  expect(onClose).not.toHaveBeenCalled();
+  expect(screen.queryByTestId("edit-user-dialog")).not.toBeInTheDocument();
+});
+
+it("closes the edit dialog from Cancel and leaves the drawer up", () => {
+  const onClose = jest.fn();
+  render(<UserDetailDrawer userId="u1" onClose={onClose} />);
+  fireEvent.click(screen.getByTestId("drawer-edit"));
+  fireEvent.click(screen.getByTestId("edit-user-cancel"));
+  expect(screen.queryByTestId("edit-user-dialog")).not.toBeInTheDocument();
+  expect(screen.getByTestId("user-detail-drawer")).toBeInTheDocument();
+  expect(onClose).not.toHaveBeenCalled();
 });

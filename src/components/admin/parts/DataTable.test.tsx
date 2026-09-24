@@ -79,3 +79,20 @@ it("disables previous on the first page and next on the last", () => {
   expect(screen.getByTestId("data-table-prev")).toBeDisabled();
   expect(screen.getByTestId("data-table-next")).toBeDisabled();
 });
+
+// The sr-only labels inside cells are position:absolute. Without a positioned
+// scroller their containing block is the page, they escape `overflow-x: auto`,
+// and a wide table stretches the document instead of scrolling inside its own
+// box -- which `body { overflow-x: hidden }` then clips away on a phone.
+it("positions the horizontal scroller so absolute cell content is clipped with it", () => {
+  const { container } = render(
+    <DataTable
+      rows={[{ id: "1", a: "x" }]}
+      rowKey="id"
+      columns={[{ key: "a", header: "A" }]}
+    />
+  );
+  const scroller = container.querySelector(".overflow-x-auto") as HTMLElement;
+  expect(scroller).toBeInTheDocument();
+  expect(scroller.className).toContain("relative");
+});

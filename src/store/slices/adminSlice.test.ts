@@ -63,6 +63,15 @@ const ENDPOINT_NAMES = [
   "getAdminGatherings",
   "archiveAdminClub",
   "cancelAdminGathering",
+  "getContentStats",
+  "listMoments",
+  "setMomentHidden",
+  "createUser",
+  "updateUser",
+  "listReports",
+  "reviewReport",
+  "resolveReport",
+  "dismissReport",
   "getAnalyticsEvents",
   "getAnalyticsVisits",
 ];
@@ -182,6 +191,186 @@ describe("request shapes match routes/admin.js", () => {
     const store = makeStore();
     await store.dispatch((adminApiSlice.endpoints as any).getAnalyticsVisits.initiate(undefined));
     expect(new URL(calls[0].url).pathname).toBe("/api/v1/admin/analytics/visits");
+  });
+
+  it("getContentStats -> GET /api/v1/admin/content/stats", async () => {
+    const calls = mockFetch({ success: true, data: { moments: { total: 1 } } });
+    const store = makeStore();
+    await store.dispatch((adminApiSlice.endpoints as any).getContentStats.initiate(undefined));
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/admin/content/stats");
+    expect(calls[0].method).toBe("GET");
+  });
+
+  it("listMoments -> GET /api/v1/admin/content/moments with page/limit/q/reported/hidden encoded", async () => {
+    const calls = mockFetch({ success: true, total: 0, page: 1, data: [] });
+    const store = makeStore();
+    await store.dispatch(
+      (adminApiSlice.endpoints as any).listMoments.initiate({
+        page: 2,
+        limit: 10,
+        q: "sunset",
+        reported: true,
+        hidden: false,
+      })
+    );
+    const url = new URL(calls[0].url);
+    expect(url.pathname).toBe("/api/v1/admin/content/moments");
+    expect(calls[0].method).toBe("GET");
+    expect(url.searchParams.get("page")).toBe("2");
+    expect(url.searchParams.get("limit")).toBe("10");
+    expect(url.searchParams.get("q")).toBe("sunset");
+    expect(url.searchParams.get("reported")).toBe("true");
+    expect(url.searchParams.get("hidden")).toBe("false");
+  });
+
+  it("setMomentHidden -> POST /api/v1/admin/content/moments/:id/hide with {hidden, reason}", async () => {
+    const calls = mockFetch({ success: true, data: { id: "m1", isDeleted: true } });
+    const store = makeStore();
+    await store.dispatch(
+      (adminApiSlice.endpoints as any).setMomentHidden.initiate({
+        id: "m1",
+        hidden: true,
+        reason: "nudity",
+      })
+    );
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/admin/content/moments/m1/hide");
+    expect(calls[0].method).toBe("POST");
+    expect(JSON.parse(calls[0].body as string)).toEqual({ hidden: true, reason: "nudity" });
+  });
+
+  it("createUser -> POST /api/v1/admin/users with the registration body", async () => {
+    const calls = mockFetch({
+      success: true,
+      data: { id: "u9", name: "Ada", email: "ada@example.com", role: "user" },
+    });
+    const store = makeStore();
+    const body = {
+      name: "Ada",
+      email: "ada@example.com",
+      password: "s3cret-password",
+      gender: "female",
+      birth_year: 1990,
+      birth_month: 1,
+      birth_day: 1,
+      native_language: "eng",
+      language_to_learn: "kor",
+      role: "user" as const,
+      markVerified: true,
+    };
+    await store.dispatch((adminApiSlice.endpoints as any).createUser.initiate(body));
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/admin/users");
+    expect(calls[0].method).toBe("POST");
+    expect(JSON.parse(calls[0].body as string)).toEqual(body);
+  });
+
+  it("updateUser -> PUT /api/v1/admin/users/:id with only the changed fields", async () => {
+    const calls = mockFetch({ success: true, data: { _id: "u1", name: "Ada L." } });
+    const store = makeStore();
+    await store.dispatch(
+      (adminApiSlice.endpoints as any).updateUser.initiate({
+        id: "u1",
+        name: "Ada L.",
+        vip: { grant: true, days: 30 },
+      })
+    );
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/admin/users/u1");
+    expect(calls[0].method).toBe("PUT");
+    expect(JSON.parse(calls[0].body as string)).toEqual({
+      name: "Ada L.",
+      vip: { grant: true, days: 30 },
+    });
+  });
+
+  it("listReports -> GET /api/v1/reports with status/type/page/limit ('type', not 'targetType')", async () => {
+    const calls = mockFetch({ success: true, count: 0, data: [] });
+    const store = makeStore();
+    await store.dispatch(
+      (adminApiSlice.endpoints as any).listReports.initiate({
+        status: "pending",
+        targetType: "moment",
+        page: 1,
+        limit: 20,
+      })
+    );
+    const url = new URL(calls[0].url);
+    expect(url.pathname).toBe("/api/v1/reports");
+    expect(calls[0].method).toBe("GET");
+    expect(url.searchParams.get("status")).toBe("pending");
+    expect(url.searchParams.get("type")).toBe("moment");
+    expect(url.searchParams.has("targetType")).toBe(false);
+    expect(url.searchParams.get("page")).toBe("1");
+    expect(url.searchParams.get("limit")).toBe("20");
+  });
+
+  it("reviewReport -> PUT /api/v1/reports/:id/review with no body", async () => {
+    const calls = mockFetch({ success: true, data: { _id: "r1", status: "under_review" } });
+    const store = makeStore();
+    await store.dispatch((adminApiSlice.endpoints as any).reviewReport.initiate("r1"));
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/reports/r1/review");
+    expect(calls[0].method).toBe("PUT");
+  });
+
+  it("resolveReport -> PUT /api/v1/reports/:id/resolve with {action, notes}", async () => {
+    const calls = mockFetch({ success: true, data: { _id: "r1", status: "resolved" } });
+    const store = makeStore();
+    await store.dispatch(
+      (adminApiSlice.endpoints as any).resolveReport.initiate({
+        id: "r1",
+        action: "content_removed",
+        notes: "removed the moment",
+      })
+    );
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/reports/r1/resolve");
+    expect(calls[0].method).toBe("PUT");
+    expect(JSON.parse(calls[0].body as string)).toEqual({
+      action: "content_removed",
+      notes: "removed the moment",
+    });
+  });
+
+  it("dismissReport -> PUT /api/v1/reports/:id/dismiss with {notes}", async () => {
+    const calls = mockFetch({ success: true, data: { _id: "r1", status: "dismissed" } });
+    const store = makeStore();
+    await store.dispatch(
+      (adminApiSlice.endpoints as any).dismissReport.initiate({ id: "r1", notes: "no violation" })
+    );
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/reports/r1/dismiss");
+    expect(calls[0].method).toBe("PUT");
+    expect(JSON.parse(calls[0].body as string)).toEqual({ notes: "no violation" });
+  });
+});
+
+describe("setMomentHidden invalidates the moments table and the stat strip", () => {
+  it("a successful hide refetches listMoments (AdminMoments invalidation)", async () => {
+    const calls = mockFetch({ success: true, total: 0, page: 1, data: [] });
+    const store = makeStore();
+
+    // A live subscription, the way the content desk's moments table holds one.
+    const sub: any = store.dispatch(
+      (adminApiSlice.endpoints as any).listMoments.initiate({ page: 1 })
+    );
+    await sub;
+    expect(calls).toHaveLength(1);
+
+    await store.dispatch(
+      (adminApiSlice.endpoints as any).setMomentHidden.initiate({
+        id: "m1",
+        hidden: true,
+        reason: "spam",
+      })
+    );
+
+    // The hide itself is call 2; the invalidated listMoments refetch is call 3.
+    const deadline = Date.now() + 2000;
+    while (calls.length < 3 && Date.now() < deadline) {
+      await new Promise((r) => setTimeout(r, 10));
+    }
+    expect(calls.length).toBeGreaterThanOrEqual(3);
+    expect(
+      calls.filter((c) => new URL(c.url).pathname === "/api/v1/admin/content/moments").length
+    ).toBeGreaterThanOrEqual(2);
+
+    sub.unsubscribe();
   });
 });
 
