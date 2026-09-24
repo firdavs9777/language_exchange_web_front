@@ -783,7 +783,20 @@
       "copyLink": "링크 복사",
       "linkCopied": "링크를 복사했어요",
       "linkCopyFailed": "링크를 복사하지 못했어요",
-      "applyFirst": "먼저 필터를 적용해 주세요"
+      "applyFirst": "먼저 필터를 적용해 주세요",
+      "matchCountLoading": "일치 인원 확인 중…",
+      "close": "필터 닫기",
+      "languages": "언어",
+      "partnerNative": "상대방의 모국어",
+      "partnerLearning": "상대방이 배우는 언어",
+      "country": "국가",
+      "countryPlaceholder": "예: 한국",
+      "level": "언어 레벨",
+      "topics": "주제",
+      "mutualInterests": "공통 관심사",
+      "newUsersOnly": "신규 사용자만",
+      "clearAll": "모두 지우기",
+      "matchCount": "{{count}}명 일치"
     },
     "highlighted": {
       "title": "추천 프로필",

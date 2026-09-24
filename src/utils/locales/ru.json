@@ -783,7 +783,20 @@
       "copyLink": "Скопировать ссылку",
       "linkCopied": "Ссылка скопирована",
       "linkCopyFailed": "Не удалось скопировать ссылку",
-      "applyFirst": "Сначала примените фильтры"
+      "applyFirst": "Сначала примените фильтры",
+      "matchCountLoading": "Подсчёт совпадений…",
+      "close": "Закрыть фильтры",
+      "languages": "Языки",
+      "partnerNative": "Родной язык партнёра",
+      "partnerLearning": "Партнёр изучает",
+      "country": "Страна",
+      "countryPlaceholder": "например, Южная Корея",
+      "level": "Уровень языка",
+      "topics": "Темы",
+      "mutualInterests": "Общие интересы",
+      "newUsersOnly": "Только новые пользователи",
+      "clearAll": "Очистить всё",
+      "matchCount": "Совпадений: {{count}}"
     },
     "highlighted": {
       "title": "Рекомендуемые профили",

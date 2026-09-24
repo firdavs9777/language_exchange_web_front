@@ -783,7 +783,20 @@
       "copyLink": "复制链接",
       "linkCopied": "链接已复制",
       "linkCopyFailed": "链接复制失败",
-      "applyFirst": "请先应用筛选条件"
+      "applyFirst": "请先应用筛选条件",
+      "matchCountLoading": "正在计算匹配数…",
+      "close": "关闭筛选",
+      "languages": "语言",
+      "partnerNative": "对方的母语",
+      "partnerLearning": "对方正在学的语言",
+      "country": "国家",
+      "countryPlaceholder": "例如：韩国",
+      "level": "语言水平",
+      "topics": "话题",
+      "mutualInterests": "共同兴趣",
+      "newUsersOnly": "只看新用户",
+      "clearAll": "清除全部",
+      "matchCount": "{{count}} 个匹配"
     },
     "highlighted": {
       "title": "推荐资料",

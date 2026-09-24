@@ -783,7 +783,20 @@
       "copyLink": "Sao chép liên kết",
       "linkCopied": "Đã sao chép liên kết",
       "linkCopyFailed": "Không thể sao chép liên kết",
-      "applyFirst": "Vui lòng áp dụng bộ lọc trước"
+      "applyFirst": "Vui lòng áp dụng bộ lọc trước",
+      "matchCountLoading": "Đang đếm kết quả phù hợp…",
+      "close": "Đóng bộ lọc",
+      "languages": "Ngôn ngữ",
+      "partnerNative": "Tiếng mẹ đẻ của đối tác",
+      "partnerLearning": "Đối tác đang học",
+      "country": "Quốc gia",
+      "countryPlaceholder": "Ví dụ: Hàn Quốc",
+      "level": "Trình độ ngôn ngữ",
+      "topics": "Chủ đề",
+      "mutualInterests": "Sở thích chung",
+      "newUsersOnly": "Chỉ người dùng mới",
+      "clearAll": "Xóa tất cả",
+      "matchCount": "{{count}} kết quả phù hợp"
     },
     "highlighted": {
       "title": "Hồ sơ nổi bật",

@@ -783,7 +783,20 @@
       "copyLink": "लिंक कॉपी करें",
       "linkCopied": "लिंक कॉपी हो गया",
       "linkCopyFailed": "लिंक कॉपी नहीं हो सका",
-      "applyFirst": "पहले फ़िल्टर लागू करें"
+      "applyFirst": "पहले फ़िल्टर लागू करें",
+      "matchCountLoading": "मिलान गिने जा रहे हैं…",
+      "close": "फ़िल्टर बंद करें",
+      "languages": "भाषाएँ",
+      "partnerNative": "साथी की मातृभाषा",
+      "partnerLearning": "साथी सीख रहे हैं",
+      "country": "देश",
+      "countryPlaceholder": "उदा. दक्षिण कोरिया",
+      "level": "भाषा स्तर",
+      "topics": "विषय",
+      "mutualInterests": "साझा रुचियाँ",
+      "newUsersOnly": "केवल नए उपयोगकर्ता",
+      "clearAll": "सभी साफ़ करें",
+      "matchCount": "{{count}} मिलान"
     },
     "highlighted": {
       "title": "चुनिंदा प्रोफ़ाइल",

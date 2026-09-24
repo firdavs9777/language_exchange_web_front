@@ -783,7 +783,20 @@
       "copyLink": "複製連結",
       "linkCopied": "已複製連結",
       "linkCopyFailed": "無法複製連結",
-      "applyFirst": "請先套用篩選"
+      "applyFirst": "請先套用篩選",
+      "matchCountLoading": "正在計算匹配數…",
+      "close": "關閉篩選",
+      "languages": "語言",
+      "partnerNative": "對方的母語",
+      "partnerLearning": "對方正在學的語言",
+      "country": "國家",
+      "countryPlaceholder": "例如：韓國",
+      "level": "語言程度",
+      "topics": "話題",
+      "mutualInterests": "共同興趣",
+      "newUsersOnly": "只看新使用者",
+      "clearAll": "清除全部",
+      "matchCount": "{{count}} 個匹配"
     },
     "highlighted": {
       "title": "精選個人檔案",

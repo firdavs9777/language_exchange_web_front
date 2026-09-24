@@ -783,7 +783,20 @@
       "copyLink": "Kopyahin ang link",
       "linkCopied": "Nakopya ang link",
       "linkCopyFailed": "Hindi nakopya ang link",
-      "applyFirst": "I-apply muna ang mga filter"
+      "applyFirst": "I-apply muna ang mga filter",
+      "matchCountLoading": "Binibilang ang mga tugma…",
+      "close": "Isara ang mga filter",
+      "languages": "Mga wika",
+      "partnerNative": "Katutubong wika ng kasama",
+      "partnerLearning": "Nag-aaral ang kasama",
+      "country": "Bansa",
+      "countryPlaceholder": "Hal. Timog Korea",
+      "level": "Level ng wika",
+      "topics": "Mga paksa",
+      "mutualInterests": "Mga magkatulad na interes",
+      "newUsersOnly": "Bagong user lang",
+      "clearAll": "I-clear lahat",
+      "matchCount": "{{count}} tugma"
     },
     "highlighted": {
       "title": "Mga itinatampok na profile",

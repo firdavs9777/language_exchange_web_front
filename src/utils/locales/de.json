@@ -783,7 +783,20 @@
       "copyLink": "Link kopieren",
       "linkCopied": "Link kopiert",
       "linkCopyFailed": "Link konnte nicht kopiert werden",
-      "applyFirst": "Zuerst Filter anwenden"
+      "applyFirst": "Zuerst Filter anwenden",
+      "matchCountLoading": "Treffer werden gezählt…",
+      "close": "Filter schließen",
+      "languages": "Sprachen",
+      "partnerNative": "Muttersprache des Partners",
+      "partnerLearning": "Partner lernt",
+      "country": "Land",
+      "countryPlaceholder": "z. B. Südkorea",
+      "level": "Sprachniveau",
+      "topics": "Themen",
+      "mutualInterests": "Gemeinsame Interessen",
+      "newUsersOnly": "Nur neue Nutzer",
+      "clearAll": "Alles löschen",
+      "matchCount": "{{count}} Treffer"
     },
     "highlighted": {
       "title": "Hervorgehobene Profile",

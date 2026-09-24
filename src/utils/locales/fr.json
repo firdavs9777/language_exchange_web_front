@@ -764,7 +764,20 @@
       "copyLink": "Copier le lien",
       "linkCopied": "Lien copié",
       "linkCopyFailed": "Impossible de copier le lien",
-      "applyFirst": "Appliquez d'abord les filtres"
+      "applyFirst": "Appliquez d'abord les filtres",
+      "matchCountLoading": "Comptage des correspondances…",
+      "close": "Fermer les filtres",
+      "languages": "Langues",
+      "partnerNative": "Langue maternelle du partenaire",
+      "partnerLearning": "Le partenaire apprend",
+      "country": "Pays",
+      "countryPlaceholder": "ex. Corée du Sud",
+      "level": "Niveau de langue",
+      "topics": "Sujets",
+      "mutualInterests": "Centres d'intérêt communs",
+      "newUsersOnly": "Nouveaux utilisateurs uniquement",
+      "clearAll": "Tout effacer",
+      "matchCount": "{{count}} correspondances"
     },
     "highlighted": {
       "title": "Profils en vedette",

@@ -783,7 +783,20 @@
       "copyLink": "リンクをコピー",
       "linkCopied": "リンクをコピーしました",
       "linkCopyFailed": "リンクをコピーできませんでした",
-      "applyFirst": "先にフィルターを適用してください"
+      "applyFirst": "先にフィルターを適用してください",
+      "matchCountLoading": "マッチ数を確認中…",
+      "close": "フィルターを閉じる",
+      "languages": "言語",
+      "partnerNative": "相手の母語",
+      "partnerLearning": "相手が学習中の言語",
+      "country": "国",
+      "countryPlaceholder": "例：韓国",
+      "level": "語学レベル",
+      "topics": "トピック",
+      "mutualInterests": "共通の興味",
+      "newUsersOnly": "新規ユーザーのみ",
+      "clearAll": "すべてクリア",
+      "matchCount": "{{count}}件のマッチ"
     },
     "highlighted": {
       "title": "注目のプロフィール",

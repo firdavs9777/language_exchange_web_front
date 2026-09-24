@@ -783,7 +783,20 @@
       "copyLink": "نسخ الرابط",
       "linkCopied": "تم نسخ الرابط",
       "linkCopyFailed": "تعذّر نسخ الرابط",
-      "applyFirst": "طبّق الفلاتر أولاً"
+      "applyFirst": "طبّق الفلاتر أولاً",
+      "matchCountLoading": "جارٍ حساب التطابقات…",
+      "close": "إغلاق الفلاتر",
+      "languages": "اللغات",
+      "partnerNative": "اللغة الأم للشريك",
+      "partnerLearning": "الشريك يتعلم",
+      "country": "البلد",
+      "countryPlaceholder": "مثال: كوريا الجنوبية",
+      "level": "مستوى اللغة",
+      "topics": "المواضيع",
+      "mutualInterests": "الاهتمامات المشتركة",
+      "newUsersOnly": "المستخدمون الجدد فقط",
+      "clearAll": "مسح الكل",
+      "matchCount": "{{count}} تطابق"
     },
     "highlighted": {
       "title": "ملفات مميزة",

@@ -783,7 +783,20 @@
       "copyLink": "คัดลอกลิงก์",
       "linkCopied": "คัดลอกลิงก์แล้ว",
       "linkCopyFailed": "ไม่สามารถคัดลอกลิงก์ได้",
-      "applyFirst": "กรุณาใช้ตัวกรองก่อน"
+      "applyFirst": "กรุณาใช้ตัวกรองก่อน",
+      "matchCountLoading": "กำลังนับจำนวนที่ตรงกัน…",
+      "close": "ปิดตัวกรอง",
+      "languages": "ภาษา",
+      "partnerNative": "ภาษาแม่ของคู่สนทนา",
+      "partnerLearning": "คู่สนทนากำลังเรียน",
+      "country": "ประเทศ",
+      "countryPlaceholder": "เช่น เกาหลีใต้",
+      "level": "ระดับภาษา",
+      "topics": "หัวข้อ",
+      "mutualInterests": "ความสนใจร่วมกัน",
+      "newUsersOnly": "เฉพาะผู้ใช้ใหม่",
+      "clearAll": "ล้างทั้งหมด",
+      "matchCount": "{{count}} รายการที่ตรงกัน"
     },
     "highlighted": {
       "title": "โปรไฟล์แนะนำ",

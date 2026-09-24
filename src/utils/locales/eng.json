@@ -783,7 +783,20 @@
       "copyLink": "Copy link",
       "linkCopied": "Link copied",
       "linkCopyFailed": "Couldn't copy the link",
-      "applyFirst": "Apply filters first"
+      "applyFirst": "Apply filters first",
+      "matchCountLoading": "Counting matches…",
+      "close": "Close filters",
+      "languages": "Languages",
+      "partnerNative": "Partner's native language",
+      "partnerLearning": "Partner is learning",
+      "country": "Country",
+      "countryPlaceholder": "e.g. South Korea",
+      "level": "Language level",
+      "topics": "Topics",
+      "mutualInterests": "Mutual interests",
+      "newUsersOnly": "New users only",
+      "clearAll": "Clear all",
+      "matchCount": "{{count}} matches"
     },
     "highlighted": {
       "title": "Highlighted Profiles",
