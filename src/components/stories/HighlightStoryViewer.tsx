@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import DialogShell from "../../design/DialogShell";
@@ -60,6 +60,17 @@ const HighlightStoryViewer: React.FC<HighlightStoryViewerProps> = ({
     }
     setIndex(next);
   };
+
+  // Keyboard parity with the app viewer: arrows step, Escape is DialogShell's.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") go(-1);
+      else if (e.key === "ArrowRight") go(1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [safeIndex, total]);
 
   return (
     <DialogShell
