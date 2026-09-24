@@ -2061,6 +2061,39 @@
       "googlePlay": "Google Play",
       "downloadOnThe": "Unduh di",
       "getItOn": "Dapatkan di"
+    },
+    "promo": {
+      "tutor": {
+        "eyebrow": "Tutor AI",
+        "title": "Membetulkan bahasa Koreamu saat mengetik",
+        "body": "Koreksi pribadi di setiap pesan, plus kuis dan latihan tata bahasa di sela obrolan.",
+        "cta": "Dapatkan aplikasinya",
+        "alt": "Study Hub BananaTalk di ponsel, menawarkan Berlatih dengan AI, ulasan, dan tantangan harian"
+      },
+      "voice": {
+        "eyebrow": "Voice Notes & Rooms",
+        "title": "Dengar pelafalan yang sesungguhnya",
+        "body": "Kirim pesan suara, bagikan lokasimu, dan gabung Voice Rooms langsung bersama penutur asli.",
+        "cta": "Dapatkan aplikasinya",
+        "alt": "Obrolan BananaTalk di ponsel, dengan catatan suara dan kartu lokasi yang dibagikan"
+      },
+      "moments": {
+        "eyebrow": "Moments & Stories",
+        "title": "Bagikan minggumu dalam dua bahasa",
+        "body": "Posting foto dan pikiranmu; teman membacanya dalam terjemahan dan mengoreksi dengan ramah.",
+        "cta": "Dapatkan aplikasinya",
+        "alt": "Feed Momen BananaTalk di ponsel, dengan foto yang diunggah oleh pelajar lain"
+      },
+      "inbox": {
+        "eyebrow": "Percakapan sungguhan",
+        "title": "Orang yang benar-benar membalas",
+        "body": "Chat, sapaan, dan reaksimu dalam satu kotak masuk — dibaca, diterjemahkan, dibalas.",
+        "cta": "Dapatkan aplikasinya",
+        "alt": "Kotak masuk BananaTalk di ponsel, menampilkan daftar percakapan terbaru dengan penutur asli"
+      },
+      "dismiss": "Tutup promosi aplikasi",
+      "label": "Apa yang dilakukan aplikasi BananaTalk",
+      "slideLabel": "Slide {{n}} dari {{total}}"
     }
   },
   "stories": {

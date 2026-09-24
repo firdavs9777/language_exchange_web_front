@@ -2061,6 +2061,39 @@
       "googlePlay": "Google Play",
       "downloadOnThe": "立即下载",
       "getItOn": "立即获取"
+    },
+    "promo": {
+      "tutor": {
+        "eyebrow": "AI 导师",
+        "title": "边打字边纠正你的韩语",
+        "body": "每条消息都有专属纠错,聊天之余还有测验和语法练习。",
+        "cta": "下载 App",
+        "alt": "手机上显示的 BananaTalk 学习中心，提供与 AI 练习、复习和每日挑战"
+      },
+      "voice": {
+        "eyebrow": "语音留言与语音房",
+        "title": "听听真实的发音",
+        "body": "发送语音消息,分享你的位置,和母语者一起加入实时语音房。",
+        "cta": "下载 App",
+        "alt": "手机上显示的 BananaTalk 聊天，包含语音消息和共享位置卡片"
+      },
+      "moments": {
+        "eyebrow": "动态与限时动态",
+        "title": "用两种语言分享你的一周",
+        "body": "发布照片和想法,朋友会读到翻译版本,并友善地纠正你。",
+        "cta": "下载 App",
+        "alt": "手机上显示的 BananaTalk 动态流，展示其他学习者发布的照片"
+      },
+      "inbox": {
+        "eyebrow": "真实对话",
+        "title": "真的会回复你的人",
+        "body": "聊天、打招呼和互动都在一个收件箱里 — 已读、已翻译、已回复。",
+        "cta": "下载 App",
+        "alt": "手机上显示的 BananaTalk 收件箱，列出与母语者的最近对话"
+      },
+      "dismiss": "关闭应用推广",
+      "label": "BananaTalk 应用能做什么",
+      "slideLabel": "幻灯片 {{n}} / {{total}}"
     }
   },
   "stories": {

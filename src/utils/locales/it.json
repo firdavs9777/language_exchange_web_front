@@ -2061,6 +2061,39 @@
       "googlePlay": "Google Play",
       "downloadOnThe": "Scarica su",
       "getItOn": "Disponibile su"
+    },
+    "promo": {
+      "tutor": {
+        "eyebrow": "Tutor IA",
+        "title": "Corregge il tuo coreano mentre scrivi",
+        "body": "Correzioni private a ogni messaggio, più quiz ed esercizi di grammatica tra una chat e l'altra.",
+        "cta": "Scarica l'app",
+        "alt": "Lo Study Hub di BananaTalk su un telefono, che offre Pratica con l'IA, ripasso e sfide giornaliere"
+      },
+      "voice": {
+        "eyebrow": "Note vocali e stanze",
+        "title": "Ascolta come suona davvero",
+        "body": "Invia note vocali, condividi dove ti trovi e unisciti a stanze vocali dal vivo con madrelingua.",
+        "cta": "Scarica l'app",
+        "alt": "Una chat di BananaTalk su un telefono, con messaggi vocali e una scheda di posizione condivisa"
+      },
+      "moments": {
+        "eyebrow": "Momenti e storie",
+        "title": "Condividi la tua settimana in due lingue",
+        "body": "Pubblica foto e pensieri; gli amici li leggono tradotti e ti correggono con gentilezza.",
+        "cta": "Scarica l'app",
+        "alt": "Il feed Momenti di BananaTalk su un telefono, con foto pubblicate da altri studenti"
+      },
+      "inbox": {
+        "eyebrow": "Conversazioni vere",
+        "title": "Persone che rispondono davvero",
+        "body": "Chat, saluti e reazioni in un'unica posta in arrivo — lette, tradotte, risposte.",
+        "cta": "Scarica l'app",
+        "alt": "La posta in arrivo di BananaTalk su un telefono, con un elenco di conversazioni recenti con madrelingua"
+      },
+      "dismiss": "Chiudi la promozione dell'app",
+      "label": "Cosa fa l'app BananaTalk",
+      "slideLabel": "Diapositiva {{n}} di {{total}}"
     }
   },
   "stories": {
