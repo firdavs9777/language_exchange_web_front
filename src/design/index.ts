@@ -15,3 +15,4 @@ export { default as SurfaceCard } from "./SurfaceCard";
 export { default as Badge } from "./Badge";
 export { default as FollowButton } from "./FollowButton";
 export { default as ConfirmDialog } from "./ConfirmDialog";
+export { default as notify, TOAST_MS } from "./notify";
