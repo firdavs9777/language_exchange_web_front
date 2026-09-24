@@ -56,7 +56,7 @@ const AnalyticsRow: React.FC = () => {
 
   if (!GA_MEASUREMENT_ID) return null;
 
-  const status =
+  const description =
     state === "granted"
       ? t("consent.manage.current_granted") || "Analytics cookies are on."
       : state === "denied"
@@ -64,53 +64,32 @@ const AnalyticsRow: React.FC = () => {
       : t("consent.manage.body") ||
         "Analytics cookies tell us which pages people find useful. Nothing else.";
 
-  const choose = (grant: boolean) => () => {
-    if (grant) accept();
+  const change = (on: boolean) => {
+    if (on) accept();
     else decline();
     notify.success(
-      grant
+      on
         ? t("consent.manage.current_granted") || "Analytics cookies are on."
         : t("consent.manage.current_denied") || "Analytics cookies are off."
     );
   };
 
   return (
-    <div className="mb-6">
+    <div className="mb-6" data-testid="analytics-consent-row">
       <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 px-1">
         {t("consent.manage.title") || "Privacy choices"}
       </h3>
-      <div
-        data-testid="analytics-consent-row"
-        className="flex flex-wrap items-center justify-between gap-3 p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-white/30 mb-3"
-      >
-        <div className="flex items-center gap-4">
-          <div className="p-2 rounded-lg bg-gradient-to-br from-teal-400 to-teal-600">
-            <span className="text-white"><BarChart3 className="w-5 h-5" /></span>
-          </div>
-          <div>
-            <p className="font-medium text-gray-800">
-              {t("consent.manage.analyticsCookies") || "Analytics cookies"}
-            </p>
-            <p className="text-sm text-gray-500">{status}</p>
-          </div>
-        </div>
-        <div className="flex shrink-0 gap-2">
-          <button
-            type="button"
-            onClick={choose(false)}
-            className="rounded-full border border-gray-300 px-4 py-1.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-100"
-          >
-            {t("consent.manage.decline") || "Turn off"}
-          </button>
-          <button
-            type="button"
-            onClick={choose(true)}
-            className="rounded-full bg-teal-600 px-4 py-1.5 text-sm font-bold text-white transition-colors hover:bg-teal-700"
-          >
-            {t("consent.manage.accept") || "Turn on"}
-          </button>
-        </div>
-      </div>
+      {/* The same switch as the six rows above it. This one is not part of
+          `settings` and is never sent to the server -- the decision lives in
+          localStorage and takes effect on the spot -- so it stays outside the
+          Save flow and says so by confirming immediately. */}
+      <Toggle
+        icon={<BarChart3 className="w-5 h-5" />}
+        label={t("consent.manage.analyticsCookies") || "Analytics cookies"}
+        description={description}
+        value={state === "granted"}
+        onChange={change}
+      />
     </div>
   );
 };

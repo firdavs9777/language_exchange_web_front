@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { readConsent, subscribeConsentManager } from "../../analytics/consent";
+import { subscribeConsentManager } from "../../analytics/consent";
 import { useConsentChoice } from "../../analytics/useConsentChoice";
-import { loadGa, GA_MEASUREMENT_ID } from "../../analytics/ga";
+import { GA_MEASUREMENT_ID } from "../../analytics/ga";
+import DialogShell from "../../design/DialogShell";
 import { useSurfaceOpen } from "./surfaceRegistry";
 
 const ACCEPT_CLASS =
@@ -17,10 +18,7 @@ const ConsentBar: React.FC = () => {
   const { state, accept, decline } = useConsentChoice();
   const [manage, setManage] = useState(false);
   const popupOpen = useSurfaceOpen("download-popup");
-
-  useEffect(() => {
-    if (readConsent() === "granted") loadGa();
-  }, []);
+  const closeManage = useCallback(() => setManage(false), []);
 
   // The footer link, the settings row and the policy page all reach the
   // manager through this, from wherever they are in the tree.
@@ -31,43 +29,40 @@ const ConsentBar: React.FC = () => {
   // still run unconditionally.
   if (!GA_MEASUREMENT_ID) return null;
 
-  // Opened deliberately, so it outranks the download popup and shows whatever
-  // the current choice is, including "not decided yet".
+  // Opened deliberately — from the footer, the policy page or privacy
+  // settings, all of them far from here in the tree — so it is a dialog, not
+  // another bar sliding up unasked: DialogShell brings Escape, the backdrop,
+  // focus into the panel and focus back to whatever opened it, which a
+  // keyboard user reaching this from the footer has no other way to get.
   if (manage) {
     return (
-      <div
-        role="region"
-        aria-label={t("consent.manage.title") || "Privacy choices"}
-        data-testid="consent-manager"
-        className={PANEL_CLASS}
-      >
-        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3">
-          <div className="min-w-[14rem] flex-1">
-            <p className="text-sm font-extrabold text-ink-900 dark:text-white">
-              {t("consent.manage.title") || "Privacy choices"}
-            </p>
-            <p className="mt-0.5 text-sm leading-snug text-ink-700 dark:text-ink-200">
-              {state === "granted" || state === "denied"
-                ? state === "granted"
-                  ? t("consent.manage.current_granted") || "Analytics cookies are on."
-                  : t("consent.manage.current_denied") || "Analytics cookies are off."
-                : t("consent.manage.body") ||
-                  "Analytics cookies tell us which pages people find useful. Nothing else."}
-            </p>
-          </div>
-          <div className="flex shrink-0 flex-wrap gap-2">
-            <button type="button" onClick={decline} className={QUIET_CLASS}>
-              {t("consent.manage.decline") || "Turn off"}
-            </button>
-            <button type="button" onClick={accept} className={ACCEPT_CLASS}>
-              {t("consent.manage.accept") || "Turn on"}
-            </button>
-            <button type="button" onClick={() => setManage(false)} className={QUIET_CLASS}>
-              {t("consent.manage.done") || "Done"}
-            </button>
-          </div>
+      <DialogShell labelledBy="consent-manage-title" onClose={closeManage} testId="consent-manager">
+        <h2
+          id="consent-manage-title"
+          className="text-base font-extrabold text-ink-900 dark:text-white"
+        >
+          {t("consent.manage.title") || "Privacy choices"}
+        </h2>
+        <p className="mt-1 text-sm leading-snug text-ink-700 dark:text-ink-200">
+          {state === "granted" || state === "denied"
+            ? state === "granted"
+              ? t("consent.manage.current_granted") || "Analytics cookies are on."
+              : t("consent.manage.current_denied") || "Analytics cookies are off."
+            : t("consent.manage.body") ||
+              "Analytics cookies tell us which pages people find useful. Nothing else."}
+        </p>
+        <div className="mt-4 flex flex-wrap justify-end gap-2">
+          <button type="button" onClick={decline} className={QUIET_CLASS}>
+            {t("consent.manage.decline") || "Turn off"}
+          </button>
+          <button type="button" onClick={accept} className={ACCEPT_CLASS}>
+            {t("consent.manage.accept") || "Turn on"}
+          </button>
+          <button type="button" onClick={closeManage} className={QUIET_CLASS}>
+            {t("consent.manage.done") || "Done"}
+          </button>
         </div>
-      </div>
+      </DialogShell>
     );
   }
 

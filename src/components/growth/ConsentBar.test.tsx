@@ -103,6 +103,34 @@ describe("manage mode", () => {
     expect(screen.getByTestId("consent-bar")).toBeInTheDocument();
   });
 
+  it("closes on Escape and hands focus back to whatever opened it", () => {
+    render(
+      <>
+        <button data-testid="trigger" onClick={() => openConsentManager()}>open</button>
+        <ConsentBar />
+      </>
+    );
+    const trigger = screen.getByTestId("trigger");
+    trigger.focus();
+    fireEvent.click(trigger);
+
+    const panel = screen.getByTestId("consent-manager");
+    expect(panel).toHaveAttribute("role", "dialog");
+    expect(panel).toHaveAttribute("aria-modal", "true");
+    expect(panel).toHaveFocus(); // not left behind on the footer link
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByTestId("consent-manager")).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
+  });
+
+  it("closes on the backdrop too", () => {
+    render(<ConsentBar />);
+    act(() => openConsentManager());
+    fireEvent.click(screen.getByTestId("dialog-shell-backdrop"));
+    expect(screen.queryByTestId("consent-manager")).not.toBeInTheDocument();
+  });
+
   it("shows even while the download popup is up: the visitor asked for it", () => {
     window.localStorage.setItem("bt.consent", "denied");
     render(<ConsentBar />);

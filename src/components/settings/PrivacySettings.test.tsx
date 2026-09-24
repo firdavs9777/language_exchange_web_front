@@ -30,17 +30,27 @@ it("carries an analytics cookies row that withdraws and restores consent", () =>
   window.localStorage.setItem("bt.consent", "granted");
   render(<PrivacySettings />);
 
+  // The same switch as the six rows above it, not a second control language.
+  const row = screen.getByTestId("analytics-consent-row");
+  const toggle = row.querySelector("button") as HTMLButtonElement;
   expect(screen.getByText("Analytics cookies")).toBeInTheDocument();
   expect(screen.getByText("Analytics cookies are on.")).toBeInTheDocument();
 
-  fireEvent.click(screen.getByText("Turn off"));
+  fireEvent.click(toggle);
   expect(window.localStorage.getItem("bt.consent")).toBe("denied");
   expect(isGaDisabled("G-TEST")).toBe(true);
   expect(document.cookie).not.toContain("_ga=");
   expect(screen.getByText("Analytics cookies are off.")).toBeInTheDocument();
 
-  fireEvent.click(screen.getByText("Turn on"));
+  (loadGa as jest.Mock).mockClear();
+  fireEvent.click(toggle);
   expect(window.localStorage.getItem("bt.consent")).toBe("granted");
   expect(isGaDisabled("G-TEST")).toBe(false);
   expect(loadGa).toHaveBeenCalledTimes(1);
+});
+
+it("loads GA on mount for a visitor who accepted on an earlier visit", () => {
+  window.localStorage.setItem("bt.consent", "granted");
+  render(<PrivacySettings />);
+  expect(loadGa).toHaveBeenCalledTimes(1); // the hook's job, not the bar's
 });

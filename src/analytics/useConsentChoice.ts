@@ -29,7 +29,13 @@ export function useConsentChoice(): {
   const [state, setState] = useState<ConsentState>("pending");
 
   useEffect(() => {
-    setState(readConsent());
+    const stored = readConsent();
+    setState(stored);
+    // A visitor who accepted on an earlier visit gets gtag back on this page
+    // load. This lives here rather than in ConsentBar so that every surface
+    // built on the hook behaves the same, instead of quietly depending on the
+    // bar having mounted first.
+    if (stored === "granted") loadGa();
     // Any other surface that changes the decision moves this one too.
     return subscribeConsent((value) => setState(value));
   }, []);
