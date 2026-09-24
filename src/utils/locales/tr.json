@@ -1435,7 +1435,7 @@
       "description": "137 dilde ana dili konuşanlarla sohbet edin. Kendi dilinizde yazın, karşı taraf kendi dilinde okusun ve bir yapay zeka öğretmeni farkı size göstersin. iOS ve Android'de ücretsiz."
     },
     "download": {
-      "title": "iPhone ve Android için BananaTalk'ı İndirin",
+      "title": "iPhone ve Android için BananaTalk'u İndirin",
       "description": "iPhone ve Android için ücretsiz BananaTalk dil değişimi uygulamasını edinin. Anında çeviri ve yapay zeka öğretmen düzeltmeleriyle ana dili konuşanlarla sohbet edin."
     },
     "moments": {
@@ -1444,7 +1444,7 @@
     },
     "privacy": {
       "title": "Gizlilik Politikası | BananaTalk",
-      "description": "BananaTalk'ın verilerinizi nasıl topladığı, kullandığı ve koruduğu ile sahip olduğunuz seçenekler."
+      "description": "BananaTalk'un verilerinizi nasıl topladığı, kullandığı ve koruduğu ile sahip olduğunuz seçenekler."
     },
     "terms": {
       "title": "Kullanım Koşulları | BananaTalk",
@@ -1482,7 +1482,18 @@
     "label": "Çerez izni",
     "message": "Ziyaretçileri buraya neyin getirdiğini anlamak için analiz çerezleri kullanıyoruz.",
     "accept": "Tamam",
-    "decline": "Hayır, teşekkürler"
+    "decline": "Hayır, teşekkürler",
+    "manage": {
+      "title": "Gizlilik tercihleri",
+      "body": "Analiz çerezleri yalnızca hangi sayfaların işe yaradığını gösterir, başka bir şey değil.",
+      "current_granted": "Analiz çerezleri açık.",
+      "current_denied": "Analiz çerezleri kapalı.",
+      "accept": "Aç",
+      "decline": "Kapat",
+      "privacyChoices": "Gizlilik tercihleri",
+      "analyticsCookies": "Analiz çerezleri",
+      "done": "Bitti"
+    }
   },
   "admin": {
     "nav": {

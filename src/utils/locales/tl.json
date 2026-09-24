@@ -1482,7 +1482,18 @@
     "label": "Pahintulot sa cookie",
     "message": "Gumagamit kami ng analytics cookies para maunawaan kung ano ang nagdadala ng mga tao rito.",
     "accept": "OK",
-    "decline": "Huwag na lang"
+    "decline": "Huwag na lang",
+    "manage": {
+      "title": "Mga pagpipilian sa privacy",
+      "body": "Sinasabi ng analytics cookies kung aling mga pahina ang nakakatulong. Wala nang iba.",
+      "current_granted": "Naka-on ang analytics cookies.",
+      "current_denied": "Naka-off ang analytics cookies.",
+      "accept": "I-on",
+      "decline": "I-off",
+      "privacyChoices": "Mga pagpipilian sa privacy",
+      "analyticsCookies": "Analytics cookies",
+      "done": "Tapos na"
+    }
   },
   "admin": {
     "nav": {

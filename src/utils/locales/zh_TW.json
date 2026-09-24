@@ -1482,7 +1482,18 @@
     "label": "Cookie 同意",
     "message": "我們使用分析 Cookie，了解大家是怎麼找到這裡的。",
     "accept": "好",
-    "decline": "不用了，謝謝"
+    "decline": "不用了，謝謝",
+    "manage": {
+      "title": "隱私選擇",
+      "body": "分析 Cookie 只告訴我們哪些頁面有幫助，沒有別的。",
+      "current_granted": "分析 Cookie 已開啟。",
+      "current_denied": "分析 Cookie 已關閉。",
+      "accept": "開啟",
+      "decline": "關閉",
+      "privacyChoices": "隱私選擇",
+      "analyticsCookies": "分析 Cookie",
+      "done": "完成"
+    }
   },
   "admin": {
     "nav": {

@@ -314,9 +314,11 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 .footer-legal {
   display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
 
-  a {
+  a,
+  .footer-legal-button {
     font-size: 0.8125rem;
     color: $ink-muted-on-950;
     text-decoration: none;
@@ -325,5 +327,15 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
     &:hover {
       color: $ink-400;
     }
+  }
+
+  // A button, not a link: it opens the consent manager instead of going
+  // anywhere. Stripped back to read as the two links beside it.
+  .footer-legal-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: inherit;
+    cursor: pointer;
   }
 }

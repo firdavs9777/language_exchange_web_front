@@ -1482,7 +1482,18 @@
     "label": "Cookie-Einwilligung",
     "message": "Wir verwenden Analyse-Cookies, um zu verstehen, was Besucher hierher bringt.",
     "accept": "OK",
-    "decline": "Nein, danke"
+    "decline": "Nein, danke",
+    "manage": {
+      "title": "Datenschutz-Einstellungen",
+      "body": "Analyse-Cookies zeigen uns, welche Seiten nützlich sind. Mehr nicht.",
+      "current_granted": "Analyse-Cookies sind an.",
+      "current_denied": "Analyse-Cookies sind aus.",
+      "accept": "Einschalten",
+      "decline": "Ausschalten",
+      "privacyChoices": "Datenschutz-Einstellungen",
+      "analyticsCookies": "Analyse-Cookies",
+      "done": "Fertig"
+    }
   },
   "admin": {
     "nav": {

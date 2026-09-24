@@ -49,7 +49,7 @@ module.exports = {
       fontFamily: {
         // Inter for UI text (tall x-height, real tabular figures), Plus Jakarta
         // Sans for headings (geometric, a little more character than Inter at
-        // display sizes without turning playful). Loaded in public/index.html.
+        // display sizes without turning playful). Self-hosted: see src/fonts.css.
         sans: [
           "Inter",
           "system-ui",
@@ -70,6 +70,18 @@ module.exports = {
           '"Segoe UI"',
           "sans-serif",
         ],
+      },
+      letterSpacing: {
+        // The two negative steps of Tailwind's scale, with their own values,
+        // behind the variables src/index.css zeroes for Hangul, kana, Han,
+        // Thai, Arabic and Devanagari. Without this the :lang() reset would
+        // not reach the homepage hero: its <h1> carries `tracking-tight`, and
+        // a utility class beats the base h1 rule no matter what that rule
+        // reads its value from. The positive steps (wide/wider/widest) are
+        // untouched -- loosening a syllabic script is harmless, and .bt-eyebrow
+        // depends on it.
+        tight: "var(--bt-track-tw-tight, -0.025em)",
+        tighter: "var(--bt-track-tw-tighter, -0.05em)",
       },
       fontSize: {
         // Display sizes only. The body scale stays Tailwind's so no existing

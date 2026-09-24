@@ -47,6 +47,51 @@
      itself is most of what "polished" means. */
   --bt-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --bt-transition: 200ms var(--bt-ease);
+
+  /* Optical tracking, as variables rather than as literals, so one rule can
+     switch the whole system off per script (see below). Latin type set at
+     these sizes wants negative tracking; the values are unchanged from when
+     they were written inline. The last two are Tailwind's own `tracking-tight`
+     and `tracking-tighter` scale steps, re-pointed at variables in
+     tailwind.config.js -- the homepage hero sets its headline with
+     `tracking-tight`, and a utility class beats the h1 rule. */
+  --bt-track-tight: -0.006em; /* body copy at UI sizes */
+  --bt-track-display: -0.022em; /* h2-h6 */
+  --bt-track-display-lg: -0.03em; /* h1 */
+  --bt-track-tw-tight: -0.025em; /* Tailwind `tracking-tight` */
+  --bt-track-tw-tighter: -0.05em; /* Tailwind `tracking-tighter` */
+}
+
+/* Negative tracking is a Latin typesetting convention. Applied to Hangul,
+   kana, Han, Thai, Arabic or Devanagari it is not a refinement but damage:
+   syllabic blocks collide, Thai above- and below-line marks stack over the
+   wrong base, and Arabic is joined script -- tightening it pulls the
+   connecting strokes into the letterforms. None of these scripts is rendered
+   by Inter or Plus Jakarta Sans in the first place (the system stack in
+   --bt-font-sans picks them up), which is exactly why the tracking the Latin
+   faces were tuned for has no business following them there.
+
+   `:lang()` matches on a prefix, so `ko` also covers the `ko-KR` that
+   i18next's navigator detection can produce (src/utils/i18n.ts's
+   `updateHtmlLang` writes i18n.language with "_" rewritten to "-", so zh_TW
+   reaches the DOM as zh-TW -- already matched by `zh`, and spelled out here
+   so the list reads as the set of scripts it is).
+
+   Outside @layer base on purpose: these are custom-property declarations, and
+   they have to beat the :root block above by specificity (0,1,1 against
+   0,1,0), which they do regardless of layer. */
+html:lang(ko),
+html:lang(ja),
+html:lang(zh),
+html:lang(zh-TW),
+html:lang(th),
+html:lang(ar),
+html:lang(hi) {
+  --bt-track-tight: 0;
+  --bt-track-display: 0;
+  --bt-track-display-lg: 0;
+  --bt-track-tw-tight: 0;
+  --bt-track-tw-tighter: 0;
 }
 
 @layer base {
@@ -63,7 +108,7 @@
     text-rendering: optimizeLegibility;
     font-feature-settings: "cv11", "ss01";
     font-variant-ligatures: contextual;
-    letter-spacing: -0.006em;
+    letter-spacing: var(--bt-track-tight);
     color: var(--bt-ink-900);
   }
 
@@ -75,8 +120,9 @@
   h6 {
     font-family: var(--bt-font-display);
     font-weight: 700;
-    /* Optical tracking: the bigger the type, the tighter it has to be set. */
-    letter-spacing: -0.022em;
+    /* Optical tracking: the bigger the type, the tighter it has to be set.
+       Zero for the scripts reset at the top of this file. */
+    letter-spacing: var(--bt-track-display);
     /* Deliberately no `color`. A declared colour beats an inherited one, so
        `color: var(--bt-ink-950)` here turned every heading on a dark surface
        near-black on near-black (ChatSettings' h1 on #1a1a2e was 1.09:1, i.e.
@@ -88,7 +134,7 @@
   }
 
   h1 {
-    letter-spacing: -0.03em;
+    letter-spacing: var(--bt-track-display-lg);
   }
 
   p {

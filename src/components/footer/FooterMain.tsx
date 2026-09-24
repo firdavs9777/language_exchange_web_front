@@ -14,6 +14,8 @@ import {
   MapPin,
 } from "lucide-react";
 import StoreLink from "../growth/StoreLink";
+import { openConsentManager } from "../../analytics/consent";
+import { GA_MEASUREMENT_ID } from "../../analytics/ga";
 import "./FooterMain.scss";
 
 // lucide 0.511 has no X glyph -- its `Twitter` export is still the pre-2023
@@ -117,6 +119,21 @@ const FooterMain: React.FC = () => {
           <div className="footer-legal">
             <Link to="/privacy-policy">Privacy Policy</Link>
             <Link to="/terms-of-use">Terms of Service</Link>
+            {/* Only where analytics actually runs. With no measurement id
+                nothing is collected, so a withdrawal control would be
+                theatre -- and the footer stays exactly as it was. The id is
+                a build-time value, identical on the server and in the
+                browser, so this is safe on the prerendered pages. */}
+            {GA_MEASUREMENT_ID ? (
+              <button
+                type="button"
+                data-testid="footer-privacy-choices"
+                className="footer-legal-button"
+                onClick={openConsentManager}
+              >
+                {t("consent.manage.privacyChoices") || "Privacy choices"}
+              </button>
+            ) : null}
           </div>
         </div>
       </div>
