@@ -103,6 +103,10 @@ export const storiesApiSlice = apiSlice.injectEndpoints({
       query: (userId: string) => ({
         url: `${MAIN_STORIES}/user/${userId}`,
       }),
+      // Tagged like its siblings so a reaction toggle refetches the stories
+      // the viewer is walking through; without it, navigating back to a story
+      // showed the pre-reaction snapshot.
+      providesTags: ["Stories"],
     }),
     // React to story
     reactToStory: builder.mutation({
