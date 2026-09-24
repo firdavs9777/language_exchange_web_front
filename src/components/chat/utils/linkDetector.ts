@@ -21,17 +21,6 @@ const BARE_URL =
 const urlPattern = (): RegExp =>
   new RegExp("(?:" + SCHEME_URL + ")|(?:" + WWW_URL + ")|(?:" + BARE_URL + ")", "gi");
 
-const emailPattern = (): RegExp =>
-  /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi;
-
-export interface LinkMatch {
-  text: string;
-  url: string;
-  type: "url" | "email";
-  start: number;
-  end: number;
-}
-
 export interface DetectedLink {
   /** The URL exactly as the person typed it. */
   text: string;
@@ -71,19 +60,22 @@ const trimTrailingPunctuation = (raw: string): string => {
 const toHref = (text: string): string =>
   /^https?:\/\//i.test(text) ? text : "https://" + text;
 
-/** A match glued to an `@` or a word character is part of something bigger. */
+/**
+ * A link starts at the start of the message or after whitespace or an opening
+ * bracket — nothing else. The test used to be the other way round, rejecting a
+ * match preceded by an ASCII word character, and any non-ASCII letter then read
+ * as a boundary: "besuche munchen.de" with the real umlaut carded `nchen.de`,
+ * a DIFFERENT domain from the one in the text. A positive class cannot do that.
+ *
+ * The cost is that a true IDN host (`日本.jp`, `привет.рф`) is not detected at
+ * all, which is a miss rather than a misdirection, and the message text still
+ * shows the address in full.
+ */
+const OPENS_A_LINK = /[\s("'[<]/;
+
 const isStandalone = (text: string, index: number): boolean => {
   if (index === 0) return true;
-  const before = text.charAt(index - 1);
-  return !/[@a-zA-Z0-9._%+/-]/.test(before);
-};
-
-export const extractDomain = (url: string): string => {
-  try {
-    return new URL(toHref(url)).hostname.replace(/^www\./, "");
-  } catch (e) {
-    return url;
-  }
+  return OPENS_A_LINK.test(text.charAt(index - 1));
 };
 
 /**
@@ -112,44 +104,3 @@ export const firstLink = (text: string): DetectedLink | null => {
   }
   return null;
 };
-
-export const detectLinks = (text: string): LinkMatch[] => {
-  const matches: LinkMatch[] = [];
-  if (!text) return matches;
-
-  const emails = emailPattern();
-  let emailMatch = emails.exec(text);
-  while (emailMatch !== null) {
-    matches.push({
-      text: emailMatch[0],
-      url: "mailto:" + emailMatch[0],
-      type: "email",
-      start: emailMatch.index,
-      end: emailMatch.index + emailMatch[0].length,
-    });
-    emailMatch = emails.exec(text);
-  }
-
-  const urls = urlPattern();
-  let urlMatch = urls.exec(text);
-  while (urlMatch !== null) {
-    const start = urlMatch.index;
-    const typed = trimTrailingPunctuation(urlMatch[0]);
-    const end = start + typed.length;
-    const insideAnEmail = matches.some((m) => m.start <= start && m.end >= end);
-    if (typed && !insideAnEmail && isStandalone(text, start)) {
-      matches.push({
-        text: typed,
-        url: toHref(typed),
-        type: "url",
-        start,
-        end,
-      });
-    }
-    urlMatch = urls.exec(text);
-  }
-
-  return matches.sort((a, b) => a.start - b.start);
-};
-
-export const hasLinks = (text: string): boolean => detectLinks(text).length > 0;

@@ -5,7 +5,7 @@
  * renders a card for the first link in a message, the detector is on the hot
  * path and every one of these cases is something a person types.
  */
-import { firstLink, hasLinks, detectLinks, extractDomain } from "./linkDetector";
+import { firstLink } from "./linkDetector";
 
 describe("firstLink", () => {
   it("finds a full https URL", () => {
@@ -59,45 +59,30 @@ describe("firstLink", () => {
     expect(firstLink("write to ada@example.com")).toBeNull();
   });
 
+  // A link has to START somewhere: after whitespace or an opening bracket, or
+  // at the start of the message. The old check asked the opposite question
+  // with an ASCII-only class, so a non-ASCII letter read as a boundary and the
+  // card pointed at a domain that was not the one in the message.
+  it("never cards a truncated host after an accented letter", () => {
+    expect(firstLink("besuche m\u00fcnchen.de heute")).toBeNull();
+    expect(firstLink("Gr\u00fc\u00dfe.com")).toBeNull();
+  });
+
+  it("finds a link right after an opening bracket or a quote", () => {
+    expect(firstLink('he said "https://example.com/x" loudly')!.url).toBe(
+      "https://example.com/x"
+    );
+    expect(firstLink("[https://example.com]")!.url).toBe("https://example.com");
+  });
+
+  it("answers the same way every time it is asked", () => {
+    const text = "see https://example.com/x";
+    expect(firstLink(text)!.url).toBe("https://example.com/x");
+    expect(firstLink(text)!.url).toBe("https://example.com/x");
+    expect(firstLink(text)!.url).toBe("https://example.com/x");
+  });
+
   it("ignores a sentence whose words happen to touch a full stop", () => {
     expect(firstLink("I went.Then I came back")).toBeNull();
-  });
-});
-
-describe("hasLinks", () => {
-  it("answers the same way every time it is asked", () => {
-    const text = "https://example.com";
-    expect(hasLinks(text)).toBe(true);
-    expect(hasLinks(text)).toBe(true);
-    expect(hasLinks(text)).toBe(true);
-  });
-
-  it("is false for plain prose", () => {
-    expect(hasLinks("hello there")).toBe(false);
-  });
-});
-
-describe("detectLinks", () => {
-  it("returns URLs and emails in the order they appear", () => {
-    const matches = detectLinks("mail ada@example.com or open https://example.com/x");
-    expect(matches.map((m) => m.type)).toEqual(["email", "url"]);
-    expect(matches[0].url).toBe("mailto:ada@example.com");
-    expect(matches[1].url).toBe("https://example.com/x");
-  });
-
-  it("does not report the domain inside an email as its own URL", () => {
-    const matches = detectLinks("ada@example.com");
-    expect(matches).toHaveLength(1);
-    expect(matches[0].type).toBe("email");
-  });
-});
-
-describe("extractDomain", () => {
-  it("strips the scheme and www", () => {
-    expect(extractDomain("https://www.example.com/a/b")).toBe("example.com");
-  });
-
-  it("hands back what it was given when that is not a URL", () => {
-    expect(extractDomain("not a url")).toBe("not a url");
   });
 });

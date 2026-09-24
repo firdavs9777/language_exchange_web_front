@@ -126,7 +126,8 @@ export interface MessageBubbleProps {
   timeLabel: string;
   isTranslationOpen: boolean;
   targetLanguage: string;
-  playingAudioId: string | null;
+  /** True only for the bubble whose voice note is playing. */
+  isPlaying: boolean;
   audioProgress: number;
   audioElapsed: number;
   onTogglePlayback: (messageId: string, url: string) => void;
@@ -151,7 +152,7 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
   timeLabel,
   isTranslationOpen,
   targetLanguage,
-  playingAudioId,
+  isPlaying,
   audioProgress,
   audioElapsed,
   onTogglePlayback,
@@ -187,7 +188,6 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
 
   const renderVoiceMessage = () => {
     const duration = msg.media?.duration || 0;
-    const isPlaying = playingAudioId === msg._id;
     const bars = (msg.media?.waveform || Array(20).fill(0.3)).slice(0, 30);
     const playedCount = isPlaying ? Math.floor(audioProgress * bars.length) : 0;
 

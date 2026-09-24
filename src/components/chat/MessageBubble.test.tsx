@@ -25,6 +25,16 @@ jest.mock("../../store/slices/learningSlice", () => ({
   useAcceptCorrectionMutation: () => mutation(),
 }));
 
+// A child that is always rendered, used as a render counter for the bubble.
+const mockRenders = { count: 0 };
+jest.mock("./actions/ReactionRow", () => ({
+  __esModule: true,
+  default: () => {
+    mockRenders.count += 1;
+    return null;
+  },
+}));
+
 const message = (extra: Partial<Message> = {}): Message =>
   ({
     _id: "m1",
@@ -49,7 +59,7 @@ function renderBubble(overrides: any = {}) {
     timeLabel: "10:00",
     isTranslationOpen: false,
     targetLanguage: "en",
-    playingAudioId: null,
+    isPlaying: false,
     audioProgress: 0,
     audioElapsed: 0,
     onTogglePlayback: jest.fn(),
@@ -67,8 +77,28 @@ function renderBubble(overrides: any = {}) {
 
 const bubble = () => document.querySelector(".modern-message") as HTMLElement;
 
-it("is memoized so a quiet thread does not re-render on every keystroke", () => {
-  expect((MessageBubble as any).$$typeof).toBe(Symbol.for("react.memo"));
+beforeEach(() => {
+  mockRenders.count = 0;
+});
+
+describe("memoization", () => {
+  it("is wrapped in React.memo", () => {
+    expect((MessageBubble as any).$$typeof).toBe(Symbol.for("react.memo"));
+  });
+
+  it("does not re-render when the same props come round again", () => {
+    const { props, rerender } = renderBubble();
+    const after = mockRenders.count;
+
+    rerender(<MessageBubble {...(props as any)} />);
+    expect(mockRenders.count).toBe(after);
+
+    // ...and does when its own message changed.
+    rerender(
+      <MessageBubble {...(props as any)} message={message({ status: "read" })} />
+    );
+    expect(mockRenders.count).toBe(after + 1);
+  });
 });
 
 describe("whose message it is", () => {

@@ -137,10 +137,23 @@ const ChatContent: React.FC<ChatContentProps> = ({
     }
   );
 
+  // How much of the thread the merged cache entry holds versus how long the
+  // thread is. NOT `page < totalPages`: the entry outlives the component
+  // (`keepUnusedDataFor`), while `page` resets to 1 on every remount and
+  // conversation switch — so re-opening a thread inside the cache window used
+  // to offer "Load earlier messages" for pages already merged, one pointless
+  // request per click.
+  const loadedCount = ((data as any)?.data || []).length;
+  const totalMessages = (data as any)?.total || 0;
   const totalPages = (data as any)?.pagination?.totalPages || 1;
   const totalPagesRef = useRef(1);
-  const hasMoreHistory = page < totalPages;
-  const isLoadingOlder = isFetching && page > 1;
+  const loadedCountRef = useRef(0);
+  const hasMoreHistory = loadedCount < totalMessages;
+  // Whether an OLDER-page request is in flight, tracked from the request
+  // itself. Inferring it from `isFetching && page > 1` made every reaction and
+  // every pin (both invalidate the conversation) say "Loading earlier
+  // messages" at the top of a thread the reader had paged back through.
+  const [isLoadingOlder, setIsLoadingOlder] = useState(false);
 
   const [createMessage] = useCreateMessageMutation();
   const [sendVoiceMessage] = useSendVoiceMessageMutation();
@@ -220,10 +233,15 @@ const ChatContent: React.FC<ChatContentProps> = ({
   // Which conversation the local list was last seeded from — a page of a
   // DIFFERENT conversation must not inherit this one's live messages.
   const seededUserRef = useRef<string>("");
+  // The server objects the current local copies were built from, so an
+  // unchanged message can keep its identity across a refetch.
+  const seedSourceRef = useRef<{ [id: string]: any }>({});
   const isAtBottomRef = useRef(true);
   const topSentinelRef = useRef<HTMLDivElement>(null);
-  // Scroll geometry captured just before an older page is requested.
-  const pendingOlderRef = useRef<{ scrollHeight: number; scrollTop: number } | null>(null);
+  // The message the viewport was anchored on when an older page was asked for.
+  const pendingOlderRef = useRef<{ id: string; top: number } | null>(null);
+  // An older-page request is in flight.
+  const olderRequestRef = useRef(false);
 
   // Read here, seeded further down -- see the draft effect below the
   // "Clear state when switching conversations" effect.
@@ -240,7 +258,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
   useEffect(() => {
     totalPagesRef.current = totalPages;
-  }, [totalPages]);
+    loadedCountRef.current = loadedCount;
+  }, [totalPages, loadedCount]);
 
   // Update online status when initial props change
   useEffect(() => {
@@ -347,7 +366,14 @@ const ChatContent: React.FC<ChatContentProps> = ({
       if (data.readBy === selectedUserRef.current) {
         setMessages((prev) =>
           prev.map((msg) => {
-            if (msg.sender._id === userId) {
+            // A message that failed, or is still going out, was never read by
+            // anyone — "Failed" next to its Retry button must not turn into a
+            // read receipt because the other person opened the thread.
+            if (
+              msg.sender._id === userId &&
+              msg.status !== "error" &&
+              !msg.isOptimistic
+            ) {
               return { ...msg, status: "read", read: true, readAt: new Date().toISOString() };
             }
             return msg;
@@ -561,6 +587,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
     const sameConversation = seededUserRef.current === selectedUser;
     seededUserRef.current = selectedUser;
 
+    const previousSource = seedSourceRef.current;
+    const nextSource: { [id: string]: any } = {};
+
     setMessages((prev) => {
       const localById: { [id: string]: Message } = {};
       if (sameConversation) {
@@ -570,13 +599,25 @@ const ChatContent: React.FC<ChatContentProps> = ({
       }
 
       const merged: Message[] = loaded.map((msg: Message) => {
-        const fromServer: MessageStatus =
-          msg.status || (msg.read ? "read" : "delivered");
+        nextSource[msg._id] = msg;
+        // The server has NO usable status: `status` is a Mongoose virtual and
+        // the thread is read with `.lean()`, so it never arrives. A message
+        // the server holds is exactly ONE tick — `messageDelivered` is what
+        // raises it to two. Synthesising "delivered" here quietly promoted
+        // every message on the next refetch.
+        const fromServer: MessageStatus = msg.status || (msg.read ? "read" : "sent");
         const local = localById[msg._id];
         const status =
           local && statusRank(local.status) > statusRank(fromServer)
             ? local.status
             : fromServer;
+        // Same server object as last time and the same resolved status: hand
+        // back the object already on screen so `React.memo` can skip the
+        // bubble. Rebuilding every message gave the whole thread fresh
+        // identities on every refetch.
+        if (local && previousSource[msg._id] === msg && local.status === status) {
+          return local;
+        }
         return { ...msg, status };
       });
 
@@ -589,6 +630,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
       return merged.concat(prev.filter((m) => !known[m._id]));
     });
 
+    seedSourceRef.current = nextSource;
+
     if (socket?.connected && selectedUser) {
       socket.emit("markAsRead", { senderId: selectedUser });
     }
@@ -600,6 +643,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
     setNewMessage("");
     setMediaPreview(null);
     setPage(1);
+    setIsLoadingOlder(false);
+    pendingOlderRef.current = null;
+    olderRequestRef.current = false;
     stopRecording();
   }, [selectedUser]);
 
@@ -660,29 +706,63 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const loadOlderMessages = useCallback(() => {
     if (!hasMoreHistory || isFetching) return;
     const container = chatContainerRef.current;
-    pendingOlderRef.current = container
-      ? { scrollHeight: container.scrollHeight, scrollTop: container.scrollTop }
-      : { scrollHeight: 0, scrollTop: 0 };
+    // Anchor on the first message on screen, not on the scroller's height. A
+    // height difference cannot tell a prepended page from a message that just
+    // arrived at the BOTTOM, and the arriving message would have consumed the
+    // restore, leaving the real prepend to jump the thread.
+    const first = container
+      ? (container.querySelector("[data-msg-id]") as HTMLElement | null)
+      : null;
+    pendingOlderRef.current = first
+      ? {
+          id: first.getAttribute("data-msg-id") || "",
+          top: first.getBoundingClientRect().top,
+        }
+      : null;
     // Reading history is not being at the bottom: the auto-scroll must not
     // drag the view back down when the older page lands.
     isAtBottomRef.current = false;
+    setIsLoadingOlder(true);
+    olderRequestRef.current = true;
     // The cap is re-checked INSIDE the updater: two sentinel hits in the same
     // tick both see the old `page`, and without this the second one would ask
-    // for a page past the end of the thread.
-    setPage((current) =>
-      current < totalPagesRef.current ? current + 1 : current
-    );
+    // for a page past the end of the thread. The page asked for is derived
+    // from what is already held, so a cache entry that survived a remount is
+    // continued rather than re-walked from page 2.
+    setPage((current) => {
+      const fromLoaded =
+        Math.floor(loadedCountRef.current / MESSAGE_PAGE_SIZE) + 1;
+      const next = Math.max(current + 1, fromLoaded);
+      return next <= totalPagesRef.current ? next : current;
+    });
   }, [hasMoreHistory, isFetching]);
 
   useLayoutEffect(() => {
     const pending = pendingOlderRef.current;
     const container = chatContainerRef.current;
     if (!pending || !container) return;
-    if (container.scrollHeight === pending.scrollHeight) return; // nothing prepended yet
+    const anchor = container.querySelector(
+      `[data-msg-id="${pending.id}"]`
+    ) as HTMLElement | null;
+    if (!anchor) return;
+    const delta = anchor.getBoundingClientRect().top - pending.top;
+    // Zero means nothing was inserted ABOVE the anchor — whatever changed
+    // `messages` happened below it, so the older page is still on its way.
+    if (delta === 0) return;
     pendingOlderRef.current = null;
-    container.scrollTop =
-      container.scrollHeight - pending.scrollHeight + pending.scrollTop;
+    container.scrollTop = container.scrollTop + delta;
   }, [messages]);
+
+  // When the request settles, stop claiming to load older messages and re-read
+  // where the reader actually is. A request that prepended nothing (a page the
+  // entry already held, or one that failed) must not leave the anchor and the
+  // disabled auto-scroll behind.
+  useEffect(() => {
+    if (isFetching || !olderRequestRef.current) return;
+    olderRequestRef.current = false;
+    setIsLoadingOlder(false);
+    handleScroll();
+  }, [isFetching, handleScroll]);
 
   // The sentinel does the asking on scroll; the button inside it is what a
   // keyboard (and a browser without IntersectionObserver) uses.
@@ -1753,7 +1833,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
                   timeLabel={formatTime(msg.createdAt)}
                   isTranslationOpen={openTranslations.has(msg._id)}
                   targetLanguage={targetLanguage}
-                  playingAudioId={playingAudioId}
+                  isPlaying={playingAudioId === msg._id}
                   audioProgress={playingAudioId === msg._id ? audioProgress : 0}
                   audioElapsed={playingAudioId === msg._id ? audioElapsed : 0}
                   onTogglePlayback={handleTogglePlayback}
