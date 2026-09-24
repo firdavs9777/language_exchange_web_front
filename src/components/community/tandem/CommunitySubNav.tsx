@@ -72,6 +72,11 @@ interface CommunitySubNavProps {
    * cannot change anything.
    */
   showFilterButton?: boolean;
+  /**
+   * False on "For you": the feed is scored server-side and ignores a search
+   * term entirely, so a box that looks like it filters the list is a lie.
+   */
+  showSearch?: boolean;
 }
 
 const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
@@ -83,6 +88,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
   hasActiveFilters = false,
   activeFilterCount = 0,
   showFilterButton = true,
+  showSearch = true,
 }) => {
   const { t } = useTranslation();
   const activeRef = useRef<HTMLButtonElement | null>(null);
@@ -156,51 +162,60 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
           </Link>
         </div>
 
-        <div className="community-subnav__actions">
-          <div className="community-subnav__search">
-            <Search size={16} className="community-subnav__search-icon" />
-            <input
-              type="text"
-              placeholder={
-                t("communityMain.subnav.searchPlaceholder") || "Find members or topics"
-              }
-              value={searchValue}
-              onChange={(e) => onSearchChange(e.target.value)}
-            />
-            {searchValue && (
+        {(showSearch || showFilterButton) && (
+          <div className="community-subnav__actions">
+            {showSearch && (
+              <div className="community-subnav__search">
+                <Search size={16} className="community-subnav__search-icon" />
+                <input
+                  type="text"
+                  placeholder={
+                    t("communityMain.subnav.searchPlaceholder") ||
+                    "Find members or topics"
+                  }
+                  value={searchValue}
+                  onChange={(e) => onSearchChange(e.target.value)}
+                />
+                {searchValue && (
+                  <button
+                    type="button"
+                    className="community-subnav__search-clear"
+                    onClick={() => onSearchChange("")}
+                    aria-label={
+                      t("communityMain.filters.clear") || "Clear search"
+                    }
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+            )}
+            {showFilterButton && (
               <button
                 type="button"
-                className="community-subnav__search-clear"
-                onClick={() => onSearchChange("")}
-                aria-label={t("communityMain.filters.clear") || "Clear search"}
+                className={`community-subnav__filter-btn ${
+                  hasActiveFilters ? "community-subnav__filter-btn--active" : ""
+                }`}
+                onClick={onOpenFilters}
+                aria-label={
+                  activeFilterCount > 0
+                    ? t("communityMain.subnav.filtersWithCount", {
+                        count: activeFilterCount,
+                      }) || `Filters (${activeFilterCount} active)`
+                    : t("communityMain.subnav.filtersLabel") || "Filters"
+                }
+                title={t("communityMain.subnav.filtersLabel") || "Filters"}
               >
-                <X size={14} />
+                <SlidersHorizontal size={18} />
+                {activeFilterCount > 0 && (
+                  <span className="community-subnav__filter-badge">
+                    {activeFilterCount}
+                  </span>
+                )}
               </button>
             )}
           </div>
-          {showFilterButton && (
-            <button
-              type="button"
-              className={`community-subnav__filter-btn ${
-                hasActiveFilters ? "community-subnav__filter-btn--active" : ""
-              }`}
-              onClick={onOpenFilters}
-              aria-label={
-                activeFilterCount > 0
-                  ? t("communityMain.subnav.filtersWithCount", {
-                      count: activeFilterCount,
-                    }) || `Filters (${activeFilterCount} active)`
-                  : t("communityMain.subnav.filtersLabel") || "Filters"
-              }
-              title={t("communityMain.subnav.filtersLabel") || "Filters"}
-            >
-              <SlidersHorizontal size={18} />
-              {activeFilterCount > 0 && (
-                <span className="community-subnav__filter-badge">{activeFilterCount}</span>
-              )}
-            </button>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );

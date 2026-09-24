@@ -302,3 +302,56 @@ describe("the filter sheet's Copy link", () => {
     expect(screen.queryByRole("button", { name: "Copy link" })).not.toBeInTheDocument();
   });
 });
+
+// On Online and New the tab holds one of these switches down. A switch the
+// member can flip, only for the tab to flip it back the moment they press
+// Apply, is a dead control -- so it is disabled and says who owns it, and the
+// count is measured with the lock in place so the number matches the list
+// they would actually get.
+describe("the filter sheet under a tab lock", () => {
+  it("has no lock and no hint on All", () => {
+    renderSheet();
+    expect(screen.queryByTestId("filter-sheet-online-locked")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("filter-sheet-new-locked")).not.toBeInTheDocument();
+    expect(screen.getByRole("switch", { name: /Online now/ })).not.toBeDisabled();
+  });
+
+  it("disables the Online switch and says which tab set it", () => {
+    const { onChange } = renderSheet({ ...DEFAULT_FILTERS }, { lockedTab: "online" });
+
+    const toggle = screen.getByRole("switch", { name: /Online now/ });
+    expect(toggle).toBeDisabled();
+    expect(toggle).toHaveAttribute("aria-checked", "true");
+    expect(screen.getByTestId("filter-sheet-online-locked")).toHaveTextContent(
+      "Set by the Online tab"
+    );
+
+    fireEvent.click(toggle);
+    expect(onChange).not.toHaveBeenCalled();
+
+    // The other switch is still the member's to set.
+    expect(screen.getByRole("switch", { name: /New users only/ })).not.toBeDisabled();
+    expect(screen.queryByTestId("filter-sheet-new-locked")).not.toBeInTheDocument();
+  });
+
+  it("disables the New switch on the New tab", () => {
+    renderSheet({ ...DEFAULT_FILTERS }, { lockedTab: "new" });
+
+    const toggle = screen.getByRole("switch", { name: /New users only/ });
+    expect(toggle).toBeDisabled();
+    expect(toggle).toHaveAttribute("aria-checked", "true");
+    expect(screen.getByTestId("filter-sheet-new-locked")).toHaveTextContent(
+      "Set by the New tab"
+    );
+    expect(screen.getByRole("switch", { name: /Online now/ })).not.toBeDisabled();
+  });
+
+  // The count has to answer the question the list is being asked, lock and all.
+  it("counts with the tab's lock applied even when the draft does not carry it", async () => {
+    renderSheet({ gender: "female" }, { lockedTab: "online" });
+
+    expect(await screen.findByText("7 matches")).toBeInTheDocument();
+    expect(countRequests()[0]).toContain("onlineOnly=true");
+    expect(countRequests()[0]).toContain("gender=female");
+  });
+});

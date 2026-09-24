@@ -1188,3 +1188,120 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
     }
   }
 }
+
+/* ===== The list's own performance furniture =====
+ *
+ * Three small pieces that only exist to make a long member list cheap: the
+ * slot the browser is allowed to skip, the placeholder that holds a row's
+ * height while it loads, and the sentinel that asks for the next page.
+ */
+
+/* One card's slot in the list.
+ *
+ * `content-visibility: auto` lets the browser skip style, layout and paint for
+ * every row outside the viewport; `contain-intrinsic-size: auto 104px` is the
+ * height it assumes for a row it has not measured yet (a card is a 72px avatar
+ * inside 16px of padding), so the scrollbar is the right length from the first
+ * paint and `auto` makes it remember the real height afterwards.
+ *
+ * The padding/negative-margin pair is not decoration: `content-visibility`
+ * brings paint containment with it, which clips to this box. Without the extra
+ * room the card's drop shadow would be sliced off at the edges and its 2px
+ * hover lift would be cut at the top. The margins cancel the padding exactly,
+ * so the slot's margin box is still the card's box and the list's 12px gap is
+ * unchanged. */
+.community-card-slot {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 104px;
+  padding: 8px 8px 20px;
+  margin: -8px -8px -20px;
+}
+
+/* A row-shaped placeholder, the same 104px tall as the card it stands in for. */
+.community-card-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(13, 19, 28, 0.06);
+}
+
+.community-card-skeleton__avatar {
+  flex: 0 0 auto;
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+}
+
+.community-card-skeleton__lines {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.community-card-skeleton__line {
+  display: block;
+  height: 12px;
+  border-radius: 999px;
+
+  &--name {
+    width: 42%;
+    height: 14px;
+  }
+
+  &--meta {
+    width: 28%;
+  }
+
+  &--bio {
+    width: 64%;
+    height: 10px;
+  }
+}
+
+.community-card-skeleton__avatar,
+.community-card-skeleton__line {
+  background: linear-gradient(
+    90deg,
+    $tandem-border 0%,
+    lighten($tandem-border, 3%) 40%,
+    $tandem-border 80%
+  );
+  background-size: 300% 100%;
+  animation: community-skeleton-sweep 1.4s ease-in-out infinite;
+}
+
+@keyframes community-skeleton-sweep {
+  0% {
+    background-position: 120% 0;
+  }
+  100% {
+    background-position: -20% 0;
+  }
+}
+
+/* What the IntersectionObserver watches. It carries no content and no height
+   of its own -- the observer's rootMargin does the anticipating. */
+.community-sentinel {
+  width: 100%;
+  height: 1px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .community-card-skeleton {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: none;
+  }
+
+  .community-card-skeleton__avatar,
+  .community-card-skeleton__line {
+    background: linear-gradient(90deg, #334155 0%, #3f4d61 40%, #334155 80%);
+    background-size: 300% 100%;
+  }
+}
