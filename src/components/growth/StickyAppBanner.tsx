@@ -32,26 +32,34 @@ const StickyAppBanner: React.FC = () => {
   if (hidden) return null;
 
   return (
+    // `line`/`ink` rather than `gray-*`: Tailwind's gray is cool-blue and
+    // reads cheap beside the teal brand, which is why the palette carries its
+    // own warmer neutral. The extra bottom padding clears the iOS home
+    // indicator -- this bar is pinned to the bottom edge on phones, which is
+    // exactly where the indicator sits.
     <div
       data-testid="sticky-app-banner"
-      className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-gray-200 bg-surface px-4 py-2.5 shadow-float dark:border-gray-700 dark:bg-cardbg-dark"
+      className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-line bg-surface px-4 py-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] shadow-float dark:border-line-dark dark:bg-cardbg-dark"
     >
       <span aria-hidden className="text-2xl">🍌</span>
       {/* Wrapping, not truncating: at 360px `truncate` turned the title into
           "BanaTalk is bet...". The Install and dismiss controls stay shrink-0
           so the copy is the only thing that reflows. */}
       <div className="min-w-0 flex-1">
-        <p className="text-xs font-bold leading-snug text-gray-900 dark:text-gray-50">
+        <p className="text-xs font-bold leading-snug text-ink-900 dark:text-ink-50">
           BananaTalk is better in the app
         </p>
-        <p className="text-[11px] leading-snug text-gray-500 dark:text-gray-400">
+        <p className="text-[11px] leading-snug text-ink-500 dark:text-ink-300">
           AI tutor, voice rooms, reels
         </p>
       </div>
       <StoreLink
         store={platform}
         placement="sticky-banner"
-        className="shrink-0 whitespace-nowrap rounded-full bg-brand-deep px-4 py-1.5 text-xs font-extrabold text-white"
+        // No `shadow-brand` here: it is a wide teal glow tuned for large
+        // CTAs, and on a pill this size it renders as a halo around the
+        // button rather than elevation under it.
+        className="shrink-0 whitespace-nowrap rounded-full bg-brand-deep px-4 py-1.5 text-xs font-extrabold text-white transition-colors hover:bg-brand-deepest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-deep"
       >
         Install
       </StoreLink>
@@ -60,9 +68,9 @@ const StickyAppBanner: React.FC = () => {
         data-testid="sticky-banner-dismiss"
         onClick={dismiss}
         aria-label="Dismiss"
-        className="shrink-0 rounded-full p-1 text-gray-400"
+        className="shrink-0 rounded-full p-1 text-ink-400 transition-colors hover:bg-ink-100 hover:text-ink-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-deep dark:hover:bg-ink-800 dark:hover:text-ink-100"
       >
-        <X className="h-4 w-4" />
+        <X className="h-4 w-4" aria-hidden />
       </button>
     </div>
   );

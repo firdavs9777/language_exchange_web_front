@@ -36,24 +36,27 @@ const ConsentBar: React.FC = () => {
       role="region"
       aria-label={t("consent.label") || "Cookie consent"}
       data-testid="consent-bar"
-      className="fixed inset-x-0 bottom-0 z-[60] border-t border-gray-200 bg-surface px-4 py-3 shadow-float dark:border-gray-700 dark:bg-cardbg-dark"
+      className="fixed inset-x-0 bottom-0 z-[60] border-t border-line bg-surface px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-float dark:border-line-dark dark:bg-cardbg-dark"
     >
       <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-gray-700 dark:text-gray-200">
+        <p className="text-sm leading-snug text-ink-700 dark:text-ink-200">
           {t("consent.message") || "We use analytics cookies to understand what brings people here."}
         </p>
-        <div className="flex gap-2">
+        {/* `brand-deep`, not `brand`: white on #00BFA5 is 2.33:1 and fails
+            AA. The accept button is the one control here that must be read
+            and pressed, so it cannot be the decorative tint. */}
+        <div className="flex shrink-0 gap-2">
           <button
             type="button"
             onClick={() => choose("denied")}
-            className="rounded-full border border-gray-300 px-4 py-1.5 text-sm font-bold text-gray-700 dark:border-gray-600 dark:text-gray-200"
+            className="rounded-full border border-line-strong px-4 py-1.5 text-sm font-bold text-ink-700 transition-colors hover:bg-ink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-deep dark:border-line-dark dark:text-ink-200 dark:hover:bg-ink-800"
           >
             {t("consent.decline") || "No thanks"}
           </button>
           <button
             type="button"
             onClick={() => choose("granted")}
-            className="rounded-full bg-brand px-4 py-1.5 text-sm font-extrabold text-white shadow-brand"
+            className="rounded-full bg-brand-deep px-4 py-1.5 text-sm font-extrabold text-white transition-colors hover:bg-brand-deepest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-deep"
           >
             {t("consent.accept") || "OK"}
           </button>
