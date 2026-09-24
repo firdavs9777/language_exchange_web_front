@@ -60,7 +60,6 @@
     },
     "deleteModal": {
       "title": "Delete Conversation",
-      "bodyPrefix": "Delete your conversation with",
       "warning": "This cannot be undone.",
       "cancel": "Cancel",
       "confirm": "Delete",
@@ -110,7 +109,6 @@
       "unmuted": "Notifications are back on",
       "muteFailed": "Couldn't update notifications",
       "wallpaper": "Wallpaper",
-      "comingSoon": "Coming soon",
       "block": "Block",
       "unblock": "Unblock",
       "blockTitle": "Block {{name}}?",

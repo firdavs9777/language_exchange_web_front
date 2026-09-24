@@ -60,7 +60,6 @@
     },
     "deleteModal": {
       "title": "刪除對話",
-      "bodyPrefix": "確定要刪除與",
       "warning": "刪除後無法復原。",
       "cancel": "取消",
       "confirm": "刪除",
@@ -110,7 +109,6 @@
       "unmuted": "已恢復通知",
       "muteFailed": "通知設定更新失敗",
       "wallpaper": "聊天背景",
-      "comingSoon": "敬請期待",
       "block": "封鎖",
       "unblock": "取消封鎖",
       "blockTitle": "確定要封鎖 {{name}}？",

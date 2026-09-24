@@ -60,7 +60,6 @@
     },
     "deleteModal": {
       "title": "대화 삭제",
-      "bodyPrefix": "다음 상대와의 대화를 삭제할까요?",
       "warning": "삭제하면 되돌릴 수 없어요.",
       "cancel": "취소",
       "confirm": "삭제",
@@ -110,7 +109,6 @@
       "unmuted": "알림이 다시 켜졌어요",
       "muteFailed": "알림 설정을 변경하지 못했어요",
       "wallpaper": "배경화면",
-      "comingSoon": "곧 출시돼요",
       "block": "차단",
       "unblock": "차단 해제",
       "blockTitle": "{{name}}님을 차단할까요?",

@@ -65,7 +65,6 @@
     },
     "deleteModal": {
       "title": "Hapus percakapan",
-      "bodyPrefix": "Hapus percakapan Anda dengan:",
       "warning": "Tindakan ini tidak dapat dibatalkan.",
       "cancel": "Batal",
       "confirm": "Hapus",
@@ -110,7 +109,6 @@
       "unmuted": "Notifikasi aktif kembali",
       "muteFailed": "Gagal memperbarui notifikasi",
       "wallpaper": "Wallpaper",
-      "comingSoon": "Segera hadir",
       "block": "Blokir",
       "unblock": "Buka blokir",
       "blockTitle": "Blokir {{name}}?",

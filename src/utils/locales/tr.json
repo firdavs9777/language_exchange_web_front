@@ -65,7 +65,6 @@
     },
     "deleteModal": {
       "title": "Sohbeti sil",
-      "bodyPrefix": "Şu kullanıcıyla olan sohbetinizi silin:",
       "warning": "Bu işlem geri alınamaz.",
       "cancel": "İptal",
       "confirm": "Sil",
@@ -110,7 +109,6 @@
       "unmuted": "Bildirimler tekrar açık",
       "muteFailed": "Bildirimler güncellenemedi",
       "wallpaper": "Duvar kağıdı",
-      "comingSoon": "Yakında",
       "block": "Engelle",
       "unblock": "Engeli kaldır",
       "blockTitle": "{{name}} engellensin mi?",

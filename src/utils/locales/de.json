@@ -65,7 +65,6 @@
     },
     "deleteModal": {
       "title": "Konversation löschen",
-      "bodyPrefix": "Konversation mit folgender Person löschen:",
       "warning": "Das kann nicht rückgängig gemacht werden.",
       "cancel": "Abbrechen",
       "confirm": "Löschen",
@@ -110,7 +109,6 @@
       "unmuted": "Benachrichtigungen sind wieder aktiv",
       "muteFailed": "Benachrichtigungen konnten nicht aktualisiert werden",
       "wallpaper": "Hintergrundbild",
-      "comingSoon": "Demnächst verfügbar",
       "block": "Blockieren",
       "unblock": "Blockierung aufheben",
       "blockTitle": "{{name}} blockieren?",

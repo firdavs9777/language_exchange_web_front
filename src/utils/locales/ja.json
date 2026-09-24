@@ -60,7 +60,6 @@
     },
     "deleteModal": {
       "title": "会話を削除",
-      "bodyPrefix": "次の相手との会話を削除しますか？",
       "warning": "削除すると元に戻せません。",
       "cancel": "キャンセル",
       "confirm": "削除",
@@ -110,7 +109,6 @@
       "unmuted": "通知が再びオンになりました",
       "muteFailed": "通知設定を変更できませんでした",
       "wallpaper": "壁紙",
-      "comingSoon": "近日公開",
       "block": "ブロック",
       "unblock": "ブロック解除",
       "blockTitle": "{{name}}さんをブロックしますか？",

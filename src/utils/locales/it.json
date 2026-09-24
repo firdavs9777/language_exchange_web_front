@@ -65,7 +65,6 @@
     },
     "deleteModal": {
       "title": "Elimina conversazione",
-      "bodyPrefix": "Eliminare la conversazione con",
       "warning": "Questa azione non può essere annullata.",
       "cancel": "Annulla",
       "confirm": "Elimina",
@@ -110,7 +109,6 @@
       "unmuted": "Le notifiche sono di nuovo attive",
       "muteFailed": "Impossibile aggiornare le notifiche",
       "wallpaper": "Sfondo",
-      "comingSoon": "Prossimamente",
       "block": "Blocca",
       "unblock": "Sblocca",
       "blockTitle": "Bloccare {{name}}?",

@@ -65,7 +65,6 @@
     },
     "deleteModal": {
       "title": "Eliminar conversación",
-      "bodyPrefix": "¿Eliminar tu conversación con",
       "warning": "Esta acción no se puede deshacer.",
       "cancel": "Cancelar",
       "confirm": "Eliminar",
@@ -110,7 +109,6 @@
       "unmuted": "Las notificaciones están activas de nuevo",
       "muteFailed": "No se pudieron actualizar las notificaciones",
       "wallpaper": "Fondo de pantalla",
-      "comingSoon": "Próximamente",
       "block": "Bloquear",
       "unblock": "Desbloquear",
       "blockTitle": "¿Bloquear a {{name}}?",

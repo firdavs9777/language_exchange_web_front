@@ -65,7 +65,6 @@
     },
     "deleteModal": {
       "title": "Supprimer la conversation",
-      "bodyPrefix": "Supprimer votre conversation avec",
       "warning": "Cette action est irréversible.",
       "cancel": "Annuler",
       "confirm": "Supprimer",
@@ -110,7 +109,6 @@
       "unmuted": "Notifications réactivées",
       "muteFailed": "Impossible de modifier les notifications",
       "wallpaper": "Fond d'écran",
-      "comingSoon": "Bientôt disponible",
       "block": "Bloquer",
       "unblock": "Débloquer",
       "blockTitle": "Bloquer {{name}} ?",

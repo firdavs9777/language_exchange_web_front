@@ -65,7 +65,6 @@
     },
     "deleteModal": {
       "title": "Excluir conversa",
-      "bodyPrefix": "Excluir sua conversa com",
       "warning": "Esta ação não pode ser desfeita.",
       "cancel": "Cancelar",
       "confirm": "Excluir",
@@ -110,7 +109,6 @@
       "unmuted": "As notificações estão ativas de novo",
       "muteFailed": "Não foi possível atualizar as notificações",
       "wallpaper": "Papel de parede",
-      "comingSoon": "Em breve",
       "block": "Bloquear",
       "unblock": "Desbloquear",
       "blockTitle": "Bloquear {{name}}?",

@@ -65,7 +65,6 @@
     },
     "deleteModal": {
       "title": "حذف المحادثة",
-      "bodyPrefix": "هل تريد حذف محادثتك مع:",
       "warning": "لا يمكن التراجع عن هذا الإجراء.",
       "cancel": "إلغاء",
       "confirm": "حذف",
@@ -110,7 +109,6 @@
       "unmuted": "الإشعارات عادت",
       "muteFailed": "تعذر تحديث الإشعارات",
       "wallpaper": "الخلفية",
-      "comingSoon": "قريبًا",
       "block": "حظر",
       "unblock": "إلغاء الحظر",
       "blockTitle": "حظر {{name}}؟",

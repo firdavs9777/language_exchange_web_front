@@ -65,7 +65,6 @@
     },
     "deleteModal": {
       "title": "Burahin ang usapan",
-      "bodyPrefix": "Burahin ang iyong usapan kay:",
       "warning": "Hindi na maibabalik ang pagkilos na ito.",
       "cancel": "Kanselahin",
       "confirm": "Burahin",
@@ -110,7 +109,6 @@
       "unmuted": "Naka-on na ulit ang mga notification",
       "muteFailed": "Hindi na-update ang mga notification",
       "wallpaper": "Wallpaper",
-      "comingSoon": "Malapit na",
       "block": "I-block",
       "unblock": "I-unblock",
       "blockTitle": "I-block {{name}}?",

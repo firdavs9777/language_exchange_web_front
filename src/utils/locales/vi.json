@@ -65,7 +65,6 @@
     },
     "deleteModal": {
       "title": "Xóa cuộc trò chuyện",
-      "bodyPrefix": "Xóa cuộc trò chuyện của bạn với:",
       "warning": "Hành động này không thể hoàn tác.",
       "cancel": "Hủy",
       "confirm": "Xóa",
@@ -110,7 +109,6 @@
       "unmuted": "Đã bật lại thông báo",
       "muteFailed": "Không thể cập nhật thông báo",
       "wallpaper": "Hình nền",
-      "comingSoon": "Sắp ra mắt",
       "block": "Chặn",
       "unblock": "Bỏ chặn",
       "blockTitle": "Chặn {{name}}?",

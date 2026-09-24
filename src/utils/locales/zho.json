@@ -60,7 +60,6 @@
     },
     "deleteModal": {
       "title": "删除对话",
-      "bodyPrefix": "确定要删除与",
       "warning": "删除后无法恢复。",
       "cancel": "取消",
       "confirm": "删除",
@@ -110,7 +109,6 @@
       "unmuted": "已恢复通知",
       "muteFailed": "通知设置更新失败",
       "wallpaper": "聊天背景",
-      "comingSoon": "敬请期待",
       "block": "拉黑",
       "unblock": "取消拉黑",
       "blockTitle": "确定拉黑 {{name}}？",
