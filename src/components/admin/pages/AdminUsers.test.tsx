@@ -1,9 +1,19 @@
 import "@testing-library/jest-dom";
 import React from "react";
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import AdminUsers from "./AdminUsers";
+import AdminUsers, { relativeTime } from "./AdminUsers";
 
-jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
+let mockLanguage = "en";
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: () => "",
+    i18n: {
+      get language() {
+        return mockLanguage;
+      },
+    },
+  }),
+}));
 
 const mockSearch = jest.fn();
 const mockBanned = jest.fn();
@@ -89,6 +99,7 @@ const list = (rows: any[], pagination: any = {}, extra: any = {}) => ({
 });
 
 beforeEach(() => {
+  mockLanguage = "en";
   jest.useFakeTimers();
   mockSearch.mockReset().mockReturnValue(list(USERS));
   mockBanned.mockReset().mockReturnValue(list(BANNED));
@@ -261,8 +272,47 @@ it("marks who has a verified email", () => {
 it("shows last active as a relative time, and a dash when there is none", () => {
   render(<AdminUsers />);
   const rows = screen.getAllByTestId("data-row");
-  expect(rows[0]).toHaveTextContent("3d ago");
+  expect(rows[0]).toHaveTextContent("3 days ago");
   expect(rows[1]).toHaveTextContent("—");
+});
+
+it("formats last active through the moderator's own language when Intl supports it", () => {
+  mockLanguage = "fr";
+  render(<AdminUsers />);
+  const rows = screen.getAllByTestId("data-row");
+  expect(rows[0]).toHaveTextContent("il y a 3 jours");
+});
+
+describe("relativeTime", () => {
+  it("returns a dash for no value and the raw string for something unparsable", () => {
+    expect(relativeTime(null)).toBe("—");
+    expect(relativeTime("not-a-date")).toBe("not-a-date");
+  });
+
+  it("formats through Intl.RelativeTimeFormat in the language passed in", () => {
+    const now = Date.now();
+    const then = new Date(now - 3 * DAY).toISOString();
+    expect(relativeTime(then, now, "en")).toBe("3 days ago");
+    expect(relativeTime(then, now, "fr")).toBe("il y a 3 jours");
+  });
+
+  it("falls back to the plain English strings when Intl.RelativeTimeFormat is unavailable", () => {
+    const original = (Intl as any).RelativeTimeFormat;
+    delete (Intl as any).RelativeTimeFormat;
+    try {
+      const now = Date.now();
+      const then = new Date(now - 3 * DAY).toISOString();
+      expect(relativeTime(then, now, "fr")).toBe("3d ago");
+    } finally {
+      (Intl as any).RelativeTimeFormat = original;
+    }
+  });
+
+  it("falls back to the date once past 30 days, in any language", () => {
+    const now = Date.now();
+    const old = new Date(now - 40 * DAY);
+    expect(relativeTime(old.toISOString(), now, "fr")).toBe(old.toLocaleDateString());
+  });
 });
 
 it("opens the register popup from the Add user button", () => {

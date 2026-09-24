@@ -16,6 +16,58 @@ it("renders a labelled modal dialog with a backdrop", () => {
   expect(screen.getByTestId("dialog-shell-backdrop")).toBeInTheDocument();
 });
 
+it("uses aria-labelledby instead of aria-label when the caller passes a heading id", () => {
+  render(
+    <DialogShell label="Add user" labelledBy="add-user-title" onClose={jest.fn()}>
+      <h2 id="add-user-title">Add user</h2>
+    </DialogShell>
+  );
+  const dialog = screen.getByRole("dialog");
+  expect(dialog).toHaveAttribute("aria-labelledby", "add-user-title");
+  expect(dialog).not.toHaveAttribute("aria-label");
+});
+
+it("restores focus to whatever had it before the dialog opened, on unmount", () => {
+  const Harness: React.FC<{ show: boolean }> = ({ show }) => (
+    <div>
+      <button data-testid="trigger">Add user</button>
+      {show ? (
+        <DialogShell label="Add user" onClose={jest.fn()}>
+          <button data-testid="inside">Save</button>
+        </DialogShell>
+      ) : null}
+    </div>
+  );
+  const { rerender } = render(<Harness show={false} />);
+  const trigger = screen.getByTestId("trigger");
+  trigger.focus();
+  expect(document.activeElement).toBe(trigger);
+
+  rerender(<Harness show />);
+  expect(document.activeElement).toBe(screen.getByRole("dialog"));
+
+  rerender(<Harness show={false} />);
+  expect(document.activeElement).toBe(trigger);
+});
+
+it("does not throw restoring focus to a node that was removed from the document", () => {
+  const Harness: React.FC<{ show: boolean }> = ({ show }) => (
+    <div>
+      {show ? (
+        <button data-testid="trigger">Add user</button>
+      ) : null}
+      {show ? (
+        <DialogShell label="Add user" onClose={jest.fn()}>
+          <p>body</p>
+        </DialogShell>
+      ) : null}
+    </div>
+  );
+  const { rerender } = render(<Harness show />);
+  screen.getByTestId("trigger").focus();
+  expect(() => rerender(<Harness show={false} />)).not.toThrow();
+});
+
 it("closes on a backdrop click", () => {
   const onClose = jest.fn();
   render(

@@ -360,7 +360,7 @@ const ReportsTable: React.FC = () => {
         }
         confirmLabel={t("admin.content.resolve") || "Resolve"}
         cancelLabel={t("admin.common.cancel") || "Cancel"}
-        requireReason
+        showReason
         reasonLabel={t("admin.content.notes") || "Notes"}
         busy={resolveState.isLoading}
         error={errorText(resolveState.error, failed)}
@@ -377,7 +377,7 @@ const ReportsTable: React.FC = () => {
         }
         confirmLabel={t("admin.content.dismiss") || "Dismiss"}
         cancelLabel={t("admin.common.cancel") || "Cancel"}
-        requireReason
+        showReason
         reasonLabel={t("admin.content.notes") || "Notes"}
         busy={dismissState.isLoading}
         error={errorText(dismissState.error, failed)}

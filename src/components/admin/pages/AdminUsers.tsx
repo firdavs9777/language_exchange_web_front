@@ -36,27 +36,58 @@ const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
+// `Intl.RelativeTimeFormat` has no typing in the repo's typescript@3.7.2 lib,
+// so the constructor is reached through an `any` view of Intl rather than
+// declared -- a `declare global` block here would fight the next TS upgrade.
+// Mirrors the shape of `formatRelative` in
+// `src/components/profile/parts/ProfileHeader.tsx` on the profile-redesign
+// branch.
+
 /**
  * "3d ago" — how long since a timestamp, in the largest unit that still says
  * something. A moderator scanning this column asks "recently or not", and a
  * date they have to subtract from today does not answer it. Anything past a
  * month falls back to the date, where the exact day starts mattering again.
+ *
+ * Formatted through `Intl.RelativeTimeFormat(language)` when the runtime has
+ * it, so a moderator reading the console in their own locale gets "il y a 3
+ * jours" rather than an English string wearing their UI; falls back to the
+ * plain English strings below when `Intl.RelativeTimeFormat` is unavailable
+ * or throws (an unrecognized language tag, say).
  */
-export const relativeTime = (value: any, now: number = Date.now()): string => {
+export const relativeTime = (
+  value: any,
+  now: number = Date.now(),
+  language: string = "en"
+): string => {
   if (!value) return "—";
   const then = new Date(value).getTime();
   if (isNaN(then)) return String(value);
 
   const elapsed = now - then;
+  if (elapsed >= 30 * DAY) return formatDate(value);
+
+  const RelativeTimeFormat = (Intl as any).RelativeTimeFormat;
+  if (RelativeTimeFormat) {
+    try {
+      const rtf = new RelativeTimeFormat(language, { numeric: "auto" });
+      if (elapsed < MINUTE) return rtf.format(0, "second");
+      if (elapsed < HOUR) return rtf.format(-Math.floor(elapsed / MINUTE), "minute");
+      if (elapsed < DAY) return rtf.format(-Math.floor(elapsed / HOUR), "hour");
+      return rtf.format(-Math.floor(elapsed / DAY), "day");
+    } catch {
+      // Fall through to the English strings below.
+    }
+  }
+
   if (elapsed < MINUTE) return "just now";
   if (elapsed < HOUR) return `${Math.floor(elapsed / MINUTE)}m ago`;
   if (elapsed < DAY) return `${Math.floor(elapsed / HOUR)}h ago`;
-  if (elapsed < 30 * DAY) return `${Math.floor(elapsed / DAY)}d ago`;
-  return formatDate(value);
+  return `${Math.floor(elapsed / DAY)}d ago`;
 };
 
 const AdminUsers: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [tab, setTab] = useState<"all" | "banned">("all");
   const [text, setText] = useState("");
   const [query, setQuery] = useState("");
@@ -296,7 +327,7 @@ const AdminUsers: React.FC = () => {
               key: "lastActive",
               header: t("admin.users.lastActive") || "Last active",
               className: "whitespace-nowrap",
-              render: (row: any) => relativeTime(row?.lastActive),
+              render: (row: any) => relativeTime(row?.lastActive, Date.now(), i18n.language),
             },
             {
               key: "createdAt",

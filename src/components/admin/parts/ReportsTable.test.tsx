@@ -173,6 +173,32 @@ it("dismisses with notes", async () => {
   );
 });
 
+it("resolves with empty notes -- the backend treats them as optional", async () => {
+  renderTable();
+  openMenu("r1");
+  fireEvent.click(screen.getByTestId("report-resolve-r1"));
+  fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
+  expect(resolveTrigger).toHaveBeenCalledWith({
+    id: "r1",
+    action: "content_removed",
+    notes: "",
+  });
+  await waitFor(() =>
+    expect(screen.queryByTestId("confirm-dialog")).not.toBeInTheDocument()
+  );
+});
+
+it("dismisses with empty notes -- the backend treats them as optional", async () => {
+  renderTable();
+  openMenu("r2");
+  fireEvent.click(screen.getByTestId("report-dismiss-r2"));
+  fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
+  expect(dismissTrigger).toHaveBeenCalledWith({ id: "r2", notes: "" });
+  await waitFor(() =>
+    expect(screen.queryByTestId("confirm-dialog")).not.toBeInTheDocument()
+  );
+});
+
 it("keeps the resolve dialog open when the mutation fails", async () => {
   resolveTrigger = jest.fn(() => ({ unwrap: () => Promise.reject({ data: { message: "Boom" } }) }));
   mockResolve.mockReturnValue([

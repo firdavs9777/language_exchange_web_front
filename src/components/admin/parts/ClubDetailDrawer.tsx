@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Flag, Users } from "lucide-react";
+import { Flag, Users, X } from "lucide-react";
 import { useArchiveAdminClubMutation } from "../../../store/slices/adminSlice";
 import { Avatar, Badge } from "../../../design";
 import ConfirmDialog from "./ConfirmDialog";
@@ -133,7 +133,7 @@ const ClubDetailDrawer: React.FC<ClubDetailDrawerProps> = ({ club, onClose }) =>
             aria-label={t("admin.common.close") || "Close"}
             className="rounded-chip border border-line px-2 py-1 text-sm text-ink-600 hover:bg-ink-100 dark:border-line-dark dark:text-ink-300 dark:hover:bg-ink-800"
           >
-            ✕
+            <X size={16} aria-hidden="true" />
           </button>
         </div>
 

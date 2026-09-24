@@ -121,7 +121,7 @@ const EditUserDialog: React.FC<EditUserDialogProps> = ({ user, onClose }) => {
 
   return (
     <DialogShell
-      label={title}
+      labelledBy="edit-user-dialog-title"
       onClose={onClose}
       testId="edit-user-dialog"
       backdropTestId="edit-user-dialog-backdrop"
@@ -131,7 +131,12 @@ const EditUserDialog: React.FC<EditUserDialogProps> = ({ user, onClose }) => {
       ].join(" ")}
       initialFocusRef={firstFieldRef}
     >
-      <h2 className="font-display text-base text-ink-900 dark:text-ink-50">{title}</h2>
+      <h2
+        id="edit-user-dialog-title"
+        className="font-display text-base text-ink-900 dark:text-ink-50"
+      >
+        {title}
+      </h2>
 
       <form onSubmit={onSubmit} noValidate className="mt-4 space-y-4">
         <div>

@@ -1,8 +1,13 @@
 import React, { useEffect, useRef } from "react";
 
 export interface DialogShellProps {
-  /** Accessible name for the dialog. */
-  label: string;
+  /**
+   * Accessible name for the dialog. Fallback only: used as `aria-label` when
+   * `labelledBy` is not given. Prefer `labelledBy`.
+   */
+  label?: string;
+  /** id of the caller's own visible heading; used as `aria-labelledby`. */
+  labelledBy?: string;
   onClose: () => void;
   children: React.ReactNode;
   /** Testid for the panel. Defaults keep a caller's existing ids available. */
@@ -42,6 +47,7 @@ const DEFAULT_CONTAINER =
  */
 const DialogShell: React.FC<DialogShellProps> = ({
   label,
+  labelledBy,
   onClose,
   children,
   testId = "dialog-shell",
@@ -61,12 +67,28 @@ const DialogShell: React.FC<DialogShellProps> = ({
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [onClose]);
 
-  // The keyboard follows the eye: focus lands inside the dialog on open.
+  // The keyboard follows the eye: focus lands inside the dialog on open, and
+  // whatever had focus before the dialog opened (the button that triggered
+  // it, almost always) gets it back once the dialog is gone -- otherwise
+  // focus silently drops to <body> and a keyboard user has to find their
+  // place again.
   useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+
     const nominated = initialFocusRef && initialFocusRef.current;
     if (nominated) nominated.focus();
     else if (panelRef.current) panelRef.current.focus();
-    // Once, on open: a later re-render must not steal focus back from
+
+    return () => {
+      if (
+        previouslyFocused &&
+        typeof previouslyFocused.focus === "function" &&
+        document.contains(previouslyFocused)
+      ) {
+        previouslyFocused.focus();
+      }
+    };
+    // Once, on open/close: a later re-render must not steal focus back from
     // whatever the moderator has tabbed to.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -111,7 +133,8 @@ const DialogShell: React.FC<DialogShellProps> = ({
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label={label}
+        aria-labelledby={labelledBy}
+        aria-label={labelledBy ? undefined : label}
         data-testid={testId}
         onKeyDown={onKeyDown}
         className={`${panelClassName} outline-none`}

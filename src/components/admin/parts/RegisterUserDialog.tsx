@@ -5,6 +5,7 @@ import { Check, Copy, ExternalLink, RefreshCw } from "lucide-react";
 import { useCreateUserMutation } from "../../../store/slices/adminSlice";
 import DialogShell from "../../../design/DialogShell";
 import { passwordStrength, isAdult } from "../../auth/register/validators";
+import { EMAIL_RE } from "../../../utils/validation";
 
 export interface RegisterUserDialogProps {
   onClose: () => void;
@@ -63,9 +64,6 @@ export function generatePassword(length: number = PASSWORD_LENGTH): string {
   }
   return chars.join("");
 }
-
-// The model's own match, so the dialog rejects exactly what the schema would.
-const EMAIL_RE = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const DAYS: number[] = [];
@@ -257,7 +255,7 @@ const RegisterUserDialog: React.FC<RegisterUserDialogProps> = ({ onClose }) => {
 
   return (
     <DialogShell
-      label={title}
+      labelledBy="register-user-dialog-title"
       onClose={onClose}
       testId="register-user-dialog"
       backdropTestId="register-user-dialog-backdrop"
@@ -267,7 +265,12 @@ const RegisterUserDialog: React.FC<RegisterUserDialogProps> = ({ onClose }) => {
       ].join(" ")}
       initialFocusRef={firstFieldRef}
     >
-      <h2 className="font-display text-base text-ink-900 dark:text-ink-50">{title}</h2>
+      <h2
+        id="register-user-dialog-title"
+        className="font-display text-base text-ink-900 dark:text-ink-50"
+      >
+        {title}
+      </h2>
 
       {created ? (
         <div data-testid="register-user-success" className="mt-4 space-y-4 text-sm">

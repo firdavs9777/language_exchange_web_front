@@ -9,6 +9,8 @@ export interface ConfirmDialogProps {
   cancelLabel?: string;
   /** Ask for a moderation reason; confirm stays disabled until one is typed. */
   requireReason?: boolean;
+  /** Show the reason field without requiring it -- notes the backend treats as optional. */
+  showReason?: boolean;
   /**
    * Ask the moderator to retype this exact string (the user's email for a hard
    * delete). Case-sensitive on purpose: an irreversible action should cost a
@@ -46,6 +48,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   confirmLabel,
   cancelLabel = "Cancel",
   requireReason = false,
+  showReason = false,
   requireTypedValue,
   danger = false,
   onConfirm,
@@ -84,18 +87,23 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
 
   return (
     <DialogShell
-      label={title}
+      labelledBy="confirm-dialog-title"
       onClose={onCancel}
       testId="confirm-dialog"
       backdropTestId="confirm-dialog-backdrop"
       initialFocusRef={firstFieldRef}
     >
-      <h2 className="font-display text-base text-ink-900 dark:text-ink-50">{title}</h2>
+      <h2
+        id="confirm-dialog-title"
+        className="font-display text-base text-ink-900 dark:text-ink-50"
+      >
+        {title}
+      </h2>
       {body ? (
         <div className="pt-2 text-sm text-ink-600 dark:text-ink-300">{body}</div>
       ) : null}
 
-      {requireReason ? (
+      {requireReason || showReason ? (
         <label className="mt-4 block text-xs font-medium uppercase tracking-wide text-ink-500 dark:text-ink-400">
           {reasonLabel}
           <textarea
