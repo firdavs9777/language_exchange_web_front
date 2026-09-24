@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import { Form, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -20,7 +27,6 @@ import {
 import "./ChatContent.css";
 import MessageActionMenu from "./actions/MessageActionMenu";
 import ForwardDialog from "./actions/ForwardDialog";
-import ReactionRow from "./actions/ReactionRow";
 import PinnedBar from "./actions/PinnedBar";
 import ReplyComposerBar from "./actions/ReplyComposerBar";
 import { canDeleteForEveryone } from "./lib/messageActions";
@@ -28,27 +34,26 @@ import StickerPanel from "./StickerPanel";
 import "./StickerPanel.css";
 import GifPickerPanel from "./GifPickerPanel";
 import { useSocket } from "./hooks/useSocket";
-import CorrectionCard, { MessageCorrection } from "./components/CorrectionCard";
 import CorrectionModal from "./components/CorrectionModal";
-import TranslationCard from "./components/TranslationCard";
+import MessageBubble, {
+  DateSeparator,
+  formatDuration,
+  Message,
+  MessageReceiver,
+  MessageStatus,
+} from "./MessageBubble";
 import { useSendCorrectionMutation } from "../../store/slices/learningSlice";
 import {
   ArrowLeft,
-  Phone,
-  Video,
   MoreVertical,
   Paperclip,
   Smile,
   Send,
   Mic,
   AlertCircle,
-  RefreshCw,
+  ArrowUp,
   X,
-  Play,
-  Pause,
   Image as ImageIcon,
-  Edit3,
-  Globe,
   FileImage,
 } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -76,65 +81,27 @@ interface ChatContentProps {
   initialLastSeen?: string;
 }
 
-interface MessageSender {
-  _id: string;
-  name: string;
-  username?: string;
-  images?: string[];
-  userMode?: string;
-}
+// How far along a message is. A page fetch must never pull a tick back from
+// where the socket has already taken it.
+const STATUS_ORDER: { [status: string]: number } = {
+  error: -1,
+  sending: 0,
+  sent: 1,
+  delivered: 2,
+  read: 3,
+};
+const statusRank = (status?: string): number =>
+  status && STATUS_ORDER[status] !== undefined ? STATUS_ORDER[status] : 0;
 
-interface MessageReceiver {
-  _id: string;
-  name: string;
-  username?: string;
-  images?: string[];
-}
-
-interface MessageMedia {
-  url: string;
-  type: string;
-  thumbnail?: string;
-  fileName?: string;
-  fileSize?: number;
-  mimeType?: string;
-  duration?: number;
-  waveform?: number[];
-  dimensions?: { width: number; height: number };
-}
-
-interface Message {
-  _id: string;
-  message: string;
-  sender: MessageSender;
-  receiver: MessageReceiver | string;
-  messageType?: string;
-  read?: boolean;
-  readAt?: string;
-  createdAt: string;
-  updatedAt?: string;
-  isOptimistic?: boolean;
-  status?: "sending" | "sent" | "delivered" | "read" | "error";
-  media?: MessageMedia;
-  replyTo?: { _id: string; message: string; sender: { _id: string; name: string } };
-  corrections?: MessageCorrection[];
-  reactions?: Array<{ user: string; emoji: string; createdAt?: string }>;
-  isEdited?: boolean;
-  editedAt?: string;
-  pinned?: boolean;
-}
+// Matches the backend's own default for
+// GET /messages/conversation/:senderId/:receiverId.
+const MESSAGE_PAGE_SIZE = 50;
 
 const getReceiverId = (receiver: MessageReceiver | string): string => {
   if (typeof receiver === "object" && receiver !== null) {
     return receiver._id;
   }
   return receiver;
-};
-
-const formatDuration = (seconds: number): string => {
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs.toString().padStart(2, "0")}`;
 };
 
 const ChatContent: React.FC<ChatContentProps> = ({
@@ -153,15 +120,27 @@ const ChatContent: React.FC<ChatContentProps> = ({
     (state: RootState) => state.auth.userInfo?.user?.name
   );
 
-  const { data, error, isLoading } = useGetConversationQuery(
+  // History paging. The backend answers 50 messages per page, newest page
+  // first; `page` walks BACKWARDS in time and the endpoint merges each older
+  // page into the same cache entry, so `data.data` is always the whole thread
+  // loaded so far, oldest first.
+  const [page, setPage] = useState(1);
+  const { data, error, isLoading, isFetching } = useGetConversationQuery(
     {
       senderId: userId,
       receiverId: selectedUser,
+      page,
+      limit: MESSAGE_PAGE_SIZE,
     },
     {
       skip: !userId || !selectedUser,
     }
   );
+
+  const totalPages = (data as any)?.pagination?.totalPages || 1;
+  const totalPagesRef = useRef(1);
+  const hasMoreHistory = page < totalPages;
+  const isLoadingOlder = isFetching && page > 1;
 
   const [createMessage] = useCreateMessageMutation();
   const [sendVoiceMessage] = useSendVoiceMessageMutation();
@@ -238,7 +217,13 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const typingClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const selectedUserRef = useRef<string>(selectedUser);
+  // Which conversation the local list was last seeded from — a page of a
+  // DIFFERENT conversation must not inherit this one's live messages.
+  const seededUserRef = useRef<string>("");
   const isAtBottomRef = useRef(true);
+  const topSentinelRef = useRef<HTMLDivElement>(null);
+  // Scroll geometry captured just before an older page is requested.
+  const pendingOlderRef = useRef<{ scrollHeight: number; scrollTop: number } | null>(null);
 
   // Read here, seeded further down -- see the draft effect below the
   // "Clear state when switching conversations" effect.
@@ -252,6 +237,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
   useEffect(() => {
     selectedUserRef.current = selectedUser;
   }, [selectedUser]);
+
+  useEffect(() => {
+    totalPagesRef.current = totalPages;
+  }, [totalPages]);
 
   // Update online status when initial props change
   useEffect(() => {
@@ -327,15 +316,31 @@ const ChatContent: React.FC<ChatContentProps> = ({
       const currentSelectedUser = selectedUserRef.current;
       if (data.receiverId === currentSelectedUser) {
         setMessages((prev) => {
-          // If already in state as our optimistic/sent message, upgrade to delivered
+          // The server has the message. One tick; `messageDelivered` upgrades
+          // it to two when the other person's client picks it up.
           if (prev.some((msg) => msg._id === data.message._id)) {
             return prev.map((msg) =>
-              msg._id === data.message._id ? { ...msg, status: "delivered" } : msg
+              msg._id === data.message._id && statusRank(msg.status) < statusRank("sent")
+                ? { ...msg, status: "sent" }
+                : msg
             );
           }
-          return [...prev, { ...data.message, status: "delivered" }];
+          return [...prev, { ...data.message, status: "sent" }];
         });
       }
+    };
+
+    // The other person's client has the message (or the server stamped a
+    // backlog one on their reconnect): one tick becomes two.
+    const handleMessageDelivered = (data: { messageId: string }) => {
+      if (!data || !data.messageId) return;
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg._id === data.messageId && statusRank(msg.status) < statusRank("delivered")
+            ? { ...msg, status: "delivered" }
+            : msg
+        )
+      );
     };
 
     const handleMessagesRead = (data: { readBy: string }) => {
@@ -480,6 +485,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     socket.on("newVoiceMessage", handleMediaMessage);
     socket.on("newVideoMessage", handleMediaMessage);
     socket.on("messageSent", handleMessageSent);
+    socket.on("messageDelivered", handleMessageDelivered);
     socket.on("messagesRead", handleMessagesRead);
     socket.on("messageDeleted", handleMessageDeleted);
     socket.on("userTyping", handleUserTyping);
@@ -498,6 +504,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       socket.off("newVoiceMessage", handleMediaMessage);
       socket.off("newVideoMessage", handleMediaMessage);
       socket.off("messageSent", handleMessageSent);
+      socket.off("messageDelivered", handleMessageDelivered);
       socket.off("messagesRead", handleMessagesRead);
       socket.off("messageDeleted", handleMessageDeleted);
       socket.off("userTyping", handleUserTyping);
@@ -539,18 +546,51 @@ const ChatContent: React.FC<ChatContentProps> = ({
     };
   }, [selectedUser, socket]);
 
-  // Load initial messages and mark as read
+  // Seed from the cache and mark as read.
+  //
+  // NOT a wholesale replace. The cache entry holds whole pages; anything the
+  // socket has delivered since the last fetch — and every optimistic message
+  // still in flight — lives only in local state, and replacing the list threw
+  // those away the moment another page arrived. So the cached page wins on
+  // content, local state keeps what the cache has not heard of, and a tick the
+  // socket has already advanced never travels backwards.
   useEffect(() => {
-    if ((data as any)?.data) {
-      const loadedMessages = (data as any).data.map((msg: Message) => ({
-        ...msg,
-        status: msg.status || (msg.read ? "read" : "delivered"),
-      }));
-      setMessages(loadedMessages);
+    const loaded = (data as any)?.data;
+    if (!loaded) return;
 
-      if (socket?.connected && selectedUser) {
-        socket.emit("markAsRead", { senderId: selectedUser });
+    const sameConversation = seededUserRef.current === selectedUser;
+    seededUserRef.current = selectedUser;
+
+    setMessages((prev) => {
+      const localById: { [id: string]: Message } = {};
+      if (sameConversation) {
+        prev.forEach((m) => {
+          localById[m._id] = m;
+        });
       }
+
+      const merged: Message[] = loaded.map((msg: Message) => {
+        const fromServer: MessageStatus =
+          msg.status || (msg.read ? "read" : "delivered");
+        const local = localById[msg._id];
+        const status =
+          local && statusRank(local.status) > statusRank(fromServer)
+            ? local.status
+            : fromServer;
+        return { ...msg, status };
+      });
+
+      if (!sameConversation) return merged;
+
+      const known: { [id: string]: boolean } = {};
+      merged.forEach((m) => {
+        known[m._id] = true;
+      });
+      return merged.concat(prev.filter((m) => !known[m._id]));
+    });
+
+    if (socket?.connected && selectedUser) {
+      socket.emit("markAsRead", { senderId: selectedUser });
     }
   }, [data, selectedUser, socket]);
 
@@ -559,6 +599,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     setIsTyping(false);
     setNewMessage("");
     setMediaPreview(null);
+    setPage(1);
     stopRecording();
   }, [selectedUser]);
 
@@ -611,6 +652,55 @@ const ChatContent: React.FC<ChatContentProps> = ({
       container.scrollHeight - container.scrollTop - container.clientHeight < threshold;
   }, []);
 
+  // ========== Older history ==========
+  // Asking for the previous page prepends messages above the viewport, which
+  // would yank the thread downwards under the reader's eyes. The height
+  // BEFORE the prepend is measured here and the offset restored in the layout
+  // effect below, so the message being read stays exactly where it was.
+  const loadOlderMessages = useCallback(() => {
+    if (!hasMoreHistory || isFetching) return;
+    const container = chatContainerRef.current;
+    pendingOlderRef.current = container
+      ? { scrollHeight: container.scrollHeight, scrollTop: container.scrollTop }
+      : { scrollHeight: 0, scrollTop: 0 };
+    // Reading history is not being at the bottom: the auto-scroll must not
+    // drag the view back down when the older page lands.
+    isAtBottomRef.current = false;
+    // The cap is re-checked INSIDE the updater: two sentinel hits in the same
+    // tick both see the old `page`, and without this the second one would ask
+    // for a page past the end of the thread.
+    setPage((current) =>
+      current < totalPagesRef.current ? current + 1 : current
+    );
+  }, [hasMoreHistory, isFetching]);
+
+  useLayoutEffect(() => {
+    const pending = pendingOlderRef.current;
+    const container = chatContainerRef.current;
+    if (!pending || !container) return;
+    if (container.scrollHeight === pending.scrollHeight) return; // nothing prepended yet
+    pendingOlderRef.current = null;
+    container.scrollTop =
+      container.scrollHeight - pending.scrollHeight + pending.scrollTop;
+  }, [messages]);
+
+  // The sentinel does the asking on scroll; the button inside it is what a
+  // keyboard (and a browser without IntersectionObserver) uses.
+  useEffect(() => {
+    if (!hasMoreHistory) return;
+    const node = topSentinelRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) loadOlderMessages();
+      },
+      { root: chatContainerRef.current, rootMargin: "120px" }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasMoreHistory, loadOlderMessages]);
+
   // Auto-scroll
   useEffect(() => {
     if (messages.length > 0 && isAtBottomRef.current) {
@@ -645,7 +735,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const finalizeOptimistic = (tempId: string, msgData: any) => {
     setMessages((prev) =>
       prev.map((m) =>
-        m._id === tempId ? { ...msgData, status: "delivered", isOptimistic: false } : m
+        m._id === tempId ? { ...msgData, status: "sent", isOptimistic: false } : m
       )
     );
   };
@@ -738,7 +828,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             setMessages((prev) =>
               prev.map((msg) =>
                 msg._id === tempId
-                  ? { ...response.message, status: "delivered", isOptimistic: false }
+                  ? { ...response.message, status: "sent", isOptimistic: false }
                   : msg
               )
             );
@@ -772,7 +862,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       setMessages((prev) =>
         prev.map((msg) =>
           msg._id === tempId
-            ? { ...msgData, status: "delivered", isOptimistic: false }
+            ? { ...msgData, status: "sent", isOptimistic: false }
             : msg
         )
       );
@@ -825,7 +915,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             setMessages((prev) =>
               prev.map((msg) =>
                 msg._id === tempId
-                  ? { ...response.message, status: "delivered", isOptimistic: false }
+                  ? { ...response.message, status: "sent", isOptimistic: false }
                   : msg
               )
             );
@@ -861,7 +951,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       setMessages((prev) =>
         prev.map((msg) =>
           msg._id === tempId
-            ? { ...msgData, status: "delivered", isOptimistic: false }
+            ? { ...msgData, status: "sent", isOptimistic: false }
             : msg
         )
       );
@@ -907,7 +997,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             setMessages((prev) =>
               prev.map((msg) =>
                 msg._id === tempId
-                  ? { ...response.message, status: "delivered", isOptimistic: false }
+                  ? { ...response.message, status: "sent", isOptimistic: false }
                   : msg
               )
             );
@@ -942,7 +1032,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       setMessages((prev) =>
         prev.map((msg) =>
           msg._id === tempId
-            ? { ...msgData, status: "delivered", isOptimistic: false }
+            ? { ...msgData, status: "sent", isOptimistic: false }
             : msg
         )
       );
@@ -1031,7 +1121,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       setMessages((prev) =>
         prev.map((msg) =>
           msg._id === tempId
-            ? { ...msgData, status: "delivered", isOptimistic: false }
+            ? { ...msgData, status: "sent", isOptimistic: false }
             : msg
         )
       );
@@ -1166,7 +1256,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       setMessages((prev) =>
         prev.map((msg) =>
           msg._id === tempId
-            ? { ...msgData, status: "delivered", isOptimistic: false }
+            ? { ...msgData, status: "sent", isOptimistic: false }
             : msg
         )
       );
@@ -1248,7 +1338,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             setMessages((prev) =>
               prev.map((msg) =>
                 msg._id === tempId
-                  ? { ...response.message, status: "delivered", isOptimistic: false }
+                  ? { ...response.message, status: "sent", isOptimistic: false }
                   : msg
               )
             );
@@ -1341,6 +1431,41 @@ const ChatContent: React.FC<ChatContentProps> = ({
     el?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, []);
 
+  // Stable identities for the memoized bubble. `toggleAudioPlayback` and
+  // `handleRetryMessage` are re-created every render (they close over half the
+  // component); handing them straight to a memoized child would defeat the
+  // memo, so the bubble gets these thin, never-changing wrappers instead.
+  const togglePlaybackRef = useRef<(messageId: string, url: string) => void>(() => {});
+  const retryRef = useRef<(msg: Message) => void>(() => {});
+  useEffect(() => {
+    togglePlaybackRef.current = toggleAudioPlayback;
+    retryRef.current = handleRetryMessage;
+  });
+  const handleTogglePlayback = useCallback((messageId: string, url: string) => {
+    togglePlaybackRef.current(messageId, url);
+  }, []);
+  const handleRetry = useCallback((msg: Message) => {
+    retryRef.current(msg);
+  }, []);
+
+  const handleLocalCorrectionAccepted = useCallback(
+    (messageId: string, correctionId: string) => {
+      setMessages((prev) =>
+        prev.map((m) =>
+          m._id === messageId
+            ? {
+                ...m,
+                corrections: (m.corrections || []).map((c) =>
+                  c._id === correctionId ? { ...c, isAccepted: true } : c
+                ),
+              }
+            : m
+        )
+      );
+    },
+    []
+  );
+
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -1424,128 +1549,6 @@ const ChatContent: React.FC<ChatContentProps> = ({
     return "last";
   };
 
-  const getBubbleRadius = (isSent: boolean, position: string): string => {
-    if (isSent) {
-      switch (position) {
-        case "single": return "18px 18px 4px 18px";
-        case "first": return "18px 18px 4px 18px";
-        case "middle": return "18px 4px 4px 18px";
-        case "last": return "18px 4px 18px 18px";
-        default: return "18px";
-      }
-    } else {
-      switch (position) {
-        case "single": return "18px 18px 18px 4px";
-        case "first": return "18px 18px 18px 4px";
-        case "middle": return "4px 18px 18px 4px";
-        case "last": return "4px 18px 18px 18px";
-        default: return "18px";
-      }
-    }
-  };
-
-  const renderStatusIcon = (msg: Message) => {
-    if (msg.sender._id !== userId) return null;
-
-    switch (msg.status) {
-      case "sending":
-        return <span className="status-text sending">Sending…</span>;
-      case "delivered":
-        return <span className="status-text delivered">Sent</span>;
-      case "read":
-        return <span className="status-text read">Read</span>;
-      case "error":
-        return <span className="status-text error">Failed</span>;
-      default:
-        return <span className="status-text delivered">Sent</span>;
-    }
-  };
-
-  // ========== Render voice message bubble content ==========
-  const renderVoiceMessage = (msg: Message) => {
-    const duration = msg.media?.duration || 0;
-    const isPlaying = playingAudioId === msg._id;
-    const bars = (msg.media?.waveform || Array(20).fill(0.3)).slice(0, 30);
-    const playedCount = isPlaying ? Math.floor(audioProgress * bars.length) : 0;
-
-    return (
-      <div className="voice-message">
-        <button
-          className="voice-play-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (msg.media?.url) toggleAudioPlayback(msg._id, msg.media.url);
-          }}
-        >
-          {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-        </button>
-        <div className="voice-waveform">
-          <div className="voice-waveform-bars">
-            {bars.map((v: number, i: number) => (
-              <div
-                key={i}
-                className={`waveform-bar${i < playedCount ? " waveform-bar--played" : ""}`}
-                style={{ height: `${Math.max(4, (v || 0.3) * 24)}px` }}
-              />
-            ))}
-          </div>
-        </div>
-        <span className="voice-duration">
-          {isPlaying ? formatDuration(audioElapsed) : formatDuration(duration)}
-        </span>
-      </div>
-    );
-  };
-
-  // ========== Render media content in bubble ==========
-  const renderMediaContent = (msg: Message) => {
-    if (!msg.media || !msg.media.type) return null;
-
-    const mediaType = msg.media.type || msg.messageType;
-
-    if (mediaType === "voice") {
-      return renderVoiceMessage(msg);
-    }
-
-    if (mediaType === "image" || msg.media.mimeType?.startsWith("image/")) {
-      return (
-        <div className="message-media">
-          <img src={msg.media.url} alt="media" className="message-image" loading="lazy" />
-        </div>
-      );
-    }
-
-    if (mediaType === "video" || msg.media.mimeType?.startsWith("video/")) {
-      return (
-        <div className="message-media">
-          {msg.media.thumbnail ? (
-            <div className="video-thumbnail-wrapper">
-              <img src={msg.media.thumbnail} alt="video" className="message-image" />
-              <div className="video-play-overlay">
-                <Play size={32} />
-              </div>
-            </div>
-          ) : (
-            <video src={msg.media.url} controls className="message-video" preload="metadata" />
-          )}
-        </div>
-      );
-    }
-
-    // Document/file
-    return (
-      <div className="message-file">
-        <Paperclip size={16} />
-        <span className="file-name">{msg.media.fileName || "File"}</span>
-        {msg.media.fileSize && (
-          <span className="file-size">
-            {(msg.media.fileSize / 1024).toFixed(0)}KB
-          </span>
-        )}
-      </div>
-    );
-  };
-
   if (isLoading)
     return (
       <div className="chat-loading">
@@ -1591,21 +1594,24 @@ const ChatContent: React.FC<ChatContentProps> = ({
             <div className="profile-avatar-container">
               {/* The avatar and the name both open the member page, the way
                   the app's header does. Two links rather than one wrapper so
-                  the presence line underneath stays plain text. */}
+                  the presence line underneath stays plain text.
+                  The avatar is the NAME link's decoration: hidden from the
+                  accessibility tree and out of the tab order, so a screen
+                  reader and a keyboard meet one "View X's profile" link
+                  instead of the same one twice. A pointer still has both. */}
               <Link
                 to={`/community/${selectedUser}`}
                 data-testid="chat-header-avatar-link"
                 className="header-profile-link"
-                aria-label={
-                  t("chatPage.viewProfileOf", { name: userName }) ||
-                  `View ${userName}'s profile`
-                }
+                aria-hidden="true"
+                tabIndex={-1}
               >
                 <img
                   src={profilePicture || "/default-avatar.png"}
                   alt={userName}
                   className="profile-avatar"
                   loading="lazy"
+                  decoding="async"
                 />
               </Link>
               <div className={`status-pulse ${isOnline ? "online" : "offline"}`}>
@@ -1685,6 +1691,30 @@ const ChatContent: React.FC<ChatContentProps> = ({
         ref={chatContainerRef}
         onScroll={handleScroll}
       >
+        {(hasMoreHistory || isLoadingOlder) && (
+          <div className="load-earlier-row" ref={topSentinelRef}>
+            {isLoadingOlder ? (
+              <span
+                className="load-earlier-status"
+                role="status"
+                data-testid="loading-earlier"
+              >
+                {t("chatPage.loadingEarlier") || "Loading earlier messages"}
+              </span>
+            ) : (
+              <button
+                type="button"
+                className="load-earlier-btn"
+                data-testid="load-earlier"
+                onClick={loadOlderMessages}
+              >
+                <ArrowUp size={14} />
+                <span>{t("chatPage.loadEarlier") || "Load earlier messages"}</span>
+              </button>
+            )}
+          </div>
+        )}
+
         {sortedMessages.length === 0 && (
           <div className="empty-messages">
             <div className="empty-messages-icon">
@@ -1697,214 +1727,43 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
         {messagesByDate.map((group) => (
           <div key={group.dateKey} className="message-date-group">
-            <div className="date-separator">
-              <span className="date-text">{group.date}</span>
-            </div>
+            <DateSeparator label={group.date} />
 
             {group.messages.map((msg: Message, index: number) => {
               const isSent = msg.sender._id === userId;
               const position = getMessagePosition(group.messages, index);
-              const showAvatar = !isSent && (position === "single" || position === "last");
-              const hideAvatarSpace = !isSent && (position === "middle" || position === "first");
-              const gap = position === "middle" || position === "last" ? "2px" : "8px";
               const senderImages = msg.sender.images;
               const avatarUrl =
                 senderImages && senderImages.length > 0
                   ? senderImages[0]
                   : profilePicture || "/default-avatar.png";
 
-              const isVoice = msg.messageType === "voice" || msg.media?.type === "voice";
-              const isSticker = msg.messageType === "sticker";
-              const isGif =
-                msg.messageType === "gif" ||
-                (typeof msg.message === "string" &&
-                  /\.gif(\?|$)|giphy\.com\/media/i.test(msg.message));
-              const hasMedia = !!msg.media?.type && !isVoice;
-
-              // System placeholder created by createConversationRoom — show as a
-              // centered notice instead of a chat bubble.
-              if (msg.message === "Conversation started") {
-                return (
-                  <div key={msg._id} className="system-notice">
-                    <span>{t("chatPage.conversationStarted") || "Conversation started"}</span>
-                  </div>
-                );
-              }
-
               return (
-                <div
+                <MessageBubble
                   key={msg._id}
-                  data-msg-id={msg._id}
-                  className={`modern-message ${isSent ? "sent" : "received"} ${
-                    msg.status === "error" ? "error" : ""
-                  }`}
-                  style={{ marginTop: index === 0 ? "0" : gap }}
-                  onContextMenu={
-                    msg.isOptimistic
-                      ? undefined
-                      : (e) => {
-                          e.preventDefault();
-                          setActiveActionMsg(msg);
-                        }
-                  }
-                >
-                  {!isSent && (
-                    <div
-                      className="message-avatar"
-                      style={{ visibility: showAvatar ? "visible" : "hidden" }}
-                    >
-                      {(showAvatar || hideAvatarSpace) && (
-                        <img src={avatarUrl} alt={msg.sender.name} />
-                      )}
-                    </div>
-                  )}
-
-                  <div className="message-wrapper">
-                    <div
-                      className={`message-bubble${isVoice ? " voice-bubble" : ""}${hasMedia ? " media-bubble" : ""}${isSticker ? " sticker-bubble" : ""}`}
-                      style={{
-                        borderRadius: getBubbleRadius(isSent, position),
-                      }}
-                    >
-                      {isSticker ? (
-                        <div className="sticker-message">{msg.message}</div>
-                      ) : isGif ? (
-                        <img
-                          className="gif-message"
-                          src={msg.message}
-                          alt={t("chatPage.gif.altText") || "GIF"}
-                          loading="lazy"
-                        />
-                      ) : (
-                        <>
-                          {renderMediaContent(msg)}
-
-                          {msg.replyTo && (
-                            <div className="reply-preview">
-                              <span className="reply-sender">{msg.replyTo.sender.name}</span>
-                              <span className="reply-text">{msg.replyTo.message}</span>
-                            </div>
-                          )}
-
-                          {msg.message && !isVoice && (
-                            <p className="message-text">{msg.message}</p>
-                          )}
-
-                          {openTranslations.has(msg._id) && msg.message && (
-                            <TranslationCard
-                              messageId={msg._id}
-                              originalText={msg.message}
-                              targetLanguage={targetLanguage}
-                              onClose={() => toggleTranslation(msg._id)}
-                            />
-                          )}
-
-                        </>
-                      )}
-
-                      <div className="message-meta">
-                        <span className="message-time">
-                          {formatTime(msg.createdAt)}
-                        </span>
-                        {isSent && (
-                          <div className="message-status">
-                            {renderStatusIcon(msg)}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Message-actions trigger (opens MessageActionMenu) */}
-                    {!msg.isOptimistic && (
-                      <button
-                        type="button"
-                        className="msg-action-trigger"
-                        aria-label={t("chatPage.moreOptions") || "More options"}
-                        onClick={() => setActiveActionMsg(msg)}
-                      >
-                        <MoreVertical size={14} />
-                      </button>
-                    )}
-
-                    {/* Reactions row (renders null when there are none) */}
-                    <ReactionRow
-                      reactions={msg.reactions}
-                      myUserId={userId || ""}
-                      onToggle={(emoji) => handleToggleReaction(msg, emoji)}
-                    />
-
-                    {/* Correction card lives OUTSIDE the bubble so it always
-                        renders on a white background — readable for both
-                        sent (teal) and received (grey) bubbles. */}
-                    {msg.corrections && msg.corrections.length > 0 && (
-                      <CorrectionCard
-                        messageId={msg._id}
-                        correction={msg.corrections[0]}
-                        isMe={isSent}
-                        currentUserId={userId || ""}
-                        otherUserName={userName}
-                        onAccepted={(correctionId) => {
-                          setMessages((prev) =>
-                            prev.map((m) =>
-                              m._id === msg._id
-                                ? {
-                                    ...m,
-                                    corrections: (m.corrections || []).map(
-                                      (c) =>
-                                        c._id === correctionId
-                                          ? { ...c, isAccepted: true }
-                                          : c
-                                    ),
-                                  }
-                                : m
-                            )
-                          );
-                        }}
-                      />
-                    )}
-
-                    {!isSent && !isSticker && !isVoice && !hasMedia && msg.message && (
-                      <div className="message-chip-row">
-                        {/* Hide Correct chip once a correction already exists */}
-                        {!(msg.corrections && msg.corrections.length > 0) && (
-                          <button
-                            type="button"
-                            className="correct-chip"
-                            onClick={() => setCorrectingMessage(msg)}
-                            title="Suggest a correction"
-                          >
-                            <Edit3 size={12} />
-                            <span>{t("chatPage.correct") || "Correct"}</span>
-                          </button>
-                        )}
-                        <button
-                          type="button"
-                          className={`translate-chip ${openTranslations.has(msg._id) ? "active" : ""}`}
-                          onClick={() => toggleTranslation(msg._id)}
-                          title="Translate this message"
-                        >
-                          <Globe size={12} />
-                          <span>
-                            {openTranslations.has(msg._id)
-                              ? t("chatPage.hide_translation") || "Hide"
-                              : t("chatPage.translate") || "Translate"}
-                          </span>
-                        </button>
-                      </div>
-                    )}
-
-                    {msg.status === "error" && (
-                      <button
-                        className="retry-btn"
-                        onClick={() => handleRetryMessage(msg)}
-                        title={t("chatPage.retrySending") || "Retry sending"}
-                      >
-                        <RefreshCw size={14} />
-                        <span>{t("chatPage.retry") || "Retry"}</span>
-                      </button>
-                    )}
-                  </div>
-                </div>
+                  message={msg}
+                  isSent={isSent}
+                  position={position}
+                  isFirstInGroup={index === 0}
+                  showAvatar={!isSent && (position === "single" || position === "last")}
+                  hideAvatarSpace={!isSent && (position === "middle" || position === "first")}
+                  avatarUrl={avatarUrl}
+                  currentUserId={userId || ""}
+                  otherUserName={userName}
+                  timeLabel={formatTime(msg.createdAt)}
+                  isTranslationOpen={openTranslations.has(msg._id)}
+                  targetLanguage={targetLanguage}
+                  playingAudioId={playingAudioId}
+                  audioProgress={playingAudioId === msg._id ? audioProgress : 0}
+                  audioElapsed={playingAudioId === msg._id ? audioElapsed : 0}
+                  onTogglePlayback={handleTogglePlayback}
+                  onOpenActions={setActiveActionMsg}
+                  onToggleReaction={handleToggleReaction}
+                  onToggleTranslation={toggleTranslation}
+                  onCorrect={setCorrectingMessage}
+                  onCorrectionAccepted={handleLocalCorrectionAccepted}
+                  onRetry={handleRetry}
+                />
               );
             })}
           </div>
@@ -1914,7 +1773,12 @@ const ChatContent: React.FC<ChatContentProps> = ({
         {isTyping && (
           <div className="modern-message received" style={{ marginTop: "8px" }}>
             <div className="message-avatar">
-              <img src={profilePicture || "/default-avatar.png"} alt={userName} />
+              <img
+                src={profilePicture || "/default-avatar.png"}
+                alt={userName}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
             <div className="message-wrapper">
               <div className="typing-indicator-bubble">
@@ -1936,7 +1800,13 @@ const ChatContent: React.FC<ChatContentProps> = ({
         <div className="media-preview-bar">
           <div className="media-preview-content">
             {mediaPreview.type === "image" ? (
-              <img src={mediaPreview.url} alt="preview" className="media-preview-thumb" />
+              <img
+                src={mediaPreview.url}
+                alt="preview"
+                className="media-preview-thumb"
+                loading="lazy"
+                decoding="async"
+              />
             ) : mediaPreview.type === "video" ? (
               <video src={mediaPreview.url} className="media-preview-thumb" />
             ) : (

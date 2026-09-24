@@ -87,6 +87,13 @@ export const chatApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["UserMessages"],
     }),
+    // One cache entry per conversation, however many pages deep it goes —
+    // RTK Query's "infinite" pattern. `serializeQueryArgs` drops `page` from
+    // the key so every page lands in the same entry, `forceRefetch` asks the
+    // network when only the page changed (otherwise the merged entry would
+    // count as a cache hit and nothing would load), and `merge` puts older
+    // pages in FRONT: the backend returns page 1 = newest, each page oldest
+    // first, so page N+1 is always older than everything already held.
     getConversation: builder.query({
       query: ({
         senderId,
@@ -101,6 +108,40 @@ export const chatApiSlice = apiSlice.injectEndpoints({
       }) => ({
         url: `${MESSAGES_URL}/conversation/${senderId}/${receiverId}?page=${page}&limit=${limit}`,
       }),
+      serializeQueryArgs: ({ queryArgs, endpointName }: any) => {
+        const args = queryArgs || {};
+        return `${endpointName}-${args.senderId}-${args.receiverId}`;
+      },
+      merge: (currentCache: any, newItems: any, otherArgs: any) => {
+        const page = (otherArgs && otherArgs.arg && otherArgs.arg.page) || 1;
+        const incoming: any[] = (newItems && newItems.data) || [];
+        if (!currentCache.data) currentCache.data = [];
+
+        // Where each id already sits, so a message that comes back again is
+        // UPDATED in place (a read receipt, a new reaction, an edit) instead
+        // of appended a second time.
+        const indexById: { [id: string]: number } = {};
+        currentCache.data.forEach((m: any, i: number) => {
+          if (m && m._id) indexById[m._id] = i;
+        });
+
+        const fresh: any[] = [];
+        incoming.forEach((m: any) => {
+          if (!m || !m._id) return;
+          const at = indexById[m._id];
+          if (at === undefined) fresh.push(m);
+          else currentCache.data[at] = m;
+        });
+
+        if (page > 1) currentCache.data.unshift.apply(currentCache.data, fresh);
+        else currentCache.data.push.apply(currentCache.data, fresh);
+
+        currentCache.count = currentCache.data.length;
+        if (newItems && newItems.total !== undefined) currentCache.total = newItems.total;
+        if (newItems && newItems.pagination) currentCache.pagination = newItems.pagination;
+      },
+      forceRefetch: ({ currentArg, previousArg }: any) =>
+        (currentArg && currentArg.page) !== (previousArg && previousArg.page),
       providesTags: ["Conversation"],
     }),
     createMessage: builder.mutation({

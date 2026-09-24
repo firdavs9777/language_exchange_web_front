@@ -1262,3 +1262,77 @@
   justify-content: center;
   background: rgba(0, 0, 0, 0.3);
 }
+
+/* --- Older history ------------------------------------------------------
+   The sentinel row at the top of the thread. Task H3 re-tokens the chat's
+   colours; nothing here names one, so it inherits whatever lands. */
+.load-earlier-row {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 4px;
+}
+
+.load-earlier-btn,
+.load-earlier-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.load-earlier-btn {
+  border: 1px solid currentColor;
+  background: transparent;
+  cursor: pointer;
+}
+
+.load-earlier-btn:hover,
+.load-earlier-btn:focus-visible {
+  opacity: 1;
+}
+
+/* --- Delivery ticks ----------------------------------------------------- */
+.message-status-icon {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.75;
+}
+
+.message-status-icon.read {
+  opacity: 1;
+}
+
+/* --- Link card ---------------------------------------------------------- */
+.message-link-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 6px;
+  padding: 8px 10px;
+  border: 1px solid currentColor;
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.message-link-card:hover {
+  text-decoration: none;
+}
+
+.message-link-host {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.message-link-url {
+  font-size: 12px;
+  line-height: 1.3;
+  opacity: 0.8;
+  word-break: break-all;
+}
