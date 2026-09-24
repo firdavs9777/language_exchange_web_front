@@ -2032,7 +2032,6 @@
     "poll": "Poll",
     "question": "Question",
     "hashtag": "Hashtag",
-    "search_people": "Search people",
     "link_url": "Link URL",
     "link_title": "Title",
     "link_label": "Sticker label",
@@ -2079,6 +2078,12 @@
       "none": "No background",
       "semi": "Translucent",
       "solid": "Solid"
-    }
+    },
+    "search_followings": "Search people you follow",
+    "mention_followings_only": "You can only tag people you follow. Follow someone first.",
+    "mention_no_match": "Nobody you follow matches that",
+    "more": "More",
+    "reply_failed": "Couldn't send your message",
+    "vote_failed": "Couldn't save your vote"
   }
 }

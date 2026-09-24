@@ -2032,7 +2032,6 @@
     "poll": "투표",
     "question": "질문",
     "hashtag": "해시태그",
-    "search_people": "사람 검색",
     "link_url": "링크 URL",
     "link_title": "제목",
     "link_label": "스티커 라벨",
@@ -2079,6 +2078,12 @@
       "none": "배경 없음",
       "semi": "반투명",
       "solid": "단색"
-    }
+    },
+    "search_followings": "팔로우하는 사람 검색",
+    "mention_followings_only": "팔로우하는 사람만 태그할 수 있어요. 먼저 팔로우해 주세요.",
+    "mention_no_match": "일치하는 팔로우 대상이 없어요",
+    "more": "더보기",
+    "reply_failed": "메시지를 보내지 못했어요",
+    "vote_failed": "투표를 저장하지 못했어요"
   }
 }

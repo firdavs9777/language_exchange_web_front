@@ -2032,7 +2032,6 @@
     "poll": "アンケート",
     "question": "質問",
     "hashtag": "ハッシュタグ",
-    "search_people": "ユーザーを検索",
     "link_url": "リンクURL",
     "link_title": "タイトル",
     "link_label": "スタンプのラベル",
@@ -2079,6 +2078,12 @@
       "none": "背景なし",
       "semi": "半透明",
       "solid": "単色"
-    }
+    },
+    "search_followings": "フォロー中の人を検索",
+    "mention_followings_only": "タグ付けできるのはフォロー中の人だけです。まず誰かをフォローしてください。",
+    "mention_no_match": "一致するフォロー中の人はいません",
+    "more": "その他",
+    "reply_failed": "メッセージを送信できませんでした",
+    "vote_failed": "投票を保存できませんでした"
   }
 }

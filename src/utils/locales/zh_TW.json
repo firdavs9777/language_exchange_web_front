@@ -2032,7 +2032,6 @@
     "poll": "投票",
     "question": "問題",
     "hashtag": "主題標籤",
-    "search_people": "搜尋使用者",
     "link_url": "連結網址",
     "link_title": "標題",
     "link_label": "貼圖標籤",
@@ -2079,6 +2078,12 @@
       "none": "無背景",
       "semi": "半透明",
       "solid": "純色"
-    }
+    },
+    "search_followings": "搜尋你追蹤的人",
+    "mention_followings_only": "只能標記你追蹤的人。請先追蹤某人。",
+    "mention_no_match": "你追蹤的人中沒有符合的",
+    "more": "更多",
+    "reply_failed": "訊息傳送失敗",
+    "vote_failed": "投票儲存失敗"
   }
 }

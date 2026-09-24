@@ -2032,7 +2032,6 @@
     "poll": "Encuesta",
     "question": "Pregunta",
     "hashtag": "Hashtag",
-    "search_people": "Buscar personas",
     "link_url": "URL del enlace",
     "link_title": "Título",
     "link_label": "Etiqueta de la pegatina",
@@ -2079,6 +2078,12 @@
       "none": "Sin fondo",
       "semi": "Translúcido",
       "solid": "Sólido"
-    }
+    },
+    "search_followings": "Buscar personas que sigues",
+    "mention_followings_only": "Solo puedes etiquetar a personas que sigues. Sigue a alguien primero.",
+    "mention_no_match": "Nadie a quien sigues coincide",
+    "more": "Más",
+    "reply_failed": "No se pudo enviar tu mensaje",
+    "vote_failed": "No se pudo guardar tu voto"
   }
 }

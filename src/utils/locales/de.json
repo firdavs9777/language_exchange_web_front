@@ -2032,7 +2032,6 @@
     "poll": "Umfrage",
     "question": "Frage",
     "hashtag": "Hashtag",
-    "search_people": "Personen suchen",
     "link_url": "Link-URL",
     "link_title": "Titel",
     "link_label": "Sticker-Beschriftung",
@@ -2079,6 +2078,12 @@
       "none": "Kein Hintergrund",
       "semi": "Transparent",
       "solid": "Deckend"
-    }
+    },
+    "search_followings": "Personen suchen, denen du folgst",
+    "mention_followings_only": "Du kannst nur Personen markieren, denen du folgst. Folge zuerst jemandem.",
+    "mention_no_match": "Niemand, dem du folgst, passt dazu",
+    "more": "Mehr",
+    "reply_failed": "Deine Nachricht konnte nicht gesendet werden",
+    "vote_failed": "Deine Stimme konnte nicht gespeichert werden"
   }
 }

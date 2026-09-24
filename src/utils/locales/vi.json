@@ -2032,7 +2032,6 @@
     "poll": "Bình chọn",
     "question": "Câu hỏi",
     "hashtag": "Hashtag",
-    "search_people": "Tìm người dùng",
     "link_url": "URL liên kết",
     "link_title": "Tiêu đề",
     "link_label": "Nhãn của nhãn dán",
@@ -2079,6 +2078,12 @@
       "none": "Không nền",
       "semi": "Bán trong suốt",
       "solid": "Nền màu"
-    }
+    },
+    "search_followings": "Tìm người bạn theo dõi",
+    "mention_followings_only": "Bạn chỉ có thể gắn thẻ người mình theo dõi. Hãy theo dõi ai đó trước.",
+    "mention_no_match": "Không có ai bạn theo dõi khớp với từ khóa",
+    "more": "Thêm",
+    "reply_failed": "Không thể gửi tin nhắn của bạn",
+    "vote_failed": "Không thể lưu lượt bình chọn của bạn"
   }
 }

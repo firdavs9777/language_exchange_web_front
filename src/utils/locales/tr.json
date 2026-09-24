@@ -2032,7 +2032,6 @@
     "poll": "Anket",
     "question": "Soru",
     "hashtag": "Hashtag",
-    "search_people": "Kişi ara",
     "link_url": "Bağlantı URL'si",
     "link_title": "Başlık",
     "link_label": "Çıkartma etiketi",
@@ -2079,6 +2078,12 @@
       "none": "Arka plan yok",
       "semi": "Yarı saydam",
       "solid": "Düz"
-    }
+    },
+    "search_followings": "Takip ettiğin kişileri ara",
+    "mention_followings_only": "Yalnızca takip ettiğin kişileri etiketleyebilirsin. Önce birini takip et.",
+    "mention_no_match": "Takip ettiğin kimse eşleşmiyor",
+    "more": "Daha fazla",
+    "reply_failed": "Mesajın gönderilemedi",
+    "vote_failed": "Oyun kaydedilemedi"
   }
 }

@@ -2032,7 +2032,6 @@
     "poll": "Sondaggio",
     "question": "Domanda",
     "hashtag": "Hashtag",
-    "search_people": "Cerca persone",
     "link_url": "URL del link",
     "link_title": "Titolo",
     "link_label": "Etichetta dello sticker",
@@ -2079,6 +2078,12 @@
       "none": "Nessuno sfondo",
       "semi": "Traslucido",
       "solid": "Pieno"
-    }
+    },
+    "search_followings": "Cerca tra le persone che segui",
+    "mention_followings_only": "Puoi taggare solo persone che segui. Prima segui qualcuno.",
+    "mention_no_match": "Nessuno tra chi segui corrisponde",
+    "more": "Altro",
+    "reply_failed": "Impossibile inviare il messaggio",
+    "vote_failed": "Impossibile salvare il tuo voto"
   }
 }

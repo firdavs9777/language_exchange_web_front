@@ -2032,7 +2032,6 @@
     "poll": "投票",
     "question": "问题",
     "hashtag": "话题标签",
-    "search_people": "搜索用户",
     "link_url": "链接地址",
     "link_title": "标题",
     "link_label": "贴纸标签",
@@ -2079,6 +2078,12 @@
       "none": "无背景",
       "semi": "半透明",
       "solid": "纯色"
-    }
+    },
+    "search_followings": "搜索你关注的人",
+    "mention_followings_only": "只能标记你关注的人。请先关注某人。",
+    "mention_no_match": "你关注的人中没有匹配项",
+    "more": "更多",
+    "reply_failed": "消息发送失败",
+    "vote_failed": "投票保存失败"
   }
 }

@@ -2032,7 +2032,6 @@
     "poll": "Enquete",
     "question": "Pergunta",
     "hashtag": "Hashtag",
-    "search_people": "Buscar pessoas",
     "link_url": "URL do link",
     "link_title": "Título",
     "link_label": "Rótulo da figurinha",
@@ -2079,6 +2078,12 @@
       "none": "Sem fundo",
       "semi": "Translúcido",
       "solid": "Sólido"
-    }
+    },
+    "search_followings": "Buscar pessoas que você segue",
+    "mention_followings_only": "Você só pode marcar pessoas que segue. Siga alguém primeiro.",
+    "mention_no_match": "Ninguém que você segue corresponde",
+    "more": "Mais",
+    "reply_failed": "Não foi possível enviar sua mensagem",
+    "vote_failed": "Não foi possível salvar seu voto"
   }
 }

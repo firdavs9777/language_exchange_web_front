@@ -2032,7 +2032,6 @@
     "poll": "Polling",
     "question": "Pertanyaan",
     "hashtag": "Hashtag",
-    "search_people": "Cari orang",
     "link_url": "URL tautan",
     "link_title": "Judul",
     "link_label": "Label stiker",
@@ -2079,6 +2078,12 @@
       "none": "Tanpa latar belakang",
       "semi": "Transparan",
       "solid": "Solid"
-    }
+    },
+    "search_followings": "Cari orang yang Anda ikuti",
+    "mention_followings_only": "Anda hanya bisa menandai orang yang Anda ikuti. Ikuti seseorang dulu.",
+    "mention_no_match": "Tidak ada yang Anda ikuti yang cocok",
+    "more": "Lainnya",
+    "reply_failed": "Pesan Anda tidak dapat dikirim",
+    "vote_failed": "Suara Anda tidak dapat disimpan"
   }
 }

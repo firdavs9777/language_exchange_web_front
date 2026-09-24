@@ -2032,7 +2032,6 @@
     "poll": "Sondage",
     "question": "Question",
     "hashtag": "Hashtag",
-    "search_people": "Rechercher des personnes",
     "link_url": "URL du lien",
     "link_title": "Titre",
     "link_label": "Libellé du sticker",
@@ -2079,6 +2078,12 @@
       "none": "Sans arrière-plan",
       "semi": "Translucide",
       "solid": "Uni"
-    }
+    },
+    "search_followings": "Rechercher parmi vos abonnements",
+    "mention_followings_only": "Vous ne pouvez identifier que des personnes que vous suivez. Abonnez-vous d’abord à quelqu’un.",
+    "mention_no_match": "Aucun de vos abonnements ne correspond",
+    "more": "Plus",
+    "reply_failed": "Impossible d’envoyer votre message",
+    "vote_failed": "Impossible d’enregistrer votre vote"
   }
 }

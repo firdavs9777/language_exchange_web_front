@@ -2032,7 +2032,6 @@
     "poll": "Poll",
     "question": "Tanong",
     "hashtag": "Hashtag",
-    "search_people": "Maghanap ng tao",
     "link_url": "URL ng link",
     "link_title": "Title",
     "link_label": "Label ng sticker",
@@ -2079,6 +2078,12 @@
       "none": "Walang background",
       "semi": "Translucent",
       "solid": "Solid"
-    }
+    },
+    "search_followings": "Hanapin ang mga sinusundan mo",
+    "mention_followings_only": "Puwede mo lang i-tag ang mga sinusundan mo. Mag-follow muna ng isang tao.",
+    "mention_no_match": "Walang sinusundan mong tumugma",
+    "more": "Iba pa",
+    "reply_failed": "Hindi maipadala ang mensahe mo",
+    "vote_failed": "Hindi ma-save ang boto mo"
   }
 }
