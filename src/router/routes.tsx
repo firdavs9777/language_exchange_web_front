@@ -90,6 +90,7 @@ const MainStories = lazyWithRetry("../components/stories/MainStories", () => imp
 const Highlights = lazyWithRetry("../components/stories/Highlights", () => import("../components/stories/Highlights"));
 const CreateStory = lazyWithRetry("../components/stories/CreateStory", () => import("../components/stories/CreateStory"));
 const StoryViewer = lazyWithRetry("../components/stories/StoryViewer", () => import("../components/stories/StoryViewer"));
+const MyStories = lazyWithRetry("../components/stories/MyStories", () => import("../components/stories/MyStories"));
 
 // Settings
 const Settings = lazyWithRetry("../components/settings/Settings", () => import("../components/settings/Settings"));
@@ -224,6 +225,10 @@ export const routes = createRoutesFromElements(
     <Route path="support/" element={<SupportPage />} />
     <Route path="stories/" element={lazyRoute(<MainStories />)} />
     <Route path="create-story" element={lazyRoute(<CreateStory />)} />
+    {/* Declared next to the viewer, and the static segment wins: react-router
+        v6 ranks "stories/mine" above "stories/:userId" regardless of order, so
+        the author's own archive can never be read as a user id. */}
+    <Route path="stories/mine" element={lazyRoute(<MyStories />)} />
     <Route path="stories/:userId" element={lazyRoute(<StoryViewer />)} />
     <Route path="highlights" element={lazyRoute(<Highlights />)} />
     <Route path="privacy-policy/" element={<PrivacyPolicy />} />

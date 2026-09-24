@@ -135,6 +135,11 @@ export const apiSlice = createApi({
     "Chat",
     "User",
     "Stories",
+    // Story highlights, separate from "Stories" on purpose: adding a story to
+    // a highlight, renaming one or changing its cover refetches the highlight
+    // rails only -- not the feed, my-stories and the archive, which the same
+    // edit leaves untouched.
+    "Highlights",
     "Comments",
     "Messages",
     "Conversations",

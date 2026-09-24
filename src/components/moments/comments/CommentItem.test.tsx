@@ -82,6 +82,24 @@ describe("CommentItem", () => {
     expect(screen.getByTestId("comment-like")).toHaveTextContent("2");
   });
 
+  it("renders the relative time in the short form this row was built for", () => {
+    // The arithmetic now lives in src/utils/timeAgo.ts, shared with the
+    // profile lists and the story sheets. What must not change is the text:
+    // this row is tight, so it reads "30m" / "5h", not "30m ago", and a
+    // week-old comment hands over to the locale date.
+    const { unmount } = renderItem({
+      comment: baseComment({
+        createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+      }),
+    });
+    expect(screen.getByText("30m")).toBeInTheDocument();
+    unmount();
+
+    const old = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+    renderItem({ comment: baseComment({ createdAt: old }) });
+    expect(screen.getByText(new Date(old).toLocaleDateString())).toBeInTheDocument();
+  });
+
   it("likes the comment and reflects the server's count", async () => {
     renderItem();
     fireEvent.click(screen.getByTestId("comment-like"));
