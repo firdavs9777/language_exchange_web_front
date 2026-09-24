@@ -15,6 +15,7 @@ import {
   useGetVipStatusQuery,
 } from "../../store/slices/usersSlice";
 import { useGetCommunityDetailsQuery } from "../../store/slices/communitySlice";
+import timeAgo from "../../utils/timeAgo";
 
 type Tab = "followers" | "following" | "visitors";
 
@@ -163,20 +164,6 @@ const VisitorStatsRow: React.FC<VisitorStatsRowProps> = ({ payload }) => {
   );
 };
 
-/** Relative time on the existing moments keys — this page adds none of its own. */
-function timeAgo(t: any, iso?: string): string {
-  if (!iso) return "";
-  const then = new Date(iso).getTime();
-  if (!isFinite(then)) return "";
-  const minutes = Math.floor((new Date().getTime() - then) / 60000);
-  if (minutes < 1) return t("moments_section.timeAgo.justNow") || "just now";
-  if (minutes < 60) return t("moments_section.timeAgo.minutesAgo", { minutes }) || `${minutes}m`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return t("moments_section.timeAgo.hoursAgo", { hours }) || `${hours}h`;
-  const days = Math.floor(hours / 24);
-  return t("moments_section.timeAgo.daysAgo", { days }) || `${days}d`;
-}
-
 interface PersonRowProps {
   row: PersonRowData;
   /** The signed-in user. No viewer, or the viewer's own row: no button. */
@@ -188,7 +175,10 @@ const PersonRow: React.FC<PersonRowProps> = ({ row, viewerId, isFollowing }) => 
   const { t } = useTranslation();
   const { following, busy, toggle } = useFollowToggle(row.id, isFollowing);
   const showFollow = Boolean(viewerId) && row.id !== viewerId;
-  const visited = timeAgo(t, row.visitedAt);
+  // Shared helper, same four moments keys. `beyondWeek: "days"` keeps this
+  // page's behaviour: a visit from last spring reads "342d", not a date --
+  // here the distance is the point, not the day it happened on.
+  const visited = timeAgo(row.visitedAt, t, { beyondWeek: "days" });
 
   return (
     <li data-testid={`list-row-${row.id}`} className="flex items-center gap-3 py-2.5">

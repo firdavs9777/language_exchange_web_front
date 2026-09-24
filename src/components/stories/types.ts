@@ -36,9 +36,30 @@ export interface StoryReply {
   repliedAt: string;
 }
 
+/**
+ * A text or emoji sticker, stored as structure rather than baked into the
+ * picture. `x`/`y` are 0-1 fractions of the canvas and mark the sticker's
+ * CENTRE; `scale` is 0.5-3.0. See `storyOverlays.ts` for the full contract and
+ * `parseOverlays()` in the backend for what it will and will not accept.
+ */
+export interface StoryOverlay {
+  type: 'text' | 'emoji';
+  content: string;
+  x: number;
+  y: number;
+  scale: number;
+  color: string;
+  fontStyle: 'sans-serif' | 'serif' | 'bold' | 'handwritten';
+  bgMode: 'none' | 'semi' | 'solid';
+}
+
 export interface Mention {
-  user: User;
+  /** Populated on the story routes, but a bare ObjectId string on anything
+   * that skips the populate. */
+  user: User | string;
   username: string;
+  /** 0-100, NOT the overlays' 0-1: `parseMentions()` really does use a
+   * different scale from `parseOverlays()`. */
   position: { x: number; y: number };
 }
 
@@ -56,6 +77,10 @@ export interface StoryLink {
   url: string;
   title: string;
   displayText: string;
+  /** Added by the server so the viewer can show where a tap really goes; a
+   * sticker reading "Shop Now" that opens an unrelated domain is the trick
+   * `lib/storyLink.js` exists to defuse. */
+  host?: string;
 }
 
 export interface PollOption {
@@ -143,6 +168,9 @@ export interface Story {
   
   // Mentions
   mentions?: Mention[];
+
+  // Text / emoji stickers, positioned but never baked in
+  overlays?: StoryOverlay[];
   
   // Location
   location?: StoryLocation;

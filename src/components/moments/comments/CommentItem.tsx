@@ -17,6 +17,7 @@ import {
   useUnreactToCommentMutation,
 } from "../../../store/slices/momentsSlice";
 import { useTargetLanguage } from "../../../hooks/useTargetLanguage";
+import timeAgo from "../../../utils/timeAgo";
 
 /**
  * One comment: body (translatable on tap), optional image, optional
@@ -40,19 +41,10 @@ const idOf = (u: any): string => (typeof u === "string" ? u : (u && u._id) || ""
 const RelativeTime: React.FC<{ date: string }> = ({ date }) => {
   const { t } = useTranslation();
 
-  const label = useMemo(() => {
-    const diff = Date.now() - new Date(date).getTime();
-    const minutes = Math.floor(diff / (1000 * 60));
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (minutes < 1) return t("moments_section.timeAgo.justNow") || "just now";
-    if (minutes < 60)
-      return t("moments_section.timeAgo.minutesAgo", { minutes }) || `${minutes}m`;
-    if (hours < 24) return t("moments_section.timeAgo.hoursAgo", { hours }) || `${hours}h`;
-    if (days < 7) return t("moments_section.timeAgo.daysAgo", { days }) || `${days}d`;
-    return new Date(date).toLocaleDateString();
-  }, [date, t]);
+  // src/utils/timeAgo.ts, on the same four `moments_section.timeAgo.*` keys
+  // this used to spell out inline. Short English fallbacks ("5m"), and a
+  // locale date past a week -- both unchanged.
+  const label = useMemo(() => timeAgo(date, t), [date, t]);
 
   return <span className="shrink-0 text-xs text-gray-500">{label}</span>;
 };

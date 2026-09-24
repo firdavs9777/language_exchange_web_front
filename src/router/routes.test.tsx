@@ -141,3 +141,18 @@ it("keeps /community/nearby off the member page", () => {
   const matches = matchRoutes(routes, "/community/nearby");
   expect(matches![matches!.length - 1].route.path).toBe("community/nearby");
 });
+
+// The author's own stories page had no route at all: the component shipped in
+// Task S2 and nothing could reach it. "mine" is a static segment sitting
+// beside "stories/:userId", so this also pins the ranking -- if the dynamic
+// route ever won, /stories/mine would open the viewer for a user called
+// "mine".
+it("resolves the author's own stories page ahead of the story viewer", () => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, "/stories/mine");
+  expect(matches && matches.length).toBe(2);
+  expect(matches![1].route.path).toBe("stories/mine");
+
+  const viewer = matchRoutes(routes, "/stories/some-user-id");
+  expect(viewer![1].route.path).toBe("stories/:userId");
+});

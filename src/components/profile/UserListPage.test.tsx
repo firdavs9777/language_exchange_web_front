@@ -475,6 +475,40 @@ describe("visitors", () => {
     );
   });
 
+  it("keeps counting days on an old visit instead of printing a date", () => {
+    // This page's relative time now comes from src/utils/timeAgo.ts, shared
+    // with the comments and the story sheets. Its `beyondWeek: "days"` option
+    // is what preserves this screen's own behaviour: here the distance is the
+    // point, so a visit from last spring reads "400d", not a calendar date.
+    mockGetVipStatus.mockReturnValue({ ...idle, data: { data: { isActive: true } } });
+    mockGetVisitors.mockReturnValue({
+      ...idle,
+      refetch: visitorsRefetch,
+      data: {
+        count: 2,
+        data: [
+          {
+            user: person("u5", "Lin"),
+            lastVisit: new Date(Date.now() - 400 * 24 * 3600 * 1000).toISOString(),
+            visitCount: 1,
+            source: "search",
+          },
+          {
+            user: person("u6", "Mo"),
+            lastVisit: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+            visitCount: 1,
+            source: "search",
+          },
+        ],
+      },
+    });
+
+    renderList("/visitors", "me");
+
+    expect(screen.getByTestId("list-row-u5")).toHaveTextContent("400d");
+    expect(screen.getByTestId("list-row-u6")).toHaveTextContent("30m");
+  });
+
   it("shows the counters the endpoint sent, and only those", () => {
     mockGetVipStatus.mockReturnValue({ ...idle, data: { data: { isActive: true } } });
     mockGetVisitors.mockReturnValue({

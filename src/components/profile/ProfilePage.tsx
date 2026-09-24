@@ -22,6 +22,7 @@ import EngagementStats from "./parts/EngagementStats";
 import MutualInterests from "./parts/MutualInterests";
 import ConversationStarters from "./parts/ConversationStarters";
 import SuggestedMembers from "./parts/SuggestedMembers";
+import HighlightsRail from "../stories/HighlightsRail";
 
 /**
  * How many moment tiles the profile shows before "See all" takes over. Three
@@ -383,6 +384,14 @@ const ProfilePage: React.FC = () => {
                   name={name}
                 />
               )}
+              {/* Story highlights sit above the moments, as on the app's
+                  member page. Mount-then-decide: the rail asks for the
+                  person's highlights itself and renders nothing when there
+                  are none, so an empty profile gains no empty card. Own
+                  profiles manage theirs on /highlights instead. It rides the
+                  lazy profile chunk -- the eager /moments path never loads
+                  it. */}
+              {!isOwn && <HighlightsRail userId={profileId} name={name} />}
               <ProfileMoments userId={profileId} isOwn={isOwn} limit={MOMENTS_ON_PROFILE} />
             </div>
           </div>

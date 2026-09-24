@@ -166,6 +166,16 @@ module.exports = {
           "86%": { opacity: "1", maxHeight: "2.5rem" },
           "100%": { opacity: "0", maxHeight: "2.5rem" },
         },
+        // The story viewer's segment bar. A CSS animation rather than a
+        // setInterval writing an inline width every 100ms: the bar is the
+        // clock, so `animation-play-state: paused` is the whole of
+        // hold-to-pause, and `animationend` is the whole of auto-advance --
+        // one source of truth instead of a timer and a style that can drift
+        // apart. 5s is the duration the interval counted out.
+        "bt-story-progress": {
+          from: { width: "0%" },
+          to: { width: "100%" },
+        },
         "bt-drift": {
           "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
           "50%": { transform: "translateY(-18px) rotate(4deg)" },
@@ -187,6 +197,7 @@ module.exports = {
         "bt-type-dots": "bt-type-dots 14s ease-in-out infinite both",
         "bt-msg-in": "bt-msg-in 14s ease-out infinite both",
         "bt-line-in": "bt-line-in 14s ease-out infinite both",
+        "bt-story-progress": "bt-story-progress 5s linear forwards",
         "bt-drift": "bt-drift 24s ease-in-out infinite",
         "bt-gradient": "bt-gradient 12s ease-in-out infinite",
       },
