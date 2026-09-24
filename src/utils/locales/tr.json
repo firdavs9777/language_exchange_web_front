@@ -377,6 +377,11 @@
       "error_title": "Anlarını yükleyemedik",
       "error_body": "Bağlantını kontrol et ve tekrar dene.",
       "retry": "Tekrar Dene"
+    },
+    "tabs": {
+      "label": "Profil bölümleri",
+      "moments": "Anlar",
+      "about": "Hakkında"
     }
   },
   "moments_section": {
@@ -714,7 +719,10 @@
     "tabs": {
       "all": "Tümü",
       "popular": "Popüler",
-      "new": "Yeni"
+      "new": "Yeni",
+      "forYou": "Senin İçin",
+      "online": "Çevrimiçi",
+      "label": "Topluluk sekmeleri"
     },
     "filters": {
       "language": "Dil",
@@ -771,7 +779,11 @@
       "onlineNow": "Şimdi çevrimiçi",
       "newMembersOnly": "Sadece yeni üyeler (son 7 gün)",
       "reset": "Sıfırla",
-      "apply": "Uygula"
+      "apply": "Uygula",
+      "copyLink": "Bağlantıyı kopyala",
+      "linkCopied": "Bağlantı kopyalandı",
+      "linkCopyFailed": "Bağlantı kopyalanamadı",
+      "applyFirst": "Önce filtreleri uygula"
     },
     "highlighted": {
       "title": "Öne çıkan profiller",
@@ -792,6 +804,22 @@
       "fluent": "AKICI",
       "learns": "ÖĞRENİYOR",
       "native": "ANA DİL"
+    },
+    "chips": {
+      "recentlyActive": "Son zamanlarda aktif",
+      "onlineNow": "Şu an çevrimiçi",
+      "speaks": "{{language}} konuşuyor",
+      "learning": "{{language}} öğreniyor"
+    },
+    "forYou": {
+      "subtitle": "Dillerine, seviyene ve ilgi alanlarına göre senin için seçilen ortaklar.",
+      "refresh": "Yenile",
+      "why": "Neden: {{reasons}}",
+      "empty": {
+        "title": "Henüz öneri yok",
+        "message": "Konuştuğun ve öğrenmek istediğin dilleri, seviyeni ve birkaç ilgi alanını ekle; sana uygun ortaklar bulalım.",
+        "action": "Profilini tamamla"
+      }
     }
   },
   "communityDetail": {
@@ -852,6 +880,40 @@
       "speaks": "Konuşuyor",
       "learning": "Öğreniyor",
       "notSpecified": "Belirtilmedi"
+    },
+    "match": {
+      "title": "Dil eşleşmesi",
+      "native": "Anadil",
+      "learning": "Öğreniyor",
+      "perfect": "Mükemmel eşleşme — birbirinize öğretebilirsiniz.",
+      "youLearnTheirs": "Tam olarak bu kişinin konuştuğu dili öğreniyorsun!",
+      "theyLearnYours": "Bu kişi tam olarak senin konuştuğun dili öğreniyor!",
+      "sameNative": "İkiniz de aynı anadili konuşuyorsunuz."
+    },
+    "mutual": {
+      "title": "Ortak ilgi alanları",
+      "countLabel": "{{count}} ortak"
+    },
+    "starters": {
+      "title": "Sohbet başlangıçları",
+      "send": "Gönder",
+      "perfect": "Selam {{name}}! Mükemmel bir dil eşleşmesiyiz — birlikte pratik yapmak ister misin?",
+      "language": "Selam {{name}}! {{language}} öğreniyorum — daha iyi olmak için önerin var mı?",
+      "teach": "Selam {{name}}! {{language}} öğrendiğini gördüm. Sorun olursa yardımcı olmaktan mutluluk duyarım.",
+      "sameNative": "Selam {{name}}! Aynı anadili konuşuyoruz — öğrenme sürecin nasıl gidiyor?",
+      "topic": "Selam {{name}}! Senin de {{topic}} ile ilgilendiğini gördüm. Nasıl başladın?",
+      "targetLearning": "Selam {{name}}! Ne zamandır {{language}} öğreniyorsun?",
+      "generic": "Selam {{name}}! Seninle dil pratiği yapmak isterim. Haftan nasıl geçiyor?",
+      "practice": "Selam {{name}}! Şu ana kadar öğrenirken sana en çok ne yardımcı oldu?",
+      "hello": "Selam {{name}}! Profilin dikkatimi çekti — günün nasıl geçiyor?"
+    },
+    "engagement": {
+      "replies": "%{{rate}} yanıt oranı",
+      "new": "Yeni üye"
+    },
+    "suggested": {
+      "title": "{{name}} gibi diğer üyeler",
+      "seeAll": "Tüm üyeleri gör"
     }
   },
   "communityDetailSection": {

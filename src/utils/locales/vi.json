@@ -377,6 +377,11 @@
       "error_title": "Không tải được khoảnh khắc của bạn",
       "error_body": "Hãy kiểm tra kết nối và thử lại.",
       "retry": "Thử lại"
+    },
+    "tabs": {
+      "label": "Các mục hồ sơ",
+      "moments": "Khoảnh Khắc",
+      "about": "Giới Thiệu"
     }
   },
   "moments_section": {
@@ -714,7 +719,10 @@
     "tabs": {
       "all": "Tất Cả",
       "popular": "Phổ Biến",
-      "new": "Mới"
+      "new": "Mới",
+      "forYou": "Dành Cho Bạn",
+      "online": "Trực Tuyến",
+      "label": "Các tab cộng đồng"
     },
     "filters": {
       "language": "Ngôn Ngữ",
@@ -771,7 +779,11 @@
       "onlineNow": "Đang trực tuyến",
       "newMembersOnly": "Chỉ thành viên mới (7 ngày qua)",
       "reset": "Đặt lại",
-      "apply": "Áp dụng"
+      "apply": "Áp dụng",
+      "copyLink": "Sao chép liên kết",
+      "linkCopied": "Đã sao chép liên kết",
+      "linkCopyFailed": "Không thể sao chép liên kết",
+      "applyFirst": "Vui lòng áp dụng bộ lọc trước"
     },
     "highlighted": {
       "title": "Hồ sơ nổi bật",
@@ -792,6 +804,22 @@
       "fluent": "THÀNH THẠO",
       "learns": "ĐANG HỌC",
       "native": "BẢN NGỮ"
+    },
+    "chips": {
+      "recentlyActive": "Hoạt động gần đây",
+      "onlineNow": "Đang trực tuyến",
+      "speaks": "Nói {{language}}",
+      "learning": "Đang học {{language}}"
+    },
+    "forYou": {
+      "subtitle": "Đối tác được chọn riêng cho bạn dựa trên ngôn ngữ, trình độ và sở thích.",
+      "refresh": "Làm mới",
+      "why": "Lý do: {{reasons}}",
+      "empty": {
+        "title": "Chưa có gợi ý nào",
+        "message": "Thêm ngôn ngữ bạn nói và muốn học, trình độ và một vài sở thích, chúng tôi sẽ tìm đối tác phù hợp cho bạn.",
+        "action": "Hoàn thiện hồ sơ"
+      }
     }
   },
   "communityDetail": {
@@ -852,6 +880,40 @@
       "speaks": "Nói",
       "learning": "Đang Học",
       "notSpecified": "Chưa xác định"
+    },
+    "match": {
+      "title": "Phù Hợp Ngôn Ngữ",
+      "native": "Tiếng Mẹ Đẻ",
+      "learning": "Đang Học",
+      "perfect": "Phù hợp hoàn hảo! Hai bạn có thể dạy nhau.",
+      "youLearnTheirs": "Bạn đang học đúng ngôn ngữ họ nói!",
+      "theyLearnYours": "Họ đang học đúng ngôn ngữ bạn nói!",
+      "sameNative": "Cả hai bạn đều có cùng tiếng mẹ đẻ."
+    },
+    "mutual": {
+      "title": "Sở Thích Chung",
+      "countLabel": "{{count}} điểm chung"
+    },
+    "starters": {
+      "title": "Gợi Ý Mở Lời",
+      "send": "Gửi",
+      "perfect": "Chào {{name}}! Chúng ta hợp nhau về ngôn ngữ quá, cùng luyện tập nhé?",
+      "language": "Chào {{name}}! Mình đang học {{language}}, bạn có mẹo gì để học tốt hơn không?",
+      "teach": "Chào {{name}}! Mình thấy bạn đang học {{language}}. Có gì thắc mắc thì cứ hỏi mình nhé.",
+      "sameNative": "Chào {{name}}! Chúng ta có cùng tiếng mẹ đẻ đó, việc học của bạn thế nào rồi?",
+      "topic": "Chào {{name}}! Mình thấy bạn cũng thích {{topic}}. Bạn bắt đầu từ khi nào vậy?",
+      "targetLearning": "Chào {{name}}! Bạn học {{language}} được bao lâu rồi?",
+      "generic": "Chào {{name}}! Mình rất muốn cùng luyện ngôn ngữ với bạn. Tuần này của bạn thế nào?",
+      "practice": "Chào {{name}}! Điều gì giúp ích cho việc học của bạn nhiều nhất từ trước đến giờ?",
+      "hello": "Chào {{name}}! Hồ sơ của bạn thu hút mình đó, hôm nay của bạn thế nào?"
+    },
+    "engagement": {
+      "replies": "{{rate}}% phản hồi",
+      "new": "Thành viên mới"
+    },
+    "suggested": {
+      "title": "Thêm thành viên giống {{name}}",
+      "seeAll": "Xem tất cả thành viên"
     }
   },
   "communityDetailSection": {

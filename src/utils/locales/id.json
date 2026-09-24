@@ -377,6 +377,11 @@
       "error_title": "Gagal memuat momen Anda",
       "error_body": "Periksa koneksi Anda lalu coba lagi.",
       "retry": "Coba lagi"
+    },
+    "tabs": {
+      "label": "Bagian profil",
+      "moments": "Momen",
+      "about": "Tentang"
     }
   },
   "moments_section": {
@@ -714,7 +719,10 @@
     "tabs": {
       "all": "Semua",
       "popular": "Populer",
-      "new": "Baru"
+      "new": "Baru",
+      "forYou": "Untuk Anda",
+      "online": "Online",
+      "label": "Tab komunitas"
     },
     "filters": {
       "language": "Bahasa",
@@ -771,7 +779,11 @@
       "onlineNow": "Online sekarang",
       "newMembersOnly": "Hanya anggota baru (7 hari terakhir)",
       "reset": "Reset",
-      "apply": "Terapkan"
+      "apply": "Terapkan",
+      "copyLink": "Salin tautan",
+      "linkCopied": "Tautan disalin",
+      "linkCopyFailed": "Gagal menyalin tautan",
+      "applyFirst": "Terapkan filter terlebih dahulu"
     },
     "highlighted": {
       "title": "Profil unggulan",
@@ -792,6 +804,22 @@
       "fluent": "FASIH",
       "learns": "BELAJAR",
       "native": "ASLI"
+    },
+    "chips": {
+      "recentlyActive": "Baru-baru ini aktif",
+      "onlineNow": "Online sekarang",
+      "speaks": "Berbicara {{language}}",
+      "learning": "Belajar {{language}}"
+    },
+    "forYou": {
+      "subtitle": "Mitra yang dipilih untuk Anda berdasarkan bahasa, level, dan minat Anda.",
+      "refresh": "Refresh",
+      "why": "Alasan: {{reasons}}",
+      "empty": {
+        "title": "Belum ada rekomendasi",
+        "message": "Tambahkan bahasa yang Anda kuasai dan ingin pelajari, level Anda, dan beberapa minat, dan kami akan mencarikan mitra yang cocok.",
+        "action": "Lengkapi profil Anda"
+      }
     }
   },
   "communityDetail": {
@@ -852,6 +880,40 @@
       "speaks": "Berbicara",
       "learning": "Sedang Belajar",
       "notSpecified": "Tidak ditentukan"
+    },
+    "match": {
+      "title": "Kecocokan bahasa",
+      "native": "Bahasa Ibu",
+      "learning": "Sedang Belajar",
+      "perfect": "Kecocokan sempurna — kalian bisa saling mengajar.",
+      "youLearnTheirs": "Anda sedang belajar bahasa yang mereka gunakan!",
+      "theyLearnYours": "Mereka sedang belajar bahasa yang Anda gunakan!",
+      "sameNative": "Kalian berdua memiliki bahasa ibu yang sama."
+    },
+    "mutual": {
+      "title": "Minat yang sama",
+      "countLabel": "{{count}} kesamaan"
+    },
+    "starters": {
+      "title": "Ide pembuka obrolan",
+      "send": "Kirim",
+      "perfect": "Hai {{name}}! Kita kecocokan bahasa yang sempurna — mau saling berlatih?",
+      "language": "Hai {{name}}! Aku lagi belajar {{language}} — ada tips biar cepat jago?",
+      "teach": "Hai {{name}}! Aku lihat kamu lagi belajar {{language}}. Aku senang bantu kalau ada pertanyaan.",
+      "sameNative": "Hai {{name}}! Bahasa ibu kita sama — gimana progres belajarmu?",
+      "topic": "Hai {{name}}! Aku lihat kamu juga suka {{topic}}. Awalnya gimana ceritanya?",
+      "targetLearning": "Hai {{name}}! Sudah berapa lama kamu belajar {{language}}?",
+      "generic": "Hai {{name}}! Aku pengen latihan bahasa bareng. Gimana minggumu?",
+      "practice": "Hai {{name}}! Apa yang paling membantu kamu selama belajar?",
+      "hello": "Hai {{name}}! Profilmu menarik perhatianku — harimu gimana?"
+    },
+    "engagement": {
+      "replies": "{{rate}}% balasan",
+      "new": "Anggota baru"
+    },
+    "suggested": {
+      "title": "Anggota lain seperti {{name}}",
+      "seeAll": "Lihat semua anggota"
     }
   },
   "communityDetailSection": {

@@ -377,6 +377,11 @@
       "error_title": "動態載入失敗",
       "error_body": "請檢查網路後再試一次。",
       "retry": "再試一次"
+    },
+    "tabs": {
+      "label": "個人檔案分區",
+      "moments": "動態",
+      "about": "關於"
     }
   },
   "moments_section": {
@@ -714,7 +719,10 @@
     "tabs": {
       "all": "全部",
       "popular": "熱門",
-      "new": "最新"
+      "new": "最新",
+      "forYou": "推薦",
+      "online": "線上",
+      "label": "社群標籤"
     },
     "filters": {
       "language": "語言",
@@ -771,7 +779,11 @@
       "onlineNow": "目前線上",
       "newMembersOnly": "只看新成員（最近 7 天）",
       "reset": "重設",
-      "apply": "套用"
+      "apply": "套用",
+      "copyLink": "複製連結",
+      "linkCopied": "已複製連結",
+      "linkCopyFailed": "無法複製連結",
+      "applyFirst": "請先套用篩選"
     },
     "highlighted": {
       "title": "精選個人檔案",
@@ -792,6 +804,22 @@
       "fluent": "流利",
       "learns": "學習中",
       "native": "母語"
+    },
+    "chips": {
+      "recentlyActive": "最近活躍",
+      "onlineNow": "目前線上",
+      "speaks": "會說{{language}}",
+      "learning": "正在學{{language}}"
+    },
+    "forYou": {
+      "subtitle": "根據你的語言、程度和興趣，為你精選的語伴。",
+      "refresh": "重新整理",
+      "why": "原因：{{reasons}}",
+      "empty": {
+        "title": "目前沒有推薦",
+        "message": "新增你會說和想學的語言、你的程度和一些興趣，我們就能幫你找到合適的語伴。",
+        "action": "完善個人檔案"
+      }
     }
   },
   "communityDetail": {
@@ -852,6 +880,40 @@
       "speaks": "會說",
       "learning": "學習中",
       "notSpecified": "尚未填寫"
+    },
+    "match": {
+      "title": "語言配對",
+      "native": "母語",
+      "learning": "學習中",
+      "perfect": "完美配對，你們可以互相教對方！",
+      "youLearnTheirs": "對方說的正是你在學的語言！",
+      "theyLearnYours": "對方正在學你的母語！",
+      "sameNative": "你們的母語相同。"
+    },
+    "mutual": {
+      "title": "共同興趣",
+      "countLabel": "{{count}} 個共同點"
+    },
+    "starters": {
+      "title": "開場白",
+      "send": "傳送",
+      "perfect": "嗨，{{name}}！我們是完美語言配對，要不要一起練習？",
+      "language": "嗨，{{name}}！我在學{{language}}，有什麼進步的小技巧嗎？",
+      "teach": "嗨，{{name}}！看到你在學{{language}}，有問題隨時可以問我。",
+      "sameNative": "嗨，{{name}}！我們母語一樣耶，你學得怎麼樣了？",
+      "topic": "嗨，{{name}}！看到你也喜歡{{topic}}，是怎麼開始的呢？",
+      "targetLearning": "嗨，{{name}}！你學{{language}}多久了？",
+      "generic": "嗨，{{name}}！很想一起練習語言，你這週過得怎麼樣？",
+      "practice": "嗨，{{name}}！到目前為止，什麼對你的學習幫助最大？",
+      "hello": "嗨，{{name}}！你的個人檔案一下子就吸引了我，今天過得如何？"
+    },
+    "engagement": {
+      "replies": "回覆率 {{rate}}%",
+      "new": "新成員"
+    },
+    "suggested": {
+      "title": "更多像{{name}}的成員",
+      "seeAll": "查看所有成員"
     }
   },
   "communityDetailSection": {
