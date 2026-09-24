@@ -1482,7 +1482,18 @@
     "label": "Çerez izni",
     "message": "Ziyaretçileri buraya neyin getirdiğini anlamak için analiz çerezleri kullanıyoruz.",
     "accept": "Tamam",
-    "decline": "Hayır, teşekkürler"
+    "decline": "Hayır, teşekkürler",
+    "manage": {
+      "title": "Gizlilik tercihleri",
+      "body": "Analiz çerezleri yalnızca hangi sayfaların işe yaradığını gösterir, başka bir şey değil.",
+      "current_granted": "Analiz çerezleri açık.",
+      "current_denied": "Analiz çerezleri kapalı.",
+      "accept": "Aç",
+      "decline": "Kapat",
+      "privacyChoices": "Gizlilik tercihleri",
+      "analyticsCookies": "Analiz çerezleri",
+      "done": "Bitti"
+    }
   },
   "admin": {
     "nav": {

@@ -56,3 +56,11 @@ it("every locale carries the new footer link labels", () => {
       .toEqual({ file, communities: "string", download: "string" });
   }
 });
+
+// REACT_APP_GA_MEASUREMENT_ID is empty here (and in every environment that has
+// not been given one), so there is no analytics to withdraw and the footer
+// stays exactly as it was. FooterMain.consent.test.tsx covers the other case.
+it("offers no privacy choices control while there is no measurement id", () => {
+  const { container } = render(<MemoryRouter><FooterMain /></MemoryRouter>);
+  expect(container.querySelector("[data-testid='footer-privacy-choices']")).toBeNull();
+});

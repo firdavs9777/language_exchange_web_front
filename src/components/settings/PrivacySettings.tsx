@@ -5,7 +5,10 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../store";
 import { useUpdateUserInfoMutation } from "../../store/slices/usersSlice";
 import { Bounce, toast } from "react-toastify";
-import { ArrowLeft, Eye, Clock, MessageSquare, MapPin, Calendar, Save } from "lucide-react";
+import { ArrowLeft, Eye, Clock, MessageSquare, MapPin, Calendar, Save, BarChart3 } from "lucide-react";
+import { GA_MEASUREMENT_ID } from "../../analytics/ga";
+import { useConsentChoice } from "../../analytics/useConsentChoice";
+import notify from "../../design/notify";
 
 interface ToggleProps {
   label: string;
@@ -40,6 +43,77 @@ const Toggle: React.FC<ToggleProps> = ({ label, description, value, onChange, ic
     </button>
   </div>
 );
+
+/**
+ * Analytics consent, in the one place a signed-in visitor looks for it. The
+ * same decision the consent bar takes on a first visit, changeable here for
+ * as long as the account exists -- and absent when no measurement id is
+ * configured, because then nothing is being collected to withdraw.
+ */
+const AnalyticsRow: React.FC = () => {
+  const { t } = useTranslation();
+  const { state, accept, decline } = useConsentChoice();
+
+  if (!GA_MEASUREMENT_ID) return null;
+
+  const status =
+    state === "granted"
+      ? t("consent.manage.current_granted") || "Analytics cookies are on."
+      : state === "denied"
+      ? t("consent.manage.current_denied") || "Analytics cookies are off."
+      : t("consent.manage.body") ||
+        "Analytics cookies tell us which pages people find useful. Nothing else.";
+
+  const choose = (grant: boolean) => () => {
+    if (grant) accept();
+    else decline();
+    notify.success(
+      grant
+        ? t("consent.manage.current_granted") || "Analytics cookies are on."
+        : t("consent.manage.current_denied") || "Analytics cookies are off."
+    );
+  };
+
+  return (
+    <div className="mb-6">
+      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 px-1">
+        {t("consent.manage.title") || "Privacy choices"}
+      </h3>
+      <div
+        data-testid="analytics-consent-row"
+        className="flex flex-wrap items-center justify-between gap-3 p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-white/30 mb-3"
+      >
+        <div className="flex items-center gap-4">
+          <div className="p-2 rounded-lg bg-gradient-to-br from-teal-400 to-teal-600">
+            <span className="text-white"><BarChart3 className="w-5 h-5" /></span>
+          </div>
+          <div>
+            <p className="font-medium text-gray-800">
+              {t("consent.manage.analyticsCookies") || "Analytics cookies"}
+            </p>
+            <p className="text-sm text-gray-500">{status}</p>
+          </div>
+        </div>
+        <div className="flex shrink-0 gap-2">
+          <button
+            type="button"
+            onClick={choose(false)}
+            className="rounded-full border border-gray-300 px-4 py-1.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-100"
+          >
+            {t("consent.manage.decline") || "Turn off"}
+          </button>
+          <button
+            type="button"
+            onClick={choose(true)}
+            className="rounded-full bg-teal-600 px-4 py-1.5 text-sm font-bold text-white transition-colors hover:bg-teal-700"
+          >
+            {t("consent.manage.accept") || "Turn on"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const PrivacySettings: React.FC = () => {
   const { t } = useTranslation();
@@ -201,6 +275,8 @@ const PrivacySettings: React.FC = () => {
             onChange={handleToggle("showGiftingLevel")}
           />
         </div>
+
+        <AnalyticsRow />
 
         {/* Save Button */}
         {hasChanges && (

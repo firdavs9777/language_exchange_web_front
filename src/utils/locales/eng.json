@@ -1482,7 +1482,18 @@
     "label": "Cookie consent",
     "message": "We use analytics cookies to understand what brings people here.",
     "accept": "OK",
-    "decline": "No thanks"
+    "decline": "No thanks",
+    "manage": {
+      "title": "Privacy choices",
+      "body": "Analytics cookies tell us which pages people find useful. Nothing else.",
+      "current_granted": "Analytics cookies are on.",
+      "current_denied": "Analytics cookies are off.",
+      "accept": "Turn on",
+      "decline": "Turn off",
+      "privacyChoices": "Privacy choices",
+      "analyticsCookies": "Analytics cookies",
+      "done": "Done"
+    }
   },
   "admin": {
     "nav": {

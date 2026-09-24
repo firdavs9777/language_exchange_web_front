@@ -1482,7 +1482,18 @@
     "label": "쿠키 동의",
     "message": "어떤 경로로 오셨는지 파악하기 위해 분석 쿠키를 사용해요.",
     "accept": "확인",
-    "decline": "괜찮아요"
+    "decline": "괜찮아요",
+    "manage": {
+      "title": "개인정보 선택",
+      "body": "분석 쿠키는 어떤 페이지가 도움이 되는지 알려줄 뿐이에요.",
+      "current_granted": "분석 쿠키가 켜져 있어요.",
+      "current_denied": "분석 쿠키가 꺼져 있어요.",
+      "accept": "켜기",
+      "decline": "끄기",
+      "privacyChoices": "개인정보 선택",
+      "analyticsCookies": "분석 쿠키",
+      "done": "완료"
+    }
   },
   "admin": {
     "nav": {

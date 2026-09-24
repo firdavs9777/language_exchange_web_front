@@ -1482,7 +1482,18 @@
     "label": "Cookie 同意",
     "message": "我们使用分析 Cookie，了解大家是怎么找到这里的。",
     "accept": "好的",
-    "decline": "不用了"
+    "decline": "不用了",
+    "manage": {
+      "title": "隐私选择",
+      "body": "分析 Cookie 只告诉我们哪些页面有帮助，没有别的。",
+      "current_granted": "分析 Cookie 已开启。",
+      "current_denied": "分析 Cookie 已关闭。",
+      "accept": "开启",
+      "decline": "关闭",
+      "privacyChoices": "隐私选择",
+      "analyticsCookies": "分析 Cookie",
+      "done": "完成"
+    }
   },
   "admin": {
     "nav": {

@@ -1482,7 +1482,18 @@
     "label": "Persetujuan cookie",
     "message": "Kami menggunakan cookie analitik untuk memahami apa yang membawa orang ke sini.",
     "accept": "OK",
-    "decline": "Tidak, terima kasih"
+    "decline": "Tidak, terima kasih",
+    "manage": {
+      "title": "Pilihan privasi",
+      "body": "Cookie analitik memberi tahu kami halaman mana yang berguna. Tidak lebih.",
+      "current_granted": "Cookie analitik aktif.",
+      "current_denied": "Cookie analitik nonaktif.",
+      "accept": "Aktifkan",
+      "decline": "Nonaktifkan",
+      "privacyChoices": "Pilihan privasi",
+      "analyticsCookies": "Cookie analitik",
+      "done": "Selesai"
+    }
   },
   "admin": {
     "nav": {
