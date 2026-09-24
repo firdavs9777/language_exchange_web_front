@@ -157,3 +157,49 @@ it("keeps Tab inside the dialog", () => {
   fireEvent.keyDown(screen.getByRole("dialog"), { key: "Tab", shiftKey: true });
   expect(document.activeElement).toBe(b);
 });
+
+// A dialog holding a request open must not be dismissable behind the request's
+// back: ConfirmDialog passes `dismissible={!busy}` for exactly this.
+it("ignores Escape and the backdrop while it is not dismissible", () => {
+  const onClose = jest.fn();
+  render(
+    <DialogShell label="Ban user" onClose={onClose} dismissible={false}>
+      <p>body</p>
+    </DialogShell>
+  );
+  fireEvent.keyDown(document, { key: "Escape" });
+  fireEvent.click(screen.getByTestId("dialog-shell-backdrop"));
+  expect(onClose).not.toHaveBeenCalled();
+  expect(screen.getByRole("dialog")).toBeInTheDocument();
+});
+
+it("takes dismissals again once it becomes dismissible", () => {
+  const onClose = jest.fn();
+  const { rerender } = render(
+    <DialogShell label="Ban user" onClose={onClose} dismissible={false}>
+      <p>body</p>
+    </DialogShell>
+  );
+  fireEvent.keyDown(document, { key: "Escape" });
+  expect(onClose).not.toHaveBeenCalled();
+
+  rerender(
+    <DialogShell label="Ban user" onClose={onClose}>
+      <p>body</p>
+    </DialogShell>
+  );
+  fireEvent.keyDown(document, { key: "Escape" });
+  expect(onClose).toHaveBeenCalledTimes(1);
+});
+
+it("locks the page behind it and restores the scroll on unmount", () => {
+  document.body.style.overflow = "";
+  const { unmount } = render(
+    <DialogShell label="Add user" onClose={jest.fn()}>
+      <p>body</p>
+    </DialogShell>
+  );
+  expect(document.body.style.overflow).toBe("hidden");
+  unmount();
+  expect(document.body.style.overflow).toBe("");
+});

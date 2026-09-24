@@ -147,7 +147,16 @@
   "profile": {
     "title": "Aking Profile",
     "edit_profile": "I-edit ang Profile",
-    "photos": "Mga Larawan",
+    "photos": {
+      "title": "Mga Larawan",
+      "add": "Magdagdag ng mga larawan",
+      "alt": "{{name}}, larawan {{index}}",
+      "open": "Buksan ang larawan {{index}}",
+      "close": "Isara",
+      "previous": "Nakaraang larawan",
+      "next": "Susunod na larawan",
+      "counter": "{{index}} ng {{total}}"
+    },
     "messages": {
       "image_update_success": "Matagumpay na na-update ang larawan ng profile",
       "image_update_failure": "Hindi na-update ang larawan ng profile",
@@ -155,6 +164,7 @@
       "image_delete_failure": "Hindi natanggal ang larawan",
       "profile_update_success": "Matagumpay na na-update ang profile",
       "profile_update_failure": "Hindi na-update ang profile",
+      "level_update_failure": "Na-save ang profile mo, pero hindi na-update ang language level",
       "error_loading_profile": "Error sa pag-load ng profile ng user",
       "no_profile_data": "Walang available na data ng profile ng user",
       "unknown_error": "May naganap na hindi kilalang error",
@@ -230,7 +240,16 @@
       "save": "I-save",
       "cancel": "Kanselahin",
       "edit_photo": "I-edit ang Larawan",
-      "clear": "I-clear ang seleksyon"
+      "clear": "I-clear ang seleksyon",
+      "settings": "Settings",
+      "message": "Mag-message",
+      "follow": "Sundan",
+      "following": "Sinusundan",
+      "more": "Iba pang opsyon",
+      "block": "I-block",
+      "report": "I-report",
+      "this_person": "ang taong ito",
+      "action_failed": "Hindi ito gumana. Subukan muli."
     },
     "buttons": {
       "edit": "I-edit",
@@ -258,6 +277,106 @@
       "kdrama": "K-Drama",
       "languages": "Mga Wika",
       "culture": "Kultura"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "Verified",
+      "joined": "Sumali noong {{date}}",
+      "active": "Aktibo {{time}}",
+      "online": "Online ngayon"
+    },
+    "block": {
+      "title": "I-block {{name}}?",
+      "body": "Hindi ka na niya mame-message at hindi na niya makikita ang profile mo."
+    },
+    "report": {
+      "title": "I-report {{name}}?",
+      "body": "Sabihin sa amin kung ano ang mali. Sinusuri namin ang bawat report.",
+      "reason": "Dahilan"
+    },
+    "languages": {
+      "also_learning": "Nag-aaral din"
+    },
+    "about": {
+      "title": "Tungkol",
+      "occupation": "Trabaho",
+      "school": "School",
+      "read_more": "Magbasa pa",
+      "read_less": "Itago"
+    },
+    "learning": {
+      "title": "Progreso sa pag-aaral",
+      "streak": "Streak",
+      "days": "araw",
+      "xp": "Kabuuang XP",
+      "level": "Level"
+    },
+    "moments": {
+      "see_all": "Tingnan lahat",
+      "empty_own": "I-share ang unang sandali mo",
+      "empty_other": "Wala pang sandali",
+      "photo_alt": "Larawan ng sandali"
+    },
+    "page": {
+      "title": "Profile",
+      "error_title": "Hindi namin na-load ang profile na ito",
+      "error_body": "Tingnan ang koneksyon mo at subukan muli.",
+      "retry": "Subukan muli",
+      "not_found_title": "Hindi mahanap ang profile",
+      "not_found_body": "Wala na ang profile na ito, o hindi naman ito kailanman narito.",
+      "back_to_community": "I-browse ang komunidad"
+    },
+    "lists": {
+      "title": "Mga koneksyon mo",
+      "title_of": "Mga koneksyon ni {{name}}",
+      "title_other": "Mga koneksyon",
+      "search": "Maghanap ayon sa pangalan",
+      "search_empty": "Walang tumutugma sa \"{{query}}\"",
+      "empty_followers_own": "Wala pang sumusunod sa iyo.",
+      "empty_followers_other": "Wala pang sumusunod sa kanya.",
+      "empty_following_own": "Hindi ka pa sumusunod sa sinuman.",
+      "empty_following_other": "Wala pa siyang sinusundan.",
+      "error_title": "Hindi namin na-load ang listahang ito",
+      "error_body": "Tingnan ang koneksyon mo at subukan muli.",
+      "retry": "Subukan muli"
+    },
+    "edit": {
+      "back": "Bumalik",
+      "about": "Tungkol",
+      "photos_hint": "Ang unang larawan mo ang nakikita ng lahat kahit saan.",
+      "add_photo": "Magdagdag ng larawan",
+      "photo_alt": "Larawan {{index}}",
+      "delete_photo": "Tanggalin ang larawan {{index}}",
+      "delete_photo_title": "Tanggalin ang larawang ito?",
+      "delete_photo_body": "Mawawala ito sa profile mo para sa lahat.",
+      "delete_photo_confirm": "Tanggalin ang larawan",
+      "level": "Level",
+      "level_hint": "Ang level mo sa wikang inaaral mo.",
+      "occupation": "Trabaho",
+      "occupation_placeholder": "Ano ang trabaho mo?",
+      "school": "School",
+      "school_placeholder": "Saan ka nag-aaral?",
+      "saving": "Nagse-save",
+      "unsaved": "May mga pagbabagong hindi pa na-save",
+      "leave_title": "Aalis nang hindi nagse-save?",
+      "leave_body": "Mawawala ang mga pagbabago mo sa profile na ito.",
+      "leave_confirm": "I-discard ang mga pagbabago",
+      "stay": "Magpatuloy sa pag-edit"
+    },
+    "myMoments": {
+      "title": "Mga Sandali Ko",
+      "create": "Mag-share ng sandali",
+      "edit": "I-edit ang sandali",
+      "delete": "Tanggalin ang sandali",
+      "delete_title": "Tanggalin ang sandaling ito?",
+      "delete_body": "Mawawala ito para sa lahat, pati na ang mga like at comment nito.",
+      "delete_confirm": "Tanggalin",
+      "delete_failed": "Hindi namin natanggal ang sandaling iyon. Subukan muli.",
+      "empty_title": "Wala pang sandali",
+      "empty_body": "I-share ang unang sandali mo sa komunidad.",
+      "error_title": "Hindi namin na-load ang mga sandali mo",
+      "error_body": "Tingnan ang koneksyon mo at subukan muli.",
+      "retry": "Subukan muli"
     }
   },
   "moments_section": {
@@ -436,7 +555,8 @@
       "addMoreText": "Magdagdag pa",
       "updateButton": "I-update ang Sandali",
       "updatingButton": "Nag-a-update...",
-      "cancelButton": "Kanselahin"
+      "cancelButton": "Kanselahin",
+      "removeImage": "Alisin ang larawan"
     }
   },
   "authentication": {

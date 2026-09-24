@@ -98,11 +98,15 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Moments"],
     }),
+    // Tagged so `deleteMoment`/`updateMoment` actually refetch this list.
+    // Without it a deleted moment came back on the next visit inside
+    // `keepUnusedDataFor`, because nothing invalidated the cached page.
     getMyMoments: builder.query({
       query: ({ userId }: { userId: string }) => ({
         url: `${MOMENTS_URL}/user/${userId}`,
       }),
       keepUnusedDataFor: 5,
+      providesTags: ["Moments"],
     }),
     // Save/Bookmark moment
     saveMoment: builder.mutation({

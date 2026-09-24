@@ -128,7 +128,16 @@
   "profile": {
     "title": "Mon profil",
     "edit_profile": "Modifier le profil",
-    "photos": "Photos",
+    "photos": {
+      "title": "Photos",
+      "add": "Ajouter des photos",
+      "alt": "{{name}}, photo {{index}}",
+      "open": "Ouvrir la photo {{index}}",
+      "close": "Fermer",
+      "previous": "Photo précédente",
+      "next": "Photo suivante",
+      "counter": "{{index}} sur {{total}}"
+    },
     "messages": {
       "image_update_success": "Photo de profil mise à jour avec succès",
       "image_update_failure": "Échec de la mise à jour de la photo de profil",
@@ -136,6 +145,7 @@
       "image_delete_failure": "Échec de la suppression de la photo",
       "profile_update_success": "Profil mis à jour avec succès",
       "profile_update_failure": "Échec de la mise à jour du profil",
+      "level_update_failure": "Votre profil a été enregistré, mais le niveau de langue n'a pas été mis à jour",
       "error_loading_profile": "Erreur lors du chargement du profil utilisateur",
       "no_profile_data": "Aucune donnée de profil utilisateur disponible",
       "unknown_error": "Une erreur inconnue s'est produite",
@@ -211,7 +221,16 @@
       "save": "Enregistrer",
       "cancel": "Annuler",
       "edit_photo": "Modifier la photo",
-      "clear": "Effacer la sélection"
+      "clear": "Effacer la sélection",
+      "settings": "Paramètres",
+      "message": "Message",
+      "follow": "Suivre",
+      "following": "Abonné",
+      "more": "Plus d'options",
+      "block": "Bloquer",
+      "report": "Signaler",
+      "this_person": "cette personne",
+      "action_failed": "Ça n'a pas fonctionné. Réessayez."
     },
     "buttons": {
       "edit": "Modifier",
@@ -239,6 +258,106 @@
       "kdrama": "K-Drama",
       "languages": "Langues",
       "culture": "Culture"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "Vérifié",
+      "joined": "Membre depuis {{date}}",
+      "active": "Actif {{time}}",
+      "online": "En ligne"
+    },
+    "block": {
+      "title": "Bloquer {{name}} ?",
+      "body": "Cette personne ne pourra plus vous envoyer de messages ni voir votre profil."
+    },
+    "report": {
+      "title": "Signaler {{name}} ?",
+      "body": "Dites-nous ce qui ne va pas. Chaque signalement est examiné.",
+      "reason": "Motif"
+    },
+    "languages": {
+      "also_learning": "Apprend aussi"
+    },
+    "about": {
+      "title": "À propos",
+      "occupation": "Travail",
+      "school": "École",
+      "read_more": "Lire la suite",
+      "read_less": "Réduire"
+    },
+    "learning": {
+      "title": "Progression",
+      "streak": "Série",
+      "days": "jours",
+      "xp": "XP total",
+      "level": "Niveau"
+    },
+    "moments": {
+      "see_all": "Voir tout",
+      "empty_own": "Partagez votre premier moment",
+      "empty_other": "Pas encore de moments",
+      "photo_alt": "Photo du moment"
+    },
+    "page": {
+      "title": "Profil",
+      "error_title": "Impossible de charger ce profil",
+      "error_body": "Vérifiez votre connexion et réessayez.",
+      "retry": "Réessayer",
+      "not_found_title": "Profil introuvable",
+      "not_found_body": "Ce profil n'existe plus, ou n'a jamais existé.",
+      "back_to_community": "Parcourir la communauté"
+    },
+    "lists": {
+      "title": "Vos contacts",
+      "title_of": "Contacts de {{name}}",
+      "title_other": "Contacts",
+      "search": "Rechercher par nom",
+      "search_empty": "Personne ne correspond à « {{query}} »",
+      "empty_followers_own": "Vous n'avez pas encore d'abonnés.",
+      "empty_followers_other": "Cette personne n'a pas encore d'abonnés.",
+      "empty_following_own": "Vous ne suivez personne pour le moment.",
+      "empty_following_other": "Cette personne ne suit encore personne.",
+      "error_title": "Impossible de charger cette liste",
+      "error_body": "Vérifiez votre connexion et réessayez.",
+      "retry": "Réessayer"
+    },
+    "edit": {
+      "back": "Retour",
+      "about": "À propos",
+      "photos_hint": "Votre première photo est celle que tout le monde voit.",
+      "add_photo": "Ajouter une photo",
+      "photo_alt": "Photo {{index}}",
+      "delete_photo": "Supprimer la photo {{index}}",
+      "delete_photo_title": "Supprimer cette photo ?",
+      "delete_photo_body": "Elle disparaîtra de votre profil pour tout le monde.",
+      "delete_photo_confirm": "Supprimer la photo",
+      "level": "Niveau",
+      "level_hint": "Votre niveau dans la langue que vous apprenez.",
+      "occupation": "Profession",
+      "occupation_placeholder": "Que faites-vous ?",
+      "school": "École",
+      "school_placeholder": "Où étudiez-vous ?",
+      "saving": "Enregistrement",
+      "unsaved": "Vous avez des modifications non enregistrées",
+      "leave_title": "Quitter sans enregistrer ?",
+      "leave_body": "Vos modifications de ce profil seront perdues.",
+      "leave_confirm": "Abandonner",
+      "stay": "Continuer l'édition"
+    },
+    "myMoments": {
+      "title": "Mes moments",
+      "create": "Partager un moment",
+      "edit": "Modifier le moment",
+      "delete": "Supprimer le moment",
+      "delete_title": "Supprimer ce moment ?",
+      "delete_body": "Il disparaîtra pour tout le monde, avec ses likes et ses commentaires.",
+      "delete_confirm": "Supprimer",
+      "delete_failed": "Impossible de supprimer ce moment. Réessayez.",
+      "empty_title": "Pas encore de moments",
+      "empty_body": "Partagez votre premier moment avec la communauté.",
+      "error_title": "Impossible de charger vos moments",
+      "error_body": "Vérifiez votre connexion et réessayez.",
+      "retry": "Réessayer"
     }
   },
   "moments_section": {
@@ -417,7 +536,8 @@
       "addMoreText": "Ajouter plus",
       "updateButton": "Mettre à jour le moment",
       "updatingButton": "Mise à jour en cours...",
-      "cancelButton": "Annuler"
+      "cancelButton": "Annuler",
+      "removeImage": "Retirer l'image"
     }
   },
   "authentication": {

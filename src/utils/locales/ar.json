@@ -147,7 +147,16 @@
   "profile": {
     "title": "ملفي الشخصي",
     "edit_profile": "تعديل الملف الشخصي",
-    "photos": "الصور",
+    "photos": {
+      "title": "الصور",
+      "add": "إضافة صور",
+      "alt": "{{name}}، صورة {{index}}",
+      "open": "فتح الصورة {{index}}",
+      "close": "إغلاق",
+      "previous": "الصورة السابقة",
+      "next": "الصورة التالية",
+      "counter": "{{index}} من {{total}}"
+    },
     "messages": {
       "image_update_success": "تم تحديث صورة الملف الشخصي بنجاح",
       "image_update_failure": "فشل في تحديث صورة الملف الشخصي",
@@ -155,6 +164,7 @@
       "image_delete_failure": "فشل في حذف الصورة",
       "profile_update_success": "تم تحديث الملف الشخصي بنجاح",
       "profile_update_failure": "فشل في تحديث الملف الشخصي",
+      "level_update_failure": "تم حفظ ملفك الشخصي، لكن لم يتم تحديث مستوى اللغة",
       "error_loading_profile": "خطأ في تحميل الملف الشخصي",
       "no_profile_data": "لا تتوفر بيانات الملف الشخصي",
       "unknown_error": "حدث خطأ غير معروف",
@@ -230,7 +240,16 @@
       "save": "حفظ",
       "cancel": "إلغاء",
       "edit_photo": "تعديل الصورة",
-      "clear": "مسح التحديد"
+      "clear": "مسح التحديد",
+      "settings": "الإعدادات",
+      "message": "مراسلة",
+      "follow": "متابعة",
+      "following": "تتم المتابعة",
+      "more": "خيارات أخرى",
+      "block": "حظر",
+      "report": "إبلاغ",
+      "this_person": "هذا الشخص",
+      "action_failed": "لم تنجح العملية. حاول مرة أخرى."
     },
     "buttons": {
       "edit": "تعديل",
@@ -258,6 +277,106 @@
       "kdrama": "K-Drama",
       "languages": "لغات",
       "culture": "ثقافة"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "موثّق",
+      "joined": "عضو منذ {{date}}",
+      "active": "نشط {{time}}",
+      "online": "متصل الآن"
+    },
+    "block": {
+      "title": "حظر {{name}}؟",
+      "body": "لن يتمكن من مراسلتك أو رؤية ملفك الشخصي."
+    },
+    "report": {
+      "title": "الإبلاغ عن {{name}}؟",
+      "body": "أخبرنا بما حدث. تتم مراجعة كل بلاغ.",
+      "reason": "السبب"
+    },
+    "languages": {
+      "also_learning": "يتعلم أيضًا"
+    },
+    "about": {
+      "title": "نبذة",
+      "occupation": "العمل",
+      "school": "الدراسة",
+      "read_more": "قراءة المزيد",
+      "read_less": "عرض أقل"
+    },
+    "learning": {
+      "title": "تقدّم التعلّم",
+      "streak": "أيام متتالية",
+      "days": "يوم",
+      "xp": "إجمالي XP",
+      "level": "المستوى"
+    },
+    "moments": {
+      "see_all": "عرض الكل",
+      "empty_own": "شارك أول لحظة لك",
+      "empty_other": "لا توجد لحظات بعد",
+      "photo_alt": "صورة اللحظة"
+    },
+    "page": {
+      "title": "الملف الشخصي",
+      "error_title": "تعذّر تحميل هذا الملف الشخصي",
+      "error_body": "تحقّق من اتصالك وحاول مرة أخرى.",
+      "retry": "حاول مرة أخرى",
+      "not_found_title": "الملف الشخصي غير موجود",
+      "not_found_body": "هذا الملف الشخصي لم يعد موجودًا، أو لم يكن موجودًا هنا أصلًا.",
+      "back_to_community": "تصفّح المجتمع"
+    },
+    "lists": {
+      "title": "شبكتك",
+      "title_of": "شبكة {{name}}",
+      "title_other": "الشبكة",
+      "search": "ابحث بالاسم",
+      "search_empty": "لا أحد هنا يطابق \"{{query}}\"",
+      "empty_followers_own": "لا أحد يتابعك بعد.",
+      "empty_followers_other": "لا أحد يتابع هذا الشخص بعد.",
+      "empty_following_own": "أنت لا تتابع أي شخص بعد.",
+      "empty_following_other": "هذا الشخص لا يتابع أحدًا بعد.",
+      "error_title": "تعذّر تحميل هذه القائمة",
+      "error_body": "تحقّق من اتصالك وحاول مرة أخرى.",
+      "retry": "حاول مرة أخرى"
+    },
+    "edit": {
+      "back": "رجوع",
+      "about": "نبذة",
+      "photos_hint": "صورتك الأولى هي التي يراها الناس في كل مكان.",
+      "add_photo": "إضافة صورة",
+      "photo_alt": "صورة {{index}}",
+      "delete_photo": "حذف الصورة {{index}}",
+      "delete_photo_title": "حذف هذه الصورة؟",
+      "delete_photo_body": "ستُزال من ملفك الشخصي بالنسبة للجميع.",
+      "delete_photo_confirm": "حذف الصورة",
+      "level": "المستوى",
+      "level_hint": "مستواك في اللغة التي تتعلمها.",
+      "occupation": "المهنة",
+      "occupation_placeholder": "ما هو عملك؟",
+      "school": "الدراسة",
+      "school_placeholder": "أين تدرس؟",
+      "saving": "جارٍ الحفظ",
+      "unsaved": "لديك تغييرات غير محفوظة",
+      "leave_title": "المغادرة دون حفظ؟",
+      "leave_body": "ستفقد التغييرات التي أجريتها على هذا الملف الشخصي.",
+      "leave_confirm": "تجاهل التغييرات",
+      "stay": "متابعة التعديل"
+    },
+    "myMoments": {
+      "title": "لحظاتي",
+      "create": "شارك لحظة",
+      "edit": "تعديل اللحظة",
+      "delete": "حذف اللحظة",
+      "delete_title": "حذف هذه اللحظة؟",
+      "delete_body": "ستختفي للجميع، مع إعجاباتها وتعليقاتها.",
+      "delete_confirm": "حذف",
+      "delete_failed": "تعذّر حذف هذه اللحظة. حاول مرة أخرى.",
+      "empty_title": "لا توجد لحظات بعد",
+      "empty_body": "شارك أول لحظة لك مع المجتمع.",
+      "error_title": "تعذّر تحميل لحظاتك",
+      "error_body": "تحقّق من اتصالك وحاول مرة أخرى.",
+      "retry": "حاول مرة أخرى"
     }
   },
   "moments_section": {
@@ -436,7 +555,8 @@
       "addMoreText": "أضف المزيد",
       "updateButton": "تحديث اللحظة",
       "updatingButton": "جارٍ التحديث...",
-      "cancelButton": "إلغاء"
+      "cancelButton": "إلغاء",
+      "removeImage": "إزالة الصورة"
     }
   },
   "authentication": {
