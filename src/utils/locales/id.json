@@ -783,7 +783,20 @@
       "copyLink": "Salin tautan",
       "linkCopied": "Tautan disalin",
       "linkCopyFailed": "Gagal menyalin tautan",
-      "applyFirst": "Terapkan filter terlebih dahulu"
+      "applyFirst": "Terapkan filter terlebih dahulu",
+      "matchCountLoading": "Menghitung kecocokan…",
+      "close": "Tutup filter",
+      "languages": "Bahasa",
+      "partnerNative": "Bahasa ibu mitra",
+      "partnerLearning": "Mitra sedang belajar",
+      "country": "Negara",
+      "countryPlaceholder": "cth. Korea Selatan",
+      "level": "Level bahasa",
+      "topics": "Topik",
+      "mutualInterests": "Minat yang sama",
+      "newUsersOnly": "Hanya pengguna baru",
+      "clearAll": "Hapus semua",
+      "matchCount": "{{count}} kecocokan"
     },
     "highlighted": {
       "title": "Profil unggulan",

@@ -783,7 +783,20 @@
       "copyLink": "Bağlantıyı kopyala",
       "linkCopied": "Bağlantı kopyalandı",
       "linkCopyFailed": "Bağlantı kopyalanamadı",
-      "applyFirst": "Önce filtreleri uygula"
+      "applyFirst": "Önce filtreleri uygula",
+      "matchCountLoading": "Eşleşmeler sayılıyor…",
+      "close": "Filtreleri kapat",
+      "languages": "Diller",
+      "partnerNative": "Partnerin ana dili",
+      "partnerLearning": "Partner öğreniyor",
+      "country": "Ülke",
+      "countryPlaceholder": "örn. Güney Kore",
+      "level": "Dil seviyesi",
+      "topics": "Konular",
+      "mutualInterests": "Ortak ilgi alanları",
+      "newUsersOnly": "Sadece yeni kullanıcılar",
+      "clearAll": "Tümünü temizle",
+      "matchCount": "{{count}} eşleşme"
     },
     "highlighted": {
       "title": "Öne çıkan profiller",
