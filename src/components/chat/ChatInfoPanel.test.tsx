@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import ChatInfoPanel from "./ChatInfoPanel";
+import { CONVERSATIONS_PAGE } from "./lib/conversationMatch";
 
 // CRA resets mocks between tests, so every factory is module-scoped and
 // `mock`-prefixed (the only names a jest.mock factory may close over) and the
@@ -18,6 +19,7 @@ const mockDelete = jest.fn();
 const mockBlock = jest.fn();
 const mockUnblock = jest.fn();
 const mockReport = jest.fn();
+const mockUserById = jest.fn();
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -37,6 +39,7 @@ jest.mock("../../store/slices/chatSlice", () => ({
 
 jest.mock("../../store/slices/usersSlice", () => ({
   useGetBlockStatusQuery: (arg: any, opts: any) => mockBlockStatus(arg, opts),
+  useGetUserByIdQuery: (arg: any, opts: any) => mockUserById(arg, opts),
   useBlockUserMutation: () => [mockBlock, { isLoading: false }],
   useUnblockUserMutation: () => [mockUnblock, { isLoading: false }],
   useReportUserMutation: () => [mockReport, { isLoading: false }],
@@ -44,6 +47,9 @@ jest.mock("../../store/slices/usersSlice", () => ({
 
 const resolved = () => ({ unwrap: () => Promise.resolve({ success: true }) });
 const rejected = () => ({ unwrap: () => Promise.reject({ data: { message: "nope" } }) });
+const rejectedWith = (message: string) => ({
+  unwrap: () => Promise.reject({ data: { message } }),
+});
 
 const onClose = jest.fn();
 
@@ -79,6 +85,9 @@ beforeEach(() => {
     isLoading: false,
   });
   mockBlockStatus.mockReturnValue({ data: { data: { isBlocked: false } } });
+  mockUserById.mockReturnValue({
+    data: { data: { native_language: "Korean", language_to_learn: "English", languageLevel: "B1" } },
+  });
   mockMute.mockReturnValue(resolved());
   mockUnmute.mockReturnValue(resolved());
   mockDelete.mockReturnValue(resolved());
@@ -108,6 +117,85 @@ describe("the entries the panel offers", () => {
   it("carries a wallpaper entry that is not wired yet, and says so", () => {
     renderPanel();
     expect(screen.getByTestId("chat-info-wallpaper")).toBeDisabled();
+  });
+});
+
+describe("the conversation the actions act on", () => {
+  it("asks with the same argument UsersList does, so they share one cache entry", () => {
+    renderPanel();
+    expect(mockConversations).toHaveBeenCalledWith(
+      CONVERSATIONS_PAGE,
+      undefined
+    );
+    // The backend clamps `limit` to 100 and offers no participant filter, so
+    // anything smaller silently hides older conversations from the panel.
+    expect(CONVERSATIONS_PAGE).toEqual({ page: 1, limit: 100 });
+  });
+
+  it("matches on the otherParticipant the backend computed", () => {
+    mockConversations.mockReturnValue({
+      data: {
+        data: [
+          {
+            _id: "c1",
+            otherParticipant: { _id: "u2" },
+            participants: [{ _id: "me" }, { _id: "u2" }],
+            isMuted: false,
+          },
+        ],
+      },
+      isLoading: false,
+    });
+    renderPanel();
+    fireEvent.click(screen.getByTestId("chat-info-mute"));
+    expect(mockMute).toHaveBeenCalledWith({ conversationId: "c1" });
+  });
+
+  it("says nothing about a conversation it has not finished loading", () => {
+    mockConversations.mockReturnValue({ data: undefined, isLoading: true });
+    renderPanel();
+    // Disabled, because there is no id to act on yet -- but NOT accused of
+    // never having spoken.
+    expect(screen.getByTestId("chat-info-mute")).toBeDisabled();
+    expect(screen.getByTestId("chat-info-panel")).not.toHaveTextContent(
+      "Say something first"
+    );
+  });
+
+  it("says so once the list is loaded and the conversation is not in it", () => {
+    mockConversations.mockReturnValue({ data: { data: [] }, isLoading: false });
+    renderPanel();
+    expect(screen.getByTestId("chat-info-panel")).toHaveTextContent(
+      "Say something first"
+    );
+  });
+});
+
+describe("the viewer's own chat", () => {
+  it("offers neither Block nor Report when the other person is the viewer", () => {
+    renderPanel({ userId: "me" });
+    expect(screen.queryByTestId("chat-info-block")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("chat-info-report")).not.toBeInTheDocument();
+    // And it does not ask the backend for a block status it would 400 on.
+    expect(mockBlockStatus).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ skip: true })
+    );
+  });
+});
+
+describe("the profile section", () => {
+  it("shows the language pair the two of them are exchanging", () => {
+    renderPanel();
+    expect(screen.getByTestId("language-pill")).toBeInTheDocument();
+    expect(screen.getByTestId("language-pill-native")).toHaveTextContent("KO");
+    expect(screen.getByTestId("language-pill-learning")).toHaveTextContent("EN");
+  });
+
+  it("leaves the pill out when the languages are unknown", () => {
+    mockUserById.mockReturnValue({ data: { data: { name: "Ada" } } });
+    renderPanel();
+    expect(screen.queryByTestId("language-pill")).not.toBeInTheDocument();
   });
 });
 
@@ -212,12 +300,21 @@ describe("report", () => {
     ]);
   });
 
-  it("keeps the form open when the report is rejected", async () => {
-    mockReport.mockReturnValue(rejected());
+  it("keeps the form open and shows what the backend said when it is rejected", async () => {
+    // The 400 everyone hits twice: controllers/report.js refuses a second
+    // report of the same thing by the same person, and its message is the
+    // only explanation the reader gets.
+    mockReport.mockReturnValue(
+      rejectedWith("You have already reported this content. Please wait for moderation.")
+    );
     renderPanel();
     fireEvent.click(screen.getByTestId("chat-info-report"));
     fireEvent.submit(screen.getByTestId("chat-report-form"));
-    await waitFor(() => expect(mockReport).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(screen.getByTestId("chat-report-error")).toHaveTextContent(
+        "You have already reported this content"
+      )
+    );
     expect(screen.getByTestId("chat-report-form")).toBeInTheDocument();
   });
 });

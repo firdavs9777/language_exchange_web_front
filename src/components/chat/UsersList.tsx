@@ -15,6 +15,7 @@ import { Bell, BellOff, MoreVertical, Pin, PinOff, Trash2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/index";
 import { useSocket } from "./hooks/useSocket";
+import { findConversationWith, CONVERSATIONS_PAGE } from "./lib/conversationMatch";
 import { useTranslation } from "react-i18next";
 import "./UsersList.css";
 
@@ -126,11 +127,11 @@ const UsersList: React.FC<UsersListProps> = ({
     currentUser?._id,
     { skip: !currentUser?._id }
   );
+  // The shared argument: ChatInfoPanel asks with the same one, so the two
+  // screens share a single cache entry instead of issuing the same request
+  // twice, and the panel can find a conversation that page 1 of 50 missed.
   const { data: conversationsData, refetch: refetchConversations } =
-    useGetConversationsQuery(
-      { page: 1, limit: 50 },
-      { skip: !currentUser?._id }
-    );
+    useGetConversationsQuery(CONVERSATIONS_PAGE, { skip: !currentUser?._id });
 
   const [deleteConversation] = useDeleteConversationMutation();
   const [pinConversation] = usePinConversationMutation();
@@ -148,9 +149,7 @@ const UsersList: React.FC<UsersListProps> = ({
   const resolveConversationId = useCallback(
     (partner: User): string | undefined =>
       partner.conversationId ||
-      (conversationsData?.data || []).find((c: any) =>
-        (c.participants || []).some((p: any) => p._id === partner._id)
-      )?._id,
+      findConversationWith(conversationsData?.data, partner._id)?._id,
     [conversationsData]
   );
 
@@ -203,11 +202,7 @@ const UsersList: React.FC<UsersListProps> = ({
       // (e.g. if it came in through getUserMessages and the conversation
       // hadn't been fetched yet). Fall back to scanning conversationsData
       // for a matching participant before giving up.
-      const resolvedConversationId =
-        partner.conversationId ||
-        (conversationsData?.data || []).find((c: any) =>
-          (c.participants || []).some((p: any) => p._id === partner._id)
-        )?._id;
+      const resolvedConversationId = resolveConversationId(partner);
 
       if (!resolvedConversationId) {
         toast.error(
@@ -258,7 +253,7 @@ const UsersList: React.FC<UsersListProps> = ({
       unpinConversation,
       refetch,
       refetchConversations,
-      conversationsData,
+      resolveConversationId,
       t,
     ]
   );
@@ -668,13 +663,7 @@ const UsersList: React.FC<UsersListProps> = ({
 
     // Prefer the conversationId we already threaded through onto the
     // partner record; fall back to the lookup for safety.
-    const conversationId =
-      userToDelete.conversationId ||
-      conversationsData?.data?.find((c: any) =>
-        (c.participants || []).some(
-          (p: any) => p._id === userToDelete._id
-        )
-      )?._id;
+    const conversationId = resolveConversationId(userToDelete);
 
     const endpoint = conversationId
       ? `/api/v1/conversations/${conversationId}`

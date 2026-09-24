@@ -5,8 +5,10 @@ it("replaces a param segment with its name", () => {
 });
 
 it("replaces a param segment in the middle of the path", () => {
-  expect(routeTemplate("/chat/c1/settings", { conversationId: "c1" })).toBe(
-    "/chat/:conversationId/settings"
+  // Every /chat route is keyed by the other person's user id; the chat
+  // settings screen this used to cite was deleted along with its route.
+  expect(routeTemplate("/chat/abc123/media", { userId: "abc123" })).toBe(
+    "/chat/:userId/media"
   );
 });
 

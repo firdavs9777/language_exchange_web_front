@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import UsersList from "./UsersList";
+import { CONVERSATIONS_PAGE } from "./lib/conversationMatch";
 
 // CRA resets mocks between tests: module-scoped, `mock`-prefixed factories,
 // implementations handed out in beforeEach.
@@ -90,6 +91,37 @@ beforeEach(() => {
 
 afterEach(() => {
   jest.clearAllMocks();
+});
+
+it("asks for conversations with the argument the info panel shares", () => {
+  renderList();
+  expect(mockConversations).toHaveBeenCalledWith(
+    CONVERSATIONS_PAGE,
+    expect.objectContaining({ skip: false })
+  );
+});
+
+it("resolves the conversation through the shared matcher, otherParticipant first", () => {
+  mockConversations.mockReturnValue({
+    data: {
+      data: [
+        {
+          _id: "c1",
+          otherParticipant: { _id: "u2", name: "Ada", images: [] },
+          participants: [
+            { _id: "me", name: "Me", images: [] },
+            { _id: "u2", name: "Ada", images: [] },
+          ],
+          isMuted: false,
+        },
+      ],
+    },
+    refetch: jest.fn(),
+  });
+  renderList();
+  fireEvent.click(screen.getByTestId("users-list-menu-u2"));
+  fireEvent.click(screen.getByTestId("users-list-mute-u2"));
+  expect(mockMute).toHaveBeenCalledWith({ conversationId: "c1" });
 });
 
 it("sends the row's avatar to the member page without opening the chat", () => {

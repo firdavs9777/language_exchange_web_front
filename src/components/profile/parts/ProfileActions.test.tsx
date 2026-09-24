@@ -205,6 +205,13 @@ describe("another user's profile", () => {
     await waitFor(() => expect(screen.queryByTestId("confirm-dialog")).not.toBeInTheDocument());
   });
 
+  it("stops the report description at the 500 the Report model allows", () => {
+    renderActions();
+    fireEvent.click(screen.getByTestId("action-more"));
+    fireEvent.click(screen.getByTestId("action-report"));
+    expect(screen.getByTestId("confirm-dialog-reason")).toHaveAttribute("maxlength", "500");
+  });
+
   it("asks the block status for this pair and offers Block while it is false", () => {
     renderActions();
     expect(mockBlockStatus).toHaveBeenCalledWith(

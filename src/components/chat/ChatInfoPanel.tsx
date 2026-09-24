@@ -18,7 +18,9 @@ import {
 import DialogShell from "../../design/DialogShell";
 import ConfirmDialog from "../../design/ConfirmDialog";
 import Avatar from "../../design/Avatar";
+import LanguageExchangePill from "../../design/LanguageExchangePill";
 import notify from "../../design/notify";
+import { findConversationWith, CONVERSATIONS_PAGE } from "./lib/conversationMatch";
 import {
   useGetConversationsQuery,
   useMuteConversationMutation,
@@ -27,6 +29,7 @@ import {
 } from "../../store/slices/chatSlice";
 import {
   useGetBlockStatusQuery,
+  useGetUserByIdQuery,
   useBlockUserMutation,
   useUnblockUserMutation,
   useReportUserMutation,
@@ -114,24 +117,39 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
     (state: any) => state.auth.userInfo?.user?._id || state.auth.userInfo?._id
   );
 
-  const { data: conversationsData } = useGetConversationsQuery({});
-  const conversation = useMemo(() => {
-    const list = conversationsData?.data;
-    if (!Array.isArray(list)) return null;
-    return (
-      list.find((c: any) =>
-        (c.participants || []).some((p: any) => (p?._id || p) === userId)
-      ) || null
-    );
-  }, [conversationsData, userId]);
+  // The SAME argument UsersList passes, character for character: RTK Query
+  // keys its cache on the serialized argument, so `{}` here would have been a
+  // second cache entry and a second identical request every time the panel
+  // opened. `limit` is the backend's maximum (controllers/conversations.js
+  // clamps to 100) because there is no "conversation with this person"
+  // endpoint and no participant filter — a page-1 miss for someone with 50+
+  // chats would otherwise disable Mute and Delete forever.
+  const { data: conversationsData, isLoading: isLoadingConversations } =
+    useGetConversationsQuery(CONVERSATIONS_PAGE);
+  const conversation = useMemo(
+    () => findConversationWith(conversationsData?.data, userId),
+    [conversationsData, userId]
+  );
   const conversationId: string = conversation?._id || "";
   const isMuted = Boolean(conversation?.isMuted);
 
+  // Blocking or reporting yourself is not a thing: the backend refuses the
+  // block (400 "Cannot block yourself") and would happily FILE the report.
+  const isSelf = Boolean(viewerId) && viewerId === userId;
+
   const { data: blockStatus } = useGetBlockStatusQuery(
     { userId: viewerId, targetUserId: userId },
-    { skip: !viewerId }
+    { skip: !viewerId || isSelf }
   );
   const isBlocked = Boolean(blockStatus?.data?.isBlocked);
+
+  // Languages for the pill. `keepUnusedDataFor` is 5s on this endpoint and
+  // MainChat has usually just asked for the same record, so opening the panel
+  // normally costs nothing.
+  const { data: partnerData } = useGetUserByIdQuery(userId, { skip: !userId });
+  const partner = partnerData?.data;
+  const nativeLanguage = String((partner && partner.native_language) || "").trim();
+  const learningLanguage = String((partner && partner.language_to_learn) || "").trim();
 
   const [muteConversation, { isLoading: isMuting }] = useMuteConversationMutation();
   const [unmuteConversation, { isLoading: isUnmuting }] = useUnmuteConversationMutation();
@@ -251,9 +269,15 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
     }
   };
 
-  const noConversationHint = conversationId
-    ? null
-    : t("chatPage.info.noConversationYet") || "Say something first";
+  // "Not loaded yet" is not "does not exist": while the list is in flight the
+  // rows are disabled but say nothing, because claiming there is no
+  // conversation in a window full of messages is the one thing the panel
+  // must not do.
+  const conversationUnavailable = !conversationId;
+  const noConversationHint =
+    conversationId || isLoadingConversations
+      ? null
+      : t("chatPage.info.noConversationYet") || "Say something first";
 
   return (
     <React.Fragment>
@@ -296,6 +320,13 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
           <p className="font-display text-base text-ink-900 dark:text-ink-50">
             {userName}
           </p>
+          {nativeLanguage && learningLanguage ? (
+            <LanguageExchangePill
+              nativeLanguage={nativeLanguage}
+              learningLanguage={learningLanguage}
+              languageLevel={(partner && partner.languageLevel) || null}
+            />
+          ) : null}
         </div>
 
         <nav className="flex flex-col gap-0.5">
@@ -315,13 +346,15 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
             type="button"
             data-testid="chat-info-mute"
             onClick={handleMute}
-            disabled={!conversationId || isMuting || isUnmuting}
+            disabled={conversationUnavailable || isMuting || isUnmuting}
             className={ROW}
           >
+            {/* The icon names the action, like the label beside it and the
+                same entry in the conversation list. */}
             {isMuted ? (
-              <BellOff className="h-4 w-4 shrink-0" aria-hidden />
-            ) : (
               <Bell className="h-4 w-4 shrink-0" aria-hidden />
+            ) : (
+              <BellOff className="h-4 w-4 shrink-0" aria-hidden />
             )}
             <span className="flex-1">
               {isMuted
@@ -342,6 +375,7 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
             </span>
           </button>
 
+          {isSelf ? null : (
           <button
             type="button"
             data-testid="chat-info-block"
@@ -360,7 +394,9 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
                 : t("chatPage.info.block") || "Block"}
             </span>
           </button>
+          )}
 
+          {isSelf ? null : (
           <button
             type="button"
             data-testid="chat-info-report"
@@ -370,12 +406,13 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
             <Flag className="h-4 w-4 shrink-0" aria-hidden />
             <span className="flex-1">{t("chatPage.info.report") || "Report"}</span>
           </button>
+          )}
 
           <button
             type="button"
             data-testid="chat-info-delete"
             onClick={() => setDialog("delete")}
-            disabled={!conversationId || isDeleting}
+            disabled={conversationUnavailable || isDeleting}
             className={ROW_DANGER}
           >
             <Trash2 className="h-4 w-4 shrink-0" aria-hidden />

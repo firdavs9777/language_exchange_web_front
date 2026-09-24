@@ -247,20 +247,23 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       providesTags: ["User"],
     }),
 
-    // Block User
+    // Block User. `Conversations` as well as `User`: blocking is reached from
+    // the chat, which navigates back to the list afterwards, and the backend
+    // filters a blocked person's thread out of `GET /conversations` — a stale
+    // cache would leave their row sitting there.
     blockUser: builder.mutation({
       query: (userId: string) => ({
         url: `${BLOCK_USER_URL}/${userId}/block`,
         method: "POST",
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User", "Conversations"],
     }),
     unblockUser: builder.mutation({
       query: (userId: string) => ({
         url: `${BLOCK_USER_URL}/${userId}/block`,
         method: "DELETE",
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User", "Conversations"],
     }),
     // `GET /api/v1/users/:userId/blocked` — the id in the path is the
     // VIEWER's own (controllers/userBlocks.js 403s when it is anyone else's).

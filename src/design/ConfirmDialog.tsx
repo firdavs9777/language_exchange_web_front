@@ -38,6 +38,14 @@ export interface ConfirmDialogProps {
   error?: React.ReactNode;
   reasonLabel?: string;
   typedLabel?: React.ReactNode;
+  /**
+   * Hard cap on the reason, with a live counter once the writer is close to
+   * it. Pass the limit the backend enforces (a report's `description` is
+   * capped at 500 by models/Report.js): a validation failure arriving after
+   * the round trip is the worst possible moment to tell someone their
+   * account of what happened was too long.
+   */
+  reasonMaxLength?: number;
 }
 
 /**
@@ -67,6 +75,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   error,
   reasonLabel = "Reason",
   typedLabel,
+  reasonMaxLength,
 }) => {
   const [reason, setReason] = useState("");
   const [typed, setTyped] = useState("");
@@ -123,8 +132,17 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             rows={3}
+            maxLength={reasonMaxLength}
             className={fieldClass}
           />
+          {reasonMaxLength ? (
+            <span
+              data-testid="confirm-dialog-reason-count"
+              className="mt-1 block text-right text-[11px] font-normal normal-case tracking-normal text-ink-400 dark:text-ink-500"
+            >
+              {`${reason.length} / ${reasonMaxLength}`}
+            </span>
+          ) : null}
         </label>
       ) : null}
 

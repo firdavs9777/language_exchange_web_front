@@ -309,6 +309,9 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
         open={dialog === "report"}
         danger
         requireReason
+        // models/Report.js caps `description` at 500 characters, and the
+        // prose collected here IS the description.
+        reasonMaxLength={500}
         reasonLabel={t("profile.report.reason") || "Reason"}
         title={t("profile.report.title", { name: personName }) || `Report ${personName}?`}
         body={t("profile.report.body") || "Tell us what is wrong. Every report is reviewed."}
