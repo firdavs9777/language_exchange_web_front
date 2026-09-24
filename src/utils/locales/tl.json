@@ -377,6 +377,11 @@
       "error_title": "Hindi namin na-load ang mga sandali mo",
       "error_body": "Tingnan ang koneksyon mo at subukan muli.",
       "retry": "Subukan muli"
+    },
+    "tabs": {
+      "label": "Mga seksyon ng profile",
+      "moments": "Mga Sandali",
+      "about": "Tungkol"
     }
   },
   "moments_section": {
@@ -714,7 +719,10 @@
     "tabs": {
       "all": "Lahat",
       "popular": "Sikat",
-      "new": "Bago"
+      "new": "Bago",
+      "forYou": "Para sa iyo",
+      "online": "Online",
+      "label": "Mga tab ng komunidad"
     },
     "filters": {
       "language": "Wika",
@@ -771,7 +779,11 @@
       "onlineNow": "Online ngayon",
       "newMembersOnly": "Bagong miyembro lang (huling 7 araw)",
       "reset": "I-reset",
-      "apply": "Ilapat"
+      "apply": "Ilapat",
+      "copyLink": "Kopyahin ang link",
+      "linkCopied": "Nakopya ang link",
+      "linkCopyFailed": "Hindi nakopya ang link",
+      "applyFirst": "I-apply muna ang mga filter"
     },
     "highlighted": {
       "title": "Mga itinatampok na profile",
@@ -792,6 +804,22 @@
       "fluent": "MATATAS",
       "learns": "NAG-AARAL",
       "native": "KATUTUBO"
+    },
+    "chips": {
+      "recentlyActive": "Kamakailan aktibo",
+      "onlineNow": "Online ngayon",
+      "speaks": "Nagsasalita ng {{language}}",
+      "learning": "Nag-aaral ng {{language}}"
+    },
+    "forYou": {
+      "subtitle": "Mga kasamang pinili para sa iyo batay sa iyong mga wika, level, at interes.",
+      "refresh": "I-refresh",
+      "why": "Dahilan: {{reasons}}",
+      "empty": {
+        "title": "Wala pang rekomendasyon",
+        "message": "Idagdag ang mga wikang alam mo at gusto mong matutunan, ang level mo, at ilang interes, at hahanapin namin ang mga kasamang tugma.",
+        "action": "Kumpletuhin ang iyong profile"
+      }
     }
   },
   "communityDetail": {
@@ -852,6 +880,40 @@
       "speaks": "Nagsasalita ng",
       "learning": "Nag-aaral ng",
       "notSpecified": "Hindi tinukoy"
+    },
+    "match": {
+      "title": "Language Match",
+      "native": "Katutubong Wika",
+      "learning": "Nag-aaral",
+      "perfect": "Perpektong match — puwede kayong magturuan sa isa't isa.",
+      "youLearnTheirs": "Nag-aaral ka ng wikang sinasalita nila!",
+      "theyLearnYours": "Nag-aaral sila ng wikang sinasalita mo!",
+      "sameNative": "Magkapareho ang inyong katutubong wika."
+    },
+    "mutual": {
+      "title": "Mga magkatulad na interes",
+      "countLabel": "{{count}} magkatulad"
+    },
+    "starters": {
+      "title": "Mga pambungad sa usapan",
+      "send": "Ipadala",
+      "perfect": "Hi {{name}}! Perpekto tayong match sa wika — mag-practice tayo?",
+      "language": "Hi {{name}}! Nag-aaral ako ng {{language}} — may tips ka ba para gumaling?",
+      "teach": "Hi {{name}}! Nakita kong nag-aaral ka ng {{language}}. Masaya akong tumulong kung may tanong ka.",
+      "sameNative": "Hi {{name}}! Pareho tayo ng katutubong wika — kumusta na ang pag-aaral mo?",
+      "topic": "Hi {{name}}! Nakita kong mahilig ka rin sa {{topic}}. Paano ka nagsimula?",
+      "targetLearning": "Hi {{name}}! Gaano na katagal kang nag-aaral ng {{language}}?",
+      "generic": "Hi {{name}}! Gusto kong mag-practice ng wika nang magkasama. Kumusta ang linggo mo?",
+      "practice": "Hi {{name}}! Ano ang pinakanakatulong sa iyo sa pag-aaral mo?",
+      "hello": "Hi {{name}}! Napansin ko ang profile mo — kumusta ang araw mo?"
+    },
+    "engagement": {
+      "replies": "{{rate}}% ng sagot",
+      "new": "Bagong miyembro"
+    },
+    "suggested": {
+      "title": "Iba pang miyembro tulad ni {{name}}",
+      "seeAll": "Tingnan lahat ng miyembro"
     }
   },
   "communityDetailSection": {

@@ -51,7 +51,7 @@ import {
   Globe,
   FileImage,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 interface RootState {
   auth: {
@@ -235,6 +235,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const typingClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const selectedUserRef = useRef<string>(selectedUser);
   const isAtBottomRef = useRef(true);
+
+  // Read here, seeded further down -- see the draft effect below the
+  // "Clear state when switching conversations" effect.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const draftSeededRef = useRef(false);
 
   // Shared socket
   const { socket, isConnected, emit } = useSocket();
@@ -552,6 +557,30 @@ const ChatContent: React.FC<ChatContentProps> = ({
     setMediaPreview(null);
     stopRecording();
   }, [selectedUser]);
+
+  // A conversation starter opened this chat: the profile page navigates to
+  // /chat/:userId?draft=<encoded>, and the opener belongs in the box rather
+  // than sent on the viewer's behalf.
+  //
+  // Declared AFTER the clear effect on purpose. React flushes passive effects
+  // in declaration order, and the clear above also fires on mount (deps
+  // `[selectedUser]`) -- so a draft seeded before it would be wiped by the
+  // very next effect, with `?draft=` already stripped from the URL and the
+  // text unrecoverable. The route guarantees that mount on every Send:
+  // /chat/:userId renders `<MainChat key={userId}>`.
+  //
+  // `seededRef` plus the functional update make this once-only and
+  // non-destructive: a param that arrives late can never overwrite text the
+  // viewer has already typed, and the strip happens only after the seed.
+  useEffect(() => {
+    const draft = searchParams.get("draft");
+    if (!draft || draftSeededRef.current) return;
+    draftSeededRef.current = true;
+    setNewMessage((current) => current || draft);
+    const next = new URLSearchParams(searchParams);
+    next.delete("draft");
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams]);
 
   // Cleanup on unmount
   useEffect(() => {

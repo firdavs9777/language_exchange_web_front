@@ -377,6 +377,11 @@
       "error_title": "动态加载失败",
       "error_body": "请检查网络后再试一次。",
       "retry": "重试"
+    },
+    "tabs": {
+      "label": "个人资料分区",
+      "moments": "动态",
+      "about": "关于"
     }
   },
   "moments_section": {
@@ -714,7 +719,10 @@
     "tabs": {
       "all": "全部",
       "popular": "热门",
-      "new": "最新"
+      "new": "最新",
+      "forYou": "推荐",
+      "online": "在线",
+      "label": "社区标签页"
     },
     "filters": {
       "language": "语言",
@@ -771,7 +779,11 @@
       "onlineNow": "当前在线",
       "newMembersOnly": "只看新成员（近 7 天）",
       "reset": "重置",
-      "apply": "确定"
+      "apply": "确定",
+      "copyLink": "复制链接",
+      "linkCopied": "链接已复制",
+      "linkCopyFailed": "链接复制失败",
+      "applyFirst": "请先应用筛选条件"
     },
     "highlighted": {
       "title": "推荐资料",
@@ -792,6 +804,22 @@
       "fluent": "流利",
       "learns": "在学",
       "native": "母语"
+    },
+    "chips": {
+      "recentlyActive": "最近活跃",
+      "onlineNow": "当前在线",
+      "speaks": "会说{{language}}",
+      "learning": "在学{{language}}"
+    },
+    "forYou": {
+      "subtitle": "根据你的语言、水平和兴趣为你精选的语伴。",
+      "refresh": "刷新",
+      "why": "原因：{{reasons}}",
+      "empty": {
+        "title": "暂无推荐",
+        "message": "添加你会说和想学的语言、你的水平和一些兴趣爱好，我们就能为你找到合适的语伴。",
+        "action": "完善资料"
+      }
     }
   },
   "communityDetail": {
@@ -852,6 +880,40 @@
       "speaks": "会说",
       "learning": "在学",
       "notSpecified": "未填写"
+    },
+    "match": {
+      "title": "语言匹配",
+      "native": "母语",
+      "learning": "在学",
+      "perfect": "完美匹配，你们可以互相教对方！",
+      "youLearnTheirs": "TA 说的语言，正是你在学的！",
+      "theyLearnYours": "TA 在学你的母语！",
+      "sameNative": "你们的母语相同。"
+    },
+    "mutual": {
+      "title": "共同兴趣",
+      "countLabel": "{{count}} 个共同点"
+    },
+    "starters": {
+      "title": "开场白",
+      "send": "发送",
+      "perfect": "嗨，{{name}}！我们是完美语伴，要不要一起练习？",
+      "language": "嗨，{{name}}！我在学{{language}}，有什么进步的小技巧吗？",
+      "teach": "嗨，{{name}}！看到你在学{{language}}，有问题随时可以问我。",
+      "sameNative": "嗨，{{name}}！我们母语一样呢，你学得怎么样了？",
+      "topic": "嗨，{{name}}！看到你也喜欢{{topic}}，是怎么开始的呀？",
+      "targetLearning": "嗨，{{name}}！你学{{language}}多久啦？",
+      "generic": "嗨，{{name}}！很想一起练语言，你这周过得怎么样？",
+      "practice": "嗨，{{name}}！到目前为止，什么对你的学习帮助最大？",
+      "hello": "嗨，{{name}}！你的资料一下子就吸引了我，今天过得怎么样？"
+    },
+    "engagement": {
+      "replies": "回复率 {{rate}}%",
+      "new": "新成员"
+    },
+    "suggested": {
+      "title": "更多像{{name}}这样的成员",
+      "seeAll": "查看全部成员"
     }
   },
   "communityDetailSection": {

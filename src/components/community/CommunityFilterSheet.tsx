@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { X, Loader2, Users } from "lucide-react";
+import { X, Loader2, Users, Link2 } from "lucide-react";
 import { RootState } from "../../store";
 import { COMMON_LANGUAGES } from "./type";
 import { CommunityFilters, Me, buildCommunityQuery } from "./lib/buildCommunityQuery";
@@ -38,6 +38,20 @@ export interface CommunityFilterSheetProps {
   onApply: (filters: CommunityFilters) => void;
   onClear: () => void;
   onClose: () => void;
+  /**
+   * Copy a link to the list as it is *applied* — what the page behind this
+   * sheet is actually showing. Optional: the button only appears when the page
+   * can produce a link at all (the owner of the URL state is MainCommunity,
+   * not the sheet).
+   */
+  onCopyLink?: () => void;
+  /**
+   * False while the draft on screen differs from the applied filters. A link
+   * can only describe a list that exists, so rather than quietly copying
+   * something other than what the member is looking at, the button says what
+   * to do first.
+   */
+  canCopyLink?: boolean;
 }
 
 /** Small pill toggle switch (teal when on) — no new CSS, Tailwind only. */
@@ -75,6 +89,8 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
   onApply,
   onClear,
   onClose,
+  onCopyLink,
+  canCopyLink = true,
 }) => {
   const { t } = useTranslation();
 
@@ -408,21 +424,41 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-5 py-4 border-t border-gray-100 flex items-center gap-3">
-          <button
-            type="button"
-            onClick={handleClearAll}
-            className="flex-1 py-3 rounded-xl font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
-          >
-            {t("communityMain.filterSheet.clearAll") || "Clear all"}
-          </button>
-          <button
-            type="button"
-            onClick={handleApply}
-            className="flex-1 py-3 rounded-xl font-medium text-white bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 transition-colors shadow-md"
-          >
-            {t("communityMain.filterSheet.apply") || "Apply"}
-          </button>
+        <div className="px-5 py-4 border-t border-gray-100 space-y-3">
+          {onCopyLink && (
+            <button
+              type="button"
+              onClick={onCopyLink}
+              disabled={!canCopyLink}
+              title={
+                canCopyLink
+                  ? undefined
+                  : t("communityMain.filterSheet.applyFirst") || "Apply filters first"
+              }
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 transition-colors disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-teal-50"
+            >
+              <Link2 className="w-4 h-4" />
+              {canCopyLink
+                ? t("communityMain.filterSheet.copyLink") || "Copy link"
+                : t("communityMain.filterSheet.applyFirst") || "Apply filters first"}
+            </button>
+          )}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleClearAll}
+              className="flex-1 py-3 rounded-xl font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors"
+            >
+              {t("communityMain.filterSheet.clearAll") || "Clear all"}
+            </button>
+            <button
+              type="button"
+              onClick={handleApply}
+              className="flex-1 py-3 rounded-xl font-medium text-white bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 transition-colors shadow-md"
+            >
+              {t("communityMain.filterSheet.apply") || "Apply"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

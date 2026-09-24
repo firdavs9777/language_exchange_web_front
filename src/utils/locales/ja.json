@@ -377,6 +377,11 @@
       "error_title": "モーメントを読み込めませんでした",
       "error_body": "通信状況を確認して、もう一度お試しください。",
       "retry": "再試行"
+    },
+    "tabs": {
+      "label": "プロフィールセクション",
+      "moments": "モーメント",
+      "about": "自己紹介"
     }
   },
   "moments_section": {
@@ -714,7 +719,10 @@
     "tabs": {
       "all": "すべて",
       "popular": "人気",
-      "new": "新着"
+      "new": "新着",
+      "forYou": "おすすめ",
+      "online": "オンライン",
+      "label": "コミュニティタブ"
     },
     "filters": {
       "language": "言語",
@@ -771,7 +779,11 @@
       "onlineNow": "オンライン中",
       "newMembersOnly": "新規メンバーのみ（過去7日間）",
       "reset": "リセット",
-      "apply": "適用"
+      "apply": "適用",
+      "copyLink": "リンクをコピー",
+      "linkCopied": "リンクをコピーしました",
+      "linkCopyFailed": "リンクをコピーできませんでした",
+      "applyFirst": "先にフィルターを適用してください"
     },
     "highlighted": {
       "title": "注目のプロフィール",
@@ -792,6 +804,22 @@
       "fluent": "流暢",
       "learns": "学習中",
       "native": "ネイティブ"
+    },
+    "chips": {
+      "recentlyActive": "最近アクティブ",
+      "onlineNow": "オンライン中",
+      "speaks": "{{language}}を話す",
+      "learning": "{{language}}を学習中"
+    },
+    "forYou": {
+      "subtitle": "あなたの言語・レベル・興味に合わせてパートナーをお選びしました。",
+      "refresh": "更新",
+      "why": "理由：{{reasons}}",
+      "empty": {
+        "title": "おすすめはまだありません",
+        "message": "話せる言語と学びたい言語、レベル、興味をいくつか追加すると、ぴったりのパートナーを見つけます。",
+        "action": "プロフィールを完成させる"
+      }
     }
   },
   "communityDetail": {
@@ -852,6 +880,40 @@
       "speaks": "話せる言語",
       "learning": "学習中",
       "notSpecified": "未設定"
+    },
+    "match": {
+      "title": "言語マッチ",
+      "native": "母語",
+      "learning": "学習中",
+      "perfect": "パーフェクトマッチです！お互いに教え合えますね。",
+      "youLearnTheirs": "相手が話す言語を学習中です！",
+      "theyLearnYours": "相手があなたの母語を学習中です！",
+      "sameNative": "お二人とも母語が同じです。"
+    },
+    "mutual": {
+      "title": "共通の興味",
+      "countLabel": "{{count}}件が共通"
+    },
+    "starters": {
+      "title": "会話のきっかけ",
+      "send": "送信",
+      "perfect": "こんにちは、{{name}}さん！パーフェクトな言語マッチですね。一緒に練習しませんか？",
+      "language": "こんにちは、{{name}}さん！{{language}}を勉強しているのですが、上達のコツはありますか？",
+      "teach": "こんにちは、{{name}}さん！{{language}}を学習されているんですね。質問があればいつでもお手伝いします。",
+      "sameNative": "こんにちは、{{name}}さん！母語が同じですね。学習の調子はどうですか？",
+      "topic": "こんにちは、{{name}}さん！{{topic}}に興味があるんですね。きっかけは何だったんですか？",
+      "targetLearning": "こんにちは、{{name}}さん！{{language}}はどのくらい学習しているんですか？",
+      "generic": "こんにちは、{{name}}さん！一緒に言語練習ができたら嬉しいです。今週はいかがですか？",
+      "practice": "こんにちは、{{name}}さん！今まで学習で一番役立ったことは何ですか？",
+      "hello": "こんにちは、{{name}}さん！プロフィールが目に留まりました。今日はどんな一日ですか？"
+    },
+    "engagement": {
+      "replies": "返信率{{rate}}%",
+      "new": "新規メンバー"
+    },
+    "suggested": {
+      "title": "{{name}}さんに似たメンバー",
+      "seeAll": "メンバーをすべて見る"
     }
   },
   "communityDetailSection": {

@@ -143,6 +143,36 @@ describe("MemberCard", () => {
     expect(screen.getByTestId("member-card-location")).toHaveTextContent("South Korea");
   });
 
+  // The card is the row's primary control. Before this it was a bare
+  // <div onClick>, so the member list and the suggestion strip on a profile
+  // were reachable by pointer only.
+  it("is reachable and operable from the keyboard", () => {
+    const onOpen = jest.fn();
+    render(<MemberCard user={baseUser} onWave={jest.fn()} onOpen={onOpen} />);
+
+    const card = screen.getByTestId("member-card-root");
+    expect(card).toHaveAttribute("role", "button");
+    expect(card).toHaveAttribute("tabindex", "0");
+
+    fireEvent.keyDown(card, { key: "Enter" });
+    expect(onOpen).toHaveBeenCalledWith(baseUser);
+
+    fireEvent.keyDown(card, { key: " " });
+    expect(onOpen).toHaveBeenCalledTimes(2);
+  });
+
+  it("ignores other keys, and keys pressed on the wave button inside it", () => {
+    const onOpen = jest.fn();
+    render(<MemberCard user={baseUser} onWave={jest.fn()} onOpen={onOpen} />);
+
+    fireEvent.keyDown(screen.getByTestId("member-card-root"), { key: "a" });
+    // A key pressed on the nested button bubbles to the card; opening the
+    // profile from it would be the wrong answer to "wave at Alice".
+    fireEvent.keyDown(screen.getByTestId("member-card-wave-button"), { key: "Enter" });
+
+    expect(onOpen).not.toHaveBeenCalled();
+  });
+
   it("renders the age from birth_year", () => {
     render(<MemberCard user={baseUser} onWave={jest.fn()} onOpen={jest.fn()} />);
     const currentYear = new Date().getFullYear();

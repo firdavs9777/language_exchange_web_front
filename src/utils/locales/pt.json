@@ -358,6 +358,11 @@
       "error_title": "Não foi possível carregar seus momentos",
       "error_body": "Verifique sua conexão e tente novamente.",
       "retry": "Tentar novamente"
+    },
+    "tabs": {
+      "label": "Seções do perfil",
+      "moments": "Momentos",
+      "about": "Sobre"
     }
   },
   "moments_section": {
@@ -695,7 +700,10 @@
     "tabs": {
       "all": "Todos",
       "popular": "Popular",
-      "new": "Novo"
+      "new": "Novo",
+      "forYou": "Para você",
+      "online": "Online",
+      "label": "Abas da comunidade"
     },
     "filters": {
       "language": "Idioma",
@@ -752,7 +760,11 @@
       "onlineNow": "Online agora",
       "newMembersOnly": "Apenas novos membros (últimos 7 dias)",
       "reset": "Limpar",
-      "apply": "Aplicar"
+      "apply": "Aplicar",
+      "copyLink": "Copiar link",
+      "linkCopied": "Link copiado",
+      "linkCopyFailed": "Não foi possível copiar o link",
+      "applyFirst": "Aplique os filtros primeiro"
     },
     "highlighted": {
       "title": "Perfis em destaque",
@@ -773,6 +785,22 @@
       "fluent": "FLUENTE",
       "learns": "APRENDE",
       "native": "NATIVO"
+    },
+    "chips": {
+      "recentlyActive": "Ativo recentemente",
+      "onlineNow": "Online agora",
+      "speaks": "Fala {{language}}",
+      "learning": "Aprendendo {{language}}"
+    },
+    "forYou": {
+      "subtitle": "Parceiros escolhidos para você com base nos seus idiomas, nível e interesses.",
+      "refresh": "Atualizar",
+      "why": "Por quê: {{reasons}}",
+      "empty": {
+        "title": "Ainda sem recomendações",
+        "message": "Adicione os idiomas que você fala e quer aprender, seu nível e alguns interesses, e vamos encontrar parceiros compatíveis.",
+        "action": "Complete seu perfil"
+      }
     }
   },
   "communityDetail": {
@@ -833,6 +861,40 @@
       "speaks": "Fala",
       "learning": "Aprendendo",
       "notSpecified": "Não especificado"
+    },
+    "match": {
+      "title": "Match de idioma",
+      "native": "Nativo",
+      "learning": "Aprendendo",
+      "perfect": "Match perfeito — vocês podem ensinar um ao outro.",
+      "youLearnTheirs": "Você está aprendendo exatamente o que essa pessoa fala!",
+      "theyLearnYours": "Essa pessoa está aprendendo exatamente o que você fala!",
+      "sameNative": "Vocês dois falam o mesmo idioma nativo."
+    },
+    "mutual": {
+      "title": "Interesses em comum",
+      "countLabel": "{{count}} em comum"
+    },
+    "starters": {
+      "title": "Para começar a conversa",
+      "send": "Enviar",
+      "perfect": "Oi {{name}}! Somos um match de idioma perfeito — que tal praticar juntos?",
+      "language": "Oi {{name}}! Estou aprendendo {{language}} — tem alguma dica para eu melhorar?",
+      "teach": "Oi {{name}}! Vi que você está aprendendo {{language}}. Se tiver dúvidas, posso ajudar com prazer.",
+      "sameNative": "Oi {{name}}! A gente fala o mesmo idioma nativo — como está indo seu aprendizado?",
+      "topic": "Oi {{name}}! Vi que você também curte {{topic}}. Como você começou?",
+      "targetLearning": "Oi {{name}}! Há quanto tempo você está aprendendo {{language}}?",
+      "generic": "Oi {{name}}! Eu adoraria praticar idiomas com você. Como está sua semana?",
+      "practice": "Oi {{name}}! O que mais te ajudou no seu aprendizado até agora?",
+      "hello": "Oi {{name}}! Seu perfil chamou minha atenção — como está seu dia?"
+    },
+    "engagement": {
+      "replies": "{{rate}}% de respostas",
+      "new": "Novo membro"
+    },
+    "suggested": {
+      "title": "Mais membros parecidos com {{name}}",
+      "seeAll": "Ver todos os membros"
     }
   },
   "communityDetailSection": {

@@ -1,0 +1,304 @@
+import "@testing-library/jest-dom";
+import React, { useState } from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { makeStore } from "../../store";
+import CommunityFilterSheet from "./CommunityFilterSheet";
+import { CommunityFilters } from "./lib/buildCommunityQuery";
+import { DEFAULT_FILTERS } from "./lib/filterStorage";
+
+// `t` answers with nothing, so every control below is found by the English
+// fallback the component ships -- which is also what a member sees in a locale
+// that has not been translated yet.
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({ t: () => "" }),
+  initReactI18next: { type: "3rdParty", init: () => {} },
+}));
+
+const requestedUrls: string[] = [];
+const originalFetch = global.fetch;
+
+beforeEach(() => {
+  requestedUrls.length = 0;
+  (global as any).fetch = jest.fn((input: any) => {
+    const url = typeof input === "string" ? input : input?.url || "";
+    requestedUrls.push(url);
+    const body = url.indexOf("/count") >= 0
+      ? { success: true, data: { count: 7 } }
+      : url.indexOf("/topics") >= 0
+      ? { success: true, data: [{ _id: "t1", name: "Music" }, { _id: "t2", name: "Travel" }] }
+      : { success: true, data: [] };
+    return Promise.resolve(
+      new Response(JSON.stringify(body), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      })
+    );
+  });
+});
+
+afterEach(() => {
+  global.fetch = originalFetch;
+  jest.clearAllMocks();
+});
+
+const SIGNED_IN = {
+  auth: {
+    userInfo: {
+      user: { _id: "u1", name: "Me", native_language: "English", language_to_learn: "Korean" },
+      token: "t",
+    },
+  },
+};
+
+const countRequests = () => requestedUrls.filter((url) => url.indexOf("/count") >= 0);
+
+function renderSheet(
+  value: CommunityFilters = { ...DEFAULT_FILTERS },
+  extra: Partial<React.ComponentProps<typeof CommunityFilterSheet>> = {}
+) {
+  const onChange = jest.fn();
+  const onApply = jest.fn();
+  const onClear = jest.fn();
+  const onClose = jest.fn();
+  const utils = render(
+    <Provider store={makeStore(SIGNED_IN)}>
+      <CommunityFilterSheet
+        open
+        value={value}
+        onChange={onChange}
+        onApply={onApply}
+        onClear={onClear}
+        onClose={onClose}
+        {...extra}
+      />
+    </Provider>
+  );
+  return { ...utils, onChange, onApply, onClear, onClose };
+}
+
+/** The sheet as the page drives it: a draft that actually changes. */
+const Harness: React.FC<{ initial?: CommunityFilters }> = ({ initial = {} }) => {
+  const [value, setValue] = useState<CommunityFilters>(initial);
+  return (
+    <CommunityFilterSheet
+      open
+      value={value}
+      onChange={setValue}
+      onApply={jest.fn()}
+      onClear={jest.fn()}
+      onClose={jest.fn()}
+    />
+  );
+};
+
+const selects = (container: HTMLElement) =>
+  Array.from(container.querySelectorAll("select"));
+
+describe("the filter sheet's controls", () => {
+  it("is not on the page at all when it is closed, and asks the server nothing", () => {
+    const { container } = render(
+      <Provider store={makeStore(SIGNED_IN)}>
+        <CommunityFilterSheet
+          open={false}
+          value={{}}
+          onChange={jest.fn()}
+          onApply={jest.fn()}
+          onClear={jest.fn()}
+          onClose={jest.fn()}
+        />
+      </Provider>
+    );
+    expect(container).toBeEmptyDOMElement();
+    expect(requestedUrls).toEqual([]);
+  });
+
+  it("moves the minimum age", () => {
+    const { onChange } = renderSheet();
+    fireEvent.change(screen.getByLabelText("Minimum age"), { target: { value: "25" } });
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ minAge: 25 }));
+  });
+
+  it("moves the maximum age", () => {
+    const { onChange } = renderSheet();
+    fireEvent.change(screen.getByLabelText("Maximum age"), { target: { value: "40" } });
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ maxAge: 40 }));
+  });
+
+  // The two handles share a track: dragging one past the other would invert
+  // the range, so each is clamped by the other.
+  it("will not let the minimum cross the maximum", () => {
+    const { onChange } = renderSheet({ minAge: 18, maxAge: 30 });
+    fireEvent.change(screen.getByLabelText("Minimum age"), { target: { value: "55" } });
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ minAge: 30 }));
+  });
+
+  it("picks a gender, and unsets it again with Any", () => {
+    const { onChange } = renderSheet();
+    fireEvent.click(screen.getByRole("button", { name: "Female" }));
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ gender: "female" }));
+
+    onChange.mockClear();
+    // Two sections offer an "Any": gender first, then the CEFR level.
+    fireEvent.click(screen.getAllByRole("button", { name: "Any" })[0]);
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ gender: undefined }));
+  });
+
+  it("sets the partner's native language from the first select", () => {
+    const { container, onChange } = renderSheet();
+    fireEvent.change(selects(container)[0], { target: { value: "Korean" } });
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ nativeLanguage: "Korean" })
+    );
+  });
+
+  it("sets the language the partner is learning from the second select", () => {
+    const { container, onChange } = renderSheet();
+    fireEvent.change(selects(container)[1], { target: { value: "English" } });
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ learningLanguage: "English" })
+    );
+  });
+
+  it("sets the country", () => {
+    const { onChange } = renderSheet();
+
+    fireEvent.change(screen.getByPlaceholderText("e.g. South Korea"), {
+      target: { value: "Japan" },
+    });
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ country: "Japan" }));
+  });
+
+  // An emptied box is no country filter at all, not `country=""`.
+  it("drops the country filter when the box is emptied", () => {
+    const { onChange } = renderSheet({ country: "Japan" });
+
+    fireEvent.change(screen.getByPlaceholderText("e.g. South Korea"), {
+      target: { value: "" },
+    });
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ country: undefined }));
+  });
+
+  it("sets a CEFR level and takes it off again", () => {
+    const { onChange } = renderSheet();
+    fireEvent.click(screen.getByRole("button", { name: "B2" }));
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ languageLevel: "B2" }));
+
+    onChange.mockClear();
+    fireEvent.click(screen.getAllByRole("button", { name: "Any" })[1]);
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ languageLevel: undefined })
+    );
+  });
+
+  it("adds and removes topics by name", async () => {
+    const { container } = render(
+      <Provider store={makeStore(SIGNED_IN)}>
+        <Harness />
+      </Provider>
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Music" }));
+    fireEvent.click(screen.getByRole("button", { name: "Travel" }));
+    // Both selected: tapping Music again must leave Travel alone.
+    fireEvent.click(screen.getByRole("button", { name: "Music" }));
+
+    const selected = Array.from(container.querySelectorAll("button"))
+      .filter((button) => /bg-teal-500/.test(button.className))
+      .map((button) => button.textContent);
+    expect(selected).toContain("Travel");
+    expect(selected).not.toContain("Music");
+  });
+
+  it("asks for a minimum number of mutual interests", () => {
+    const { onChange } = renderSheet();
+    fireEvent.change(screen.getByLabelText("Mutual interests"), { target: { value: "3" } });
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ topicsAtLeast: 3 }));
+  });
+
+  it("flips the two toggles onto the right filters", () => {
+    const { onChange } = renderSheet();
+
+    fireEvent.click(screen.getByText("Online now"));
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ onlineOnly: true }));
+
+    onChange.mockClear();
+    fireEvent.click(screen.getByText("New users only"));
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ newUsersOnly: true }));
+  });
+
+  it("hands the draft up on Apply", () => {
+    const value = { gender: "male", onlineOnly: true };
+    const { onApply } = renderSheet(value);
+
+    fireEvent.click(screen.getByRole("button", { name: "Apply" }));
+    expect(onApply).toHaveBeenCalledWith(value);
+  });
+
+  // "Clear all" has two jobs: empty the sheet on screen AND tell the page, so
+  // the list behind it stops filtering too.
+  it("resets the draft and the page on Clear all", () => {
+    const { onChange, onClear } = renderSheet({ gender: "male", country: "Japan" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Clear all" }));
+    expect(onChange).toHaveBeenCalledWith({ ...DEFAULT_FILTERS });
+    expect(onClear).toHaveBeenCalled();
+  });
+});
+
+describe("the filter sheet's live count", () => {
+  it("counts the matches for the filters it opened with", async () => {
+    renderSheet({ gender: "female", onlineOnly: true });
+
+    expect(await screen.findByText("7 matches")).toBeInTheDocument();
+    expect(countRequests()[0]).toContain("gender=female");
+    expect(countRequests()[0]).toContain("onlineOnly=true");
+  });
+
+  // Every keystroke in the country box must not become a request.
+  it("waits for the editing to settle before counting again", async () => {
+    render(
+      <Provider store={makeStore(SIGNED_IN)}>
+        <Harness />
+      </Provider>
+    );
+    await waitFor(() => expect(countRequests().length).toBe(1));
+
+    const input = screen.getByPlaceholderText("e.g. South Korea");
+    fireEvent.change(input, { target: { value: "J" } });
+    fireEvent.change(input, { target: { value: "Ja" } });
+    fireEvent.change(input, { target: { value: "Japan" } });
+
+    await waitFor(() => expect(countRequests().length).toBe(2));
+    expect(countRequests()[1]).toContain("country=Japan");
+  });
+});
+
+describe("the filter sheet's Copy link", () => {
+  it("is absent when the page cannot produce a link", () => {
+    renderSheet();
+    expect(screen.queryByRole("button", { name: "Copy link" })).not.toBeInTheDocument();
+  });
+
+  it("copies the link when the sheet shows what the list shows", () => {
+    const onCopyLink = jest.fn();
+    renderSheet({ gender: "male" }, { onCopyLink, canCopyLink: true });
+
+    fireEvent.click(screen.getByRole("button", { name: "Copy link" }));
+    expect(onCopyLink).toHaveBeenCalled();
+  });
+
+  // A link describes a list. While the draft is unapplied there is no such
+  // list, so the button says what to do instead of copying a URL that opens
+  // something other than what the member is looking at.
+  it("refuses to copy an unapplied draft, and says why", () => {
+    const onCopyLink = jest.fn();
+    renderSheet({ gender: "male" }, { onCopyLink, canCopyLink: false });
+
+    const button = screen.getByRole("button", { name: "Apply filters first" });
+    expect(button).toBeDisabled();
+    fireEvent.click(button);
+    expect(onCopyLink).not.toHaveBeenCalled();
+    expect(screen.queryByRole("button", { name: "Copy link" })).not.toBeInTheDocument();
+  });
+});

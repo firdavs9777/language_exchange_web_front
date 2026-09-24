@@ -127,6 +127,10 @@ export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: [
     "Community",
+    // The matching engine's "For you" feed. Deliberately separate from
+    // "Community": the list invalidating on a wave or a follow must not throw
+    // away a recommendation set the server spent 30 cached minutes on.
+    "Recommendations",
     "Moments",
     "Chat",
     "User",

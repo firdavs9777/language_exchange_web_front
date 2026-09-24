@@ -220,3 +220,33 @@ describe("getPublicUserProfile", () => {
     expect(profileCalls()).toBe(2);
   });
 });
+
+describe('the "For you" recommendation feed', () => {
+  it("getRecommendations -> GET /api/v1/matching/recommendations?limit=", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+
+    await store.dispatch(
+      (communityApiSlice.endpoints as any).getRecommendations.initiate({ limit: 20 })
+    );
+
+    expect(calls).toHaveLength(1);
+    const url = new URL(calls[0].url);
+    expect(url.pathname).toBe("/api/v1/matching/recommendations");
+    expect(url.searchParams.get("limit")).toBe("20");
+    expect(calls[0].method).toBe("GET");
+  });
+
+  // The backend caps `limit` at 50 and defaults to 20; the client sends a
+  // limit either way so the request is explicit about the page it wants.
+  it("asks for the server's default page when no limit is given", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+
+    await store.dispatch(
+      (communityApiSlice.endpoints as any).getRecommendations.initiate({})
+    );
+
+    expect(new URL(calls[0].url).searchParams.get("limit")).toBe("20");
+  });
+});

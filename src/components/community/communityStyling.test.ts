@@ -30,3 +30,60 @@ it("still ships the class names the member list depends on", () => {
     expect(scss).toContain(cls);
   }
 });
+
+// --- The member page --------------------------------------------------------
+//
+// /community/:id is the profile page now, and the blocks that made it one live
+// in src/components/profile/parts. They are new code on the community surface,
+// so they are held to the same rules as the list: design tokens only, lucide
+// for every icon, nothing from react-bootstrap, and no colour or emoji baked
+// into the markup where no theme can reach it.
+
+const MEMBER_PAGE_FILES = [
+  "../profile/ProfilePage.tsx",
+  "../profile/parts/LanguageMatchCard.tsx",
+  "../profile/parts/EngagementStats.tsx",
+  "../profile/parts/MutualInterests.tsx",
+  "../profile/parts/ConversationStarters.tsx",
+  "../profile/parts/SuggestedMembers.tsx",
+];
+
+const memberPageSources: { name: string; source: string }[] = MEMBER_PAGE_FILES.map((rel) => ({
+  name: rel,
+  source: fs.readFileSync(path.join(__dirname, rel), "utf8"),
+}));
+
+// Emoji presentation blocks: pictographs, dingbats, symbols and the variation
+// selector. Arrows and punctuation (em dash) are deliberately NOT in here --
+// they are typography, not icons.
+const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/u;
+
+describe("the member page blocks", () => {
+  memberPageSources.forEach(({ name, source }) => {
+    it(`${name} carries no inline style attribute`, () => {
+      expect(source.match(/style=\{\{/g) || []).toEqual([]);
+    });
+
+    it(`${name} names no colour by hex`, () => {
+      expect(source.match(/#[0-9a-fA-F]{3,8}\b/g) || []).toEqual([]);
+    });
+
+    it(`${name} imports no react-bootstrap`, () => {
+      expect(source).not.toContain("react-bootstrap");
+    });
+
+    it(`${name} draws its icons with lucide, not emoji`, () => {
+      expect(EMOJI.test(source)).toBe(false);
+    });
+  });
+
+  it("keeps the deleted detail page deleted", () => {
+    expect(fs.existsSync(path.join(__dirname, "CommunityDetail.tsx"))).toBe(false);
+    expect(fs.existsSync(path.join(__dirname, "CommunityDetail.css"))).toBe(false);
+    // TandemMemberCard was the detail page's row. Nothing rendered it once
+    // that page went; its one surviving export, the TandemMember type, now
+    // lives in tandem/types.ts.
+    expect(fs.existsSync(path.join(__dirname, "tandem/TandemMemberCard.tsx"))).toBe(false);
+    expect(fs.existsSync(path.join(__dirname, "tandem/types.ts"))).toBe(true);
+  });
+});

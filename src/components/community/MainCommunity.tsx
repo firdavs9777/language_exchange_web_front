@@ -1,11 +1,12 @@
 import { Fragment, useState, useMemo, useCallback, useEffect, useLayoutEffect, useRef } from "react";
-import { Loader2, Search } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Loader2, RefreshCw, Search, Sparkles } from "lucide-react";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import {
   useGetCommunityMembersQuery,
+  useGetRecommendationsQuery,
   useGetTopicsQuery,
 } from "../../store/slices/communitySlice";
 import { useGetProfileVisitorsQuery } from "../../store/slices/usersSlice";
@@ -26,9 +27,27 @@ import { AD_SLOTS } from "../ads/adsenseConfig";
 import { CommunityFilters, buildCommunityQuery } from "./lib/buildCommunityQuery";
 import * as filterStorage from "./lib/filterStorage";
 import { DEFAULT_FILTERS } from "./lib/filterStorage";
+import {
+  CommunityUrlState,
+  decodeCommunityState,
+  encodeCommunityState,
+  hasCommunityUrlState,
+  mergeCommunityParams,
+} from "./lib/communityUrlState";
+import notify from "../../design/notify";
 import "./tandem/tandem-community.scss";
 
 const PAGE_LIMIT = 20;
+
+/**
+ * A member as the recommendation feed returns them: the card's own fields plus
+ * the two the matching engine adds. `matchReasons` is a short list of English
+ * reason strings ("Native Korean speaker", "Online now") computed server-side.
+ */
+interface RecommendedMember extends CommunityMemberCard {
+  matchScore?: number;
+  matchReasons?: string[];
+}
 
 /** Count how many discovery filters are active (drives the SubNav badge). */
 const countActiveFilters = (f: CommunityFilters): number => {
@@ -47,18 +66,137 @@ const countActiveFilters = (f: CommunityFilters): number => {
   return n;
 };
 
+/**
+ * The "For you" tab.
+ *
+ * One request, no filters, no paging: the matching engine already decided,
+ * and every reason it had is printed under the card it belongs to, because a
+ * recommendation nobody can see the reasoning for is indistinguishable from a
+ * random list. When it comes back empty the answer is never "no one is here"
+ * -- it is that we do not know enough about the member yet, so the empty state
+ * sends them to their profile rather than to a dead end.
+ */
+const ForYouTab: React.FC<{
+  members: RecommendedMember[];
+  isFetching: boolean;
+  onRefresh: () => void;
+  onOpen: (user: CommunityMemberCard) => void;
+  onWave: (user: CommunityMemberCard) => void;
+  t: (key: string, options?: any) => string;
+}> = ({ members, isFetching, onRefresh, onOpen, onWave, t }) => (
+  <>
+    <div className="flex items-center justify-between gap-3 py-2">
+      <p className="text-sm text-gray-500 m-0">
+        {t("communityMain.forYou.subtitle") ||
+          "Partners picked for you from your languages, level and interests."}
+      </p>
+      <button
+        type="button"
+        data-testid="for-you-refresh"
+        onClick={onRefresh}
+        disabled={isFetching}
+        className="inline-flex shrink-0 items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 transition-colors disabled:opacity-60"
+      >
+        <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? "animate-spin" : ""}`} />
+        {t("communityMain.forYou.refresh") || "Refresh"}
+      </button>
+    </div>
+
+    {isFetching && members.length === 0 ? (
+      <div className="community-empty">
+        <Loader2 className="animate-spin" />
+        <p>{t("communityMain.search.loading") || "Loading members..."}</p>
+      </div>
+    ) : members.length === 0 ? (
+      <div className="community-empty" data-testid="for-you-empty">
+        <Sparkles className="community-empty__icon" aria-hidden />
+        <h3>{t("communityMain.forYou.empty.title") || "No recommendations yet"}</h3>
+        <p>
+          {t("communityMain.forYou.empty.message") ||
+            "Add the languages you speak and want to learn, your level and a few interests, and we'll find partners who match."}
+        </p>
+        <Link to="/profile/edit" className="community-empty__action">
+          {t("communityMain.forYou.empty.action") || "Complete your profile"}
+        </Link>
+      </div>
+    ) : (
+      <div className="flex flex-col gap-3">
+        {members.map((member) => {
+          const reasons = (member.matchReasons || []).filter(Boolean);
+          return (
+            <div key={member._id} className="flex flex-col gap-1">
+              <MemberCard user={member} onOpen={onOpen} onWave={onWave} />
+              {reasons.length > 0 && (
+                <p
+                  data-testid="for-you-why"
+                  className="text-xs text-gray-500 px-3 m-0"
+                >
+                  {t("communityMain.forYou.why", { reasons: reasons.join(" \u00b7 ") }) ||
+                    `Why: ${reasons.join(" \u00b7 ")}`}
+                </p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </>
+);
+
 const ModernCommunity: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // Search + sort live outside `filters` (search is the SubNav box, sort is a
-  // quick chip) but are folded into the query so BOTH hit the DB.
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<"recently_active" | undefined>(undefined);
-  const [filters, setFilters] = useState<CommunityFilters>(() => filterStorage.load());
+  // The filters this browser remembered from last time. Read once, in a lazy
+  // initializer guarded for the prerender — never during render, and never as
+  // the source of truth. It is the fallback for a bare /communities; a URL
+  // that carries state outranks it, so a shared link never silently picks up
+  // the recipient's own saved filters.
+  const [storedFilters] = useState<CommunityFilters>(() =>
+    typeof window === "undefined" ? { ...DEFAULT_FILTERS } : filterStorage.load()
+  );
+
+  // THE state of the list, derived from the query string on every render
+  // rather than mirrored into React state. That is what makes Back, Forward
+  // and a pasted link work without a single extra line: the browser changes
+  // the URL and this recomputes.
+  const listState = useMemo<CommunityUrlState>(() => {
+    const decoded = decodeCommunityState(searchParams);
+    const fromUrl = hasCommunityUrlState(searchParams);
+    return {
+      filters: fromUrl
+        ? { ...DEFAULT_FILTERS, ...(decoded.filters || {}) }
+        : { ...storedFilters },
+      search: decoded.search || "",
+      sort: decoded.sort,
+      tab: decoded.tab || "all",
+    };
+  }, [searchParams, storedFilters]);
+
+  const filters = listState.filters;
+  const sort = listState.sort;
+  const search = listState.search;
+  const activeTab: CommunityNavTab = listState.tab;
+  const isForYou = activeTab === "foryou";
+
+  /**
+   * Online and New are the All list with one switch held down. The member
+   * keeps every other filter; the tab's own condition is simply not theirs to
+   * turn off while they are in it.
+   *
+   * The lock lives on the *query*, not on the stored filters, so leaving the
+   * tab does not leave `online=1` behind in the URL or in localStorage — the
+   * tab name in `?tab=` already says everything the link needs to say.
+   */
+  const effectiveFilters = useMemo<CommunityFilters>(() => {
+    if (activeTab === "online") return { ...filters, onlineOnly: true };
+    if (activeTab === "new") return { ...filters, newUsersOnly: true };
+    return filters;
+  }, [filters, activeTab]);
+
   const [draftFilters, setDraftFilters] = useState<CommunityFilters>(filters);
-
-  const [activeTab, setActiveTab] = useState<CommunityNavTab>("all");
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [waveTarget, setWaveTarget] = useState<CommunityMemberCard | null>(null);
   const [page, setPage] = useState(1);
@@ -68,7 +206,55 @@ const ModernCommunity: React.FC = () => {
   // instead of flashing the empty state.
   const [extraPages, setExtraPages] = useState<CommunityMemberCard[]>([]);
 
+  // The box updates the URL on every keystroke (so a link always matches what
+  // is on screen); only the *query* waits for the typing to settle.
   const debouncedSearch = useDebounce(search, 300);
+
+  /**
+   * Write a list state into the query string, keeping any param this page does
+   * not own (campaign tags, a stray `ref`). `replace` because a filter toggle
+   * is a correction of where you are, not a place you went: Back should leave
+   * the list, not walk you through twelve half-built filter combinations.
+   */
+  const writeUrl = useCallback(
+    (next: CommunityUrlState) => {
+      const merged = mergeCommunityParams(searchParams, encodeCommunityState(next));
+      if (merged.toString() === searchParams.toString()) return;
+      setSearchParams(merged, { replace: true });
+    },
+    [searchParams, setSearchParams]
+  );
+
+  /**
+   * The single write path. Every control — the sheet, the quick chips, the
+   * active-filter chips, the search box, the tabs — hands it a patch; it folds
+   * that into the current state, puts the result in the URL and mirrors the
+   * filters to localStorage so a later visit with no link still opens where
+   * the member left off.
+   */
+  const applyState = useCallback(
+    (patch: Partial<CommunityUrlState>) => {
+      const next: CommunityUrlState = {
+        filters,
+        search,
+        sort,
+        tab: activeTab,
+        ...patch,
+      };
+      if (patch.filters) filterStorage.save(patch.filters);
+      writeUrl(next);
+    },
+    [filters, search, sort, activeTab, writeUrl]
+  );
+
+  // Two jobs, both idempotent: put the stored filters into the URL on a bare
+  // /communities (so "Copy link" always has something to copy), and normalise
+  // a hand-edited query into its canonical spelling. `writeUrl` compares the
+  // encoded string first, so a URL that already says this does nothing.
+  useEffect(() => {
+    writeUrl({ filters, search, sort, tab: activeTab });
+  }, [filters, search, sort, activeTab, writeUrl]);
+
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
 
   const currentUser = useMemo(
@@ -95,12 +281,12 @@ const ModernCommunity: React.FC = () => {
   const queryArg = useMemo(
     () =>
       buildCommunityQuery(
-        { ...filters, search: debouncedSearch || undefined, sort },
+        { ...effectiveFilters, search: debouncedSearch || undefined, sort },
         me,
         page,
         PAGE_LIMIT
       ),
-    [filters, debouncedSearch, sort, me, page]
+    [effectiveFilters, debouncedSearch, sort, me, page]
   );
 
   const {
@@ -109,7 +295,24 @@ const ModernCommunity: React.FC = () => {
     isFetching,
     error: errorInfo,
     refetch,
-  } = useGetCommunityMembersQuery(queryArg);
+  } = useGetCommunityMembersQuery(queryArg, { skip: isForYou });
+
+  // "For you" asks a different server a different question: no filters, no
+  // paging, one scored set. It is skipped entirely off the tab so the tab
+  // costs nothing to anyone who never opens it.
+  const {
+    data: recommendationsData,
+    isFetching: isRecommendationsFetching,
+    refetch: refetchRecommendations,
+  } = useGetRecommendationsQuery({ limit: PAGE_LIMIT }, { skip: !isForYou });
+
+  const recommendations = useMemo<RecommendedMember[]>(() => {
+    const raw = recommendationsData?.data;
+    if (!Array.isArray(raw)) return [];
+    return (raw as RecommendedMember[]).filter((m) =>
+      currentUser._id ? m._id !== currentUser._id : true
+    );
+  }, [recommendationsData, currentUser._id]);
 
   const { data: topicsResult } = useGetTopicsQuery({});
   const topicLabels = useMemo<Record<string, string>>(() => {
@@ -157,12 +360,14 @@ const ModernCommunity: React.FC = () => {
     });
   }, [communityData, page]);
 
-  // Reset pagination whenever the server query changes (filters / search /
-  // sort). Skip the first run so a fresh mount (back-nav from /community/:id)
-  // doesn't clobber restored state.
+  // Reset pagination whenever the URL state that feeds the query changes
+  // (filters / search / sort / tab) -- including a change that arrived via
+  // Back. Skip the first run so a fresh mount (back-nav from /community/:id)
+  // doesn't clobber restored state. Keyed on the *value*, not the object
+  // identity, which changes on every query-string edit.
   const filterKey = useMemo(
-    () => JSON.stringify({ filters, debouncedSearch, sort }),
-    [filters, debouncedSearch, sort]
+    () => JSON.stringify({ effectiveFilters, debouncedSearch, sort, activeTab }),
+    [effectiveFilters, debouncedSearch, sort, activeTab]
   );
   const skipFilterReset = useRef(true);
   useEffect(() => {
@@ -248,54 +453,128 @@ const ModernCommunity: React.FC = () => {
   }, [isFetching, hasMore]);
 
   const openFilterSheet = useCallback(() => {
-    setDraftFilters(filters);
+    // The sheet opens on what is actually applied -- the tab's lock included,
+    // so the Online tab does not show an "Online now" switch sitting off while
+    // the list beneath it is online-only.
+    setDraftFilters(effectiveFilters);
     setIsFilterSheetOpen(true);
-  }, [filters]);
+  }, [effectiveFilters]);
 
-  const applyFilters = useCallback((next: CommunityFilters) => {
-    setFilters(next);
-    filterStorage.save(next);
-    setIsFilterSheetOpen(false);
-  }, []);
+  const applyFilters = useCallback(
+    (next: CommunityFilters) => {
+      applyState({ filters: next });
+      setIsFilterSheetOpen(false);
+    },
+    [applyState]
+  );
 
   // Reset ALL discovery filters back to defaults (used by the sheet's
   // "Clear all" and the ActiveFilterChips "Clear"). Persisted immediately.
   const clearAllFilters = useCallback(() => {
     const next = { ...DEFAULT_FILTERS };
     setDraftFilters(next);
-    setFilters(next);
-    filterStorage.save(next);
-  }, []);
+    applyState({ filters: next });
+  }, [applyState]);
 
-  // Remove a single active filter chip (or one topic within `topics[]`).
+  // Remove a single active filter chip (or one topic within `topics[]`) --
+  // the same write path as everything else, so the chip disappears from the
+  // URL and not only from the screen.
   const removeFilter = useCallback(
     (key: keyof CommunityFilters, topicValue?: string) => {
-      setFilters((prev) => {
-        const next: CommunityFilters = { ...prev };
-        if (key === "topics" && topicValue) {
-          const remaining = (prev.topics || []).filter((topic) => topic !== topicValue);
-          if (remaining.length) next.topics = remaining;
-          else delete next.topics;
-        } else if (key === "minAge") {
-          next.minAge = DEFAULT_FILTERS.minAge;
-        } else if (key === "maxAge") {
-          next.maxAge = DEFAULT_FILTERS.maxAge;
-        } else {
-          delete next[key];
-        }
-        filterStorage.save(next);
-        return next;
-      });
+      const next: CommunityFilters = { ...filters };
+      if (key === "topics" && topicValue) {
+        const remaining = (filters.topics || []).filter((topic) => topic !== topicValue);
+        if (remaining.length) next.topics = remaining;
+        else delete next.topics;
+      } else if (key === "minAge") {
+        next.minAge = DEFAULT_FILTERS.minAge;
+      } else if (key === "maxAge") {
+        next.maxAge = DEFAULT_FILTERS.maxAge;
+      } else {
+        delete next[key];
+      }
+      if (key === "search") applyState({ filters: next, search: "" });
+      else applyState({ filters: next });
     },
-    []
+    [filters, applyState]
   );
 
-  // Quick chips replace the filter object wholesale — persist + reset via the
-  // shared applyFilters-style path (no sheet to close, so update inline).
-  const handleQuickChange = useCallback((next: CommunityFilters) => {
-    setFilters(next);
-    filterStorage.save(next);
-  }, []);
+  // Quick chips replace the filter object wholesale.
+  const handleQuickChange = useCallback(
+    (next: CommunityFilters) => {
+      applyState({ filters: next });
+    },
+    [applyState]
+  );
+
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      applyState({ search: value });
+    },
+    [applyState]
+  );
+
+  const handleSortChange = useCallback(
+    (next?: "recently_active") => {
+      applyState({ sort: next });
+    },
+    [applyState]
+  );
+
+  const handleTabChange = useCallback(
+    (tab: CommunityNavTab) => {
+      applyState({ tab });
+    },
+    [applyState]
+  );
+
+  /**
+   * Is the sheet's draft the list you are looking at?
+   *
+   * Compared as the canonical param string rather than by object identity, so
+   * key order and an `undefined` written over a missing key do not read as a
+   * change. Compared against the *effective* filters, because the tab's own
+   * lock is part of what is applied — otherwise the Online tab would refuse to
+   * offer a link to a list nobody had edited.
+   */
+  const draftMatchesApplied = useMemo(
+    () =>
+      encodeCommunityState({ filters: draftFilters, search, sort, tab: activeTab }).toString() ===
+      encodeCommunityState({ filters: effectiveFilters, search, sort, tab: activeTab }).toString(),
+    [draftFilters, effectiveFilters, search, sort, activeTab]
+  );
+
+  /**
+   * Hand the member a link to exactly what they are looking at: the APPLIED
+   * state, never the sheet's unapplied draft. A link that opens a different
+   * list than the one on screen is worse than no link, and the recipient has
+   * no way to know it happened -- so while the draft differs, the sheet's
+   * button is disabled and says to apply first (`draftMatchesApplied`).
+   *
+   * Every browser global here is read inside the handler, never during render.
+   */
+  const handleCopyLink = useCallback(() => {
+    const params = mergeCommunityParams(
+      searchParams,
+      encodeCommunityState({ filters, search, sort, tab: activeTab })
+    );
+    const query = params.toString();
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const url = `${origin}${location.pathname}${query ? `?${query}` : ""}`;
+    const clipboard: any =
+      typeof navigator !== "undefined" ? (navigator as any).clipboard : undefined;
+    const failed = () =>
+      notify.error(t("communityMain.filterSheet.linkCopyFailed") || "Couldn't copy the link");
+
+    if (!clipboard || typeof clipboard.writeText !== "function") {
+      failed();
+      return;
+    }
+    Promise.resolve(clipboard.writeText(url)).then(
+      () => notify.success(t("communityMain.filterSheet.linkCopied") || "Link copied"),
+      failed
+    );
+  }, [searchParams, filters, search, sort, activeTab, location.pathname, t]);
 
   const handleOpenMember = useCallback(
     (user: CommunityMemberCard) => {
@@ -311,11 +590,10 @@ const ModernCommunity: React.FC = () => {
   }, []);
 
   const handleResetAll = useCallback(() => {
-    setSearch("");
-    setSort(undefined);
-    clearAllFilters();
-    setActiveTab("all");
-  }, [clearAllFilters]);
+    const next = { ...DEFAULT_FILTERS };
+    setDraftFilters(next);
+    applyState({ filters: next, search: "", sort: undefined, tab: "all" });
+  }, [applyState]);
 
   const activeFilterCount = useMemo(() => countActiveFilters(filters), [filters]);
 
@@ -339,12 +617,13 @@ const ModernCommunity: React.FC = () => {
     <div className="community-page">
       <CommunitySubNav
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         searchValue={search}
-        onSearchChange={setSearch}
+        onSearchChange={handleSearchChange}
         onOpenFilters={openFilterSheet}
         hasActiveFilters={activeFilterCount > 0}
         activeFilterCount={activeFilterCount}
+        showFilterButton={!isForYou}
       />
 
       <CommunityFilterSheet
@@ -353,6 +632,8 @@ const ModernCommunity: React.FC = () => {
         onChange={setDraftFilters}
         onApply={applyFilters}
         onClear={clearAllFilters}
+        onCopyLink={handleCopyLink}
+        canCopyLink={draftMatchesApplied}
         onClose={() => setIsFilterSheetOpen(false)}
       />
 
@@ -363,33 +644,54 @@ const ModernCommunity: React.FC = () => {
       />
 
       <div className="community-page__container">
-        <QuickFilterChips
-          filters={filters}
-          sort={sort}
-          me={me}
-          onChange={handleQuickChange}
-          onSortChange={setSort}
-        />
+        {/* No filter or sort control on "For you": the tab is the server's
+            answer to who you should meet, and a control that cannot change the
+            answer is worse than no control. */}
+        {!isForYou && (
+          <>
+            <QuickFilterChips
+              filters={effectiveFilters}
+              sort={sort}
+              me={me}
+              onChange={handleQuickChange}
+              onSortChange={handleSortChange}
+            />
 
-        <ActiveFilterChips
-          value={filters}
-          onRemove={removeFilter}
-          onClear={clearAllFilters}
-          topicLabels={topicLabels}
-        />
+            {/* The chips show what the *member* chose, not the tab's own lock:
+                a chip you cannot dismiss is a dead control. */}
+            <ActiveFilterChips
+              value={filters}
+              onRemove={removeFilter}
+              onClear={clearAllFilters}
+              topicLabels={topicLabels}
+            />
+          </>
+        )}
 
-        {highlightedProfiles.length > 0 && (
+        {/* The carousel and the visitors banner are the front page of the
+            community, not furniture that follows you into every tab: on
+            Online, New and For you the list is the whole point. */}
+        {activeTab === "all" && highlightedProfiles.length > 0 && (
           <HighlightedProfilesCarousel
             profiles={highlightedProfiles as any}
             currentUser={currentUser}
           />
         )}
 
-        {visitorsTotal > 0 && (
+        {activeTab === "all" && visitorsTotal > 0 && (
           <VisitorsBanner visitors={visitorsList} totalCount={visitorsTotal} />
         )}
 
-        {isLoading ? (
+        {isForYou ? (
+          <ForYouTab
+            members={recommendations}
+            isFetching={isRecommendationsFetching}
+            onRefresh={refetchRecommendations}
+            onOpen={handleOpenMember}
+            onWave={handleWaveMember}
+            t={t}
+          />
+        ) : isLoading ? (
           <div className="community-empty">
             <Loader2 className="animate-spin" />
             <p>{t("communityMain.search.loading") || "Loading members..."}</p>
