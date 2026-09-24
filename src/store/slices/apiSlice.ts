@@ -140,6 +140,11 @@ export const apiSlice = createApi({
     "Conversations",
     "UserMessages",
     "Conversation",
+    // The shared per-conversation wallpaper (GET/PUT /conversations/:id/theme).
+    // Its own tag: a theme save must refresh the pane's colours without
+    // refetching a thread of messages, and a new message must not refetch a
+    // wallpaper that did not change.
+    "ChatTheme",
     "Learning",
     "Vocabulary",
     "Lessons",

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../store';
 import { logout } from '../../../store/slices/authSlice';
+import { chatApiSlice } from '../../../store/slices/chatSlice';
 import { BASE_URL } from '../../../constants';
 
 // ---- Types ----
@@ -48,6 +49,17 @@ function loadIo(): Promise<IoFactory> {
   return ioLoader;
 }
 
+/**
+ * Errors only, and only where a developer can see them. The chat socket used
+ * to narrate itself into every user's console — every event, every reconnect,
+ * with payloads — which is noise at best and a transcript of someone's
+ * conversation at worst.
+ */
+function logError(message: string, detail?: any): void {
+  if (process.env.NODE_ENV === 'production') return;
+  console.error(`[Socket] ${message}`, detail);
+}
+
 // ---- Module-level singleton ----
 
 let globalSocket: Socket | null = null;
@@ -58,13 +70,11 @@ function getOrCreateSocket(io: IoFactory, token: string): Socket {
   // a socket that's still connecting has disconnected=true, which would cause
   // a duplicate connection on React StrictMode remount)
   if (globalSocket && globalToken === token) {
-    console.log('[Socket] Reusing existing socket:', globalSocket.id, 'connected:', globalSocket.connected, 'disconnected:', globalSocket.disconnected);
     return globalSocket;
   }
 
   // Clean up old socket only if token actually changed
   if (globalSocket) {
-    console.log('[Socket] Token changed, destroying old socket:', globalSocket.id);
     globalSocket.removeAllListeners();
     globalSocket.disconnect();
     globalSocket = null;
@@ -82,23 +92,12 @@ function getOrCreateSocket(io: IoFactory, token: string): Socket {
     timeout: 20000,
   });
 
-  const s = globalSocket;
-
-  // Permanent debug listener on the singleton - never removed
-  s.onAny((event, ...args) => {
-    console.log(`[Socket:${s.id}] << ${event}`, args);
-  });
-
-  s.on('connect', () => {
-    console.log(`[Socket] Connected as: ${s.id}`);
-  });
-
-  s.on('disconnect', (reason) => {
-    console.log(`[Socket] Disconnected: ${reason}`);
-  });
-
-  s.on('connect_error', (err) => {
-    console.error(`[Socket] Connect error: ${err.message}`);
+  // No blanket event mirror and no connect/disconnect chatter: this
+  // is a user's console, not ours, and the transcript of a private
+  // conversation is the last thing that belongs in it. A connection that
+  // FAILS is still worth a line, in development only.
+  globalSocket.on('connect_error', (err) => {
+    logError('connect error', err && err.message);
   });
 
   return globalSocket;
@@ -112,7 +111,6 @@ function getOrCreateSocket(io: IoFactory, token: string): Socket {
  */
 function destroySocket(reason: string): void {
   if (!globalSocket) return;
-  console.log(`[Socket] ${reason}, destroying socket:`, globalSocket.id);
   globalSocket.removeAllListeners();
   globalSocket.disconnect();
   globalSocket = null;
@@ -174,19 +172,38 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // the REST baseQueryWithReauth handles the silent-refresh case on its
     // own, this branch covers the case where the server has already given up.
     const onTokenExpired = (data?: { reason?: string }) => {
-      console.warn('[Socket] tokenExpired — forcing logout', data);
+      logError('tokenExpired — forcing logout', data);
       dispatch(logout());
     };
 
     const onAuthError = (data?: { error?: string }) => {
-      console.warn('[Socket] authError — forcing logout', data);
+      logError('authError — forcing logout', data);
       dispatch(logout());
     };
 
-    // Heads-up only — log so we can correlate against refresh attempts. The
-    // next REST call's 401 path will rotate the token automatically.
-    const onTokenExpiring = (data?: { secondsRemaining?: number }) => {
-      console.info('[Socket] tokenExpiring', data);
+    // Heads-up only. The next REST call's 401 path rotates the token by
+    // itself, so there is nothing to do and nothing to say.
+    const onTokenExpiring = (_data?: { secondsRemaining?: number }) => {};
+
+    // The other person changed the conversation's wallpaper. The theme is
+    // SHARED (the server writes it on the conversation and pushes it here
+    // from controllers/conversations.js), so the pane has to repaint without
+    // a reload — which means writing it into the cache entry the pane reads,
+    // `getConversationTheme(<conversationId>)`. A push for a conversation
+    // this client is not holding patches nothing, which is correct: it will
+    // be fetched fresh when that thread is next opened.
+    const onThemeChanged = (data?: { conversationId?: string; theme?: any }) => {
+      if (!data || !data.conversationId || !data.theme) return;
+      (dispatch as any)(
+        (chatApiSlice.util as any).updateQueryData(
+          'getConversationTheme',
+          data.conversationId,
+          (draft: any) => {
+            if (!draft) return;
+            draft.data = Object.assign({}, draft.data || {}, data.theme);
+          }
+        )
+      );
     };
 
     // The chunk arrives a tick (or a network round trip) later, so the effect
@@ -208,6 +225,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         s.on('tokenExpired', onTokenExpired);
         s.on('tokenExpiring', onTokenExpiring);
         s.on('authError', onAuthError);
+        s.on('themeChanged', onThemeChanged);
 
         // If already connected (reusing existing socket), sync state
         if (s.connected) {
@@ -218,7 +236,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         // A failed chunk leaves chat inert rather than broken: every consumer
         // guards on a null socket, and the next sign-in retries the import.
         ioLoader = null;
-        console.error('[Socket] Failed to load the realtime client', err);
+        logError('failed to load the realtime client', err);
       }
     );
 
@@ -230,6 +248,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       attached.off('tokenExpired', onTokenExpired);
       attached.off('tokenExpiring', onTokenExpiring);
       attached.off('authError', onAuthError);
+      attached.off('themeChanged', onThemeChanged);
     };
   }, [token, dispatch]);
 

@@ -21,8 +21,11 @@ import Avatar from "../../design/Avatar";
 import LanguageExchangePill from "../../design/LanguageExchangePill";
 import notify from "../../design/notify";
 import { findConversationWith, CONVERSATIONS_PAGE } from "./lib/conversationMatch";
+import WallpaperPicker from "./WallpaperPicker";
+import { DEFAULT_WALLPAPER } from "../../design/chatWallpapers";
 import {
   useGetConversationsQuery,
+  useGetConversationThemeQuery,
   useMuteConversationMutation,
   useUnmuteConversationMutation,
   useDeleteConversationMutation,
@@ -151,6 +154,15 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
   const nativeLanguage = String((partner && partner.native_language) || "").trim();
   const learningLanguage = String((partner && partner.language_to_learn) || "").trim();
 
+  // The wallpaper this conversation wears, for the picker to open on. Shared
+  // between the two participants, so it is the conversation's, not the
+  // viewer's — the same cache entry the pane itself reads.
+  const { data: themeData } = useGetConversationThemeQuery(conversationId, {
+    skip: !conversationId,
+  });
+  const currentPreset: string =
+    (themeData && themeData.data && themeData.data.preset) || DEFAULT_WALLPAPER;
+
   const [muteConversation, { isLoading: isMuting }] = useMuteConversationMutation();
   const [unmuteConversation, { isLoading: isUnmuting }] = useUnmuteConversationMutation();
   const [deleteConversation, { isLoading: isDeleting }] = useDeleteConversationMutation();
@@ -158,7 +170,9 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
   const [unblockUser, { isLoading: isUnblocking }] = useUnblockUserMutation();
   const [reportUser, { isLoading: isReporting }] = useReportUserMutation();
 
-  const [dialog, setDialog] = useState<"block" | "delete" | "report" | null>(null);
+  const [dialog, setDialog] = useState<
+    "block" | "delete" | "report" | "wallpaper" | null
+  >(null);
   const [dialogError, setDialogError] = useState("");
   const [reason, setReason] = useState("other");
   const [description, setDescription] = useState("");
@@ -364,15 +378,21 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
             </span>
           </button>
 
-          {/* Wired in Task H3, which brings the per-conversation wallpapers
-              and the tokens they paint with. Shown disabled rather than
-              omitted so the entry the app has keeps its place. */}
-          <button type="button" data-testid="chat-info-wallpaper" disabled className={ROW}>
+          {/* The wallpaper is a property of the CONVERSATION, so like mute and
+              delete it needs the conversation document to exist first. */}
+          <button
+            type="button"
+            data-testid="chat-info-wallpaper"
+            onClick={() => setDialog("wallpaper")}
+            disabled={conversationUnavailable}
+            className={ROW}
+          >
             <Palette className="h-4 w-4 shrink-0" aria-hidden />
             <span className="flex-1">
               {t("chatPage.info.wallpaper") || "Wallpaper"}
-              <span className={HINT}>{t("chatPage.info.comingSoon") || "Coming soon"}</span>
+              {noConversationHint ? <span className={HINT}>{noConversationHint}</span> : null}
             </span>
+            <ChevronRight className="h-4 w-4 shrink-0" aria-hidden />
           </button>
 
           {isSelf ? null : (
@@ -466,6 +486,14 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
         onConfirm={handleDeleteConfirm}
         onCancel={closeDialog}
       />
+
+      {dialog === "wallpaper" ? (
+        <WallpaperPicker
+          conversationId={conversationId}
+          currentPreset={currentPreset}
+          onClose={closeDialog}
+        />
+      ) : null}
 
       {dialog === "report" ? (
         <DialogShell

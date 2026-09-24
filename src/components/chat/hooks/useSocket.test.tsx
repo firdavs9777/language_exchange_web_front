@@ -238,12 +238,13 @@ it("reuses one socket for the same token and detaches its listeners on unmount",
 
   const first = await renderProvider(makeTestStore("tok-reuse"));
   await waitFor(() => expect(mockIo).toHaveBeenCalledTimes(1));
-  // Two "connect" listeners: the singleton's permanent debug one, plus the
-  // provider's state sync. Only the second is the provider's to remove.
-  await waitFor(() => expect(sock.handlerCount("connect")).toBe(2));
+  // One "connect" listener: the provider's state sync. (The singleton used
+  // to add a permanent debug one on top; it logged every event of every
+  // conversation to the reader's console and is gone.)
+  await waitFor(() => expect(sock.handlerCount("connect")).toBe(1));
 
   first.unmount();
-  expect(sock.handlerCount("connect")).toBe(1);
+  expect(sock.handlerCount("connect")).toBe(0);
   expect(sock.handlerCount("authError")).toBe(0);
   // Unmount is not a sign-out: the singleton survives so a remount (a route
   // change that re-renders the shell) does not reconnect.

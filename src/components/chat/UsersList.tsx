@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback, useState, useMemo } from "react";
-import { Badge, Modal, Button } from "react-bootstrap";
+import ConfirmDialog from "../../design/ConfirmDialog";
 import {
   useGetUserMessagesQuery,
   useGetConversationsQuery,
@@ -901,14 +901,11 @@ const UsersList: React.FC<UsersListProps> = ({
                         )}
                       </span>
                       {hasUnread && (
-                        <Badge
-                          pill
-                          className="users-list-badge"
-                        >
+                        <span className="users-list-badge">
                           {(user.unreadCount || 0) > 99
                             ? "99+"
                             : user.unreadCount}
-                        </Badge>
+                        </span>
                       )}
                     </div>
                   </div>
@@ -1021,51 +1018,38 @@ const UsersList: React.FC<UsersListProps> = ({
         )}
       </div>
 
-      {/* Delete confirmation modal */}
-      <Modal
-        show={showDeleteModal}
-        onHide={handleDeleteCancel}
-        centered
-        size="sm"
-      >
-        <Modal.Header closeButton className="border-0 pb-1">
-          <Modal.Title className="fs-6 fw-semibold">
-            {t("chatPage.deleteModal.title") || "Delete Conversation"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="pt-0">
-          {/* One sentence with the name interpolated. The old
-              `bodyPrefix` + <strong>{name}</strong> + "?" could not be
-              translated into any language that does not end on the name. */}
-          <p className="mb-1 text-secondary" data-testid="users-list-delete-body">
-            {t("chatPage.deleteModal.body", { name: userToDelete?.name }) ||
-              `Delete your conversation with ${userToDelete?.name}?`}
-          </p>
-          <p className="mb-0 text-muted" style={{ fontSize: "0.8rem" }}>
-            {t("chatPage.deleteModal.warning") || "This cannot be undone."}
-          </p>
-        </Modal.Body>
-        <Modal.Footer className="border-0 pt-0">
-          <Button
-            variant="light"
-            size="sm"
-            onClick={handleDeleteCancel}
-            disabled={isDeleting}
-          >
-            {t("chatPage.deleteModal.cancel") || "Cancel"}
-          </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={handleDeleteConfirm}
-            disabled={isDeleting}
-          >
-            {isDeleting
-              ? t("chatPage.deleteModal.deleting") || "Deleting..."
-              : t("chatPage.deleteModal.confirm") || "Delete"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {/* The app's own confirm dialog rather than the bootstrap modal this
+          used to be: one dialog shell for the whole product means one Escape
+          behaviour, one focus trap, one scroll lock — and colours that follow
+          the tokens into dark mode. */}
+      <ConfirmDialog
+        open={showDeleteModal}
+        danger
+        title={t("chatPage.deleteModal.title") || "Delete Conversation"}
+        body={
+          <React.Fragment>
+            {/* One sentence with the name interpolated. The old
+                `bodyPrefix` + <strong>{name}</strong> + "?" could not be
+                translated into any language that does not end on the name. */}
+            <span className="block" data-testid="users-list-delete-body">
+              {t("chatPage.deleteModal.body", { name: userToDelete?.name }) ||
+                `Delete your conversation with ${userToDelete?.name}?`}
+            </span>
+            <span className="mt-1 block text-xs text-ink-500 dark:text-ink-400">
+              {t("chatPage.deleteModal.warning") || "This cannot be undone."}
+            </span>
+          </React.Fragment>
+        }
+        confirmLabel={
+          isDeleting
+            ? t("chatPage.deleteModal.deleting") || "Deleting..."
+            : t("chatPage.deleteModal.confirm") || "Delete"
+        }
+        cancelLabel={t("chatPage.deleteModal.cancel") || "Cancel"}
+        busy={isDeleting}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+      />
     </div>
   );
 };

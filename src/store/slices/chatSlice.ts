@@ -10,6 +10,74 @@ export interface MessageData {
   replyTo?: string;
 }
 
+/**
+ * The parties of a send, so the thread's FIRST page can be refreshed after it.
+ *
+ * A text send names both; a media/voice/video send is FormData that carries
+ * only `receiver` (the server takes the sender from the token). For those the
+ * sender is read back off the thread the reader already has open — the cache
+ * key of `getConversation` is `getConversation-<senderId>-<receiverId>`, and
+ * its `originalArgs` hold both ids.
+ */
+function partiesOfSend(arg: any, state: any): { senderId: string; receiverId: string; limit: number } | null {
+  let receiverId = "";
+  let senderId = "";
+  if (arg && typeof arg.get === "function") {
+    receiverId = String(arg.get("receiver") || "");
+  } else if (arg) {
+    receiverId = String(arg.receiver || "");
+    senderId = String(arg.sender || "");
+  }
+  if (!receiverId) return null;
+
+  let limit = 50;
+  const queries = (state && state[apiSlice.reducerPath] && state[apiSlice.reducerPath].queries) || {};
+  Object.keys(queries).forEach((key: string) => {
+    const entry: any = queries[key];
+    const args = entry && entry.originalArgs;
+    if (!args || entry.endpointName !== "getConversation") return;
+    if (args.receiverId !== receiverId) return;
+    if (!senderId) senderId = String(args.senderId || "");
+    if (args.senderId === senderId && args.limit) limit = args.limit;
+  });
+
+  return senderId ? { senderId, receiverId, limit } : null;
+}
+
+/**
+ * Refetch page 1 of the thread after a send.
+ *
+ * Invalidating the `Conversation` tag refetched whatever page the reader was
+ * LOOKING at — page 3, say, deep in the history — so a message just sent (it
+ * is on page 1) never entered the cache and the screen and the cache
+ * disagreed until the conversation was reopened. `serializeQueryArgs` drops
+ * the page, so this lands in the same entry and `merge` upserts it by id.
+ */
+function refetchFirstPage(arg: any, api: any): void {
+  const parties = partiesOfSend(arg, api.getState());
+  if (!parties) return;
+  api.dispatch(
+    (chatApiSlice.endpoints as any).getConversation.initiate(
+      {
+        senderId: parties.senderId,
+        receiverId: parties.receiverId,
+        page: 1,
+        limit: parties.limit,
+      },
+      { forceRefetch: true, subscribe: false }
+    )
+  );
+}
+
+async function refetchFirstPageOnSuccess(arg: any, api: any): Promise<void> {
+  try {
+    await api.queryFulfilled;
+  } catch (error) {
+    return;
+  }
+  refetchFirstPage(arg, api);
+}
+
 export const chatApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder: any) => ({
     // Conversations
@@ -72,6 +140,26 @@ export const chatApiSlice = apiSlice.injectEndpoints({
         method: "POST",
       }),
       invalidatesTags: ["Conversations"],
+    }),
+
+    // Wallpaper / theme — SHARED by both participants, which is the whole
+    // point: the app writes it with PUT and the server pushes `themeChanged`
+    // to the other person's socket room. `:id` is the conversation id (the
+    // controller also accepts the other user's id, but the socket payload is
+    // keyed by the conversation, so the cache has to be too).
+    getConversationTheme: builder.query({
+      query: (conversationId: string) => ({
+        url: `${CONVERSATIONS_URL}/${conversationId}/theme`,
+      }),
+      providesTags: ["ChatTheme"],
+    }),
+    setConversationTheme: builder.mutation({
+      query: ({ conversationId, theme }: { conversationId: string; theme: any }) => ({
+        url: `${CONVERSATIONS_URL}/${conversationId}/theme`,
+        method: "PUT",
+        body: { theme },
+      }),
+      invalidatesTags: ["ChatTheme"],
     }),
 
     // Messages
@@ -150,7 +238,9 @@ export const chatApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: newMessage,
       }),
-      invalidatesTags: ["Messages", "Conversation", "Conversations"],
+      // No "Conversation" tag: see refetchFirstPage above.
+      invalidatesTags: ["Messages", "Conversations"],
+      onQueryStarted: refetchFirstPageOnSuccess,
     }),
     editMessage: builder.mutation({
       query: ({ messageId, content }: { messageId: string; content: string }) => ({
@@ -192,7 +282,8 @@ export const chatApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: formData,
       }),
-      invalidatesTags: ["Conversation", "Conversations"],
+      invalidatesTags: ["Conversations"],
+      onQueryStarted: refetchFirstPageOnSuccess,
     }),
 
     // Media Messages - POST /api/v1/messages with FormData (field: attachment)
@@ -202,7 +293,8 @@ export const chatApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: formData,
       }),
-      invalidatesTags: ["Conversation", "Conversations"],
+      invalidatesTags: ["Conversations"],
+      onQueryStarted: refetchFirstPageOnSuccess,
     }),
 
     // Video Messages - POST /api/v1/messages/video with FormData (field: video)
@@ -212,7 +304,8 @@ export const chatApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: formData,
       }),
-      invalidatesTags: ["Conversation", "Conversations"],
+      invalidatesTags: ["Conversations"],
+      onQueryStarted: refetchFirstPageOnSuccess,
     }),
 
     // Pin (toggle) — POST /api/v1/messages/:id/pin, no body. Server does NOT
@@ -276,7 +369,8 @@ export const chatApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { message, receiver },
       }),
-      invalidatesTags: ["Conversation", "Conversations"],
+      invalidatesTags: ["Conversations"],
+      onQueryStarted: refetchFirstPageOnSuccess,
     }),
 
     // TTS — POST /api/v1/messages/:id/tts. Response (confirmed against
@@ -355,6 +449,9 @@ export const {
   useUnmuteConversationMutation,
   usePinConversationMutation,
   useUnpinConversationMutation,
+  // Wallpaper
+  useGetConversationThemeQuery,
+  useSetConversationThemeMutation,
   // Messages
   useGetMessagesQuery,
   useGetUserMessagesQuery,

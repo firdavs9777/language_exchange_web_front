@@ -85,25 +85,16 @@ export const formatDuration = (seconds: number): string => {
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 };
 
-const getBubbleRadius = (isSent: boolean, position: string): string => {
-  if (isSent) {
-    switch (position) {
-      case "single": return "18px 18px 4px 18px";
-      case "first": return "18px 18px 4px 18px";
-      case "middle": return "18px 4px 4px 18px";
-      case "last": return "18px 4px 18px 18px";
-      default: return "18px";
-    }
-  } else {
-    switch (position) {
-      case "single": return "18px 18px 18px 4px";
-      case "first": return "18px 18px 18px 4px";
-      case "middle": return "4px 18px 18px 4px";
-      case "last": return "4px 18px 18px 18px";
-      default: return "18px";
-    }
-  }
-};
+/**
+ * The corner the bubble loses where it meets its neighbour, as a class rather
+ * than the inline `borderRadius` this used to compute. ChatContent.css owns
+ * the eight rules (four positions x sent/received); a position the list does
+ * not know keeps the default corners of `.message-bubble`.
+ */
+const BUBBLE_POSITIONS = ["single", "first", "middle", "last"];
+
+const bubblePositionClass = (position: string): string =>
+  BUBBLE_POSITIONS.indexOf(position) === -1 ? "" : ` message-bubble--${position}`;
 
 /** The day heading above the first message of each day. */
 export const DateSeparator: React.FC<{ label: string }> = ({ label }) => (
@@ -350,10 +341,7 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
       }
     >
       {!isSent && (
-        <div
-          className="message-avatar"
-          style={{ visibility: showAvatar ? "visible" : "hidden" }}
-        >
+        <div className={`message-avatar${showAvatar ? "" : " message-avatar--hidden"}`}>
           {(showAvatar || hideAvatarSpace) && (
             <img src={avatarUrl} alt={msg.sender.name} loading="lazy" decoding="async" />
           )}
@@ -362,10 +350,7 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
 
       <div className="message-wrapper">
         <div
-          className={`message-bubble${isVoice ? " voice-bubble" : ""}${hasMedia ? " media-bubble" : ""}${isSticker ? " sticker-bubble" : ""}`}
-          style={{
-            borderRadius: getBubbleRadius(isSent, position),
-          }}
+          className={`message-bubble${isVoice ? " voice-bubble" : ""}${hasMedia ? " media-bubble" : ""}${isSticker ? " sticker-bubble" : ""}${bubblePositionClass(position)}`}
         >
           {isSticker ? (
             <div className="sticker-message">{msg.message}</div>

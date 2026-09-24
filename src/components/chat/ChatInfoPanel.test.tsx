@@ -20,6 +20,8 @@ const mockBlock = jest.fn();
 const mockUnblock = jest.fn();
 const mockReport = jest.fn();
 const mockUserById = jest.fn();
+const mockTheme = jest.fn();
+const mockSetTheme = jest.fn();
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -32,6 +34,8 @@ jest.mock("react-router-dom", () => ({
 
 jest.mock("../../store/slices/chatSlice", () => ({
   useGetConversationsQuery: (arg: any, opts: any) => mockConversations(arg, opts),
+  useGetConversationThemeQuery: (arg: any, opts: any) => mockTheme(arg, opts),
+  useSetConversationThemeMutation: () => [mockSetTheme, { isLoading: false }],
   useMuteConversationMutation: () => [mockMute, { isLoading: false }],
   useUnmuteConversationMutation: () => [mockUnmute, { isLoading: false }],
   useDeleteConversationMutation: () => [mockDelete, { isLoading: false }],
@@ -84,6 +88,8 @@ beforeEach(() => {
     },
     isLoading: false,
   });
+  mockTheme.mockReturnValue({ data: { data: { preset: "navy" } } });
+  mockSetTheme.mockReturnValue(resolved());
   mockBlockStatus.mockReturnValue({ data: { data: { isBlocked: false } } });
   mockUserById.mockReturnValue({
     data: { data: { native_language: "Korean", language_to_learn: "English", languageLevel: "B1" } },
@@ -114,7 +120,20 @@ describe("the entries the panel offers", () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it("carries a wallpaper entry that is not wired yet, and says so", () => {
+  it("opens the wallpaper picker on the wallpaper the conversation wears", () => {
+    renderPanel();
+    fireEvent.click(screen.getByTestId("chat-info-wallpaper"));
+    expect(screen.getByTestId("chat-wallpaper-dialog")).toBeInTheDocument();
+    // The theme is read for THIS conversation, not for the other person.
+    expect(mockTheme).toHaveBeenCalledWith("c1", { skip: false });
+    expect(screen.getByTestId("wallpaper-navy")).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+  });
+
+  it("cannot set a wallpaper before the conversation exists", () => {
+    mockConversations.mockReturnValue({ data: { data: [] }, isLoading: false });
     renderPanel();
     expect(screen.getByTestId("chat-info-wallpaper")).toBeDisabled();
   });
