@@ -38,6 +38,18 @@ const ROOTS = [
 ];
 
 const FORBIDDEN_PACKAGE = "bootstrap-icons";
+
+// Task D2's half of the rule, and the same shape of mistake: the socket.io
+// client (~13 KB gzipped with engine.io and its parsers) is useless to a
+// logged-out visitor -- there is no token to authenticate with -- so
+// src/components/chat/hooks/useSocket.ts `import()`s it from inside the effect
+// that runs only when `state.auth.userInfo` has one. App.tsx still wraps the
+// whole tree in SocketProvider, so this module IS eager; what must stay behind
+// the boundary is the client it loads. A static `import { io } from
+// "socket.io-client"` anywhere in the eager graph -- including a type-only one,
+// which TypeScript 3.7 cannot mark as such -- puts it back in main.js.
+const FORBIDDEN_SOCKET_PACKAGE = "socket.io-client";
+const SOCKET_MODULE = path.join(SRC, "components", "chat", "hooks", "useSocket.ts");
 // The module that used to carry the stylesheet. Deleted with the last `bi-*`
 // screen; asserted below so a re-introduced copy cannot sneak the font back.
 const RETIRED_MODULE = path.join(SRC, "lazyIcons.ts");
@@ -170,9 +182,15 @@ function walkEagerGraph(): Graph {
         } else {
           unresolved.push(`${path.relative(SRC, file)} -> ${spec}`);
         }
-      } else if (spec === FORBIDDEN_PACKAGE || spec.indexOf(FORBIDDEN_PACKAGE + "/") === 0) {
-        // A package import, but the one package that must never be static
-        // here: bootstrap-icons carries the webfont and ~2,000 glyph rules.
+      } else if (
+        spec === FORBIDDEN_PACKAGE ||
+        spec.indexOf(FORBIDDEN_PACKAGE + "/") === 0 ||
+        spec === FORBIDDEN_SOCKET_PACKAGE ||
+        spec.indexOf(FORBIDDEN_SOCKET_PACKAGE + "/") === 0
+      ) {
+        // A package import, but one of the two packages that must never be
+        // static here: bootstrap-icons carries the webfont and ~2,000 glyph
+        // rules, socket.io-client the transport nobody logged out can use.
         packageHits.push(`${path.relative(SRC, file)} -> ${spec}`);
       }
       // Every other package import (react, lucide, bootstrap, ...) is out of
@@ -204,10 +222,35 @@ it("has no lazyIcons module left to reach", () => {
   expect(offenders.map((f) => path.relative(SRC, f))).toEqual([]);
 });
 
-it("never statically imports bootstrap-icons from an eager module", () => {
+it("never statically imports bootstrap-icons or socket.io-client from an eager module", () => {
   // The other half of the same rule: importing the package directly would put
   // the stylesheet back into main.css just as surely as importing lazyIcons.
   expect(graph.packageHits).toEqual([]);
+});
+
+it("reaches the socket provider but not the socket client", () => {
+  // useSocket.ts in the graph is the control: App.tsx wraps the tree in
+  // SocketProvider on every page, prerendered ones included, so the provider
+  // itself is eager by design. The assertion that matters is the one above --
+  // nothing in that graph names socket.io-client statically.
+  expect(graph.modules.indexOf(SOCKET_MODULE)).toBeGreaterThan(-1);
+  const staticSocketImports = graph.packageHits.filter(
+    (hit) => hit.indexOf(FORBIDDEN_SOCKET_PACKAGE) > -1
+  );
+  expect(staticSocketImports).toEqual([]);
+});
+
+it("proves the socket guard can fire, on the module that really does load the client", () => {
+  // useSocket.ts names the package twice -- once in `import(...)` for the
+  // value, once in an `import(...)` *type* for `Socket`, which is how a TS 3.7
+  // file (no `import type`) refers to it without an edge webpack can see.
+  // Neither form is a static specifier; a plain `import { io } from` would be.
+  const text = fs.readFileSync(SOCKET_MODULE, "utf8");
+  expect(text).toContain(FORBIDDEN_SOCKET_PACKAGE);
+  expect(staticSpecifiers(text)).not.toContain(FORBIDDEN_SOCKET_PACKAGE);
+  expect(staticSpecifiers('import { io } from "socket.io-client";\n')).toContain(
+    FORBIDDEN_SOCKET_PACKAGE
+  );
 });
 
 it("proves the guard can fire, on a source that really does import the icons", () => {
