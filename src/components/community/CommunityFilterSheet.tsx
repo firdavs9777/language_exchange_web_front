@@ -39,11 +39,19 @@ export interface CommunityFilterSheetProps {
   onClear: () => void;
   onClose: () => void;
   /**
-   * Copy a link to the list as the sheet currently has it. Optional: the
-   * button only appears when the page can actually produce a link (the owner
-   * of the URL state is MainCommunity, not the sheet).
+   * Copy a link to the list as it is *applied* — what the page behind this
+   * sheet is actually showing. Optional: the button only appears when the page
+   * can produce a link at all (the owner of the URL state is MainCommunity,
+   * not the sheet).
    */
   onCopyLink?: () => void;
+  /**
+   * False while the draft on screen differs from the applied filters. A link
+   * can only describe a list that exists, so rather than quietly copying
+   * something other than what the member is looking at, the button says what
+   * to do first.
+   */
+  canCopyLink?: boolean;
 }
 
 /** Small pill toggle switch (teal when on) — no new CSS, Tailwind only. */
@@ -82,6 +90,7 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
   onClear,
   onClose,
   onCopyLink,
+  canCopyLink = true,
 }) => {
   const { t } = useTranslation();
 
@@ -420,10 +429,18 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
             <button
               type="button"
               onClick={onCopyLink}
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 transition-colors"
+              disabled={!canCopyLink}
+              title={
+                canCopyLink
+                  ? undefined
+                  : t("communityMain.filterSheet.applyFirst") || "Apply filters first"
+              }
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 transition-colors disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-teal-50"
             >
               <Link2 className="w-4 h-4" />
-              {t("communityMain.filterSheet.copyLink") || "Copy link"}
+              {canCopyLink
+                ? t("communityMain.filterSheet.copyLink") || "Copy link"
+                : t("communityMain.filterSheet.applyFirst") || "Apply filters first"}
             </button>
           )}
           <div className="flex items-center gap-3">

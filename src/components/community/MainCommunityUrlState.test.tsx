@@ -154,7 +154,7 @@ describe("the community list keeps its state in the URL", () => {
       expect(memberRequests().some((u) => /[?&]page=2\b/.test(u))).toBe(true)
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /Online Now/ }));
+    fireEvent.click(screen.getByRole("button", { name: /communityMain.chips.onlineNow/ }));
 
     await waitFor(() => expect(router.state.location.search).toBe("?online=1"));
     const last = memberRequests()[memberRequests().length - 1];
@@ -192,12 +192,12 @@ describe("the community list keeps its state in the URL", () => {
   it("keeps the sort chip in the URL", async () => {
     const { router } = renderList(["/communities"]);
 
-    fireEvent.click(await screen.findByRole("button", { name: /Recently Active/ }));
+    fireEvent.click(await screen.findByRole("button", { name: /communityMain.chips.recentlyActive/ }));
     await waitFor(() =>
       expect(router.state.location.search).toBe("?sort=recently_active")
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /Recently Active/ }));
+    fireEvent.click(screen.getByRole("button", { name: /communityMain.chips.recentlyActive/ }));
     await waitFor(() => expect(router.state.location.search).toBe(""));
   });
 

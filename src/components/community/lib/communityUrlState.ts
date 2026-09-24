@@ -24,8 +24,20 @@
  */
 import { CommunityFilters } from './buildCommunityQuery';
 
-/** The tab set the list ships today (`CommunitySubNav`'s `CommunityNavTab`). */
-export type CommunityUrlTab = 'all' | 'nearby' | 'topics';
+/**
+ * The tab set the list ships (`CommunitySubNav`'s `CommunityNavTab`).
+ *
+ * `foryou`, `all`, `online` and `new` are rendered in place by the list;
+ * `nearby` and `topics` are their own routes and only ever appear here when a
+ * link or an old URL says so.
+ */
+export type CommunityUrlTab =
+  | 'foryou'
+  | 'all'
+  | 'online'
+  | 'new'
+  | 'nearby'
+  | 'topics';
 
 export interface CommunityUrlState {
   filters: CommunityFilters;
@@ -66,7 +78,14 @@ export const URL_KEYS: string[] = [
 const GENDERS = ['male', 'female', 'other'];
 const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 const SORTS = ['recently_active'];
-const TABS: CommunityUrlTab[] = ['all', 'nearby', 'topics'];
+const TABS: CommunityUrlTab[] = [
+  'foryou',
+  'all',
+  'online',
+  'new',
+  'nearby',
+  'topics',
+];
 
 /** Mirrors the filter sheet's own bounds (CommunityFilterSheet.tsx). */
 const MIN_AGE = 18;

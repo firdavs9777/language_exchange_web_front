@@ -9,6 +9,14 @@ import {
 } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
+/**
+ * The matching engine's recommendation feed, behind `protect`.
+ * Kept local rather than in `constants.ts` because this is the only caller:
+ * `/api/v1/matching/*` is a namespace of its own, not part of the community
+ * CRUD surface the shared constants describe.
+ */
+const MATCHING_RECOMMENDATIONS_URL = "/api/v1/matching/recommendations";
+
 export const communityApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder: any) => ({
     // Accepts the flat `Record<string,string>` produced by
@@ -103,6 +111,26 @@ export const communityApiSlice = apiSlice.injectEndpoints({
         { type: "User", id },
         "User",
       ],
+    }),
+
+    // "For you": the backend's scored recommendation feed
+    // (GET /api/v1/matching/recommendations, protected, cached 30 min
+    // server-side). Response is `{ success, count, data, cached }` and each
+    // item carries the same fields the member cards read plus `matchScore`
+    // and `matchReasons` (an array of short English reason strings).
+    //
+    // It takes no filters by design — the whole point of the tab is that the
+    // server decides — so the only argument is `limit` (default 20, capped at
+    // 50 server-side). Its own tag, not "Community": a follow or a wave
+    // invalidating the list must not throw away a 30-minute recommendation
+    // computation.
+    getRecommendations: builder.query({
+      query: ({ limit = 20 }: { limit?: number } = {}) => ({
+        url: MATCHING_RECOMMENDATIONS_URL,
+        params: { limit: String(limit) },
+      }),
+      keepUnusedDataFor: 60,
+      providesTags: ["Recommendations"],
     }),
 
     // Nearby Users (Discovery)
@@ -247,6 +275,8 @@ export const {
   useGetCommunityCountQuery,
   useGetCommunityDetailsQuery,
   useGetPublicUserProfileQuery,
+  // "For you"
+  useGetRecommendationsQuery,
   // Nearby
   useGetNearbyUsersQuery,
   // Waves (real backend routes)
