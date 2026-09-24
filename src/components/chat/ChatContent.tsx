@@ -6,7 +6,6 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { Form, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import {
@@ -1642,19 +1641,19 @@ const ChatContent: React.FC<ChatContentProps> = ({
   if (error)
     return (
       <div className="chat-error">
-        <AlertCircle size={48} color="#EF4444" />
+        <AlertCircle size={48} className="chat-error-icon" />
         <p>{t("chatPage.errorLoading") || "Failed to load conversation"}</p>
       </div>
     );
 
   return (
-    <Container fluid className="modern-chat-container">
+    <div className="modern-chat-container">
       {/* Hidden file input */}
       <input
         ref={fileInputRef}
         type="file"
         accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip"
-        style={{ display: "none" }}
+        className="hidden"
         onChange={handleFileSelect}
       />
 
@@ -1851,7 +1850,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
         {/* Typing Indicator */}
         {isTyping && (
-          <div className="modern-message received" style={{ marginTop: "8px" }}>
+          <div className="modern-message received modern-message--gap-normal">
             <div className="message-avatar">
               <img
                 src={profilePicture || "/default-avatar.png"}
@@ -1922,7 +1921,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
       {/* Message Input */}
       {!isRecording && (
-        <div className="modern-chat-input" style={{ position: "relative" }}>
+        <div className="modern-chat-input">
           {/* Sticker Panel */}
           {isStickerPanelOpen && (
             <StickerPanel
@@ -1942,7 +1941,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           {/* Reply band (renders null when not replying) */}
           <ReplyComposerBar replyingTo={replyingTo} onCancel={() => setReplyingTo(null)} />
 
-          <Form onSubmit={handleSendMessage} className="input-form">
+          <form onSubmit={handleSendMessage} className="input-form">
             <div className="input-container">
               <button
                 type="button"
@@ -1955,7 +1954,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
               </button>
 
               <div className="text-input-wrapper">
-                <Form.Control
+                <input
                   type="text"
                   placeholder={
                     mediaPreview
@@ -2003,7 +2002,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
                   disabled={isSending}
                 >
                   {isSending ? (
-                    <div className="spinner" style={{ width: 18, height: 18, borderWidth: 2 }}></div>
+                    <div className="spinner spinner--sm"></div>
                   ) : (
                     <Send size={18} />
                   )}
@@ -2022,7 +2021,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 </button>
               )}
             </div>
-          </Form>
+          </form>
         </div>
       )}
 
@@ -2126,7 +2125,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           }}
         />
       )}
-    </Container>
+    </div>
   );
 };
 

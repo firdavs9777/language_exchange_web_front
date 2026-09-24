@@ -22,16 +22,19 @@ function read(relPath: string): string {
 //
 // Genuinely new or self-contained surfaces: no inline style attribute at
 // all, no colour named by hex, no react-bootstrap, no emoji standing in for
-// an icon. (ChatContent.tsx, UsersList.tsx and MessageBubble.tsx are the
-// pre-existing monolith and its extracted bubble -- they still carry a
-// react-bootstrap import and a couple of non-colour inline styles
-// (`borderRadius`, avatar `visibility`) that Task H3 owns re-tokenizing, so
-// they are checked separately below with a narrower rule.)
+// an icon. (UsersList.tsx is the one file still checked separately below,
+// with a narrower rule -- its non-colour inline styles are its own, unrelated
+// to this task's re-tokenizing. ChatContent.tsx and MessageBubble.tsx used to
+// be checked there too: react-bootstrap's `Form`/`Container` are gone, and
+// every remaining inline style -- marginTop, the waveform bar height -- moved
+// to a class, so both now carry the full bar.)
 const STRICT_FILES = [
+  "ChatContent.tsx",
   "ChatInfoPanel.tsx",
   "GifPickerPanel.tsx",
   "MainChat.tsx",
   "MediaGallery.tsx",
+  "MessageBubble.tsx",
   "NewChat.tsx",
   "actions/ForwardDialog.tsx",
   "actions/MessageActionMenu.tsx",
@@ -69,10 +72,10 @@ describe("chat surface: design-system hygiene", () => {
 });
 
 describe("chat surface: inline styles never carry a colour", () => {
-  // The wider monolith files: inline styles are allowed to exist (layout
-  // values computed at runtime), but never a hardcoded colour -- that always
-  // belongs to a token in the stylesheet.
-  ["ChatContent.tsx", "UsersList.tsx", "MessageBubble.tsx"].forEach((rel) => {
+  // UsersList.tsx: inline styles are allowed to exist (layout values computed
+  // at runtime), but never a hardcoded colour -- that always belongs to a
+  // token in the stylesheet.
+  ["UsersList.tsx"].forEach((rel) => {
     it(`${rel} keeps colours out of its inline styles`, () => {
       const source = read(rel);
       const inlineStyles = source.match(/style=\{\{[\s\S]*?\}\}/g) || [];

@@ -240,6 +240,21 @@
   justify-content: flex-start;
 }
 
+/* Vertical gap above a message -- computed per bubble in MessageBubble.tsx
+   (grouped-by-sender position, first-in-group) rather than an inline
+   marginTop. */
+.modern-message--gap-none {
+  margin-top: 0;
+}
+
+.modern-message--gap-tight {
+  margin-top: 2px;
+}
+
+.modern-message--gap-normal {
+  margin-top: 8px;
+}
+
 @keyframes messageSlide {
   from {
     opacity: 0;
@@ -667,6 +682,13 @@
   animation: spin 0.8s linear infinite;
 }
 
+/* The send button's in-flight spinner -- same rule, smaller footprint. */
+.spinner--sm {
+  width: 18px;
+  height: 18px;
+  border-width: 2px;
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -682,6 +704,13 @@
 .error-icon {
   font-size: 3rem;
   margin-bottom: 1rem;
+}
+
+/* The AlertCircle icon on the "failed to load conversation" state --
+   lucide's default stroke is currentColor, so this is what supplies it,
+   in place of a hardcoded hex passed to the component's `color` prop. */
+.chat-error-icon {
+  color: var(--chat-danger);
 }
 
 .chat-error p {
@@ -992,6 +1021,54 @@
 
 .modern-message.received .waveform-bar--played {
   background: var(--chat-accent-fill);
+}
+
+/* A waveform bar's height is one recorded-amplitude sample -- data-driven,
+   not a fixed design value, but bounded to 4-24px. Quantised to the nearest
+   even pixel in MessageBubble.tsx and looked up here instead of an inline
+   style. */
+.waveform-bar--h4 {
+  height: 4px;
+}
+
+.waveform-bar--h6 {
+  height: 6px;
+}
+
+.waveform-bar--h8 {
+  height: 8px;
+}
+
+.waveform-bar--h10 {
+  height: 10px;
+}
+
+.waveform-bar--h12 {
+  height: 12px;
+}
+
+.waveform-bar--h14 {
+  height: 14px;
+}
+
+.waveform-bar--h16 {
+  height: 16px;
+}
+
+.waveform-bar--h18 {
+  height: 18px;
+}
+
+.waveform-bar--h20 {
+  height: 20px;
+}
+
+.waveform-bar--h22 {
+  height: 22px;
+}
+
+.waveform-bar--h24 {
+  height: 24px;
 }
 
 .voice-duration {

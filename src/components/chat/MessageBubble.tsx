@@ -96,6 +96,36 @@ const BUBBLE_POSITIONS = ["single", "first", "middle", "last"];
 const bubblePositionClass = (position: string): string =>
   BUBBLE_POSITIONS.indexOf(position) === -1 ? "" : ` message-bubble--${position}`;
 
+/**
+ * The vertical gap above a message, as a class rather than the inline
+ * `marginTop` this used to compute. Two bubbles from the same sender sit
+ * 2px apart; the first message of a new sender (or the first in its date
+ * group) sits 8px below the previous group, and the very first message of
+ * a group has none at all -- ChatContent.css owns the three values.
+ */
+const messageGapClass = (position: string, isFirstInGroup: boolean): string => {
+  if (isFirstInGroup) return " modern-message--gap-none";
+  return position === "middle" || position === "last"
+    ? " modern-message--gap-tight"
+    : " modern-message--gap-normal";
+};
+
+/**
+ * A voice waveform bar's height is data-driven (one value per recorded
+ * amplitude sample) and can't be named by a handful of classes the way the
+ * bubble corners can. Rather than an inline `style`, it is quantised to the
+ * nearest even pixel and looked up as `waveform-bar--h{N}` -- a bounded set
+ * of classes (4..24 step 2) that ChatContent.css declares once.
+ */
+const WAVEFORM_BAR_MIN = 4;
+const WAVEFORM_BAR_MAX = 24;
+const waveformBarHeightClass = (amplitude: number): string => {
+  const raw = (amplitude || 0.3) * WAVEFORM_BAR_MAX;
+  const clamped = Math.min(WAVEFORM_BAR_MAX, Math.max(WAVEFORM_BAR_MIN, raw));
+  const bucket = Math.round(clamped / 2) * 2;
+  return ` waveform-bar--h${bucket}`;
+};
+
 /** The day heading above the first message of each day. */
 export const DateSeparator: React.FC<{ label: string }> = ({ label }) => (
   <div className="date-separator">
@@ -166,7 +196,6 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
     );
   }
 
-  const gap = position === "middle" || position === "last" ? "2px" : "8px";
   const isVoice = msg.messageType === "voice" || msg.media?.type === "voice";
   const isSticker = msg.messageType === "sticker";
   const isGif =
@@ -198,8 +227,7 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
             {bars.map((v: number, i: number) => (
               <div
                 key={i}
-                className={`waveform-bar${i < playedCount ? " waveform-bar--played" : ""}`}
-                style={{ height: `${Math.max(4, (v || 0.3) * 24)}px` }}
+                className={`waveform-bar${i < playedCount ? " waveform-bar--played" : ""}${waveformBarHeightClass(v)}`}
               />
             ))}
           </div>
@@ -329,8 +357,7 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
       data-msg-id={msg._id}
       className={`modern-message ${isSent ? "sent" : "received"} ${
         msg.status === "error" ? "error" : ""
-      }`}
-      style={{ marginTop: isFirstInGroup ? "0" : gap }}
+      }${messageGapClass(position, isFirstInGroup)}`}
       onContextMenu={
         msg.isOptimistic
           ? undefined
