@@ -10,4 +10,6 @@ it("re-exports every design primitive", () => {
   expect(Design.Badge).toBeDefined();
   expect(Design.FollowButton).toBeDefined();
   expect(Design.ConfirmDialog).toBeDefined();
+  expect(Design.notify).toBeDefined();
+  expect(Design.TOAST_MS).toBeDefined();
 });

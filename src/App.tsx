@@ -11,8 +11,10 @@ import MainNavbar from "./components/navbar/MainNavbar";
 import { Container } from "react-bootstrap";
 import { Outlet } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+// Must come AFTER toastify's own stylesheet: it overrides it.
+import "./design/toastTheme.css";
 import FooterMain from "./components/footer/FooterMain";
 import { SocketProvider } from "./components/chat/hooks/useSocket";
 import AppBanner from "./components/linking/AppBanner";
@@ -45,7 +47,26 @@ const App = () => {
         </Container>
         <FooterMain />
         <ConsentBar />
-        <ToastContainer />
+        {/*
+          Defaults for every toast that does not override them. Most existing
+          call sites still pass their own options object and win over these;
+          the appearance is fixed in design/toastTheme.css instead, which no
+          call site can override. `newestOnTop` + a stack limit keeps a burst
+          of failures from covering the screen, which is when a toast is least
+          useful and most in the way.
+        */}
+        <ToastContainer
+          position="top-right"
+          autoClose={3200}
+          limit={3}
+          newestOnTop
+          transition={Slide}
+          closeOnClick
+          pauseOnHover
+          pauseOnFocusLoss
+          draggable
+          role="alert"
+        />
       </SocketProvider>
     </I18nextProvider>
   );
