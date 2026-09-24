@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Lightbulb, Send } from "lucide-react";
@@ -37,7 +37,9 @@ export function buildStarters(
   name: string,
   t: Translate
 ): Starter[] {
-  const who = name.trim() || "there";
+  // First name only: "Hi Ada Lovelace!" reads like a form letter. The
+  // suggestion strip already greets people this way.
+  const who = name.trim().split(" ")[0] || "there";
   const theirNative = String((user && user.native_language) || "").trim();
   const theirLearning = String((user && user.language_to_learn) || "").trim();
   const myNative = String((viewer && viewer.native_language) || "").trim();
@@ -124,7 +126,11 @@ const ConversationStarters: React.FC<ConversationStartersProps> = ({
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [createChatRoom, { isLoading }] = useCreateChatRoomMutation();
+  const [createChatRoom] = useCreateChatRoomMutation();
+  // Which line is mid-flight. One shared `isLoading` from the mutation would
+  // grey out the two starters the viewer did NOT press, which reads as the
+  // card refusing them.
+  const [pendingKey, setPendingKey] = useState<string | null>(null);
 
   // The handler awaits a round trip and then navigates away, so the component
   // can be gone by the time the promise settles.
@@ -140,13 +146,15 @@ const ConversationStarters: React.FC<ConversationStartersProps> = ({
 
   const starters = buildStarters(viewer, user, String(name || ""), t as Translate);
 
-  const handleSend = async (text: string): Promise<void> => {
+  const handleSend = async (key: string, text: string): Promise<void> => {
+    setPendingKey(key);
     try {
       await createChatRoom(userId).unwrap();
     } catch (error) {
       // Best-effort: the chat screen creates the room on the first send.
     }
     if (!mounted.current) return;
+    setPendingKey(null);
     navigate(`/chat/${userId}?draft=${encodeURIComponent(text)}`);
   };
 
@@ -168,12 +176,21 @@ const ConversationStarters: React.FC<ConversationStartersProps> = ({
               data-starter={starter.key}
               className="flex items-start gap-3 rounded-chip border border-line px-3 py-2.5 dark:border-line-dark"
             >
-              <p className="flex-1 text-sm text-ink-700 dark:text-ink-200">{starter.text}</p>
+              <p
+                id={`starter-${starter.key}`}
+                className="flex-1 text-sm text-ink-700 dark:text-ink-200"
+              >
+                {starter.text}
+              </p>
+              {/* Three buttons all called "Send" are three identical rows to a
+                  screen reader; the description names which line each one
+                  sends. */}
               <button
                 type="button"
                 data-testid="conversation-starter-send"
-                onClick={() => handleSend(starter.text)}
-                disabled={isLoading}
+                aria-describedby={`starter-${starter.key}`}
+                onClick={() => handleSend(starter.key, starter.text)}
+                disabled={pendingKey === starter.key}
                 className="inline-flex shrink-0 items-center gap-1.5 rounded-chip bg-brand-deep px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
               >
                 <Send className="h-3.5 w-3.5" aria-hidden />

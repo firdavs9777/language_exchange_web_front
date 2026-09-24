@@ -63,6 +63,15 @@ it("does not ask at all when the profile has no language", () => {
   expect(mockGetMembers.mock.calls[0][1].skip).toBe(true);
 });
 
+// GET /auth/users is protected and /community/:userId is public, so an
+// anonymous visitor must never reach it.
+it("asks nothing and renders nothing for a signed-out visitor", () => {
+  mockGetMembers.mockReturnValue({ data: { data: [member("u3")] } });
+  renderStrip({ viewerId: undefined });
+  expect(mockGetMembers.mock.calls[0][1].skip).toBe(true);
+  expect(screen.queryByTestId("suggested-members")).not.toBeInTheDocument();
+});
+
 it("leaves out the profile itself and the viewer", () => {
   mockGetMembers.mockReturnValue({
     data: { data: [member("u2"), member("me"), member("u3")] },

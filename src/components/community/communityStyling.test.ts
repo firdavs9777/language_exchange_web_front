@@ -80,5 +80,10 @@ describe("the member page blocks", () => {
   it("keeps the deleted detail page deleted", () => {
     expect(fs.existsSync(path.join(__dirname, "CommunityDetail.tsx"))).toBe(false);
     expect(fs.existsSync(path.join(__dirname, "CommunityDetail.css"))).toBe(false);
+    // TandemMemberCard was the detail page's row. Nothing rendered it once
+    // that page went; its one surviving export, the TandemMember type, now
+    // lives in tandem/types.ts.
+    expect(fs.existsSync(path.join(__dirname, "tandem/TandemMemberCard.tsx"))).toBe(false);
+    expect(fs.existsSync(path.join(__dirname, "tandem/types.ts"))).toBe(true);
   });
 });

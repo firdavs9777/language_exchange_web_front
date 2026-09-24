@@ -88,12 +88,54 @@ describe("buildStarters", () => {
       expect(starter.text).toContain("Ada");
     });
   });
+
+  it("greets by first name only", () => {
+    buildStarters(viewer, target, "Ada Lovelace", t).forEach((starter) => {
+      expect(starter.text).toContain("Hi Ada!");
+      expect(starter.text).not.toContain("Lovelace");
+    });
+  });
+
+  it("greets a nameless profile without an empty gap", () => {
+    expect(buildStarters(viewer, target, "  ", t)[0].text).toContain("Hi there!");
+  });
 });
 
 describe("the card", () => {
   it("renders three starters", () => {
     renderCard();
     expect(screen.getAllByTestId("conversation-starter")).toHaveLength(3);
+  });
+
+  it("tells a screen reader which line each Send button sends", () => {
+    renderCard();
+    const lines = screen.getAllByTestId("conversation-starter");
+    screen.getAllByTestId("conversation-starter-send").forEach((button, i) => {
+      const describedBy = button.getAttribute("aria-describedby") || "";
+      const described = document.getElementById(describedBy);
+      expect(described).not.toBe(null);
+      expect(lines[i]).toContainElement(described);
+    });
+  });
+
+  it("only the pressed Send waits -- the other two stay live", async () => {
+    let settle: (value: any) => void = () => undefined;
+    mockCreateChatRoom.mockReturnValue({
+      unwrap: () => new Promise((resolve) => {
+        settle = resolve;
+      }),
+    });
+    renderCard();
+
+    const buttons = screen.getAllByTestId("conversation-starter-send");
+    fireEvent.click(buttons[0]);
+
+    await waitFor(() => expect(buttons[0]).toBeDisabled());
+    expect(buttons[1]).not.toBeDisabled();
+    expect(buttons[2]).not.toBeDisabled();
+
+    settle({ success: true });
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
   });
 
   it("renders nothing to a signed-out visitor", () => {

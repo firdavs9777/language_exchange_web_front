@@ -63,7 +63,11 @@ const MutualInterests: React.FC<MutualInterestsProps> = ({ viewer, user }) => {
         </div>
 
         <p className="mt-1 text-sm text-ink-500 dark:text-ink-400">
-          {t("communityDetail.mutual.count", { count: shared.length }) ||
+          {/* `countLabel`, not `count`: an i18next key given a `count`
+              option is treated as pluralisable, and a key literally named
+              `count` invites a `count_other` collision across the 18 locales
+              and their six plural rule sets. */}
+          {t("communityDetail.mutual.countLabel", { count: shared.length }) ||
             `${shared.length} in common`}
         </p>
 

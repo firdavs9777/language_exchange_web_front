@@ -41,6 +41,11 @@ const AFTER_BLOCK = "/communities";
  */
 type ProfileTab = "moments" | "about";
 
+/** Tab order, which is also the arrow-key order. */
+const TABS: ProfileTab[] = ["moments", "about"];
+const tabId = (name: ProfileTab): string => `profile-tab-${name}`;
+const panelId = (name: ProfileTab): string => `profile-panel-${name}`;
+
 const TAB_BASE =
   "flex-1 rounded-chip px-3 py-2 text-sm font-semibold transition-colors";
 const TAB_ON = "bg-surface text-ink-900 shadow-card dark:bg-cardbg-dark dark:text-ink-50";
@@ -141,6 +146,24 @@ const ProfilePage: React.FC = () => {
     const params = new URLSearchParams(searchParams);
     params.set("tab", next);
     setSearchParams(params, { replace: true });
+  };
+
+  // Arrow keys move between tabs, Home/End jump to the ends -- the ARIA tabs
+  // pattern, which a roving tabIndex is only half of. Focus follows the
+  // selection, so the keyboard user lands on the tab they just chose; the
+  // lookup runs in a handler, never during render.
+  const handleTabKeys = (event: React.KeyboardEvent<HTMLDivElement>): void => {
+    const at = TABS.indexOf(tab);
+    let next: ProfileTab | null = null;
+    if (event.key === "ArrowRight") next = TABS[(at + 1) % TABS.length];
+    else if (event.key === "ArrowLeft") next = TABS[(at - 1 + TABS.length) % TABS.length];
+    else if (event.key === "Home") next = TABS[0];
+    else if (event.key === "End") next = TABS[TABS.length - 1];
+    if (!next) return;
+    event.preventDefault();
+    selectTab(next);
+    const button = document.getElementById(tabId(next));
+    if (button) button.focus();
   };
 
   // /profile is the signed-in user's own page, and routes.tsx guards nothing
@@ -283,32 +306,41 @@ const ProfilePage: React.FC = () => {
             role="tablist"
             data-testid="profile-tabs"
             aria-label={t("profile.tabs.label") || "Profile sections"}
+            onKeyDown={handleTabKeys}
             className="flex gap-1 rounded-chip bg-ink-100 p-1 dark:bg-ink-800 lg:hidden"
           >
-            <button
-              type="button"
-              role="tab"
-              data-testid="profile-tab-moments"
-              aria-selected={tab === "moments"}
-              onClick={() => selectTab("moments")}
-              className={`${TAB_BASE} ${tab === "moments" ? TAB_ON : TAB_OFF}`}
-            >
-              {t("profile.tabs.moments") || "Moments"}
-            </button>
-            <button
-              type="button"
-              role="tab"
-              data-testid="profile-tab-about"
-              aria-selected={tab === "about"}
-              onClick={() => selectTab("about")}
-              className={`${TAB_BASE} ${tab === "about" ? TAB_ON : TAB_OFF}`}
-            >
-              {t("profile.tabs.about") || "About"}
-            </button>
+            {TABS.map((name) => (
+              <button
+                key={name}
+                type="button"
+                role="tab"
+                id={tabId(name)}
+                data-testid={tabId(name)}
+                aria-selected={tab === name}
+                aria-controls={panelId(name)}
+                // Roving tabIndex: one stop for the whole tablist, then the
+                // arrow keys move within it.
+                tabIndex={tab === name ? 0 : -1}
+                onClick={() => selectTab(name)}
+                className={`${TAB_BASE} ${tab === name ? TAB_ON : TAB_OFF}`}
+              >
+                {name === "moments"
+                  ? t("profile.tabs.moments") || "Moments"
+                  : t("profile.tabs.about") || "About"}
+              </button>
+            ))}
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+            {/* Both panels are labelled by their tab. From 1024px up the
+                tablist is display:none and the two panels simply become the
+                two columns, which is the one place this pattern bends: a
+                tabpanel with no visible tab still reads as a labelled region,
+                which is exactly what those columns are. */}
             <div
+              role="tabpanel"
+              id={panelId("about")}
+              aria-labelledby={tabId("about")}
               data-testid="profile-about-panel"
               className={`space-y-4 lg:block ${tab === "about" ? "" : "hidden"}`}
             >
@@ -318,17 +350,31 @@ const ProfilePage: React.FC = () => {
               {!isOwn && <MutualInterests viewer={viewer} user={user} />}
               {/* The photo set is the fastest read of who someone is, and it
                   renders nothing at all when the account has no photos — so
-                  an empty profile shows no empty card. It sits with the rest
-                  of the About material, which is where the app's tab puts
-                  it. */}
-              <ProfilePhotos images={images} isOwn={isOwn} name={name} />
+                  an empty profile shows no empty card.
+                  It belongs to the About tab on a phone (app parity) and to
+                  the right-hand column on a desktop, where the left column
+                  would otherwise carry four cards against a near-empty half.
+                  A grid child cannot move between columns with CSS, so it is
+                  declared in both and exactly one is ever displayed —
+                  `display:none` keeps the other out of the accessibility tree
+                  as well as off the screen, and the images come from cache. */}
+              <div data-testid="profile-photos-phone" className="lg:hidden">
+                <ProfilePhotos images={images} isOwn={isOwn} name={name} />
+              </div>
               {isOwn && <AdUnit slot={AD_SLOTS.profile} className="pt-1" />}
             </div>
 
             <div
+              role="tabpanel"
+              id={panelId("moments")}
+              aria-labelledby={tabId("moments")}
               data-testid="profile-moments-panel"
               className={`space-y-4 lg:block ${tab === "moments" ? "" : "hidden"}`}
             >
+              {/* The desktop half of the pair declared in the About panel. */}
+              <div data-testid="profile-photos-desktop" className="hidden lg:block">
+                <ProfilePhotos images={images} isOwn={isOwn} name={name} />
+              </div>
               {!isOwn && (
                 <ConversationStarters
                   userId={profileId}

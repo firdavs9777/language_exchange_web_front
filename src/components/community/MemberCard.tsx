@@ -72,10 +72,25 @@ const MemberCard: React.FC<MemberCardProps> = ({ user, onWave, onOpen }) => {
     onWave(user);
   };
 
+  // The card is the primary control of the row, so it has to answer the
+  // keyboard as well as the mouse: without this the whole member list (and
+  // the suggestion strip on a profile) is reachable only by pointer. Space is
+  // preventDefault'd because its default action scrolls the page.
+  const handleCardKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    if (e.target !== e.currentTarget) return;
+    e.preventDefault();
+    onOpen(user);
+  };
+
   return (
     <div
       data-testid="member-card-root"
+      role="button"
+      tabIndex={0}
+      aria-label={user.name}
       onClick={() => onOpen(user)}
+      onKeyDown={handleCardKeyDown}
       className="flex items-center gap-4 bg-white/80 backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-white/30 hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
     >
       {/* Avatar */}

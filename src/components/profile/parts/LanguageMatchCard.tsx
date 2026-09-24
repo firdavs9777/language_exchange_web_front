@@ -119,12 +119,27 @@ const LanguageMatchCard: React.FC<LanguageMatchCardProps> = ({ viewer, user }) =
             learningLanguage={learning}
             languageLevel={level || null}
           />
-          <span className="inline-flex items-center gap-1.5 text-sm text-ink-600 dark:text-ink-300">
-            {native}
-            <ArrowRight className="h-3.5 w-3.5 text-ink-400" aria-hidden />
-            {learning}
-          </span>
         </div>
+
+        {/* The pill states the pair in codes; this says which half is which,
+            as the app's two labelled cards do
+            (communityLanguageMatchNative / …Learning). Without the labels
+            neither rendering answers "who speaks what". */}
+        <dl className="mt-3 flex items-center gap-3">
+          <div data-testid="language-match-native" className="leading-tight">
+            <dt className="text-[11px] uppercase tracking-wide text-ink-500 dark:text-ink-400">
+              {t("communityDetail.match.native") || "Native"}
+            </dt>
+            <dd className="text-sm font-semibold text-ink-900 dark:text-ink-50">{native}</dd>
+          </div>
+          <ArrowRight className="h-4 w-4 shrink-0 text-ink-400" aria-hidden />
+          <div data-testid="language-match-learning" className="leading-tight">
+            <dt className="text-[11px] uppercase tracking-wide text-ink-500 dark:text-ink-400">
+              {t("communityDetail.match.learning") || "Learning"}
+            </dt>
+            <dd className="text-sm font-semibold text-ink-900 dark:text-ink-50">{learning}</dd>
+          </div>
+        </dl>
 
         {message && (
           <p

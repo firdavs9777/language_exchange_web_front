@@ -14,7 +14,11 @@ const PAGE_LIMIT = 12;
 export interface SuggestedMembersProps {
   /** The profile being viewed — never suggested back to the viewer. */
   targetUserId: string;
-  /** The signed-in user, who is likewise filtered out. */
+  /**
+   * The signed-in user. Filtered out of the results — and, because the
+   * endpoint behind this strip is protected, the reason the strip exists at
+   * all.
+   */
   viewerId?: string;
   /** The profile's native language: what makes a suggestion relevant. */
   language?: string;
@@ -31,7 +35,7 @@ export interface SuggestedMembersProps {
  * drawn with the list's own `MemberCard` so a suggestion looks exactly like
  * the row it came from. A phone scrolls the strip sideways; from 768px it is
  * a grid, because a horizontal scroller on a wide screen hides half its
- * contents for no reason.
+ * contents for no reason. Signed-in only: the list endpoint is protected.
  */
 const SuggestedMembers: React.FC<SuggestedMembersProps> = ({
   targetUserId,
@@ -43,9 +47,13 @@ const SuggestedMembers: React.FC<SuggestedMembersProps> = ({
   const navigate = useNavigate();
   const [waveTarget, setWaveTarget] = useState<CommunityMemberCard | null>(null);
 
+  // `GET /api/v1/auth/users` is behind `protect` (routes/users.js:50), and
+  // /community/:userId is a public page — so an anonymous visitor must not
+  // fire this at all. Skipping is what keeps the logged-out member page on
+  // public endpoints, and the strip renders nothing for them anyway.
   const { data } = useGetCommunityMembersQuery(
     { page: 1, limit: PAGE_LIMIT, language: language || undefined },
-    { skip: !language }
+    { skip: !language || !viewerId }
   );
 
   const members = useMemo<CommunityMemberCard[]>(() => {
@@ -56,7 +64,7 @@ const SuggestedMembers: React.FC<SuggestedMembersProps> = ({
       .slice(0, HOW_MANY);
   }, [data, targetUserId, viewerId]);
 
-  if (members.length === 0) return null;
+  if (!viewerId || members.length === 0) return null;
 
   const who = String(name || "").trim().split(" ")[0];
 

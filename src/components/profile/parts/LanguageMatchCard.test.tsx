@@ -27,11 +27,17 @@ describe("matchTypeFor", () => {
     });
   });
 
-  it("compares languages case-insensitively", () => {
+  it("compares languages case-insensitively and ignores stray whitespace", () => {
     expect(
       matchTypeFor(
         { native_language: "korean", language_to_learn: "ENGLISH" },
         { native_language: "English", language_to_learn: "Korean" }
+      )
+    ).toBe("perfect");
+    expect(
+      matchTypeFor(
+        { native_language: " Korean ", language_to_learn: "  English" },
+        { native_language: "english ", language_to_learn: " korean" }
       )
     ).toBe("perfect");
   });
@@ -54,6 +60,14 @@ describe("the card", () => {
     expect(screen.getByTestId("language-match-message")).toHaveTextContent(
       "Perfect match — you can teach each other."
     );
+  });
+
+  it("says which language is the native one and which is being learnt", () => {
+    render(<LanguageMatchCard viewer={viewer} user={MATRIX[0].target} />);
+    expect(screen.getByTestId("language-match-native")).toHaveTextContent("Native");
+    expect(screen.getByTestId("language-match-native")).toHaveTextContent("English");
+    expect(screen.getByTestId("language-match-learning")).toHaveTextContent("Learning");
+    expect(screen.getByTestId("language-match-learning")).toHaveTextContent("Korean");
   });
 
   it("shows the pair but no verdict when there is no match", () => {
