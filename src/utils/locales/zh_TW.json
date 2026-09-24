@@ -2061,6 +2061,39 @@
       "googlePlay": "Google Play",
       "downloadOnThe": "立即下載",
       "getItOn": "立即取得"
+    },
+    "promo": {
+      "tutor": {
+        "eyebrow": "AI 家教",
+        "title": "邊打字邊糾正你的韓文",
+        "body": "每則訊息都有專屬批改,聊天之餘還有測驗和文法練習。",
+        "cta": "下載 App",
+        "alt": "手機上顯示的 BananaTalk 學習中心，提供與 AI 練習、複習和每日挑戰"
+      },
+      "voice": {
+        "eyebrow": "語音訊息與聊天室",
+        "title": "聽聽真實的發音",
+        "body": "傳送語音訊息、分享你的所在位置,和母語人士一起加入即時語音聊天室。",
+        "cta": "下載 App",
+        "alt": "手機上顯示的 BananaTalk 聊天，包含語音訊息和共用位置卡片"
+      },
+      "moments": {
+        "eyebrow": "動態與限時動態",
+        "title": "用兩種語言分享你的一週",
+        "body": "發布照片和想法,朋友會讀到翻譯版本,並友善地糾正你。",
+        "cta": "下載 App",
+        "alt": "手機上顯示的 BananaTalk 動態消息，顯示其他學習者發布的照片"
+      },
+      "inbox": {
+        "eyebrow": "真實的對話",
+        "title": "真的會回你訊息的人",
+        "body": "聊天、打招呼和互動都在同一個收件匣 — 已讀、已翻譯、已回覆。",
+        "cta": "下載 App",
+        "alt": "手機上顯示的 BananaTalk 收件匣，列出與母語者的最近對話"
+      },
+      "dismiss": "關閉應用程式推廣",
+      "label": "BananaTalk 應用程式能做什麼",
+      "slideLabel": "投影片 {{n}} / {{total}}"
     }
   },
   "stories": {

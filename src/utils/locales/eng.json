@@ -2061,6 +2061,39 @@
       "googlePlay": "Google Play",
       "downloadOnThe": "Download on the",
       "getItOn": "Get it on"
+    },
+    "promo": {
+      "label": "What the BananaTalk app does",
+      "dismiss": "Dismiss app promotion",
+      "slideLabel": "Slide {{n}} of {{total}}",
+      "tutor": {
+        "eyebrow": "AI tutor",
+        "title": "Fix your Korean as you type",
+        "body": "Private corrections on every message, plus quizzes and grammar drills between chats.",
+        "cta": "Get the app",
+        "alt": "The BananaTalk Study Hub on a phone, offering Practice with AI, review and daily challenges"
+      },
+      "voice": {
+        "eyebrow": "Voice notes & rooms",
+        "title": "Hear how it really sounds",
+        "body": "Send voice notes, share where you are, and join live voice rooms with native speakers.",
+        "cta": "Get the app",
+        "alt": "A BananaTalk chat on a phone, with voice notes and a shared location card"
+      },
+      "moments": {
+        "eyebrow": "Moments & stories",
+        "title": "Share your week in two languages",
+        "body": "Post photos and thoughts; friends read them translated and correct you kindly.",
+        "cta": "Get the app",
+        "alt": "The BananaTalk Moments feed on a phone, with photos posted by other learners"
+      },
+      "inbox": {
+        "eyebrow": "Real conversations",
+        "title": "People who actually write back",
+        "body": "Your chats, waves and reactions in one inbox — read, translated, answered.",
+        "cta": "Get the app",
+        "alt": "The BananaTalk inbox on a phone, listing recent conversations with native speakers"
+      }
     }
   },
   "stories": {
@@ -2203,5 +2236,6 @@
     "more": "More",
     "reply_failed": "Couldn't send your message",
     "vote_failed": "Couldn't save your vote"
-  }
+  },
+  "_note": "English source for the homepage promo carousel (src/data/promoSlides.ts, src/components/growth/PromoCarousel.tsx). NOT yet merged into src/utils/locales/*.json: localeParity.test.ts requires all 18 locales to carry the same key set, so this namespace lands in one translation pass. Until then every call site is t(key) || the English below."
 }

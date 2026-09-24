@@ -2061,6 +2061,39 @@
       "googlePlay": "Google Play",
       "downloadOnThe": "Laden im",
       "getItOn": "Jetzt bei"
+    },
+    "promo": {
+      "tutor": {
+        "eyebrow": "KI-Tutor",
+        "title": "Korrigiert dein Koreanisch beim Tippen",
+        "body": "Persönliche Korrekturen bei jeder Nachricht, dazu Quizze und Grammatikübungen zwischen den Chats.",
+        "cta": "App herunterladen",
+        "alt": "Der BananaTalk Study Hub auf einem Smartphone, mit Übungen mit KI, Wiederholung und täglichen Herausforderungen"
+      },
+      "voice": {
+        "eyebrow": "Sprachnachrichten & -räume",
+        "title": "Hör, wie es wirklich klingt",
+        "body": "Sende Sprachnachrichten, teile deinen Standort und tritt Live-Sprachräumen mit Muttersprachlern bei.",
+        "cta": "App herunterladen",
+        "alt": "Ein BananaTalk-Chat auf einem Smartphone, mit Sprachnachrichten und einer geteilten Standortkarte"
+      },
+      "moments": {
+        "eyebrow": "Moments & Storys",
+        "title": "Teile deine Woche in zwei Sprachen",
+        "body": "Poste Fotos und Gedanken; Freunde lesen sie übersetzt und korrigieren dich freundlich.",
+        "cta": "App herunterladen",
+        "alt": "Der BananaTalk Moments-Feed auf einem Smartphone, mit Fotos von anderen Lernenden"
+      },
+      "inbox": {
+        "eyebrow": "Echte Gespräche",
+        "title": "Leute, die wirklich zurückschreiben",
+        "body": "Chats, Winken und Reaktionen in einem Posteingang — gelesen, übersetzt, beantwortet.",
+        "cta": "App herunterladen",
+        "alt": "Der BananaTalk Posteingang auf einem Smartphone, mit einer Liste aktueller Unterhaltungen mit Muttersprachlern"
+      },
+      "dismiss": "App-Werbung schließen",
+      "label": "Was die BananaTalk-App kann",
+      "slideLabel": "Folie {{n}} von {{total}}"
     }
   },
   "stories": {

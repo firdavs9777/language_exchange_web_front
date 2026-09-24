@@ -2061,6 +2061,39 @@
       "googlePlay": "Google Play",
       "downloadOnThe": "Télécharger dans l'",
       "getItOn": "Disponible sur"
+    },
+    "promo": {
+      "tutor": {
+        "eyebrow": "Tuteur IA",
+        "title": "Corrige ton coréen en direct",
+        "body": "Des corrections privées à chaque message, plus des quiz et exercices de grammaire entre les discussions.",
+        "cta": "Obtenir l'application",
+        "alt": "Le Study Hub de BananaTalk sur un téléphone, proposant de s'entraîner avec l'IA, des révisions et des défis quotidiens"
+      },
+      "voice": {
+        "eyebrow": "Notes vocales & salons",
+        "title": "Écoute comment ça sonne vraiment",
+        "body": "Envoie des notes vocales, partage où tu es, et rejoins des salons vocaux en direct avec des locuteurs natifs.",
+        "cta": "Obtenir l'application",
+        "alt": "Une discussion BananaTalk sur un téléphone, avec des messages vocaux et une carte de position partagée"
+      },
+      "moments": {
+        "eyebrow": "Moments & Stories",
+        "title": "Partage ta semaine en deux langues",
+        "body": "Publie photos et pensées ; tes amis les lisent traduites et te corrigent avec bienveillance.",
+        "cta": "Obtenir l'application",
+        "alt": "Le fil Moments de BananaTalk sur un téléphone, avec des photos publiées par d'autres apprenants"
+      },
+      "inbox": {
+        "eyebrow": "De vraies conversations",
+        "title": "Des gens qui répondent vraiment",
+        "body": "Tes discussions, saluts et réactions dans une seule boîte — lus, traduits, répondus.",
+        "cta": "Obtenir l'application",
+        "alt": "La boîte de réception BananaTalk sur un téléphone, répertoriant les conversations récentes avec des locuteurs natifs"
+      },
+      "dismiss": "Fermer la promotion de l'application",
+      "label": "Ce que fait l'application BananaTalk",
+      "slideLabel": "Diapositive {{n}} sur {{total}}"
     }
   },
   "stories": {

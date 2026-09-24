@@ -2061,6 +2061,39 @@
       "googlePlay": "Google Play",
       "downloadOnThe": "Tải về trên",
       "getItOn": "Tải trên"
+    },
+    "promo": {
+      "tutor": {
+        "eyebrow": "Gia sư AI",
+        "title": "Sửa tiếng Hàn ngay khi bạn gõ",
+        "body": "Sửa lỗi riêng cho từng tin nhắn, cùng các bài quiz và luyện ngữ pháp giữa các cuộc trò chuyện.",
+        "cta": "Tải ứng dụng",
+        "alt": "Trung tâm Học tập BananaTalk trên điện thoại, cung cấp Luyện tập với AI, ôn tập và thử thách hằng ngày"
+      },
+      "voice": {
+        "eyebrow": "Voice Notes & Rooms",
+        "title": "Nghe cách phát âm thật sự",
+        "body": "Gửi tin nhắn thoại, chia sẻ vị trí của bạn, và tham gia Voice Rooms trực tiếp cùng người bản xứ.",
+        "cta": "Tải ứng dụng",
+        "alt": "Một cuộc trò chuyện BananaTalk trên điện thoại, có ghi âm giọng nói và thẻ vị trí đã chia sẻ"
+      },
+      "moments": {
+        "eyebrow": "Moments & Stories",
+        "title": "Chia sẻ tuần của bạn bằng hai ngôn ngữ",
+        "body": "Đăng ảnh và suy nghĩ; bạn bè đọc bản dịch và sửa lỗi cho bạn một cách nhẹ nhàng.",
+        "cta": "Tải ứng dụng",
+        "alt": "Bảng tin Khoảnh Khắc của BananaTalk trên điện thoại, với ảnh do người học khác đăng"
+      },
+      "inbox": {
+        "eyebrow": "Trò chuyện thực sự",
+        "title": "Những người thực sự hồi âm",
+        "body": "Tin nhắn, lượt vẫy tay và cảm xúc trong một hộp thư — đọc, dịch, hồi đáp.",
+        "cta": "Tải ứng dụng",
+        "alt": "Hộp thư đến BananaTalk trên điện thoại, liệt kê các cuộc trò chuyện gần đây với người bản ngữ"
+      },
+      "dismiss": "Đóng quảng cáo ứng dụng",
+      "label": "BananaTalk làm được những gì",
+      "slideLabel": "Trang {{n}} trên {{total}}"
     }
   },
   "stories": {
