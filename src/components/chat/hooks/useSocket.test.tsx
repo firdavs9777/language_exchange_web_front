@@ -3,31 +3,24 @@ import React from "react";
 import { render, screen, act, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer, { logout } from "../../../store/slices/authSlice";
+import authReducer, { logout, setCredentials } from "../../../store/slices/authSlice";
 import { BASE_URL } from "../../../constants";
 import { SocketProvider, useSocket } from "./useSocket";
 
-// How many times the socket.io-client module has actually been evaluated.
+// The signed-in half of the provider. The logged-out half -- "never loads the
+// client at all" -- is useSocket.loggedOut.test.tsx, in its own file because
+// Jest shares one module registry across the tests inside a file: the first
+// test here loads socket.io-client and it stays loaded, which would make that
+// assertion quietly depend on declaration order.
 //
-// This is the assertion the whole task turns on: a logged-out visitor must not
-// pay for the client at all. Jest evaluates a mock factory the first time the
-// module is `require`d, and the CRA test preset compiles `import("...")` to a
-// `require` inside a promise -- so this counter is a faithful stand-in for
-// "webpack fetched the chunk". A static import at the top of useSocket.ts
-// would make it 1 before the first test even renders.
-//
-// The factory touches `global` only, never a module-scope const: a static
-// import would run it during module initialisation, and a TDZ crash there
-// would report as "suite failed to run" instead of as the number below.
+// `global` rather than a module-scope const, so the factory cannot hit a TDZ
+// if something ever evaluates the module at import time.
 const mockIo = jest.fn();
 (global as any).__btIo = (...args: any[]) => mockIo(...args);
 
 jest.mock("socket.io-client", () => {
-  (global as any).__btIoLoads = ((global as any).__btIoLoads || 0) + 1;
   return { io: (...args: any[]) => (global as any).__btIo(...args) };
 });
-
-const loadCount = (): number => (global as any).__btIoLoads || 0;
 
 interface FakeSocket {
   id: string;
@@ -115,19 +108,6 @@ beforeEach(() => {
   localStorage.clear();
 });
 
-// Order matters for this one only: the module registry is shared across the
-// file, so once any test has signed in, socket.io-client stays loaded. That is
-// production behaviour too -- the chunk is fetched once per session.
-it("never loads the socket client for a logged-out visitor", async () => {
-  await renderProvider(makeTestStore());
-
-  expect(loadCount()).toBe(0);
-  expect(mockIo).not.toHaveBeenCalled();
-  expect(screen.getByTestId("socket")).toHaveTextContent("none");
-  expect(screen.getByTestId("connected")).toHaveTextContent("no");
-  expect(screen.getByTestId("emit")).toHaveTextContent("function");
-});
-
 it("loads the client and connects with the token once a visitor is signed in", async () => {
   const sock = makeFakeSocket("sock-signed-in");
   mockIo.mockImplementation(() => sock);
@@ -135,7 +115,6 @@ it("loads the client and connects with the token once a visitor is signed in", a
   await renderProvider(makeTestStore("tok-signed-in"));
 
   await waitFor(() => expect(mockIo).toHaveBeenCalledTimes(1));
-  expect(loadCount()).toBe(1);
   expect(mockIo.mock.calls[0][0]).toBe(BASE_URL);
   expect(mockIo.mock.calls[0][1]).toEqual(
     expect.objectContaining({
@@ -178,22 +157,79 @@ it("disconnects and drops the socket when the user signs out", async () => {
   expect(screen.getByTestId("connected")).toHaveTextContent("no");
 });
 
-it("forces a logout when the server reports an expired token or an auth error", async () => {
-  const sock = makeFakeSocket("sock-auth-error");
+// Both pushes mean the same thing -- the server has given up on this token --
+// and they have separate, near-identical handlers, so both are fired here
+// rather than one being trusted to stand in for the other.
+it.each(["authError", "tokenExpired"])("forces a logout when the server pushes %s", async (event: string) => {
+  const sock = makeFakeSocket(`sock-${event}`);
   mockIo.mockImplementation(() => sock);
-  const store = makeTestStore("tok-auth-error");
+  const store = makeTestStore(`tok-${event}`);
 
   await renderProvider(store);
   await waitFor(() => expect(sock.handlerCount("authError")).toBe(1));
   expect(sock.handlerCount("tokenExpired")).toBe(1);
 
   await act(async () => {
-    sock.fire("authError", { error: "invalid token" });
+    sock.fire(event, { error: "invalid token", reason: "expired" });
     await Promise.resolve();
   });
 
   expect(store.getState().auth.userInfo).toBe(null);
   expect(sock.disconnect).toHaveBeenCalled();
+  expect(screen.getByTestId("socket")).toHaveTextContent("none");
+});
+
+// The silent-refresh path: src/store/slices/apiSlice.ts's baseQueryWithReauth
+// dispatches setCredentials with a fresh token after a 401, so the token
+// rotates with nobody signing out. Before the client was lazy this swap was
+// one synchronous effect body; now the loader resolves a microtask later, and
+// what this test pins is that the gap is empty rather than stale -- consumers
+// see `null`, not a socket that is about to be destroyed with their listeners
+// still on it.
+it("drops the stale socket synchronously when the token rotates", async () => {
+  const a = makeFakeSocket("sock-token-a");
+  const b = makeFakeSocket("sock-token-b");
+  mockIo.mockImplementationOnce(() => a).mockImplementationOnce(() => b);
+  const store = makeTestStore("tok-a");
+
+  await renderProvider(store);
+  await waitFor(() => expect(screen.getByTestId("socket")).toHaveTextContent("sock-token-a"));
+  act(() => {
+    a.connected = true;
+    a.fire("connect");
+  });
+  expect(screen.getByTestId("connected")).toHaveTextContent("yes");
+
+  // No logout — the same user, a new access token.
+  act(() => {
+    store.dispatch(setCredentials({ user: { _id: "u1" }, token: "tok-b" }));
+  });
+
+  // Synchronously, in the same tick the effect ran: the old socket is closed
+  // and gone from the context, and the new one does not exist yet (the
+  // loader's `.then` is a microtask, which cannot run before this assertion).
+  expect(a.disconnect).toHaveBeenCalled();
+  expect(a.removeAllListeners).toHaveBeenCalled();
+  expect(screen.getByTestId("socket")).toHaveTextContent("none");
+  expect(screen.getByTestId("connected")).toHaveTextContent("no");
+  expect(mockIo).toHaveBeenCalledTimes(1);
+
+  // And then the new one arrives, authenticated with token B.
+  await act(async () => {
+    await Promise.resolve();
+  });
+  await waitFor(() => expect(screen.getByTestId("socket")).toHaveTextContent("sock-token-b"));
+  expect(mockIo).toHaveBeenCalledTimes(2);
+  expect(mockIo.mock.calls[1][1]).toEqual(
+    expect.objectContaining({ auth: { token: "tok-b" } })
+  );
+  act(() => {
+    b.connected = true;
+    b.fire("connect");
+  });
+  expect(screen.getByTestId("connected")).toHaveTextContent("yes");
+  // B never inherited A's listeners, and A never got B's.
+  expect(a.handlerCount("connect")).toBe(0);
 });
 
 it("reuses one socket for the same token and detaches its listeners on unmount", async () => {

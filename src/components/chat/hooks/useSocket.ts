@@ -106,12 +106,13 @@ function getOrCreateSocket(io: IoFactory, token: string): Socket {
 
 /**
  * Tear the singleton down. Called when the session ends — a sign-out, or the
- * `authError`/`tokenExpired` push that forces one — never on unmount: a route
- * change re-mounts the provider and must not reconnect.
+ * `authError`/`tokenExpired` push that forces one — and when the token
+ * rotates under us; never on unmount: a route change re-mounts the provider
+ * and must not reconnect.
  */
-function destroySocket(): void {
+function destroySocket(reason: string): void {
   if (!globalSocket) return;
-  console.log('[Socket] Signed out, destroying socket:', globalSocket.id);
+  console.log(`[Socket] ${reason}, destroying socket:`, globalSocket.id);
   globalSocket.removeAllListeners();
   globalSocket.disconnect();
   globalSocket = null;
@@ -140,8 +141,28 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (!token) {
       setSocket(null);
       setIsConnected(false);
-      destroySocket();
+      destroySocket('Signed out');
       return;
+    }
+
+    // The token rotated without a sign-out. This is a real path, not a
+    // hypothetical one: baseQueryWithReauth dispatches `setCredentials` with a
+    // fresh token after a silent 401 refresh, which re-runs this effect with a
+    // new, non-null token.
+    //
+    // Before the client was lazy, the swap happened inside one synchronous
+    // effect body, so no render ever saw the old socket after the new token
+    // arrived. `loadIo()` now resolves a microtask later (the promise is
+    // cached, but a promise is still a promise), and in that gap `socket`
+    // would still be the old object with consumer listeners attached to it —
+    // a socket about to be destroyed. So close it here, synchronously, and let
+    // consumers see `null` in the gap exactly as they do when logged out:
+    // every one of them already guards on it, and their effects key on
+    // `[socket]`, so they re-attach when the new one arrives.
+    if (globalToken && globalToken !== token) {
+      setSocket(null);
+      setIsConnected(false);
+      destroySocket('Token rotated');
     }
 
     // Sync React state with socket connection state
