@@ -796,7 +796,8 @@
       "mutualInterests": "الاهتمامات المشتركة",
       "newUsersOnly": "المستخدمون الجدد فقط",
       "clearAll": "مسح الكل",
-      "matchCount": "{{count}} تطابق"
+      "matchCount": "{{count}} تطابق",
+      "lockedByTab": "محدد من علامة التبويب {{tab}}"
     },
     "highlighted": {
       "title": "ملفات مميزة",

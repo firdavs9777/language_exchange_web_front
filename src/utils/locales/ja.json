@@ -796,7 +796,8 @@
       "mutualInterests": "共通の興味",
       "newUsersOnly": "新規ユーザーのみ",
       "clearAll": "すべてクリア",
-      "matchCount": "{{count}}件のマッチ"
+      "matchCount": "{{count}}件のマッチ",
+      "lockedByTab": "{{tab}}タブで設定済み"
     },
     "highlighted": {
       "title": "注目のプロフィール",

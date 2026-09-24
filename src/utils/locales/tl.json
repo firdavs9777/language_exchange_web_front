@@ -796,7 +796,8 @@
       "mutualInterests": "Mga magkatulad na interes",
       "newUsersOnly": "Bagong user lang",
       "clearAll": "I-clear lahat",
-      "matchCount": "{{count}} tugma"
+      "matchCount": "{{count}} tugma",
+      "lockedByTab": "Itinakda ng tab na {{tab}}"
     },
     "highlighted": {
       "title": "Mga itinatampok na profile",

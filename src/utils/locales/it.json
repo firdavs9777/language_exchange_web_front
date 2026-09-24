@@ -777,7 +777,8 @@
       "mutualInterests": "Interessi in comune",
       "newUsersOnly": "Solo nuovi utenti",
       "clearAll": "Cancella tutto",
-      "matchCount": "{{count}} corrispondenze"
+      "matchCount": "{{count}} corrispondenze",
+      "lockedByTab": "Impostato dalla scheda {{tab}}"
     },
     "highlighted": {
       "title": "Profili in evidenza",

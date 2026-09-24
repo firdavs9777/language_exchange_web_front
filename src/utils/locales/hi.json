@@ -796,7 +796,8 @@
       "mutualInterests": "साझा रुचियाँ",
       "newUsersOnly": "केवल नए उपयोगकर्ता",
       "clearAll": "सभी साफ़ करें",
-      "matchCount": "{{count}} मिलान"
+      "matchCount": "{{count}} मिलान",
+      "lockedByTab": "{{tab}} टैब द्वारा सेट"
     },
     "highlighted": {
       "title": "चुनिंदा प्रोफ़ाइल",

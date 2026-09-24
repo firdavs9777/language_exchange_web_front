@@ -777,7 +777,8 @@
       "mutualInterests": "Centres d'intérêt communs",
       "newUsersOnly": "Nouveaux utilisateurs uniquement",
       "clearAll": "Tout effacer",
-      "matchCount": "{{count}} correspondances"
+      "matchCount": "{{count}} correspondances",
+      "lockedByTab": "Défini par l’onglet {{tab}}"
     },
     "highlighted": {
       "title": "Profils en vedette",

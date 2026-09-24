@@ -796,7 +796,8 @@
       "mutualInterests": "Общие интересы",
       "newUsersOnly": "Только новые пользователи",
       "clearAll": "Очистить всё",
-      "matchCount": "Совпадений: {{count}}"
+      "matchCount": "Совпадений: {{count}}",
+      "lockedByTab": "Задано вкладкой «{{tab}}»"
     },
     "highlighted": {
       "title": "Рекомендуемые профили",

@@ -796,7 +796,8 @@
       "mutualInterests": "Mutual interests",
       "newUsersOnly": "New users only",
       "clearAll": "Clear all",
-      "matchCount": "{{count}} matches"
+      "matchCount": "{{count}} matches",
+      "lockedByTab": "Set by the {{tab}} tab"
     },
     "highlighted": {
       "title": "Highlighted Profiles",

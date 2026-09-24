@@ -796,7 +796,8 @@
       "mutualInterests": "Ortak ilgi alanları",
       "newUsersOnly": "Sadece yeni kullanıcılar",
       "clearAll": "Tümünü temizle",
-      "matchCount": "{{count}} eşleşme"
+      "matchCount": "{{count}} eşleşme",
+      "lockedByTab": "{{tab}} sekmesi tarafından ayarlandı"
     },
     "highlighted": {
       "title": "Öne çıkan profiller",

@@ -796,7 +796,8 @@
       "mutualInterests": "Minat yang sama",
       "newUsersOnly": "Hanya pengguna baru",
       "clearAll": "Hapus semua",
-      "matchCount": "{{count}} kecocokan"
+      "matchCount": "{{count}} kecocokan",
+      "lockedByTab": "Diatur oleh tab {{tab}}"
     },
     "highlighted": {
       "title": "Profil unggulan",

@@ -796,7 +796,8 @@
       "mutualInterests": "공통 관심사",
       "newUsersOnly": "신규 사용자만",
       "clearAll": "모두 지우기",
-      "matchCount": "{{count}}명 일치"
+      "matchCount": "{{count}}명 일치",
+      "lockedByTab": "{{tab}} 탭에서 설정됨"
     },
     "highlighted": {
       "title": "추천 프로필",
