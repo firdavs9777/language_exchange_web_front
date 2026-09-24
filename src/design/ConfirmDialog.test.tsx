@@ -230,3 +230,23 @@ it("offers an optional note under showReason without gating confirm on it", () =
   fireEvent.click(confirm);
   expect(props.onConfirm).toHaveBeenCalledWith("duplicate report");
 });
+
+// A report's description is capped at 500 by the backend (models/Report.js).
+// The cap has to be a keystroke the browser refuses, not a 400 that arrives
+// after the round trip and takes the text with it.
+it("caps the reason at reasonMaxLength and counts what is left", () => {
+  const props = base();
+  render(<ConfirmDialog {...props} requireReason reasonMaxLength={500} />);
+  const field = screen.getByTestId("confirm-dialog-reason");
+  expect(field).toHaveAttribute("maxlength", "500");
+
+  fireEvent.change(field, { target: { value: "abc" } });
+  expect(screen.getByTestId("confirm-dialog-reason-count")).toHaveTextContent("3 / 500");
+});
+
+it("shows no counter when no cap was asked for", () => {
+  const props = base();
+  render(<ConfirmDialog {...props} requireReason />);
+  expect(screen.getByTestId("confirm-dialog-reason")).not.toHaveAttribute("maxlength");
+  expect(screen.queryByTestId("confirm-dialog-reason-count")).not.toBeInTheDocument();
+});

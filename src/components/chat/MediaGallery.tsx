@@ -47,7 +47,10 @@ interface RootState {
 }
 
 const MediaGallery: React.FC = () => {
-  const { conversationId } = useParams<{ conversationId: string }>();
+  // The route param is the OTHER USER's id — /chat/:userId/media — which is
+  // what the conversation query needs as its receiver. It was only ever named
+  // `conversationId`; it has never held one.
+  const { userId: partnerId } = useParams<{ userId: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -63,10 +66,10 @@ const MediaGallery: React.FC = () => {
   const { data, isLoading, error } = useGetConversationQuery(
     {
       senderId: userId,
-      receiverId: conversationId || '',
+      receiverId: partnerId || '',
       limit: 500, // Get more messages to find all media
     },
-    { skip: !userId || !conversationId }
+    { skip: !userId || !partnerId }
   );
 
   // Extract media items from messages

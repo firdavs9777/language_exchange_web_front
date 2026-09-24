@@ -142,6 +142,25 @@ it("keeps /community/nearby off the member page", () => {
   expect(matches![matches!.length - 1].route.path).toBe("community/nearby");
 });
 
+// Every /chat route is keyed by the other person's user id -- that is what
+// /chat/:userId carries, what ChatContent queries the thread with, and what
+// the media gallery reads out of useParams. The param was named
+// `conversationId` on the media route, which was never true.
+it("names the media gallery's param userId", () => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, "/chat/abc123/media");
+  expect(matches![matches!.length - 1].route.path).toBe("chat/:userId/media");
+  expect(matches![matches!.length - 1].params.userId).toBe("abc123");
+});
+
+// The settings screen is gone: the "..." info panel in the chat header
+// replaced it, and the route it left behind pointed at a deleted module.
+it("no longer routes the chat settings screen", () => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, "/chat/abc123/settings");
+  expect(matches![matches!.length - 1].route.path).toBe("*");
+});
+
 // The author's own stories page had no route at all: the component shipped in
 // Task S2 and nothing could reach it. "mine" is a static segment sitting
 // beside "stories/:userId", so this also pins the ranking -- if the dynamic

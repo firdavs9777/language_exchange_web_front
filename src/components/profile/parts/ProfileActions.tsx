@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Ban, Flag, MessageCircle, MoreHorizontal, Pencil, Settings } from "lucide-react";
+import { Ban, Flag, MessageCircle, MoreHorizontal, Pencil, Settings, ShieldOff } from "lucide-react";
 import ConfirmDialog from "../../../design/ConfirmDialog";
 import useFollowToggle from "../useFollowToggle";
 import {
   useBlockUserMutation,
+  useUnblockUserMutation,
   useReportUserMutation,
+  useGetBlockStatusQuery,
 } from "../../../store/slices/usersSlice";
 import { useCreateChatRoomMutation } from "../../../store/slices/chatSlice";
 
@@ -68,7 +70,17 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
   );
 
   const [blockUser, { isLoading: isBlocking }] = useBlockUserMutation();
+  const [unblockUser, { isLoading: isUnblocking }] = useUnblockUserMutation();
   const [reportUser, { isLoading: isReporting }] = useReportUserMutation();
+
+  // Whether the viewer has already blocked this person. Without it the menu
+  // offered "Block" to someone who had blocked them months ago, and the
+  // backend answered "User is already blocked" into a toast nobody showed.
+  const { data: blockStatus } = useGetBlockStatusQuery(
+    { userId: viewerId, targetUserId: userId },
+    { skip: !viewerId || isOwn }
+  );
+  const isBlocked = Boolean(blockStatus?.data?.isBlocked);
   const [createChatRoom, { isLoading: isCreatingChat }] = useCreateChatRoomMutation();
 
   // Optimistic follow, rollback and the signed-out bounce all live in the
@@ -81,7 +93,7 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
   );
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [dialog, setDialog] = useState<"block" | "report" | null>(null);
+  const [dialog, setDialog] = useState<"block" | "unblock" | "report" | null>(null);
   const [dialogError, setDialogError] = useState("");
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -133,7 +145,7 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
     navigate(`/chat/${userId}`);
   };
 
-  const openDialog = (which: "block" | "report"): void => {
+  const openDialog = (which: "block" | "unblock" | "report"): void => {
     setDialogError("");
     setMenuOpen(false);
     setDialog(which);
@@ -144,7 +156,18 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
     const blocking = dialog === "block";
     try {
       if (blocking) await blockUser(userId).unwrap();
-      else await reportUser({ userId, reason }).unwrap();
+      else if (dialog === "unblock") await unblockUser(userId).unwrap();
+      else {
+        // `reason` on the Report model is an enum; the prose the dialog
+        // collected is the description. `reportId` is filled in by the slice
+        // (for a user report it is the user).
+        await reportUser({
+          type: "user",
+          reportedUser: userId,
+          reason: "other",
+          description: reason,
+        }).unwrap();
+      }
       if (mounted.current) setDialog(null);
       if (blocking && onBlocked) onBlocked();
     } catch (error) {
@@ -214,16 +237,29 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
             role="menu"
             className="absolute right-0 z-20 mt-1 w-44 overflow-hidden rounded-card border border-line bg-surface py-1 shadow-float dark:border-line-dark dark:bg-cardbg-dark"
           >
-            <button
-              type="button"
-              role="menuitem"
-              data-testid="action-block"
-              onClick={() => openDialog("block")}
-              className={MENU_ITEM}
-            >
-              <Ban className="h-4 w-4" aria-hidden />
-              {t("profile.actions.block") || "Block"}
-            </button>
+            {isBlocked ? (
+              <button
+                type="button"
+                role="menuitem"
+                data-testid="action-unblock"
+                onClick={() => openDialog("unblock")}
+                className={MENU_ITEM}
+              >
+                <ShieldOff className="h-4 w-4" aria-hidden />
+                {t("profile.actions.unblock") || "Unblock"}
+              </button>
+            ) : (
+              <button
+                type="button"
+                role="menuitem"
+                data-testid="action-block"
+                onClick={() => openDialog("block")}
+                className={MENU_ITEM}
+              >
+                <Ban className="h-4 w-4" aria-hidden />
+                {t("profile.actions.block") || "Block"}
+              </button>
+            )}
             <button
               type="button"
               role="menuitem"
@@ -255,9 +291,27 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
       />
 
       <ConfirmDialog
+        open={dialog === "unblock"}
+        title={t("profile.unblock.title", { name: personName }) || `Unblock ${personName}?`}
+        body={
+          t("profile.unblock.body") ||
+          "They will be able to message you and see your profile again."
+        }
+        confirmLabel={t("profile.actions.unblock") || "Unblock"}
+        cancelLabel={t("profile.actions.cancel") || "Cancel"}
+        busy={isUnblocking}
+        error={dialogError || undefined}
+        onConfirm={handleConfirm}
+        onCancel={() => setDialog(null)}
+      />
+
+      <ConfirmDialog
         open={dialog === "report"}
         danger
         requireReason
+        // models/Report.js caps `description` at 500 characters, and the
+        // prose collected here IS the description.
+        reasonMaxLength={500}
         reasonLabel={t("profile.report.reason") || "Reason"}
         title={t("profile.report.title", { name: personName }) || `Report ${personName}?`}
         body={t("profile.report.body") || "Tell us what is wrong. Every report is reviewed."}

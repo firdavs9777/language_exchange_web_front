@@ -10,7 +10,9 @@ const mockNavigate = jest.fn();
 const mockFollow = jest.fn();
 const mockUnfollow = jest.fn();
 const mockBlock = jest.fn();
+const mockUnblock = jest.fn();
 const mockReport = jest.fn();
+const mockBlockStatus = jest.fn();
 const mockCreateChatRoom = jest.fn();
 
 jest.mock("react-i18next", () => ({
@@ -26,7 +28,9 @@ jest.mock("../../../store/slices/usersSlice", () => ({
   useFollowUserMutation: () => [mockFollow, { isLoading: false }],
   useUnFollowUserMutation: () => [mockUnfollow, { isLoading: false }],
   useBlockUserMutation: () => [mockBlock, { isLoading: false }],
+  useUnblockUserMutation: () => [mockUnblock, { isLoading: false }],
   useReportUserMutation: () => [mockReport, { isLoading: false }],
+  useGetBlockStatusQuery: (arg: any, opts: any) => mockBlockStatus(arg, opts),
 }));
 
 jest.mock("../../../store/slices/chatSlice", () => ({
@@ -58,7 +62,9 @@ beforeEach(() => {
   mockFollow.mockReturnValue(resolved());
   mockUnfollow.mockReturnValue(resolved());
   mockBlock.mockReturnValue(resolved());
+  mockUnblock.mockReturnValue(resolved());
   mockReport.mockReturnValue(resolved());
+  mockBlockStatus.mockReturnValue({ data: { data: { isBlocked: false } } });
   mockCreateChatRoom.mockReturnValue(resolved());
 });
 
@@ -176,7 +182,10 @@ describe("another user's profile", () => {
     expect(screen.getByTestId("confirm-dialog")).toBeInTheDocument();
   });
 
-  it("reports with the reason the dialog collected", async () => {
+  // The dialog collects free text, and `reason` on the Report model is an
+  // enum — so what the reader typed is the `description` and the reason is
+  // "other". Sending the prose as `reason` would be a 400 from mongoose.
+  it("reports with the body POST /api/v1/reports actually accepts", async () => {
     renderActions();
     fireEvent.click(screen.getByTestId("action-more"));
     fireEvent.click(screen.getByTestId("action-report"));
@@ -184,11 +193,54 @@ describe("another user's profile", () => {
     expect(confirm).toBeDisabled();
 
     fireEvent.change(screen.getByTestId("confirm-dialog-reason"), {
-      target: { value: "harassment" },
+      target: { value: "kept messaging after I asked them to stop" },
     });
     fireEvent.click(confirm);
-    expect(mockReport).toHaveBeenCalledWith({ userId: "u2", reason: "harassment" });
+    expect(mockReport).toHaveBeenCalledWith({
+      type: "user",
+      reportedUser: "u2",
+      reason: "other",
+      description: "kept messaging after I asked them to stop",
+    });
     await waitFor(() => expect(screen.queryByTestId("confirm-dialog")).not.toBeInTheDocument());
+  });
+
+  it("stops the report description at the 500 the Report model allows", () => {
+    renderActions();
+    fireEvent.click(screen.getByTestId("action-more"));
+    fireEvent.click(screen.getByTestId("action-report"));
+    expect(screen.getByTestId("confirm-dialog-reason")).toHaveAttribute("maxlength", "500");
+  });
+
+  it("asks the block status for this pair and offers Block while it is false", () => {
+    renderActions();
+    expect(mockBlockStatus).toHaveBeenCalledWith(
+      { userId: "me", targetUserId: "u2" },
+      expect.objectContaining({ skip: false })
+    );
+    fireEvent.click(screen.getByTestId("action-more"));
+    expect(screen.getByTestId("action-block")).toBeInTheDocument();
+    expect(screen.queryByTestId("action-unblock")).not.toBeInTheDocument();
+  });
+
+  it("offers Unblock instead once the status says the viewer blocked them", async () => {
+    mockBlockStatus.mockReturnValue({ data: { data: { isBlocked: true } } });
+    renderActions();
+    fireEvent.click(screen.getByTestId("action-more"));
+    expect(screen.queryByTestId("action-block")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("action-unblock"));
+    fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
+    expect(mockUnblock).toHaveBeenCalledWith("u2");
+    await waitFor(() => expect(screen.queryByTestId("confirm-dialog")).not.toBeInTheDocument());
+  });
+
+  it("does not ask for a block status on the viewer's own profile", () => {
+    renderActions({ isOwn: true, userId: "me" });
+    expect(mockBlockStatus).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ skip: true })
+    );
   });
 
   it("closes the overflow menu once an action is chosen", () => {

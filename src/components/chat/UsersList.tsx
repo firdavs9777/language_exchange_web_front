@@ -1,17 +1,21 @@
 import React, { useEffect, useRef, useCallback, useState, useMemo } from "react";
-import { Badge, Modal, Button } from "react-bootstrap";
+import ConfirmDialog from "../../design/ConfirmDialog";
 import {
   useGetUserMessagesQuery,
   useGetConversationsQuery,
   useDeleteConversationMutation,
   usePinConversationMutation,
   useUnpinConversationMutation,
+  useMuteConversationMutation,
+  useUnmuteConversationMutation,
 } from "../../store/slices/chatSlice";
 import { Bounce, toast } from "react-toastify";
-import { MoreVertical, Pin, PinOff, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Bell, BellOff, MoreVertical, Pin, PinOff, Trash2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/index";
 import { useSocket } from "./hooks/useSocket";
+import { findConversationWith, CONVERSATIONS_PAGE } from "./lib/conversationMatch";
 import { useTranslation } from "react-i18next";
 import "./UsersList.css";
 
@@ -31,6 +35,7 @@ interface User {
   // (pin/unpin/delete) can hit the right document instead of looking it up.
   conversationId?: string;
   isPinned?: boolean;
+  isMuted?: boolean;
 }
 
 interface OnlineUser {
@@ -122,19 +127,71 @@ const UsersList: React.FC<UsersListProps> = ({
     currentUser?._id,
     { skip: !currentUser?._id }
   );
+  // The shared argument: ChatInfoPanel asks with the same one, so the two
+  // screens share a single cache entry instead of issuing the same request
+  // twice, and the panel can find a conversation that page 1 of 50 missed.
   const { data: conversationsData, refetch: refetchConversations } =
-    useGetConversationsQuery(
-      { page: 1, limit: 50 },
-      { skip: !currentUser?._id }
-    );
+    useGetConversationsQuery(CONVERSATIONS_PAGE, { skip: !currentUser?._id });
 
   const [deleteConversation] = useDeleteConversationMutation();
   const [pinConversation] = usePinConversationMutation();
   const [unpinConversation] = useUnpinConversationMutation();
+  const [muteConversation] = useMuteConversationMutation();
+  const [unmuteConversation] = useUnmuteConversationMutation();
   const [openMenuFor, setOpenMenuFor] = useState<string | null>(null);
   // Whether the action dropdown should open upward (when the kebab is near
   // the bottom of the viewport and a downward menu would clip).
   const [menuOpensUp, setMenuOpensUp] = useState(false);
+
+  // The conversation document, found from the partner. Same lookup pin and
+  // delete already did inline: a partner row can come from getUserMessages,
+  // which knows nothing about conversations.
+  const resolveConversationId = useCallback(
+    (partner: User): string | undefined =>
+      partner.conversationId ||
+      findConversationWith(conversationsData?.data, partner._id)?._id,
+    [conversationsData]
+  );
+
+  const handleToggleMute = useCallback(
+    async (e: React.MouseEvent, partner: User) => {
+      e.stopPropagation();
+      setOpenMenuFor(null);
+
+      const resolvedConversationId = resolveConversationId(partner);
+      if (!resolvedConversationId) {
+        toast.error(
+          t("chatPage.actions.noConversationYet") ||
+            "Start the conversation first",
+          { autoClose: 3000, theme: "colored", transition: Bounce }
+        );
+        return;
+      }
+
+      try {
+        if (partner.isMuted) {
+          await unmuteConversation(resolvedConversationId).unwrap();
+        } else {
+          await muteConversation({ conversationId: resolvedConversationId }).unwrap();
+        }
+        toast.success(
+          partner.isMuted
+            ? t("chatPage.actions.unmuted") || "Notifications are back on"
+            : t("chatPage.actions.muted") || "Notifications muted",
+          { autoClose: 1800, theme: "colored", transition: Bounce }
+        );
+        refetchConversations();
+      } catch (err: any) {
+        const message =
+          err?.data?.error ||
+          err?.data?.message ||
+          t("chatPage.actions.muteFailed") ||
+          "Couldn't update notifications";
+        toast.error(message, { autoClose: 3000, theme: "colored", transition: Bounce });
+      }
+    },
+    [muteConversation, unmuteConversation, refetchConversations, resolveConversationId, t]
+  );
 
   const handleTogglePin = useCallback(
     async (e: React.MouseEvent, partner: User) => {
@@ -145,11 +202,7 @@ const UsersList: React.FC<UsersListProps> = ({
       // (e.g. if it came in through getUserMessages and the conversation
       // hadn't been fetched yet). Fall back to scanning conversationsData
       // for a matching participant before giving up.
-      const resolvedConversationId =
-        partner.conversationId ||
-        (conversationsData?.data || []).find((c: any) =>
-          (c.participants || []).some((p: any) => p._id === partner._id)
-        )?._id;
+      const resolvedConversationId = resolveConversationId(partner);
 
       if (!resolvedConversationId) {
         toast.error(
@@ -200,7 +253,7 @@ const UsersList: React.FC<UsersListProps> = ({
       unpinConversation,
       refetch,
       refetchConversations,
-      conversationsData,
+      resolveConversationId,
       t,
     ]
   );
@@ -214,7 +267,7 @@ const UsersList: React.FC<UsersListProps> = ({
   }, [openMenuFor]);
 
   // Shared socket
-  const { socket, isConnected } = useSocket();
+  const { socket } = useSocket();
   const activeUserIdRef = useRef<string | null | undefined>(activeUserId);
 
   // State
@@ -541,12 +594,14 @@ const UsersList: React.FC<UsersListProps> = ({
             lastSeen: userStatuses[otherUser._id]?.lastSeen,
             conversationId: conversation._id,
             isPinned: Boolean(conversation.isPinned),
+            isMuted: Boolean(conversation.isMuted),
           });
         } else {
           // Keep the freshest conversation reference + pin state regardless
           // of which lastMessage wins.
           existing.conversationId = conversation._id;
           existing.isPinned = existing.isPinned || Boolean(conversation.isPinned);
+          existing.isMuted = Boolean(conversation.isMuted);
           if (
             messageDate &&
             (!existing.lastMessageTime || messageDate > existing.lastMessageTime)
@@ -608,13 +663,7 @@ const UsersList: React.FC<UsersListProps> = ({
 
     // Prefer the conversationId we already threaded through onto the
     // partner record; fall back to the lookup for safety.
-    const conversationId =
-      userToDelete.conversationId ||
-      conversationsData?.data?.find((c: any) =>
-        (c.participants || []).some(
-          (p: any) => p._id === userToDelete._id
-        )
-      )?._id;
+    const conversationId = resolveConversationId(userToDelete);
 
     const endpoint = conversationId
       ? `/api/v1/conversations/${conversationId}`
@@ -773,21 +822,34 @@ const UsersList: React.FC<UsersListProps> = ({
                   onClick={() => handleUserClick(user)}
                   onContextMenu={(e) => handleContextMenu(e, user)}
                 >
-                  {/* Avatar */}
+                  {/* Avatar — opens the member page. The row still opens the
+                      chat, so the click must not reach it. */}
                   <div className="users-list-avatar-wrap">
-                    <div className="users-list-avatar">
-                      {user.avatar || user.imageUrls?.[0] ? (
-                        <img
-                          src={user.avatar || user.imageUrls[0]}
-                          alt={user.name}
-                          className="users-list-avatar-img"
-                        />
-                      ) : (
-                        <span className="users-list-avatar-letter">
-                          {user.name?.charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                    </div>
+                    <Link
+                      to={`/community/${user._id}`}
+                      data-testid={`users-list-avatar-link-${user._id}`}
+                      className="users-list-avatar-link"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={
+                        t("chatPage.actions.openProfile", { name: user.name }) ||
+                        `Open ${user.name}'s profile`
+                      }
+                    >
+                      <div className="users-list-avatar">
+                        {user.avatar || user.imageUrls?.[0] ? (
+                          <img
+                            src={user.avatar || user.imageUrls[0]}
+                            alt={user.name}
+                            className="users-list-avatar-img"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <span className="users-list-avatar-letter">
+                            {user.name?.charAt(0).toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
                     {online && (
                       <span
                         className="users-list-online-dot"
@@ -839,14 +901,11 @@ const UsersList: React.FC<UsersListProps> = ({
                         )}
                       </span>
                       {hasUnread && (
-                        <Badge
-                          pill
-                          className="users-list-badge"
-                        >
+                        <span className="users-list-badge">
                           {(user.unreadCount || 0) > 99
                             ? "99+"
                             : user.unreadCount}
-                        </Badge>
+                        </span>
                       )}
                     </div>
                   </div>
@@ -858,6 +917,7 @@ const UsersList: React.FC<UsersListProps> = ({
                     <button
                       type="button"
                       className="users-list-action-btn"
+                      data-testid={`users-list-menu-${user._id}`}
                       aria-label={
                         t("chatPage.actions.menuLabel") || "Conversation actions"
                       }
@@ -901,7 +961,26 @@ const UsersList: React.FC<UsersListProps> = ({
                         </button>
                         <button
                           type="button"
+                          className="users-list-action-item"
+                          data-testid={`users-list-mute-${user._id}`}
+                          onClick={(e) => handleToggleMute(e, user)}
+                        >
+                          {user.isMuted ? (
+                            <>
+                              <Bell size={14} />
+                              <span>{t("chatPage.actions.unmute") || "Unmute"}</span>
+                            </>
+                          ) : (
+                            <>
+                              <BellOff size={14} />
+                              <span>{t("chatPage.actions.mute") || "Mute"}</span>
+                            </>
+                          )}
+                        </button>
+                        <button
+                          type="button"
                           className="users-list-action-item users-list-action-item--danger"
+                          data-testid={`users-list-delete-${user._id}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             setOpenMenuFor(null);
@@ -939,49 +1018,38 @@ const UsersList: React.FC<UsersListProps> = ({
         )}
       </div>
 
-      {/* Delete confirmation modal */}
-      <Modal
-        show={showDeleteModal}
-        onHide={handleDeleteCancel}
-        centered
-        size="sm"
-      >
-        <Modal.Header closeButton className="border-0 pb-1">
-          <Modal.Title className="fs-6 fw-semibold">
-            {t("chatPage.deleteModal.title") || "Delete Conversation"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="pt-0">
-          <p className="mb-1 text-secondary" style={{ fontSize: "0.9rem" }}>
-            {t("chatPage.deleteModal.bodyPrefix") ||
-              "Delete your conversation with"}{" "}
-            <strong>{userToDelete?.name}</strong>?
-          </p>
-          <p className="mb-0 text-muted" style={{ fontSize: "0.8rem" }}>
-            {t("chatPage.deleteModal.warning") || "This cannot be undone."}
-          </p>
-        </Modal.Body>
-        <Modal.Footer className="border-0 pt-0">
-          <Button
-            variant="light"
-            size="sm"
-            onClick={handleDeleteCancel}
-            disabled={isDeleting}
-          >
-            {t("chatPage.deleteModal.cancel") || "Cancel"}
-          </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={handleDeleteConfirm}
-            disabled={isDeleting}
-          >
-            {isDeleting
-              ? t("chatPage.deleteModal.deleting") || "Deleting..."
-              : t("chatPage.deleteModal.confirm") || "Delete"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      {/* The app's own confirm dialog rather than the bootstrap modal this
+          used to be: one dialog shell for the whole product means one Escape
+          behaviour, one focus trap, one scroll lock — and colours that follow
+          the tokens into dark mode. */}
+      <ConfirmDialog
+        open={showDeleteModal}
+        danger
+        title={t("chatPage.deleteModal.title") || "Delete Conversation"}
+        body={
+          <React.Fragment>
+            {/* One sentence with the name interpolated. The old
+                `bodyPrefix` + <strong>{name}</strong> + "?" could not be
+                translated into any language that does not end on the name. */}
+            <span className="block" data-testid="users-list-delete-body">
+              {t("chatPage.deleteModal.body", { name: userToDelete?.name }) ||
+                `Delete your conversation with ${userToDelete?.name}?`}
+            </span>
+            <span className="mt-1 block text-xs text-ink-500 dark:text-ink-400">
+              {t("chatPage.deleteModal.warning") || "This cannot be undone."}
+            </span>
+          </React.Fragment>
+        }
+        confirmLabel={
+          isDeleting
+            ? t("chatPage.deleteModal.deleting") || "Deleting..."
+            : t("chatPage.deleteModal.confirm") || "Delete"
+        }
+        cancelLabel={t("chatPage.deleteModal.cancel") || "Cancel"}
+        busy={isDeleting}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+      />
     </div>
   );
 };

@@ -11,6 +11,7 @@ import {
   REGISTER_EMAIL_CODE,
   VERIFY_REGISTRATION_CODE,
   BLOCK_USER_URL,
+  REPORTS_URL,
   ACCEPT_TERMS_URL,
   CHECK_USERNAME_URL,
   GEOCODE_REVERSE_URL,
@@ -246,34 +247,73 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       providesTags: ["User"],
     }),
 
-    // Block User
+    // Block User. `Conversations` as well as `User`: blocking is reached from
+    // the chat, which navigates back to the list afterwards, and the backend
+    // filters a blocked person's thread out of `GET /conversations` — a stale
+    // cache would leave their row sitting there.
     blockUser: builder.mutation({
       query: (userId: string) => ({
         url: `${BLOCK_USER_URL}/${userId}/block`,
         method: "POST",
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User", "Conversations"],
     }),
     unblockUser: builder.mutation({
       query: (userId: string) => ({
         url: `${BLOCK_USER_URL}/${userId}/block`,
         method: "DELETE",
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User", "Conversations"],
     }),
+    // `GET /api/v1/users/:userId/blocked` — the id in the path is the
+    // VIEWER's own (controllers/userBlocks.js 403s when it is anyone else's).
+    // The old `/users/blocked` matched no route at all: the settings screen
+    // showed an empty list because the request 404'd, not because nobody was
+    // blocked.
     getBlockedUsers: builder.query({
-      query: () => ({
-        url: `${BLOCK_USER_URL}/blocked`,
+      query: ({ userId }: { userId: string }) => ({
+        url: `${BLOCK_USER_URL}/${userId}/blocked`,
+      }),
+      providesTags: ["User"],
+    }),
+    // Live block state between the viewer and one other person, so a screen
+    // can offer Unblock instead of Block. Tagged "User" like the two
+    // mutations invalidate, so blocking refreshes the status it just changed.
+    getBlockStatus: builder.query({
+      query: ({ userId, targetUserId }: { userId: string; targetUserId: string }) => ({
+        url: `${BLOCK_USER_URL}/${userId}/block-status/${targetUserId}`,
       }),
       providesTags: ["User"],
     }),
 
-    // Report User
+    // Report anything: `POST /api/v1/reports` (routes/report.js). `reportId`
+    // is the id of the reported THING — for `type: "user"` that is the user
+    // themselves, so it defaults to `reportedUser` rather than making every
+    // caller repeat it. `reason` must be one of the Report model's enum
+    // values; free text belongs in `description`.
     reportUser: builder.mutation({
-      query: ({ userId, reason, description }: { userId: string; reason: string; description?: string }) => ({
-        url: `${BLOCK_USER_URL}/${userId}/report`,
+      query: ({
+        type = "user",
+        reportId,
+        reportedUser,
+        reason,
+        description,
+      }: {
+        type?: string;
+        reportId?: string;
+        reportedUser: string;
+        reason: string;
+        description?: string;
+      }) => ({
+        url: `${REPORTS_URL}`,
         method: "POST",
-        body: { reason, description },
+        body: {
+          type,
+          reportId: reportId || reportedUser,
+          reportedUser,
+          reason,
+          description,
+        },
       }),
     }),
 
@@ -352,6 +392,7 @@ export const {
   useBlockUserMutation,
   useUnblockUserMutation,
   useGetBlockedUsersQuery,
+  useGetBlockStatusQuery,
   useReportUserMutation,
   useGetUserByIdQuery,
   useSearchUsersQuery,

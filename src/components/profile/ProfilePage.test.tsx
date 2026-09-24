@@ -40,7 +40,10 @@ jest.mock("../../store/slices/usersSlice", () => ({
   useFollowUserMutation: () => [mockFollow, { isLoading: false }],
   useUnFollowUserMutation: () => [mockUnfollow, { isLoading: false }],
   useBlockUserMutation: () => [mockBlock, { isLoading: false }],
+  useUnblockUserMutation: () => [jest.fn(), { isLoading: false }],
   useReportUserMutation: () => [mockReport, { isLoading: false }],
+  // ProfileActions asks whether the viewer already blocked this person.
+  useGetBlockStatusQuery: () => ({ data: undefined }),
 }));
 
 jest.mock("../../store/slices/communitySlice", () => ({

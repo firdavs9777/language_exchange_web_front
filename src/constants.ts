@@ -58,6 +58,13 @@ export const VIP_PLANS_URL = "/api/v1/purchases/plans";
 
 // Block & Report
 export const BLOCK_USER_URL = "/api/v1/users";
+// Reporting a person, a message or a moment is ONE backend route:
+// `POST /api/v1/reports` (routes/report.js), body
+// `{ type, reportId, reportedUser, reason, description }`. There has never
+// been a `/users/:id/report`, which is why every report the web app sent
+// before this 404'd. Same path as ADMIN_REPORTS_URL below — the difference is
+// only which verbs an admin may use on it.
+export const REPORTS_URL = "/api/v1/reports";
 
 // Username & Geocode
 export const CHECK_USERNAME_URL = "/api/v1/auth/users/check-username";
