@@ -51,7 +51,7 @@ import {
   Globe,
   FileImage,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 interface RootState {
   auth: {
@@ -235,6 +235,21 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const typingClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const selectedUserRef = useRef<string>(selectedUser);
   const isAtBottomRef = useRef(true);
+
+  // A conversation starter opened this chat: the profile page navigates to
+  // /chat/:userId?draft=<encoded>, and the opener belongs in the box rather
+  // than sent on the viewer's behalf. Read once, then stripped from the URL
+  // with `replace`, so a reload or a Back does not re-seed a box the viewer
+  // has since cleared or edited.
+  const [searchParams, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    const draft = searchParams.get("draft");
+    if (!draft) return;
+    setNewMessage(draft);
+    const next = new URLSearchParams(searchParams);
+    next.delete("draft");
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams]);
 
   // Shared socket
   const { socket, isConnected, emit } = useSocket();

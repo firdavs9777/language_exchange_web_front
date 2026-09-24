@@ -3,7 +3,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import { HelmetProvider } from "react-helmet-async";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import ProfilePage from "./ProfilePage";
@@ -21,6 +21,8 @@ const mockUnfollow = jest.fn();
 const mockBlock = jest.fn();
 const mockReport = jest.fn();
 const mockCreateChatRoom = jest.fn();
+const mockGetCommunityMembers = jest.fn();
+const mockSendWave = jest.fn();
 const mockNavigate = jest.fn();
 
 jest.mock("react-i18next", () => ({
@@ -42,6 +44,8 @@ jest.mock("../../store/slices/usersSlice", () => ({
 
 jest.mock("../../store/slices/communitySlice", () => ({
   useGetPublicUserProfileQuery: (arg: any, opts: any) => mockGetPublicProfile(arg, opts),
+  useGetCommunityMembersQuery: (arg: any, opts: any) => mockGetCommunityMembers(arg, opts),
+  useSendWaveMutation: () => [mockSendWave, { isLoading: false }],
 }));
 
 jest.mock("../../store/slices/momentsSlice", () => ({
@@ -59,6 +63,12 @@ const momentsRefetch = jest.fn();
 const idle = { data: undefined, isLoading: false, isFetching: false, error: undefined };
 const resolved = () => ({ unwrap: () => Promise.resolve({ success: true }) });
 
+/** Reads the live URL back out of the router, for the tab assertions. */
+const LocationProbe: React.FC = () => {
+  const location = useLocation();
+  return <div data-testid="location-search">{location.search}</div>;
+};
+
 function page(path: string, viewerId: string | null) {
   const store = configureStore({
     reducer: {
@@ -69,6 +79,7 @@ function page(path: string, viewerId: string | null) {
     <Provider store={store}>
       <HelmetProvider>
         <MemoryRouter initialEntries={[path]}>
+          <LocationProbe />
           <Routes>
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/profile/:userId" element={<ProfilePage />} />
@@ -88,6 +99,7 @@ beforeEach(() => {
   mockGetUserProfile.mockReturnValue({ ...idle, refetch: ownRefetch });
   mockGetPublicProfile.mockReturnValue({ ...idle, refetch: otherRefetch });
   mockGetMyMoments.mockReturnValue({ ...idle, refetch: momentsRefetch });
+  mockGetCommunityMembers.mockReturnValue({ ...idle });
   mockBlock.mockReturnValue(resolved());
   mockFollow.mockReturnValue(resolved());
   mockUnfollow.mockReturnValue(resolved());
@@ -360,4 +372,125 @@ it("titles the page after the person and keeps it out of the index", () => {
 
   expect(context.helmet.title.toString()).toContain("Ada · BananaTalk");
   expect(context.helmet.meta.toString()).toContain("noindex");
+});
+
+// The app's member page carries four blocks a profile page of your own has no
+// use for. Every one of them is keyed off `isOwn`, so this is the guard that
+// they never appear on /profile.
+describe("the match-aware blocks", () => {
+  const viewer = {
+    _id: "me",
+    name: "Me",
+    native_language: "Korean",
+    language_to_learn: "English",
+    topics: ["music", "travel"],
+  };
+  const other = {
+    _id: "u2",
+    name: "Ada",
+    native_language: "English",
+    language_to_learn: "Korean",
+    topics: ["music"],
+    responseRate: 91,
+  };
+
+  beforeEach(() => {
+    mockGetUserProfile.mockReturnValue({ ...idle, refetch: ownRefetch, data: { data: viewer } });
+    mockGetPublicProfile.mockReturnValue({ ...idle, refetch: otherRefetch, data: { data: other } });
+    mockGetCommunityMembers.mockReturnValue({
+      ...idle,
+      data: {
+        data: [
+          { _id: "u3", name: "Grace", native_language: "English", language_to_learn: "Korean", imageUrls: [] },
+        ],
+      },
+    });
+  });
+
+  it("renders the match, engagement, interests, starters and suggestions for someone else", () => {
+    renderPage("/profile/u2", "me");
+
+    expect(screen.getByTestId("language-match-card")).toHaveAttribute("data-match", "perfect");
+    expect(screen.getByTestId("engagement-stats")).toBeInTheDocument();
+    expect(screen.getByTestId("mutual-interests")).toBeInTheDocument();
+    expect(screen.getByTestId("conversation-starters")).toBeInTheDocument();
+    expect(screen.getByTestId("suggested-members")).toBeInTheDocument();
+  });
+
+  it("renders none of them on your own profile", () => {
+    renderPage("/profile", "me");
+
+    expect(screen.queryByTestId("language-match-card")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("engagement-stats")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("mutual-interests")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("conversation-starters")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("suggested-members")).not.toBeInTheDocument();
+  });
+
+  it("drops the signed-in-only blocks for a signed-out visitor", () => {
+    mockGetUserProfile.mockReturnValue({ ...idle, refetch: ownRefetch });
+
+    renderPage("/profile/u2", null);
+
+    expect(screen.getByTestId("profile-body")).toBeInTheDocument();
+    expect(screen.queryByTestId("language-match-card")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("conversation-starters")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("mutual-interests")).not.toBeInTheDocument();
+    // The engagement strip is public data, so it stays.
+    expect(screen.getByTestId("engagement-stats")).toBeInTheDocument();
+  });
+
+  it("keeps the suggestions off the profile itself and off the viewer", () => {
+    renderPage("/profile/u2", "me");
+
+    expect(mockGetCommunityMembers.mock.calls[0][0]).toEqual({
+      page: 1,
+      limit: 12,
+      language: "English",
+    });
+    expect(screen.getAllByTestId("suggested-member")).toHaveLength(1);
+  });
+});
+
+describe("the phone tab switcher", () => {
+  beforeEach(() => {
+    mockGetUserProfile.mockReturnValue({
+      ...idle,
+      refetch: ownRefetch,
+      data: { data: { _id: "me", name: "Me" } },
+    });
+  });
+
+  it("opens on Moments and hides the About panel below 1024px", () => {
+    renderPage("/profile", "me");
+
+    expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByTestId("profile-about-panel").className).toContain("hidden");
+    expect(screen.getByTestId("profile-moments-panel").className).not.toContain("hidden");
+  });
+
+  it("writes the chosen tab into the URL", () => {
+    renderPage("/profile", "me");
+
+    fireEvent.click(screen.getByTestId("profile-tab-about"));
+
+    expect(screen.getByTestId("location-search")).toHaveTextContent("tab=about");
+    expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByTestId("profile-moments-panel").className).toContain("hidden");
+    expect(screen.getByTestId("profile-about-panel").className).not.toContain("hidden");
+  });
+
+  it("reads the tab back off the URL", () => {
+    renderPage("/profile?tab=about", "me");
+
+    expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByTestId("profile-about-panel").className).not.toContain("hidden");
+  });
+
+  it("keeps both panels in the DOM so switching costs no refetch", () => {
+    renderPage("/profile?tab=about", "me");
+
+    expect(screen.getByTestId("profile-moments-panel")).toBeInTheDocument();
+    expect(screen.getByTestId("profile-about-panel")).toBeInTheDocument();
+  });
 });

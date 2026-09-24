@@ -103,7 +103,8 @@ const CloseFriends = lazyWithRetry("../components/settings/CloseFriends", () => 
 
 // Community, authenticated. /communities itself (MainCommnity, which renders
 // PublicCommunities for logged-out visitors) is prerendered and stays eager.
-const CommunityDetail = lazyWithRetry("../components/community/CommunityDetail", () => import("../components/community/CommunityDetail"));
+// There is no CommunityDetail any more: /community/:userId is the profile
+// page, declared with the profile group above.
 const NearbyUsers = lazyWithRetry("../components/community/NearbyUsers", () => import("../components/community/NearbyUsers"));
 const Waves = lazyWithRetry("../components/community/Waves", () => import("../components/community/Waves"));
 const Topics = lazyWithRetry("../components/community/Topics", () => import("../components/community/Topics"));
@@ -177,7 +178,12 @@ export const routes = createRoutesFromElements(
     <Route path="register" element={lazyRoute(<Register />)} />
     <Route path="forgot-password" element={lazyRoute(<ForgetPassword />)} />
     <Route path="communities" element={<MainCommnity />} />
-    <Route path="community/:id" element={lazyRoute(<CommunityDetail />)} />
+    {/* The member page. It is the profile page -- the same component, the
+        same param name, the same chunk -- because the two pages had drifted
+        into two different answers to "who is this person". Every existing
+        /community/<id> link still resolves; only the component behind it
+        changed. */}
+    <Route path="community/:userId" element={lazyRoute(<ProfilePage />)} />
     <Route path="moments" element={<MainMoments />} />
     <Route path="moment/:id" element={<MomentDetail />} />
     <Route path="add-moment" element={lazyRoute(<CreateMoment />)} />

@@ -116,9 +116,28 @@ it("ranks the per-user list paths above the profile route", () => {
   expect(matches![matches!.length - 1].route.path).toBe("profile/:userId/followers");
 });
 
-// /profile/:userId used to mount CommunityDetail through PublicProfile. The
-// community route keeps it; the profile route must not.
-it("leaves /community/:id on CommunityDetail", () => {
-  const [community] = chunkKeysFor(["/community/abc123"]);
-  expect(community).toBe("../components/community/CommunityDetail");
+// The member page and the profile page are one page. /community/<id> is the
+// link the app, the list and every share sheet already hand out, so it keeps
+// working -- it just resolves to ProfilePage now, out of the same chunk as
+// /profile/<id>, which is what makes the second visit free.
+it("resolves /community/:id and /profile/:id to the one profile page", () => {
+  const [community, profile] = chunkKeysFor(["/community/abc123", "/profile/abc123"]);
+  expect(community).toBe("../components/profile/ProfilePage");
+  expect(profile).toBe("../components/profile/ProfilePage");
+});
+
+// ProfilePage reads `useParams().userId`; a route that still said ":id" would
+// render the signed-in user's own profile at every member URL.
+it("names the member-page param userId, as ProfilePage reads it", () => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, "/community/abc123");
+  expect(matches![matches!.length - 1].route.path).toBe("community/:userId");
+  expect(matches![matches!.length - 1].params.userId).toBe("abc123");
+});
+
+// The static community paths must keep beating the dynamic member path.
+it("keeps /community/nearby off the member page", () => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, "/community/nearby");
+  expect(matches![matches!.length - 1].route.path).toBe("community/nearby");
 });
