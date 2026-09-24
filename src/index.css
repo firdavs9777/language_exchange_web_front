@@ -3,6 +3,25 @@
 @tailwind utilities;
 
 /* ==========================================================================
+   A trap to know about before reaching for a spacing utility.
+
+   src/assets/styles/bootstrap.custom.css is a full Bootstrap 5.3 build and
+   its utility API ships `!important` on every declaration. Bootstrap and
+   Tailwind spell ~50 of their utilities identically -- `p-0` to `p-5`,
+   `m-*`, `px-*`, `py-*`, `gap-0` to `gap-5`, `rounded`, `shadow-sm`,
+   `top-0`, `text-white`, `text-center`, `overflow-hidden` -- and on every one
+   of those Bootstrap wins no matter which stylesheet loads last, because
+   `!important` beats source order and specificity alike. Bootstrap's spacer
+   is 1.2rem here, so a component asking Tailwind for `px-4` (1rem) is served
+   1.8rem instead.
+
+   Until that is untangled, prefer a spelling the two do not share wherever
+   the exact value matters: `h-10 w-10` over `p-3`, `p-2.5` over `p-2`,
+   `gap-x-2` over `gap-2`. A decimal step, an arbitrary value, or a scale
+   step above 5 is Tailwind's alone.
+   ========================================================================== */
+
+/* ==========================================================================
    Typography and surface foundation.
 
    Two families, one job each: Inter for anything you read at UI size, Plus

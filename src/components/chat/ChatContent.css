@@ -829,8 +829,9 @@
 /* Back button for mobile */
 .back-btn {
   display: none;
-  width: 36px;
-  height: 36px;
+  /* 40, not 36: this is the only way out of a conversation on a phone. */
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
   background: transparent;

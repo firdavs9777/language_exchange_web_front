@@ -227,7 +227,11 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
           aria-haspopup="menu"
           aria-expanded={menuOpen}
           aria-label={t("profile.actions.more") || "More options"}
-          className="rounded-chip border border-line p-2 text-ink-600 transition-colors hover:bg-ink-100 dark:border-line-dark dark:text-ink-300 dark:hover:bg-ink-800"
+          // Sized, not padded: `p-2` rendered a 37px box -- Bootstrap's own
+          // `.p-2` carries !important and wins, see the note at the top of
+          // src/index.css -- which is under the tap-target minimum on the
+          // profile's main action row.
+          className="inline-flex h-10 w-10 items-center justify-center rounded-chip border border-line text-ink-600 transition-colors hover:bg-ink-100 dark:border-line-dark dark:text-ink-300 dark:hover:bg-ink-800"
         >
           <MoreHorizontal className="h-4 w-4" aria-hidden />
         </button>

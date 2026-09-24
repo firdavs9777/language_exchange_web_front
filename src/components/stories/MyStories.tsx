@@ -189,7 +189,11 @@ const MyStories: React.FC = () => {
       <div className={COLUMN}>
         <SurfaceCard padding="lg">
           <div className="flex flex-wrap items-center gap-3">
-            <div className="min-w-0 flex-1">
+            {/* `min-w-[8rem]`, not `min-w-0`: the row already wraps, but with
+                no floor the title column shrank to nothing at 320px and the
+                <h1> came out 8px wide instead of pushing the buttons onto a
+                second line. */}
+            <div className="min-w-[8rem] flex-1">
               <h1 className="font-display text-lg text-ink-900 dark:text-ink-50">
                 {t("stories.my_stories") || "My stories"}
               </h1>

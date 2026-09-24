@@ -845,6 +845,10 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   color: $tandem-muted;
 
   &__label {
+    /* The label is a <small>, and the browser's 0.8em on that took the chip's
+       already-small type down to 9.6px -- unreadable, and not a size the chip
+       ever asked for. Inherit the chip's own size instead. */
+    font-size: inherit;
     font-weight: 700;
     letter-spacing: 0.04em;
   }

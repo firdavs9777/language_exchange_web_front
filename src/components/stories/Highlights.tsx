@@ -203,7 +203,13 @@ const Highlights: React.FC = () => {
   };
 
   const header = (
-    <div className="flex items-center gap-3">
+    // Wrapping, with a floor under the title. Without it the "New highlight"
+    // button took the whole row on a phone and the <h1> was squeezed to zero
+    // width -- the page had no visible title at 320-414px. `min-w-[8rem]`
+    // below is the floor; it is what makes the row wrap instead of
+    // collapsing the heading, and `truncate` still handles a long custom
+    // highlight name.
+    <div className="flex flex-wrap items-center gap-3">
       <button
         type="button"
         data-testid="highlights-back"
@@ -213,7 +219,7 @@ const Highlights: React.FC = () => {
       >
         <ArrowLeft className="h-5 w-5" />
       </button>
-      <div className="min-w-0 flex-1">
+      <div className="min-w-[8rem] flex-1">
         <h1 className="truncate font-display text-lg text-ink-900 dark:text-ink-50">
           {open ? open.title : t("stories.highlights_title") || "Highlights"}
         </h1>

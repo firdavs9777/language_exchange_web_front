@@ -37,9 +37,15 @@ const StickyAppBanner: React.FC = () => {
     // own warmer neutral. The extra bottom padding clears the iOS home
     // indicator -- this bar is pinned to the bottom edge on phones, which is
     // exactly where the indicator sits.
+    //
+    // `sticky`, not `fixed`. It pins to the bottom edge identically for the
+    // whole homepage, but a fixed bar is out of the flow and so sat on top of
+    // whatever the document ended with -- the footer's store buttons and
+    // legal links, which no amount of scrolling could bring out from under
+    // it. Sticky reserves its own height at the foot of the page instead.
     <div
       data-testid="sticky-app-banner"
-      className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-line bg-surface px-4 py-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] shadow-float dark:border-line-dark dark:bg-cardbg-dark"
+      className="sticky bottom-0 z-40 flex items-center gap-3 border-t border-line bg-surface px-4 py-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] shadow-float dark:border-line-dark dark:bg-cardbg-dark"
     >
       <span aria-hidden className="text-2xl">🍌</span>
       {/* Wrapping, not truncating: at 360px `truncate` turned the title into
@@ -68,7 +74,12 @@ const StickyAppBanner: React.FC = () => {
         data-testid="sticky-banner-dismiss"
         onClick={dismiss}
         aria-label="Dismiss"
-        className="shrink-0 rounded-full p-1 text-ink-400 transition-colors hover:bg-ink-100 hover:text-ink-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-deep dark:hover:bg-ink-800 dark:hover:text-ink-100"
+        // A 40x40 box rather than the 16px glyph plus `p-1` it used to be:
+        // this is the control that makes the bar go away, and 26px of it was
+        // not enough to hit on a phone. Sized rather than padded because
+        // Bootstrap's `.p-N` utilities ship `!important` and win over
+        // Tailwind's -- see the note at the top of src/index.css.
+        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink-400 transition-colors hover:bg-ink-100 hover:text-ink-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-deep dark:hover:bg-ink-800 dark:hover:text-ink-100"
       >
         <X className="h-4 w-4" aria-hidden />
       </button>
