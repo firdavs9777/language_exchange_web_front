@@ -50,6 +50,14 @@ jest.mock("../../store/slices/learningSlice", () => ({
   useSendCorrectionMutation: () => mutation(),
 }));
 
+// The panel has its own suite (ChatInfoPanel.test.tsx) and its own store
+// hooks; here only the header's job matters -- that "⋯" opens it.
+jest.mock("./ChatInfoPanel", () => ({
+  __esModule: true,
+  default: () =>
+    require("react").createElement("div", { "data-testid": "chat-info-panel" }),
+}));
+
 /** Pushes a ?draft= onto the URL long after the chat has mounted. */
 const DraftInjector: React.FC = () => {
   const navigate = useNavigate();
@@ -154,4 +162,42 @@ it("leaves the box empty when no starter was passed", async () => {
   renderChat("/chat/u2");
 
   await waitFor(() => expect(messageBox()).toHaveValue(""));
+});
+
+// --- The header ------------------------------------------------------------
+//
+// The name and the avatar were plain text and a plain <img> with no handler,
+// and "⋯" was a button with no onClick: three of the four things the app's
+// chat header does were unreachable on the web.
+
+it("sends the header name and avatar to the other person's member page", () => {
+  renderChat("/chat/u2");
+
+  expect(screen.getByTestId("chat-header-profile-link")).toHaveAttribute(
+    "href",
+    "/community/u2"
+  );
+  expect(screen.getByTestId("chat-header-avatar-link")).toHaveAttribute(
+    "href",
+    "/community/u2"
+  );
+});
+
+it("names the profile link for a screen reader", () => {
+  renderChat("/chat/u2");
+
+  expect(screen.getByTestId("chat-header-profile-link")).toHaveAttribute("aria-label");
+});
+
+it("opens the info panel from the header's overflow button", () => {
+  renderChat("/chat/u2");
+
+  const more = screen.getByTestId("chat-header-more");
+  expect(more).toHaveAttribute("aria-expanded", "false");
+  expect(screen.queryByTestId("chat-info-panel")).not.toBeInTheDocument();
+
+  fireEvent.click(more);
+
+  expect(screen.getByTestId("chat-info-panel")).toBeInTheDocument();
+  expect(screen.getByTestId("chat-header-more")).toHaveAttribute("aria-expanded", "true");
 });

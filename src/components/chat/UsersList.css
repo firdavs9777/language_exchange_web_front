@@ -79,6 +79,21 @@
   margin-right: 12px;
 }
 
+/* The avatar is a link to the member page; it must not pick up link colour
+   or an underline from the browser's defaults. */
+.users-list-avatar-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 50%;
+}
+
+.users-list-avatar-link:hover,
+.users-list-avatar-link:focus-visible {
+  color: inherit;
+  text-decoration: none;
+}
+
 .users-list-avatar {
   width: 48px;
   height: 48px;

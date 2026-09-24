@@ -88,6 +88,25 @@
   border-radius: 50%;
 }
 
+/* The header name and avatar are links to the member page; they must not
+   look like links -- the colour and weight belong to the header. */
+.header-profile-link {
+  color: inherit;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 999px;
+}
+
+.header-profile-link:hover,
+.header-profile-link:focus-visible {
+  color: inherit;
+  text-decoration: none;
+}
+
+.header-profile-link:hover .profile-avatar {
+  opacity: 0.9;
+}
+
 .user-details {
   flex: 1;
   min-width: 0;

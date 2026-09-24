@@ -51,7 +51,8 @@ import {
   Globe,
   FileImage,
 } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import ChatInfoPanel from "./ChatInfoPanel";
 
 interface RootState {
   auth: {
@@ -181,6 +182,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const [activeActionMsg, setActiveActionMsg] = useState<Message | null>(null);
   const [replyingTo, setReplyingTo] = useState<Message | null>(null);
   const [forwardMsg, setForwardMsg] = useState<Message | null>(null);
+
+  // The "⋯" panel: profile, media, mute, wallpaper, block, report, delete.
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -1585,17 +1589,43 @@ const ChatContent: React.FC<ChatContentProps> = ({
               <ArrowLeft size={20} />
             </button>
             <div className="profile-avatar-container">
-              <img
-                src={profilePicture || "/default-avatar.png"}
-                alt={userName}
-                className="profile-avatar"
-              />
+              {/* The avatar and the name both open the member page, the way
+                  the app's header does. Two links rather than one wrapper so
+                  the presence line underneath stays plain text. */}
+              <Link
+                to={`/community/${selectedUser}`}
+                data-testid="chat-header-avatar-link"
+                className="header-profile-link"
+                aria-label={
+                  t("chatPage.viewProfileOf", { name: userName }) ||
+                  `View ${userName}'s profile`
+                }
+              >
+                <img
+                  src={profilePicture || "/default-avatar.png"}
+                  alt={userName}
+                  className="profile-avatar"
+                  loading="lazy"
+                />
+              </Link>
               <div className={`status-pulse ${isOnline ? "online" : "offline"}`}>
                 <div className="pulse-dot"></div>
               </div>
             </div>
             <div className="user-details">
-              <h3 className="user-name">{userName}</h3>
+              <h3 className="user-name">
+                <Link
+                  to={`/community/${selectedUser}`}
+                  data-testid="chat-header-profile-link"
+                  className="header-profile-link"
+                  aria-label={
+                    t("chatPage.viewProfileOf", { name: userName }) ||
+                    `View ${userName}'s profile`
+                  }
+                >
+                  {userName}
+                </Link>
+              </h3>
               <div className="status-info">
                 {isTyping ? (
                   <span className="online-status">{t("chatPage.typing") || "typing..."}</span>
@@ -1617,6 +1647,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 the documented web scope (Community/Chats/Moments/Profile). */}
             <button
               className="action-btn"
+              type="button"
+              data-testid="chat-header-more"
+              onClick={() => setIsInfoOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={isInfoOpen}
               title={t("chatPage.moreOptions") || "More options"}
               aria-label={t("chatPage.moreOptions") || "More options"}
             >
@@ -1625,6 +1660,15 @@ const ChatContent: React.FC<ChatContentProps> = ({
           </div>
         </div>
       </div>
+
+      {isInfoOpen && (
+        <ChatInfoPanel
+          userId={selectedUser}
+          userName={userName}
+          profilePicture={profilePicture}
+          onClose={() => setIsInfoOpen(false)}
+        />
+      )}
 
       {/* Pinned messages bar (renders null when there are none) */}
       <PinnedBar

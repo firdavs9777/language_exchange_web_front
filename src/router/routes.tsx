@@ -83,7 +83,6 @@ const SavedMoments = lazyWithRetry("../components/moments/SavedMoments", () => i
 // Chat. The heaviest group: socket plumbing, media galleries, emoji.
 const MainChat = lazyWithRetry("../components/chat/MainChat", () => import("../components/chat/MainChat"));
 const NewChat = lazyWithRetry("../components/chat/NewChat", () => import("../components/chat/NewChat"));
-const ChatSettings = lazyWithRetry("../components/chat/ChatSettings", () => import("../components/chat/ChatSettings"));
 const MediaGallery = lazyWithRetry("../components/chat/MediaGallery", () => import("../components/chat/MediaGallery"));
 
 // Stories / reels
@@ -215,8 +214,11 @@ export const routes = createRoutesFromElements(
     <Route path="profile/:userId/followers" element={lazyRoute(<UserListPage />)} />
     <Route path="profile/:userId/following" element={lazyRoute(<UserListPage />)} />
     <Route path="chat/new" element={lazyRoute(<NewChat />)} />
-    <Route path="chat/:conversationId/settings" element={lazyRoute(<ChatSettings />)} />
-    <Route path="chat/:conversationId/media" element={lazyRoute(<MediaGallery />)} />
+    {/* Every /chat route is keyed by the OTHER USER's id, not a conversation
+        id: that is what /chat/:userId carries and what the media gallery
+        queries with. (The old /chat/:id/settings screen is gone — the "⋯"
+        info panel in the chat header replaced it.) */}
+    <Route path="chat/:userId/media" element={lazyRoute(<MediaGallery />)} />
     <Route path="chat/:userId?" element={lazyRoute(<MainChatWrapper />)} />
     <Route path="courses" element={lazyRoute(<CoursesMain />)} />
     <Route path="support/" element={<SupportPage />} />
