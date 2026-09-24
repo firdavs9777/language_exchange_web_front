@@ -199,17 +199,37 @@ export const communityApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Community"],
     }),
+    // `PUT /api/v1/community/topics/my` with `{ topics }` -- routes/community.js
+    // and controllers/community.js `updateMyTopics`. This used to post
+    // `{ topicIds }` to `/topics/my-topics`, an endpoint the API has never
+    // had, so saving a member's topics was a 404 every time.
     updateMyTopics: builder.mutation({
       query: (topicIds: string[]) => ({
-        url: `${COMMUNITY_TOPICS}/my-topics`,
+        url: `${COMMUNITY_TOPICS}/my`,
         method: "PUT",
-        body: { topicIds },
+        body: { topics: topicIds },
       }),
-      invalidatesTags: ["Community"],
+      invalidatesTags: ["Community", "User"],
     }),
+    // `onlineOnly` is a real query param on `getTopicUsers` (it filters on the
+    // persisted isOnline flag, the same one behind the green presence dots);
+    // it is only ever sent when true so the cache key of the default list
+    // stays `?page&limit`.
     getUsersByTopic: builder.query({
-      query: ({ topicId, page = 1, limit = 20 }: { topicId: string; page?: number; limit?: number }) => ({
-        url: `${COMMUNITY_TOPICS}/${topicId}/users?page=${page}&limit=${limit}`,
+      query: ({
+        topicId,
+        page = 1,
+        limit = 20,
+        onlineOnly = false,
+      }: {
+        topicId: string;
+        page?: number;
+        limit?: number;
+        onlineOnly?: boolean;
+      }) => ({
+        url: `${COMMUNITY_TOPICS}/${topicId}/users?page=${page}&limit=${limit}${
+          onlineOnly ? "&onlineOnly=true" : ""
+        }`,
       }),
       providesTags: ["Community"],
     }),
