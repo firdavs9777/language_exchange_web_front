@@ -10,6 +10,7 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { Bookmark, Heart, Smile } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { useHasHydrated } from "../../seo/prerender/useHasHydrated";
 import { Bounce, toast } from "react-toastify";
 import {
   useDislikeMomentMutation,
@@ -293,9 +294,19 @@ const SingleMoment: React.FC<MomentProps> = ({
     });
   }, [t]);
 
-  const formatDate = (dateString: string): string => {
-    return moment(dateString).fromNow();
-  };
+  /**
+   * Relative time is a function of WHEN it is read, so it cannot be baked
+   * into prerendered markup: /moments is rendered once at build time and
+   * served as a static file, and "16 minutes ago" is already wrong by the
+   * time the first visitor sees it. React calls that a hydration text
+   * mismatch and recovers by discarding the server HTML and re-rendering the
+   * whole tree, which throws away the first paint the prerender exists to
+   * buy. So the server and the first client render both show the absolute
+   * date, and the relative form appears on the render after hydration.
+   */
+  const hasHydrated = useHasHydrated();
+  const formatDate = (dateString: string): string =>
+    hasHydrated ? moment(dateString).fromNow() : moment(dateString).format("ll");
 
   const toggleDescription = useCallback(() => {
     setShowFullDescription(!showFullDescription);
@@ -356,7 +367,7 @@ const SingleMoment: React.FC<MomentProps> = ({
                   </h3>
                 </div>
                 <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 mt-0.5">
-                  <time className="truncate">{formatDate(createdAt)}</time>
+                  <time dateTime={createdAt} className="truncate">{formatDate(createdAt)}</time>
                   <span className="hidden xs:inline">•</span>
                   <svg
                     className="w-3 h-3 text-gray-400 hidden xs:block"
