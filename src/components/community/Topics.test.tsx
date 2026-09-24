@@ -395,7 +395,7 @@ describe("the people in a topic", () => {
 });
 
 describe("the copy", () => {
-  it("every topics.* key the page uses exists in eng.json or in the new-keys file", () => {
+  it("every topics.* key the page uses exists in eng.json", () => {
     const source = fs.readFileSync(path.join(__dirname, "Topics.tsx"), "utf8");
     const used: string[] = [];
     const re = /t\("(topics\.[A-Za-z0-9_.]+)"/g;
@@ -409,12 +409,8 @@ describe("the copy", () => {
     const eng = JSON.parse(
       fs.readFileSync(path.join(__dirname, "../../utils/locales/eng.json"), "utf8")
     );
-    const newKeys = JSON.parse(
-      fs.readFileSync(
-        path.join(__dirname, "../../../.superpowers/sdd/topics/keys-topics.json"),
-        "utf8"
-      )
-    );
+    // Every key must live in eng.json (the locale merge happened); no scratch files.
+    const newKeys = {};
 
     const has = (tree: any, key: string): boolean => {
       let node = tree;
