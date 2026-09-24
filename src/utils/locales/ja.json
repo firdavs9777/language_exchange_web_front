@@ -147,7 +147,16 @@
   "profile": {
     "title": "マイプロフィール",
     "edit_profile": "プロフィールを編集",
-    "photos": "写真",
+    "photos": {
+      "title": "写真",
+      "add": "写真を追加",
+      "alt": "{{name}}さんの写真{{index}}",
+      "open": "写真{{index}}を開く",
+      "close": "閉じる",
+      "previous": "前の写真",
+      "next": "次の写真",
+      "counter": "{{index}} / {{total}}"
+    },
     "messages": {
       "image_update_success": "プロフィール写真を更新しました",
       "image_update_failure": "プロフィール写真を更新できませんでした",
@@ -155,6 +164,7 @@
       "image_delete_failure": "写真を削除できませんでした",
       "profile_update_success": "プロフィールを保存しました",
       "profile_update_failure": "プロフィールを保存できませんでした",
+      "level_update_failure": "プロフィールは保存されましたが、語学レベルは更新されませんでした",
       "error_loading_profile": "プロフィールを読み込めませんでした",
       "no_profile_data": "プロフィール情報がありません",
       "unknown_error": "エラーが発生しました",
@@ -230,7 +240,16 @@
       "save": "保存",
       "cancel": "キャンセル",
       "edit_photo": "写真を編集",
-      "clear": "選択を解除"
+      "clear": "選択を解除",
+      "settings": "設定",
+      "message": "メッセージ",
+      "follow": "フォロー",
+      "following": "フォロー中",
+      "more": "その他の操作",
+      "block": "ブロック",
+      "report": "報告",
+      "this_person": "この人",
+      "action_failed": "うまくいきませんでした。もう一度お試しください。"
     },
     "buttons": {
       "edit": "編集",
@@ -258,6 +277,106 @@
       "kdrama": "K-ドラマ",
       "languages": "言語",
       "culture": "文化"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "認証済み",
+      "joined": "{{date}}に登録",
+      "active": "{{time}}にアクティブ",
+      "online": "オンライン中"
+    },
+    "block": {
+      "title": "{{name}}さんをブロックしますか？",
+      "body": "ブロックすると、相手はあなたにメッセージを送ったり、プロフィールを見たりできなくなります。"
+    },
+    "report": {
+      "title": "{{name}}さんを報告しますか？",
+      "body": "気になった点を教えてください。すべての報告を確認しています。",
+      "reason": "理由"
+    },
+    "languages": {
+      "also_learning": "ほかに学習中の言語"
+    },
+    "about": {
+      "title": "自己紹介",
+      "occupation": "仕事",
+      "school": "学校",
+      "read_more": "もっと見る",
+      "read_less": "閉じる"
+    },
+    "learning": {
+      "title": "学習の記録",
+      "streak": "連続学習",
+      "days": "日",
+      "xp": "合計XP",
+      "level": "レベル"
+    },
+    "moments": {
+      "see_all": "すべて見る",
+      "empty_own": "最初のモーメントを投稿しましょう",
+      "empty_other": "モーメントはまだありません",
+      "photo_alt": "モーメントの写真"
+    },
+    "page": {
+      "title": "プロフィール",
+      "error_title": "プロフィールを読み込めませんでした",
+      "error_body": "通信状況を確認して、もう一度お試しください。",
+      "retry": "再試行",
+      "not_found_title": "プロフィールが見つかりません",
+      "not_found_body": "このプロフィールは削除されたか、もともと存在しません。",
+      "back_to_community": "コミュニティを見る"
+    },
+    "lists": {
+      "title": "あなたのつながり",
+      "title_of": "{{name}}さんのつながり",
+      "title_other": "つながり",
+      "search": "名前で検索",
+      "search_empty": "「{{query}}」に一致する人はいません",
+      "empty_followers_own": "まだフォロワーがいません。",
+      "empty_followers_other": "この人をフォローしている人はまだいません。",
+      "empty_following_own": "まだ誰もフォローしていません。",
+      "empty_following_other": "この人はまだ誰もフォローしていません。",
+      "error_title": "リストを読み込めませんでした",
+      "error_body": "通信状況を確認して、もう一度お試しください。",
+      "retry": "再試行"
+    },
+    "edit": {
+      "back": "戻る",
+      "about": "自己紹介",
+      "photos_hint": "1枚目の写真が、どこでも表示されるプロフィール写真になります。",
+      "add_photo": "写真を追加",
+      "photo_alt": "写真{{index}}",
+      "delete_photo": "写真{{index}}を削除",
+      "delete_photo_title": "この写真を削除しますか？",
+      "delete_photo_body": "プロフィールから削除され、誰からも見えなくなります。",
+      "delete_photo_confirm": "写真を削除",
+      "level": "レベル",
+      "level_hint": "学習中の言語のレベルです。",
+      "occupation": "職業",
+      "occupation_placeholder": "どんな仕事をしていますか？",
+      "school": "学校",
+      "school_placeholder": "どこで学んでいますか？",
+      "saving": "保存中",
+      "unsaved": "保存していない変更があります",
+      "leave_title": "保存せずに戻りますか？",
+      "leave_body": "プロフィールの変更内容は失われます。",
+      "leave_confirm": "変更を破棄",
+      "stay": "編集を続ける"
+    },
+    "myMoments": {
+      "title": "マイモーメント",
+      "create": "モーメントを投稿",
+      "edit": "モーメントを編集",
+      "delete": "モーメントを削除",
+      "delete_title": "このモーメントを削除しますか？",
+      "delete_body": "いいねやコメントも含めて、誰からも見えなくなります。",
+      "delete_confirm": "削除",
+      "delete_failed": "モーメントを削除できませんでした。もう一度お試しください。",
+      "empty_title": "モーメントはまだありません",
+      "empty_body": "最初のモーメントをコミュニティにシェアしましょう。",
+      "error_title": "モーメントを読み込めませんでした",
+      "error_body": "通信状況を確認して、もう一度お試しください。",
+      "retry": "再試行"
     }
   },
   "moments_section": {
@@ -436,7 +555,8 @@
       "addMoreText": "追加",
       "updateButton": "モーメントを更新",
       "updatingButton": "更新中…",
-      "cancelButton": "キャンセル"
+      "cancelButton": "キャンセル",
+      "removeImage": "画像を削除"
     }
   },
   "authentication": {

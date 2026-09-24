@@ -65,12 +65,14 @@ const ForgetPassword = lazyWithRetry("../components/auth/ForgetPassword", () => 
 const AuthCallback = lazyWithRetry("../components/auth/AuthCallback", () => import("../components/auth/AuthCallback"));
 
 // Profile
-const ProfileScreen = lazyWithRetry("../components/profile/Profile", () => import("../components/profile/Profile"));
-const PublicProfile = lazyWithRetry("../components/profile/PublicProfile", () => import("../components/profile/PublicProfile"));
+// One component for both profile routes: /profile and /profile/:userId. It
+// decides whose profile it is from the route param and the signed-in user in
+// the store, so the two paths can never drift apart again.
+const ProfilePage = lazyWithRetry("../components/profile/ProfilePage", () => import("../components/profile/ProfilePage"));
 const EditProfile = lazyWithRetry("../components/profile/EditProfile", () => import("../components/profile/EditProfile"));
-const UserFollowersList = lazyWithRetry("../components/profile/UserFollowers", () => import("../components/profile/UserFollowers"));
-const UserFollowingList = lazyWithRetry("../components/profile/UserFollowing", () => import("../components/profile/UserFollowing"));
-const UserVisitorsList = lazyWithRetry("../components/profile/UserVisitors", () => import("../components/profile/UserVisitors"));
+// Followers, following and visitors are three tabs of one page. It reads the
+// tab off the path, so every route below points at the same component.
+const UserListPage = lazyWithRetry("../components/profile/UserListPage", () => import("../components/profile/UserListPage"));
 const MyMoments = lazyWithRetry("../components/profile/MyMoments", () => import("../components/profile/MyMoments"));
 const EditMyMoment = lazyWithRetry("../components/profile/EditMyMoment", () => import("../components/profile/EditMyMoment"));
 
@@ -181,26 +183,31 @@ export const routes = createRoutesFromElements(
     <Route path="add-moment" element={lazyRoute(<CreateMoment />)} />
     <Route path="edit-moment/:id" element={lazyRoute(<EditMyMoment />)} />
     <Route path="my-moments" element={lazyRoute(<MyMoments />)} />
-    <Route path="profile" element={lazyRoute(<ProfileScreen />)} />
+    <Route path="profile" element={lazyRoute(<ProfilePage />)} />
     <Route path="profile/edit" element={lazyRoute(<EditProfile />)} />
-    {/* Public, read-only profile route for shared links. Must stay public
-        (no auth guard) so logged-out visitors can view it; react-router v6
-        ranks the static "profile/edit" segment above this dynamic
-        "profile/:userId" segment regardless of declaration order, so
+    {/* Another person's profile, and the target of every shared profile
+        link. Must stay public (no auth guard) so logged-out visitors can open
+        it; react-router v6 ranks the static "profile/edit" segment above this
+        dynamic "profile/:userId" segment regardless of declaration order, so
         there's no conflict between the two.
 
         Lazy, unlike the equally-public /moment/:id above, and the difference
-        is what it costs to make it eager: PublicProfile pulls in the whole
-        profile group (the followers/following lists, the moments grid, the
-        image viewer) and shares almost nothing with the eager pages, so
+        is what it costs to make it eager: the profile page pulls in the whole
+        profile group and shares almost nothing with the eager pages, so
         keeping it in main.js taxes every marketing visitor for a page few of
         them open. MomentDetail is the opposite -- it is built out of modules
         /moments already ships. A shared profile link pays one round trip; a
         shared moment link would have paid it for nothing. */}
-    <Route path="profile/:userId" element={lazyRoute(<PublicProfile />)} />
-    <Route path="followersList" element={lazyRoute(<UserFollowersList />)} />
-    <Route path="followingsList" element={lazyRoute(<UserFollowingList />)} />
-    <Route path="visitors" element={lazyRoute(<UserVisitorsList />)} />
+    <Route path="profile/:userId" element={lazyRoute(<ProfilePage />)} />
+    {/* The three own-list paths predate the list page and are kept verbatim:
+        every link already pointing at them still works, and each one selects
+        its own tab. The two per-user paths are what the profile's stat tiles
+        link to. */}
+    <Route path="followersList" element={lazyRoute(<UserListPage />)} />
+    <Route path="followingsList" element={lazyRoute(<UserListPage />)} />
+    <Route path="visitors" element={lazyRoute(<UserListPage />)} />
+    <Route path="profile/:userId/followers" element={lazyRoute(<UserListPage />)} />
+    <Route path="profile/:userId/following" element={lazyRoute(<UserListPage />)} />
     <Route path="chat/new" element={lazyRoute(<NewChat />)} />
     <Route path="chat/:conversationId/settings" element={lazyRoute(<ChatSettings />)} />
     <Route path="chat/:conversationId/media" element={lazyRoute(<MediaGallery />)} />

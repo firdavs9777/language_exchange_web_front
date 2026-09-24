@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 // lucide, not bootstrap-icons: the footer renders on every prerendered
-// marketing page, and the bootstrap-icons font/stylesheet is now confined to
-// the authenticated lazy chunks (src/lazyIcons.ts). These seven glyphs are
-// tree-shaken out of lucide, so they cost bytes instead of a webfont.
+// marketing page, and the bootstrap-icons font/stylesheet is no longer part
+// of the app at all. These seven glyphs are tree-shaken out of lucide, so
+// they cost bytes instead of a webfont.
 import {
   Instagram,
   Facebook,

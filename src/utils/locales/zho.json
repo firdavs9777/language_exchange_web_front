@@ -147,7 +147,16 @@
   "profile": {
     "title": "我的资料",
     "edit_profile": "编辑资料",
-    "photos": "照片",
+    "photos": {
+      "title": "照片",
+      "add": "添加照片",
+      "alt": "{{name}} 的第 {{index}} 张照片",
+      "open": "打开照片 {{index}}",
+      "close": "关闭",
+      "previous": "上一张",
+      "next": "下一张",
+      "counter": "{{index}} / {{total}}"
+    },
     "messages": {
       "image_update_success": "头像已更新",
       "image_update_failure": "头像更新失败",
@@ -155,6 +164,7 @@
       "image_delete_failure": "照片删除失败",
       "profile_update_success": "资料已更新",
       "profile_update_failure": "资料更新失败",
+      "level_update_failure": "个人资料已保存，但语言水平未更新",
       "error_loading_profile": "用户资料加载失败",
       "no_profile_data": "暂无用户资料",
       "unknown_error": "发生了未知错误",
@@ -230,7 +240,16 @@
       "save": "保存",
       "cancel": "取消",
       "edit_photo": "编辑照片",
-      "clear": "清除选择"
+      "clear": "清除选择",
+      "settings": "设置",
+      "message": "私信",
+      "follow": "关注",
+      "following": "已关注",
+      "more": "更多选项",
+      "block": "拉黑",
+      "report": "举报",
+      "this_person": "这个人",
+      "action_failed": "操作失败，请再试一次。"
     },
     "buttons": {
       "edit": "编辑",
@@ -258,6 +277,106 @@
       "kdrama": "韩剧",
       "languages": "语言",
       "culture": "文化"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "已认证",
+      "joined": "{{date}} 加入",
+      "active": "{{time}}活跃",
+      "online": "当前在线"
+    },
+    "block": {
+      "title": "确定拉黑 {{name}}？",
+      "body": "对方将无法给你发消息，也看不到你的资料。"
+    },
+    "report": {
+      "title": "确定举报 {{name}}？",
+      "body": "告诉我们哪里有问题。每一条举报我们都会查看。",
+      "reason": "举报原因"
+    },
+    "languages": {
+      "also_learning": "还在学"
+    },
+    "about": {
+      "title": "简介",
+      "occupation": "职业",
+      "school": "学校",
+      "read_more": "展开",
+      "read_less": "收起"
+    },
+    "learning": {
+      "title": "学习进度",
+      "streak": "连续学习",
+      "days": "天",
+      "xp": "总 XP",
+      "level": "等级"
+    },
+    "moments": {
+      "see_all": "查看全部",
+      "empty_own": "发布你的第一条动态",
+      "empty_other": "还没有动态",
+      "photo_alt": "动态图片"
+    },
+    "page": {
+      "title": "资料",
+      "error_title": "资料加载失败",
+      "error_body": "请检查网络后再试一次。",
+      "retry": "重试",
+      "not_found_title": "找不到这个资料",
+      "not_found_body": "这个资料已经不存在了，或者从来就没有过。",
+      "back_to_community": "去社区逛逛"
+    },
+    "lists": {
+      "title": "关注与粉丝",
+      "title_of": "{{name}} 的关注与粉丝",
+      "title_other": "关注与粉丝",
+      "search": "按名字搜索",
+      "search_empty": "没有找到和“{{query}}”相符的人",
+      "empty_followers_own": "你还没有粉丝。",
+      "empty_followers_other": "对方还没有粉丝。",
+      "empty_following_own": "你还没有关注任何人。",
+      "empty_following_other": "对方还没有关注任何人。",
+      "error_title": "列表加载失败",
+      "error_body": "请检查网络后再试一次。",
+      "retry": "重试"
+    },
+    "edit": {
+      "back": "返回",
+      "about": "简介",
+      "photos_hint": "第一张照片会显示在所有人看得到的地方。",
+      "add_photo": "添加照片",
+      "photo_alt": "照片 {{index}}",
+      "delete_photo": "删除照片 {{index}}",
+      "delete_photo_title": "确定删除这张照片？",
+      "delete_photo_body": "删除后，所有人都不会再在你的资料里看到它。",
+      "delete_photo_confirm": "删除照片",
+      "level": "等级",
+      "level_hint": "你在所学语言上的水平。",
+      "occupation": "职业",
+      "occupation_placeholder": "你从事什么工作？",
+      "school": "学校",
+      "school_placeholder": "你在哪里读书？",
+      "saving": "保存中",
+      "unsaved": "你有未保存的修改",
+      "leave_title": "不保存就离开？",
+      "leave_body": "你对这份资料的修改会丢失。",
+      "leave_confirm": "放弃修改",
+      "stay": "继续编辑"
+    },
+    "myMoments": {
+      "title": "我的动态",
+      "create": "发布动态",
+      "edit": "编辑动态",
+      "delete": "删除动态",
+      "delete_title": "确定删除这条动态？",
+      "delete_body": "所有人都看不到了，点赞和评论也会一起消失。",
+      "delete_confirm": "删除",
+      "delete_failed": "这条动态删除失败，请再试一次。",
+      "empty_title": "还没有动态",
+      "empty_body": "把你的第一条动态分享给社区吧。",
+      "error_title": "动态加载失败",
+      "error_body": "请检查网络后再试一次。",
+      "retry": "重试"
     }
   },
   "moments_section": {
@@ -436,7 +555,8 @@
       "addMoreText": "继续添加",
       "updateButton": "更新动态",
       "updatingButton": "更新中…",
-      "cancelButton": "取消"
+      "cancelButton": "取消",
+      "removeImage": "移除图片"
     }
   },
   "authentication": {

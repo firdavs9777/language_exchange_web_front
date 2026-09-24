@@ -147,7 +147,16 @@
   "profile": {
     "title": "My Profile",
     "edit_profile": "Edit Profile",
-    "photos": "Photos",
+    "photos": {
+      "title": "Photos",
+      "add": "Add photos",
+      "alt": "{{name}}, photo {{index}}",
+      "open": "Open photo {{index}}",
+      "close": "Close",
+      "previous": "Previous photo",
+      "next": "Next photo",
+      "counter": "{{index}} of {{total}}"
+    },
     "messages": {
       "image_update_success": "Profile image updated successfully",
       "image_update_failure": "Failed to update profile image",
@@ -155,6 +164,7 @@
       "image_delete_failure": "Failed to delete photo",
       "profile_update_success": "Profile updated successfully",
       "profile_update_failure": "Failed to update profile",
+      "level_update_failure": "Your profile was saved, but the language level didn't update",
       "error_loading_profile": "Error loading user profile",
       "no_profile_data": "No user profile data available",
       "unknown_error": "An unknown error occurred",
@@ -230,7 +240,16 @@
       "save": "Save",
       "cancel": "Cancel",
       "edit_photo": "Edit Photo",
-      "clear": "Clear selection"
+      "clear": "Clear selection",
+      "settings": "Settings",
+      "message": "Message",
+      "follow": "Follow",
+      "following": "Following",
+      "more": "More options",
+      "block": "Block",
+      "report": "Report",
+      "this_person": "this person",
+      "action_failed": "That didn't work. Try again."
     },
     "buttons": {
       "edit": "Edit",
@@ -258,6 +277,106 @@
       "kdrama": "K-Drama",
       "languages": "Languages",
       "culture": "Culture"
+    },
+    "badges": {
+      "vip": "VIP",
+      "verified": "Verified",
+      "joined": "Joined {{date}}",
+      "active": "Active {{time}}",
+      "online": "Online now"
+    },
+    "block": {
+      "title": "Block {{name}}?",
+      "body": "They will not be able to message you or see your profile."
+    },
+    "report": {
+      "title": "Report {{name}}?",
+      "body": "Tell us what is wrong. Every report is reviewed.",
+      "reason": "Reason"
+    },
+    "languages": {
+      "also_learning": "Also learning"
+    },
+    "about": {
+      "title": "About",
+      "occupation": "Work",
+      "school": "School",
+      "read_more": "Read more",
+      "read_less": "Show less"
+    },
+    "learning": {
+      "title": "Learning progress",
+      "streak": "Streak",
+      "days": "days",
+      "xp": "Total XP",
+      "level": "Level"
+    },
+    "moments": {
+      "see_all": "See all",
+      "empty_own": "Share your first moment",
+      "empty_other": "No moments yet",
+      "photo_alt": "Moment photo"
+    },
+    "page": {
+      "title": "Profile",
+      "error_title": "We couldn't load this profile",
+      "error_body": "Check your connection and try again.",
+      "retry": "Try again",
+      "not_found_title": "Profile not found",
+      "not_found_body": "This profile doesn't exist any more, or it was never here.",
+      "back_to_community": "Browse the community"
+    },
+    "lists": {
+      "title": "Your connections",
+      "title_of": "{{name}}'s connections",
+      "title_other": "Connections",
+      "search": "Search by name",
+      "search_empty": "No one here matches \"{{query}}\"",
+      "empty_followers_own": "Nobody follows you yet.",
+      "empty_followers_other": "Nobody follows them yet.",
+      "empty_following_own": "You are not following anyone yet.",
+      "empty_following_other": "They are not following anyone yet.",
+      "error_title": "We couldn't load this list",
+      "error_body": "Check your connection and try again.",
+      "retry": "Try again"
+    },
+    "edit": {
+      "back": "Back",
+      "about": "About",
+      "photos_hint": "Your first photo is the one people see everywhere.",
+      "add_photo": "Add photo",
+      "photo_alt": "Photo {{index}}",
+      "delete_photo": "Delete photo {{index}}",
+      "delete_photo_title": "Delete this photo?",
+      "delete_photo_body": "It is removed from your profile for everyone.",
+      "delete_photo_confirm": "Delete photo",
+      "level": "Level",
+      "level_hint": "Your level in the language you are learning.",
+      "occupation": "Occupation",
+      "occupation_placeholder": "What do you do?",
+      "school": "School",
+      "school_placeholder": "Where do you study?",
+      "saving": "Saving",
+      "unsaved": "You have unsaved changes",
+      "leave_title": "Leave without saving?",
+      "leave_body": "Your changes to this profile will be lost.",
+      "leave_confirm": "Discard changes",
+      "stay": "Keep editing"
+    },
+    "myMoments": {
+      "title": "My moments",
+      "create": "Share a moment",
+      "edit": "Edit moment",
+      "delete": "Delete moment",
+      "delete_title": "Delete this moment?",
+      "delete_body": "It disappears for everyone, along with its likes and comments.",
+      "delete_confirm": "Delete",
+      "delete_failed": "We couldn't delete that moment. Try again.",
+      "empty_title": "No moments yet",
+      "empty_body": "Share your first moment with the community.",
+      "error_title": "We couldn't load your moments",
+      "error_body": "Check your connection and try again.",
+      "retry": "Try again"
     }
   },
   "moments_section": {
@@ -436,7 +555,8 @@
       "addMoreText": "Add more",
       "updateButton": "Update Moment",
       "updatingButton": "Updating...",
-      "cancelButton": "Cancel"
+      "cancelButton": "Cancel",
+      "removeImage": "Remove image"
     }
   },
   "authentication": {
