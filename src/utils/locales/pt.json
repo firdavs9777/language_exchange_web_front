@@ -777,7 +777,8 @@
       "mutualInterests": "Interesses em comum",
       "newUsersOnly": "Apenas novos usuários",
       "clearAll": "Limpar tudo",
-      "matchCount": "{{count}} correspondências"
+      "matchCount": "{{count}} correspondências",
+      "lockedByTab": "Definido pela aba {{tab}}"
     },
     "highlighted": {
       "title": "Perfis em destaque",

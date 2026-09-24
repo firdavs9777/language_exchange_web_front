@@ -796,7 +796,8 @@
       "mutualInterests": "共同兴趣",
       "newUsersOnly": "只看新用户",
       "clearAll": "清除全部",
-      "matchCount": "{{count}} 个匹配"
+      "matchCount": "{{count}} 个匹配",
+      "lockedByTab": "由“{{tab}}”标签设置"
     },
     "highlighted": {
       "title": "推荐资料",

@@ -796,7 +796,8 @@
       "mutualInterests": "Sở thích chung",
       "newUsersOnly": "Chỉ người dùng mới",
       "clearAll": "Xóa tất cả",
-      "matchCount": "{{count}} kết quả phù hợp"
+      "matchCount": "{{count}} kết quả phù hợp",
+      "lockedByTab": "Được đặt bởi thẻ {{tab}}"
     },
     "highlighted": {
       "title": "Hồ sơ nổi bật",

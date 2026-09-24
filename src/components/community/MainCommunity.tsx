@@ -40,6 +40,47 @@ import "./tandem/tandem-community.scss";
 const PAGE_LIMIT = 20;
 
 /**
+ * How long the search box waits before it rewrites the URL.
+ *
+ * The box itself is never delayed -- it echoes locally on the keystroke. What
+ * waits is `setSearchParams`, because that is a router update that re-derives
+ * the whole list state and, before the cards were memoized, re-rendered every
+ * visible row once per character.
+ */
+const SEARCH_URL_DEBOUNCE_MS = 250;
+
+/**
+ * Rows the browser is allowed to skip.
+ *
+ * `content-visibility: auto` lets it leave everything outside the viewport
+ * unstyled, unlaid-out and unpainted; `contain-intrinsic-size` is the height
+ * it should assume for a row it has not measured yet, so the scrollbar is
+ * honest from the first paint. The class also carries the padding/negative
+ * margin pair that gives the card's shadow and its 2px hover lift room inside
+ * the containment box -- paint containment clips to the slot.
+ */
+const CARD_SLOT = "community-card-slot";
+
+/** Nothing appended yet. A module-level constant so the memos below see a
+ *  stable identity rather than a fresh `[]` on every render. */
+const NO_EXTRA_PAGES: CommunityMemberCard[] = [];
+
+/** How many skeleton rows stand in for the first page while it loads. */
+const SKELETON_ROWS = 6;
+
+/** A row-shaped placeholder: same height as a card, so nothing jumps. */
+const CardSkeleton: React.FC = () => (
+  <div className="community-card-skeleton" aria-hidden>
+    <div className="community-card-skeleton__avatar" />
+    <div className="community-card-skeleton__lines">
+      <span className="community-card-skeleton__line community-card-skeleton__line--name" />
+      <span className="community-card-skeleton__line community-card-skeleton__line--meta" />
+      <span className="community-card-skeleton__line community-card-skeleton__line--bio" />
+    </div>
+  </div>
+);
+
+/**
  * A member as the recommendation feed returns them: the card's own fields plus
  * the two the matching engine adds. `matchReasons` is a short list of English
  * reason strings ("Native Korean speaker", "Online now") computed server-side.
@@ -124,7 +165,7 @@ const ForYouTab: React.FC<{
         {members.map((member) => {
           const reasons = (member.matchReasons || []).filter(Boolean);
           return (
-            <div key={member._id} className="flex flex-col gap-1">
+            <div key={member._id} className={`${CARD_SLOT} flex flex-col gap-1`}>
               <MemberCard user={member} onOpen={onOpen} onWave={onWave} />
               {reasons.length > 0 && (
                 <p
@@ -165,10 +206,17 @@ const ModernCommunity: React.FC = () => {
   const listState = useMemo<CommunityUrlState>(() => {
     const decoded = decodeCommunityState(searchParams);
     const fromUrl = hasCommunityUrlState(searchParams);
+    // "For you" deliberately writes no filter params (they describe nothing
+    // it uses), so on that tab an absent set of filters means "unknown", not
+    // "none" -- the stored ones stand in so that walking For you -> All gets
+    // the member's own list back rather than a cleared one.
+    const forYouWithoutFilters =
+      decoded.tab === "foryou" && decoded.filters === undefined;
     return {
-      filters: fromUrl
-        ? { ...DEFAULT_FILTERS, ...(decoded.filters || {}) }
-        : { ...storedFilters },
+      filters:
+        fromUrl && !forYouWithoutFilters
+          ? { ...DEFAULT_FILTERS, ...(decoded.filters || {}) }
+          : { ...storedFilters },
       search: decoded.search || "",
       sort: decoded.sort,
       tab: decoded.tab || "all",
@@ -199,16 +247,54 @@ const ModernCommunity: React.FC = () => {
   const [draftFilters, setDraftFilters] = useState<CommunityFilters>(filters);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [waveTarget, setWaveTarget] = useState<CommunityMemberCard | null>(null);
-  const [page, setPage] = useState(1);
-  // Pages beyond the first are accumulated here so "Load more" keeps prior
-  // results visible. Page 1 is derived directly from the RTK Query cache below
-  // so returning from /community/:id shows the cached list on the first render
-  // instead of flashing the empty state.
-  const [extraPages, setExtraPages] = useState<CommunityMemberCard[]>([]);
+  /**
+   * Where the list has got to, tagged with the question it is an answer to.
+   *
+   * The tag is the point. Resetting the page in an effect when the filters
+   * change means one render in between where the *new* filters are paired
+   * with the *old* page number -- and RTK Query fires that request before the
+   * effect can take it back. Tagging lets the reset happen during render:
+   * a `pager` that belongs to another question simply does not count.
+   *
+   * Page 1 itself is never stored here; it is read straight off the RTK Query
+   * cache below, so coming back from /community/:id shows the cached list on
+   * the first render instead of flashing the empty state.
+   */
+  const [pager, setPager] = useState<{
+    key: string;
+    page: number;
+    extra: CommunityMemberCard[];
+  }>({ key: "", page: 1, extra: NO_EXTRA_PAGES });
 
-  // The box updates the URL on every keystroke (so a link always matches what
-  // is on screen); only the *query* waits for the typing to settle.
-  const debouncedSearch = useDebounce(search, 300);
+  /**
+   * What the search box shows, right now.
+   *
+   * The URL is still the source of truth -- this is its echo, so that typing
+   * is never one router update per character. It follows `search` whenever the
+   * URL changes from somewhere else (Back, a dismissed chip, "Reset filters"),
+   * and leads it for the few hundred milliseconds between a keystroke and the
+   * debounced write.
+   */
+  const [searchDraft, setSearchDraft] = useState<string>(search);
+  const pendingSearch = useRef<string | null>(null);
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    // Only adopt the URL's value when we are not mid-word ourselves.
+    if (pendingSearch.current !== null) return;
+    setSearchDraft(search);
+  }, [search]);
+
+  useEffect(
+    () => () => {
+      if (searchTimer.current) clearTimeout(searchTimer.current);
+    },
+    []
+  );
+
+  // The query is keyed on the box, not on the URL, so the request still fires
+  // one debounce after the typing stops rather than after two of them.
+  const debouncedSearch = useDebounce(searchDraft, 300);
 
   /**
    * Write a list state into the query string, keeping any param this page does
@@ -218,7 +304,14 @@ const ModernCommunity: React.FC = () => {
    */
   const writeUrl = useCallback(
     (next: CommunityUrlState) => {
-      const merged = mergeCommunityParams(searchParams, encodeCommunityState(next));
+      // "For you" is the server's answer, not a query: it ignores every
+      // filter, so writing them into the link would hand the recipient a set
+      // of params that describe nothing they are looking at. The member's own
+      // filters are still in localStorage and come back the moment they
+      // return to a tab that uses them.
+      const forUrl: CommunityUrlState =
+        next.tab === "foryou" ? { ...next, filters: {} } : next;
+      const merged = mergeCommunityParams(searchParams, encodeCommunityState(forUrl));
       if (merged.toString() === searchParams.toString()) return;
       setSearchParams(merged, { replace: true });
     },
@@ -242,10 +335,27 @@ const ModernCommunity: React.FC = () => {
         ...patch,
       };
       if (patch.filters) filterStorage.save(patch.filters);
+      // Somebody other than the search box just decided what `search` is (a
+      // dismissed chip, "Reset filters"). Drop the pending keystroke write so
+      // it cannot land afterwards and undo them.
+      if (patch.search !== undefined) {
+        if (searchTimer.current) clearTimeout(searchTimer.current);
+        searchTimer.current = null;
+        pendingSearch.current = null;
+      }
       writeUrl(next);
     },
     [filters, search, sort, activeTab, writeUrl]
   );
+
+  // The debounced URL write fires long after the render that scheduled it, so
+  // it must not close over that render's `applyState` -- a filter change in
+  // between would be overwritten with the state as it was when the member
+  // last pressed a key.
+  const applyStateRef = useRef(applyState);
+  useEffect(() => {
+    applyStateRef.current = applyState;
+  }, [applyState]);
 
   // Two jobs, both idempotent: put the stored filters into the URL on a bare
   // /communities (so "Copy link" always has something to copy), and normalise
@@ -275,6 +385,17 @@ const ModernCommunity: React.FC = () => {
     }),
     [userInfo]
   );
+
+  // Identifies the question the list is currently asking. Paging is tagged
+  // with it, so changing filters, search, sort or tab puts the list back to
+  // page 1 during render rather than one effect later.
+  const filterKey = useMemo(
+    () => JSON.stringify({ effectiveFilters, debouncedSearch, sort, activeTab }),
+    [effectiveFilters, debouncedSearch, sort, activeTab]
+  );
+
+  const page = pager.key === filterKey ? pager.page : 1;
+  const extraPages = pager.key === filterKey ? pager.extra : NO_EXTRA_PAGES;
 
   // Single source of truth for the server query — ALL filters map to real
   // params here (inverted-language semantics handled inside the mapper).
@@ -348,36 +469,35 @@ const ModernCommunity: React.FC = () => {
 
   const hasRestoredScroll = useRef(false);
 
-  // Append "Load more" pages. Page 1 is read off the cache in the useMemo below.
+  /**
+   * The last page we asked for, and the question it belonged to.
+   *
+   * The sentinel can fire more than once before `isFetching` has had a chance
+   * to flip (two entries in one callback, a resize, a fast flick), and every
+   * one of those would be a duplicate request for the same page.
+   */
+  const requestedPage = useRef<{ key: string; page: number }>({ key: "", page: 1 });
+
+  /**
+   * Append a "Load more" / sentinel page.
+   *
+   * RTK Query already drops a superseded request -- the query arg changed, so
+   * the old subscription's result never reaches this component -- and the key
+   * check is the second lock: a page that arrived for a question we have since
+   * left is ignored rather than stapled onto the answer to a different one.
+   */
   useEffect(() => {
     if (!communityData?.data || page === 1) return;
-    setExtraPages((prev) => {
-      const existingIds = new Set(prev.map((m) => m._id));
+    setPager((prev) => {
+      if (prev.key !== filterKey) return prev;
+      const existingIds = new Set(prev.extra.map((m) => m._id));
       const newOnes = (communityData.data as CommunityMemberCard[]).filter(
         (m) => !existingIds.has(m._id)
       );
-      return [...prev, ...newOnes];
+      if (newOnes.length === 0) return prev;
+      return { ...prev, extra: [...prev.extra, ...newOnes] };
     });
-  }, [communityData, page]);
-
-  // Reset pagination whenever the URL state that feeds the query changes
-  // (filters / search / sort / tab) -- including a change that arrived via
-  // Back. Skip the first run so a fresh mount (back-nav from /community/:id)
-  // doesn't clobber restored state. Keyed on the *value*, not the object
-  // identity, which changes on every query-string edit.
-  const filterKey = useMemo(
-    () => JSON.stringify({ effectiveFilters, debouncedSearch, sort, activeTab }),
-    [effectiveFilters, debouncedSearch, sort, activeTab]
-  );
-  const skipFilterReset = useRef(true);
-  useEffect(() => {
-    if (skipFilterReset.current) {
-      skipFilterReset.current = false;
-      return;
-    }
-    setPage(1);
-    setExtraPages([]);
-  }, [filterKey]);
+  }, [communityData, page, filterKey]);
 
   // Derived union of the first page (cache) + accumulated extra pages, with a
   // stable VIP-first then online-first tiebreak. `Array.prototype.sort` is
@@ -448,9 +568,57 @@ const ModernCommunity: React.FC = () => {
 
   const hasMore = communityData?.data?.length === PAGE_LIMIT;
 
-  const handleLoadMore = useCallback(() => {
-    if (!isFetching && hasMore) setPage((p) => p + 1);
-  }, [isFetching, hasMore]);
+  // The observer callback lives outside React's render, so it reads the paging
+  // state through a ref rather than through a closure that would be one render
+  // out of date the moment a page lands.
+  const pagingState = useRef({ isFetching, hasMore, page, key: filterKey });
+  useEffect(() => {
+    pagingState.current = { isFetching, hasMore, page, key: filterKey };
+  }, [isFetching, hasMore, page, filterKey]);
+
+  /**
+   * Ask for the next page -- the one path the "Load more" button and the
+   * sentinel both take, so the two can never disagree about which page is
+   * next or ask for it twice.
+   */
+  const requestNextPage = useCallback(() => {
+    const { isFetching: fetching, hasMore: more, page: current, key } = pagingState.current;
+    if (fetching || !more) return;
+    const next = current + 1;
+    if (requestedPage.current.key === key && requestedPage.current.page >= next) return;
+    requestedPage.current = { key, page: next };
+    setPager((prev) =>
+      prev.key === key
+        ? { ...prev, page: next }
+        : { key, page: next, extra: NO_EXTRA_PAGES }
+    );
+  }, []);
+
+  /**
+   * Paging without a button press.
+   *
+   * A sentinel below the last card asks for the next page as it comes within
+   * 400px of the viewport. The button stays: it is the fallback wherever
+   * IntersectionObserver does not exist (older Safari, jsdom) and it is the
+   * only way to page with the keyboard, so it is not hidden behind the
+   * observer's existence either.
+   */
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const node = sentinelRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) requestNextPage();
+      },
+      { rootMargin: "400px 0px" }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+    // `hasMore` re-runs this when the sentinel is mounted or unmounted, and
+    // `filterKey` when the list underneath it became a different list.
+  }, [hasMore, filterKey, requestNextPage]);
 
   const openFilterSheet = useCallback(() => {
     // The sheet opens on what is actually applied -- the tab's lock included,
@@ -507,12 +675,24 @@ const ModernCommunity: React.FC = () => {
     [applyState]
   );
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      applyState({ search: value });
-    },
-    [applyState]
-  );
+  /**
+   * Type now, navigate later.
+   *
+   * The box gets the character immediately (local echo, zero lag); the URL --
+   * and with it the re-derivation of every piece of list state -- gets one
+   * write once the typing settles. The clear "x" and a pasted term go through
+   * the same path, so `?q=` always catches up within one debounce.
+   */
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchDraft(value);
+    pendingSearch.current = value;
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    searchTimer.current = setTimeout(() => {
+      searchTimer.current = null;
+      pendingSearch.current = null;
+      applyStateRef.current({ search: value });
+    }, SEARCH_URL_DEBOUNCE_MS);
+  }, []);
 
   const handleSortChange = useCallback(
     (next?: "recently_active") => {
@@ -618,12 +798,13 @@ const ModernCommunity: React.FC = () => {
       <CommunitySubNav
         activeTab={activeTab}
         onTabChange={handleTabChange}
-        searchValue={search}
+        searchValue={searchDraft}
         onSearchChange={handleSearchChange}
         onOpenFilters={openFilterSheet}
         hasActiveFilters={activeFilterCount > 0}
         activeFilterCount={activeFilterCount}
         showFilterButton={!isForYou}
+        showSearch={!isForYou}
       />
 
       <CommunityFilterSheet
@@ -634,6 +815,7 @@ const ModernCommunity: React.FC = () => {
         onClear={clearAllFilters}
         onCopyLink={handleCopyLink}
         canCopyLink={draftMatchesApplied}
+        lockedTab={activeTab === "online" || activeTab === "new" ? activeTab : undefined}
         onClose={() => setIsFilterSheetOpen(false)}
       />
 
@@ -692,9 +874,22 @@ const ModernCommunity: React.FC = () => {
             t={t}
           />
         ) : isLoading ? (
-          <div className="community-empty">
-            <Loader2 className="animate-spin" />
-            <p>{t("communityMain.search.loading") || "Loading members..."}</p>
+          // Row-shaped placeholders rather than a centred spinner: the page
+          // reaches its final height before the first member arrives, so
+          // nothing under the list jumps when it does.
+          <div
+            className="flex flex-col gap-3"
+            data-testid="community-skeletons"
+            aria-busy="true"
+          >
+            <span className="sr-only">
+              {t("communityMain.search.loading") || "Loading members..."}
+            </span>
+            {Array.from({ length: SKELETON_ROWS }, (_, i) => (
+              <div key={i} className={CARD_SLOT}>
+                <CardSkeleton />
+              </div>
+            ))}
           </div>
         ) : allMembers.length === 0 ? (
           <div className="community-empty">
@@ -710,11 +905,13 @@ const ModernCommunity: React.FC = () => {
             <div className="flex flex-col gap-3">
               {allMembers.map((member, index) => (
                 <Fragment key={member._id}>
-                  <MemberCard
-                    user={member}
-                    onOpen={handleOpenMember}
-                    onWave={handleWaveMember}
-                  />
+                  <div className={CARD_SLOT}>
+                    <MemberCard
+                      user={member}
+                      onOpen={handleOpenMember}
+                      onWave={handleWaveMember}
+                    />
+                  </div>
                   {/* Interleave a community ad every 6 members, but never after
                       the last item. No-op until AdSense is configured. */}
                   {(index + 1) % 6 === 0 &&
@@ -725,17 +922,28 @@ const ModernCommunity: React.FC = () => {
               ))}
             </div>
             {hasMore && (
-              <div className="community-loadmore">
-                <button
-                  type="button"
-                  onClick={handleLoadMore}
-                  disabled={isFetching}
-                >
-                  {isFetching
-                    ? t("communityMain.loadMore.loading") || "Loading..."
-                    : t("communityMain.loadMore.button") || "Load more"}
-                </button>
-              </div>
+              <>
+                {/* Reaching this means the member is at the end of the list;
+                    the next page is already on its way by the time they get
+                    to the button. */}
+                <div
+                  ref={sentinelRef}
+                  data-testid="community-sentinel"
+                  className="community-sentinel"
+                  aria-hidden
+                />
+                <div className="community-loadmore">
+                  <button
+                    type="button"
+                    onClick={requestNextPage}
+                    disabled={isFetching}
+                  >
+                    {isFetching
+                      ? t("communityMain.loadMore.loading") || "Loading..."
+                      : t("communityMain.loadMore.button") || "Load more"}
+                  </button>
+                </div>
+              </>
             )}
           </>
         )}

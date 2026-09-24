@@ -796,7 +796,8 @@
       "mutualInterests": "共同興趣",
       "newUsersOnly": "只看新使用者",
       "clearAll": "清除全部",
-      "matchCount": "{{count}} 個匹配"
+      "matchCount": "{{count}} 個匹配",
+      "lockedByTab": "由「{{tab}}」分頁設定"
     },
     "highlighted": {
       "title": "精選個人檔案",

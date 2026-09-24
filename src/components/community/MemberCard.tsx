@@ -59,7 +59,7 @@ const formatLocation = (location?: CommunityMemberCard["location"]): string | un
   return parts.length > 0 ? parts.join(", ") : undefined;
 };
 
-const MemberCard: React.FC<MemberCardProps> = ({ user, onWave, onOpen }) => {
+const MemberCardRow: React.FC<MemberCardProps> = ({ user, onWave, onOpen }) => {
   const age = getAge(user.birth_year);
   const isNew = !!user.isNew || isRecentlyCreated(user.createdAt);
   const locationLabel = formatLocation(user.location);
@@ -94,7 +94,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ user, onWave, onOpen }) => {
       className="flex items-center gap-4 bg-white/80 backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-white/30 hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
     >
       {/* Avatar */}
-      <div className="relative shrink-0 w-[72px] h-[72px]">
+      <div className="relative shrink-0 w-[72px] h-[72px] aspect-square">
         <div
           data-testid={user.hasActiveStory ? "member-card-story-ring" : undefined}
           className={
@@ -111,10 +111,18 @@ const MemberCard: React.FC<MemberCardProps> = ({ user, onWave, onOpen }) => {
             }
           >
             {avatar ? (
+              // Width/height + a square box mean the row has its final height
+              // before a single byte of the picture arrives, so a list that
+              // loads 20 avatars never reflows. `lazy` keeps the ones below
+              // the fold off the network until they are scrolled towards.
               <img
                 src={avatar}
                 alt={user.name}
-                className="w-full h-full object-cover rounded-[19px]"
+                width={72}
+                height={72}
+                loading="lazy"
+                decoding="async"
+                className="block w-full h-full object-cover rounded-[19px]"
               />
             ) : (
               <div className="w-full h-full rounded-[19px] bg-gradient-to-br from-teal-100 to-yellow-50 flex items-center justify-center text-2xl font-semibold text-teal-600">
@@ -217,5 +225,54 @@ const MemberCard: React.FC<MemberCardProps> = ({ user, onWave, onOpen }) => {
     </div>
   );
 };
+
+/**
+ * Does this card draw the same row?
+ *
+ * The list re-renders on every keystroke, every filter edit and every page
+ * append; without this every visible card's body re-runs each time. Compared
+ * field by field rather than by identity because RTK Query hands out a fresh
+ * object for every page, and only the fields this component actually paints
+ * are compared -- `gender`, `lastActive` and `followersCount` are on the
+ * payload but nowhere on screen, so a change in them is not a reason to draw
+ * the row again.
+ *
+ * Returns true when the props are equivalent, i.e. when React may skip the
+ * re-render (React.memo's convention, the inverse of shouldComponentUpdate).
+ */
+export const areMemberRowsEqual = (
+  prev: MemberCardProps,
+  next: MemberCardProps
+): boolean => {
+  // The handlers end up on onClick/onKeyDown, so a new identity is a real
+  // difference. Both callers pass useCallback'd ones.
+  if (prev.onOpen !== next.onOpen || prev.onWave !== next.onWave) return false;
+
+  const a = prev.user;
+  const b = next.user;
+  if (a === b) return true;
+
+  return (
+    a._id === b._id &&
+    a.name === b.name &&
+    a.bio === b.bio &&
+    a.native_language === b.native_language &&
+    a.language_to_learn === b.language_to_learn &&
+    a.birth_year === b.birth_year &&
+    a.createdAt === b.createdAt &&
+    a.isNew === b.isNew &&
+    a.isVIP === b.isVIP &&
+    a.languageLevel === b.languageLevel &&
+    a.hasActiveStory === b.hasActiveStory &&
+    a.isOnline === b.isOnline &&
+    // Only the first image is painted; the rest of the array is not the
+    // card's business.
+    (a.imageUrls ? a.imageUrls[0] : undefined) ===
+      (b.imageUrls ? b.imageUrls[0] : undefined) &&
+    formatLocation(a.location) === formatLocation(b.location)
+  );
+};
+
+const MemberCard = React.memo(MemberCardRow, areMemberRowsEqual);
 
 export default MemberCard;

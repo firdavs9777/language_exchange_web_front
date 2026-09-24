@@ -796,7 +796,8 @@
       "mutualInterests": "ความสนใจร่วมกัน",
       "newUsersOnly": "เฉพาะผู้ใช้ใหม่",
       "clearAll": "ล้างทั้งหมด",
-      "matchCount": "{{count}} รายการที่ตรงกัน"
+      "matchCount": "{{count}} รายการที่ตรงกัน",
+      "lockedByTab": "กำหนดโดยแท็บ {{tab}}"
     },
     "highlighted": {
       "title": "โปรไฟล์แนะนำ",

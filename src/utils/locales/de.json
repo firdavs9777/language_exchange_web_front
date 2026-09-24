@@ -796,7 +796,8 @@
       "mutualInterests": "Gemeinsame Interessen",
       "newUsersOnly": "Nur neue Nutzer",
       "clearAll": "Alles löschen",
-      "matchCount": "{{count}} Treffer"
+      "matchCount": "{{count}} Treffer",
+      "lockedByTab": "Vom Tab „{{tab}}“ gesetzt"
     },
     "highlighted": {
       "title": "Hervorgehobene Profile",

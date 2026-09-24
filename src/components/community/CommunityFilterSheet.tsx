@@ -23,7 +23,10 @@ const CEFR_LEVELS = ["Any", "A1", "A2", "B1", "B2", "C1", "C2"];
 const MIN_AGE_BOUND = 18;
 const MAX_AGE_BOUND = 100;
 const MAX_TOPICS_AT_LEAST = 10;
-const DEBOUNCE_MS = 300;
+// The count is a whole extra round trip per edit, and nobody reads it while
+// they are still dragging a slider. 400ms is long enough that a drag or a
+// typed country produces one request rather than a dozen.
+const DEBOUNCE_MS = 400;
 
 interface TopicOption {
   id: string;
@@ -52,6 +55,17 @@ export interface CommunityFilterSheetProps {
    * to do first.
    */
   canCopyLink?: boolean;
+  /**
+   * The tab that is holding one of these switches down, if any.
+   *
+   * On Online and New the list is locked to that condition, and the sheet has
+   * to say so: an "Online now" toggle the member can turn off, only for the
+   * tab to turn it straight back on after Apply, is a dead control. The
+   * matching switch is disabled with a one-line explanation, and the live
+   * count is measured with the lock applied so the number matches the list
+   * they would get.
+   */
+  lockedTab?: "online" | "new";
 }
 
 /** Small pill toggle switch (teal when on) — no new CSS, Tailwind only. */
@@ -59,27 +73,42 @@ const ToggleSwitch: React.FC<{
   checked: boolean;
   onChange: (checked: boolean) => void;
   label: string;
-}> = ({ checked, onChange, label }) => (
-  <button
-    type="button"
-    role="switch"
-    aria-checked={checked}
-    onClick={() => onChange(!checked)}
-    className="w-full flex items-center justify-between py-2"
-  >
-    <span className="text-sm text-gray-700">{label}</span>
-    <span
-      className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors ${
-        checked ? "bg-teal-500" : "bg-gray-300"
+  disabled?: boolean;
+  hint?: string;
+  hintTestId?: string;
+}> = ({ checked, onChange, label, disabled = false, hint, hintTestId }) => (
+  <div className="py-1">
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      disabled={disabled}
+      onClick={() => {
+        if (!disabled) onChange(!checked);
+      }}
+      className={`w-full flex items-center justify-between py-2 ${
+        disabled ? "cursor-not-allowed opacity-60" : ""
       }`}
     >
+      <span className="text-sm text-gray-700">{label}</span>
       <span
-        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
-          checked ? "translate-x-5" : "translate-x-0.5"
+        className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors ${
+          checked ? "bg-teal-500" : "bg-gray-300"
         }`}
-      />
-    </span>
-  </button>
+      >
+        <span
+          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+            checked ? "translate-x-5" : "translate-x-0.5"
+          }`}
+        />
+      </span>
+    </button>
+    {hint && (
+      <p data-testid={hintTestId} className="m-0 pb-2 text-xs text-gray-500">
+        {hint}
+      </p>
+    )}
+  </div>
 );
 
 const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
@@ -91,6 +120,7 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
   onClose,
   onCopyLink,
   canCopyLink = true,
+  lockedTab,
 }) => {
   const { t } = useTranslation();
 
@@ -106,9 +136,20 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
     return () => clearTimeout(handle);
   }, [value, open]);
 
+  /**
+   * The draft as the *list* would see it: the tab's lock is part of what is
+   * applied, so a count taken without it would promise a number the member
+   * cannot get from where they are standing.
+   */
+  const lockedDraft = useMemo<CommunityFilters>(() => {
+    if (lockedTab === "online") return { ...debouncedValue, onlineOnly: true };
+    if (lockedTab === "new") return { ...debouncedValue, newUsersOnly: true };
+    return debouncedValue;
+  }, [debouncedValue, lockedTab]);
+
   const countQuery = useMemo(
-    () => buildCommunityQuery(debouncedValue, me || {}, 1, 1),
-    [debouncedValue, me]
+    () => buildCommunityQuery(lockedDraft, me || {}, 1, 1),
+    [lockedDraft, me]
   );
 
   const { data: countResult, isFetching: isCountLoading } = useGetCommunityCountQuery(
@@ -119,6 +160,19 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
   // is already the response body `{ success, data: { count } }` (this endpoint
   // has no transformResponse). The count therefore lives at `.data.count`.
   const matchCount: number | undefined = countResult?.data?.count;
+
+  /** "Set by the Online tab" -- one line, only where the lock actually is. */
+  const lockHint = useMemo(() => {
+    if (!lockedTab) return undefined;
+    const tabName =
+      lockedTab === "online"
+        ? t("communityMain.tabs.online") || "Online"
+        : t("communityMain.tabs.new") || "New";
+    return (
+      t("communityMain.filterSheet.lockedByTab", { tab: tabName }) ||
+      `Set by the ${tabName} tab`
+    );
+  }, [lockedTab, t]);
 
   // --- Topics ----------------------------------------------------------------------
   const { data: topicsResult } = useGetTopicsQuery({}, { skip: !open });
@@ -408,17 +462,24 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
             </div>
           </section>
 
-          {/* Toggles */}
+          {/* Toggles. One of them may belong to the tab rather than to the
+              member -- see `lockedTab`. */}
           <section className="divide-y divide-gray-100">
             <ToggleSwitch
-              checked={!!value.onlineOnly}
+              checked={lockedTab === "online" ? true : !!value.onlineOnly}
               onChange={(checked) => set("onlineOnly", checked || undefined)}
               label={t("communityMain.filterSheet.onlineNow") || "Online now"}
+              disabled={lockedTab === "online"}
+              hint={lockedTab === "online" ? lockHint : undefined}
+              hintTestId="filter-sheet-online-locked"
             />
             <ToggleSwitch
-              checked={!!value.newUsersOnly}
+              checked={lockedTab === "new" ? true : !!value.newUsersOnly}
               onChange={(checked) => set("newUsersOnly", checked || undefined)}
               label={t("communityMain.filterSheet.newUsersOnly") || "New users only"}
+              disabled={lockedTab === "new"}
+              hint={lockedTab === "new" ? lockHint : undefined}
+              hintTestId="filter-sheet-new-locked"
             />
           </section>
         </div>
