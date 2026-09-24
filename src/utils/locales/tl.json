@@ -2068,32 +2068,34 @@
         "title": "Itinutuwid ang Korean mo habang nagta-type",
         "body": "Personal na pagwawasto sa bawat mensahe, kasama ang quizzes at grammar drills sa pagitan ng chats.",
         "cta": "Kunin ang app",
-        "alt": "Ang BananaTalk Study Hub sa telepono, na nag-aalok ng pagsasanay kasama ang AI, review, at pang-araw-araw na hamon"
+        "alt": "Ilustrasyon ng chat bubble na may isang salitang may guhit at ang pagwawasto nito na lumulutang sa itaas, katabi ng isang check mark"
       },
       "voice": {
         "eyebrow": "Voice Notes & Rooms",
         "title": "Marinig kung paano talaga ito bigkasin",
         "body": "Magpadala ng voice notes, ibahagi kung nasaan ka, at sumali sa live na Voice Rooms kasama ang mga native speaker.",
         "cta": "Kunin ang app",
-        "alt": "Isang BananaTalk chat sa telepono, na may voice note at isang shared na location card"
+        "alt": "Ilustrasyon ng isang mikropono na may sound wave na dumadaan dito at isang shared location card sa likod"
       },
       "moments": {
         "eyebrow": "Moments & Stories",
         "title": "Ibahagi ang linggo mo sa dalawang wika",
         "body": "Mag-post ng mga litrato at saloobin; babasahin ito ng mga kaibigan mo na naisalin at maayos kang itutuwid.",
         "cta": "Kunin ang app",
-        "alt": "Ang BananaTalk Moments feed sa telepono, na may mga larawang pinost ng ibang mag-aaral"
+        "alt": "Ilustrasyon ng tatlong nagtatapat na photo card na may puso at isang translation mark na nagsasabing A hanggang 가"
       },
       "inbox": {
         "eyebrow": "Tunay na usapan",
         "title": "Mga taong talagang sumasagot",
         "body": "Ang mga chat, wave, at reaction mo sa iisang inbox — nababasa, naisasalin, nasasagot.",
         "cta": "Kunin ang app",
-        "alt": "Ang BananaTalk inbox sa telepono, na naglilista ng mga kamakailang pag-uusap kasama ang mga katutubong nagsasalita"
+        "alt": "Ilustrasyon ng tatlong pag-uusap na nakatambak sa isang inbox, isa sa mga ito ay hindi pa nababasa, kasama ang isang kamay na kumakaway"
       },
       "dismiss": "I-dismiss ang promosyon ng app",
       "label": "Ano ang ginagawa ng BananaTalk app",
-      "slideLabel": "Slide {{n}} ng {{total}}"
+      "slideLabel": "Slide {{n}} ng {{total}}",
+      "prev": "Nakaraang slide",
+      "next": "Susunod na slide"
     }
   },
   "stories": {

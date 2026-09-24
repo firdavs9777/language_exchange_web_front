@@ -2068,32 +2068,34 @@
         "title": "Yazarken Korece'ni düzeltir",
         "body": "Her mesajda özel düzeltmeler, sohbetler arasında quizler ve dilbilgisi alıştırmaları.",
         "cta": "Uygulamayı edin",
-        "alt": "Telefonda BananaTalk Study Hub, Yapay Zeka ile Pratik, tekrar ve günlük meydan okumalar sunuyor"
+        "alt": "Bir konuşma balonunda üzeri çizilmiş bir kelime ve üzerinde yüzen düzeltmesi ile yanında bir onay işareti bulunan illüstrasyon"
       },
       "voice": {
         "eyebrow": "Sesli Notlar & Odalar",
         "title": "Gerçekte nasıl duyulduğunu dinle",
         "body": "Sesli not gönder, nerede olduğunu paylaş ve anadili konuşanlarla canlı Sesli Odalara katıl.",
         "cta": "Uygulamayı edin",
-        "alt": "Telefonda bir BananaTalk sohbeti, sesli notlar ve paylaşılan bir konum kartıyla"
+        "alt": "Üzerinden bir ses dalgası geçen bir mikrofon ve arkasında paylaşılan bir konum kartı bulunan illüstrasyon"
       },
       "moments": {
         "eyebrow": "Moments & Stories",
         "title": "Haftanı iki dilde paylaş",
         "body": "Fotoğraf ve düşüncelerini paylaş; arkadaşların çeviriyle okur ve seni nazikçe düzeltir.",
         "cta": "Uygulamayı edin",
-        "alt": "Telefonda BananaTalk Anlar akışı, diğer öğrencilerin paylaştığı fotoğraflarla"
+        "alt": "Üst üste binen üç fotoğraf kartı, bir kalp ve A'dan 가'ya çeviriyi gösteren bir işaret bulunan illüstrasyon"
       },
       "inbox": {
         "eyebrow": "Gerçek sohbetler",
         "title": "Gerçekten geri yazan insanlar",
         "body": "Sohbetlerin, el sallamaların ve tepkilerin tek bir kutuda — okunur, çevrilir, yanıtlanır.",
         "cta": "Uygulamayı edin",
-        "alt": "Telefonda BananaTalk gelen kutusu, anadil konuşmacılarıyla yapılan son konuşmaları listeliyor"
+        "alt": "Gelen kutusunda üst üste yığılmış üç konuşmadan biri okunmamış ve el sallayarak merhaba diyen bir el bulunan illüstrasyon"
       },
       "dismiss": "Uygulama tanıtımını kapat",
       "label": "BananaTalk uygulamasının ne yaptığı",
-      "slideLabel": "Slayt {{n}} / {{total}}"
+      "slideLabel": "Slayt {{n}} / {{total}}",
+      "prev": "Önceki slayt",
+      "next": "Sonraki slayt"
     }
   },
   "stories": {

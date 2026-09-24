@@ -1,6 +1,6 @@
 // The "get the app" carousel, as data. Four slides, each one a thing the app
-// does that the web cannot, shown rather than claimed: the copy on the left is
-// the argument and the screenshot on the right is the evidence.
+// does that the web cannot: the copy on the left is the argument and the
+// illustration on the right is the picture of it.
 //
 // The strings here are the English source. The component resolves each one
 // through `t("growth.promo.<key>.<field>")` and falls back to the value below,
@@ -8,23 +8,26 @@
 // raw key (src/utils/i18n.ts returns "" for a missing key on purpose). The key
 // list for the translators lives at .superpowers/sdd/promo-keys.json.
 //
-// Every image is a real screenshot of the shipped app, 480x~1100, exported as
-// webp with a png fallback under public/images/app/. The component crops them
-// from the top, so what a slide shows is the top of that screen; anything below
-// the crop bleeds off the bottom edge of the card.
-export interface PromoSlideImage {
-  /** Preferred source; served to anything that understands image/webp. */
-  webp: string;
-  /** Fallback for the handful of browsers that do not. */
-  png: string;
-  /** What the screenshot shows, for a reader who cannot see it. */
-  alt: string;
-}
+// Each slide's art is an inline SVG component from
+// src/components/growth/promoArt/, not a file under public/: the band is
+// prerendered and above the fold, so the drawings ship in the markup rather
+// than as four more round trips, and they inherit the page's colours instead
+// of baking a background into a bitmap. They replaced cropped screenshots of
+// the app, which read as four unrelated photographs of a phone.
+import React from "react";
+import TutorArt from "../components/growth/promoArt/TutorArt";
+import VoiceArt from "../components/growth/promoArt/VoiceArt";
+import MomentsArt from "../components/growth/promoArt/MomentsArt";
+import InboxArt from "../components/growth/promoArt/InboxArt";
+import { PromoArtProps } from "../components/growth/promoArt/paint";
 
 export interface PromoSlide {
   /** Stable id: the React key, the dot's id, and the i18n key segment. */
   key: string;
-  image: PromoSlideImage;
+  /** The illustration for this slide, inlined as an <svg role="img">. */
+  art: React.ComponentType<PromoArtProps>;
+  /** What the illustration shows, for a reader who cannot see it. */
+  alt: string;
   eyebrow: string;
   title: string;
   body: string;
@@ -32,16 +35,11 @@ export interface PromoSlide {
   cta: string;
 }
 
-const IMAGE_DIR = "/images/app";
-
 export const PROMO_SLIDES: PromoSlide[] = [
   {
     key: "tutor",
-    image: {
-      webp: `${IMAGE_DIR}/study.webp`,
-      png: `${IMAGE_DIR}/study.png`,
-      alt: "The BananaTalk Study Hub on a phone, offering Practice with AI, review and daily challenges",
-    },
+    art: TutorArt,
+    alt: "An illustration of a chat bubble with one word crossed out and the correction floating above it, next to a check mark",
     eyebrow: "AI tutor",
     title: "Fix your Korean as you type",
     body: "Private corrections on every message, plus quizzes and grammar drills between chats.",
@@ -49,11 +47,8 @@ export const PROMO_SLIDES: PromoSlide[] = [
   },
   {
     key: "voice",
-    image: {
-      webp: `${IMAGE_DIR}/chat.webp`,
-      png: `${IMAGE_DIR}/chat.png`,
-      alt: "A BananaTalk chat on a phone, with voice notes and a shared location card",
-    },
+    art: VoiceArt,
+    alt: "An illustration of a microphone with a sound wave sweeping across it and a shared location card behind",
     eyebrow: "Voice notes & rooms",
     title: "Hear how it really sounds",
     body: "Send voice notes, share where you are, and join live voice rooms with native speakers.",
@@ -61,11 +56,8 @@ export const PROMO_SLIDES: PromoSlide[] = [
   },
   {
     key: "moments",
-    image: {
-      webp: `${IMAGE_DIR}/moments.webp`,
-      png: `${IMAGE_DIR}/moments.png`,
-      alt: "The BananaTalk Moments feed on a phone, with photos posted by other learners",
-    },
+    art: MomentsArt,
+    alt: "An illustration of three overlapping photo cards with a heart and a translation mark reading A to 가",
     eyebrow: "Moments & stories",
     title: "Share your week in two languages",
     body: "Post photos and thoughts; friends read them translated and correct you kindly.",
@@ -73,11 +65,8 @@ export const PROMO_SLIDES: PromoSlide[] = [
   },
   {
     key: "inbox",
-    image: {
-      webp: `${IMAGE_DIR}/messages.webp`,
-      png: `${IMAGE_DIR}/messages.png`,
-      alt: "The BananaTalk inbox on a phone, listing recent conversations with native speakers",
-    },
+    art: InboxArt,
+    alt: "An illustration of three conversations stacked in an inbox, one of them unread, with a hand waving hello",
     eyebrow: "Real conversations",
     title: "People who actually write back",
     body: "Your chats, waves and reactions in one inbox — read, translated, answered.",

@@ -2071,29 +2071,31 @@
         "title": "Fix your Korean as you type",
         "body": "Private corrections on every message, plus quizzes and grammar drills between chats.",
         "cta": "Get the app",
-        "alt": "The BananaTalk Study Hub on a phone, offering Practice with AI, review and daily challenges"
+        "alt": "An illustration of a chat bubble with one word crossed out and the correction floating above it, next to a check mark"
       },
       "voice": {
         "eyebrow": "Voice notes & rooms",
         "title": "Hear how it really sounds",
         "body": "Send voice notes, share where you are, and join live voice rooms with native speakers.",
         "cta": "Get the app",
-        "alt": "A BananaTalk chat on a phone, with voice notes and a shared location card"
+        "alt": "An illustration of a microphone with a sound wave sweeping across it and a shared location card behind"
       },
       "moments": {
         "eyebrow": "Moments & stories",
         "title": "Share your week in two languages",
         "body": "Post photos and thoughts; friends read them translated and correct you kindly.",
         "cta": "Get the app",
-        "alt": "The BananaTalk Moments feed on a phone, with photos posted by other learners"
+        "alt": "An illustration of three overlapping photo cards with a heart and a translation mark reading A to 가"
       },
       "inbox": {
         "eyebrow": "Real conversations",
         "title": "People who actually write back",
         "body": "Your chats, waves and reactions in one inbox — read, translated, answered.",
         "cta": "Get the app",
-        "alt": "The BananaTalk inbox on a phone, listing recent conversations with native speakers"
-      }
+        "alt": "An illustration of three conversations stacked in an inbox, one of them unread, with a hand waving hello"
+      },
+      "prev": "Previous slide",
+      "next": "Next slide"
     }
   },
   "stories": {

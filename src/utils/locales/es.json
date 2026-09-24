@@ -2068,32 +2068,34 @@
         "title": "Corrige tu coreano mientras escribes",
         "body": "Correcciones privadas en cada mensaje, además de quizzes y ejercicios de gramática entre chats.",
         "cta": "Obtener la app",
-        "alt": "El Study Hub de BananaTalk en un teléfono, con Practicar con IA, repaso y retos diarios"
+        "alt": "Ilustración de una burbuja de chat con una palabra tachada y la corrección flotando encima, junto a una marca de verificación"
       },
       "voice": {
         "eyebrow": "Notas de voz y salas",
         "title": "Escucha cómo suena de verdad",
         "body": "Envía notas de voz, comparte dónde estás y únete a salas de voz en vivo con hablantes nativos.",
         "cta": "Obtener la app",
-        "alt": "Un chat de BananaTalk en un teléfono, con notas de voz y una tarjeta de ubicación compartida"
+        "alt": "Ilustración de un micrófono con una onda de sonido que lo recorre y una tarjeta de ubicación compartida detrás"
       },
       "moments": {
         "eyebrow": "Momentos e historias",
         "title": "Comparte tu semana en dos idiomas",
         "body": "Publica fotos y pensamientos; tus amigos los leen traducidos y te corrigen con cariño.",
         "cta": "Obtener la app",
-        "alt": "El feed de Momentos de BananaTalk en un teléfono, con fotos publicadas por otros estudiantes"
+        "alt": "Ilustración de tres tarjetas de fotos superpuestas con un corazón y una marca de traducción que dice A a 가"
       },
       "inbox": {
         "eyebrow": "Conversaciones reales",
         "title": "Gente que sí responde",
         "body": "Tus chats, saludos y reacciones en una sola bandeja — leídos, traducidos, respondidos.",
         "cta": "Obtener la app",
-        "alt": "La bandeja de entrada de BananaTalk en un teléfono, con una lista de conversaciones recientes con hablantes nativos"
+        "alt": "Ilustración de tres conversaciones apiladas en una bandeja de entrada, una de ellas sin leer, con una mano saludando"
       },
       "dismiss": "Cerrar la promoción de la aplicación",
       "label": "Qué hace la aplicación BananaTalk",
-      "slideLabel": "Diapositiva {{n}} de {{total}}"
+      "slideLabel": "Diapositiva {{n}} de {{total}}",
+      "prev": "Diapositiva anterior",
+      "next": "Diapositiva siguiente"
     }
   },
   "stories": {
