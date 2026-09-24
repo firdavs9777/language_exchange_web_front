@@ -22,6 +22,11 @@ if (!fs.existsSync(templatePath)) {
 }
 // Read once, before "/" overwrites build/index.html.
 const template = fs.readFileSync(templatePath, "utf8");
+// The untouched SPA shell. nginx falls back to it for app routes that have no
+// prerendered page (/login, /settings, /admin/...). Falling back to index.html
+// would hand React the prerendered homepage markup for a different route, and
+// hydration would fail (React #418) on every one of those pages.
+fs.writeFileSync(path.join(BUILD, "app.html"), template);
 
 const fileFor = (route) => {
   if (route === "/") return path.join(BUILD, "index.html");

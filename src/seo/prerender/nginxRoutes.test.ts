@@ -12,7 +12,8 @@ const conf = buildNginxRoutesConf(routes as any);
 
 it("emits one regex location covering the app's top-level route segments", () => {
   expect(conf).toMatch(/^location ~ \^\/\([^)]+\)\(\/\|\$\) \{$/m);
-  expect(conf).toContain("try_files $uri $uri/index.html /index.html;");
+  expect(conf).toContain("try_files $uri $uri/index.html /app.html;");
+  expect(conf).not.toContain("/index.html;");
   expect(conf.endsWith("\n")).toBe(true);
 });
 
