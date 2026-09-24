@@ -222,7 +222,11 @@ export const storiesApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Highlights"],
     }),
     createHighlight: builder.mutation({
-      query: (data: { title: string; storyIds: string[] }) => ({
+      // `POST /stories/highlights` reads {title, storyId, coverImage} --
+      // singular, and the story it is created FROM. The old `storyIds` array
+      // was never a field this route had; nothing it described reached the
+      // server.
+      query: (data: { title: string; storyId?: string; coverImage?: string }) => ({
         url: `${MAIN_STORIES}/highlights`,
         method: "POST",
         body: data,

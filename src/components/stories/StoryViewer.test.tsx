@@ -12,6 +12,11 @@ jest.mock("react-router-dom", () => ({
   useParams: () => ({ userId: "author-1" }),
   useNavigate: () => mockNavigate,
   useLocation: () => ({ state: null }),
+  Link: ({ to, children, ...rest }: any) => (
+    <a href={to} {...rest}>
+      {children}
+    </a>
+  ),
 }));
 
 let mockCurrentUserId: string | null = "me";
@@ -255,5 +260,83 @@ describe("owner tools and sharing", () => {
     mockCurrentUserId = "author-1";
     renderViewer([story()]);
     expect(screen.queryByTestId("story-responses-button")).not.toBeInTheDocument();
+  });
+});
+
+describe("structured stickers", () => {
+  it("paints overlays at their normalized positions with their own styling", () => {
+    renderViewer([
+      story({
+        overlays: [
+          {
+            type: "text",
+            content: "Seoul, 6am",
+            x: 0.25,
+            y: 0.9,
+            scale: 2.5,
+            color: "#FF3B30",
+            fontStyle: "bold",
+            bgMode: "semi",
+          },
+          { type: "emoji", content: "🔥", x: 1, y: 0, scale: 1, color: "#FFFFFF", fontStyle: "sans-serif", bgMode: "none" },
+        ],
+      }),
+    ]);
+
+    const first = screen.getByTestId("story-overlay-0");
+    expect(first).toHaveTextContent("Seoul, 6am");
+    // The two coordinates are the only inline style; 0.25/0.9 of the canvas.
+    expect(first).toHaveStyle({ left: "25%", top: "90%", color: "#FF3B30" });
+    expect(first.className).toContain("font-bold");
+    expect(first.className).toContain("text-4xl");
+
+    expect(screen.getByTestId("story-overlay-1")).toHaveStyle({ left: "100%", top: "0%" });
+  });
+
+  it("clamps a position the server would have clamped anyway", () => {
+    renderViewer([
+      story({
+        overlays: [
+          { type: "text", content: "x", x: 5, y: -3, scale: 1, color: "#FFFFFF", fontStyle: "serif", bgMode: "none" },
+        ],
+      }),
+    ]);
+    expect(screen.getByTestId("story-overlay-0")).toHaveStyle({ left: "100%", top: "0%" });
+  });
+
+  it("renders mentions as pills that link to the member page", () => {
+    renderViewer([
+      story({
+        mentions: [
+          { user: { _id: "u-9", name: "Ann" }, username: "ann", position: { x: 50, y: 80 } },
+          { user: "u-10", username: "bo", position: { x: 10, y: 10 } },
+        ],
+      }),
+    ]);
+    const pill = screen.getByTestId("story-mention-0");
+    expect(pill).toHaveTextContent("@ann");
+    expect(pill).toHaveAttribute("href", "/community/u-9");
+    // 0-100 on the wire, percentages on screen.
+    expect(pill).toHaveStyle({ left: "50%", top: "80%" });
+    // An unpopulated mention is still a link.
+    expect(screen.getByTestId("story-mention-1")).toHaveAttribute("href", "/community/u-10");
+  });
+
+  it("opens the link sticker in a new tab without handing it this one", () => {
+    renderViewer([
+      story({ link: { url: "https://example.com/sale", title: "", displayText: "Shop", host: "example.com" } }),
+    ]);
+    const sticker = screen.getByTestId("story-link-sticker");
+    expect(sticker).toHaveTextContent("Shop");
+    expect(sticker).toHaveAttribute("href", "https://example.com/sale");
+    expect(sticker).toHaveAttribute("target", "_blank");
+    expect(sticker.getAttribute("rel")).toContain("noopener");
+  });
+
+  it("falls back to the real host when the author gave no label", () => {
+    renderViewer([
+      story({ link: { url: "https://example.com/sale", title: "", displayText: "", host: "example.com" } }),
+    ]);
+    expect(screen.getByTestId("story-link-sticker")).toHaveTextContent("example.com");
   });
 });

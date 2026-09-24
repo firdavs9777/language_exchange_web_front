@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useGetStoryFeedsQuery, useGetMyStoriesQuery } from "../../store/slices/storiesSlice";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaPlus } from "react-icons/fa";
 import { StoryFeedUser, Story } from "./types";
@@ -150,6 +150,19 @@ const StoriesFeed: React.FC<StoriesFeedProps> = ({ compact = false }) => {
               ? t("stories.your_story") || "Your Story"
               : t("stories.create_story") || "Create"}
           </div>
+          {/* The only way into the author's own stories, highlights picker and
+              archive. A <Link>, not a navigate() button: this row is in the
+              eagerly-loaded /moments chunk, so it takes no new import beyond
+              the one react-router already ships here. */}
+          {userId && (
+            <Link
+              data-testid="my-stories-link"
+              to="/stories/mine"
+              className="mt-0.5 block text-[11px] font-medium text-ink-500 no-underline hover:underline dark:text-ink-400"
+            >
+              {t("stories.my_stories") || "My stories"}
+            </Link>
+          )}
         </div>
 
         {/* Other Users' Stories */}

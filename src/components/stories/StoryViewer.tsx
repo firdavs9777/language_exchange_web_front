@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
   useGetUserStoriesQuery,
@@ -28,6 +28,13 @@ import StoryViewersSheet from "./StoryViewersSheet";
 import QuestionResponsesSheet from "./QuestionResponsesSheet";
 import StoryShareSheet from "./StoryShareSheet";
 import { Story, STORY_REACTIONS } from "./types";
+import {
+  OVERLAY_BG_CLASS,
+  OVERLAY_FONT_CLASS,
+  mentionPositionStyle,
+  overlayPositionStyle,
+  overlayScaleClass,
+} from "./storyOverlays";
 import "./StoryViewer.scss";
 
 interface RootState {
@@ -538,16 +545,75 @@ const StoryViewer: React.FC = () => {
             </div>
           )}
 
-          {/* Link Sticker */}
-          {currentStory.link && (
-            <div className="story-link-overlay">
-              <button
-                className="link-sticker"
-                onClick={() => window.open(currentStory.link!.url, "_blank")}
+          {/* Text and emoji overlays.
+              These are STRUCTURE, not pixels: the composer (web) and the
+              studio (app) both upload `overlays[]` as JSON and never bake the
+              glyphs into the image, so this is the only place they become
+              visible. `left`/`top` are the one thing that has to be an inline
+              style -- two numbers out of the JSON that no utility class can
+              express, on a canvas whose size is whatever the viewport gives
+              it. Everything else (font, weight, plate, size) is a class from
+              `storyOverlays.ts`; `color` is the author's own choice and is
+              data, like the text-story colours beside it. */}
+          {(currentStory.overlays || []).map((overlay, index) => (
+            <span
+              key={index}
+              data-testid={"story-overlay-" + index}
+              style={{
+                ...overlayPositionStyle(overlay.x, overlay.y),
+                color: overlay.color,
+              }}
+              className={[
+                "pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-1/2",
+                "max-w-[80%] whitespace-pre-wrap text-center font-semibold leading-tight",
+                overlayScaleClass(overlay.scale),
+                OVERLAY_FONT_CLASS[overlay.fontStyle] || "font-sans",
+                OVERLAY_BG_CLASS[overlay.bgMode] || "",
+              ].join(" ")}
+            >
+              {overlay.content}
+            </span>
+          ))}
+
+          {/* Tagged people. Tappable, exactly as in the app viewer: a mention
+              nobody can follow is decoration. */}
+          {(currentStory.mentions || []).map((mention, index) => {
+            const mentionUser: any = mention.user;
+            const mentionId =
+              typeof mentionUser === "string" ? mentionUser : mentionUser && mentionUser._id;
+            if (!mentionId) return null;
+            return (
+              <Link
+                key={index}
+                data-testid={"story-mention-" + index}
+                to={"/community/" + mentionId}
+                onClick={(e) => e.stopPropagation()}
+                style={mentionPositionStyle(mention.position)}
+                className="absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-chip bg-white/85 px-2 py-0.5 text-xs font-semibold text-ink-900 no-underline"
               >
-                <span>{currentStory.link.displayText}</span>
-              </button>
-            </div>
+                @{mention.username || (mentionUser && mentionUser.name) || ""}
+              </Link>
+            );
+          })}
+
+          {/* Link sticker. A real anchor, not window.open: the destination is
+              visible on hover and in the context menu, and `noopener` keeps
+              the opened tab away from this one. The host is shown when the
+              author gave no label, so a tap is never a blind one. */}
+          {currentStory.link && currentStory.link.url && (
+            <a
+              data-testid="story-link-sticker"
+              href={currentStory.link.url}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              onClick={(e) => e.stopPropagation()}
+              className="absolute bottom-24 left-1/2 z-10 -translate-x-1/2 rounded-chip bg-white/90 px-3 py-1.5 text-sm font-semibold text-ink-900 no-underline"
+            >
+              {currentStory.link.displayText ||
+                currentStory.link.title ||
+                currentStory.link.host ||
+                currentStory.link.url}
+            </a>
           )}
         </div>
 
