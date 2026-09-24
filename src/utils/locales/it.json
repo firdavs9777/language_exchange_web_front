@@ -1450,7 +1450,18 @@
     "label": "Consenso ai cookie",
     "message": "Utilizziamo cookie di analisi per capire cosa porta le persone qui.",
     "accept": "OK",
-    "decline": "No grazie"
+    "decline": "No grazie",
+    "manage": {
+      "title": "Scelte sulla privacy",
+      "body": "I cookie di analisi ci dicono quali pagine risultano utili. Nient'altro.",
+      "current_granted": "I cookie di analisi sono attivi.",
+      "current_denied": "I cookie di analisi sono disattivati.",
+      "accept": "Attiva",
+      "decline": "Disattiva",
+      "privacyChoices": "Scelte sulla privacy",
+      "analyticsCookies": "Cookie di analisi",
+      "done": "Fatto"
+    }
   },
   "linking": {
     "share": {

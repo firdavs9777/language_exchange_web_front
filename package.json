@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/plus-jakarta-sans": "^5.3.0",
     "@reduxjs/toolkit": "^2.2.5",
     "@types/jest": "24.0.23",
     "@types/node": "12.12.8",

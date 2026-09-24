@@ -1482,7 +1482,18 @@
     "label": "クッキーの同意",
     "message": "どこから来ていただいたかを知るために、分析用のクッキーを使っています。",
     "accept": "OK",
-    "decline": "利用しない"
+    "decline": "利用しない",
+    "manage": {
+      "title": "プライバシーの設定",
+      "body": "分析用のクッキーは、どのページが役に立っているかを知るためだけに使います。",
+      "current_granted": "分析用のクッキーはオンです。",
+      "current_denied": "分析用のクッキーはオフです。",
+      "accept": "オンにする",
+      "decline": "オフにする",
+      "privacyChoices": "プライバシーの設定",
+      "analyticsCookies": "分析用のクッキー",
+      "done": "完了"
+    }
   },
   "admin": {
     "nav": {

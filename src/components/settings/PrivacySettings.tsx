@@ -5,7 +5,10 @@ import { useTranslation } from "react-i18next";
 import { RootState } from "../../store";
 import { useUpdateUserInfoMutation } from "../../store/slices/usersSlice";
 import { Bounce, toast } from "react-toastify";
-import { ArrowLeft, Eye, Clock, MessageSquare, MapPin, Calendar, Save } from "lucide-react";
+import { ArrowLeft, Eye, Clock, MessageSquare, MapPin, Calendar, Save, BarChart3 } from "lucide-react";
+import { GA_MEASUREMENT_ID } from "../../analytics/ga";
+import { useConsentChoice } from "../../analytics/useConsentChoice";
+import notify from "../../design/notify";
 
 interface ToggleProps {
   label: string;
@@ -40,6 +43,56 @@ const Toggle: React.FC<ToggleProps> = ({ label, description, value, onChange, ic
     </button>
   </div>
 );
+
+/**
+ * Analytics consent, in the one place a signed-in visitor looks for it. The
+ * same decision the consent bar takes on a first visit, changeable here for
+ * as long as the account exists -- and absent when no measurement id is
+ * configured, because then nothing is being collected to withdraw.
+ */
+const AnalyticsRow: React.FC = () => {
+  const { t } = useTranslation();
+  const { state, accept, decline } = useConsentChoice();
+
+  if (!GA_MEASUREMENT_ID) return null;
+
+  const description =
+    state === "granted"
+      ? t("consent.manage.current_granted") || "Analytics cookies are on."
+      : state === "denied"
+      ? t("consent.manage.current_denied") || "Analytics cookies are off."
+      : t("consent.manage.body") ||
+        "Analytics cookies tell us which pages people find useful. Nothing else.";
+
+  const change = (on: boolean) => {
+    if (on) accept();
+    else decline();
+    notify.success(
+      on
+        ? t("consent.manage.current_granted") || "Analytics cookies are on."
+        : t("consent.manage.current_denied") || "Analytics cookies are off."
+    );
+  };
+
+  return (
+    <div className="mb-6" data-testid="analytics-consent-row">
+      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 px-1">
+        {t("consent.manage.title") || "Privacy choices"}
+      </h3>
+      {/* The same switch as the six rows above it. This one is not part of
+          `settings` and is never sent to the server -- the decision lives in
+          localStorage and takes effect on the spot -- so it stays outside the
+          Save flow and says so by confirming immediately. */}
+      <Toggle
+        icon={<BarChart3 className="w-5 h-5" />}
+        label={t("consent.manage.analyticsCookies") || "Analytics cookies"}
+        description={description}
+        value={state === "granted"}
+        onChange={change}
+      />
+    </div>
+  );
+};
 
 const PrivacySettings: React.FC = () => {
   const { t } = useTranslation();
@@ -201,6 +254,8 @@ const PrivacySettings: React.FC = () => {
             onChange={handleToggle("showGiftingLevel")}
           />
         </div>
+
+        <AnalyticsRow />
 
         {/* Save Button */}
         {hasChanges && (

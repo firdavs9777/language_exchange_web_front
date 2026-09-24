@@ -1482,7 +1482,18 @@
     "label": "Đồng ý sử dụng cookie",
     "message": "Chúng tôi sử dụng cookie phân tích để hiểu điều gì đã đưa mọi người đến đây.",
     "accept": "OK",
-    "decline": "Không, cảm ơn"
+    "decline": "Không, cảm ơn",
+    "manage": {
+      "title": "Lựa chọn quyền riêng tư",
+      "body": "Cookie phân tích chỉ cho chúng tôi biết trang nào hữu ích, không gì khác.",
+      "current_granted": "Cookie phân tích đang bật.",
+      "current_denied": "Cookie phân tích đang tắt.",
+      "accept": "Bật",
+      "decline": "Tắt",
+      "privacyChoices": "Lựa chọn quyền riêng tư",
+      "analyticsCookies": "Cookie phân tích",
+      "done": "Xong"
+    }
   },
   "admin": {
     "nav": {

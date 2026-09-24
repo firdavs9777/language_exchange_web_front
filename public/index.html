@@ -191,30 +191,15 @@
     }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Inter for UI, Plus Jakarta Sans for headings.
+    <!-- No font <link>s here, and no preconnects: Inter and Plus Jakarta Sans
+         are self-hosted since task D3. They are imported by src/fonts.css
+         (which src/index.tsx loads before index.css), so their woff2 files
+         come off this origin on the connection the page already has, instead
+         of costing a DNS lookup plus a TLS handshake to googleapis.com for
+         the CSS and a second one to gstatic.com for the files.
 
-         Loaded as rel="preload" and promoted to a stylesheet on load, so the
-         request never blocks rendering: a plain rel="stylesheet" here held
-         first paint on every prerendered page for a round trip to a third
-         party. display=swap still applies once it lands, and the <noscript>
-         copy keeps the fonts for scripting-off visitors.
-
-         Inter carries 300 and 800 because src/assets/styles/typography.css
-         used to fetch the family a second time just for those two, and the
-         app uses both (font-light, font-extrabold). Weight 500 stays: it is
-         the most-used non-default weight in the app (126 `font-medium` plus
-         47 explicit `font-weight: 500`). -->
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
-    <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" />
-    </noscript>
+         src/fonts.css documents which weights ship and why; src/fonts.test.ts
+         asserts that neither Google host comes back into this file. -->
     <!-- The bootstrap-icons stylesheet used to be fetched from jsdelivr right
          here, render-blocking, on every page. Nothing renders a `bi-*` glyph
          any more -- the last three screens that did moved to lucide with the
