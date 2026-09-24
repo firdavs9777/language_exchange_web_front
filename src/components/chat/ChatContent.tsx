@@ -144,9 +144,17 @@ const ChatContent: React.FC<ChatContentProps> = ({
   // request per click.
   const loadedCount = ((data as any)?.data || []).length;
   const totalMessages = (data as any)?.total || 0;
-  const totalPages = (data as any)?.pagination?.totalPages || 1;
+  // `totalPages` is read from whichever shape the response carries — the
+  // route returns `pagination.totalPages`, other handlers answer `pages` —
+  // and falls back to what `total` implies. Reading only one of them capped
+  // paging at page 1 and the thread's history was unreachable again.
+  const totalPages =
+    (data as any)?.pagination?.totalPages ||
+    (data as any)?.pages ||
+    (totalMessages ? Math.ceil(totalMessages / MESSAGE_PAGE_SIZE) : 1);
   const totalPagesRef = useRef(1);
   const loadedCountRef = useRef(0);
+  const pageRef = useRef(1);
   const hasMoreHistory = loadedCount < totalMessages;
   // Whether an OLDER-page request is in flight, tracked from the request
   // itself. Inferring it from `isFetching && page > 1` made every reaction and
@@ -241,6 +249,12 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const pendingOlderRef = useRef<{ id: string; top: number } | null>(null);
   // An older-page request is in flight.
   const olderRequestRef = useRef(false);
+  // Whether the top sentinel is inside the viewport right now.
+  const sentinelVisibleRef = useRef(false);
+  // The previous value of `isFetching`, to catch the settling edge.
+  const wasFetchingRef = useRef(false);
+  // The conversation whose first page has already been scrolled to the bottom.
+  const openedAtBottomRef = useRef<string>("");
 
   // Read here, seeded further down -- see the draft effect below the
   // "Clear state when switching conversations" effect.
@@ -258,7 +272,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
   useEffect(() => {
     totalPagesRef.current = totalPages;
     loadedCountRef.current = loadedCount;
-  }, [totalPages, loadedCount]);
+    pageRef.current = page;
+  }, [totalPages, loadedCount, page]);
 
   // Update online status when initial props change
   useEffect(() => {
@@ -645,6 +660,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     setIsLoadingOlder(false);
     pendingOlderRef.current = null;
     olderRequestRef.current = false;
+    sentinelVisibleRef.current = false;
     stopRecording();
   }, [selectedUser]);
 
@@ -718,23 +734,38 @@ const ChatContent: React.FC<ChatContentProps> = ({
           top: first.getBoundingClientRect().top,
         }
       : null;
+    // Which page to ask for is decided BEFORE anything is set: a call that
+    // cannot advance must change no state at all, or the re-arm below and the
+    // settle effect trade renders forever. The page is derived from what is
+    // already held, so a cache entry that survived a remount is continued
+    // rather than re-walked from page 2.
+    const fromLoaded = Math.floor(loadedCountRef.current / MESSAGE_PAGE_SIZE) + 1;
+    const next = Math.max(pageRef.current + 1, fromLoaded);
+    if (next > totalPagesRef.current) return;
+
     // Reading history is not being at the bottom: the auto-scroll must not
     // drag the view back down when the older page lands.
     isAtBottomRef.current = false;
     setIsLoadingOlder(true);
     olderRequestRef.current = true;
-    // The cap is re-checked INSIDE the updater: two sentinel hits in the same
-    // tick both see the old `page`, and without this the second one would ask
-    // for a page past the end of the thread. The page asked for is derived
-    // from what is already held, so a cache entry that survived a remount is
-    // continued rather than re-walked from page 2.
-    setPage((current) => {
-      const fromLoaded =
-        Math.floor(loadedCountRef.current / MESSAGE_PAGE_SIZE) + 1;
-      const next = Math.max(current + 1, fromLoaded);
-      return next <= totalPagesRef.current ? next : current;
-    });
+    setPage((current) => (next > current ? next : current));
   }, [hasMoreHistory, isFetching]);
+
+  // Open at the newest message. The thread renders oldest-first, so without
+  // this the reader lands at the TOP of the history — on the oldest message,
+  // with the "load earlier" sentinel already in view. `scrollIntoView` in a
+  // passive effect was not enough: it is asynchronous and smooth, and on
+  // first paint it left the scroller at 0. This jumps, before paint, once per
+  // conversation.
+  useLayoutEffect(() => {
+    if (messages.length === 0) return;
+    if (openedAtBottomRef.current === selectedUser) return;
+    const container = chatContainerRef.current;
+    if (!container) return;
+    openedAtBottomRef.current = selectedUser;
+    container.scrollTop = container.scrollHeight;
+    isAtBottomRef.current = true;
+  }, [messages, selectedUser]);
 
   useLayoutEffect(() => {
     const pending = pendingOlderRef.current;
@@ -757,11 +788,22 @@ const ChatContent: React.FC<ChatContentProps> = ({
   // entry already held, or one that failed) must not leave the anchor and the
   // disabled auto-scroll behind.
   useEffect(() => {
-    if (isFetching || !olderRequestRef.current) return;
-    olderRequestRef.current = false;
-    setIsLoadingOlder(false);
-    handleScroll();
-  }, [isFetching, handleScroll]);
+    const settled = wasFetchingRef.current && !isFetching;
+    wasFetchingRef.current = isFetching;
+    if (isFetching) return;
+    if (olderRequestRef.current) {
+      olderRequestRef.current = false;
+      setIsLoadingOlder(false);
+      handleScroll();
+    }
+    // An intersection that arrived WHILE a fetch was in flight was dropped,
+    // and an observer only fires again when the sentinel crosses its boundary
+    // anew — which never happens if it simply stayed on screen. So on the
+    // settling edge, and only there, ask again for what is still in view.
+    if (settled && sentinelVisibleRef.current && hasMoreHistory) {
+      loadOlderMessages();
+    }
+  }, [isFetching, hasMoreHistory, handleScroll, loadOlderMessages]);
 
   // The sentinel does the asking on scroll; the button inside it is what a
   // keyboard (and a browser without IntersectionObserver) uses.
@@ -772,7 +814,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) loadOlderMessages();
+        const visible = entries.some((entry) => entry.isIntersecting);
+        sentinelVisibleRef.current = visible;
+        if (visible) loadOlderMessages();
       },
       { root: chatContainerRef.current, rootMargin: "120px" }
     );
@@ -1772,7 +1816,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       >
         {(hasMoreHistory || isLoadingOlder) && (
           <div className="load-earlier-row" ref={topSentinelRef}>
-            {isLoadingOlder ? (
+            {isLoadingOlder && (
               <span
                 className="load-earlier-status"
                 role="status"
@@ -1780,12 +1824,17 @@ const ChatContent: React.FC<ChatContentProps> = ({
               >
                 {t("chatPage.loadingEarlier") || "Loading earlier messages"}
               </span>
-            ) : (
+            )}
+            {/* The button stays for as long as there IS more history — it is
+                the fallback for a browser without an observer, and swapping
+                it out mid-load took the way back off the screen. */}
+            {hasMoreHistory && (
               <button
                 type="button"
                 className="load-earlier-btn"
                 data-testid="load-earlier"
                 onClick={loadOlderMessages}
+                disabled={isLoadingOlder}
               >
                 <ArrowUp size={14} />
                 <span>{t("chatPage.loadEarlier") || "Load earlier messages"}</span>

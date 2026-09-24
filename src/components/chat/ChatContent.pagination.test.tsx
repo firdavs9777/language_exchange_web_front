@@ -243,13 +243,16 @@ it("asks for page 2 from the button too, for keyboards and browsers without an o
 });
 
 it("says earlier messages are on their way while the page is in flight", async () => {
-  answerWith({ fetchingOlder: true });
+  // Six messages in the thread, so there is still history left after page 2 —
+  // the way back must stay on screen while the request is out.
+  answerWith({ fetchingOlder: true, total: 6 });
   renderChat();
 
   fireEvent.click(screen.getByTestId("load-earlier"));
 
   await waitFor(() => expect(screen.getByTestId("loading-earlier")).toBeInTheDocument());
-  expect(screen.queryByTestId("load-earlier")).not.toBeInTheDocument();
+  // The way back never leaves the screen — it is just not clickable twice.
+  expect(screen.getByTestId("load-earlier")).toBeDisabled();
 });
 
 it("puts the older page ABOVE what was already on screen", async () => {
@@ -377,6 +380,112 @@ it("never pulls a read receipt back to delivered", async () => {
 
   expect(screen.getAllByTestId("msg-status-read").length).toBe(2);
   expect(screen.queryByTestId("msg-status-delivered")).not.toBeInTheDocument();
+});
+
+
+// --- Opening the thread, and the sentinel that starts on screen -------------
+
+it("opens at the newest message instead of the top of the history", () => {
+  // jsdom has no layout: the scroller is 2,500px of content in a 400px window.
+  const proto = Element.prototype as any;
+  const originalScrollHeight = Object.getOwnPropertyDescriptor(proto, "scrollHeight");
+  const originalClientHeight = Object.getOwnPropertyDescriptor(proto, "clientHeight");
+  const originalScrollTop = Object.getOwnPropertyDescriptor(proto, "scrollTop");
+  let top = 0;
+  Object.defineProperty(proto, "scrollHeight", { configurable: true, get: () => 2500 });
+  Object.defineProperty(proto, "clientHeight", { configurable: true, get: () => 400 });
+  Object.defineProperty(proto, "scrollTop", {
+    configurable: true,
+    get: () => top,
+    set: (v: number) => {
+      top = v;
+    },
+  });
+
+  try {
+    renderChat();
+    // The first page renders oldest-first, so landing at 0 would put the
+    // reader on the oldest message with the sentinel already in view.
+    expect(top).toBe(2500);
+  } finally {
+    if (originalScrollHeight) Object.defineProperty(proto, "scrollHeight", originalScrollHeight);
+    if (originalClientHeight) Object.defineProperty(proto, "clientHeight", originalClientHeight);
+    if (originalScrollTop) Object.defineProperty(proto, "scrollTop", originalScrollTop);
+  }
+});
+
+it("re-arms the sentinel when the first fetch settles", async () => {
+  // The sentinel comes into view while page 1 is still in flight. The
+  // observer will not fire again by itself — the sentinel never leaves the
+  // viewport — so the request has to be re-made when the fetch settles.
+  let inFlight = true;
+  const newest = {
+    data: response(PAGE_1, 2, 4),
+    error: undefined,
+    isLoading: false,
+    isFetching: true,
+  };
+  const settled = { ...newest, isFetching: false };
+  const merged = {
+    data: response(PAGE_2.concat(PAGE_1), 2, 4),
+    error: undefined,
+    isLoading: false,
+    isFetching: false,
+  };
+  mockGetConversation.mockImplementation((arg: any) =>
+    arg.page >= 2 ? merged : inFlight ? newest : settled
+  );
+
+  const view = renderChat();
+  scrollTheSentinelIntoView();
+
+  // Nothing while the first page is still loading.
+  expect(pagesAskedFor().some((p) => p === 2)).toBe(false);
+
+  inFlight = false;
+  view.rerender(
+    <Provider
+      store={configureStore({
+        reducer: {
+          auth: (state: any = { userInfo: { user: { _id: "me", name: "Me" }, token: "t" } }) =>
+            state,
+        },
+      })}
+    >
+      <MemoryRouter initialEntries={["/chat/u2"]}>
+        <ChatContent selectedUser="u2" userName="Ada" profilePicture="/ada.png" />
+      </MemoryRouter>
+    </Provider>
+  );
+
+  await waitFor(() => expect(pagesAskedFor()).toContain(2));
+  // Exactly one page further: the re-arm asks once, not in a loop.
+  expect(pagesAskedFor().some((p) => p > 2)).toBe(false);
+});
+
+it("knows how many pages there are when the response says `pages`", async () => {
+  // The conversation route answers `pagination.totalPages`; other handlers
+  // answer a bare `pages`. Reading only the first capped paging at page 1.
+  // Stable objects: a fresh one per call would restart the seeding effect on
+  // every render.
+  const newest = {
+    data: { success: true, count: 2, total: 4, pages: 2, data: PAGE_1 },
+    error: undefined,
+    isLoading: false,
+    isFetching: false,
+  };
+  const merged = {
+    data: { success: true, count: 4, total: 4, pages: 2, data: PAGE_2.concat(PAGE_1) },
+    error: undefined,
+    isLoading: false,
+    isFetching: false,
+  };
+  mockGetConversation.mockImplementation((arg: any) => (arg.page >= 2 ? merged : newest));
+
+  renderChat();
+  fireEvent.click(screen.getByTestId("load-earlier"));
+
+  await waitFor(() => expect(pagesAskedFor()).toContain(2));
 });
 
 // --- The header (H1 review follow-up) --------------------------------------
