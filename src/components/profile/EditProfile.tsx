@@ -59,7 +59,10 @@ const MAX_TOPICS = 10;
 const BIO_LIMIT = 500;
 
 const PAGE = "min-h-screen bg-canvas dark:bg-canvas-dark";
-const COLUMN = "mx-auto w-full max-w-2xl px-3 pb-28 pt-4 sm:px-4";
+// `pb-6`, not the `pb-28` this used to carry: the save bar below is sticky
+// rather than fixed, so it takes its own height out of the flow instead of
+// needing the form to leave a hole underneath itself.
+const COLUMN = "mx-auto w-full max-w-2xl px-3 pb-6 pt-4 sm:px-4";
 
 const FIELD = [
   "w-full rounded-chip border border-line bg-surface px-3.5 py-2.5 text-sm",
@@ -899,10 +902,15 @@ const EditProfile: React.FC = () => {
         </div>
       </div>
 
-      {/* The save bar. Pinned to the viewport so a long form never hides it. */}
+      {/* The save bar. Pinned to the viewport so a long form never hides it --
+          but `sticky`, not `fixed`: a fixed bar is out of the flow, so it sat
+          on top of whatever the document ended with (the footer's legal row)
+          with no way to scroll it clear. Sticky pins it exactly the same way
+          while the form is on screen and still reserves its own height at the
+          foot of the page. */}
       <div
         data-testid="edit-save-bar"
-        className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface/95 backdrop-blur dark:border-line-dark dark:bg-cardbg-dark/95"
+        className="sticky bottom-0 z-20 border-t border-line bg-surface/95 backdrop-blur dark:border-line-dark dark:bg-cardbg-dark/95"
       >
         <div className="mx-auto flex w-full max-w-2xl items-center gap-3 px-3 py-3 sm:px-4">
           <p

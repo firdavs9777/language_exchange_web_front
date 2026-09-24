@@ -597,8 +597,9 @@ $font-display: var(--bt-font-display);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  /* 40, not 36: the only control that closes the mobile menu. */
+  width: 40px;
+  height: 40px;
   background: rgba(255, 255, 255, 0.06);
   border: none;
   border-radius: 10px;
