@@ -34,31 +34,36 @@ it("renders every slide from the data, with its eyebrow, title and body", () => 
   });
 });
 
-it("gives every slide a screenshot with alt text and both sources", () => {
+// `hidden: true` because three of the four slides are aria-hidden at any
+// moment; the art is still in the DOM, which is the point of mounting all four.
+const arts = () => screen.getAllByRole("img", { hidden: true });
+
+it("gives every slide an illustration announced by its own alt text", () => {
   render(<PromoCarousel />);
-  PROMO_SLIDES.forEach((slide) => {
-    const img = screen.getByAltText(slide.image.alt) as HTMLImageElement;
-    expect(img.getAttribute("src")).toBe(slide.image.png);
-    expect(img).toHaveAttribute("width");
-    expect(img).toHaveAttribute("height");
-    const source = img.closest("picture")!.querySelector("source");
-    expect(source).toHaveAttribute("srcset", slide.image.webp);
-    expect(source).toHaveAttribute("type", "image/webp");
+  const svgs = arts();
+  expect(svgs).toHaveLength(PROMO_SLIDES.length);
+  PROMO_SLIDES.forEach((slide, i) => {
+    const svg = svgs[i];
+    expect(svg.tagName.toLowerCase()).toBe("svg");
+    // A viewBox and no width/height is what lets the art fill its slot at any
+    // size; the label is wired through aria-labelledby, not an alt attribute.
+    expect(svg).toHaveAttribute("viewBox");
+    const titleId = svg.getAttribute("aria-labelledby") || "";
+    expect(titleId).toBe(`promo-art-${slide.key}`);
+    const title = document.getElementById(titleId);
+    expect(title && title.tagName.toLowerCase()).toBe("title");
+    expect(title && title.textContent).toBe(slide.alt);
   });
 });
 
-// The first slide is the one a visitor sees; the rest are below the fold of
-// attention, so they must not compete with the hero for bandwidth.
-it("loads the first screenshot eagerly at high priority and the rest lazily", () => {
-  render(<PromoCarousel />);
-  const first = screen.getByAltText(PROMO_SLIDES[0].image.alt);
-  expect(first).toHaveAttribute("loading", "eager");
-  expect(first).toHaveAttribute("fetchpriority", "high");
-  PROMO_SLIDES.slice(1).forEach((slide) => {
-    const img = screen.getByAltText(slide.image.alt);
-    expect(img).toHaveAttribute("loading", "lazy");
-    expect(img).not.toHaveAttribute("fetchpriority");
-  });
+// The whole reason the screenshots went: the band is above the fold on a
+// phone, and four cropped phone photos were four network requests and four
+// chances to reflow. Inline SVG is neither.
+it("fetches no image at all", () => {
+  const { container } = render(<PromoCarousel />);
+  expect(container.querySelectorAll("img")).toHaveLength(0);
+  expect(container.querySelectorAll("picture")).toHaveLength(0);
+  expect(container.innerHTML).not.toContain("/images/app/");
 });
 
 it("shows the first slide and a dot per slide", () => {
@@ -132,6 +137,49 @@ it("exposes the dots as a tablist and marks the current one", () => {
   expect(dots[0]).toHaveAttribute("aria-selected", "false");
 });
 
+// The dots say where you are; the arrows are how you move. Below 640px they
+// sit on the dots' row, above it at the band's edges -- one pair of buttons
+// either way, so there is one accessible name per direction.
+it("steps with the visible arrows, wrapping at both ends", () => {
+  render(<PromoCarousel />);
+  fireEvent.click(screen.getByTestId("promo-next"));
+  expect(currentSlide()).toHaveTextContent(PROMO_SLIDES[1].title);
+  fireEvent.click(screen.getByTestId("promo-prev"));
+  expect(currentSlide()).toHaveTextContent(PROMO_SLIDES[0].title);
+  fireEvent.click(screen.getByTestId("promo-prev"));
+  expect(currentSlide()).toHaveTextContent(PROMO_SLIDES[PROMO_SLIDES.length - 1].title);
+  fireEvent.click(screen.getByTestId("promo-next"));
+  expect(currentSlide()).toHaveTextContent(PROMO_SLIDES[0].title);
+});
+
+it("gives both arrows an accessible name, routed through i18n", () => {
+  const { unmount } = render(<PromoCarousel />);
+  expect(screen.getByRole("button", { name: "Previous slide" })).toBe(
+    screen.getByTestId("promo-prev")
+  );
+  expect(screen.getByRole("button", { name: "Next slide" })).toBe(
+    screen.getByTestId("promo-next")
+  );
+  unmount();
+
+  mockTMode = "echo";
+  render(<PromoCarousel />);
+  expect(screen.getByTestId("promo-prev")).toHaveAttribute("aria-label", "growth.promo.prev");
+  expect(screen.getByTestId("promo-next")).toHaveAttribute("aria-label", "growth.promo.next");
+});
+
+// Steering by hand outranks the timer, the same way hovering does -- and the
+// same mouseleave hands the rotation back.
+it("pauses the rotation while a visitor is stepping by hand", () => {
+  render(<PromoCarousel />);
+  fireEvent.click(screen.getByTestId("promo-next"));
+  act(() => { jest.advanceTimersByTime(12000); });
+  expect(currentSlide()).toHaveTextContent(PROMO_SLIDES[1].title);
+  fireEvent.mouseLeave(screen.getByTestId("promo-carousel"));
+  act(() => { jest.advanceTimersByTime(6000); });
+  expect(currentSlide()).toHaveTextContent(PROMO_SLIDES[2].title);
+});
+
 it("moves with the arrow keys, wrapping at both ends", () => {
   render(<PromoCarousel />);
   const carousel = screen.getByTestId("promo-carousel");
@@ -187,7 +235,8 @@ it("routes every slide string through i18n", () => {
     ["eyebrow", "title", "body", "cta"].forEach((field) =>
       expect(el).toHaveTextContent(promoKey(slide.key, field))
     );
-    expect(within(el).getByAltText(promoKey(slide.key, "alt"))).toBeInTheDocument();
+    const titleId = within(el).getByRole("img", { hidden: true }).getAttribute("aria-labelledby") || "";
+    expect(document.getElementById(titleId)!.textContent).toBe(promoKey(slide.key, "alt"));
   });
 });
 
