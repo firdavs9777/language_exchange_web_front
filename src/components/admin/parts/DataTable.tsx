@@ -59,7 +59,19 @@ const DataTable: React.FC<DataTableProps> = ({
 
   return (
     <div className={className}>
-      <div className="overflow-x-auto">
+      {/*
+        `relative` is load-bearing, not decoration. The cells carry `sr-only`
+        labels, and Tailwind's `sr-only` is `position: absolute` — with no
+        positioned ancestor their containing block is the INITIAL one, so they
+        are laid out against the page rather than against this scroller, and
+        `overflow-x: auto` never clips them. A wide table then stretched the
+        root's scroll width (804px inside a 390px phone viewport on the moments
+        tab, whose Engagement column carries three of them per row), which
+        `body { overflow-x: hidden }` then cut off instead of scrolling.
+        Positioning this box makes it their containing block, so they are
+        clipped and scrolled with the table they belong to.
+      */}
+      <div className="relative overflow-x-auto">
         <table data-testid="data-table" className="w-full border-collapse text-sm">
           {caption ? <caption className="sr-only">{caption}</caption> : null}
           <thead>
