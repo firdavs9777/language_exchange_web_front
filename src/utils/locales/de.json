@@ -69,7 +69,8 @@
       "warning": "Das kann nicht rückgängig gemacht werden.",
       "cancel": "Abbrechen",
       "confirm": "Löschen",
-      "deleting": "Löschen…"
+      "deleting": "Löschen…",
+      "body": "Deine Konversation mit {{name}} löschen?"
     },
     "gif": {
       "title": "GIFs",
@@ -88,8 +89,81 @@
       "noConversationYet": "Starte zuerst die Konversation, um sie anzuheften",
       "pinFailed": "Anheften konnte nicht aktualisiert werden",
       "deleteFailed": "Konversation konnte nicht gelöscht werden",
-      "deleted": "Konversation gelöscht"
-    }
+      "deleted": "Konversation gelöscht",
+      "openProfile": "Profil von {{name}} öffnen",
+      "mute": "Stummschalten",
+      "unmute": "Stummschaltung aufheben",
+      "muted": "Benachrichtigungen stummgeschaltet",
+      "unmuted": "Benachrichtigungen sind wieder aktiv",
+      "muteFailed": "Benachrichtigungen konnten nicht aktualisiert werden",
+      "unpinned": "Nicht mehr angeheftet"
+    },
+    "viewProfileOf": "Profil von {{name}} ansehen",
+    "info": {
+      "title": "Chat-Info",
+      "close": "Schließen",
+      "viewProfile": "Profil ansehen",
+      "media": "Geteilte Medien",
+      "mute": "Benachrichtigungen stummschalten",
+      "unmute": "Benachrichtigungen wieder aktivieren",
+      "muted": "Benachrichtigungen stummgeschaltet",
+      "unmuted": "Benachrichtigungen sind wieder aktiv",
+      "muteFailed": "Benachrichtigungen konnten nicht aktualisiert werden",
+      "wallpaper": "Hintergrundbild",
+      "comingSoon": "Demnächst verfügbar",
+      "block": "Blockieren",
+      "unblock": "Blockierung aufheben",
+      "blockTitle": "{{name}} blockieren?",
+      "blockBody": "Diese Person kann dir dann nicht mehr schreiben und dein Profil nicht mehr sehen.",
+      "unblockTitle": "Blockierung von {{name}} aufheben?",
+      "unblockBody": "Diese Person kann dir dann wieder schreiben.",
+      "blocked": "Blockiert",
+      "unblocked": "Blockierung aufgehoben",
+      "blockFailed": "Das hat nicht geklappt. Versuch es noch mal.",
+      "report": "Melden",
+      "reportTitle": "{{name}} melden",
+      "reportBody": "Sag uns, was nicht stimmt. Jede Meldung wird geprüft.",
+      "reportReason": "Grund",
+      "reportDescription": "Details (optional)",
+      "reportSubmit": "Meldung senden",
+      "reported": "Danke — die Moderation schaut sich das an",
+      "reportFailed": "Meldung konnte nicht gesendet werden",
+      "delete": "Konversation löschen",
+      "cancel": "Abbrechen",
+      "noConversationYet": "Schreib zuerst etwas"
+    },
+    "reportReasons": {
+      "spam": "Spam",
+      "harassment": "Belästigung oder Mobbing",
+      "hate_speech": "Hassrede",
+      "violence": "Gewalt oder Drohungen",
+      "nudity": "Nacktheit oder sexuelle Inhalte",
+      "false_information": "Falschinformationen",
+      "copyright": "Urheberrecht",
+      "other": "Etwas anderes"
+    },
+    "status": {
+      "sending": "Wird gesendet",
+      "sent": "Gesendet",
+      "delivered": "Zugestellt",
+      "read": "Gelesen",
+      "failed": "Fehlgeschlagen"
+    },
+    "loadEarlier": "Frühere Nachrichten laden",
+    "loadingEarlier": "Frühere Nachrichten werden geladen",
+    "suggestCorrection": "Korrektur vorschlagen",
+    "translateThis": "Nachricht übersetzen",
+    "addCaption": "Bildunterschrift hinzufügen...",
+    "conversationStarted": "Unterhaltung begonnen",
+    "correct": "Korrigieren",
+    "daysAgo": "vor {{count}} Tg.",
+    "edit": "Nachricht bearbeiten",
+    "hide_translation": "Ausblenden",
+    "noMessages": "Noch keine Nachrichten",
+    "retry": "Erneut versuchen",
+    "today": "Heute",
+    "translate": "Übersetzen",
+    "yesterday": "Gestern"
   },
   "newChat": {
     "title": "Neuer Chat",
@@ -249,7 +323,8 @@
       "block": "Blockieren",
       "report": "Melden",
       "this_person": "diese Person",
-      "action_failed": "Das hat nicht geklappt. Versuch es noch mal."
+      "action_failed": "Das hat nicht geklappt. Versuch es noch mal.",
+      "unblock": "Blockierung aufheben"
     },
     "buttons": {
       "edit": "Bearbeiten",
@@ -382,6 +457,10 @@
       "label": "Profilbereiche",
       "moments": "Momente",
       "about": "Info"
+    },
+    "unblock": {
+      "title": "Blockierung von {{name}} aufheben?",
+      "body": "Diese Person kann dir dann wieder schreiben und dein Profil wieder sehen."
     }
   },
   "moments_section": {

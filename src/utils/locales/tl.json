@@ -69,7 +69,8 @@
       "warning": "Hindi na maibabalik ang pagkilos na ito.",
       "cancel": "Kanselahin",
       "confirm": "Burahin",
-      "deleting": "Binubura..."
+      "deleting": "Binubura...",
+      "body": "Burahin ang usapan mo kay {{name}}?"
     },
     "gif": {
       "title": "GIF",
@@ -88,8 +89,81 @@
       "noConversationYet": "Simulan muna ang usapan bago i-pin",
       "pinFailed": "Hindi nai-update ang pin",
       "deleteFailed": "Hindi nabura ang usapan",
-      "deleted": "Naburas ang usapan"
-    }
+      "deleted": "Naburas ang usapan",
+      "openProfile": "Buksan ang profile ni {{name}}",
+      "mute": "I-mute",
+      "unmute": "I-unmute",
+      "muted": "Na-mute ang mga notification",
+      "unmuted": "Naka-on na ulit ang mga notification",
+      "muteFailed": "Hindi na-update ang mga notification",
+      "unpinned": "Na-unpin ang usapan"
+    },
+    "viewProfileOf": "Tingnan ang profile ni {{name}}",
+    "info": {
+      "title": "Impormasyon ng chat",
+      "close": "Isara",
+      "viewProfile": "Tingnan ang profile",
+      "media": "Mga ipinamahaging media",
+      "mute": "I-mute ang mga notification",
+      "unmute": "I-unmute ang mga notification",
+      "muted": "Na-mute ang mga notification",
+      "unmuted": "Naka-on na ulit ang mga notification",
+      "muteFailed": "Hindi na-update ang mga notification",
+      "wallpaper": "Wallpaper",
+      "comingSoon": "Malapit na",
+      "block": "I-block",
+      "unblock": "I-unblock",
+      "blockTitle": "I-block {{name}}?",
+      "blockBody": "Hindi ka na niya mame-message at hindi na niya makikita ang profile mo.",
+      "unblockTitle": "I-unblock {{name}}?",
+      "unblockBody": "Makakapag-message na siya ulit sa iyo.",
+      "blocked": "Naka-block",
+      "unblocked": "Na-unblock",
+      "blockFailed": "Hindi ito gumana. Subukan muli.",
+      "report": "I-report",
+      "reportTitle": "I-report si {{name}}",
+      "reportBody": "Sabihin sa amin kung ano ang mali. Sinusuri namin ang bawat report.",
+      "reportReason": "Dahilan",
+      "reportDescription": "Detalye (opsyonal)",
+      "reportSubmit": "Ipadala ang report",
+      "reported": "Salamat — susuriin ito ng mga moderator",
+      "reportFailed": "Hindi naipadala ang report",
+      "delete": "Burahin ang usapan",
+      "cancel": "Kanselahin",
+      "noConversationYet": "Magsimula muna ng usapan"
+    },
+    "reportReasons": {
+      "spam": "Spam",
+      "harassment": "Panliligalig o pambu-bully",
+      "hate_speech": "Hate speech",
+      "violence": "Karahasan o banta",
+      "nudity": "Kahubaran o sekswal na content",
+      "false_information": "Maling impormasyon",
+      "copyright": "Copyright",
+      "other": "Iba pa"
+    },
+    "status": {
+      "sending": "Ipinapadala",
+      "sent": "Naipadala",
+      "delivered": "Naihatid",
+      "read": "Nabasa",
+      "failed": "Nabigo"
+    },
+    "loadEarlier": "I-load ang mga naunang mensahe",
+    "loadingEarlier": "Nilo-load ang mga naunang mensahe",
+    "suggestCorrection": "Magmungkahi ng pagwawasto",
+    "translateThis": "Isalin ang mensaheng ito",
+    "addCaption": "Magdagdag ng caption...",
+    "conversationStarted": "Nagsimula ang usapan",
+    "correct": "Tama",
+    "daysAgo": "{{count}}a nakalipas",
+    "edit": "I-edit ang mensahe",
+    "hide_translation": "Itago",
+    "noMessages": "Wala pang mensahe",
+    "retry": "Subukan muli",
+    "today": "Ngayon",
+    "translate": "Isalin",
+    "yesterday": "Kahapon"
   },
   "newChat": {
     "title": "Bagong Chat",
@@ -249,7 +323,8 @@
       "block": "I-block",
       "report": "I-report",
       "this_person": "ang taong ito",
-      "action_failed": "Hindi ito gumana. Subukan muli."
+      "action_failed": "Hindi ito gumana. Subukan muli.",
+      "unblock": "I-unblock"
     },
     "buttons": {
       "edit": "I-edit",
@@ -382,6 +457,10 @@
       "label": "Mga seksyon ng profile",
       "moments": "Mga Sandali",
       "about": "Tungkol"
+    },
+    "unblock": {
+      "title": "I-unblock {{name}}?",
+      "body": "Makakapag-message ulit siya sa iyo at makikita ulit ang profile mo."
     }
   },
   "moments_section": {

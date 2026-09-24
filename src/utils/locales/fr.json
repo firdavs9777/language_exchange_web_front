@@ -69,7 +69,8 @@
       "warning": "Cette action est irréversible.",
       "cancel": "Annuler",
       "confirm": "Supprimer",
-      "deleting": "Suppression..."
+      "deleting": "Suppression...",
+      "body": "Supprimer votre conversation avec {{name}} ?"
     },
     "gif": {
       "title": "GIFs",
@@ -88,8 +89,81 @@
       "noConversationYet": "Démarrez d'abord la conversation pour l'épingler",
       "pinFailed": "Impossible de modifier l'épinglage",
       "deleteFailed": "Impossible de supprimer la conversation",
-      "deleted": "Conversation supprimée"
-    }
+      "deleted": "Conversation supprimée",
+      "openProfile": "Ouvrir le profil de {{name}}",
+      "mute": "Mettre en sourdine",
+      "unmute": "Réactiver",
+      "muted": "Notifications en sourdine",
+      "unmuted": "Notifications réactivées",
+      "muteFailed": "Impossible de modifier les notifications",
+      "unpinned": "Conversation désépinglée"
+    },
+    "viewProfileOf": "Voir le profil de {{name}}",
+    "info": {
+      "title": "Infos sur la conversation",
+      "close": "Fermer",
+      "viewProfile": "Voir le profil",
+      "media": "Médias partagés",
+      "mute": "Mettre les notifications en sourdine",
+      "unmute": "Réactiver les notifications",
+      "muted": "Notifications en sourdine",
+      "unmuted": "Notifications réactivées",
+      "muteFailed": "Impossible de modifier les notifications",
+      "wallpaper": "Fond d'écran",
+      "comingSoon": "Bientôt disponible",
+      "block": "Bloquer",
+      "unblock": "Débloquer",
+      "blockTitle": "Bloquer {{name}} ?",
+      "blockBody": "Cette personne ne pourra plus vous envoyer de messages ni voir votre profil.",
+      "unblockTitle": "Débloquer {{name}} ?",
+      "unblockBody": "Cette personne pourra à nouveau vous envoyer des messages.",
+      "blocked": "Bloqué",
+      "unblocked": "Débloqué",
+      "blockFailed": "Ça n'a pas fonctionné. Réessayez.",
+      "report": "Signaler",
+      "reportTitle": "Signaler {{name}}",
+      "reportBody": "Dites-nous ce qui ne va pas. Chaque signalement est examiné.",
+      "reportReason": "Motif",
+      "reportDescription": "Détails (facultatif)",
+      "reportSubmit": "Envoyer le signalement",
+      "reported": "Merci — l'équipe de modération va y jeter un œil",
+      "reportFailed": "Impossible d'envoyer le signalement",
+      "delete": "Supprimer la conversation",
+      "cancel": "Annuler",
+      "noConversationYet": "Écrivez d'abord quelque chose"
+    },
+    "reportReasons": {
+      "spam": "Spam",
+      "harassment": "Harcèlement",
+      "hate_speech": "Discours haineux",
+      "violence": "Violence ou menaces",
+      "nudity": "Nudité ou contenu sexuel",
+      "false_information": "Fausses informations",
+      "copyright": "Droits d'auteur",
+      "other": "Autre chose"
+    },
+    "status": {
+      "sending": "Envoi en cours",
+      "sent": "Envoyé",
+      "delivered": "Distribué",
+      "read": "Lu",
+      "failed": "Échec"
+    },
+    "loadEarlier": "Charger les messages précédents",
+    "loadingEarlier": "Chargement des messages précédents",
+    "suggestCorrection": "Suggérer une correction",
+    "translateThis": "Traduire ce message",
+    "addCaption": "Ajouter une légende...",
+    "conversationStarted": "Conversation commencée",
+    "correct": "Corriger",
+    "daysAgo": "il y a {{count}} j",
+    "edit": "Modifier le message",
+    "hide_translation": "Masquer",
+    "noMessages": "Pas encore de messages",
+    "retry": "Réessayer",
+    "today": "Aujourd'hui",
+    "translate": "Traduire",
+    "yesterday": "Hier"
   },
   "notifications": "Notifications",
   "moments": "Moments",
@@ -230,7 +304,8 @@
       "block": "Bloquer",
       "report": "Signaler",
       "this_person": "cette personne",
-      "action_failed": "Ça n'a pas fonctionné. Réessayez."
+      "action_failed": "Ça n'a pas fonctionné. Réessayez.",
+      "unblock": "Débloquer"
     },
     "buttons": {
       "edit": "Modifier",
@@ -363,6 +438,10 @@
       "label": "Sections du profil",
       "moments": "Moments",
       "about": "À propos"
+    },
+    "unblock": {
+      "title": "Débloquer {{name}} ?",
+      "body": "Cette personne pourra à nouveau vous envoyer des messages et voir votre profil."
     }
   },
   "moments_section": {

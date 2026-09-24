@@ -69,7 +69,8 @@
       "warning": "Tindakan ini tidak dapat dibatalkan.",
       "cancel": "Batal",
       "confirm": "Hapus",
-      "deleting": "Menghapus..."
+      "deleting": "Menghapus...",
+      "body": "Hapus percakapan Anda dengan {{name}}?"
     },
     "gif": {
       "title": "GIF",
@@ -88,8 +89,81 @@
       "noConversationYet": "Mulai percakapan terlebih dahulu untuk menyematkannya",
       "pinFailed": "Gagal memperbarui sematan",
       "deleteFailed": "Gagal menghapus percakapan",
-      "deleted": "Percakapan dihapus"
-    }
+      "deleted": "Percakapan dihapus",
+      "openProfile": "Buka profil {{name}}",
+      "mute": "Bisukan",
+      "unmute": "Aktifkan suara",
+      "muted": "Notifikasi dibisukan",
+      "unmuted": "Notifikasi aktif kembali",
+      "muteFailed": "Gagal memperbarui notifikasi",
+      "unpinned": "Sematan percakapan dilepas"
+    },
+    "viewProfileOf": "Lihat profil {{name}}",
+    "info": {
+      "title": "Info obrolan",
+      "close": "Tutup",
+      "viewProfile": "Lihat profil",
+      "media": "Media yang dibagikan",
+      "mute": "Bisukan notifikasi",
+      "unmute": "Aktifkan notifikasi",
+      "muted": "Notifikasi dibisukan",
+      "unmuted": "Notifikasi aktif kembali",
+      "muteFailed": "Gagal memperbarui notifikasi",
+      "wallpaper": "Wallpaper",
+      "comingSoon": "Segera hadir",
+      "block": "Blokir",
+      "unblock": "Buka blokir",
+      "blockTitle": "Blokir {{name}}?",
+      "blockBody": "Dia tidak akan bisa mengirim pesan kepada Anda atau melihat profil Anda.",
+      "unblockTitle": "Buka blokir {{name}}?",
+      "unblockBody": "Dia akan bisa mengirim pesan kepada Anda lagi.",
+      "blocked": "Diblokir",
+      "unblocked": "Blokir dibuka",
+      "blockFailed": "Gagal. Silakan coba lagi.",
+      "report": "Laporkan",
+      "reportTitle": "Laporkan {{name}}",
+      "reportBody": "Beri tahu kami apa yang salah. Setiap laporan kami tinjau.",
+      "reportReason": "Alasan",
+      "reportDescription": "Detail (opsional)",
+      "reportSubmit": "Kirim laporan",
+      "reported": "Terima kasih — tim moderator akan memeriksanya",
+      "reportFailed": "Gagal mengirim laporan",
+      "delete": "Hapus percakapan",
+      "cancel": "Batal",
+      "noConversationYet": "Kirim pesan dulu"
+    },
+    "reportReasons": {
+      "spam": "Spam",
+      "harassment": "Pelecehan atau perundungan",
+      "hate_speech": "Ujaran kebencian",
+      "violence": "Kekerasan atau ancaman",
+      "nudity": "Ketelanjangan atau konten seksual",
+      "false_information": "Informasi palsu",
+      "copyright": "Hak cipta",
+      "other": "Lainnya"
+    },
+    "status": {
+      "sending": "Mengirim",
+      "sent": "Terkirim",
+      "delivered": "Diterima",
+      "read": "Dibaca",
+      "failed": "Gagal"
+    },
+    "loadEarlier": "Muat pesan sebelumnya",
+    "loadingEarlier": "Memuat pesan sebelumnya",
+    "suggestCorrection": "Sarankan koreksi",
+    "translateThis": "Terjemahkan pesan ini",
+    "addCaption": "Tambahkan keterangan...",
+    "conversationStarted": "Percakapan dimulai",
+    "correct": "Benar",
+    "daysAgo": "{{count}} hari lalu",
+    "edit": "Edit pesan",
+    "hide_translation": "Sembunyikan",
+    "noMessages": "Belum ada pesan",
+    "retry": "Coba lagi",
+    "today": "Hari Ini",
+    "translate": "Terjemahkan",
+    "yesterday": "Kemarin"
   },
   "newChat": {
     "title": "Obrolan Baru",
@@ -249,7 +323,8 @@
       "block": "Blokir",
       "report": "Laporkan",
       "this_person": "orang ini",
-      "action_failed": "Gagal. Silakan coba lagi."
+      "action_failed": "Gagal. Silakan coba lagi.",
+      "unblock": "Buka blokir"
     },
     "buttons": {
       "edit": "Edit",
@@ -382,6 +457,10 @@
       "label": "Bagian profil",
       "moments": "Momen",
       "about": "Tentang"
+    },
+    "unblock": {
+      "title": "Buka blokir {{name}}?",
+      "body": "Dia akan bisa mengirim pesan dan melihat profil Anda lagi."
     }
   },
   "moments_section": {

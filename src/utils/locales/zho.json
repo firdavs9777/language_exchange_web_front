@@ -49,7 +49,14 @@
       "noConversationYet": "先开始对话才能置顶",
       "pinFailed": "置顶状态更新失败",
       "deleteFailed": "对话删除失败",
-      "deleted": "对话已删除"
+      "deleted": "对话已删除",
+      "openProfile": "打开 {{name}} 的资料",
+      "mute": "静音",
+      "unmute": "取消静音",
+      "muted": "已开启静音",
+      "unmuted": "已恢复通知",
+      "muteFailed": "通知设置更新失败",
+      "unpinned": "已取消置顶"
     },
     "deleteModal": {
       "title": "删除对话",
@@ -57,7 +64,8 @@
       "warning": "删除后无法恢复。",
       "cancel": "取消",
       "confirm": "删除",
-      "deleting": "删除中…"
+      "deleting": "删除中…",
+      "body": "确定要删除和 {{name}} 的对话吗？"
     },
     "gif": {
       "title": "GIF",
@@ -89,7 +97,73 @@
     "justNow": "刚刚",
     "minutesAgo": "{{count}} 分钟前",
     "hoursAgo": "{{count}} 小时前",
-    "unknownUser": "未知用户"
+    "unknownUser": "未知用户",
+    "viewProfileOf": "查看 {{name}} 的资料",
+    "info": {
+      "title": "聊天信息",
+      "close": "关闭",
+      "viewProfile": "查看资料",
+      "media": "共享的媒体",
+      "mute": "关闭通知",
+      "unmute": "开启通知",
+      "muted": "已开启静音",
+      "unmuted": "已恢复通知",
+      "muteFailed": "通知设置更新失败",
+      "wallpaper": "聊天背景",
+      "comingSoon": "敬请期待",
+      "block": "拉黑",
+      "unblock": "取消拉黑",
+      "blockTitle": "确定拉黑 {{name}}？",
+      "blockBody": "对方将无法给你发消息，也看不到你的资料。",
+      "unblockTitle": "确定取消拉黑 {{name}}？",
+      "unblockBody": "对方将可以再次给你发消息。",
+      "blocked": "已拉黑",
+      "unblocked": "已取消拉黑",
+      "blockFailed": "操作失败，请再试一次。",
+      "report": "举报",
+      "reportTitle": "举报 {{name}}",
+      "reportBody": "告诉我们哪里有问题。每一条举报我们都会查看。",
+      "reportReason": "举报原因",
+      "reportDescription": "详细说明（可选）",
+      "reportSubmit": "提交举报",
+      "reported": "谢谢，管理团队会尽快查看",
+      "reportFailed": "举报发送失败",
+      "delete": "删除对话",
+      "cancel": "取消",
+      "noConversationYet": "先发一条消息吧"
+    },
+    "reportReasons": {
+      "spam": "垃圾信息",
+      "harassment": "骚扰或欺凌",
+      "hate_speech": "仇恨言论",
+      "violence": "暴力或威胁",
+      "nudity": "裸露或性内容",
+      "false_information": "虚假信息",
+      "copyright": "版权问题",
+      "other": "其他"
+    },
+    "status": {
+      "sending": "发送中",
+      "sent": "已发送",
+      "delivered": "已送达",
+      "read": "已读",
+      "failed": "发送失败"
+    },
+    "loadEarlier": "加载更早的消息",
+    "loadingEarlier": "正在加载更早的消息",
+    "suggestCorrection": "提出修改建议",
+    "translateThis": "翻译这条消息",
+    "addCaption": "添加说明…",
+    "conversationStarted": "对话已开始",
+    "correct": "修改",
+    "daysAgo": "{{count}} 天前",
+    "edit": "编辑消息",
+    "hide_translation": "隐藏",
+    "noMessages": "还没有消息",
+    "retry": "重试",
+    "today": "今天",
+    "translate": "翻译",
+    "yesterday": "昨天"
   },
   "newChat": {
     "title": "新建聊天",
@@ -249,7 +323,8 @@
       "block": "拉黑",
       "report": "举报",
       "this_person": "这个人",
-      "action_failed": "操作失败，请再试一次。"
+      "action_failed": "操作失败，请再试一次。",
+      "unblock": "取消拉黑"
     },
     "buttons": {
       "edit": "编辑",
@@ -382,6 +457,10 @@
       "label": "个人资料分区",
       "moments": "动态",
       "about": "关于"
+    },
+    "unblock": {
+      "title": "确定取消拉黑 {{name}}？",
+      "body": "对方将可以再次给你发消息，也能看到你的资料。"
     }
   },
   "moments_section": {

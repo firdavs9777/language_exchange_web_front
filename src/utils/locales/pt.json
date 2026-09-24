@@ -69,7 +69,8 @@
       "warning": "Esta ação não pode ser desfeita.",
       "cancel": "Cancelar",
       "confirm": "Excluir",
-      "deleting": "Excluindo..."
+      "deleting": "Excluindo...",
+      "body": "Excluir sua conversa com {{name}}?"
     },
     "gif": {
       "title": "GIFs",
@@ -88,8 +89,81 @@
       "noConversationYet": "Inicie a conversa primeiro para fixá-la",
       "pinFailed": "Não foi possível atualizar a fixação",
       "deleteFailed": "Não foi possível excluir a conversa",
-      "deleted": "Conversa excluída"
-    }
+      "deleted": "Conversa excluída",
+      "openProfile": "Abrir o perfil de {{name}}",
+      "mute": "Silenciar",
+      "unmute": "Reativar",
+      "muted": "Notificações silenciadas",
+      "unmuted": "As notificações estão ativas de novo",
+      "muteFailed": "Não foi possível atualizar as notificações",
+      "unpinned": "Conversa desafixada"
+    },
+    "viewProfileOf": "Ver o perfil de {{name}}",
+    "info": {
+      "title": "Informações da conversa",
+      "close": "Fechar",
+      "viewProfile": "Ver perfil",
+      "media": "Mídia compartilhada",
+      "mute": "Silenciar notificações",
+      "unmute": "Reativar notificações",
+      "muted": "Notificações silenciadas",
+      "unmuted": "As notificações estão ativas de novo",
+      "muteFailed": "Não foi possível atualizar as notificações",
+      "wallpaper": "Papel de parede",
+      "comingSoon": "Em breve",
+      "block": "Bloquear",
+      "unblock": "Desbloquear",
+      "blockTitle": "Bloquear {{name}}?",
+      "blockBody": "Essa pessoa não vai poder te mandar mensagem nem ver seu perfil.",
+      "unblockTitle": "Desbloquear {{name}}?",
+      "unblockBody": "Essa pessoa vai poder te mandar mensagem de novo.",
+      "blocked": "Bloqueado",
+      "unblocked": "Desbloqueado",
+      "blockFailed": "Não deu certo. Tente novamente.",
+      "report": "Denunciar",
+      "reportTitle": "Denunciar {{name}}",
+      "reportBody": "Conte para a gente o que houve. Toda denúncia é analisada.",
+      "reportReason": "Motivo",
+      "reportDescription": "Detalhes (opcional)",
+      "reportSubmit": "Enviar denúncia",
+      "reported": "Obrigado — a moderação vai dar uma olhada",
+      "reportFailed": "Não foi possível enviar a denúncia",
+      "delete": "Excluir conversa",
+      "cancel": "Cancelar",
+      "noConversationYet": "Escreva alguma coisa primeiro"
+    },
+    "reportReasons": {
+      "spam": "Spam",
+      "harassment": "Assédio ou bullying",
+      "hate_speech": "Discurso de ódio",
+      "violence": "Violência ou ameaças",
+      "nudity": "Nudez ou conteúdo sexual",
+      "false_information": "Informação falsa",
+      "copyright": "Direitos autorais",
+      "other": "Outra coisa"
+    },
+    "status": {
+      "sending": "Enviando",
+      "sent": "Enviada",
+      "delivered": "Entregue",
+      "read": "Lida",
+      "failed": "Falhou"
+    },
+    "loadEarlier": "Carregar mensagens anteriores",
+    "loadingEarlier": "Carregando mensagens anteriores",
+    "suggestCorrection": "Sugerir uma correção",
+    "translateThis": "Traduzir esta mensagem",
+    "addCaption": "Adicionar uma legenda...",
+    "conversationStarted": "Conversa iniciada",
+    "correct": "Corrigir",
+    "daysAgo": "{{count}}d atrás",
+    "edit": "Editar mensagem",
+    "hide_translation": "Ocultar",
+    "noMessages": "Ainda não há mensagens",
+    "retry": "Tentar novamente",
+    "today": "Hoje",
+    "translate": "Traduzir",
+    "yesterday": "Ontem"
   },
   "notifications": "Notificações",
   "moments": "Momentos",
@@ -230,7 +304,8 @@
       "block": "Bloquear",
       "report": "Denunciar",
       "this_person": "esta pessoa",
-      "action_failed": "Não deu certo. Tente novamente."
+      "action_failed": "Não deu certo. Tente novamente.",
+      "unblock": "Desbloquear"
     },
     "buttons": {
       "edit": "Editar",
@@ -363,6 +438,10 @@
       "label": "Seções do perfil",
       "moments": "Momentos",
       "about": "Sobre"
+    },
+    "unblock": {
+      "title": "Desbloquear {{name}}?",
+      "body": "Essa pessoa vai poder te mandar mensagem e ver seu perfil de novo."
     }
   },
   "moments_section": {

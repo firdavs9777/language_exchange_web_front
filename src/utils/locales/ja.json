@@ -49,7 +49,14 @@
       "noConversationYet": "ピン留めするには、先に会話を始めてください",
       "pinFailed": "ピン留めを変更できませんでした",
       "deleteFailed": "会話を削除できませんでした",
-      "deleted": "会話を削除しました"
+      "deleted": "会話を削除しました",
+      "openProfile": "{{name}}さんのプロフィールを開く",
+      "mute": "通知をオフ",
+      "unmute": "通知をオン",
+      "muted": "通知をオフにしました",
+      "unmuted": "通知が再びオンになりました",
+      "muteFailed": "通知設定を変更できませんでした",
+      "unpinned": "ピン留めを解除しました"
     },
     "deleteModal": {
       "title": "会話を削除",
@@ -57,7 +64,8 @@
       "warning": "削除すると元に戻せません。",
       "cancel": "キャンセル",
       "confirm": "削除",
-      "deleting": "削除中…"
+      "deleting": "削除中…",
+      "body": "{{name}}さんとの会話を削除しますか？"
     },
     "gif": {
       "title": "GIF",
@@ -89,7 +97,73 @@
     "justNow": "たった今",
     "minutesAgo": "{{count}}分前",
     "hoursAgo": "{{count}}時間前",
-    "unknownUser": "不明なユーザー"
+    "unknownUser": "不明なユーザー",
+    "viewProfileOf": "{{name}}さんのプロフィールを見る",
+    "info": {
+      "title": "チャット情報",
+      "close": "閉じる",
+      "viewProfile": "プロフィールを見る",
+      "media": "共有したメディア",
+      "mute": "通知をオフにする",
+      "unmute": "通知をオンにする",
+      "muted": "通知をオフにしました",
+      "unmuted": "通知が再びオンになりました",
+      "muteFailed": "通知設定を変更できませんでした",
+      "wallpaper": "壁紙",
+      "comingSoon": "近日公開",
+      "block": "ブロック",
+      "unblock": "ブロック解除",
+      "blockTitle": "{{name}}さんをブロックしますか？",
+      "blockBody": "ブロックすると、相手はあなたにメッセージを送ったり、プロフィールを見たりできなくなります。",
+      "unblockTitle": "{{name}}さんのブロックを解除しますか？",
+      "unblockBody": "ブロックを解除すると、相手は再びメッセージを送れるようになります。",
+      "blocked": "ブロック済み",
+      "unblocked": "ブロック解除済み",
+      "blockFailed": "うまくいきませんでした。もう一度お試しください。",
+      "report": "報告",
+      "reportTitle": "{{name}}さんを報告",
+      "reportBody": "気になった点を教えてください。すべての報告を確認しています。",
+      "reportReason": "理由",
+      "reportDescription": "詳細（任意）",
+      "reportSubmit": "報告を送信",
+      "reported": "ありがとうございます。運営チームが確認します",
+      "reportFailed": "報告を送信できませんでした",
+      "delete": "会話を削除",
+      "cancel": "キャンセル",
+      "noConversationYet": "先にメッセージを送ってください"
+    },
+    "reportReasons": {
+      "spam": "スパム",
+      "harassment": "嫌がらせ・いじめ",
+      "hate_speech": "ヘイトスピーチ",
+      "violence": "暴力・脅迫",
+      "nudity": "ヌードまたは性的なコンテンツ",
+      "false_information": "誤った情報",
+      "copyright": "著作権",
+      "other": "その他"
+    },
+    "status": {
+      "sending": "送信中",
+      "sent": "送信済み",
+      "delivered": "配信済み",
+      "read": "既読",
+      "failed": "送信失敗"
+    },
+    "loadEarlier": "以前のメッセージを読み込む",
+    "loadingEarlier": "以前のメッセージを読み込み中",
+    "suggestCorrection": "修正を提案",
+    "translateThis": "このメッセージを翻訳",
+    "addCaption": "キャプションを追加...",
+    "conversationStarted": "会話が始まりました",
+    "correct": "修正",
+    "daysAgo": "{{count}}日前",
+    "edit": "メッセージを編集",
+    "hide_translation": "非表示",
+    "noMessages": "まだメッセージがありません",
+    "retry": "再試行",
+    "today": "今日",
+    "translate": "翻訳",
+    "yesterday": "昨日"
   },
   "newChat": {
     "title": "新しいチャット",
@@ -249,7 +323,8 @@
       "block": "ブロック",
       "report": "報告",
       "this_person": "この人",
-      "action_failed": "うまくいきませんでした。もう一度お試しください。"
+      "action_failed": "うまくいきませんでした。もう一度お試しください。",
+      "unblock": "ブロック解除"
     },
     "buttons": {
       "edit": "編集",
@@ -382,6 +457,10 @@
       "label": "プロフィールセクション",
       "moments": "モーメント",
       "about": "自己紹介"
+    },
+    "unblock": {
+      "title": "{{name}}さんのブロックを解除しますか？",
+      "body": "ブロックを解除すると、相手は再びメッセージを送ったり、プロフィールを見たりできるようになります。"
     }
   },
   "moments_section": {

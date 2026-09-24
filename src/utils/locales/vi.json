@@ -69,7 +69,8 @@
       "warning": "Hành động này không thể hoàn tác.",
       "cancel": "Hủy",
       "confirm": "Xóa",
-      "deleting": "Đang xóa..."
+      "deleting": "Đang xóa...",
+      "body": "Xóa cuộc trò chuyện với {{name}}?"
     },
     "gif": {
       "title": "GIF",
@@ -88,8 +89,81 @@
       "noConversationYet": "Hãy bắt đầu cuộc trò chuyện trước khi ghim",
       "pinFailed": "Không thể cập nhật ghim",
       "deleteFailed": "Không thể xóa cuộc trò chuyện",
-      "deleted": "Đã xóa cuộc trò chuyện"
-    }
+      "deleted": "Đã xóa cuộc trò chuyện",
+      "openProfile": "Mở hồ sơ của {{name}}",
+      "mute": "Tắt thông báo",
+      "unmute": "Bật thông báo",
+      "muted": "Đã tắt thông báo",
+      "unmuted": "Đã bật lại thông báo",
+      "muteFailed": "Không thể cập nhật thông báo",
+      "unpinned": "Đã bỏ ghim cuộc trò chuyện"
+    },
+    "viewProfileOf": "Xem hồ sơ của {{name}}",
+    "info": {
+      "title": "Thông tin trò chuyện",
+      "close": "Đóng",
+      "viewProfile": "Xem hồ sơ",
+      "media": "Nội dung đã chia sẻ",
+      "mute": "Tắt thông báo",
+      "unmute": "Bật thông báo",
+      "muted": "Đã tắt thông báo",
+      "unmuted": "Đã bật lại thông báo",
+      "muteFailed": "Không thể cập nhật thông báo",
+      "wallpaper": "Hình nền",
+      "comingSoon": "Sắp ra mắt",
+      "block": "Chặn",
+      "unblock": "Bỏ chặn",
+      "blockTitle": "Chặn {{name}}?",
+      "blockBody": "Người này sẽ không thể nhắn tin cho bạn hoặc xem hồ sơ của bạn.",
+      "unblockTitle": "Bỏ chặn {{name}}?",
+      "unblockBody": "Người này sẽ có thể nhắn tin lại cho bạn.",
+      "blocked": "Đã chặn",
+      "unblocked": "Đã bỏ chặn",
+      "blockFailed": "Chưa thực hiện được. Vui lòng thử lại.",
+      "report": "Báo cáo",
+      "reportTitle": "Báo cáo {{name}}",
+      "reportBody": "Hãy cho chúng tôi biết vấn đề là gì. Mọi báo cáo đều được xem xét.",
+      "reportReason": "Lý do",
+      "reportDescription": "Chi tiết (không bắt buộc)",
+      "reportSubmit": "Gửi báo cáo",
+      "reported": "Cảm ơn bạn — đội ngũ kiểm duyệt sẽ xem xét",
+      "reportFailed": "Không thể gửi báo cáo",
+      "delete": "Xóa cuộc trò chuyện",
+      "cancel": "Hủy",
+      "noConversationYet": "Hãy nhắn gì đó trước"
+    },
+    "reportReasons": {
+      "spam": "Spam",
+      "harassment": "Quấy rối hoặc bắt nạt",
+      "hate_speech": "Phát ngôn thù ghét",
+      "violence": "Bạo lực hoặc đe dọa",
+      "nudity": "Nội dung khỏa thân hoặc khiêu dâm",
+      "false_information": "Thông tin sai lệch",
+      "copyright": "Bản quyền",
+      "other": "Vấn đề khác"
+    },
+    "status": {
+      "sending": "Đang gửi",
+      "sent": "Đã gửi",
+      "delivered": "Đã nhận",
+      "read": "Đã xem",
+      "failed": "Gửi thất bại"
+    },
+    "loadEarlier": "Tải tin nhắn trước đó",
+    "loadingEarlier": "Đang tải tin nhắn trước đó",
+    "suggestCorrection": "Đề xuất chỉnh sửa",
+    "translateThis": "Dịch tin nhắn này",
+    "addCaption": "Thêm chú thích...",
+    "conversationStarted": "Cuộc trò chuyện đã bắt đầu",
+    "correct": "Sửa",
+    "daysAgo": "{{count}} ngày trước",
+    "edit": "Chỉnh sửa tin nhắn",
+    "hide_translation": "Ẩn",
+    "noMessages": "Chưa có tin nhắn nào",
+    "retry": "Thử lại",
+    "today": "Hôm nay",
+    "translate": "Dịch",
+    "yesterday": "Hôm qua"
   },
   "newChat": {
     "title": "Trò Chuyện Mới",
@@ -249,7 +323,8 @@
       "block": "Chặn",
       "report": "Báo cáo",
       "this_person": "người này",
-      "action_failed": "Chưa thực hiện được. Vui lòng thử lại."
+      "action_failed": "Chưa thực hiện được. Vui lòng thử lại.",
+      "unblock": "Bỏ chặn"
     },
     "buttons": {
       "edit": "Chỉnh Sửa",
@@ -382,6 +457,10 @@
       "label": "Các mục hồ sơ",
       "moments": "Khoảnh Khắc",
       "about": "Giới Thiệu"
+    },
+    "unblock": {
+      "title": "Bỏ chặn {{name}}?",
+      "body": "Người này sẽ có thể nhắn tin cho bạn và xem hồ sơ của bạn trở lại."
     }
   },
   "moments_section": {

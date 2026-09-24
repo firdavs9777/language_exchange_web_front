@@ -69,7 +69,8 @@
       "warning": "Esta acción no se puede deshacer.",
       "cancel": "Cancelar",
       "confirm": "Eliminar",
-      "deleting": "Eliminando..."
+      "deleting": "Eliminando...",
+      "body": "¿Eliminar tu conversación con {{name}}?"
     },
     "gif": {
       "title": "GIFs",
@@ -88,8 +89,81 @@
       "noConversationYet": "Inicia la conversación primero para fijarla",
       "pinFailed": "No se pudo actualizar el fijado",
       "deleteFailed": "No se pudo eliminar la conversación",
-      "deleted": "Conversación eliminada"
-    }
+      "deleted": "Conversación eliminada",
+      "openProfile": "Abrir el perfil de {{name}}",
+      "mute": "Silenciar",
+      "unmute": "Dejar de silenciar",
+      "muted": "Notificaciones silenciadas",
+      "unmuted": "Las notificaciones están activas de nuevo",
+      "muteFailed": "No se pudieron actualizar las notificaciones",
+      "unpinned": "Conversación desfijada"
+    },
+    "viewProfileOf": "Ver el perfil de {{name}}",
+    "info": {
+      "title": "Información de la conversación",
+      "close": "Cerrar",
+      "viewProfile": "Ver perfil",
+      "media": "Multimedia compartida",
+      "mute": "Silenciar notificaciones",
+      "unmute": "Dejar de silenciar notificaciones",
+      "muted": "Notificaciones silenciadas",
+      "unmuted": "Las notificaciones están activas de nuevo",
+      "muteFailed": "No se pudieron actualizar las notificaciones",
+      "wallpaper": "Fondo de pantalla",
+      "comingSoon": "Próximamente",
+      "block": "Bloquear",
+      "unblock": "Desbloquear",
+      "blockTitle": "¿Bloquear a {{name}}?",
+      "blockBody": "No podrá enviarte mensajes ni ver tu perfil.",
+      "unblockTitle": "¿Desbloquear a {{name}}?",
+      "unblockBody": "Podrá volver a enviarte mensajes.",
+      "blocked": "Bloqueado",
+      "unblocked": "Desbloqueado",
+      "blockFailed": "No funcionó. Inténtalo de nuevo.",
+      "report": "Reportar",
+      "reportTitle": "Reportar a {{name}}",
+      "reportBody": "Cuéntanos qué pasa. Revisamos todos los reportes.",
+      "reportReason": "Motivo",
+      "reportDescription": "Detalles (opcional)",
+      "reportSubmit": "Enviar reporte",
+      "reported": "Gracias — el equipo de moderación lo revisará",
+      "reportFailed": "No se pudo enviar el reporte",
+      "delete": "Eliminar conversación",
+      "cancel": "Cancelar",
+      "noConversationYet": "Escribe algo primero"
+    },
+    "reportReasons": {
+      "spam": "Spam",
+      "harassment": "Acoso o intimidación",
+      "hate_speech": "Discurso de odio",
+      "violence": "Violencia o amenazas",
+      "nudity": "Desnudez o contenido sexual",
+      "false_information": "Información falsa",
+      "copyright": "Derechos de autor",
+      "other": "Otra cosa"
+    },
+    "status": {
+      "sending": "Enviando",
+      "sent": "Enviado",
+      "delivered": "Entregado",
+      "read": "Leído",
+      "failed": "Fallido"
+    },
+    "loadEarlier": "Cargar mensajes anteriores",
+    "loadingEarlier": "Cargando mensajes anteriores",
+    "suggestCorrection": "Sugerir una corrección",
+    "translateThis": "Traducir este mensaje",
+    "addCaption": "Agregar un pie de foto...",
+    "conversationStarted": "Conversación iniciada",
+    "correct": "Corregir",
+    "daysAgo": "hace {{count}}d",
+    "edit": "Editar mensaje",
+    "hide_translation": "Ocultar",
+    "noMessages": "Aún no hay mensajes",
+    "retry": "Reintentar",
+    "today": "Hoy",
+    "translate": "Traducir",
+    "yesterday": "Ayer"
   },
   "notifications": "Notificaciones",
   "moments": "Momentos",
@@ -230,7 +304,8 @@
       "block": "Bloquear",
       "report": "Reportar",
       "this_person": "esta persona",
-      "action_failed": "No funcionó. Inténtalo de nuevo."
+      "action_failed": "No funcionó. Inténtalo de nuevo.",
+      "unblock": "Desbloquear"
     },
     "buttons": {
       "edit": "Editar",
@@ -363,6 +438,10 @@
       "label": "Secciones del perfil",
       "moments": "Momentos",
       "about": "Acerca de"
+    },
+    "unblock": {
+      "title": "¿Desbloquear a {{name}}?",
+      "body": "Podrá volver a enviarte mensajes y ver tu perfil."
     }
   },
   "moments_section": {

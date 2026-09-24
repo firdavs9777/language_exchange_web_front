@@ -49,7 +49,14 @@
       "noConversationYet": "Start the conversation first to pin it",
       "pinFailed": "Couldn't update pin",
       "deleteFailed": "Couldn't delete the conversation",
-      "deleted": "Conversation deleted"
+      "deleted": "Conversation deleted",
+      "openProfile": "Open {{name}}'s profile",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "muted": "Notifications muted",
+      "unmuted": "Notifications are back on",
+      "muteFailed": "Couldn't update notifications",
+      "unpinned": "Conversation unpinned"
     },
     "deleteModal": {
       "title": "Delete Conversation",
@@ -57,7 +64,8 @@
       "warning": "This cannot be undone.",
       "cancel": "Cancel",
       "confirm": "Delete",
-      "deleting": "Deleting..."
+      "deleting": "Deleting...",
+      "body": "Delete your conversation with {{name}}?"
     },
     "gif": {
       "title": "GIFs",
@@ -89,7 +97,73 @@
     "justNow": "Just now",
     "minutesAgo": "{{count}}m ago",
     "hoursAgo": "{{count}}h ago",
-    "unknownUser": "Unknown User"
+    "unknownUser": "Unknown User",
+    "viewProfileOf": "View {{name}}'s profile",
+    "info": {
+      "title": "Chat info",
+      "close": "Close",
+      "viewProfile": "View profile",
+      "media": "Shared media",
+      "mute": "Mute notifications",
+      "unmute": "Unmute notifications",
+      "muted": "Notifications muted",
+      "unmuted": "Notifications are back on",
+      "muteFailed": "Couldn't update notifications",
+      "wallpaper": "Wallpaper",
+      "comingSoon": "Coming soon",
+      "block": "Block",
+      "unblock": "Unblock",
+      "blockTitle": "Block {{name}}?",
+      "blockBody": "They will not be able to message you or see your profile.",
+      "unblockTitle": "Unblock {{name}}?",
+      "unblockBody": "They will be able to message you again.",
+      "blocked": "Blocked",
+      "unblocked": "Unblocked",
+      "blockFailed": "That didn't work. Try again.",
+      "report": "Report",
+      "reportTitle": "Report {{name}}",
+      "reportBody": "Tell us what is wrong. Every report is reviewed.",
+      "reportReason": "Reason",
+      "reportDescription": "Details (optional)",
+      "reportSubmit": "Send report",
+      "reported": "Thanks — moderators will take a look",
+      "reportFailed": "Couldn't send the report",
+      "delete": "Delete conversation",
+      "cancel": "Cancel",
+      "noConversationYet": "Say something first"
+    },
+    "reportReasons": {
+      "spam": "Spam",
+      "harassment": "Harassment or bullying",
+      "hate_speech": "Hate speech",
+      "violence": "Violence or threats",
+      "nudity": "Nudity or sexual content",
+      "false_information": "False information",
+      "copyright": "Copyright",
+      "other": "Something else"
+    },
+    "status": {
+      "sending": "Sending",
+      "sent": "Sent",
+      "delivered": "Delivered",
+      "read": "Read",
+      "failed": "Failed"
+    },
+    "loadEarlier": "Load earlier messages",
+    "loadingEarlier": "Loading earlier messages",
+    "suggestCorrection": "Suggest a correction",
+    "translateThis": "Translate this message",
+    "addCaption": "Add a caption...",
+    "conversationStarted": "Conversation started",
+    "correct": "Correct",
+    "daysAgo": "{{count}}d ago",
+    "edit": "Edit message",
+    "hide_translation": "Hide",
+    "noMessages": "No messages yet",
+    "retry": "Retry",
+    "today": "Today",
+    "translate": "Translate",
+    "yesterday": "Yesterday"
   },
   "newChat": {
     "title": "New Chat",
@@ -249,7 +323,8 @@
       "block": "Block",
       "report": "Report",
       "this_person": "this person",
-      "action_failed": "That didn't work. Try again."
+      "action_failed": "That didn't work. Try again.",
+      "unblock": "Unblock"
     },
     "buttons": {
       "edit": "Edit",
@@ -382,6 +457,10 @@
       "label": "Profile sections",
       "moments": "Moments",
       "about": "About"
+    },
+    "unblock": {
+      "title": "Unblock {{name}}?",
+      "body": "They will be able to message you and see your profile again."
     }
   },
   "moments_section": {

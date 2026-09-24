@@ -69,7 +69,8 @@
       "warning": "Questa azione non può essere annullata.",
       "cancel": "Annulla",
       "confirm": "Elimina",
-      "deleting": "Eliminazione..."
+      "deleting": "Eliminazione...",
+      "body": "Eliminare la conversazione con {{name}}?"
     },
     "gif": {
       "title": "GIF",
@@ -88,8 +89,81 @@
       "noConversationYet": "Avvia prima la conversazione per fissarla",
       "pinFailed": "Impossibile aggiornare il fissaggio",
       "deleteFailed": "Impossibile eliminare la conversazione",
-      "deleted": "Conversazione eliminata"
-    }
+      "deleted": "Conversazione eliminata",
+      "openProfile": "Apri il profilo di {{name}}",
+      "mute": "Silenzia",
+      "unmute": "Riattiva",
+      "muted": "Notifiche silenziate",
+      "unmuted": "Le notifiche sono di nuovo attive",
+      "muteFailed": "Impossibile aggiornare le notifiche",
+      "unpinned": "Conversazione non più fissata"
+    },
+    "viewProfileOf": "Vedi il profilo di {{name}}",
+    "info": {
+      "title": "Informazioni sulla conversazione",
+      "close": "Chiudi",
+      "viewProfile": "Vedi profilo",
+      "media": "Media condivisi",
+      "mute": "Silenzia notifiche",
+      "unmute": "Riattiva notifiche",
+      "muted": "Notifiche silenziate",
+      "unmuted": "Le notifiche sono di nuovo attive",
+      "muteFailed": "Impossibile aggiornare le notifiche",
+      "wallpaper": "Sfondo",
+      "comingSoon": "Prossimamente",
+      "block": "Blocca",
+      "unblock": "Sblocca",
+      "blockTitle": "Bloccare {{name}}?",
+      "blockBody": "Non potrà più scriverti né vedere il tuo profilo.",
+      "unblockTitle": "Sbloccare {{name}}?",
+      "unblockBody": "Potrà scriverti di nuovo.",
+      "blocked": "Bloccato",
+      "unblocked": "Sbloccato",
+      "blockFailed": "Non ha funzionato. Riprova.",
+      "report": "Segnala",
+      "reportTitle": "Segnala {{name}}",
+      "reportBody": "Dicci cosa non va. Ogni segnalazione viene esaminata.",
+      "reportReason": "Motivo",
+      "reportDescription": "Dettagli (facoltativo)",
+      "reportSubmit": "Invia segnalazione",
+      "reported": "Grazie — i moderatori daranno un'occhiata",
+      "reportFailed": "Impossibile inviare la segnalazione",
+      "delete": "Elimina conversazione",
+      "cancel": "Annulla",
+      "noConversationYet": "Scrivi prima qualcosa"
+    },
+    "reportReasons": {
+      "spam": "Spam",
+      "harassment": "Molestie o bullismo",
+      "hate_speech": "Incitamento all'odio",
+      "violence": "Violenza o minacce",
+      "nudity": "Nudità o contenuti sessuali",
+      "false_information": "Informazioni false",
+      "copyright": "Copyright",
+      "other": "Altro"
+    },
+    "status": {
+      "sending": "Invio in corso",
+      "sent": "Inviato",
+      "delivered": "Consegnato",
+      "read": "Letto",
+      "failed": "Non riuscito"
+    },
+    "loadEarlier": "Carica messaggi precedenti",
+    "loadingEarlier": "Caricamento messaggi precedenti",
+    "suggestCorrection": "Suggerisci una correzione",
+    "translateThis": "Traduci questo messaggio",
+    "addCaption": "Aggiungi una didascalia...",
+    "conversationStarted": "Conversazione iniziata",
+    "correct": "Correggi",
+    "daysAgo": "{{count}}g fa",
+    "edit": "Modifica messaggio",
+    "hide_translation": "Nascondi",
+    "noMessages": "Ancora nessun messaggio",
+    "retry": "Riprova",
+    "today": "Oggi",
+    "translate": "Traduci",
+    "yesterday": "Ieri"
   },
   "notifications": "Notifiche",
   "moments": "Momenti",
@@ -230,7 +304,8 @@
       "block": "Blocca",
       "report": "Segnala",
       "this_person": "questa persona",
-      "action_failed": "Non ha funzionato. Riprova."
+      "action_failed": "Non ha funzionato. Riprova.",
+      "unblock": "Sblocca"
     },
     "buttons": {
       "edit": "Modifica",
@@ -363,6 +438,10 @@
       "label": "Sezioni del profilo",
       "moments": "Momenti",
       "about": "Info"
+    },
+    "unblock": {
+      "title": "Sbloccare {{name}}?",
+      "body": "Potrà scriverti di nuovo e vedere il tuo profilo."
     }
   },
   "moments_section": {

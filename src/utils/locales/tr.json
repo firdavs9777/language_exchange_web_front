@@ -69,7 +69,8 @@
       "warning": "Bu işlem geri alınamaz.",
       "cancel": "İptal",
       "confirm": "Sil",
-      "deleting": "Siliniyor…"
+      "deleting": "Siliniyor…",
+      "body": "{{name}} ile sohbetini silmek istiyor musun?"
     },
     "gif": {
       "title": "GIF",
@@ -88,8 +89,81 @@
       "noConversationYet": "Sabitlemek için önce sohbeti başlatın",
       "pinFailed": "Sabitleme güncellenemedi",
       "deleteFailed": "Sohbet silinemedi",
-      "deleted": "Sohbet silindi"
-    }
+      "deleted": "Sohbet silindi",
+      "openProfile": "{{name}} adlı kullanıcının profilini aç",
+      "mute": "Sessize al",
+      "unmute": "Sesi aç",
+      "muted": "Bildirimler sessize alındı",
+      "unmuted": "Bildirimler tekrar açık",
+      "muteFailed": "Bildirimler güncellenemedi",
+      "unpinned": "Sabitleme kaldırıldı"
+    },
+    "viewProfileOf": "{{name}} adlı kullanıcının profilini gör",
+    "info": {
+      "title": "Sohbet bilgisi",
+      "close": "Kapat",
+      "viewProfile": "Profili gör",
+      "media": "Paylaşılan medya",
+      "mute": "Bildirimleri sessize al",
+      "unmute": "Bildirimlerin sesini aç",
+      "muted": "Bildirimler sessize alındı",
+      "unmuted": "Bildirimler tekrar açık",
+      "muteFailed": "Bildirimler güncellenemedi",
+      "wallpaper": "Duvar kağıdı",
+      "comingSoon": "Yakında",
+      "block": "Engelle",
+      "unblock": "Engeli kaldır",
+      "blockTitle": "{{name}} engellensin mi?",
+      "blockBody": "Sana mesaj gönderemez ve profilini göremez.",
+      "unblockTitle": "{{name}} adlı kullanıcının engeli kaldırılsın mı?",
+      "unblockBody": "Sana tekrar mesaj gönderebilir.",
+      "blocked": "Engellendi",
+      "unblocked": "Engel kaldırıldı",
+      "blockFailed": "Bu işe yaramadı. Tekrar dene.",
+      "report": "Şikayet Et",
+      "reportTitle": "{{name}} kullanıcısını şikayet et",
+      "reportBody": "Neyin yanlış olduğunu bize anlat. Her şikayet inceleniyor.",
+      "reportReason": "Sebep",
+      "reportDescription": "Detaylar (isteğe bağlı)",
+      "reportSubmit": "Şikayeti gönder",
+      "reported": "Teşekkürler — moderatörler inceleyecek",
+      "reportFailed": "Şikayet gönderilemedi",
+      "delete": "Sohbeti sil",
+      "cancel": "İptal",
+      "noConversationYet": "Önce bir şeyler yaz"
+    },
+    "reportReasons": {
+      "spam": "Spam",
+      "harassment": "Taciz veya zorbalık",
+      "hate_speech": "Nefret söylemi",
+      "violence": "Şiddet veya tehdit",
+      "nudity": "Çıplaklık veya cinsel içerik",
+      "false_information": "Yanlış bilgi",
+      "copyright": "Telif hakkı",
+      "other": "Başka bir şey"
+    },
+    "status": {
+      "sending": "Gönderiliyor",
+      "sent": "Gönderildi",
+      "delivered": "İletildi",
+      "read": "Okundu",
+      "failed": "Başarısız"
+    },
+    "loadEarlier": "Önceki mesajları yükle",
+    "loadingEarlier": "Önceki mesajlar yükleniyor",
+    "suggestCorrection": "Düzeltme öner",
+    "translateThis": "Bu mesajı çevir",
+    "addCaption": "Açıklama ekle...",
+    "conversationStarted": "Sohbet başladı",
+    "correct": "Düzelt",
+    "daysAgo": "{{count}}g önce",
+    "edit": "Mesajı düzenle",
+    "hide_translation": "Gizle",
+    "noMessages": "Henüz mesaj yok",
+    "retry": "Tekrar dene",
+    "today": "Bugün",
+    "translate": "Çevir",
+    "yesterday": "Dün"
   },
   "newChat": {
     "title": "Yeni Sohbet",
@@ -249,7 +323,8 @@
       "block": "Engelle",
       "report": "Şikayet Et",
       "this_person": "bu kişi",
-      "action_failed": "Bu işe yaramadı. Tekrar dene."
+      "action_failed": "Bu işe yaramadı. Tekrar dene.",
+      "unblock": "Engeli kaldır"
     },
     "buttons": {
       "edit": "Düzenle",
@@ -382,6 +457,10 @@
       "label": "Profil bölümleri",
       "moments": "Anlar",
       "about": "Hakkında"
+    },
+    "unblock": {
+      "title": "{{name}} adlı kullanıcının engeli kaldırılsın mı?",
+      "body": "Sana tekrar mesaj gönderebilir ve profilini görebilir."
     }
   },
   "moments_section": {
