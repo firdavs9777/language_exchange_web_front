@@ -20,6 +20,7 @@ import { SocketProvider } from "./components/chat/hooks/useSocket";
 import AppBanner from "./components/linking/AppBanner";
 import { usePageView } from "./analytics/usePageView";
 import ConsentBar from "./components/growth/ConsentBar";
+import AdsBootstrap from "./components/ads/AdsBootstrap";
 
 const App = () => {
   usePageView();
@@ -47,6 +48,7 @@ const App = () => {
         </Container>
         <FooterMain />
         <ConsentBar />
+        <AdsBootstrap />
         {/*
           Defaults for every toast that does not override them. Most existing
           call sites still pass their own options object and win over these;
