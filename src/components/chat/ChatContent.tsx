@@ -135,6 +135,13 @@ const ChatContent: React.FC<ChatContentProps> = ({
     },
     {
       skip: !userId || !selectedUser,
+      // Re-entering a thread has to reach the server. The cache entry is keyed
+      // on the pair alone (serializeQueryArgs drops `page`) and outlives this
+      // component, and its `forceRefetch` only fires when `page` changes — so
+      // coming back to a conversation with `page` reset to 1 was a plain cache
+      // hit, and anything that arrived while the thread was closed (nothing
+      // mounted to catch the socket event) stayed invisible until a reload.
+      refetchOnMountOrArgChange: true,
     }
   );
 
@@ -283,6 +290,38 @@ const ChatContent: React.FC<ChatContentProps> = ({
     setLastSeen(initialLastSeen);
   }, [initialIsOnline, initialLastSeen, selectedUser]);
 
+  // A message the socket delivered belongs in the CACHE, not only on screen.
+  //
+  // The seeding effect below rebuilds local state from the `getConversation`
+  // entry wholesale whenever the conversation changes, so anything that lived
+  // only in state — every message the socket brought in while this thread was
+  // open — was thrown away the moment the reader visited another room and came
+  // back. It reappeared only after the network answered again.
+  //
+  // `updateQueryData` patches an entry that already exists and no-ops when it
+  // does not, which is exactly right: a thread nobody is holding gets fetched
+  // fresh on its next open.
+  const rememberInThread = useCallback(
+    (message: Message | undefined, partnerId: string | undefined) => {
+      if (!message || !message._id || !userId || !partnerId) return;
+      dispatch(
+        (chatApiSlice.util as any).updateQueryData(
+          "getConversation",
+          { senderId: userId, receiverId: partnerId, page: 1, limit: MESSAGE_PAGE_SIZE },
+          (draft: any) => {
+            if (!draft) return;
+            if (!Array.isArray(draft.data)) draft.data = [];
+            const at = draft.data.findIndex((m: any) => m && m._id === message._id);
+            if (at >= 0) draft.data[at] = { ...draft.data[at], ...message };
+            else draft.data.push(message);
+            draft.count = draft.data.length;
+          }
+        )
+      );
+    },
+    [dispatch, userId]
+  );
+
   // ========== Socket event listeners (shared socket) ==========
   useEffect(() => {
     if (!socket) return;
@@ -319,6 +358,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           console.log("[ChatContent] Adding message to state");
           return [...prev, { ...newMsg, status: "delivered" }];
         });
+        rememberInThread(newMsg, currentSelectedUser);
 
         if (newMsg.sender._id === currentSelectedUser && socket.connected) {
           socket.emit("markAsRead", { senderId: currentSelectedUser });
@@ -340,6 +380,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           if (prev.some((msg) => msg._id === newMsg._id)) return prev;
           return [...prev, { ...newMsg, status: "delivered" }];
         });
+        rememberInThread(newMsg, currentSelectedUser);
 
         if (newMsg.sender._id === currentSelectedUser && socket.connected) {
           socket.emit("markAsRead", { senderId: currentSelectedUser });
@@ -379,6 +420,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           }
           return [...prev, { ...data.message, status: "sent" }];
         });
+        rememberInThread(data.message, currentSelectedUser);
       }
     };
 
@@ -577,7 +619,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       socket.off("messageSendError", handleMessageSendError);
       socket.off("queuedMessages", handleQueuedMessages);
     };
-  }, [socket, userId]);
+  }, [socket, userId, rememberInThread]);
 
   // Request user status when selectedUser changes or socket connects
   useEffect(() => {

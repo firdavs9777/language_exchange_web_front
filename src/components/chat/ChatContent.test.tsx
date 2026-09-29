@@ -18,6 +18,7 @@ import ChatContent from "./ChatContent";
 const mockUseSocket = jest.fn();
 const mockGetConversation = jest.fn();
 const mockInvalidateTags = jest.fn();
+const mockUpdateQueryData = jest.fn();
 const mockCreateMessage = jest.fn();
 
 jest.mock("react-i18next", () => ({
@@ -31,7 +32,12 @@ jest.mock("./hooks/useSocket", () => ({
 const mutation = () => [jest.fn(), { isLoading: false }];
 
 jest.mock("../../store/slices/chatSlice", () => ({
-  chatApiSlice: { util: { invalidateTags: (tags: any) => mockInvalidateTags(tags) } },
+  chatApiSlice: {
+    util: {
+      invalidateTags: (tags: any) => mockInvalidateTags(tags),
+      updateQueryData: (...args: any[]) => mockUpdateQueryData(...args),
+    },
+  },
   useGetConversationQuery: (arg: any, opts: any) => mockGetConversation(arg, opts),
   // ForwardDialog, mounted (closed) by ChatContent.
   useGetConversationsQuery: () => ({ data: undefined, isLoading: false, isError: false }),
@@ -114,6 +120,7 @@ beforeEach(() => {
     type: "chatApi/invalidateTags",
     payload: tags,
   }));
+  mockUpdateQueryData.mockImplementation(() => ({ type: "chatApi/updateQueryData" }));
   mockCreateMessage.mockReturnValue({
     unwrap: () => Promise.resolve({ data: { _id: "m-rest", message: "hi", sender: { _id: "me" } } }),
   });
