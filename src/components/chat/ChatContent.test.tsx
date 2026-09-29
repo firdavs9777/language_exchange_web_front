@@ -381,3 +381,58 @@ it("only upgrades the tick when the ack already landed", async () => {
 
   expect(renderedIds()).toEqual(["m-real"]);
 });
+
+// --- A message you SENT has to survive leaving the room --------------------
+//
+// Reported: send "hi" to A, switch to B and send "hello", come back to A and
+// "hi" is gone, only the older messages are there.
+//
+// Incoming messages were written into the thread cache when they arrived, but
+// the confirmed message from our own send was not — it landed in local state
+// and in the two LIST queries and nowhere else. Local state is rebuilt from
+// the thread cache wholesale on a conversation switch, so our own message was
+// the one thing that could not survive the round trip out of the room.
+
+it("writes a message we sent into the thread cache, over the socket", async () => {
+  mockUseSocket.mockReturnValue(ackingSocket());
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hi" } });
+  fireEvent.submit(messageBox().closest("form")!);
+
+  await waitFor(() =>
+    expect(mockUpdateQueryData).toHaveBeenCalledWith(
+      "getConversation",
+      expect.objectContaining({ senderId: "me", receiverId: "u2" }),
+      expect.any(Function)
+    )
+  );
+});
+
+it("writes it when the send fell back to REST too", async () => {
+  mockUseSocket.mockReturnValue(offlineSocket());
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hi" } });
+  fireEvent.submit(messageBox().closest("form")!);
+
+  await waitFor(() =>
+    expect(mockUpdateQueryData).toHaveBeenCalledWith(
+      "getConversation",
+      expect.objectContaining({ senderId: "me", receiverId: "u2" }),
+      expect.any(Function)
+    )
+  );
+});
+
+it("does not write a send that failed", async () => {
+  mockUseSocket.mockReturnValue(offlineSocket());
+  mockCreateMessage.mockReturnValue({ unwrap: () => Promise.reject(new Error("offline")) });
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hi" } });
+  fireEvent.submit(messageBox().closest("form")!);
+
+  await waitFor(() => expect(mockCreateMessage).toHaveBeenCalled());
+  expect(mockUpdateQueryData).not.toHaveBeenCalled();
+});

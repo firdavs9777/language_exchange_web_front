@@ -935,6 +935,14 @@ const ChatContent: React.FC<ChatContentProps> = ({
         m._id === tempId ? { ...msgData, status: "sent", isOptimistic: false } : m
       )
     );
+    // And into the THREAD, which is a different cache entry from the two lists
+    // above. Local state is rebuilt from that entry wholesale on a conversation
+    // switch, so without this our own message was the one kind that could not
+    // survive leaving the room: send "hi" to A, step into B, come back, and the
+    // seeding effect replaced it with a cached page that had never heard of it.
+    // Incoming messages have been written here since they arrive over the
+    // socket; a send is confirmed by an ack instead, so it needs its own call.
+    rememberInThread(msgData, selectedUser);
     dispatch(
       (chatApiSlice.util as any).invalidateTags(["Conversations", "UserMessages"])
     );
