@@ -19,6 +19,8 @@ import ChatContent from "./ChatContent";
  */
 const mockUseSocket = jest.fn();
 const mockGetConversation = jest.fn();
+const mockUpdateQueryData = jest.fn();
+const mockInvalidateTags = jest.fn();
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -31,6 +33,12 @@ jest.mock("./hooks/useSocket", () => ({
 const mutation = () => [jest.fn(), { isLoading: false }];
 
 jest.mock("../../store/slices/chatSlice", () => ({
+  chatApiSlice: {
+    util: {
+      updateQueryData: (...args: any[]) => mockUpdateQueryData(...args),
+      invalidateTags: (...args: any[]) => mockInvalidateTags(...args),
+    },
+  },
   useGetConversationQuery: (arg: any, opts: any) => mockGetConversation(arg, opts),
   useGetConversationsQuery: () => ({ data: undefined, isLoading: false, isError: false }),
   useCreateMessageMutation: () => mutation(),
@@ -200,6 +208,13 @@ beforeEach(() => {
   (Element.prototype as any).scrollIntoView = jest.fn();
   installIntersectionObserver();
   mockUseSocket.mockReturnValue({ socket: null, isConnected: false, emit: jest.fn() });
+  // CRA resets implementations between tests, and the component dispatches
+  // whatever these hand back.
+  mockUpdateQueryData.mockImplementation(() => ({ type: "chatApi/updateQueryData" }));
+  mockInvalidateTags.mockImplementation((tags: any) => ({
+    type: "chatApi/invalidateTags",
+    payload: tags,
+  }));
   answerWith();
 });
 
@@ -497,4 +512,71 @@ it("announces one profile link, not the same one twice", () => {
   expect(avatarLink).toHaveAttribute("tabindex", "-1");
   expect(avatarLink).not.toHaveAttribute("aria-label");
   expect(screen.getByTestId("chat-header-profile-link")).toHaveAttribute("aria-label");
+});
+
+// --- Coming back to a thread ------------------------------------------------
+//
+// Reported from production: the list row showed the newest message ("how are
+// u", 18:18) while the thread itself stopped at the one before it. Visiting
+// another room and coming back was enough to reproduce.
+//
+// Two things put it there, and both are fixed below.
+//
+// First, a message delivered by the socket lived ONLY in this component's
+// state. Nothing wrote it into the `getConversation` cache entry — and that
+// entry is what the seeding effect rebuilds state from, wholesale, whenever
+// the conversation changes (`if (!sameConversation) return merged`). So a
+// message that arrived while the thread was open was dropped the moment the
+// reader switched rooms and came back.
+//
+// Second, the entry is keyed on the pair alone and outlives the component, and
+// its `forceRefetch` only fires when `page` changes. Re-entering a thread with
+// `page` back at 1 is a plain cache hit, so nothing that arrived while the
+// thread was CLOSED (no socket handler mounted to catch it) was ever fetched
+// either.
+
+it("asks the server again when a thread is re-entered", () => {
+  renderChat();
+
+  expect(mockGetConversation).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.objectContaining({ refetchOnMountOrArgChange: true })
+  );
+});
+
+it("writes a live incoming message into the thread cache, not just the screen", async () => {
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+
+  socket.fire("newMessage", {
+    message: liveMessage("live-1"),
+    unreadCount: 1,
+    senderId: "u2",
+  });
+
+  await waitFor(() => expect(renderedIds()).toContain("live-1"));
+  expect(mockUpdateQueryData).toHaveBeenCalledWith(
+    "getConversation",
+    expect.objectContaining({ senderId: "me", receiverId: "u2" }),
+    expect.any(Function)
+  );
+});
+
+it("writes a message we sent into it too", async () => {
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+
+  socket.fire("messageSent", {
+    message: { ...liveMessage("sent-1"), sender: { _id: "me", name: "Me" }, receiver: { _id: "u2" } },
+    receiverId: "u2",
+  });
+
+  await waitFor(() => expect(renderedIds()).toContain("sent-1"));
+  expect(mockUpdateQueryData).toHaveBeenCalledWith(
+    "getConversation",
+    expect.objectContaining({ senderId: "me", receiverId: "u2" }),
+    expect.any(Function)
+  );
 });
