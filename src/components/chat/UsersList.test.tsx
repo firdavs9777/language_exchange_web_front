@@ -171,3 +171,50 @@ it("asks the delete question as one sentence with the name inside it", () => {
     "Delete your conversation with Ada?"
   );
 });
+
+// --- Reading a conversation has to reach the badge ------------------------
+//
+// Opening a thread emits `markAsRead`. The server answers the emitter through
+// the ack callback and pushes `messagesRead` to the OTHER person -- so the
+// tab that just did the reading never receives a socket event about it, and
+// only the ack tells it anything happened. That ack refetched the messages
+// query and left the conversations query alone, which is the one holding the
+// unread counts the sidebar rows and the navbar badge are drawn from. The
+// badge therefore kept whatever number it had until a full reload.
+
+/** A connected socket that answers markAsRead the way the server does. */
+function readingSocket() {
+  const emit = jest.fn((event: string, _data: any, cb?: (r: any) => void) => {
+    if (event === "markAsRead" && cb) cb({ status: "success", markedCount: 3 });
+  });
+  return { socket: { on: jest.fn(), off: jest.fn(), emit, connected: true }, isConnected: true };
+}
+
+function renderListFor(activeUserId: string) {
+  const store = configureStore({
+    reducer: {
+      auth: (state: any = { userInfo: { user: { _id: "me", name: "Me" }, token: "t" } }) =>
+        state,
+    },
+  });
+  return render(
+    <Provider store={store}>
+      <MemoryRouter>
+        <UsersList onSelectUser={onSelectUser} activeUserId={activeUserId} />
+      </MemoryRouter>
+    </Provider>
+  );
+}
+
+it("refetches the conversations once the messages are marked read", async () => {
+  const refetchConversations = jest.fn();
+  mockUseSocket.mockReturnValue(readingSocket());
+  mockConversations.mockReturnValue({
+    data: { data: [conversation({ unreadCount: 3 })] },
+    refetch: refetchConversations,
+  });
+
+  renderListFor("u2");
+
+  await waitFor(() => expect(refetchConversations).toHaveBeenCalled());
+});

@@ -26,6 +26,7 @@ import { BASE_URL } from "../../constants";
 import logo from "../../assets/logo.png";
 import { useGetConversationsQuery } from "../../store/slices/chatSlice";
 import { useSocket } from "../chat/hooks/useSocket";
+import { CONVERSATIONS_PAGE } from "../chat/lib/conversationMatch";
 import "./MainNavbar.scss";
 
 const LANGUAGES = [
@@ -75,13 +76,17 @@ const MainNavbar = () => {
   const activeLang = i18n.resolvedLanguage || i18n.language;
   const currentLang = LANGUAGES.find((l) => l.code === activeLang) || LANGUAGES[0];
 
-  // Unread chat badge. Shares the same RTK Query cache key UsersList uses
-  // ({page:1, limit:50}), so no duplicate request when the chat page is also
-  // mounted; refetches live off the same socket events UsersList reacts to,
-  // so the badge stays correct even when the chat page isn't open at all.
+  // Unread chat badge. Shares the same RTK Query cache key UsersList uses --
+  // CONVERSATIONS_PAGE, the one literal every caller passes -- so there is no
+  // duplicate request when the chat page is also mounted, and no second copy
+  // of the list going stale on its own: this badge used to ask with its own
+  // {page:1, limit:50} while the chat list asked with {page:1, limit:100}, two
+  // cache entries that refetched independently. Refetches live off the same
+  // socket events UsersList reacts to, so the badge stays correct even when
+  // the chat page isn't open at all.
   const currentUserId = userInfo?.user?._id;
   const { data: conversationsData, refetch: refetchConversations } = useGetConversationsQuery(
-    { page: 1, limit: 50 },
+    CONVERSATIONS_PAGE,
     { skip: !currentUserId }
   );
   const { socket } = useSocket();
@@ -99,11 +104,16 @@ const MainNavbar = () => {
     socket.on("newVoiceMessage", handleConversationsChanged);
     socket.on("newVideoMessage", handleConversationsChanged);
     socket.on("messagesRead", handleConversationsChanged);
+    // A message WE sent changes the list too -- new last message, new row
+    // order, and a brand-new row for a first message. The server addresses it
+    // to every device on the account.
+    socket.on("messageSent", handleConversationsChanged);
     return () => {
       socket.off("newMessage", handleConversationsChanged);
       socket.off("newVoiceMessage", handleConversationsChanged);
       socket.off("newVideoMessage", handleConversationsChanged);
       socket.off("messagesRead", handleConversationsChanged);
+      socket.off("messageSent", handleConversationsChanged);
     };
   }, [socket, currentUserId, refetchConversations]);
 

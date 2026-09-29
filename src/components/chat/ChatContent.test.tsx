@@ -17,6 +17,8 @@ import ChatContent from "./ChatContent";
 // close over).
 const mockUseSocket = jest.fn();
 const mockGetConversation = jest.fn();
+const mockInvalidateTags = jest.fn();
+const mockCreateMessage = jest.fn();
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -29,10 +31,11 @@ jest.mock("./hooks/useSocket", () => ({
 const mutation = () => [jest.fn(), { isLoading: false }];
 
 jest.mock("../../store/slices/chatSlice", () => ({
+  chatApiSlice: { util: { invalidateTags: (tags: any) => mockInvalidateTags(tags) } },
   useGetConversationQuery: (arg: any, opts: any) => mockGetConversation(arg, opts),
   // ForwardDialog, mounted (closed) by ChatContent.
   useGetConversationsQuery: () => ({ data: undefined, isLoading: false, isError: false }),
-  useCreateMessageMutation: () => mutation(),
+  useCreateMessageMutation: () => [mockCreateMessage, { isLoading: false }],
   useSendVoiceMessageMutation: () => mutation(),
   useSendMediaMessageMutation: () => mutation(),
   useEditMessageMutation: () => mutation(),
@@ -91,6 +94,12 @@ function renderChat(entry: string) {
   );
 }
 
+// jsdom has no layout, so it has no scrollIntoView -- and the thread scrolls
+// itself to the bottom every time a message lands.
+if (!(window.HTMLElement.prototype as any).scrollIntoView) {
+  (window.HTMLElement.prototype as any).scrollIntoView = () => {};
+}
+
 /** The composer input, found the way a person finds it. */
 function messageBox(): HTMLInputElement {
   return screen.getByPlaceholderText("Message...") as HTMLInputElement;
@@ -99,6 +108,15 @@ function messageBox(): HTMLInputElement {
 beforeEach(() => {
   mockUseSocket.mockReturnValue({ socket: null, isConnected: false, emit: jest.fn() });
   mockGetConversation.mockReturnValue({ data: undefined, error: undefined, isLoading: false });
+  // CRA resets mocks between tests, implementations included -- and this one
+  // has to return a real action, because the component dispatches it.
+  mockInvalidateTags.mockImplementation((tags: any) => ({
+    type: "chatApi/invalidateTags",
+    payload: tags,
+  }));
+  mockCreateMessage.mockReturnValue({
+    unwrap: () => Promise.resolve({ data: { _id: "m-rest", message: "hi", sender: { _id: "me" } } }),
+  });
 });
 
 afterEach(() => {
@@ -200,4 +218,159 @@ it("opens the info panel from the header's overflow button", () => {
 
   expect(screen.getByTestId("chat-info-panel")).toBeInTheDocument();
   expect(screen.getByTestId("chat-header-more")).toHaveAttribute("aria-expanded", "true");
+});
+
+// --- The conversation list, after this tab sends ---------------------------
+//
+// The sidebar and the navbar badge live off socket events, and `messageSent`
+// is the one they refetch on. The server emits it with
+// `socket.to(`user_<id>`)` (socket/socketHandler.js), and socket.io's `.to()`
+// on a SOCKET excludes the socket doing the sending -- it is meant for the
+// sender's other devices. So the phone updated, the second tab updated, and
+// the one place the message was actually typed kept showing the previous last
+// message in the previous row order until something else happened to refetch.
+//
+// The server-side half of that is fixed too (io.to, so the sender's own socket
+// is included), but the REST fallback path never emitted anything at all and a
+// client should not need a deploy to show its own message. Every send route --
+// socket ack, REST fallback, reply, sticker, GIF, media, voice -- lands on
+// `finalizeOptimistic`, so the invalidation lives there, once.
+
+/** A socket whose sendMessage ack succeeds, like a healthy connection. */
+function ackingSocket() {
+  const on = jest.fn();
+  const off = jest.fn();
+  const emit = jest.fn((event: string, _data: any, cb?: (r: any) => void) => {
+    if (event === "sendMessage" && cb) {
+      cb({ status: "success", message: { _id: "m1", message: "hi", sender: { _id: "me" } } });
+    }
+  });
+  return { socket: { on, off, emit, connected: true }, isConnected: true, emit: jest.fn() };
+}
+
+/** A socket that is present but not connected, so sends go over REST. */
+function offlineSocket() {
+  return {
+    socket: { on: jest.fn(), off: jest.fn(), emit: jest.fn(), connected: false },
+    isConnected: false,
+    emit: jest.fn(),
+  };
+}
+
+it("refreshes the conversation list after a message goes out over the socket", async () => {
+  mockUseSocket.mockReturnValue(ackingSocket());
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hi" } });
+  fireEvent.submit(messageBox().closest("form")!);
+
+  await waitFor(() => expect(mockInvalidateTags).toHaveBeenCalled());
+  expect(mockInvalidateTags).toHaveBeenCalledWith(["Conversations", "UserMessages"]);
+});
+
+it("refreshes it after the REST fallback too", async () => {
+  mockUseSocket.mockReturnValue(offlineSocket());
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hi" } });
+  fireEvent.submit(messageBox().closest("form")!);
+
+  await waitFor(() =>
+    expect(mockInvalidateTags).toHaveBeenCalledWith(["Conversations", "UserMessages"])
+  );
+});
+
+it("does not refresh it for a send that failed", async () => {
+  mockUseSocket.mockReturnValue(offlineSocket());
+  mockCreateMessage.mockReturnValue({ unwrap: () => Promise.reject(new Error("offline")) });
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hi" } });
+  fireEvent.submit(messageBox().closest("form")!);
+
+  await waitFor(() => expect(mockCreateMessage).toHaveBeenCalled());
+  expect(mockInvalidateTags).not.toHaveBeenCalled();
+});
+
+// --- The sender now hears its own messageSent ------------------------------
+//
+// The server used to address `messageSent` with `socket.to(...)`, which skips
+// the socket that sent. It now uses `io.to(...)`, so the sending tab gets it
+// as well — which is the whole point, the conversation list refetches on it.
+//
+// That means the same message can arrive twice on this tab: once as the ack
+// that replaces the optimistic bubble, once as the event. Socket.io writes the
+// ack first, so in practice the event finds the real id already there and only
+// upgrades the tick. If the ack is lost, though, the event must adopt the
+// optimistic bubble rather than land beside it.
+
+/** A socket that records its listeners and never answers a sendMessage. */
+function silentSocket() {
+  const handlers: Record<string, Function[]> = {};
+  return {
+    handlers,
+    value: {
+      socket: {
+        connected: true,
+        on: (event: string, fn: Function) => {
+          (handlers[event] = handlers[event] || []).push(fn);
+        },
+        off: (event: string, fn: Function) => {
+          handlers[event] = (handlers[event] || []).filter((f) => f !== fn);
+        },
+        emit: jest.fn(),
+      },
+      isConnected: true,
+      emit: jest.fn(),
+    },
+  };
+}
+
+const renderedIds = (): string[] =>
+  Array.from(document.querySelectorAll("[data-msg-id]")).map(
+    (el) => el.getAttribute("data-msg-id") as string
+  );
+
+it("adopts the pending bubble when messageSent beats the ack", async () => {
+  const s = silentSocket();
+  mockUseSocket.mockReturnValue(s.value);
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hello" } });
+  fireEvent.submit(messageBox().closest("form")!);
+  await waitFor(() => expect(renderedIds()).toHaveLength(1));
+
+  // The ack never came; the server's own push arrives instead.
+  s.handlers["messageSent"].forEach((fn) =>
+    fn({
+      message: { _id: "m-real", message: "hello", sender: { _id: "me" }, receiver: "u2" },
+      receiverId: "u2",
+    })
+  );
+
+  await waitFor(() => expect(renderedIds()).toEqual(["m-real"]));
+});
+
+it("only upgrades the tick when the ack already landed", async () => {
+  const s = silentSocket();
+  s.value.socket.emit = jest.fn((event: string, _d: any, cb?: (r: any) => void) => {
+    if (event === "sendMessage" && cb) {
+      cb({ status: "success", message: { _id: "m-real", message: "hello", sender: { _id: "me" } } });
+    }
+  }) as any;
+  mockUseSocket.mockReturnValue(s.value);
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hello" } });
+  fireEvent.submit(messageBox().closest("form")!);
+  await waitFor(() => expect(renderedIds()).toEqual(["m-real"]));
+
+  s.handlers["messageSent"].forEach((fn) =>
+    fn({
+      message: { _id: "m-real", message: "hello", sender: { _id: "me" }, receiver: "u2" },
+      receiverId: "u2",
+    })
+  );
+
+  expect(renderedIds()).toEqual(["m-real"]);
 });

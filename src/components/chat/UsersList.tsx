@@ -488,6 +488,12 @@ const UsersList: React.FC<UsersListProps> = ({
           (response: any) => {
             if (response?.status === "success") {
               refetch();
+              // And the conversations, which is where the unread counts the
+              // rows and the navbar badge are drawn from actually live. The
+              // server answers the reader through this ack and pushes
+              // `messagesRead` to the OTHER person, so this callback is the
+              // only notice this tab gets that its own counts just changed.
+              refetchConversations();
             }
           }
         );
@@ -495,7 +501,7 @@ const UsersList: React.FC<UsersListProps> = ({
 
       return () => clearTimeout(timer);
     }
-  }, [activeUserId, socket, refetch]);
+  }, [activeUserId, socket, refetch, refetchConversations]);
 
   // ---------- Derived data ----------
 

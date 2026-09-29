@@ -6,9 +6,10 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import {
+  chatApiSlice,
   useCreateMessageMutation,
   useGetConversationQuery,
   useSendVoiceMessageMutation,
@@ -112,6 +113,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const userId = useSelector(
     (state: RootState) => state.auth.userInfo?.user?._id
   );
@@ -357,6 +359,23 @@ const ChatContent: React.FC<ChatContentProps> = ({
                 ? { ...msg, status: "sent" }
                 : msg
             );
+          }
+          // This tab is now among the sockets the server addresses (io.to,
+          // not socket.to), so this event can be the FIRST word we get about
+          // a message we sent ourselves — if the ack was lost, or arrives
+          // after. The optimistic bubble is still standing under a temp id, so
+          // adopt it rather than land a second copy of the same message beside
+          // it. Matched on the body: a temp id is ours alone and the server
+          // never knew it.
+          const pending = prev.findIndex(
+            (msg) =>
+              msg.isOptimistic &&
+              (msg.message || "") === (data.message.message || "")
+          );
+          if (pending >= 0) {
+            const next = [...prev];
+            next[pending] = { ...data.message, status: "sent" };
+            return next;
           }
           return [...prev, { ...data.message, status: "sent" }];
         });
@@ -855,11 +874,27 @@ const ChatContent: React.FC<ChatContentProps> = ({
     ...extra,
   });
 
+  // The one place a message of ours stops being a guess and becomes a record
+  // the server holds -- every send route ends here: socket ack, REST fallback,
+  // reply, sticker, GIF, media, voice.
+  //
+  // Which is why the conversation LIST is refreshed from here. The sidebar and
+  // the navbar badge refetch off `messageSent`, and the tab that sent the
+  // message is the one tab that never used to see it: the server emits that
+  // event with `socket.to(`user_<id>`)` (socket/socketHandler.js), and
+  // socket.io's `.to()` on a socket excludes the socket doing the sending --
+  // it is addressed to the sender's OTHER devices. So the phone updated and
+  // the second tab updated while the window the message was typed in kept the
+  // previous last message, in the previous row order, until something else
+  // happened to refetch. The REST fallback emitted nothing at all.
   const finalizeOptimistic = (tempId: string, msgData: any) => {
     setMessages((prev) =>
       prev.map((m) =>
         m._id === tempId ? { ...msgData, status: "sent", isOptimistic: false } : m
       )
+    );
+    dispatch(
+      (chatApiSlice.util as any).invalidateTags(["Conversations", "UserMessages"])
     );
   };
 
@@ -948,13 +983,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           setIsSending(false);
 
           if (response?.status === "success" && response?.message) {
-            setMessages((prev) =>
-              prev.map((msg) =>
-                msg._id === tempId
-                  ? { ...response.message, status: "sent", isOptimistic: false }
-                  : msg
-              )
-            );
+            finalizeOptimistic(tempId, response.message);
           } else {
             sendViaRestApi(tempId, messageToSend);
           }
@@ -982,13 +1011,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       }).unwrap();
 
       const msgData = result.data || result;
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === tempId
-            ? { ...msgData, status: "sent", isOptimistic: false }
-            : msg
-        )
-      );
+      finalizeOptimistic(tempId, msgData);
       setIsSending(false);
     } catch (err) {
       console.error("REST API send failed:", err);
@@ -1035,13 +1058,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           if (resolved) return;
           resolved = true;
           if (response?.status === "success" && response?.message) {
-            setMessages((prev) =>
-              prev.map((msg) =>
-                msg._id === tempId
-                  ? { ...response.message, status: "sent", isOptimistic: false }
-                  : msg
-              )
-            );
+            finalizeOptimistic(tempId, response.message);
           } else {
             sendInlineMessageViaRest(tempId, text, messageType);
           }
@@ -1071,13 +1088,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
         type: messageType,
       }).unwrap();
       const msgData = result.data || result;
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === tempId
-            ? { ...msgData, status: "sent", isOptimistic: false }
-            : msg
-        )
-      );
+      finalizeOptimistic(tempId, msgData);
     } catch (err) {
       setMessages((prev) =>
         prev.map((msg) =>
@@ -1117,13 +1128,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           resolved = true;
 
           if (response?.status === "success" && response?.message) {
-            setMessages((prev) =>
-              prev.map((msg) =>
-                msg._id === tempId
-                  ? { ...response.message, status: "sent", isOptimistic: false }
-                  : msg
-              )
-            );
+            finalizeOptimistic(tempId, response.message);
           } else {
             // Fallback to REST API
             sendStickerViaRest(tempId, sticker);
@@ -1152,13 +1157,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       }).unwrap();
 
       const msgData = result.data || result;
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === tempId
-            ? { ...msgData, status: "sent", isOptimistic: false }
-            : msg
-        )
-      );
+      finalizeOptimistic(tempId, msgData);
     } catch (err) {
       console.error("Sticker send failed:", err);
       setMessages((prev) =>
@@ -1241,13 +1240,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       const result: any = await sendMediaMessage(formData).unwrap();
       const msgData = result.data || result;
 
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === tempId
-            ? { ...msgData, status: "sent", isOptimistic: false }
-            : msg
-        )
-      );
+      finalizeOptimistic(tempId, msgData);
     } catch (err) {
       console.error("Media upload failed:", err);
       setMessages((prev) =>
@@ -1376,13 +1369,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       const result: any = await sendVoiceMessage(formData).unwrap();
       const msgData = result.data || result;
 
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === tempId
-            ? { ...msgData, status: "sent", isOptimistic: false }
-            : msg
-        )
-      );
+      finalizeOptimistic(tempId, msgData);
     } catch (err) {
       console.error("Voice send failed:", err);
       setMessages((prev) =>
@@ -1458,13 +1445,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           setIsSending(false);
 
           if (response?.status === "success" && response?.message) {
-            setMessages((prev) =>
-              prev.map((msg) =>
-                msg._id === tempId
-                  ? { ...response.message, status: "sent", isOptimistic: false }
-                  : msg
-              )
-            );
+            finalizeOptimistic(tempId, response.message);
           } else {
             sendViaRestApi(tempId, failedMsg.message);
           }
