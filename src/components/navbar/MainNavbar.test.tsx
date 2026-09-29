@@ -5,13 +5,21 @@ import { configureStore } from "@reduxjs/toolkit";
 import { MemoryRouter } from "react-router-dom";
 import { apiSlice } from "../../store/slices/apiSlice";
 import MainNavbar from "./MainNavbar";
+import { CONVERSATIONS_PAGE } from "../chat/lib/conversationMatch";
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (k: string) => k, i18n: { language: "en", changeLanguage: jest.fn() } }),
 }));
 
+const mockSocket = {
+  on: jest.fn(),
+  off: jest.fn(),
+  emit: jest.fn(),
+  connected: true,
+};
+
 jest.mock("../chat/hooks/useSocket", () => ({
-  useSocket: () => ({ socket: null, isConnected: false, emit: jest.fn() }),
+  useSocket: () => ({ socket: mockSocket, isConnected: true, emit: jest.fn() }),
 }));
 
 function makeStore(user: any = { _id: "me", name: "Me" }) {
@@ -93,4 +101,42 @@ it("hides the Admin link from a non-admin", async () => {
   fireEvent.click(screen.getByLabelText("Menu"));
   await waitFor(() => expect(screen.getAllByText("community").length).toBeGreaterThan(1));
   expect(adminLinks()).toHaveLength(0);
+});
+
+// --- One cache entry, and every event that changes it ----------------------
+//
+// The badge and the chat sidebar read the same list. Asking for it with a
+// different literal than UsersList does gives RTK Query a different cache key,
+// which means two identical requests and, worse, two copies that go stale
+// independently: UsersList could refetch after a read while the navbar's copy
+// kept the old counts.
+
+it("asks for the conversations with the argument the chat list shares", async () => {
+  mockConversationsFetch([]);
+  renderNavbar();
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+
+  const asked = (global.fetch as jest.Mock).mock.calls[0][0];
+  const url = typeof asked === "string" ? asked : asked.url;
+  expect(url).toContain(`limit=${CONVERSATIONS_PAGE.limit}`);
+  expect(url).toContain(`page=${CONVERSATIONS_PAGE.page}`);
+});
+
+it("refreshes the badge on the events that change it, sending included", async () => {
+  mockConversationsFetch([]);
+  renderNavbar();
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+
+  const listened = mockSocket.on.mock.calls.map((c: any[]) => c[0]);
+  // `messageSent` is what a sent message looks like from the sender's side --
+  // the row order and the last message change even when no count does.
+  expect(listened).toEqual(
+    expect.arrayContaining([
+      "newMessage",
+      "newVoiceMessage",
+      "newVideoMessage",
+      "messagesRead",
+      "messageSent",
+    ])
+  );
 });
