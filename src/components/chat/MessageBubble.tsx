@@ -63,6 +63,12 @@ export interface Message {
   receiver: MessageReceiver | string;
   messageType?: string;
   read?: boolean;
+  /**
+   * Set by the server once the receiver's socket actually has the message
+   * (socket/socketHandler.js). A real field, not the `status` virtual, so it
+   * survives a reload -- which is what keeps two ticks two ticks.
+   */
+  delivered?: boolean;
   readAt?: string;
   createdAt: string;
   updatedAt?: string;
