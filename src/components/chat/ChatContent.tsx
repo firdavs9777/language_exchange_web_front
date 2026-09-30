@@ -322,6 +322,35 @@ const ChatContent: React.FC<ChatContentProps> = ({
     [dispatch, userId]
   );
 
+  // The other half of rememberInThread: a message that is GONE.
+  //
+  // `merge` on the getConversation entry only adds incoming messages and
+  // updates ones it already holds — it has no branch that removes. So
+  // invalidating the tag after a delete refetches the thread, merges it, and
+  // leaves the deleted message sitting in the cache. Local state is rebuilt
+  // from that cache wholesale on a conversation switch, so a message deleted
+  // here came back the moment the reader stepped into another room and
+  // returned.
+  const forgetFromThread = useCallback(
+    (messageId: string | undefined, partnerId: string | undefined) => {
+      if (!messageId || !userId || !partnerId) return;
+      dispatch(
+        (chatApiSlice.util as any).updateQueryData(
+          "getConversation",
+          { senderId: userId, receiverId: partnerId, page: 1, limit: MESSAGE_PAGE_SIZE },
+          (draft: any) => {
+            if (!draft || !Array.isArray(draft.data)) return;
+            const at = draft.data.findIndex((m: any) => m && m._id === messageId);
+            if (at < 0) return;
+            draft.data.splice(at, 1);
+            draft.count = draft.data.length;
+          }
+        )
+      );
+    },
+    [dispatch, userId]
+  );
+
   // ========== Socket event listeners (shared socket) ==========
   useEffect(() => {
     if (!socket) return;
@@ -459,6 +488,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
     const handleMessageDeleted = (data: { messageId: string }) => {
       setMessages((prev) => prev.filter((msg) => msg._id !== data.messageId));
+      forgetFromThread(data.messageId, selectedUserRef.current);
     };
 
     const handleUserTyping = (data: { userId: string }) => {
@@ -619,7 +649,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       socket.off("messageSendError", handleMessageSendError);
       socket.off("queuedMessages", handleQueuedMessages);
     };
-  }, [socket, userId, rememberInThread]);
+  }, [socket, userId, rememberInThread, forgetFromThread]);
 
   // Request user status when selectedUser changes or socket connects
   useEffect(() => {
@@ -1561,10 +1591,13 @@ const ChatContent: React.FC<ChatContentProps> = ({
       if (!confirmed) return;
       deleteMessageApi({ messageId: msg._id, forEveryone })
         .unwrap()
-        .then(() => setMessages((prev) => prev.filter((m) => m._id !== msg._id)))
+        .then(() => {
+          setMessages((prev) => prev.filter((m) => m._id !== msg._id));
+          forgetFromThread(msg._id, selectedUserRef.current);
+        })
         .catch((err) => console.error("Delete failed:", err));
     },
-    [deleteMessageApi, userId]
+    [deleteMessageApi, userId, forgetFromThread]
   );
 
   const handleTtsMessage = useCallback(
