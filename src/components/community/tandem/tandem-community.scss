@@ -127,6 +127,22 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   gap: 8px;
 }
 
+.community-subnav__visitors {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bt-space-1);
+  /* 40px is this app's floor for a tap target in a primary flow. */
+  min-height: 40px;
+  padding: 0 var(--bt-space-3);
+  border-radius: var(--bt-radius-chip);
+  background: $tandem-pink-soft;
+  color: $tandem-pink;
+  font-size: var(--bt-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
 .community-subnav__search {
   position: relative;
   display: flex;
@@ -622,70 +638,6 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   justify-content: center;
 }
 
-/* ===== Visitors banner ===== */
-.visitors-banner {
-  margin: var(--bt-space-4) 0;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, #fff7ed 0%, #fff 100%);
-  border: 1px solid #fde68a;
-  border-radius: 16px;
-
-  h3 {
-    margin: 0 0 12px;
-    font-size: var(--bt-text-base);
-    font-weight: 700;
-    color: $tandem-text;
-  }
-}
-
-.visitors-banner__bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.visitors-banner__members {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.visitors-banner__avatars {
-  display: flex;
-
-  img {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #fff;
-    margin-left: -8px;
-
-    &:first-child {
-      margin-left: 0;
-    }
-  }
-}
-
-.visitors-banner__see-all {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 14px;
-  background: $tandem-pro;
-  color: #fff;
-  font-weight: 600;
-  font-size: var(--bt-text-sm);
-  border-radius: 999px;
-  text-decoration: none;
-
-  &:hover {
-    background: darken($tandem-pro, 5%);
-    color: #fff;
-    text-decoration: none;
-  }
-}
-
 /* ===== Member Grid =====
    repeat(3, ...) rather than auto-fill: the column count is the design, not a
    consequence of the container's width. minmax(0, 1fr) so a long unbroken name
@@ -1056,14 +1008,6 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
     height: 64px;
   }
 
-  .visitors-banner {
-    padding: 14px 16px;
-
-    h3 {
-      font-size: var(--bt-text-sm);
-    }
-  }
-
   /* Bottom-sheet variant of the filter panel on small screens */
   .filter-sheet {
     align-items: flex-end;
@@ -1152,15 +1096,6 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
     color: #94a3b8;
 
     &__extra {
-      color: #e5e7eb;
-    }
-  }
-
-  .visitors-banner {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    border-color: #334155;
-
-    h3 {
       color: #e5e7eb;
     }
   }

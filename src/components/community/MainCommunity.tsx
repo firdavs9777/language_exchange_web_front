@@ -15,7 +15,6 @@ import { useDebounce } from "./utils";
 
 import CommunitySubNav, { CommunityNavTab } from "./tandem/CommunitySubNav";
 import HighlightedProfilesCarousel from "./tandem/HighlightedProfilesCarousel";
-import VisitorsBanner from "./tandem/VisitorsBanner";
 import MemberCard, { CommunityMemberCard } from "./MemberCard";
 import CommunityFilterSheet from "./CommunityFilterSheet";
 import ActiveFilterChips from "./ActiveFilterChips";
@@ -799,6 +798,7 @@ const ModernCommunity: React.FC = () => {
         activeFilterCount={activeFilterCount}
         showFilterButton={!isForYou}
         showSearch={!isForYou}
+        visitorsCount={activeTab === "all" ? visitorsTotal : 0}
       />
 
       <CommunityFilterSheet
@@ -844,18 +844,14 @@ const ModernCommunity: React.FC = () => {
           </>
         )}
 
-        {/* The carousel and the visitors banner are the front page of the
-            community, not furniture that follows you into every tab: on
-            Online, New and For you the list is the whole point. */}
+        {/* The carousel is the front page of the community, not furniture
+            that follows you into every tab: on Online, New and For you the
+            list is the whole point. */}
         {activeTab === "all" && highlightedProfiles.length > 0 && (
           <HighlightedProfilesCarousel
             profiles={highlightedProfiles as any}
             currentUser={currentUser}
           />
-        )}
-
-        {activeTab === "all" && visitorsTotal > 0 && (
-          <VisitorsBanner visitors={visitorsList} totalCount={visitorsTotal} />
         )}
 
         {isForYou ? (

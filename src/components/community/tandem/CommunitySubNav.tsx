@@ -77,6 +77,8 @@ interface CommunitySubNavProps {
    * term entirely, so a box that looks like it filters the list is a lie.
    */
   showSearch?: boolean;
+  /** How many people visited the viewer's profile. Absent or 0 renders nothing. */
+  visitorsCount?: number;
 }
 
 const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
@@ -89,6 +91,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
   activeFilterCount = 0,
   showFilterButton = true,
   showSearch = true,
+  visitorsCount,
 }) => {
   const { t } = useTranslation();
   const activeRef = useRef<HTMLButtonElement | null>(null);
@@ -164,6 +167,20 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
 
         {(showSearch || showFilterButton) && (
           <div className="community-subnav__actions">
+            {typeof visitorsCount === "number" && visitorsCount > 0 && (
+              <Link
+                to="/visitors"
+                data-testid="subnav-visitors"
+                className="community-subnav__visitors"
+                aria-label={
+                  t("communityMain.visitors.pill", { count: visitorsCount }) ||
+                  `${visitorsCount} people visited your profile`
+                }
+              >
+                <span aria-hidden>👋</span>
+                <span>{visitorsCount > 99 ? "99+" : visitorsCount}</span>
+              </Link>
+            )}
             {showSearch && (
               <div className="community-subnav__search">
                 <Search size={16} className="community-subnav__search-icon" />

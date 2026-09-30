@@ -193,18 +193,16 @@ describe("the community tabs", () => {
     expect(first).not.toContain("newUsersOnly");
   });
 
-  it("keeps the visitors banner and the highlighted carousel on All only", async () => {
+  it("keeps the highlighted carousel on All only", async () => {
     const { container, router } = renderList();
 
     await waitFor(() =>
-      expect(container.querySelector(".visitors-banner")).toBeInTheDocument()
+      expect(container.querySelector(".highlighted-banner")).toBeInTheDocument()
     );
-    expect(container.querySelector(".highlighted-banner")).toBeInTheDocument();
 
     fireEvent.click(tab("communityMain.tabs.online"));
     await waitFor(() => expect(router.state.location.search).toBe("?tab=online"));
 
-    expect(container.querySelector(".visitors-banner")).not.toBeInTheDocument();
     expect(container.querySelector(".highlighted-banner")).not.toBeInTheDocument();
   });
 
