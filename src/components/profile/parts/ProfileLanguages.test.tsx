@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import ProfileLanguages from "./ProfileLanguages";
+import ProfileLanguages, { hasLanguages } from "./ProfileLanguages";
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -111,4 +111,33 @@ it("renders nothing when the profile has no languages", () => {
 it("renders nothing without a user", () => {
   const { container } = render(<ProfileLanguages />);
   expect(container).toBeEmptyDOMElement();
+});
+
+
+// The page draws one card around all four info sections and asks each whether
+// it has anything BEFORE drawing, because a parent cannot see that a child
+// returned null. These pin the predicate to the component's own rendering.
+describe("hasLanguages", () => {
+  const cases: Array<[string, any, boolean]> = [
+    ["nothing", {}, false],
+    ["a native language", { native_language: "English" }, true],
+    ["a learning language", { language_to_learn: "Korean" }, true],
+    ["both", { native_language: "English", language_to_learn: "Korean" }, true],
+    ["whitespace only", { native_language: "  ", language_to_learn: " " }, false],
+  ];
+
+  cases.forEach(([label, user, expected]) => {
+    it(`agrees with the component for ${label}`, () => {
+      expect(hasLanguages(user)).toBe(expected);
+      const { container } = render(<ProfileLanguages user={user} />);
+      expect(container.firstChild === null).toBe(!expected);
+    });
+  });
+
+  it("drops its own card in bare mode", () => {
+    const { container } = render(
+      <ProfileLanguages user={{ native_language: "English" }} bare />
+    );
+    expect(container.querySelector("[data-testid='surface-card']")).toBeNull();
+  });
 });

@@ -116,8 +116,16 @@ describe("hasAbout", () => {
   });
 
   it("drops its own card in bare mode", () => {
-    const { container } = render(<ProfileAbout user={{ bio: "hi" }} bare />);
-    expect(container.querySelector("[data-testid='profile-about']")).toBeInTheDocument();
-    expect(container.textContent).toContain("hi");
+    // The point of `bare` is that the PAGE draws one card around all four
+    // sections. A part that kept its own SurfaceCard would nest a card inside
+    // a card, so the assertion that matters is the card's absence.
+    const bare = render(<ProfileAbout user={{ bio: "hi" }} bare />);
+    expect(bare.container.querySelector("[data-testid='surface-card']")).toBeNull();
+    expect(bare.container.querySelector("[data-testid='profile-about']")).toBeInTheDocument();
+
+    bare.unmount();
+
+    const wrapped = render(<ProfileAbout user={{ bio: "hi" }} />);
+    expect(wrapped.container.querySelector("[data-testid='surface-card']")).not.toBeNull();
   });
 });

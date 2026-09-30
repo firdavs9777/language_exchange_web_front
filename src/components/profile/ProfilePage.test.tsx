@@ -499,6 +499,11 @@ describe("the phone tab switcher", () => {
   });
 
   it("opens on About below 1024px, so a phone lands on who someone is", () => {
+    mockGetUserProfile.mockReturnValue({
+      ...idle,
+      refetch: ownRefetch,
+      data: { data: { _id: "me", name: "Me", bio: "something to read" } },
+    });
     renderPage("/profile", "me");
 
     expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
@@ -562,6 +567,11 @@ describe("the phone tab switcher", () => {
   });
 
   it("gives the tablist one tab stop, on whichever tab is selected", () => {
+    mockGetUserProfile.mockReturnValue({
+      ...idle,
+      refetch: ownRefetch,
+      data: { data: { _id: "me", name: "Me", bio: "something to read" } },
+    });
     renderPage("/profile", "me");
 
     // About is the default, so it carries the tab stop.
@@ -589,24 +599,32 @@ describe("the phone tab switcher", () => {
   it("wraps at the ends and answers Home and End", () => {
     renderPage("/profile?tab=moments", "me");
 
-    // Moments is first: ArrowLeft wraps round to About.
-    fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "ArrowLeft" });
+    // About is first now, Moments last. Starting on Moments (the last tab),
+    // ArrowRight wraps round to About.
+    fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "ArrowRight" });
     expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
 
-    fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "Home" });
+    fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "End" });
     expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("aria-selected", "true");
 
-    fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "End" });
+    fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "Home" });
     expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
   });
 
   it("leaves other keys to the browser", () => {
-    renderPage("/profile", "me");
+    // Anchored, not defaulted: asserting the tab the page already opens on
+    // would pass whether or not the keypress was inert.
+    mockGetUserProfile.mockReturnValue({
+      ...idle,
+      refetch: ownRefetch,
+      data: { data: { _id: "me", name: "Me", bio: "something to read" } },
+    });
+    renderPage("/profile?tab=moments", "me");
 
     fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "a" });
 
-    expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByTestId("location-search")).not.toHaveTextContent("tab=");
+    expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByTestId("location-search")).toHaveTextContent("tab=moments");
   });
 });
 
@@ -750,5 +768,46 @@ describe("the info card", () => {
     expect(card.getByTestId("profile-about")).toBeInTheDocument();
     expect(card.queryByTestId("profile-languages")).not.toBeInTheDocument();
     expect(card.queryByTestId("profile-learning")).not.toBeInTheDocument();
+  });
+});
+
+describe("the default tab on a sparse profile", () => {
+  it("falls back to Moments when About would be empty", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      // No languages, no bio, no learning stats, no photos.
+      data: { data: { _id: "u2", name: "Ada" } },
+    });
+
+    renderPage("/profile/u2", "me");
+
+    // Landing on an empty panel is worse than landing on posts.
+    expect(screen.getByTestId("profile-moments-panel").className).not.toContain("hidden");
+    expect(screen.getByTestId("profile-about-panel").className).toContain("hidden");
+  });
+
+  it("still opens on About when there is only a photo to show", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", imageUrls: ["a.jpg"] } },
+    });
+
+    renderPage("/profile/u2", "me");
+
+    expect(screen.getByTestId("profile-about-panel").className).not.toContain("hidden");
+  });
+
+  it("honours an explicit ?tab=about even on a sparse profile", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada" } },
+    });
+
+    renderPage("/profile/u2?tab=about", "me");
+
+    expect(screen.getByTestId("profile-about-panel").className).not.toContain("hidden");
   });
 });

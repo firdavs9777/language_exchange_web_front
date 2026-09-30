@@ -140,7 +140,13 @@ for a three-column grid, and a horizontal suggestion strip is not that.
 - A profile with no languages, no bio, no learning data and no mutual interests
   shows no info card at all.
 - The suggestion strip is about the height it was before piece A.
-- Desktop renders exactly what it renders today, bar the four-into-one card.
+- Desktop renders exactly what it renders today, bar two deliberate changes:
+  the four-into-one card, and the suggestion strip, which takes the compact row
+  on every width. The strip is a carousel on a phone and a two-column grid on a
+  desktop; neither wants a ~400px photo-on-top cell at the foot of a profile,
+  so `compact` is passed unconditionally rather than by breakpoint — a
+  breakpoint would mean viewport-aware rendering, which this spec rejects
+  elsewhere for the same reason.
 - The lightbox still opens on click, closes on Escape, steps with the arrow
   keys, traps Tab and restores focus.
 

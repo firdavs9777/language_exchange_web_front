@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import ProfileLearning from "./ProfileLearning";
+import ProfileLearning, { hasLearning } from "./ProfileLearning";
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -50,4 +50,35 @@ it("renders nothing for a brand new account carrying only schema defaults", () =
 it("renders nothing without a user", () => {
   const { container } = render(<ProfileLearning />);
   expect(container).toBeEmptyDOMElement();
+});
+
+
+// Same contract as the other three sections. Learning's emptiness is computed
+// from its tiles, so `hasLearning` shares `learningValues` with the component
+// rather than re-deriving it -- these prove the two really do agree.
+describe("hasLearning", () => {
+  const cases: Array<[string, any, boolean]> = [
+    ["nothing", {}, false],
+    ["a streak", { learningStats: { currentStreak: 3 } }, true],
+    ["XP", { learningStats: { totalXP: 120 } }, true],
+    ["level 1, the schema default", { learningStats: { level: 1 } }, false],
+    ["level 2", { learningStats: { level: 2 } }, true],
+    ["zeroes", { learningStats: { currentStreak: 0, totalXP: 0 } }, false],
+    ["the legacy top-level fields", { streakDays: 5 }, true],
+  ];
+
+  cases.forEach(([label, user, expected]) => {
+    it(`agrees with the component for ${label}`, () => {
+      expect(hasLearning(user)).toBe(expected);
+      const { container } = render(<ProfileLearning user={user} />);
+      expect(container.firstChild === null).toBe(!expected);
+    });
+  });
+
+  it("drops its own card in bare mode", () => {
+    const { container } = render(
+      <ProfileLearning user={{ learningStats: { currentStreak: 3 } }} bare />
+    );
+    expect(container.querySelector("[data-testid='surface-card']")).toBeNull();
+  });
 });

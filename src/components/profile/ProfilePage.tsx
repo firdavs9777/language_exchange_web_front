@@ -43,7 +43,10 @@ const AFTER_BLOCK = "/communities";
 type ProfileTab = "moments" | "about";
 
 /** Tab order, which is also the arrow-key order. */
-const TABS: ProfileTab[] = ["moments", "about"];
+// About first, because it is the tab the page opens on: landing on the
+// SECOND tab reads as though something went wrong, and Home would jump away
+// from where you started.
+const TABS: ProfileTab[] = ["about", "moments"];
 const tabId = (name: ProfileTab): string => `profile-tab-${name}`;
 const panelId = (name: ProfileTab): string => `profile-panel-${name}`;
 
@@ -146,7 +149,6 @@ const ProfilePage: React.FC = () => {
   // landing on someone's posts before knowing who they are is the wrong first
   // screen. `?tab=moments` still works, so existing links are unaffected, and
   // desktop is untouched -- both panels are `lg:block` regardless of this.
-  const tab: ProfileTab = searchParams.get("tab") === "moments" ? "moments" : "about";
   const selectTab = (next: ProfileTab): void => {
     const params = new URLSearchParams(searchParams);
     params.set("tab", next);
@@ -185,6 +187,31 @@ const ProfilePage: React.FC = () => {
   const profileId = userId || (user && user._id) || "";
 
   const images = (user && user.imageUrls) || [];
+
+  // What the About panel would actually contain. Photos sit above the tabs, so
+  // they are not part of it -- but they are worth landing next to, which is why
+  // they count towards "About has something to show".
+  const aboutHasSomething =
+    hasLanguages(user) ||
+    hasAbout(user) ||
+    hasLearning(user) ||
+    (!isOwn && hasMutualInterests(viewer, user)) ||
+    images.length > 0;
+
+  // About, not Moments: on a phone the tabs are the whole navigation, and
+  // landing on someone's posts before knowing who they are is the wrong first
+  // screen. But landing on an EMPTY panel is worse than either, so a profile
+  // with nothing to say falls back to Moments. An explicit ?tab= always wins,
+  // and desktop is untouched -- both panels are `lg:block` regardless of this.
+  const requested = searchParams.get("tab");
+  const tab: ProfileTab =
+    requested === "moments"
+      ? "moments"
+      : requested === "about"
+      ? "about"
+      : aboutHasSomething
+      ? "about"
+      : "moments";
   const notFound = !loading && (statusOf(error) === 404 || (!error && !user));
   const failed = !loading && !notFound && Boolean(error);
 
