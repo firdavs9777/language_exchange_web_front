@@ -161,7 +161,7 @@ const ForYouTab: React.FC<{
         </Link>
       </div>
     ) : (
-      <div className="flex flex-col gap-3">
+      <div className="community-grid">
         {members.map((member) => {
           const reasons = (member.matchReasons || []).filter(Boolean);
           return (
@@ -878,7 +878,7 @@ const ModernCommunity: React.FC = () => {
           // reaches its final height before the first member arrives, so
           // nothing under the list jumps when it does.
           <div
-            className="flex flex-col gap-3"
+            className="community-skeleton-list"
             data-testid="community-skeletons"
             aria-busy="true"
           >
@@ -902,7 +902,7 @@ const ModernCommunity: React.FC = () => {
           </div>
         ) : (
           <>
-            <div className="flex flex-col gap-3">
+            <div className="community-grid">
               {allMembers.map((member, index) => (
                 <Fragment key={member._id}>
                   <div className={CARD_SLOT}>

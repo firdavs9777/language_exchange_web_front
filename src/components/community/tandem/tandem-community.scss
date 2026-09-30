@@ -686,12 +686,21 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 
-/* ===== Member Grid ===== */
+/* ===== Member Grid =====
+   repeat(3, ...) rather than auto-fill: the column count is the design, not a
+   consequence of the container's width. minmax(0, 1fr) so a long unbroken name
+   cannot push its column wider than its share. */
 .community-grid {
   margin-top: 16px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.community-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .community-grid__count {
@@ -969,10 +978,10 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .community-grid {
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
   }
 }
 
@@ -1013,11 +1022,6 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   .community-subnav__search {
     flex: 1 1 auto;
     min-width: 0;
-  }
-
-  .community-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
   }
 
   .tandem-member-card__content {
@@ -1083,7 +1087,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 @media (max-width: 380px) {
   .community-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 }
 

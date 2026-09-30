@@ -87,3 +87,19 @@ describe("the member page blocks", () => {
     expect(fs.existsSync(path.join(__dirname, "tandem/types.ts"))).toBe(true);
   });
 });
+
+describe("the member list is a grid, not a column", () => {
+  it("puts three members per row above 1024px", () => {
+    expect(scss).toMatch(/\.community-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/);
+  });
+
+  it("drops to two columns on a tablet and one on a small phone", () => {
+    expect(scss).toMatch(/@media \(max-width: 1024px\)[\s\S]*?\.community-grid\s*\{[^}]*repeat\(2, minmax\(0, 1fr\)\)/);
+    expect(scss).toMatch(/@media \(max-width: 380px\)[\s\S]*?\.community-grid\s*\{[^}]*repeat\(1, minmax\(0, 1fr\)\)/);
+  });
+
+  it("renders members through the grid on both tabs, not a flex column", () => {
+    expect(tsx).toContain('className="community-grid"');
+    expect(tsx).not.toContain('className="flex flex-col gap-3"');
+  });
+});
