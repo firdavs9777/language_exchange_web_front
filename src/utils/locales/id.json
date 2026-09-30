@@ -202,7 +202,8 @@
       "gradient_winter": "Musim dingin",
       "gradient_lavender": "Lavender",
       "gradient_aurora": "Aurora"
-    }
+    },
+    "jumpToLatest": "Lompat ke pesan terbaru"
   },
   "newChat": {
     "title": "Obrolan Baru",

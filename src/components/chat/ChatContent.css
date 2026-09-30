@@ -1466,3 +1466,70 @@
 .message-avatar--hidden {
   visibility: hidden;
 }
+
+/* ---- The way back down -------------------------------------------------
+   Sits above the composer, over the thread rather than in its flow, so it
+   never shifts a message while the reader is mid-sentence. It only exists
+   while the newest message is off screen. */
+.scroll-to-bottom-btn {
+  position: absolute;
+  right: 16px;
+  /* Clear of the composer, and of a phone's home indicator. */
+  bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 40px is this app's floor for a tap target in a primary flow. */
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 10px;
+  gap: 6px;
+
+  border: 1px solid var(--chat-line);
+  border-radius: 999px;
+  background: var(--chat-surface);
+  color: var(--chat-text);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+  cursor: pointer;
+
+  animation: scroll-to-bottom-in 140ms ease-out;
+}
+
+.scroll-to-bottom-btn:hover {
+  background: var(--chat-hover);
+}
+
+.scroll-to-bottom-btn:focus-visible {
+  outline: 2px solid var(--chat-accent);
+  outline-offset: 2px;
+}
+
+.scroll-to-bottom-count {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: var(--chat-accent);
+  color: var(--chat-on-accent);
+}
+
+@keyframes scroll-to-bottom-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Someone who asked for less motion gets the button, not the movement. */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-to-bottom-btn { animation: none; }
+}
+
+/* The composer is shorter on a phone, so the float sits lower. */
+@media (max-width: 768px) {
+  .scroll-to-bottom-btn {
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    right: 12px;
+  }
+}

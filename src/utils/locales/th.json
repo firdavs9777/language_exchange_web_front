@@ -202,7 +202,8 @@
       "gradient_winter": "ฤดูหนาว",
       "gradient_lavender": "ลาเวนเดอร์",
       "gradient_aurora": "แสงเหนือ"
-    }
+    },
+    "jumpToLatest": "ไปที่ข้อความล่าสุด"
   },
   "newChat": {
     "title": "แชทใหม่",

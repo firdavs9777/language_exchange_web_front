@@ -202,7 +202,8 @@
       "gradient_winter": "冬日",
       "gradient_lavender": "薰衣草紫",
       "gradient_aurora": "极光"
-    }
+    },
+    "jumpToLatest": "跳转到最新消息"
   },
   "newChat": {
     "title": "新建聊天",

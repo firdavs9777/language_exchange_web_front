@@ -202,7 +202,8 @@
       "gradient_winter": "Winter",
       "gradient_lavender": "Lavendel",
       "gradient_aurora": "Aurora"
-    }
+    },
+    "jumpToLatest": "Zu den neuesten Nachrichten springen"
   },
   "newChat": {
     "title": "Neuer Chat",

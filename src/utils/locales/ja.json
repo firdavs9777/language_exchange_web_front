@@ -202,7 +202,8 @@
       "gradient_winter": "ウィンター",
       "gradient_lavender": "ラベンダー",
       "gradient_aurora": "オーロラ"
-    }
+    },
+    "jumpToLatest": "最新のメッセージへ移動"
   },
   "newChat": {
     "title": "新しいチャット",

@@ -202,7 +202,8 @@
       "gradient_winter": "Invierno",
       "gradient_lavender": "Lavanda",
       "gradient_aurora": "Aurora"
-    }
+    },
+    "jumpToLatest": "Ir a los mensajes más recientes"
   },
   "notifications": "Notificaciones",
   "moments": "Momentos",
