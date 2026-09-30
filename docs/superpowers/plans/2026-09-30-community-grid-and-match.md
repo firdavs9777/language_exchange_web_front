@@ -329,6 +329,7 @@ before the image arrives."
 - Modify: `src/components/community/MainCommunity.tsx:165-180`
 - Modify: `src/components/community/MainCommunityTabs.test.tsx:240`
 - Test: `src/components/community/MemberCard.test.tsx`
+- Test: `src/components/community/communityStyling.test.ts` (the sentence is gone)
 
 **Interfaces:**
 - Consumes: the cell layout from Task 2.
@@ -396,10 +397,18 @@ describe("MemberCard match reasons", () => {
     expect(screen.queryByText("Active today")).not.toBeInTheDocument();
   });
 
-  it("leaves the Why sentence behind in the parent", () => {
-    // MainCommunity used to render it; the testid must not survive anywhere.
-    expect(screen.queryByTestId("for-you-why")).not.toBeInTheDocument();
-  });
+});
+```
+
+And in `src/components/community/communityStyling.test.ts`, a static check that
+the sentence really left the parent. This is deliberately a source assertion
+rather than a render one: `screen.queryByTestId` in a test that renders nothing
+passes whatever the code does, which would be a test that asserts nothing.
+
+```ts
+it("leaves the Why sentence behind -- the card carries the reasons now", () => {
+  expect(tsx).not.toContain("for-you-why");
+  expect(tsx).not.toContain("communityMain.forYou.why");
 });
 ```
 
