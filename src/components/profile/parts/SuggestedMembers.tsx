@@ -7,7 +7,10 @@ import MemberCard, { CommunityMemberCard } from "../../community/MemberCard";
 import WaveSheet from "../../community/WaveSheet";
 
 /** How many suggestions the strip shows, as the detail page always has. */
-const HOW_MANY = 8;
+// Four. This is a "by the way" at the foot of someone's profile, not a browse
+// surface -- eight compact rows put ~640px of other people below the person
+// you came to read. "See all members" is right there for anyone who wants more.
+const HOW_MANY = 4;
 /** Asked for more than shown, because the viewer and the target are filtered out here. */
 const PAGE_LIMIT = 12;
 

@@ -126,7 +126,7 @@ const ProfileLearning: React.FC<ProfileLearningProps> = ({ user, bare }) => {
     </>
   );
 
-  return bare ? body : <SurfaceCard padding="lg">{body}</SurfaceCard>;
+  return bare ? body : <SurfaceCard padding="md">{body}</SurfaceCard>;
 };
 
 export default ProfileLearning;

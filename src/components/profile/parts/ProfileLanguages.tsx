@@ -160,7 +160,7 @@ const ProfileLanguages: React.FC<ProfileLanguagesProps> = ({ user, bare }) => {
     </>
   );
 
-  return bare ? body : <SurfaceCard padding="lg">{body}</SurfaceCard>;
+  return bare ? body : <SurfaceCard padding="md">{body}</SurfaceCard>;
 };
 
 export default ProfileLanguages;

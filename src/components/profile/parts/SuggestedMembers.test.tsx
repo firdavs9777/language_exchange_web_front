@@ -81,12 +81,12 @@ it("leaves out the profile itself and the viewer", () => {
   expect(screen.getByTestId("member-card-name")).toHaveTextContent("User u3");
 });
 
-it("shows at most eight", () => {
+it("shows at most four, however many the page returns", () => {
   mockGetMembers.mockReturnValue({
     data: { data: Array.from({ length: 12 }).map((unused, i) => member(`u${i + 10}`)) },
   });
   renderStrip();
-  expect(screen.getAllByTestId("suggested-member")).toHaveLength(8);
+  expect(screen.getAllByTestId("suggested-member")).toHaveLength(4);
 });
 
 it("renders nothing when nothing is left to suggest", () => {
@@ -120,4 +120,15 @@ it("asks for the compact card, not the grid cell", () => {
   expect(screen.getAllByTestId("suggested-member").length).toBe(2);
   expect(screen.queryByTestId("member-card-photo")).not.toBeInTheDocument();
   expect(screen.getAllByTestId("member-card-avatar").length).toBeGreaterThan(0);
+});
+
+it("shows four suggestions, not a second community page", () => {
+  mockGetMembers.mockReturnValue({
+    data: { data: [member("u3"), member("u4"), member("u5"), member("u6"), member("u7"), member("u8")] },
+  });
+  renderStrip();
+
+  expect(screen.getAllByTestId("suggested-member")).toHaveLength(4);
+  // The way to more is the link, not a longer list.
+  expect(screen.getByText(/see all members/i)).toBeInTheDocument();
 });

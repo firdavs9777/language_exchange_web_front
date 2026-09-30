@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import "@testing-library/jest-dom";
 import React from "react";
 import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
@@ -809,5 +811,29 @@ describe("the default tab on a sparse profile", () => {
     renderPage("/profile/u2?tab=about", "me");
 
     expect(screen.getByTestId("profile-about-panel").className).not.toContain("hidden");
+  });
+});
+
+// Reported: the profile's sections are too tall. Every card carried p-5 (20px
+// all round), stacked with 16px between ~8 blocks, and the merged info card
+// added another 20px between each of its four sections. Nothing is removed —
+// the air is.
+describe("section density", () => {
+  const source = fs.readFileSync(
+    path.resolve(__dirname, "./ProfilePage.tsx"),
+    "utf8"
+  );
+
+  it("stacks the profile's blocks at 12px, not 16px", () => {
+    expect(source).toContain('data-testid="profile-body" className="space-y-3"');
+  });
+
+  it("uses the medium card padding, not the large one", () => {
+    expect(source).not.toContain('padding="lg"');
+  });
+
+  it("keeps the info card's four sections closer together", () => {
+    expect(source).toContain('className="space-y-4"');
+    expect(source).not.toContain('className="space-y-5"');
   });
 });

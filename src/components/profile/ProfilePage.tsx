@@ -235,7 +235,7 @@ const ProfilePage: React.FC = () => {
       <div className={PAGE}>
         {meta}
         <div className={COLUMN}>
-          <SurfaceCard padding="lg">
+          <SurfaceCard padding="md">
             <div data-testid="profile-not-found" className="py-6 text-center">
               <UserX className="mx-auto h-8 w-8 text-ink-400" aria-hidden />
               <h1 className="pt-3 font-display text-lg text-ink-900 dark:text-ink-50">
@@ -264,7 +264,7 @@ const ProfilePage: React.FC = () => {
       <div className={PAGE}>
         {meta}
         <div className={COLUMN}>
-          <SurfaceCard padding="lg">
+          <SurfaceCard padding="md">
             <div data-testid="profile-error" role="alert" className="py-6 text-center">
               <h1 className="font-display text-lg text-ink-900 dark:text-ink-50">
                 {t("profile.page.error_title") || "We couldn't load this profile"}
@@ -292,7 +292,7 @@ const ProfilePage: React.FC = () => {
     <div className={PAGE}>
       {meta}
       <div className={COLUMN}>
-        <div data-testid="profile-body" className="space-y-4">
+        <div data-testid="profile-body" className="space-y-3">
           <ProfileHeader
             name={displayName}
             username={user.username}
@@ -389,7 +389,7 @@ const ProfilePage: React.FC = () => {
               id={panelId("about")}
               aria-labelledby={tabId("about")}
               data-testid="profile-about-panel"
-              className={`space-y-4 lg:block ${tab === "about" ? "" : "hidden"}`}
+              className={`space-y-3 lg:block ${tab === "about" ? "" : "hidden"}`}
             >
               {/* One card, four sections. Four separate cards is what pushed
                   everything below the fold on a phone, and the four read as
@@ -406,8 +406,8 @@ const ProfilePage: React.FC = () => {
                 hasLearning(user) ||
                 (!isOwn && hasMutualInterests(viewer, user))) && (
                 <div data-testid="profile-info-card">
-                  <SurfaceCard padding="lg">
-                    <div className="space-y-5">
+                  <SurfaceCard padding="md">
+                    <div className="space-y-4">
                       <ProfileLanguages user={user} bare />
                       <ProfileAbout user={user} bare />
                       <ProfileLearning user={user} bare />
@@ -424,7 +424,7 @@ const ProfilePage: React.FC = () => {
               id={panelId("moments")}
               aria-labelledby={tabId("moments")}
               data-testid="profile-moments-panel"
-              className={`space-y-4 lg:block ${tab === "moments" ? "" : "hidden"}`}
+              className={`space-y-3 lg:block ${tab === "moments" ? "" : "hidden"}`}
             >
               {/* The desktop half of the pair declared in the About panel. */}
               <div data-testid="profile-photos-desktop" className="hidden lg:block">
