@@ -837,3 +837,37 @@ describe("section density", () => {
     expect(source).not.toContain('className="space-y-5"');
   });
 });
+
+describe("the profile picture", () => {
+  const withPhotos = () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", imageUrls: ["a.jpg", "b.jpg"] } },
+    });
+  };
+
+  it("opens the photo viewer when the avatar is clicked", () => {
+    withPhotos();
+    renderPage("/profile/u2", "me");
+
+    // Nothing open to begin with.
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /Ada's photo/i }));
+
+    expect(screen.getAllByRole("dialog").length).toBeGreaterThan(0);
+  });
+
+  it("leaves the avatar inert when the person has no photo to show", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", imageUrls: [] } },
+    });
+    renderPage("/profile/u2", "me");
+
+    // A button that opens an empty viewer is worse than no button.
+    expect(screen.queryByRole("button", { name: /Ada's photo/i })).not.toBeInTheDocument();
+  });
+});

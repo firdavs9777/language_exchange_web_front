@@ -269,7 +269,8 @@
       "close": "Isara",
       "previous": "Nakaraang larawan",
       "next": "Susunod na larawan",
-      "counter": "{{index}} ng {{total}}"
+      "counter": "{{index}} ng {{total}}",
+      "openAvatar": "Buksan ang larawan ni {{name}}"
     },
     "messages": {
       "image_update_success": "Matagumpay na na-update ang larawan ng profile",

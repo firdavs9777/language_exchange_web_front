@@ -269,7 +269,8 @@
       "close": "閉じる",
       "previous": "前の写真",
       "next": "次の写真",
-      "counter": "{{index}} / {{total}}"
+      "counter": "{{index}} / {{total}}",
+      "openAvatar": "{{name}}の写真を開く"
     },
     "messages": {
       "image_update_success": "プロフィール写真を更新しました",

@@ -250,7 +250,8 @@
       "close": "Chiudi",
       "previous": "Foto precedente",
       "next": "Foto successiva",
-      "counter": "{{index}} di {{total}}"
+      "counter": "{{index}} di {{total}}",
+      "openAvatar": "Apri la foto di {{name}}"
     },
     "messages": {
       "image_update_success": "Immagine del profilo aggiornata con successo",

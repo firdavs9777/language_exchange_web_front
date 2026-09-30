@@ -269,7 +269,8 @@
       "close": "Kapat",
       "previous": "Önceki fotoğraf",
       "next": "Sonraki fotoğraf",
-      "counter": "{{index}} / {{total}}"
+      "counter": "{{index}} / {{total}}",
+      "openAvatar": "{{name}} adlı kişinin fotoğrafını aç"
     },
     "messages": {
       "image_update_success": "Profil resmi başarıyla güncellendi",

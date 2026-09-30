@@ -269,7 +269,8 @@
       "close": "Đóng",
       "previous": "Ảnh trước",
       "next": "Ảnh sau",
-      "counter": "{{index}}/{{total}}"
+      "counter": "{{index}}/{{total}}",
+      "openAvatar": "Mở ảnh của {{name}}"
     },
     "messages": {
       "image_update_success": "Đã cập nhật ảnh hồ sơ thành công",

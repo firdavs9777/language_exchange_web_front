@@ -269,7 +269,8 @@
       "close": "ปิด",
       "previous": "รูปก่อนหน้า",
       "next": "รูปถัดไป",
-      "counter": "{{index}} จาก {{total}}"
+      "counter": "{{index}} จาก {{total}}",
+      "openAvatar": "เปิดรูปของ {{name}}"
     },
     "messages": {
       "image_update_success": "อัปเดตรูปโปรไฟล์สำเร็จ",

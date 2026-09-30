@@ -8,6 +8,8 @@ export interface ProfileHeaderProps {
   name: string;
   username?: string;
   avatarUrl?: string;
+  /** Opens the photo viewer on the avatar, which is also the first photo. */
+  onAvatarClick?: () => void;
   isOnline?: boolean;
   /** Birth fields as the API returns them — strings on the wire. */
   birthYear?: string | number;
@@ -115,6 +117,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   name,
   username,
   avatarUrl,
+  onAvatarClick,
   isOnline,
   birthYear,
   birthMonth,
@@ -149,7 +152,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       <div className="px-4 pb-5 sm:px-6">
         <div className="-mt-10 flex items-end gap-3">
           <div className="rounded-full bg-surface p-1 dark:bg-cardbg-dark">
-            <Avatar src={avatarUrl} name={name} size={80} isOnline={isOnline} />
+            <Avatar
+              src={avatarUrl}
+              name={name}
+              size={80}
+              isOnline={isOnline}
+              onClick={avatarUrl ? onAvatarClick : undefined}
+              label={t("profile.photos.openAvatar", { name }) || `Open ${name}'s photo`}
+            />
           </div>
         </div>
 
