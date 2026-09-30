@@ -8,6 +8,7 @@ import path from "path";
 
 const tsx = fs.readFileSync(path.join(__dirname, "MainCommunity.tsx"), "utf8");
 const scss = fs.readFileSync(path.join(__dirname, "tandem/tandem-community.scss"), "utf8");
+const indexCss = fs.readFileSync(path.resolve(__dirname, "../../index.css"), "utf8");
 
 it("keeps colours out of the component -- no hardcoded hex in an inline style", () => {
   const inlineStyles = tsx.match(/style=\{\{[\s\S]*?\}\}/g) || [];
@@ -136,5 +137,47 @@ describe("the interleaved ad does not break the 3-per-row rhythm", () => {
   it("spans the full row instead of occupying one of the three columns", () => {
     expect(tsx).toMatch(/<AdUnit[^>]*className="[^"]*\bcommunity-grid__ad\b[^"]*"/);
     expect(scss).toMatch(/\.community-grid__ad\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/);
+  });
+});
+
+describe("the shared scales exist as tokens", () => {
+  it("declares a spacing scale", () => {
+    ["--bt-space-1: 4px", "--bt-space-2: 8px", "--bt-space-3: 12px",
+     "--bt-space-4: 16px", "--bt-space-5: 24px", "--bt-space-6: 32px",
+     "--bt-space-7: 48px"].forEach((decl) => {
+      expect(indexCss).toContain(decl);
+    });
+  });
+
+  it("declares a five-step type scale", () => {
+    ["--bt-text-xs: 0.75rem", "--bt-text-sm: 0.875rem", "--bt-text-base: 1rem",
+     "--bt-text-lg: 1.125rem", "--bt-text-xl: 1.25rem"].forEach((decl) => {
+      expect(indexCss).toContain(decl);
+    });
+  });
+});
+
+describe("type sizes come from the scale", () => {
+  it("names no font size the scale does not have", () => {
+    const sizes = scss.match(/font-size:\s*[^;]+;/g) || [];
+    const offenders = sizes.filter(
+      (decl) => !/var\(--bt-text-(xs|sm|base|lg|xl)\)/.test(decl) && !/inherit/.test(decl)
+    );
+    expect(offenders).toEqual([]);
+  });
+});
+
+describe("the page's own rhythm comes from the scale", () => {
+  const pageRule = (selector: string): string => {
+    const m = scss.match(new RegExp(`\\${selector}\\s*\\{([^}]*)\\}`));
+    return m ? m[1] : "";
+  };
+
+  it("pads the page container from the scale", () => {
+    expect(pageRule(".community-page__container")).toMatch(/var\(--bt-space-\d\)/);
+  });
+
+  it("spaces the member grid from the scale", () => {
+    expect(pageRule(".community-grid")).toMatch(/margin-top:\s*var\(--bt-space-\d\)/);
   });
 });

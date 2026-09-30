@@ -925,9 +925,8 @@
       "highlightSelfTopic": "Profilinizi öne çıkararak daha çok kişinin sizi görmesini sağlayın"
     },
     "visitors": {
-      "justYou": "{{name}} profilinizi ziyaret etti!",
-      "andOthers": "{{name}} ve {{count}} diğer kişi profilinizi ziyaret etti!",
-      "seeAll": "Tümünü gör"
+      "pill_one": "1 kişi profilinizi ziyaret etti",
+      "pill_other": "{{count}} kişi profilinizi ziyaret etti"
     },
     "tandemCard": {
       "newChip": "YENİ",

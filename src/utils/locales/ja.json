@@ -925,9 +925,8 @@
       "highlightSelfTopic": "プロフィールを目立たせて、もっと多くの人に見てもらいましょう"
     },
     "visitors": {
-      "justYou": "{{name}}さんがあなたのプロフィールを見ました！",
-      "andOthers": "{{name}}さんと他{{count}}人があなたのプロフィールを見ました！",
-      "seeAll": "すべて見る"
+      "pill_one": "1人があなたのプロフィールを見ました",
+      "pill_other": "{{count}}人があなたのプロフィールを見ました"
     },
     "tandemCard": {
       "newChip": "新着",

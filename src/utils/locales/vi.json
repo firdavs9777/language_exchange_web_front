@@ -925,9 +925,8 @@
       "highlightSelfTopic": "Làm nổi bật hồ sơ của bạn để nhiều người thấy bạn hơn"
     },
     "visitors": {
-      "justYou": "{{name}} đã xem hồ sơ của bạn!",
-      "andOthers": "{{name}} và {{count}} người khác đã xem hồ sơ của bạn!",
-      "seeAll": "Xem tất cả"
+      "pill_one": "1 người đã xem hồ sơ của bạn",
+      "pill_other": "{{count}} người đã xem hồ sơ của bạn"
     },
     "tandemCard": {
       "newChip": "MỚI",

@@ -79,6 +79,26 @@
   --bt-track-display-lg: -0.03em; /* h1 */
   --bt-track-tw-tight: -0.025em; /* Tailwind `tracking-tight` */
   --bt-track-tw-tighter: -0.05em; /* Tailwind `tracking-tighter` */
+
+  /* Spacing scale. The community stylesheet grew nineteen distinct values with
+     no relation between them (2 3 4 5 6 8 10 11 12 14 16 18 20 24 26 28 38 48
+     64); this is the ladder new work climbs. */
+  --bt-space-1: 4px;
+  --bt-space-2: 8px;
+  --bt-space-3: 12px;
+  --bt-space-4: 16px;
+  --bt-space-5: 24px;
+  --bt-space-6: 32px;
+  --bt-space-7: 48px;
+
+  /* Type scale. Eleven sizes were in use, three of them within 1.2px of each
+     other (0.875 / 0.9375 / 0.95rem) -- steps nobody can see are noise, not
+     hierarchy. */
+  --bt-text-xs: 0.75rem;
+  --bt-text-sm: 0.875rem;
+  --bt-text-base: 1rem;
+  --bt-text-lg: 1.125rem;
+  --bt-text-xl: 1.25rem;
 }
 
 /* Negative tracking is a Latin typesetting convention. Applied to Hangul,

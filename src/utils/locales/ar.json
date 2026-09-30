@@ -925,9 +925,10 @@
       "highlightSelfTopic": "اجعل ملفك الشخصي مميزًا ليراك المزيد من الأشخاص"
     },
     "visitors": {
-      "justYou": "زار {{name}} ملفك الشخصي!",
-      "andOthers": "زار {{name}} و {{count}} آخرون ملفك الشخصي!",
-      "seeAll": "عرض الكل"
+      "pill_one": "شخص واحد زار ملفك الشخصي",
+      "pill_few": "{{count}} أشخاص زاروا ملفك الشخصي",
+      "pill_many": "{{count}} شخصًا زاروا ملفك الشخصي",
+      "pill_other": "{{count}} شخص زار ملفك الشخصي"
     },
     "tandemCard": {
       "newChip": "جديد",

@@ -193,19 +193,83 @@ describe("the community tabs", () => {
     expect(first).not.toContain("newUsersOnly");
   });
 
-  it("keeps the visitors banner and the highlighted carousel on All only", async () => {
+  it("keeps the highlighted carousel on All only, below the first row", async () => {
     const { container, router } = renderList();
 
     await waitFor(() =>
-      expect(container.querySelector(".visitors-banner")).toBeInTheDocument()
+      expect(container.querySelector(".highlighted-banner")).toBeInTheDocument()
     );
-    expect(container.querySelector(".highlighted-banner")).toBeInTheDocument();
+    // It is inside the grid now, not a sibling above it.
+    const grid = container.querySelector(".community-grid")!;
+    expect(grid.querySelector(".highlighted-banner")).toBeInTheDocument();
+    expect(container.querySelector(".visitors-banner")).not.toBeInTheDocument();
 
     fireEvent.click(tab("communityMain.tabs.online"));
     await waitFor(() => expect(router.state.location.search).toBe("?tab=online"));
 
-    expect(container.querySelector(".visitors-banner")).not.toBeInTheDocument();
     expect(container.querySelector(".highlighted-banner")).not.toBeInTheDocument();
+  });
+
+  it("places the carousel after the first six members, spanning the row", async () => {
+    // Six is the first index that is a row boundary at 3, 2 AND 1 columns, so
+    // the default 3-member mock is not enough to reach the index === 5
+    // branch; this test supplies six members to exercise it.
+    const realFetch = global.fetch;
+    (global as any).fetch = jest.fn((input: any) => {
+      const url = typeof input === "string" ? input : input?.url || "";
+      if (/\/auth\/users\?/.test(url)) {
+        return Promise.resolve(new Response(JSON.stringify({
+          success: true,
+          data: [member(1), member(2), member(3), member(4), member(5), member(6)],
+        }), { status: 200, headers: { "Content-Type": "application/json" } }));
+      }
+      return (realFetch as any)(input);
+    });
+
+    try {
+      const { container } = renderList();
+      await waitFor(() =>
+        expect(container.querySelector(".highlighted-banner")).toBeInTheDocument()
+      );
+      const grid = container.querySelector(".community-grid")!;
+
+      const feature = grid.querySelector(".community-grid__feature")!;
+      expect(feature).toBeInTheDocument();
+      // Six members before it, so the carousel is the seventh child of the grid.
+      expect(Array.from(grid.children).indexOf(feature)).toBe(6);
+    } finally {
+      global.fetch = realFetch;
+    }
+  });
+
+  it("still places the carousel when a search returns fewer than six members", async () => {
+    // The shared mock returns a full page; this one returns two members so the
+    // index === 5 branch is never reached and the fallback has to carry it.
+    const realFetch = global.fetch;
+    (global as any).fetch = jest.fn((input: any) => {
+      const url = typeof input === "string" ? input : input?.url || "";
+      if (/\/auth\/users\?/.test(url)) {
+        return Promise.resolve(new Response(JSON.stringify({
+          data: [
+            { _id: "m1", name: "Ada", imageUrls: [], native_language: "English", language_to_learn: "Korean" },
+            { _id: "m2", name: "Bo", imageUrls: [], native_language: "Korean", language_to_learn: "English" },
+          ],
+          total: 2,
+        }), { status: 200, headers: { "Content-Type": "application/json" } }));
+      }
+      return (realFetch as any)(input);
+    });
+
+    try {
+      const { container } = renderList();
+      await waitFor(() =>
+        expect(container.querySelector(".highlighted-banner")).toBeInTheDocument()
+      );
+      const grid = container.querySelector(".community-grid")!;
+      expect(grid.querySelector(".highlighted-banner")).toBeInTheDocument();
+    } finally {
+      global.fetch = realFetch;
+    }
   });
 
   it("keeps the wave sheet reachable on every tab", async () => {

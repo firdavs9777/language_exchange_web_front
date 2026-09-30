@@ -15,7 +15,6 @@ import { useDebounce } from "./utils";
 
 import CommunitySubNav, { CommunityNavTab } from "./tandem/CommunitySubNav";
 import HighlightedProfilesCarousel from "./tandem/HighlightedProfilesCarousel";
-import VisitorsBanner from "./tandem/VisitorsBanner";
 import MemberCard, { CommunityMemberCard } from "./MemberCard";
 import CommunityFilterSheet from "./CommunityFilterSheet";
 import ActiveFilterChips from "./ActiveFilterChips";
@@ -541,24 +540,19 @@ const ModernCommunity: React.FC = () => {
     return [...pros, ...fillers].slice(0, 12);
   }, [allMembers]);
 
-  const visitorsList = useMemo(() => {
+  const visitorsCount = useMemo(() => {
     const raw = (visitorsData?.data ?? visitorsData?.visitors ?? []) as any[];
-    return raw.map((v) => ({
-      _id: v._id || v.userId || v.id,
-      name: v.name || v.visitorName,
-      imageUrls: v.imageUrls || (v.image ? [v.image] : undefined),
-      photo: v.photo,
-    }));
+    return raw.length;
   }, [visitorsData]);
 
   const visitorsTotal = useMemo(() => {
     return (
       visitorsData?.totalCount ??
       visitorsData?.total ??
-      visitorsList.length ??
+      visitorsCount ??
       0
     );
-  }, [visitorsData, visitorsList]);
+  }, [visitorsData, visitorsCount]);
 
   const hasMore = communityData?.data?.length === PAGE_LIMIT;
 
@@ -799,6 +793,7 @@ const ModernCommunity: React.FC = () => {
         activeFilterCount={activeFilterCount}
         showFilterButton={!isForYou}
         showSearch={!isForYou}
+        visitorsCount={activeTab === "all" ? visitorsTotal : 0}
       />
 
       <CommunityFilterSheet
@@ -842,20 +837,6 @@ const ModernCommunity: React.FC = () => {
               topicLabels={topicLabels}
             />
           </>
-        )}
-
-        {/* The carousel and the visitors banner are the front page of the
-            community, not furniture that follows you into every tab: on
-            Online, New and For you the list is the whole point. */}
-        {activeTab === "all" && highlightedProfiles.length > 0 && (
-          <HighlightedProfilesCarousel
-            profiles={highlightedProfiles as any}
-            currentUser={currentUser}
-          />
-        )}
-
-        {activeTab === "all" && visitorsTotal > 0 && (
-          <VisitorsBanner visitors={visitorsList} totalCount={visitorsTotal} />
         )}
 
         {isForYou ? (
@@ -915,6 +896,37 @@ const ModernCommunity: React.FC = () => {
                     index !== allMembers.length - 1 && (
                       <AdUnit slot={AD_SLOTS.community} className="my-3 community-grid__ad" />
                     )}
+                  {/* The carousel is the front page of the community, not
+                      furniture that follows you into every tab: on Online,
+                      New and For you the list is the whole point. It sits
+                      after the first six members -- the first index that is
+                      a row boundary at 3, 2 AND 1 columns (the grid drops to
+                      2 columns at <=1024px and 1 at narrower still), so it
+                      never tears a hole in the grid the way index 2 did at
+                      the 2-column breakpoint. The index is intentionally not
+                      responsive: that would make the component know a
+                      breakpoint the CSS already owns. */}
+                  {index === 5 && activeTab === "all" && highlightedProfiles.length > 0 && (
+                    <div className="community-grid__feature">
+                      <HighlightedProfilesCarousel
+                        profiles={highlightedProfiles as any}
+                        currentUser={currentUser}
+                      />
+                    </div>
+                  )}
+                  {/* A thread shorter than six members never reaches index 5,
+                      so the carousel still has to land after the last member. */}
+                  {allMembers.length < 6 &&
+                    index === allMembers.length - 1 &&
+                    activeTab === "all" &&
+                    highlightedProfiles.length > 0 && (
+                    <div className="community-grid__feature">
+                      <HighlightedProfilesCarousel
+                        profiles={highlightedProfiles as any}
+                        currentUser={currentUser}
+                      />
+                    </div>
+                  )}
                 </Fragment>
               ))}
             </div>

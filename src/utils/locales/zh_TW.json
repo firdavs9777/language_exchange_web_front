@@ -925,9 +925,8 @@
       "highlightSelfTopic": "讓你的個人檔案更顯眼，被更多人看見"
     },
     "visitors": {
-      "justYou": "{{name}} 看過你的個人檔案！",
-      "andOthers": "{{name}} 和另外 {{count}} 人看過你的個人檔案！",
-      "seeAll": "查看全部"
+      "pill_one": "1 人看過你的個人檔案",
+      "pill_other": "{{count}} 人看過你的個人檔案"
     },
     "tandemCard": {
       "newChip": "新",

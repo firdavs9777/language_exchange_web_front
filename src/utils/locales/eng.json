@@ -925,9 +925,8 @@
       "highlightSelfTopic": "Highlight your profile and let more people see you"
     },
     "visitors": {
-      "justYou": "{{name}} visited your profile!",
-      "andOthers": "{{name}} and {{count}} others visited your profile!",
-      "seeAll": "See all"
+      "pill_one": "1 person visited your profile",
+      "pill_other": "{{count}} people visited your profile"
     },
     "tandemCard": {
       "newChip": "NEW",

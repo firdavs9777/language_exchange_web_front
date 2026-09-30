@@ -925,9 +925,8 @@
       "highlightSelfTopic": "Sorot profil Anda agar lebih banyak orang melihat Anda"
     },
     "visitors": {
-      "justYou": "{{name}} mengunjungi profil Anda!",
-      "andOthers": "{{name}} dan {{count}} lainnya mengunjungi profil Anda!",
-      "seeAll": "Lihat semua"
+      "pill_one": "1 orang mengunjungi profil Anda",
+      "pill_other": "{{count}} orang mengunjungi profil Anda"
     },
     "tandemCard": {
       "newChip": "BARU",

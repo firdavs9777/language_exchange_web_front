@@ -143,4 +143,22 @@ describe("the community sub-nav", () => {
 
     expect(screen.queryByLabelText("communityMain.subnav.filtersLabel")).not.toBeInTheDocument();
   });
+
+  it("shows a visitors pill with the count", () => {
+    renderNav({ visitorsCount: 12 });
+    const pill = screen.getByTestId("subnav-visitors");
+    expect(pill).toHaveTextContent("12");
+    expect(pill).toHaveAttribute("href", "/visitors");
+    expect(pill).toHaveAccessibleName();
+  });
+
+  it("shows no pill when nobody has visited", () => {
+    renderNav({ visitorsCount: 0 });
+    expect(screen.queryByTestId("subnav-visitors")).not.toBeInTheDocument();
+  });
+
+  it("shows no pill when the count is absent", () => {
+    renderNav({});
+    expect(screen.queryByTestId("subnav-visitors")).not.toBeInTheDocument();
+  });
 });

@@ -925,9 +925,8 @@
       "highlightSelfTopic": "I-highlight ang iyong profile para makita ka ng mas maraming tao"
     },
     "visitors": {
-      "justYou": "Binisita ni {{name}} ang iyong profile!",
-      "andOthers": "Binisita ni {{name}} at {{count}} iba pa ang iyong profile!",
-      "seeAll": "Tingnan lahat"
+      "pill_one": "1 tao ang bumisita sa iyong profile",
+      "pill_other": "{{count}} tao ang bumisita sa iyong profile"
     },
     "tandemCard": {
       "newChip": "BAGO",
