@@ -269,7 +269,23 @@ const SingleMoment: React.FC<MomentProps> = ({
         console.error("Like/unlike error:", error);
       }
     },
-    [userId, _id, currentLikeCount, isLoadingLike, navigate, refetch]
+    // `liked` belongs here: the body branches on it four times to choose
+    // like vs unlike. It was held out, and the only reason the toggle worked
+    // was that `currentLikeCount` happens to change on every tap and so
+    // rebuilt the callback anyway. Any render that flips `liked` WITHOUT
+    // moving the count — the sync effect above answering a refetch — left a
+    // callback that likes what it should unlike. `handleDoubleTapLike` right
+    // above already lists it.
+    [
+      userId,
+      _id,
+      liked,
+      currentLikeCount,
+      isLoadingLike,
+      navigate,
+      likeMoment,
+      dislikeMoment,
+    ]
   );
 
   // Translate-on-tap for the moment body. The server answers with
