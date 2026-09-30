@@ -102,7 +102,7 @@ const LanguageMatchCard: React.FC<LanguageMatchCardProps> = ({ viewer, user }) =
   const MessageIcon = MESSAGE_ICON[matchType];
 
   return (
-    <SurfaceCard padding="lg">
+    <SurfaceCard padding="md">
       <div data-testid="language-match-card" data-match={matchType}>
         <div className="flex items-center gap-2">
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-chip bg-brand/[0.12]">

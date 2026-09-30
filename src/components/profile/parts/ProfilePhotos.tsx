@@ -105,7 +105,7 @@ const ProfilePhotos: React.FC<ProfilePhotosProps> = ({ images, isOwn, name }) =>
   const current = openIndex === null ? 0 : openIndex;
 
   return (
-    <SurfaceCard padding="lg">
+    <SurfaceCard padding="md">
       <section data-testid="profile-photos">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 className="text-eyebrow font-extrabold uppercase text-ink-500 dark:text-ink-400">

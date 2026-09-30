@@ -170,7 +170,7 @@ const ProfileAbout: React.FC<ProfileAboutProps> = ({ user, bare }) => {
     </>
   );
 
-  return bare ? body : <SurfaceCard padding="lg">{body}</SurfaceCard>;
+  return bare ? body : <SurfaceCard padding="md">{body}</SurfaceCard>;
 };
 
 export default ProfileAbout;

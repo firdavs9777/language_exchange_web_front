@@ -93,7 +93,7 @@ const MutualInterests: React.FC<MutualInterestsProps> = ({ viewer, user, bare })
     </>
   );
 
-  return bare ? body : <SurfaceCard padding="lg">{body}</SurfaceCard>;
+  return bare ? body : <SurfaceCard padding="md">{body}</SurfaceCard>;
 };
 
 export default MutualInterests;
