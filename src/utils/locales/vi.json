@@ -202,7 +202,8 @@
       "gradient_winter": "Mùa đông",
       "gradient_lavender": "Oải hương",
       "gradient_aurora": "Cực quang"
-    }
+    },
+    "jumpToLatest": "Chuyển đến tin nhắn mới nhất"
   },
   "newChat": {
     "title": "Trò Chuyện Mới",

@@ -667,3 +667,127 @@ it("writes a reaction into the thread cache", async () => {
   recipe(draft);
   expect(draft.data[0].reactions).toEqual([{ user: "u2", emoji: "🎉" }]);
 });
+
+// --- The way back down -----------------------------------------------------
+//
+// The thread had a way UP through its history and no way back. Once a reader
+// scrolled off the newest message the only route down was dragging through
+// everything they had just loaded, and nothing told them a message had landed
+// while they were reading.
+//
+// `isAtBottomRef` already knew the answer but it is a ref, so no UI could
+// render off it.
+
+/** A scroller jsdom can drive: it has no layout, so every metric is faked. */
+function installScroller({ scrollHeight = 2000, clientHeight = 400, top = 1600 } = {}) {
+  const container = document.querySelector(".modern-chat-messages") as HTMLElement;
+  let scrollTop = top;
+  Object.defineProperty(container, "scrollHeight", { configurable: true, get: () => scrollHeight });
+  Object.defineProperty(container, "clientHeight", { configurable: true, get: () => clientHeight });
+  Object.defineProperty(container, "scrollTop", {
+    configurable: true,
+    get: () => scrollTop,
+    set: (v: number) => { scrollTop = v; },
+  });
+  (container as any).scrollTo = (opts: any) => {
+    scrollTop = typeof opts === "number" ? opts : opts.top;
+  };
+  return {
+    container,
+    /** Move the reader and tell the component, the way a real scroll does. */
+    moveTo(v: number) {
+      scrollTop = v;
+      fireEvent.scroll(container);
+    },
+    get position() { return scrollTop; },
+    get scrollHeight() { return scrollHeight; },
+  };
+}
+
+const wayDown = () => screen.queryByTestId("scroll-to-bottom");
+
+it("offers no way down while the newest message is already on screen", () => {
+  mockUseSocket.mockReturnValue({ socket: fakeSocket(), isConnected: true, emit: jest.fn() });
+  renderChat();
+  const scroller = installScroller();
+
+  scroller.moveTo(1600); // bottom: 2000 - 1600 - 400 = 0
+
+  expect(wayDown()).not.toBeInTheDocument();
+});
+
+it("offers a way down once the reader goes up into the history", () => {
+  mockUseSocket.mockReturnValue({ socket: fakeSocket(), isConnected: true, emit: jest.fn() });
+  renderChat();
+  const scroller = installScroller();
+
+  scroller.moveTo(200);
+
+  expect(wayDown()).toBeInTheDocument();
+  expect(wayDown()).toHaveAttribute("aria-label");
+});
+
+it("the way down returns to the newest message", () => {
+  mockUseSocket.mockReturnValue({ socket: fakeSocket(), isConnected: true, emit: jest.fn() });
+  renderChat();
+  const scroller = installScroller();
+  scroller.moveTo(200);
+
+  fireEvent.click(wayDown()!);
+
+  expect(scroller.position).toBe(scroller.scrollHeight);
+});
+
+it("counts what arrived while the reader was up in the history", async () => {
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+  const scroller = installScroller();
+  scroller.moveTo(200);
+
+  socket.fire("newMessage", {
+    message: liveMessage("live-1"),
+    unreadCount: 1,
+    senderId: "u2",
+  });
+
+  await waitFor(() =>
+    expect(screen.getByTestId("scroll-to-bottom-count")).toHaveTextContent("1")
+  );
+});
+
+it("stops counting once the reader is back at the newest message", async () => {
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+  const scroller = installScroller();
+  scroller.moveTo(200);
+
+  socket.fire("newMessage", {
+    message: liveMessage("live-1"),
+    unreadCount: 1,
+    senderId: "u2",
+  });
+  await waitFor(() => expect(screen.getByTestId("scroll-to-bottom-count")).toBeInTheDocument());
+
+  fireEvent.click(wayDown()!);
+
+  expect(screen.queryByTestId("scroll-to-bottom-count")).not.toBeInTheDocument();
+});
+
+it("counts nothing for a message that lands while the reader is at the bottom", async () => {
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+  const scroller = installScroller();
+  scroller.moveTo(1600);
+
+  socket.fire("newMessage", {
+    message: liveMessage("live-1"),
+    unreadCount: 1,
+    senderId: "u2",
+  });
+
+  await waitFor(() => expect(renderedIds()).toContain("live-1"));
+  expect(screen.queryByTestId("scroll-to-bottom-count")).not.toBeInTheDocument();
+});

@@ -202,7 +202,8 @@
       "gradient_winter": "Winter",
       "gradient_lavender": "Lavender",
       "gradient_aurora": "Aurora"
-    }
+    },
+    "jumpToLatest": "Pumunta sa pinakabagong mensahe"
   },
   "newChat": {
     "title": "Bagong Chat",

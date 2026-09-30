@@ -202,7 +202,8 @@
       "gradient_winter": "विंटर",
       "gradient_lavender": "लैवेंडर",
       "gradient_aurora": "अरोरा"
-    }
+    },
+    "jumpToLatest": "नवीनतम संदेशों पर जाएँ"
   },
   "newChat": {
     "title": "नई चैट",

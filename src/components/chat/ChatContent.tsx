@@ -52,6 +52,7 @@ import {
   Mic,
   AlertCircle,
   ArrowUp,
+  ArrowDown,
   X,
   Image as ImageIcon,
   FileImage,
@@ -253,6 +254,15 @@ const ChatContent: React.FC<ChatContentProps> = ({
   // unchanged message can keep its identity across a refetch.
   const seedSourceRef = useRef<{ [id: string]: any }>({});
   const isAtBottomRef = useRef(true);
+  // The ref is what the scroll logic reads inside effects that must not re-run.
+  // This is the same answer in a form the UI can render off: without it the
+  // thread had a way UP through its history and no way back down.
+  const [isAtBottom, setIsAtBottom] = useState(true);
+  // How much landed while the reader was up in the history. Counted in one
+  // place (the auto-scroll effect below) so every kind of message — text,
+  // reply, sticker, voice, video — is counted without each handler knowing.
+  const [missedCount, setMissedCount] = useState(0);
+  const seenCountRef = useRef(0);
   const topSentinelRef = useRef<HTMLDivElement>(null);
   // The message the viewport was anchored on when an older page was asked for.
   const pendingOlderRef = useRef<{ id: string; top: number } | null>(null);
@@ -787,6 +797,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
     setIsTyping(false);
     setNewMessage("");
     setMediaPreview(null);
+    setMissedCount(0);
+    setIsAtBottom(true);
+    seenCountRef.current = 0;
     setPage(1);
     setIsLoadingOlder(false);
     pendingOlderRef.current = null;
@@ -840,8 +853,30 @@ const ChatContent: React.FC<ChatContentProps> = ({
     const container = chatContainerRef.current;
     if (!container) return;
     const threshold = 100;
-    isAtBottomRef.current =
+    const atBottom =
       container.scrollHeight - container.scrollTop - container.clientHeight < threshold;
+    isAtBottomRef.current = atBottom;
+    // Only on a FLIP. A scroll event fires many times a second and setting
+    // state on each one would re-render the whole thread while it moves.
+    setIsAtBottom((was) => (was === atBottom ? was : atBottom));
+    if (atBottom) setMissedCount((n) => (n === 0 ? n : 0));
+  }, []);
+
+  /** Back to the newest message, and nothing missed any more. */
+  const jumpToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+    // On the container, never `messagesEndRef.scrollIntoView`: scrollIntoView
+    // walks up and scrolls ANCESTORS too, which is what made the whole page
+    // lurch on a phone.
+    if (typeof container.scrollTo === "function") {
+      container.scrollTo({ top: container.scrollHeight, behavior });
+    } else {
+      container.scrollTop = container.scrollHeight;
+    }
+    isAtBottomRef.current = true;
+    setIsAtBottom(true);
+    setMissedCount(0);
   }, []);
 
   // ========== Older history ==========
@@ -955,12 +990,22 @@ const ChatContent: React.FC<ChatContentProps> = ({
     return () => observer.disconnect();
   }, [hasMoreHistory, loadOlderMessages]);
 
-  // Auto-scroll
+  // Auto-scroll, and the tally of what the reader did not see.
+  //
+  // One place for both: every send and every arrival ends in `messages`, so
+  // text, replies, stickers, voice and video are all covered without each
+  // handler counting for itself.
   useEffect(() => {
-    if (messages.length > 0 && isAtBottomRef.current) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const grewBy = messages.length - seenCountRef.current;
+    seenCountRef.current = messages.length;
+
+    if (messages.length === 0) return;
+    if (isAtBottomRef.current) {
+      jumpToBottom("smooth");
+    } else if (grewBy > 0) {
+      setMissedCount((n) => n + grewBy);
     }
-  }, [messages]);
+  }, [messages, jumpToBottom]);
 
   // ========== Typing ==========
   const handleTyping = useCallback(() => {
@@ -2026,6 +2071,30 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
         <div ref={messagesEndRef} />
       </div>
+
+      {/* The way back down. Shown whenever the newest message is off screen,
+          so there is always a route back; the badge says how much landed
+          while the reader was up in the history. */}
+      {!isAtBottom && (
+        <button
+          type="button"
+          className="scroll-to-bottom-btn"
+          data-testid="scroll-to-bottom"
+          onClick={() => jumpToBottom("smooth")}
+          aria-label={
+            missedCount > 0
+              ? `${t("chatPage.jumpToLatest") || "Jump to latest messages"} (${missedCount})`
+              : t("chatPage.jumpToLatest") || "Jump to latest messages"
+          }
+        >
+          {missedCount > 0 && (
+            <span className="scroll-to-bottom-count" data-testid="scroll-to-bottom-count">
+              {missedCount > 99 ? "99+" : missedCount}
+            </span>
+          )}
+          <ArrowDown size={20} aria-hidden="true" />
+        </button>
+      )}
 
       {/* Media Preview */}
       {mediaPreview && (

@@ -202,7 +202,8 @@
       "gradient_winter": "الشتاء",
       "gradient_lavender": "لافندر",
       "gradient_aurora": "الشفق القطبي"
-    }
+    },
+    "jumpToLatest": "الانتقال إلى أحدث الرسائل"
   },
   "newChat": {
     "title": "دردشة جديدة",

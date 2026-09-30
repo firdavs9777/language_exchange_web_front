@@ -202,7 +202,8 @@
       "gradient_winter": "Зима",
       "gradient_lavender": "Лаванда",
       "gradient_aurora": "Аврора"
-    }
+    },
+    "jumpToLatest": "Перейти к последним сообщениям"
   },
   "newChat": {
     "title": "Новый чат",

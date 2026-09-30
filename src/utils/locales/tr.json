@@ -202,7 +202,8 @@
       "gradient_winter": "Kış",
       "gradient_lavender": "Lavanta",
       "gradient_aurora": "Aurora"
-    }
+    },
+    "jumpToLatest": "En son mesajlara git"
   },
   "newChat": {
     "title": "Yeni Sohbet",

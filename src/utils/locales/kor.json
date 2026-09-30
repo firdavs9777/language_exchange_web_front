@@ -202,7 +202,8 @@
       "gradient_winter": "윈터",
       "gradient_lavender": "라벤더",
       "gradient_aurora": "오로라"
-    }
+    },
+    "jumpToLatest": "최신 메시지로 이동"
   },
   "newChat": {
     "title": "새 채팅",
