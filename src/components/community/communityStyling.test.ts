@@ -31,6 +31,11 @@ it("still ships the class names the member list depends on", () => {
   }
 });
 
+it("leaves the Why sentence behind -- the card carries the reasons now", () => {
+  expect(tsx).not.toContain("for-you-why");
+  expect(tsx).not.toContain("communityMain.forYou.why");
+});
+
 // --- The member page --------------------------------------------------------
 //
 // /community/:id is the profile page now, and the blocks that made it one live
@@ -85,5 +90,51 @@ describe("the member page blocks", () => {
     // lives in tandem/types.ts.
     expect(fs.existsSync(path.join(__dirname, "tandem/TandemMemberCard.tsx"))).toBe(false);
     expect(fs.existsSync(path.join(__dirname, "tandem/types.ts"))).toBe(true);
+  });
+});
+
+describe("the member list is a grid, not a column", () => {
+  it("puts three members per row above 1024px", () => {
+    expect(scss).toMatch(/\.community-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/);
+  });
+
+  it("drops to two columns on a tablet and one on a small phone", () => {
+    expect(scss).toMatch(/@media \(max-width: 1024px\)[\s\S]*?\.community-grid\s*\{[^}]*repeat\(2, minmax\(0, 1fr\)\)/);
+    expect(scss).toMatch(/@media \(max-width: 380px\)[\s\S]*?\.community-grid\s*\{[^}]*repeat\(1, minmax\(0, 1fr\)\)/);
+  });
+
+  it("renders members through the grid on both tabs, not a flex column", () => {
+    expect(tsx).toContain('className="community-grid"');
+    expect(tsx).not.toContain('className="flex flex-col gap-3"');
+  });
+});
+
+describe("the list still skips work it cannot see", () => {
+  it("reserves the cell's height, not the old row's", () => {
+    expect(scss).toMatch(/\.community-card-slot\s*\{[^}]*content-visibility:\s*auto/);
+    expect(scss).toMatch(/\.community-card-slot\s*\{[^}]*contain-intrinsic-size:\s*auto 420px/);
+    expect(scss).not.toContain("contain-intrinsic-size: auto 104px");
+    expect(scss).not.toContain("contain-intrinsic-size: auto 320px");
+  });
+
+  it("shapes the skeleton like the card it stands in for", () => {
+    expect(scss).toMatch(/\.community-card-skeleton\s*\{[^}]*flex-direction:\s*column/);
+    expect(scss).toMatch(/\.community-card-skeleton\s*\{[^}]*min-height:\s*420px/);
+    // A full-width 16:10 photo block up top and a foot bar for the wave
+    // button, not the deleted row card's 72x72 avatar square.
+    expect(scss).toContain(".community-card-skeleton__photo");
+    expect(scss).toContain(".community-card-skeleton__foot");
+    expect(scss).not.toContain(".community-card-skeleton__avatar");
+  });
+
+  it("lays the skeletons out in the same grid as the members", () => {
+    expect(tsx).not.toContain('className="community-skeleton-list"');
+  });
+});
+
+describe("the interleaved ad does not break the 3-per-row rhythm", () => {
+  it("spans the full row instead of occupying one of the three columns", () => {
+    expect(tsx).toMatch(/<AdUnit[^>]*className="[^"]*\bcommunity-grid__ad\b[^"]*"/);
+    expect(scss).toMatch(/\.community-grid__ad\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/);
   });
 });

@@ -686,12 +686,22 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 
-/* ===== Member Grid ===== */
+/* ===== Member Grid =====
+   repeat(3, ...) rather than auto-fill: the column count is the design, not a
+   consequence of the container's width. minmax(0, 1fr) so a long unbroken name
+   cannot push its column wider than its share. */
 .community-grid {
   margin-top: 16px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* The interleaved ad is a direct child of the grid, so without this it lands
+ * in whichever of the three columns its position falls into and shifts every
+ * following member across -- breaking the 3-per-row rhythm after each ad. */
+.community-grid__ad {
+  grid-column: 1 / -1;
 }
 
 .community-grid__count {
@@ -969,10 +979,10 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .community-grid {
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
   }
 }
 
@@ -1013,11 +1023,6 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   .community-subnav__search {
     flex: 1 1 auto;
     min-width: 0;
-  }
-
-  .community-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
   }
 
   .tandem-member-card__content {
@@ -1083,7 +1088,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 @media (max-width: 380px) {
   .community-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 }
 
@@ -1200,44 +1205,53 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
  * height while it loads, and the sentinel that asks for the next page.
  */
 
-/* One card's slot in the list.
+/* One card's slot in the grid.
  *
  * `content-visibility: auto` lets the browser skip style, layout and paint for
- * every row outside the viewport; `contain-intrinsic-size: auto 104px` is the
- * height it assumes for a row it has not measured yet (a card is a 72px avatar
- * inside 16px of padding), so the scrollbar is the right length from the first
- * paint and `auto` makes it remember the real height afterwards.
+ * every cell outside the viewport. `contain-intrinsic-size: auto 420px` is the
+ * height it assumes for a cell it has not measured yet, derived from the
+ * card's own layout rather than guessed: at the page's 1180px max-width with
+ * 20px side padding the content box is 1140px; three columns with two 20px
+ * gaps give (1140 - 40) / 3 = 366px per column. A 16:10 photo on a 366px
+ * column is 229px. Below it, the `p-4` info block adds 32px of its own
+ * padding, a 24px name line, a 24px language/level row, a 20px location row
+ * and a 20px bio line; the chip row (when there are match reasons) adds 34px;
+ * the full-width wave button foot is 44px. 229 + 32 + 24 + 24 + 20 + 20 + 34 +
+ * 44 = 427px, so 420px is the estimate that reaches the foot of the card
+ * rather than stopping at the photo. A wrong estimate here makes the
+ * scrollbar jump as cards render, which is worse than no content-visibility
+ * at all.
  *
  * The padding/negative-margin pair is not decoration: `content-visibility`
  * brings paint containment with it, which clips to this box. Without the extra
  * room the card's drop shadow would be sliced off at the edges and its 2px
  * hover lift would be cut at the top. The margins cancel the padding exactly,
- * so the slot's margin box is still the card's box and the list's 12px gap is
+ * so the slot's margin box is still the card's box and the grid's 20px gap is
  * unchanged. */
 .community-card-slot {
   content-visibility: auto;
-  contain-intrinsic-size: auto 104px;
+  contain-intrinsic-size: auto 420px;
   padding: 8px 8px 20px;
   margin: -8px -8px -20px;
 }
 
-/* A row-shaped placeholder, the same 104px tall as the card it stands in for. */
+/* A card-shaped placeholder, the same height and silhouette as the card it
+ * stands in for: a full-width 16:10 photo block, padded text lines below it,
+ * and a full-bleed foot bar where the wave button goes. */
 .community-card-skeleton {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
+  flex-direction: column;
+  min-height: 420px;
   border-radius: 16px;
+  overflow: hidden;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 10px 15px -3px rgba(13, 19, 28, 0.06);
 }
 
-.community-card-skeleton__avatar {
+.community-card-skeleton__photo {
   flex: 0 0 auto;
-  width: 72px;
-  height: 72px;
-  border-radius: 22px;
+  width: 100%;
+  aspect-ratio: 16 / 10;
 }
 
 .community-card-skeleton__lines {
@@ -1246,6 +1260,12 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 16px;
+}
+
+.community-card-skeleton__foot {
+  flex: 0 0 auto;
+  height: 44px;
 }
 
 .community-card-skeleton__line {
@@ -1268,8 +1288,9 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 }
 
-.community-card-skeleton__avatar,
-.community-card-skeleton__line {
+.community-card-skeleton__photo,
+.community-card-skeleton__line,
+.community-card-skeleton__foot {
   background: linear-gradient(
     90deg,
     $tandem-border 0%,
@@ -1303,8 +1324,9 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
     box-shadow: none;
   }
 
-  .community-card-skeleton__avatar,
-  .community-card-skeleton__line {
+  .community-card-skeleton__photo,
+  .community-card-skeleton__line,
+  .community-card-skeleton__foot {
     background: linear-gradient(90deg, #334155 0%, #3f4d61 40%, #334155 80%);
     background-size: 300% 100%;
   }

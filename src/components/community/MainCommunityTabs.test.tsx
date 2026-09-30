@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
 import { Provider } from "react-redux";
 import {
   createMemoryRouter,
@@ -211,7 +211,7 @@ describe("the community tabs", () => {
   it("keeps the wave sheet reachable on every tab", async () => {
     renderList(["/communities?tab=foryou"]);
 
-    const waveButtons = await screen.findAllByTestId("member-card-wave-button");
+    const waveButtons = await screen.findAllByTestId("member-card-wave");
     fireEvent.click(waveButtons[0]);
     expect(await screen.findByTestId("wave-sheet")).toBeInTheDocument();
   });
@@ -233,14 +233,22 @@ describe("the For you tab", () => {
     expect(recommendationRequests()).toEqual([]);
   });
 
-  // A recommendation nobody can see the reasoning for is just a list.
+  // A recommendation nobody can see the reasoning for is just a list, and a
+  // reason that lands under the wrong member is worse than no reason at all
+  // -- this is the only end-to-end proof the parent hands the right reasons
+  // to the right card.
   it("prints the server's reasons under the member they belong to", async () => {
     renderList(["/communities?tab=foryou"]);
 
-    const why = await screen.findAllByTestId("for-you-why");
-    expect(why).toHaveLength(1); // the second member came back with no reasons
-    expect(why[0]).toHaveTextContent("Native Korean speaker");
-    expect(why[0]).toHaveTextContent("Online now");
+    const cards = await screen.findAllByTestId("member-card-root");
+    const member1Card = cards.find((c) => within(c).queryByText(/Member 1/)) as HTMLElement;
+    const member2Card = cards.find((c) => within(c).queryByText(/Member 2/)) as HTMLElement;
+
+    expect(within(member1Card).getByText("Native Korean speaker")).toBeInTheDocument();
+    expect(within(member1Card).getByText("Online now")).toBeInTheDocument();
+
+    // Member 2's fixture has no match reasons -- it renders no chip row.
+    expect(within(member2Card).queryByTestId("member-card-reasons")).not.toBeInTheDocument();
   });
 
   it("offers no filter or sort control", async () => {

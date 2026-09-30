@@ -73,7 +73,7 @@ describe("MemberCard", () => {
     const onOpen = jest.fn();
     render(<MemberCard user={baseUser} onWave={onWave} onOpen={onOpen} />);
 
-    fireEvent.click(screen.getByTestId("member-card-wave-button"));
+    fireEvent.click(screen.getByTestId("member-card-wave"));
 
     expect(onWave).toHaveBeenCalledWith(baseUser);
     expect(onOpen).not.toHaveBeenCalled();
@@ -168,7 +168,7 @@ describe("MemberCard", () => {
     fireEvent.keyDown(screen.getByTestId("member-card-root"), { key: "a" });
     // A key pressed on the nested button bubbles to the card; opening the
     // profile from it would be the wrong answer to "wave at Alice".
-    fireEvent.keyDown(screen.getByTestId("member-card-wave-button"), { key: "Enter" });
+    fireEvent.keyDown(screen.getByTestId("member-card-wave"), { key: "Enter" });
 
     expect(onOpen).not.toHaveBeenCalled();
   });
@@ -179,4 +179,139 @@ describe("MemberCard", () => {
     const expectedAge = currentYear - 1996;
     expect(screen.getByTestId("member-card-name")).toHaveTextContent(`, ${expectedAge}`);
   });
+
+  it("stacks the card: photo above the details, not beside them", () => {
+    const { container } = render(
+      <MemberCard user={baseUser} onWave={jest.fn()} onOpen={jest.fn()} />
+    );
+    const root = screen.getByTestId("member-card-root");
+    expect(root.className).toContain("flex-col");
+    expect(root.className).not.toContain("items-center");
+    expect(container.querySelector("[data-testid='member-card-photo']")).toBeInTheDocument();
+  });
+
+  it("gives the photo a reserved 16:10 box so the grid does not reflow", () => {
+    render(<MemberCard user={baseUser} onWave={jest.fn()} onOpen={jest.fn()} />);
+    const img = screen.getByAltText("Alice") as HTMLImageElement;
+    expect(img).toHaveAttribute("width", "320");
+    expect(img).toHaveAttribute("height", "200");
+    expect(img).toHaveAttribute("loading", "lazy");
+    expect(img).toHaveAttribute("decoding", "async");
+  });
+
+  it("fills the photo box with an initial when the member has no picture", () => {
+    render(
+      <MemberCard user={{ ...baseUser, imageUrls: [] }} onWave={jest.fn()} onOpen={jest.fn()} />
+    );
+    const placeholder = screen.getByTestId("member-card-photo-placeholder");
+    expect(placeholder).toHaveTextContent("A");
+    expect(placeholder.className).toContain("w-full");
+    expect(placeholder.className).toContain("h-full");
+  });
+
+  it("falls back to a placeholder mark when the member has no name either", () => {
+    render(
+      <MemberCard
+        user={{ ...baseUser, name: "", imageUrls: [] }}
+        onWave={jest.fn()}
+        onOpen={jest.fn()}
+      />
+    );
+    expect(screen.getByTestId("member-card-photo-placeholder")).toHaveTextContent("?");
+  });
+
+  it("keeps the story ring on the photo corner, not across the middle", () => {
+    render(
+      <MemberCard
+        user={{ ...baseUser, hasActiveStory: true }}
+        onWave={jest.fn()}
+        onOpen={jest.fn()}
+      />
+    );
+    const ring = screen.getByTestId("member-card-story-ring");
+    expect(ring.className).toContain("absolute");
+  });
+
+  it("does not let a long name widen its column", () => {
+    render(
+      <MemberCard
+        user={{ ...baseUser, name: "안녕하세요반갑습니다저는한국어를배우고있어요" }}
+        onWave={jest.fn()}
+        onOpen={jest.fn()}
+      />
+    );
+    const name = screen.getByTestId("member-card-name");
+    expect(name.className).toContain("truncate");
+    // `truncate` alone cannot shrink a flex item below its content's natural
+    // width -- `min-w-0` overrides the flex item's automatic minimum size,
+    // which is what actually lets the ellipsis engage instead of the text
+    // hard-clipping against the card's `overflow-hidden`.
+    expect(name.className).toContain("min-w-0");
+  });
+
+  it("gives the wave button the full width of the card foot", () => {
+    render(<MemberCard user={baseUser} onWave={jest.fn()} onOpen={jest.fn()} />);
+    const wave = screen.getByTestId("member-card-wave");
+    expect(wave.className).toContain("w-full");
+  });
+});
+
+describe("MemberCard match reasons", () => {
+  const withReasons = (reasons: string[]) =>
+    render(
+      <MemberCard
+        user={baseUser}
+        reasons={reasons}
+        onWave={jest.fn()}
+        onOpen={jest.fn()}
+      />
+    );
+
+  it("leads with the language reason and mutes the rest", () => {
+    withReasons(["Active today", "Native Korean speaker", "Same country"]);
+    const chips = screen.getAllByTestId(/^member-card-reason-/);
+    expect(chips).toHaveLength(3);
+    expect(chips[0]).toHaveTextContent("Native Korean speaker");
+    expect(chips[0].getAttribute("data-testid")).toBe("member-card-reason-primary");
+    expect(chips[1].getAttribute("data-testid")).toBe("member-card-reason-secondary");
+  });
+
+  it("shows presence reasons on their own when there is no language match", () => {
+    withReasons(["Active today", "Same country"]);
+    expect(screen.queryByTestId("member-card-reason-primary")).not.toBeInTheDocument();
+    expect(screen.getAllByTestId("member-card-reason-secondary")).toHaveLength(2);
+  });
+
+  it("renders no chip row at all when there are no reasons", () => {
+    withReasons([]);
+    expect(screen.queryByTestId("member-card-reasons")).not.toBeInTheDocument();
+  });
+
+  it("renders no chip row when the prop is absent", () => {
+    render(<MemberCard user={baseUser} onWave={jest.fn()} onOpen={jest.fn()} />);
+    expect(screen.queryByTestId("member-card-reasons")).not.toBeInTheDocument();
+  });
+
+  it("drops empty strings rather than rendering a blank chip", () => {
+    withReasons(["", "Active today", ""]);
+    expect(screen.getAllByTestId(/^member-card-reason-/)).toHaveLength(1);
+  });
+
+  it("re-renders when only the reasons change", () => {
+    // Same user object and same handlers, so every other field the memo
+    // comparator looks at is identical. If it does not compare reasons -- or
+    // compares them after its `user === user` fast path -- this keeps the old
+    // chip.
+    const onWave = jest.fn();
+    const onOpen = jest.fn();
+    const { rerender } = render(
+      <MemberCard user={baseUser} reasons={["Active today"]} onWave={onWave} onOpen={onOpen} />
+    );
+    rerender(
+      <MemberCard user={baseUser} reasons={["Same country"]} onWave={onWave} onOpen={onOpen} />
+    );
+    expect(screen.getByText("Same country")).toBeInTheDocument();
+    expect(screen.queryByText("Active today")).not.toBeInTheDocument();
+  });
+
 });

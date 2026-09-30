@@ -65,18 +65,19 @@ const CARD_SLOT = "community-card-slot";
  *  stable identity rather than a fresh `[]` on every render. */
 const NO_EXTRA_PAGES: CommunityMemberCard[] = [];
 
-/** How many skeleton rows stand in for the first page while it loads. */
+/** How many skeleton cells stand in for the first page while it loads. */
 const SKELETON_ROWS = 6;
 
-/** A row-shaped placeholder: same height as a card, so nothing jumps. */
+/** A card-shaped placeholder: same silhouette as a card, so nothing jumps. */
 const CardSkeleton: React.FC = () => (
   <div className="community-card-skeleton" aria-hidden>
-    <div className="community-card-skeleton__avatar" />
+    <div className="community-card-skeleton__photo" />
     <div className="community-card-skeleton__lines">
       <span className="community-card-skeleton__line community-card-skeleton__line--name" />
       <span className="community-card-skeleton__line community-card-skeleton__line--meta" />
       <span className="community-card-skeleton__line community-card-skeleton__line--bio" />
     </div>
+    <div className="community-card-skeleton__foot" />
   </div>
 );
 
@@ -161,24 +162,17 @@ const ForYouTab: React.FC<{
         </Link>
       </div>
     ) : (
-      <div className="flex flex-col gap-3">
-        {members.map((member) => {
-          const reasons = (member.matchReasons || []).filter(Boolean);
-          return (
-            <div key={member._id} className={`${CARD_SLOT} flex flex-col gap-1`}>
-              <MemberCard user={member} onOpen={onOpen} onWave={onWave} />
-              {reasons.length > 0 && (
-                <p
-                  data-testid="for-you-why"
-                  className="text-xs text-gray-500 px-3 m-0"
-                >
-                  {t("communityMain.forYou.why", { reasons: reasons.join(" \u00b7 ") }) ||
-                    `Why: ${reasons.join(" \u00b7 ")}`}
-                </p>
-              )}
-            </div>
-          );
-        })}
+      <div className="community-grid">
+        {members.map((member) => (
+          <div key={member._id} className={CARD_SLOT}>
+            <MemberCard
+              user={member}
+              reasons={member.matchReasons}
+              onOpen={onOpen}
+              onWave={onWave}
+            />
+          </div>
+        ))}
       </div>
     )}
   </>
@@ -874,11 +868,11 @@ const ModernCommunity: React.FC = () => {
             t={t}
           />
         ) : isLoading ? (
-          // Row-shaped placeholders rather than a centred spinner: the page
+          // Cell-shaped placeholders rather than a centred spinner: the page
           // reaches its final height before the first member arrives, so
-          // nothing under the list jumps when it does.
+          // nothing under the grid jumps when it does.
           <div
-            className="flex flex-col gap-3"
+            className="community-grid"
             data-testid="community-skeletons"
             aria-busy="true"
           >
@@ -902,7 +896,7 @@ const ModernCommunity: React.FC = () => {
           </div>
         ) : (
           <>
-            <div className="flex flex-col gap-3">
+            <div className="community-grid">
               {allMembers.map((member, index) => (
                 <Fragment key={member._id}>
                   <div className={CARD_SLOT}>
@@ -913,10 +907,13 @@ const ModernCommunity: React.FC = () => {
                     />
                   </div>
                   {/* Interleave a community ad every 6 members, but never after
-                      the last item. No-op until AdSense is configured. */}
+                      the last item. No-op until AdSense is configured. As a
+                      direct child of the grid it must span the full row
+                      (community-grid__ad), or it lands in one of the three
+                      columns and shifts every following member across. */}
                   {(index + 1) % 6 === 0 &&
                     index !== allMembers.length - 1 && (
-                      <AdUnit slot={AD_SLOTS.community} className="my-3" />
+                      <AdUnit slot={AD_SLOTS.community} className="my-3 community-grid__ad" />
                     )}
                 </Fragment>
               ))}
