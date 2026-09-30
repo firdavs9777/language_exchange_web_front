@@ -656,6 +656,13 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   grid-column: 1 / -1;
 }
 
+/* A full-row item in the member grid, like .community-grid__ad: a carousel
+   that took one of three columns would shift every member after it. */
+.community-grid__feature {
+  grid-column: 1 / -1;
+  margin: var(--bt-space-2) 0;
+}
+
 .community-grid__count {
   margin: 16px 0;
   color: $tandem-muted;

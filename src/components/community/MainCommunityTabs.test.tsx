@@ -193,17 +193,61 @@ describe("the community tabs", () => {
     expect(first).not.toContain("newUsersOnly");
   });
 
-  it("keeps the highlighted carousel on All only", async () => {
+  it("keeps the highlighted carousel on All only, below the first row", async () => {
     const { container, router } = renderList();
 
     await waitFor(() =>
       expect(container.querySelector(".highlighted-banner")).toBeInTheDocument()
     );
+    // It is inside the grid now, not a sibling above it.
+    const grid = container.querySelector(".community-grid")!;
+    expect(grid.querySelector(".highlighted-banner")).toBeInTheDocument();
+    expect(container.querySelector(".visitors-banner")).not.toBeInTheDocument();
 
     fireEvent.click(tab("communityMain.tabs.online"));
     await waitFor(() => expect(router.state.location.search).toBe("?tab=online"));
 
     expect(container.querySelector(".highlighted-banner")).not.toBeInTheDocument();
+  });
+
+  it("places the carousel after the first row of three, spanning the row", async () => {
+    const { container } = renderList();
+    await waitFor(() =>
+      expect(container.querySelector(".highlighted-banner")).toBeInTheDocument()
+    );
+    const grid = container.querySelector(".community-grid")!;
+
+    const feature = grid.querySelector(".community-grid__feature")!;
+    expect(feature).toBeInTheDocument();
+    // Three members per row, so the carousel is the fourth child of the grid.
+    expect(Array.from(grid.children).indexOf(feature)).toBe(3);
+  });
+
+  it("still places the carousel when a search returns fewer than one row", async () => {
+    // The shared mock returns a full page; this one returns two members so the
+    // index === 2 branch is never reached and the fallback has to carry it.
+    const realFetch = global.fetch;
+    (global as any).fetch = jest.fn((input: any) => {
+      const url = typeof input === "string" ? input : input?.url || "";
+      if (/\/auth\/users\?/.test(url)) {
+        return Promise.resolve(new Response(JSON.stringify({
+          data: [
+            { _id: "m1", name: "Ada", imageUrls: [], native_language: "English", language_to_learn: "Korean" },
+            { _id: "m2", name: "Bo", imageUrls: [], native_language: "Korean", language_to_learn: "English" },
+          ],
+          total: 2,
+        }), { status: 200, headers: { "Content-Type": "application/json" } }));
+      }
+      return (realFetch as any)(input);
+    });
+
+    const { container } = renderList();
+    await waitFor(() =>
+      expect(container.querySelector(".highlighted-banner")).toBeInTheDocument()
+    );
+    const grid = container.querySelector(".community-grid")!;
+    expect(grid.querySelector(".highlighted-banner")).toBeInTheDocument();
+    global.fetch = realFetch;
   });
 
   it("keeps the wave sheet reachable on every tab", async () => {

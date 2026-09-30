@@ -844,16 +844,6 @@ const ModernCommunity: React.FC = () => {
           </>
         )}
 
-        {/* The carousel is the front page of the community, not furniture
-            that follows you into every tab: on Online, New and For you the
-            list is the whole point. */}
-        {activeTab === "all" && highlightedProfiles.length > 0 && (
-          <HighlightedProfilesCarousel
-            profiles={highlightedProfiles as any}
-            currentUser={currentUser}
-          />
-        )}
-
         {isForYou ? (
           <ForYouTab
             members={recommendations}
@@ -911,6 +901,32 @@ const ModernCommunity: React.FC = () => {
                     index !== allMembers.length - 1 && (
                       <AdUnit slot={AD_SLOTS.community} className="my-3 community-grid__ad" />
                     )}
+                  {/* The carousel is the front page of the community, not
+                      furniture that follows you into every tab: on Online,
+                      New and For you the list is the whole point. It sits
+                      after the first row of three so the grid starts above
+                      the fold, spanning the row like community-grid__ad. */}
+                  {index === 2 && activeTab === "all" && highlightedProfiles.length > 0 && (
+                    <div className="community-grid__feature">
+                      <HighlightedProfilesCarousel
+                        profiles={highlightedProfiles as any}
+                        currentUser={currentUser}
+                      />
+                    </div>
+                  )}
+                  {/* A thread shorter than one row never reaches index 2, so
+                      the carousel still has to land after the last member. */}
+                  {allMembers.length < 3 &&
+                    index === allMembers.length - 1 &&
+                    activeTab === "all" &&
+                    highlightedProfiles.length > 0 && (
+                    <div className="community-grid__feature">
+                      <HighlightedProfilesCarousel
+                        profiles={highlightedProfiles as any}
+                        currentUser={currentUser}
+                      />
+                    </div>
+                  )}
                 </Fragment>
               ))}
             </div>
