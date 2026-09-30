@@ -31,6 +31,8 @@ export interface CommunityMemberCard {
 
 export interface MemberCardProps {
   user: CommunityMemberCard;
+  /** From the matching engine. 0-3 strings; see controllers/matching.js. */
+  reasons?: string[];
   onWave: (user: CommunityMemberCard) => void;
   onOpen: (user: CommunityMemberCard) => void;
 }
@@ -59,13 +61,27 @@ const formatLocation = (location?: CommunityMemberCard["location"]): string | un
   return parts.length > 0 ? parts.join(", ") : undefined;
 };
 
-const MemberCardRow: React.FC<MemberCardProps> = ({ user, onWave, onOpen }) => {
+/**
+ * Only the language bucket describes compatibility -- the others are presence
+ * and location facts. Leading with the language reason stops a card reading
+ * "Active today - Same country" and making the matching look shallow.
+ */
+const isLanguageReason = (reason: string): boolean =>
+  /^Speaks |^Native /.test(reason);
+
+const orderReasons = (reasons: string[]): string[] => {
+  const clean = reasons.filter(Boolean);
+  return [...clean.filter(isLanguageReason), ...clean.filter((r) => !isLanguageReason(r))];
+};
+
+const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, onWave, onOpen }) => {
   const age = getAge(user.birth_year);
   const isNew = !!user.isNew || isRecentlyCreated(user.createdAt);
   const locationLabel = formatLocation(user.location);
   const avatar = user.imageUrls?.[0];
   const nativeFlag = languageFlag(user.native_language);
   const learningFlag = languageFlag(user.language_to_learn);
+  const orderedReasons = orderReasons(reasons || []);
 
   const handleWaveClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -187,6 +203,27 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, onWave, onOpen }) => {
         )}
       </div>
 
+      {orderedReasons.length > 0 && (
+        <div data-testid="member-card-reasons" className="flex flex-wrap gap-1.5 px-4 pb-3">
+          {orderedReasons.map((reason) => {
+            const primary = isLanguageReason(reason);
+            return (
+              <span
+                key={reason}
+                data-testid={primary ? "member-card-reason-primary" : "member-card-reason-secondary"}
+                className={
+                  primary
+                    ? "text-[11px] font-semibold text-teal-700 bg-teal-50 border border-teal-200 rounded-full px-2 py-0.5"
+                    : "text-[11px] text-gray-600 bg-gray-100 border border-gray-200 rounded-full px-2 py-0.5"
+                }
+              >
+                {reason}
+              </span>
+            );
+          })}
+        </div>
+      )}
+
       {/* Wave button */}
       <button
         type="button"
@@ -224,6 +261,14 @@ export const areMemberRowsEqual = (
   // The handlers end up on onClick/onKeyDown, so a new identity is a real
   // difference. Both callers pass useCallback'd ones.
   if (prev.onOpen !== next.onOpen || prev.onWave !== next.onWave) return false;
+
+  // Before the `a === b` fast path below: the list reuses the user object
+  // between renders, so a comparison placed after it would never run and the
+  // chips would freeze at whatever first rendered.
+  const ra = prev.reasons || [];
+  const rb = next.reasons || [];
+  if (ra.length !== rb.length) return false;
+  if (ra.some((reason, index) => reason !== rb[index])) return false;
 
   const a = prev.user;
   const b = next.user;

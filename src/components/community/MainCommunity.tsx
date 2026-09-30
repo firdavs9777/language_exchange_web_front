@@ -162,23 +162,16 @@ const ForYouTab: React.FC<{
       </div>
     ) : (
       <div className="community-grid">
-        {members.map((member) => {
-          const reasons = (member.matchReasons || []).filter(Boolean);
-          return (
-            <div key={member._id} className={`${CARD_SLOT} flex flex-col gap-1`}>
-              <MemberCard user={member} onOpen={onOpen} onWave={onWave} />
-              {reasons.length > 0 && (
-                <p
-                  data-testid="for-you-why"
-                  className="text-xs text-gray-500 px-3 m-0"
-                >
-                  {t("communityMain.forYou.why", { reasons: reasons.join(" \u00b7 ") }) ||
-                    `Why: ${reasons.join(" \u00b7 ")}`}
-                </p>
-              )}
-            </div>
-          );
-        })}
+        {members.map((member) => (
+          <div key={member._id} className={CARD_SLOT}>
+            <MemberCard
+              user={member}
+              reasons={member.matchReasons}
+              onOpen={onOpen}
+              onWave={onWave}
+            />
+          </div>
+        ))}
       </div>
     )}
   </>

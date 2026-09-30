@@ -238,3 +238,63 @@ describe("MemberCard", () => {
     expect(wave.className).toContain("w-full");
   });
 });
+
+describe("MemberCard match reasons", () => {
+  const withReasons = (reasons: string[]) =>
+    render(
+      <MemberCard
+        user={baseUser}
+        reasons={reasons}
+        onWave={jest.fn()}
+        onOpen={jest.fn()}
+      />
+    );
+
+  it("leads with the language reason and mutes the rest", () => {
+    withReasons(["Active today", "Native Korean speaker", "Same country"]);
+    const chips = screen.getAllByTestId(/^member-card-reason-/);
+    expect(chips).toHaveLength(3);
+    expect(chips[0]).toHaveTextContent("Native Korean speaker");
+    expect(chips[0].getAttribute("data-testid")).toBe("member-card-reason-primary");
+    expect(chips[1].getAttribute("data-testid")).toBe("member-card-reason-secondary");
+  });
+
+  it("shows presence reasons on their own when there is no language match", () => {
+    withReasons(["Active today", "Same country"]);
+    expect(screen.queryByTestId("member-card-reason-primary")).not.toBeInTheDocument();
+    expect(screen.getAllByTestId("member-card-reason-secondary")).toHaveLength(2);
+  });
+
+  it("renders no chip row at all when there are no reasons", () => {
+    withReasons([]);
+    expect(screen.queryByTestId("member-card-reasons")).not.toBeInTheDocument();
+  });
+
+  it("renders no chip row when the prop is absent", () => {
+    render(<MemberCard user={baseUser} onWave={jest.fn()} onOpen={jest.fn()} />);
+    expect(screen.queryByTestId("member-card-reasons")).not.toBeInTheDocument();
+  });
+
+  it("drops empty strings rather than rendering a blank chip", () => {
+    withReasons(["", "Active today", ""]);
+    expect(screen.getAllByTestId(/^member-card-reason-/)).toHaveLength(1);
+  });
+
+  it("re-renders when only the reasons change", () => {
+    // Same user object and same handlers, so every other field the memo
+    // comparator looks at is identical. If it does not compare reasons -- or
+    // compares them after its `user === user` fast path -- this keeps the old
+    // chip.
+    const onWave = jest.fn();
+    const onOpen = jest.fn();
+    const { rerender } = render(
+      <MemberCard user={baseUser} reasons={["Active today"]} onWave={onWave} onOpen={onOpen} />
+    );
+    rerender(
+      <MemberCard user={baseUser} reasons={["Same country"]} onWave={onWave} onOpen={onOpen} />
+    );
+    expect(screen.getByText("Same country")).toBeInTheDocument();
+    expect(screen.queryByText("Active today")).not.toBeInTheDocument();
+  });
+
+});

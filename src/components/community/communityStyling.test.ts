@@ -31,6 +31,11 @@ it("still ships the class names the member list depends on", () => {
   }
 });
 
+it("leaves the Why sentence behind -- the card carries the reasons now", () => {
+  expect(tsx).not.toContain("for-you-why");
+  expect(tsx).not.toContain("communityMain.forYou.why");
+});
+
 // --- The member page --------------------------------------------------------
 //
 // /community/:id is the profile page now, and the blocks that made it one live
