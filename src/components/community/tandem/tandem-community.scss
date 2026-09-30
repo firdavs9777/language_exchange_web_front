@@ -34,6 +34,11 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   letter-spacing: -0.006em;
 }
 
+/* Page-level rhythm (the container gutter, section margins, the sub-nav's
+   own padding) is deliberately tokenised onto the --bt-space-* scale; that
+   was this piece's actual scope. The remaining raw px in this file are
+   component-internal spacing (card padding, icon gaps, etc.) that a later
+   piece will sweep -- it was not abandoned halfway. */
 .community-page__container {
   max-width: 1180px;
   margin: 0 auto;
@@ -134,7 +139,12 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   /* 40px is this app's floor for a tap target in a primary flow. */
   min-height: 40px;
   padding: 0 var(--bt-space-3);
-  border-radius: var(--bt-radius-chip);
+  /* 999px, not --bt-radius-chip (12px): it sits beside sub-nav tabs and
+     badges that are all fully rounded. */
+  border-radius: 999px;
+  /* Contrast debt: $tandem-pink on $tandem-pink-soft is 2.79:1, below AA's
+     4.5:1. The same pair already ships elsewhere in this file (~781) --
+     pre-existing, not fixed here; belongs to a later piece. */
   background: $tandem-pink-soft;
   color: $tandem-pink;
   font-size: var(--bt-text-sm);
@@ -1080,6 +1090,12 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
     input::placeholder {
       color: #94a3b8;
     }
+  }
+
+  /* Same contrast debt as the light-mode rule (~130): not fixed here. */
+  .community-subnav__visitors {
+    background: #3f1d22;
+    color: #ff8890;
   }
 
   .tandem-member-card,
