@@ -37,7 +37,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 .community-page__container {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 0 var(--bt-space-5) 8px;
+  padding: 0 var(--bt-space-5) var(--bt-space-2);
 }
 
 /* ===== Sub Navbar ===== */
@@ -947,7 +947,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 .community-loadmore {
   display: flex;
   justify-content: center;
-  margin: var(--bt-space-5) 0 48px;
+  margin: var(--bt-space-5) 0 var(--bt-space-7);
 
   button {
     background: #fff;
