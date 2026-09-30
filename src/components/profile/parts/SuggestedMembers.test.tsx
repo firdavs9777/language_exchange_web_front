@@ -109,3 +109,15 @@ it("waves from the card without leaving the profile", () => {
   expect(mockNavigate).not.toHaveBeenCalled();
   expect(screen.getByTestId("wave-sheet")).toBeInTheDocument();
 });
+
+// Piece A rebuilt MemberCard as a photo-on-top grid cell. This strip is a
+// horizontal carousel, not a grid, so it took a ~104px row to something four
+// times taller. It asks for the row shape back.
+it("asks for the compact card, not the grid cell", () => {
+  mockGetMembers.mockReturnValue({ data: { data: [member("u3"), member("u4")] } });
+  renderStrip();
+
+  expect(screen.getAllByTestId("suggested-member").length).toBe(2);
+  expect(screen.queryByTestId("member-card-photo")).not.toBeInTheDocument();
+  expect(screen.getAllByTestId("member-card-avatar").length).toBeGreaterThan(0);
+});

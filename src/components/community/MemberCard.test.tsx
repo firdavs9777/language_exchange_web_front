@@ -315,3 +315,46 @@ describe("MemberCard match reasons", () => {
   });
 
 });
+
+// --- The compact variant ---------------------------------------------------
+//
+// This card was reshaped into a cell for the three-column community grid. The
+// profile page's suggestion strip reuses it in a horizontal carousel, where a
+// ~400px photo-on-top card is the wrong shape entirely -- it went from a row
+// carousel to something four times taller. `compact` gives that caller the row
+// back without the grid losing its cell.
+
+describe("MemberCard compact", () => {
+  it("lays out as a row, with an avatar rather than a full-width photo", () => {
+    render(<MemberCard user={baseUser} compact onWave={jest.fn()} onOpen={jest.fn()} />);
+
+    const root = screen.getByTestId("member-card-root");
+    expect(root.className).toContain("flex-row");
+    expect(root.className).not.toContain("flex-col");
+    expect(screen.queryByTestId("member-card-photo")).not.toBeInTheDocument();
+    expect(screen.getByTestId("member-card-avatar")).toBeInTheDocument();
+  });
+
+  it("keeps the wave control at or above the 40px tap target", () => {
+    render(<MemberCard user={baseUser} compact onWave={jest.fn()} onOpen={jest.fn()} />);
+    expect(screen.getByTestId("member-card-wave").className).toContain("h-11");
+  });
+
+  it("stays a cell by default, so the community grid is unaffected", () => {
+    render(<MemberCard user={baseUser} onWave={jest.fn()} onOpen={jest.fn()} />);
+
+    expect(screen.getByTestId("member-card-photo")).toBeInTheDocument();
+    expect(screen.getByTestId("member-card-root").className).toContain("flex-col");
+  });
+
+  it("re-renders when only compact changes", () => {
+    const onWave = jest.fn();
+    const onOpen = jest.fn();
+    const { rerender } = render(
+      <MemberCard user={baseUser} onWave={onWave} onOpen={onOpen} />
+    );
+    rerender(<MemberCard user={baseUser} compact onWave={onWave} onOpen={onOpen} />);
+
+    expect(screen.queryByTestId("member-card-photo")).not.toBeInTheDocument();
+  });
+});
