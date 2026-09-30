@@ -107,6 +107,8 @@ function answerWith(
     fetchingOlder?: boolean;
     total?: number;
     own?: boolean;
+    /** Replace page 1 outright, for fixtures that need their own flags. */
+    page1?: any[];
   } = {}
 ) {
   const totalPages = options.totalPages === undefined ? 2 : options.totalPages;
@@ -115,7 +117,11 @@ function answerWith(
   // back until it actually changes. A fresh object per render would restart
   // the effect that seeds the message list on every pass.
   const newest = {
-    data: response(options.own ? OWN_PAGE_1 : PAGE_1, totalPages, total),
+    data: response(
+      options.page1 || (options.own ? OWN_PAGE_1 : PAGE_1),
+      totalPages,
+      total
+    ),
     error: undefined,
     isLoading: false,
     isFetching: false,
@@ -790,4 +796,46 @@ it("counts nothing for a message that lands while the reader is at the bottom", 
 
   await waitFor(() => expect(renderedIds()).toContain("live-1"));
   expect(screen.queryByTestId("scroll-to-bottom-count")).not.toBeInTheDocument();
+});
+
+// --- The tick state a reload used to lose --------------------------------
+//
+// Message has a `delivered` field whose own comment says it "powers sent ->
+// delivered -> read tick states on the client", the send path sets it once the
+// receiver's socket has the message, and GET /messages/conversation returns it
+// (`.select('-__v')` drops only the version key).
+//
+// The seeding effect ignored it: `msg.status || (msg.read ? "read" : "sent")`.
+// So "delivered" existed ONLY as a live socket event. Reload the thread and
+// every delivered-but-unread message fell back from two ticks to one, which is
+// what the mobile app gets right and the web did not.
+
+it("reads delivered off the server, so a reload keeps two ticks", async () => {
+  mockUseSocket.mockReturnValue({ socket: fakeSocket(), isConnected: true, emit: jest.fn() });
+  answerWith({
+    own: true,
+    page1: [
+      { ...msg("newer-a", "2026-09-20T10:00:00.000Z", true), delivered: true, read: false },
+      { ...msg("newer-b", "2026-09-20T10:05:00.000Z", true), delivered: false, read: false },
+    ],
+  });
+  renderChat();
+
+  await waitFor(() =>
+    expect(screen.getByTestId("msg-status-delivered")).toBeInTheDocument()
+  );
+  // The one the receiver's client never picked up stays on a single tick.
+  expect(screen.getAllByTestId("msg-status-sent")).toHaveLength(1);
+});
+
+it("still prefers read over delivered", async () => {
+  mockUseSocket.mockReturnValue({ socket: fakeSocket(), isConnected: true, emit: jest.fn() });
+  answerWith({
+    own: true,
+    page1: [{ ...msg("newer-a", "2026-09-20T10:00:00.000Z", true), delivered: true, read: true }],
+  });
+  renderChat();
+
+  await waitFor(() => expect(screen.getByTestId("msg-status-read")).toBeInTheDocument());
+  expect(screen.queryByTestId("msg-status-delivered")).not.toBeInTheDocument();
 });

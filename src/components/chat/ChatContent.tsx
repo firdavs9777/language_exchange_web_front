@@ -760,7 +760,14 @@ const ChatContent: React.FC<ChatContentProps> = ({
         // the server holds is exactly ONE tick — `messageDelivered` is what
         // raises it to two. Synthesising "delivered" here quietly promoted
         // every message on the next refetch.
-        const fromServer: MessageStatus = msg.status || (msg.read ? "read" : "sent");
+        // `delivered` is a real field on Message, not a virtual, and the
+        // thread endpoint returns it -- its own comment in the model says it
+        // "powers sent -> delivered -> read tick states on the client". Reading
+        // only `read` meant two ticks existed solely as a live socket event, so
+        // a reload dropped every delivered-but-unread message back to one.
+        const fromServer: MessageStatus =
+          msg.status ||
+          (msg.read ? "read" : msg.delivered ? "delivered" : "sent");
         const local = localById[msg._id];
         const status =
           local && statusRank(local.status) > statusRank(fromServer)
