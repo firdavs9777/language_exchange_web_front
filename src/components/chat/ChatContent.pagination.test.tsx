@@ -618,3 +618,52 @@ it("takes a deleted message out of the thread cache, not just the screen", async
   expect(draft.data.map((m: any) => m._id)).toEqual(["newer-b"]);
   expect(draft.count).toBe(1);
 });
+
+// --- Edits and reactions have to reach the cache too -----------------------
+//
+// Same family as the two above. An edit or a reaction we make ourselves goes
+// through a mutation that invalidates the Conversation tag, so the refetch
+// carries it and `merge` updates the message in place. One that ARRIVES over
+// the socket only touched local state — and local state is rebuilt from the
+// cache on a conversation switch, so the old text came back until a refetch
+// happened to land.
+
+it("writes an edited message into the thread cache", async () => {
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+
+  socket.fire("messageEdited", {
+    messageId: "newer-a",
+    message: { _id: "newer-a", message: "edited text" },
+    editedAt: "2026-09-30T10:00:00.000Z",
+  });
+
+  await waitFor(() => expect(mockUpdateQueryData).toHaveBeenCalled());
+  const recipe = mockUpdateQueryData.mock.calls
+    .map((c: any[]) => c[2])
+    .pop() as (draft: any) => void;
+  const draft = { data: [{ _id: "newer-a", message: "old text" }], count: 1 };
+  recipe(draft);
+  expect(draft.data[0].message).toBe("edited text");
+  expect(draft.data[0].isEdited).toBe(true);
+});
+
+it("writes a reaction into the thread cache", async () => {
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+
+  socket.fire("messageReaction", {
+    messageId: "newer-b",
+    reactions: [{ user: "u2", emoji: "🎉" }],
+  });
+
+  await waitFor(() => expect(mockUpdateQueryData).toHaveBeenCalled());
+  const recipe = mockUpdateQueryData.mock.calls
+    .map((c: any[]) => c[2])
+    .pop() as (draft: any) => void;
+  const draft = { data: [{ _id: "newer-b", reactions: [] }], count: 1 };
+  recipe(draft);
+  expect(draft.data[0].reactions).toEqual([{ user: "u2", emoji: "🎉" }]);
+});
