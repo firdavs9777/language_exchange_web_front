@@ -351,6 +351,32 @@ const ChatContent: React.FC<ChatContentProps> = ({
     [dispatch, userId]
   );
 
+  // Change a message the cache already holds, without adding one it does not.
+  //
+  // An edit or reaction WE make goes through a mutation that invalidates the
+  // Conversation tag, so the refetch carries it and `merge` updates the
+  // message in place. One that ARRIVES over the socket only reached local
+  // state — which is rebuilt from the cache on a conversation switch, so the
+  // pre-edit text and the missing reaction came back until a refetch landed.
+  const patchInThread = useCallback(
+    (messageId: string | undefined, patch: Partial<Message>, partnerId: string | undefined) => {
+      if (!messageId || !userId || !partnerId) return;
+      dispatch(
+        (chatApiSlice.util as any).updateQueryData(
+          "getConversation",
+          { senderId: userId, receiverId: partnerId, page: 1, limit: MESSAGE_PAGE_SIZE },
+          (draft: any) => {
+            if (!draft || !Array.isArray(draft.data)) return;
+            const at = draft.data.findIndex((m: any) => m && m._id === messageId);
+            if (at < 0) return;
+            draft.data[at] = { ...draft.data[at], ...patch };
+          }
+        )
+      );
+    },
+    [dispatch, userId]
+  );
+
   // ========== Socket event listeners (shared socket) ==========
   useEffect(() => {
     if (!socket) return;
@@ -572,6 +598,15 @@ const ChatContent: React.FC<ChatContentProps> = ({
           return { ...m, isEdited: true, editedAt: data.editedAt };
         })
       );
+      patchInThread(
+        data.messageId,
+        {
+          ...(data.message || {}),
+          isEdited: true,
+          editedAt: data.editedAt || data.message?.editedAt,
+        } as Partial<Message>,
+        selectedUserRef.current
+      );
     };
 
     const handleMessageReaction = (data: {
@@ -583,6 +618,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
         prev.map((m) =>
           m._id === data.messageId ? { ...m, reactions: data.reactions || [] } : m
         )
+      );
+      patchInThread(
+        data.messageId,
+        { reactions: data.reactions || [] } as Partial<Message>,
+        selectedUserRef.current
       );
     };
 
@@ -649,7 +689,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       socket.off("messageSendError", handleMessageSendError);
       socket.off("queuedMessages", handleQueuedMessages);
     };
-  }, [socket, userId, rememberInThread, forgetFromThread]);
+  }, [socket, userId, rememberInThread, forgetFromThread, patchInThread]);
 
   // Request user status when selectedUser changes or socket connects
   useEffect(() => {
