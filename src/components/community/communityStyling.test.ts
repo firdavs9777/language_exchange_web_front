@@ -108,3 +108,20 @@ describe("the member list is a grid, not a column", () => {
     expect(tsx).not.toContain('className="flex flex-col gap-3"');
   });
 });
+
+describe("the list still skips work it cannot see", () => {
+  it("reserves the cell's height, not the old row's", () => {
+    expect(scss).toMatch(/\.community-card-slot\s*\{[^}]*content-visibility:\s*auto/);
+    expect(scss).toMatch(/\.community-card-slot\s*\{[^}]*contain-intrinsic-size:\s*auto 320px/);
+    expect(scss).not.toContain("contain-intrinsic-size: auto 104px");
+  });
+
+  it("shapes the skeleton like the card it stands in for", () => {
+    expect(scss).toMatch(/\.community-card-skeleton\s*\{[^}]*flex-direction:\s*column/);
+    expect(scss).toMatch(/\.community-card-skeleton\s*\{[^}]*min-height:\s*320px/);
+  });
+
+  it("lays the skeletons out in the same grid as the members", () => {
+    expect(tsx).not.toContain('className="community-skeleton-list"');
+  });
+});;

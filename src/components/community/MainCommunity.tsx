@@ -867,11 +867,11 @@ const ModernCommunity: React.FC = () => {
             t={t}
           />
         ) : isLoading ? (
-          // Row-shaped placeholders rather than a centred spinner: the page
+          // Cell-shaped placeholders rather than a centred spinner: the page
           // reaches its final height before the first member arrives, so
-          // nothing under the list jumps when it does.
+          // nothing under the grid jumps when it does.
           <div
-            className="community-skeleton-list"
+            className="community-grid"
             data-testid="community-skeletons"
             aria-busy="true"
           >

@@ -697,12 +697,6 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   gap: 20px;
 }
 
-.community-skeleton-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
 .community-grid__count {
   margin: 16px 0;
   color: $tandem-muted;
@@ -1204,37 +1198,39 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
  * height while it loads, and the sentinel that asks for the next page.
  */
 
-/* One card's slot in the list.
+/* One card's slot in the grid.
  *
  * `content-visibility: auto` lets the browser skip style, layout and paint for
- * every row outside the viewport; `contain-intrinsic-size: auto 104px` is the
- * height it assumes for a row it has not measured yet (a card is a 72px avatar
- * inside 16px of padding), so the scrollbar is the right length from the first
- * paint and `auto` makes it remember the real height afterwards.
+ * every cell outside the viewport. `contain-intrinsic-size: auto 320px` is the
+ * height it assumes for a cell it has not measured yet. The cell is roughly
+ * 320px tall: a 16:10 photo on a ~330px column is ~206px, plus details, chips
+ * and the wave foot. A wrong estimate here makes the scrollbar jump as cards
+ * render, which is worse than no content-visibility at all.
  *
  * The padding/negative-margin pair is not decoration: `content-visibility`
  * brings paint containment with it, which clips to this box. Without the extra
  * room the card's drop shadow would be sliced off at the edges and its 2px
  * hover lift would be cut at the top. The margins cancel the padding exactly,
- * so the slot's margin box is still the card's box and the list's 12px gap is
+ * so the slot's margin box is still the card's box and the grid's 20px gap is
  * unchanged. */
 .community-card-slot {
   content-visibility: auto;
-  contain-intrinsic-size: auto 104px;
+  contain-intrinsic-size: auto 320px;
   padding: 8px 8px 20px;
   margin: -8px -8px -20px;
 }
 
-/* A row-shaped placeholder, the same 104px tall as the card it stands in for. */
+/* A cell-shaped placeholder, the same height as the card it stands in for. */
 .community-card-skeleton {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 320px;
+  padding: 0 0 16px;
   border-radius: 16px;
+  overflow: hidden;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 10px 15px -3px rgba(13, 19, 28, 0.06);
 }
 
 .community-card-skeleton__avatar {
