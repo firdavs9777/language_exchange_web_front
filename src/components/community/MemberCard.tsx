@@ -33,6 +33,12 @@ export interface MemberCardProps {
   user: CommunityMemberCard;
   /** From the matching engine. 0-3 strings; see controllers/matching.js. */
   reasons?: string[];
+  /**
+   * The row shape this card had before it was rebuilt as a grid cell. The
+   * profile page's suggestion strip is a horizontal carousel, not a grid, and
+   * a ~400px photo-on-top card is the wrong thing to put in one.
+   */
+  compact?: boolean;
   onWave: (user: CommunityMemberCard) => void;
   onOpen: (user: CommunityMemberCard) => void;
 }
@@ -74,7 +80,7 @@ const orderReasons = (reasons: string[]): string[] => {
   return [...clean.filter(isLanguageReason), ...clean.filter((r) => !isLanguageReason(r))];
 };
 
-const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, onWave, onOpen }) => {
+const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWave, onOpen }) => {
   const age = getAge(user.birth_year);
   const isNew = !!user.isNew || isRecentlyCreated(user.createdAt);
   const locationLabel = formatLocation(user.location);
@@ -107,17 +113,28 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, onWave, onOpe
       aria-label={user.name}
       onClick={() => onOpen(user)}
       onKeyDown={handleCardKeyDown}
-      className="flex flex-col bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
+      className={
+        compact
+          ? "flex flex-row items-center gap-3 p-3 bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 hover:shadow-xl transition-all cursor-pointer"
+          : "flex flex-col bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
+      }
     >
-      {/* Photo — 16:10 so a row of three is not a wall of portraits. The
-          width/height are the reserved box, not the painted size. */}
-      <div data-testid="member-card-photo" className="relative w-full aspect-[16/10]">
+      {/* Photo. A grid cell gets a 16:10 banner; a carousel row gets a 56px
+          avatar. The width/height are the reserved box, not the painted size. */}
+      <div
+        data-testid={compact ? "member-card-avatar" : "member-card-photo"}
+        className={
+          compact
+            ? "relative shrink-0 w-14 h-14 rounded-xl overflow-hidden"
+            : "relative w-full aspect-[16/10]"
+        }
+      >
         {avatar ? (
           <img
             src={avatar}
             alt={user.name}
-            width={320}
-            height={200}
+            width={compact ? 56 : 320}
+            height={compact ? 56 : 200}
             loading="lazy"
             decoding="async"
             className="block w-full h-full object-cover"
@@ -125,7 +142,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, onWave, onOpe
         ) : (
           <div
             data-testid="member-card-photo-placeholder"
-            className="w-full h-full bg-gradient-to-br from-teal-100 to-yellow-50 flex items-center justify-center text-4xl font-semibold text-teal-600"
+            className={`w-full h-full bg-gradient-to-br from-teal-100 to-yellow-50 flex items-center justify-center font-semibold text-teal-600 ${compact ? "text-lg" : "text-4xl"}`}
           >
             {user.name?.charAt(0)?.toUpperCase() || "?"}
           </div>
@@ -145,7 +162,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, onWave, onOpe
       </div>
 
       {/* Info column */}
-      <div className="flex-1 min-w-0 p-4">
+      <div className={compact ? "flex-1 min-w-0" : "flex-1 min-w-0 p-4"}>
         <div className="flex items-center gap-2 flex-wrap">
           <span data-testid="member-card-name" className="font-semibold text-gray-900 truncate min-w-0">
             {user.name}
@@ -203,7 +220,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, onWave, onOpe
         )}
       </div>
 
-      {orderedReasons.length > 0 && (
+      {!compact && orderedReasons.length > 0 && (
         <div data-testid="member-card-reasons" className="flex flex-wrap gap-1.5 px-4 pb-3">
           {orderedReasons.map((reason) => {
             const primary = isLanguageReason(reason);
@@ -230,7 +247,11 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, onWave, onOpe
         data-testid="member-card-wave"
         onClick={handleWaveClick}
         aria-label={`Wave at ${user.name}`}
-        className="w-full min-h-[44px] flex items-center justify-center gap-2 text-white bg-gradient-to-r from-[#00BFA5] to-[#00ACC1] hover:brightness-105 active:scale-[.99] transition-all"
+        className={
+          compact
+            ? "shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-white bg-gradient-to-r from-[#00BFA5] to-[#00ACC1] hover:brightness-105 active:scale-95 transition-all"
+            : "w-full min-h-[44px] flex items-center justify-center gap-2 text-white bg-gradient-to-r from-[#00BFA5] to-[#00ACC1] hover:brightness-105 active:scale-[.99] transition-all"
+        }
       >
         <span className="text-lg leading-none" aria-hidden>
           👋
@@ -265,6 +286,8 @@ export const areMemberRowsEqual = (
   // Before the `a === b` fast path below: the list reuses the user object
   // between renders, so a comparison placed after it would never run and the
   // chips would freeze at whatever first rendered.
+  if (prev.compact !== next.compact) return false;
+
   const ra = prev.reasons || [];
   const rb = next.reasons || [];
   if (ra.length !== rb.length) return false;

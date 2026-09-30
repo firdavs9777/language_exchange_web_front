@@ -6,6 +6,8 @@ import SurfaceCard from "../../../design/SurfaceCard";
 export interface ProfileAboutProps {
   /** The user document, own (`/auth/me`) or public (`USER_PUBLIC_FIELDS`). */
   user?: any;
+  /** Render the contents alone, for a caller that draws the card itself. */
+  bare?: boolean;
 }
 
 /** Long bios get a fold rather than a scroll: the card must stay a card. */
@@ -24,7 +26,22 @@ function text(value: any): string {
  * appearance. The whole card is skipped when every field is empty — an
  * "About" heading over nothing is worse than no heading.
  */
-const ProfileAbout: React.FC<ProfileAboutProps> = ({ user }) => {
+/** Whether this section has anything to show. Same rule as the guard below. */
+export const hasAbout = (user: any): boolean => {
+  const topics: string[] = Array.isArray(user && user.topics)
+    ? user.topics.filter((topic: any) => text(topic))
+    : [];
+  return !!(
+    text(user && user.bio) ||
+    text(user && user.occupation) ||
+    text(user && user.school) ||
+    text(user && user.mbti) ||
+    text(user && user.bloodType) ||
+    topics.length
+  );
+};
+
+const ProfileAbout: React.FC<ProfileAboutProps> = ({ user, bare }) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
@@ -37,9 +54,7 @@ const ProfileAbout: React.FC<ProfileAboutProps> = ({ user }) => {
     ? user.topics.filter((topic: any) => text(topic))
     : [];
 
-  if (!bio && !occupation && !school && !mbti && !bloodType && topics.length === 0) {
-    return null;
-  }
+  if (!hasAbout(user)) return null;
 
   const isLong = bio.length > BIO_COLLAPSE_AT;
   const shownBio = isLong && !expanded ? `${bio.slice(0, BIO_COLLAPSE_AT).trim()}…` : bio;
@@ -71,8 +86,8 @@ const ProfileAbout: React.FC<ProfileAboutProps> = ({ user }) => {
     },
   ].filter((fact) => Boolean(fact.value));
 
-  return (
-    <SurfaceCard padding="lg">
+  const body = (
+    <>
       <div data-testid="profile-about">
         <h2 className="mb-3 text-eyebrow font-extrabold uppercase text-ink-500 dark:text-ink-400">
           {t("profile.about.title") || "About"}
@@ -152,8 +167,10 @@ const ProfileAbout: React.FC<ProfileAboutProps> = ({ user }) => {
           </div>
         )}
       </div>
-    </SurfaceCard>
+    </>
   );
+
+  return bare ? body : <SurfaceCard padding="lg">{body}</SurfaceCard>;
 };
 
 export default ProfileAbout;

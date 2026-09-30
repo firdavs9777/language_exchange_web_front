@@ -286,10 +286,12 @@ describe("moderation", () => {
 });
 
 describe("photos", () => {
-  // The photo card is declared in both panels -- About on a phone, the right
-  // column on a desktop -- with exactly one displayed at any width, so every
-  // assertion here names which panel it means.
-  const about = () => within(screen.getByTestId("profile-about-panel"));
+  // The photo card is declared twice -- once ABOVE the tabs for a phone, once
+  // in the right-hand column (inside the Moments panel) for a desktop -- with
+  // exactly one displayed at any width. The phone copy is deliberately outside
+  // both panels so it needs no tap, so it is queried from the page, not from a
+  // panel.
+  const phoneCopy = () => within(screen.getByTestId("profile-photos-phone"));
   const moments = () => within(screen.getByTestId("profile-moments-panel"));
 
   it("shows the photo set, and Add photos on an own profile", () => {
@@ -301,9 +303,9 @@ describe("photos", () => {
 
     renderPage("/profile", "me");
 
-    expect(about().getByTestId("profile-photos")).toBeInTheDocument();
-    expect(about().getAllByTestId("photo-tile")).toHaveLength(2);
-    expect(about().getByTestId("photos-add")).toHaveAttribute("href", "/profile/edit");
+    expect(phoneCopy().getByTestId("profile-photos")).toBeInTheDocument();
+    expect(phoneCopy().getAllByTestId("photo-tile")).toHaveLength(2);
+    expect(phoneCopy().getByTestId("photos-add")).toHaveAttribute("href", "/profile/edit");
   });
 
   it("puts the desktop copy in the right-hand column", () => {
@@ -315,8 +317,8 @@ describe("photos", () => {
 
     renderPage("/profile", "me");
 
-    // Phone: the About copy shows, the column copy is held back to lg.
-    const phone = about().getByTestId("profile-photos-phone");
+    // Phone: the above-the-tabs copy shows, the column copy is held back to lg.
+    const phone = screen.getByTestId("profile-photos-phone");
     const desktop = moments().getByTestId("profile-photos-desktop");
     expect(phone.className).toContain("lg:hidden");
     expect(desktop.className).toContain("hidden lg:block");
@@ -333,7 +335,7 @@ describe("photos", () => {
 
     renderPage("/profile/u2", "me");
 
-    expect(about().getAllByTestId("photo-tile")).toHaveLength(1);
+    expect(phoneCopy().getAllByTestId("photo-tile")).toHaveLength(1);
     expect(screen.queryByTestId("photos-add")).not.toBeInTheDocument();
   });
 
@@ -496,23 +498,37 @@ describe("the phone tab switcher", () => {
     });
   });
 
-  it("opens on Moments and hides the About panel below 1024px", () => {
+  it("opens on About below 1024px, so a phone lands on who someone is", () => {
+    mockGetUserProfile.mockReturnValue({
+      ...idle,
+      refetch: ownRefetch,
+      data: { data: { _id: "me", name: "Me", bio: "something to read" } },
+    });
     renderPage("/profile", "me");
 
+    expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByTestId("profile-moments-panel").className).toContain("hidden");
+    expect(screen.getByTestId("profile-about-panel").className).not.toContain("hidden");
+  });
+
+  it("still honours ?tab=moments, so existing links keep working", () => {
+    renderPage("/profile?tab=moments", "me");
+
     expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByTestId("profile-about-panel").className).toContain("hidden");
     expect(screen.getByTestId("profile-moments-panel").className).not.toContain("hidden");
+    expect(screen.getByTestId("profile-about-panel").className).toContain("hidden");
   });
 
   it("writes the chosen tab into the URL", () => {
     renderPage("/profile", "me");
 
-    fireEvent.click(screen.getByTestId("profile-tab-about"));
+    // About is the default now, so Moments is the one a click has to move to.
+    fireEvent.click(screen.getByTestId("profile-tab-moments"));
 
-    expect(screen.getByTestId("location-search")).toHaveTextContent("tab=about");
-    expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByTestId("profile-moments-panel").className).toContain("hidden");
-    expect(screen.getByTestId("profile-about-panel").className).not.toContain("hidden");
+    expect(screen.getByTestId("location-search")).toHaveTextContent("tab=moments");
+    expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByTestId("profile-about-panel").className).toContain("hidden");
+    expect(screen.getByTestId("profile-moments-panel").className).not.toContain("hidden");
   });
 
   it("reads the tab back off the URL", () => {
@@ -550,15 +566,23 @@ describe("the phone tab switcher", () => {
     );
   });
 
-  it("gives the tablist one tab stop", () => {
+  it("gives the tablist one tab stop, on whichever tab is selected", () => {
+    mockGetUserProfile.mockReturnValue({
+      ...idle,
+      refetch: ownRefetch,
+      data: { data: { _id: "me", name: "Me", bio: "something to read" } },
+    });
     renderPage("/profile", "me");
 
-    expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("tabindex", "0");
-    expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("tabindex", "-1");
+    // About is the default, so it carries the tab stop.
+    expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("tabindex", "0");
+    expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("tabindex", "-1");
   });
 
   it("moves between tabs with the arrow keys, and focus follows", () => {
-    renderPage("/profile", "me");
+    // Anchored to Moments: this proves the journey from the FIRST tab in the
+    // order, which is independent of which tab happens to be the default.
+    renderPage("/profile?tab=moments", "me");
 
     fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "ArrowRight" });
 
@@ -573,26 +597,34 @@ describe("the phone tab switcher", () => {
   });
 
   it("wraps at the ends and answers Home and End", () => {
-    renderPage("/profile", "me");
+    renderPage("/profile?tab=moments", "me");
 
-    // Moments is first: ArrowLeft wraps round to About.
-    fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "ArrowLeft" });
+    // About is first now, Moments last. Starting on Moments (the last tab),
+    // ArrowRight wraps round to About.
+    fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "ArrowRight" });
     expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
 
-    fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "Home" });
+    fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "End" });
     expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("aria-selected", "true");
 
-    fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "End" });
+    fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "Home" });
     expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
   });
 
   it("leaves other keys to the browser", () => {
-    renderPage("/profile", "me");
+    // Anchored, not defaulted: asserting the tab the page already opens on
+    // would pass whether or not the keypress was inert.
+    mockGetUserProfile.mockReturnValue({
+      ...idle,
+      refetch: ownRefetch,
+      data: { data: { _id: "me", name: "Me", bio: "something to read" } },
+    });
+    renderPage("/profile?tab=moments", "me");
 
     fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "a" });
 
     expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByTestId("location-search")).not.toHaveTextContent("tab=");
+    expect(screen.getByTestId("location-search")).toHaveTextContent("tab=moments");
   });
 });
 
@@ -658,5 +690,124 @@ describe("the story highlights rail", () => {
       "src",
       "https://cdn/s1.jpg"
     );
+  });
+});
+
+describe("the photo set on a phone", () => {
+  const withPhotos = () => {
+    mockGetUserProfile.mockReturnValue({
+      ...idle,
+      refetch: ownRefetch,
+      data: { data: { _id: "me", name: "Me", imageUrls: ["a.jpg", "b.jpg"] } },
+    });
+  };
+
+  it("sits above the tabs, outside both panels, so it needs no tap", () => {
+    withPhotos();
+    const { container } = renderPage("/profile", "me");
+
+    const photos = screen.getByTestId("profile-photos-phone");
+    const tablist = container.querySelector('[role="tablist"]') as HTMLElement;
+
+    // Not inside a panel: it must not disappear when the tab changes.
+    expect(photos.closest('[role="tabpanel"]')).toBeNull();
+    // And it comes before the tablist in document order.
+    expect(
+      photos.compareDocumentPosition(tablist) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
+  it("keeps the desktop copy inside the Moments panel", () => {
+    withPhotos();
+    renderPage("/profile", "me");
+
+    const desktop = screen.getByTestId("profile-photos-desktop");
+    expect(desktop.closest('[data-testid="profile-moments-panel"]')).not.toBeNull();
+  });
+});
+
+describe("the info card", () => {
+  it("draws the four sections inside one card, not four", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", native_language: "English", bio: "hi" } },
+    });
+
+    renderPage("/profile/u2", "me");
+
+    expect(screen.getAllByTestId("profile-info-card")).toHaveLength(1);
+    const card = within(screen.getByTestId("profile-info-card"));
+    expect(card.getByTestId("profile-languages")).toBeInTheDocument();
+    expect(card.getByTestId("profile-about")).toBeInTheDocument();
+  });
+
+  it("shows no card at all when the profile has none of the four", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada" } },
+    });
+
+    renderPage("/profile/u2", "me");
+
+    // Absent, not empty: four independent early returns gave nothing before.
+    expect(screen.queryByTestId("profile-info-card")).not.toBeInTheDocument();
+  });
+
+  it("carries only the sections that have something", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", bio: "just a bio" } },
+    });
+
+    renderPage("/profile/u2", "me");
+
+    const card = within(screen.getByTestId("profile-info-card"));
+    expect(card.getByTestId("profile-about")).toBeInTheDocument();
+    expect(card.queryByTestId("profile-languages")).not.toBeInTheDocument();
+    expect(card.queryByTestId("profile-learning")).not.toBeInTheDocument();
+  });
+});
+
+describe("the default tab on a sparse profile", () => {
+  it("falls back to Moments when About would be empty", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      // No languages, no bio, no learning stats, no photos.
+      data: { data: { _id: "u2", name: "Ada" } },
+    });
+
+    renderPage("/profile/u2", "me");
+
+    // Landing on an empty panel is worse than landing on posts.
+    expect(screen.getByTestId("profile-moments-panel").className).not.toContain("hidden");
+    expect(screen.getByTestId("profile-about-panel").className).toContain("hidden");
+  });
+
+  it("still opens on About when there is only a photo to show", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", imageUrls: ["a.jpg"] } },
+    });
+
+    renderPage("/profile/u2", "me");
+
+    expect(screen.getByTestId("profile-about-panel").className).not.toContain("hidden");
+  });
+
+  it("honours an explicit ?tab=about even on a sparse profile", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada" } },
+    });
+
+    renderPage("/profile/u2?tab=about", "me");
+
+    expect(screen.getByTestId("profile-about-panel").className).not.toContain("hidden");
   });
 });

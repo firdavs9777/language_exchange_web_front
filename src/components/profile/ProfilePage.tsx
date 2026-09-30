@@ -12,14 +12,14 @@ import useProfileData from "./useProfileData";
 import ProfileHeader from "./parts/ProfileHeader";
 import ProfileStats from "./parts/ProfileStats";
 import ProfileActions from "./parts/ProfileActions";
-import ProfileLanguages from "./parts/ProfileLanguages";
-import ProfileAbout from "./parts/ProfileAbout";
-import ProfileLearning from "./parts/ProfileLearning";
+import ProfileLanguages, { hasLanguages } from "./parts/ProfileLanguages";
+import ProfileAbout, { hasAbout } from "./parts/ProfileAbout";
+import ProfileLearning, { hasLearning } from "./parts/ProfileLearning";
 import ProfileMoments from "./parts/ProfileMoments";
 import ProfilePhotos from "./parts/ProfilePhotos";
 import LanguageMatchCard from "./parts/LanguageMatchCard";
 import EngagementStats from "./parts/EngagementStats";
-import MutualInterests from "./parts/MutualInterests";
+import MutualInterests, { hasMutualInterests } from "./parts/MutualInterests";
 import ConversationStarters from "./parts/ConversationStarters";
 import SuggestedMembers from "./parts/SuggestedMembers";
 import HighlightsRail from "../stories/HighlightsRail";
@@ -43,7 +43,10 @@ const AFTER_BLOCK = "/communities";
 type ProfileTab = "moments" | "about";
 
 /** Tab order, which is also the arrow-key order. */
-const TABS: ProfileTab[] = ["moments", "about"];
+// About first, because it is the tab the page opens on: landing on the
+// SECOND tab reads as though something went wrong, and Home would jump away
+// from where you started.
+const TABS: ProfileTab[] = ["about", "moments"];
 const tabId = (name: ProfileTab): string => `profile-tab-${name}`;
 const panelId = (name: ProfileTab): string => `profile-panel-${name}`;
 
@@ -142,7 +145,10 @@ const ProfilePage: React.FC = () => {
   // tab; `useSearchParams` rather than `window.location`, because nothing
   // here may touch a browser global during render.
   const [searchParams, setSearchParams] = useSearchParams();
-  const tab: ProfileTab = searchParams.get("tab") === "about" ? "about" : "moments";
+  // About, not Moments. On a phone the tabs are the whole navigation, and
+  // landing on someone's posts before knowing who they are is the wrong first
+  // screen. `?tab=moments` still works, so existing links are unaffected, and
+  // desktop is untouched -- both panels are `lg:block` regardless of this.
   const selectTab = (next: ProfileTab): void => {
     const params = new URLSearchParams(searchParams);
     params.set("tab", next);
@@ -181,6 +187,31 @@ const ProfilePage: React.FC = () => {
   const profileId = userId || (user && user._id) || "";
 
   const images = (user && user.imageUrls) || [];
+
+  // What the About panel would actually contain. Photos sit above the tabs, so
+  // they are not part of it -- but they are worth landing next to, which is why
+  // they count towards "About has something to show".
+  const aboutHasSomething =
+    hasLanguages(user) ||
+    hasAbout(user) ||
+    hasLearning(user) ||
+    (!isOwn && hasMutualInterests(viewer, user)) ||
+    images.length > 0;
+
+  // About, not Moments: on a phone the tabs are the whole navigation, and
+  // landing on someone's posts before knowing who they are is the wrong first
+  // screen. But landing on an EMPTY panel is worse than either, so a profile
+  // with nothing to say falls back to Moments. An explicit ?tab= always wins,
+  // and desktop is untouched -- both panels are `lg:block` regardless of this.
+  const requested = searchParams.get("tab");
+  const tab: ProfileTab =
+    requested === "moments"
+      ? "moments"
+      : requested === "about"
+      ? "about"
+      : aboutHasSomething
+      ? "about"
+      : "moments";
   const notFound = !loading && (statusOf(error) === 404 || (!error && !user));
   const failed = !loading && !notFound && Boolean(error);
 
@@ -299,6 +330,21 @@ const ProfilePage: React.FC = () => {
           {!isOwn && <LanguageMatchCard viewer={viewer} user={user} />}
           {!isOwn && <EngagementStats user={user} />}
 
+          {/* The photo set is the fastest read of who someone is, and it
+              renders nothing at all when the account has no photos — so an
+              empty profile shows no empty card.
+              On a phone it sits ABOVE the tabs rather than inside one: it is
+              worth seeing on either tab, and behind a tab it cost a tap to
+              reach. On a desktop it belongs to the right-hand column, where
+              the left would otherwise carry the info against a near-empty
+              half. A grid child cannot move between columns with CSS, so it
+              is declared twice and exactly one is ever displayed —
+              `display:none` keeps the other out of the accessibility tree as
+              well as off the screen, and the images come from cache. */}
+          <div data-testid="profile-photos-phone" className="lg:hidden">
+            <ProfilePhotos images={images} isOwn={isOwn} name={name} />
+          </div>
+
           {/* Below 1024px the two columns become two tabs, as on the app's
               member page. Both panels stay mounted and the inactive one is
               hidden with a class, so switching costs no refetch and the
@@ -345,23 +391,31 @@ const ProfilePage: React.FC = () => {
               data-testid="profile-about-panel"
               className={`space-y-4 lg:block ${tab === "about" ? "" : "hidden"}`}
             >
-              <ProfileLanguages user={user} />
-              <ProfileAbout user={user} />
-              <ProfileLearning user={user} />
-              {!isOwn && <MutualInterests viewer={viewer} user={user} />}
-              {/* The photo set is the fastest read of who someone is, and it
-                  renders nothing at all when the account has no photos — so
-                  an empty profile shows no empty card.
-                  It belongs to the About tab on a phone (app parity) and to
-                  the right-hand column on a desktop, where the left column
-                  would otherwise carry four cards against a near-empty half.
-                  A grid child cannot move between columns with CSS, so it is
-                  declared in both and exactly one is ever displayed —
-                  `display:none` keeps the other out of the accessibility tree
-                  as well as off the screen, and the images come from cache. */}
-              <div data-testid="profile-photos-phone" className="lg:hidden">
-                <ProfilePhotos images={images} isOwn={isOwn} name={name} />
-              </div>
+              {/* One card, four sections. Four separate cards is what pushed
+                  everything below the fold on a phone, and the four read as
+                  unrelated boxes rather than one account.
+                  The page has to ask each section whether it has anything
+                  BEFORE drawing the card, because a parent cannot see that a
+                  child returned null — hence the predicates, each exported by
+                  the component that owns the rule so the two cannot drift.
+                  The testid rides a wrapper div: SurfaceCard is a shared design
+                  component that sets its own and forwards nothing, and it is
+                  not worth changing for one caller. */}
+              {(hasLanguages(user) ||
+                hasAbout(user) ||
+                hasLearning(user) ||
+                (!isOwn && hasMutualInterests(viewer, user))) && (
+                <div data-testid="profile-info-card">
+                  <SurfaceCard padding="lg">
+                    <div className="space-y-5">
+                      <ProfileLanguages user={user} bare />
+                      <ProfileAbout user={user} bare />
+                      <ProfileLearning user={user} bare />
+                      {!isOwn && <MutualInterests viewer={viewer} user={user} bare />}
+                    </div>
+                  </SurfaceCard>
+                </div>
+              )}
               {isOwn && <AdUnit slot={AD_SLOTS.profile} className="pt-1" />}
             </div>
 

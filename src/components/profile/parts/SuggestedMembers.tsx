@@ -94,6 +94,10 @@ const SuggestedMembers: React.FC<SuggestedMembersProps> = ({
           >
             <MemberCard
               user={member}
+              /* A carousel, not a grid: the cell shape MemberCard takes on the
+                 community page is roughly four times taller than this strip
+                 needs. */
+              compact
               onOpen={(picked) => navigate(`/community/${picked._id}`)}
               onWave={(picked) => setWaveTarget(picked)}
             />

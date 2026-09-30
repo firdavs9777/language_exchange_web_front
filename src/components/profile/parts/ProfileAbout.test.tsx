@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import ProfileAbout from "./ProfileAbout";
+import ProfileAbout, { hasAbout } from "./ProfileAbout";
 
 // Translation is off by default (every `t()` returns "", so the components'
 // English fallbacks render); one test swaps in a real lookup.
@@ -86,4 +86,46 @@ it("renders nothing at all when every field is empty", () => {
 it("renders nothing without a user", () => {
   const { container } = render(<ProfileAbout />);
   expect(container).toBeEmptyDOMElement();
+});
+
+// The page draws one shared card around all four info sections, so it must ask
+// each whether it has anything BEFORE drawing — a parent cannot see that a
+// child returned null. These pin the predicate to the component, so the two
+// cannot drift apart.
+describe("hasAbout", () => {
+  const cases: Array<[string, any, boolean]> = [
+    ["nothing at all", {}, false],
+    ["a bio", { bio: "hi" }, true],
+    ["whitespace only", { bio: "   " }, false],
+    ["an occupation", { occupation: "Engineer" }, true],
+    ["a school", { school: "KAIST" }, true],
+    ["an MBTI", { mbti: "INFJ" }, true],
+    ["a blood type", { bloodType: "O" }, true],
+    ["topics", { topics: ["Film"] }, true],
+    ["empty topics", { topics: [] }, false],
+    ["blank topics", { topics: ["  "] }, false],
+  ];
+
+  cases.forEach(([label, user, expected]) => {
+    it(`agrees with the component for ${label}`, () => {
+      expect(hasAbout(user)).toBe(expected);
+      // And the component itself renders nothing exactly when the predicate is false.
+      const { container } = render(<ProfileAbout user={user} />);
+      expect(container.firstChild === null).toBe(!expected);
+    });
+  });
+
+  it("drops its own card in bare mode", () => {
+    // The point of `bare` is that the PAGE draws one card around all four
+    // sections. A part that kept its own SurfaceCard would nest a card inside
+    // a card, so the assertion that matters is the card's absence.
+    const bare = render(<ProfileAbout user={{ bio: "hi" }} bare />);
+    expect(bare.container.querySelector("[data-testid='surface-card']")).toBeNull();
+    expect(bare.container.querySelector("[data-testid='profile-about']")).toBeInTheDocument();
+
+    bare.unmount();
+
+    const wrapped = render(<ProfileAbout user={{ bio: "hi" }} />);
+    expect(wrapped.container.querySelector("[data-testid='surface-card']")).not.toBeNull();
+  });
 });

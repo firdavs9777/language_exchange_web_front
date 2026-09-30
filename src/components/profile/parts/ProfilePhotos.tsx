@@ -123,7 +123,10 @@ const ProfilePhotos: React.FC<ProfilePhotosProps> = ({ images, isOwn, name }) =>
           )}
         </div>
 
-        <ul className="grid grid-cols-3 gap-2">
+        {/* Two per row on a phone (~165px a tile), three once there is room.
+            At three across a phone tile is ~110px, too small to read a face in
+            -- and the tiles are how someone decides to open the viewer. */}
+        <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {photos.map((url, index) => (
             <li key={`${index}-${url}`}>
               <button

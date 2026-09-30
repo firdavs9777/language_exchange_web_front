@@ -181,3 +181,15 @@ it("draws its controls with icons, never emoji", () => {
     /[\u{1F300}-\u{1FAFF}\u{2190}-\u{21FF}\u{2700}-\u{27BF}]/u
   );
 });
+
+// The tiles are how someone decides whether to open the viewer at all. At
+// three per row a phone gives each about 110px, which is too small to read a
+// face in. Two per row is ~165px; a desktop keeps three, where the column is
+// wide enough for them.
+it("shows two tiles per row on a phone and three above it", () => {
+  const { container } = renderPhotos();
+  const list = container.querySelector("ul") as HTMLElement;
+
+  expect(list.className).toContain("grid-cols-2");
+  expect(list.className).toContain("sm:grid-cols-3");
+});
