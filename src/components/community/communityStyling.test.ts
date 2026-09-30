@@ -156,3 +156,13 @@ describe("the shared scales exist as tokens", () => {
     });
   });
 });
+
+describe("type sizes come from the scale", () => {
+  it("names no font size the scale does not have", () => {
+    const sizes = scss.match(/font-size:\s*[^;]+;/g) || [];
+    const offenders = sizes.filter(
+      (decl) => !/var\(--bt-text-(xs|sm|base|lg|xl)\)/.test(decl) && !/inherit/.test(decl)
+    );
+    expect(offenders).toEqual([]);
+  });
+});

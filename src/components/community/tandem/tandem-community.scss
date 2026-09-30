@@ -79,7 +79,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   background: #fff;
   color: $tandem-muted;
   font-family: var(--bt-font-display);
-  font-size: 0.8125rem;
+  font-size: var(--bt-text-sm);
   font-weight: 700;
   letter-spacing: -0.01em;
   cursor: pointer;
@@ -158,7 +158,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
        app-wide :focus-visible ring, leaving keyboard users with only the
        :focus-within glow on the wrapper -- a 1px border change. */
     font-family: inherit;
-    font-size: 0.875rem;
+    font-size: var(--bt-text-sm);
     font-weight: 500;
     width: 100%;
     color: $tandem-text;
@@ -227,7 +227,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   border-radius: 999px;
   background: $tandem-pink;
   color: #fff;
-  font-size: 0.6875rem;
+  font-size: var(--bt-text-xs);
   font-weight: 700;
   line-height: 18px;
   text-align: center;
@@ -286,7 +286,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   h2 {
     margin: 0;
-    font-size: 1.0625rem;
+    font-size: var(--bt-text-base);
     font-weight: 700;
     color: $tandem-text;
   }
@@ -326,7 +326,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   h3 {
     margin: 0;
-    font-size: 0.8125rem;
+    font-size: var(--bt-text-sm);
     font-weight: 700;
     color: $tandem-muted;
     letter-spacing: 0.04em;
@@ -349,7 +349,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   border: 1px solid $tandem-border;
   background: #fff;
   color: $tandem-text;
-  font-size: 0.8125rem;
+  font-size: var(--bt-text-sm);
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease;
@@ -381,7 +381,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
     gap: 4px;
 
     span {
-      font-size: 0.75rem;
+      font-size: var(--bt-text-xs);
       font-weight: 600;
       color: $tandem-muted;
       text-transform: uppercase;
@@ -394,7 +394,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
       border-radius: 12px;
       border: 1px solid $tandem-border;
       background: $tandem-bg;
-      font-size: 0.9375rem;
+      font-size: var(--bt-text-sm);
       color: $tandem-text;
 
       /* Keeps the app-wide :focus-visible ring; this rule only adds the
@@ -418,7 +418,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  font-size: 0.9375rem;
+  font-size: var(--bt-text-sm);
   color: $tandem-text;
 
   input[type="checkbox"] {
@@ -485,7 +485,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   gap: 8px;
 
   h2 {
-    font-size: 1.125rem;
+    font-size: var(--bt-text-lg);
     font-weight: 700;
     margin: 0;
     color: $tandem-text;
@@ -497,7 +497,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   align-items: center;
   gap: 4px;
   padding: 3px 10px;
-  font-size: 0.75rem;
+  font-size: var(--bt-text-xs);
   font-weight: 700;
   text-transform: uppercase;
   background: linear-gradient(135deg, #fff3cd, #ffe69b);
@@ -552,7 +552,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   h5 {
-    font-size: 0.95rem;
+    font-size: var(--bt-text-sm);
     font-weight: 700;
     margin: 0;
   }
@@ -588,7 +588,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .highlighted-card__topic {
-  font-size: 0.75rem;
+  font-size: var(--bt-text-xs);
   color: $tandem-muted;
   line-height: 1.35;
   display: -webkit-box;
@@ -606,7 +606,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   background: $tandem-pro;
   color: #fff;
   font-weight: 700;
-  font-size: 0.75rem;
+  font-size: var(--bt-text-xs);
   cursor: pointer;
 
   &:hover {
@@ -632,7 +632,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   h3 {
     margin: 0 0 12px;
-    font-size: 1rem;
+    font-size: var(--bt-text-base);
     font-weight: 700;
     color: $tandem-text;
   }
@@ -675,7 +675,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   background: $tandem-pro;
   color: #fff;
   font-weight: 600;
-  font-size: 0.8125rem;
+  font-size: var(--bt-text-sm);
   border-radius: 999px;
   text-decoration: none;
 
@@ -707,7 +707,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 .community-grid__count {
   margin: 16px 0;
   color: $tandem-muted;
-  font-size: 0.8125rem;
+  font-size: var(--bt-text-sm);
 }
 
 /* ===== Tandem Member Card ===== */
@@ -798,7 +798,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   h3 {
     font-family: var(--bt-font-display);
-    font-size: 1rem;
+    font-size: var(--bt-text-base);
     font-weight: 700;
     letter-spacing: -0.018em;
     margin: 0;
@@ -814,7 +814,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   align-items: center;
   padding: 2px 8px;
   border-radius: 999px;
-  font-size: 0.6875rem;
+  font-size: var(--bt-text-xs);
   font-weight: 700;
   letter-spacing: 0.04em;
 
@@ -825,7 +825,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .tandem-member-card__topic {
-  font-size: 0.8125rem;
+  font-size: var(--bt-text-sm);
   color: $tandem-muted;
   line-height: 1.4;
   margin: 0;
@@ -851,7 +851,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   padding: 4px 8px;
   background: $tandem-bg;
   border-radius: 999px;
-  font-size: 0.6875rem;
+  font-size: var(--bt-text-xs);
   color: $tandem-muted;
 
   &__label {
@@ -864,7 +864,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   &__flag {
-    font-size: 1rem;
+    font-size: var(--bt-text-base);
     line-height: 1;
   }
 
@@ -887,7 +887,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   h3 {
     font-family: var(--bt-font-display);
-    font-size: 1.25rem;
+    font-size: var(--bt-text-xl);
     font-weight: 700;
     letter-spacing: -0.022em;
     color: $tandem-strong;
@@ -897,7 +897,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   p {
     margin: 0 auto 20px;
     max-width: 38ch;
-    font-size: 0.9375rem;
+    font-size: var(--bt-text-sm);
     line-height: 1.6;
   }
 
@@ -927,7 +927,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   background: linear-gradient(135deg, $brand-deep 0%, $brand-deepest 100%);
   color: #fff;
   font-family: var(--bt-font-display);
-  font-size: 0.875rem;
+  font-size: var(--bt-text-sm);
   font-weight: 700;
   letter-spacing: -0.01em;
   cursor: pointer;
@@ -956,7 +956,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
     padding: 11px 28px;
     border-radius: 999px;
     font-family: var(--bt-font-display);
-    font-size: 0.875rem;
+    font-size: var(--bt-text-sm);
     font-weight: 700;
     letter-spacing: -0.01em;
     cursor: pointer;
@@ -1031,11 +1031,11 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .tandem-member-card__first-row h3 {
-    font-size: 0.9375rem;
+    font-size: var(--bt-text-sm);
   }
 
   .tandem-member-card__topic {
-    font-size: 0.75rem;
+    font-size: var(--bt-text-xs);
   }
 
   .highlighted-banner__header {
@@ -1047,7 +1047,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
     padding: 14px 10px;
 
     h5 {
-      font-size: 0.875rem;
+      font-size: var(--bt-text-sm);
     }
   }
 
@@ -1060,7 +1060,7 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
     padding: 14px 16px;
 
     h3 {
-      font-size: 0.9375rem;
+      font-size: var(--bt-text-sm);
     }
   }
 
