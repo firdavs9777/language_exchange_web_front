@@ -12,8 +12,8 @@
 
 ## Global Constraints
 
-- **No hex colours in `tandem-community.scss`** — tokens only. `communityStyling.test.ts` enforces it.
-- **No inline `style={{}}` containing hex** in community components.
+- **`tandem-community.scss` legitimately contains hex today** (92 literals, mostly the `$tandem-*` SCSS variables). The no-hex rule in `communityStyling.test.ts:72` applies to the member-page TSX sources, NOT to this stylesheet. Do not purge them — migrating `$tandem-*` onto tokens is piece **D**.
+- **No inline `style={{}}` at all** in the member-page components, and no hex inside any inline style in community components. That is what `communityStyling.test.ts` actually enforces.
 - **40px minimum tap target** in primary flows — the visitors pill is a control.
 - **Online, New and For you must render exactly what they render today.** Only the All members tab changes.
 - **Bundle budget has ~9KB headroom** (317.1 / 326 KB). Check it at the end.
@@ -273,6 +273,7 @@ page-rhythm problem, not a reason to rewrite every declaration blind."
 - Modify: `src/components/community/MainCommunity.tsx` (~line 857: remove `<VisitorsBanner>`, pass the count to the sub-nav)
 - Modify: `src/components/community/tandem/tandem-community.scss` (add `.community-subnav__visitors`; the `.visitors-banner` rules become dead and are removed)
 - Delete: `src/components/community/tandem/VisitorsBanner.tsx`
+- Modify: `src/components/community/MainCommunityTabs.test.tsx:196` — "keeps the visitors banner and the highlighted carousel on All only" asserts `.visitors-banner` IS present. Deleting the banner breaks it HERE, so this task drops the visitors half of that test; Task 5 then rewrites the carousel half.
 - Test: `src/components/community/tandem/CommunitySubNav.test.tsx`
 
 **Interfaces:**
@@ -369,7 +370,11 @@ In `MainCommunity.tsx`, delete the `{activeTab === "all" && visitorsTotal > 0 &&
 ```
 
 Delete `VisitorsBanner.tsx` and the `.visitors-banner*` rules from the
-stylesheet — nothing else references them. Verify with:
+stylesheet. Then fix `MainCommunityTabs.test.tsx:196`, which asserts
+`.visitors-banner` is present and will fail the moment the component is gone:
+remove its two `.visitors-banner` assertions and rename it to
+`"keeps the highlighted carousel on All only"`. Leave the carousel assertions
+alone — Task 5 rewrites those. Nothing else references the banner. Verify with:
 `grep -rn "VisitorsBanner\|visitors-banner" src/` before committing; only the
 i18n keys should remain, and `communityMain.visitors.seeAll` becomes unused —
 leave the keys in place, they are shared with `/visitors`.
