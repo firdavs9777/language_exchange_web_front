@@ -906,9 +906,8 @@
       "highlightSelfTopic": "Destaca tu perfil y que más personas te vean"
     },
     "visitors": {
-      "justYou": "¡{{name}} visitó tu perfil!",
-      "andOthers": "¡{{name}} y {{count}} más visitaron tu perfil!",
-      "seeAll": "Ver todo"
+      "pill_one": "1 persona visitó tu perfil",
+      "pill_other": "{{count}} personas visitaron tu perfil"
     },
     "tandemCard": {
       "newChip": "NUEVO",

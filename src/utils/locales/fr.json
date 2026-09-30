@@ -906,9 +906,8 @@
       "highlightSelfTopic": "Mettez en avant votre profil pour que plus de personnes vous voient"
     },
     "visitors": {
-      "justYou": "{{name}} a visité votre profil !",
-      "andOthers": "{{name}} et {{count}} autres ont visité votre profil !",
-      "seeAll": "Voir tout"
+      "pill_one": "1 personne a visité votre profil",
+      "pill_other": "{{count}} personnes ont visité votre profil"
     },
     "tandemCard": {
       "newChip": "NOUVEAU",

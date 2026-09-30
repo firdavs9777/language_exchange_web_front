@@ -925,9 +925,8 @@
       "highlightSelfTopic": "Hebe dein Profil hervor, damit mehr Leute dich sehen"
     },
     "visitors": {
-      "justYou": "{{name}} hat dein Profil besucht!",
-      "andOthers": "{{name}} und {{count}} weitere haben dein Profil besucht!",
-      "seeAll": "Alle anzeigen"
+      "pill_one": "1 Person hat dein Profil besucht",
+      "pill_other": "{{count}} Personen haben dein Profil besucht"
     },
     "tandemCard": {
       "newChip": "NEU",

@@ -925,9 +925,8 @@
       "highlightSelfTopic": "让你的资料更醒目，被更多人看到"
     },
     "visitors": {
-      "justYou": "{{name}} 看过你的资料！",
-      "andOthers": "{{name}} 和另外 {{count}} 人看过你的资料！",
-      "seeAll": "查看全部"
+      "pill_one": "1 人看过你的资料",
+      "pill_other": "{{count}} 人看过你的资料"
     },
     "tandemCard": {
       "newChip": "新",

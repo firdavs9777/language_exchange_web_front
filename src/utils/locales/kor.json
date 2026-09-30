@@ -925,9 +925,8 @@
       "highlightSelfTopic": "프로필을 상단에 노출해 더 많은 사람에게 보여 주세요"
     },
     "visitors": {
-      "justYou": "{{name}}님이 내 프로필을 방문했어요!",
-      "andOthers": "{{name}}님 외 {{count}}명이 내 프로필을 방문했어요!",
-      "seeAll": "모두 보기"
+      "pill_one": "1명이 내 프로필을 방문했어요",
+      "pill_other": "{{count}}명이 내 프로필을 방문했어요"
     },
     "tandemCard": {
       "newChip": "신규",
