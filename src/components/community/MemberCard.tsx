@@ -127,7 +127,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, onWave, onOpe
             data-testid="member-card-photo-placeholder"
             className="w-full h-full bg-gradient-to-br from-teal-100 to-yellow-50 flex items-center justify-center text-4xl font-semibold text-teal-600"
           >
-            {user.name?.charAt(0)?.toUpperCase()}
+            {user.name?.charAt(0)?.toUpperCase() || "?"}
           </div>
         )}
         {user.hasActiveStory && (
@@ -147,7 +147,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, onWave, onOpe
       {/* Info column */}
       <div className="flex-1 min-w-0 p-4">
         <div className="flex items-center gap-2 flex-wrap">
-          <span data-testid="member-card-name" className="font-semibold text-gray-900 truncate">
+          <span data-testid="member-card-name" className="font-semibold text-gray-900 truncate min-w-0">
             {user.name}
             {age !== undefined ? `, ${age}` : ""}
           </span>

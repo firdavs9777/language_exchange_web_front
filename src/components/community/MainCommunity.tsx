@@ -65,18 +65,19 @@ const CARD_SLOT = "community-card-slot";
  *  stable identity rather than a fresh `[]` on every render. */
 const NO_EXTRA_PAGES: CommunityMemberCard[] = [];
 
-/** How many skeleton rows stand in for the first page while it loads. */
+/** How many skeleton cells stand in for the first page while it loads. */
 const SKELETON_ROWS = 6;
 
-/** A row-shaped placeholder: same height as a card, so nothing jumps. */
+/** A card-shaped placeholder: same silhouette as a card, so nothing jumps. */
 const CardSkeleton: React.FC = () => (
   <div className="community-card-skeleton" aria-hidden>
-    <div className="community-card-skeleton__avatar" />
+    <div className="community-card-skeleton__photo" />
     <div className="community-card-skeleton__lines">
       <span className="community-card-skeleton__line community-card-skeleton__line--name" />
       <span className="community-card-skeleton__line community-card-skeleton__line--meta" />
       <span className="community-card-skeleton__line community-card-skeleton__line--bio" />
     </div>
+    <div className="community-card-skeleton__foot" />
   </div>
 );
 
@@ -906,10 +907,13 @@ const ModernCommunity: React.FC = () => {
                     />
                   </div>
                   {/* Interleave a community ad every 6 members, but never after
-                      the last item. No-op until AdSense is configured. */}
+                      the last item. No-op until AdSense is configured. As a
+                      direct child of the grid it must span the full row
+                      (community-grid__ad), or it lands in one of the three
+                      columns and shifts every following member across. */}
                   {(index + 1) % 6 === 0 &&
                     index !== allMembers.length - 1 && (
-                      <AdUnit slot={AD_SLOTS.community} className="my-3" />
+                      <AdUnit slot={AD_SLOTS.community} className="my-3 community-grid__ad" />
                     )}
                 </Fragment>
               ))}

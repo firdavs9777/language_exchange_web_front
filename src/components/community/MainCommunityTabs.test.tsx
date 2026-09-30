@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
 import { Provider } from "react-redux";
 import {
   createMemoryRouter,
@@ -233,12 +233,22 @@ describe("the For you tab", () => {
     expect(recommendationRequests()).toEqual([]);
   });
 
-  // A recommendation nobody can see the reasoning for is just a list.
+  // A recommendation nobody can see the reasoning for is just a list, and a
+  // reason that lands under the wrong member is worse than no reason at all
+  // -- this is the only end-to-end proof the parent hands the right reasons
+  // to the right card.
   it("prints the server's reasons under the member they belong to", async () => {
     renderList(["/communities?tab=foryou"]);
 
-    const why = await screen.findAllByTestId(/^member-card-reason/);
-    expect(why.length).toBeGreaterThan(0);
+    const cards = await screen.findAllByTestId("member-card-root");
+    const member1Card = cards.find((c) => within(c).queryByText(/Member 1/)) as HTMLElement;
+    const member2Card = cards.find((c) => within(c).queryByText(/Member 2/)) as HTMLElement;
+
+    expect(within(member1Card).getByText("Native Korean speaker")).toBeInTheDocument();
+    expect(within(member1Card).getByText("Online now")).toBeInTheDocument();
+
+    // Member 2's fixture has no match reasons -- it renders no chip row.
+    expect(within(member2Card).queryByTestId("member-card-reasons")).not.toBeInTheDocument();
   });
 
   it("offers no filter or sort control", async () => {

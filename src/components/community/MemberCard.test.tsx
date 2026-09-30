@@ -209,6 +209,17 @@ describe("MemberCard", () => {
     expect(placeholder.className).toContain("h-full");
   });
 
+  it("falls back to a placeholder mark when the member has no name either", () => {
+    render(
+      <MemberCard
+        user={{ ...baseUser, name: "", imageUrls: [] }}
+        onWave={jest.fn()}
+        onOpen={jest.fn()}
+      />
+    );
+    expect(screen.getByTestId("member-card-photo-placeholder")).toHaveTextContent("?");
+  });
+
   it("keeps the story ring on the photo corner, not across the middle", () => {
     render(
       <MemberCard
@@ -229,7 +240,13 @@ describe("MemberCard", () => {
         onOpen={jest.fn()}
       />
     );
-    expect(screen.getByTestId("member-card-name").className).toContain("truncate");
+    const name = screen.getByTestId("member-card-name");
+    expect(name.className).toContain("truncate");
+    // `truncate` alone cannot shrink a flex item below its content's natural
+    // width -- `min-w-0` overrides the flex item's automatic minimum size,
+    // which is what actually lets the ellipsis engage instead of the text
+    // hard-clipping against the card's `overflow-hidden`.
+    expect(name.className).toContain("min-w-0");
   });
 
   it("gives the wave button the full width of the card foot", () => {

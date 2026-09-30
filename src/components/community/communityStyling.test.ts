@@ -112,16 +112,29 @@ describe("the member list is a grid, not a column", () => {
 describe("the list still skips work it cannot see", () => {
   it("reserves the cell's height, not the old row's", () => {
     expect(scss).toMatch(/\.community-card-slot\s*\{[^}]*content-visibility:\s*auto/);
-    expect(scss).toMatch(/\.community-card-slot\s*\{[^}]*contain-intrinsic-size:\s*auto 320px/);
+    expect(scss).toMatch(/\.community-card-slot\s*\{[^}]*contain-intrinsic-size:\s*auto 420px/);
     expect(scss).not.toContain("contain-intrinsic-size: auto 104px");
+    expect(scss).not.toContain("contain-intrinsic-size: auto 320px");
   });
 
   it("shapes the skeleton like the card it stands in for", () => {
     expect(scss).toMatch(/\.community-card-skeleton\s*\{[^}]*flex-direction:\s*column/);
-    expect(scss).toMatch(/\.community-card-skeleton\s*\{[^}]*min-height:\s*320px/);
+    expect(scss).toMatch(/\.community-card-skeleton\s*\{[^}]*min-height:\s*420px/);
+    // A full-width 16:10 photo block up top and a foot bar for the wave
+    // button, not the deleted row card's 72x72 avatar square.
+    expect(scss).toContain(".community-card-skeleton__photo");
+    expect(scss).toContain(".community-card-skeleton__foot");
+    expect(scss).not.toContain(".community-card-skeleton__avatar");
   });
 
   it("lays the skeletons out in the same grid as the members", () => {
     expect(tsx).not.toContain('className="community-skeleton-list"');
   });
-});;
+});
+
+describe("the interleaved ad does not break the 3-per-row rhythm", () => {
+  it("spans the full row instead of occupying one of the three columns", () => {
+    expect(tsx).toMatch(/<AdUnit[^>]*className="[^"]*\bcommunity-grid__ad\b[^"]*"/);
+    expect(scss).toMatch(/\.community-grid__ad\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/);
+  });
+});

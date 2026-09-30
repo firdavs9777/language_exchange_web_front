@@ -212,7 +212,7 @@ describe("what a mount costs", () => {
     });
   });
 
-  it("stands row-shaped placeholders in while the first page loads", () => {
+  it("stands card-shaped placeholders in while the first page loads", () => {
     const { container } = renderList();
     expect(screen.getByTestId("community-skeletons")).toBeInTheDocument();
     expect(container.querySelectorAll(".community-card-skeleton").length).toBeGreaterThan(0);
