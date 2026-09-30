@@ -7,6 +7,8 @@ import LanguageExchangePill from "../../../design/LanguageExchangePill";
 export interface ProfileLanguagesProps {
   /** The user document, own (`/auth/me`) or public (`USER_PUBLIC_FIELDS`). */
   user?: any;
+  /** Render the contents alone, for a caller that draws the card itself. */
+  bare?: boolean;
 }
 
 interface ExtraLanguage {
@@ -58,7 +60,12 @@ export function extraLanguages(user: any, primaryLearning: string): ExtraLanguag
  * The pill is the shared primitive, so the pair reads identically here, in the
  * community row and on a moment card.
  */
-const ProfileLanguages: React.FC<ProfileLanguagesProps> = ({ user }) => {
+/** Whether this section has anything to show. Same rule as the guard below. */
+export const hasLanguages = (user: any): boolean =>
+  !!(String((user && user.native_language) || "").trim() ||
+     String((user && user.language_to_learn) || "").trim());
+
+const ProfileLanguages: React.FC<ProfileLanguagesProps> = ({ user, bare }) => {
   const { t } = useTranslation();
 
   const native = String((user && user.native_language) || "").trim();
@@ -66,10 +73,10 @@ const ProfileLanguages: React.FC<ProfileLanguagesProps> = ({ user }) => {
   const level = String((user && user.languageLevel) || "").trim();
   const extras = extraLanguages(user, learning);
 
-  if (!native && !learning) return null;
+  if (!hasLanguages(user)) return null;
 
-  return (
-    <SurfaceCard padding="lg">
+  const body = (
+    <>
       <div data-testid="profile-languages">
         <h2 className="mb-3 text-eyebrow font-extrabold uppercase text-ink-500 dark:text-ink-400">
           {t("profile.sections.languages") || "Languages"}
@@ -150,8 +157,10 @@ const ProfileLanguages: React.FC<ProfileLanguagesProps> = ({ user }) => {
           </div>
         )}
       </div>
-    </SurfaceCard>
+    </>
   );
+
+  return bare ? body : <SurfaceCard padding="lg">{body}</SurfaceCard>;
 };
 
 export default ProfileLanguages;

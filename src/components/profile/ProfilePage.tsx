@@ -12,14 +12,14 @@ import useProfileData from "./useProfileData";
 import ProfileHeader from "./parts/ProfileHeader";
 import ProfileStats from "./parts/ProfileStats";
 import ProfileActions from "./parts/ProfileActions";
-import ProfileLanguages from "./parts/ProfileLanguages";
-import ProfileAbout from "./parts/ProfileAbout";
-import ProfileLearning from "./parts/ProfileLearning";
+import ProfileLanguages, { hasLanguages } from "./parts/ProfileLanguages";
+import ProfileAbout, { hasAbout } from "./parts/ProfileAbout";
+import ProfileLearning, { hasLearning } from "./parts/ProfileLearning";
 import ProfileMoments from "./parts/ProfileMoments";
 import ProfilePhotos from "./parts/ProfilePhotos";
 import LanguageMatchCard from "./parts/LanguageMatchCard";
 import EngagementStats from "./parts/EngagementStats";
-import MutualInterests from "./parts/MutualInterests";
+import MutualInterests, { hasMutualInterests } from "./parts/MutualInterests";
 import ConversationStarters from "./parts/ConversationStarters";
 import SuggestedMembers from "./parts/SuggestedMembers";
 import HighlightsRail from "../stories/HighlightsRail";
@@ -364,10 +364,31 @@ const ProfilePage: React.FC = () => {
               data-testid="profile-about-panel"
               className={`space-y-4 lg:block ${tab === "about" ? "" : "hidden"}`}
             >
-              <ProfileLanguages user={user} />
-              <ProfileAbout user={user} />
-              <ProfileLearning user={user} />
-              {!isOwn && <MutualInterests viewer={viewer} user={user} />}
+              {/* One card, four sections. Four separate cards is what pushed
+                  everything below the fold on a phone, and the four read as
+                  unrelated boxes rather than one account.
+                  The page has to ask each section whether it has anything
+                  BEFORE drawing the card, because a parent cannot see that a
+                  child returned null — hence the predicates, each exported by
+                  the component that owns the rule so the two cannot drift.
+                  The testid rides a wrapper div: SurfaceCard is a shared design
+                  component that sets its own and forwards nothing, and it is
+                  not worth changing for one caller. */}
+              {(hasLanguages(user) ||
+                hasAbout(user) ||
+                hasLearning(user) ||
+                (!isOwn && hasMutualInterests(viewer, user))) && (
+                <div data-testid="profile-info-card">
+                  <SurfaceCard padding="lg">
+                    <div className="space-y-5">
+                      <ProfileLanguages user={user} bare />
+                      <ProfileAbout user={user} bare />
+                      <ProfileLearning user={user} bare />
+                      {!isOwn && <MutualInterests viewer={viewer} user={user} bare />}
+                    </div>
+                  </SurfaceCard>
+                </div>
+              )}
               {isOwn && <AdUnit slot={AD_SLOTS.profile} className="pt-1" />}
             </div>
 

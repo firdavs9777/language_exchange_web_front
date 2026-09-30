@@ -44,16 +44,22 @@ export function sharedTopics(viewer: any, user: any): string[] {
 export interface MutualInterestsProps {
   viewer?: any;
   user?: any;
+  /** Render the contents alone, for a caller that draws the card itself. */
+  bare?: boolean;
 }
 
-const MutualInterests: React.FC<MutualInterestsProps> = ({ viewer, user }) => {
+/** Whether this section has anything to show. Reuses the exported selector. */
+export const hasMutualInterests = (viewer: any, user: any): boolean =>
+  !!viewer && sharedTopics(viewer, user).length > 0;
+
+const MutualInterests: React.FC<MutualInterestsProps> = ({ viewer, user, bare }) => {
   const { t } = useTranslation();
   const shared = sharedTopics(viewer, user);
 
-  if (!viewer || shared.length === 0) return null;
+  if (!hasMutualInterests(viewer, user)) return null;
 
-  return (
-    <SurfaceCard padding="lg">
+  const body = (
+    <>
       <div data-testid="mutual-interests">
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-brand" aria-hidden />
@@ -84,8 +90,10 @@ const MutualInterests: React.FC<MutualInterestsProps> = ({ viewer, user }) => {
           ))}
         </div>
       </div>
-    </SurfaceCard>
+    </>
   );
+
+  return bare ? body : <SurfaceCard padding="lg">{body}</SurfaceCard>;
 };
 
 export default MutualInterests;

@@ -707,3 +707,48 @@ describe("the photo set on a phone", () => {
     expect(desktop.closest('[data-testid="profile-moments-panel"]')).not.toBeNull();
   });
 });
+
+describe("the info card", () => {
+  it("draws the four sections inside one card, not four", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", native_language: "English", bio: "hi" } },
+    });
+
+    renderPage("/profile/u2", "me");
+
+    expect(screen.getAllByTestId("profile-info-card")).toHaveLength(1);
+    const card = within(screen.getByTestId("profile-info-card"));
+    expect(card.getByTestId("profile-languages")).toBeInTheDocument();
+    expect(card.getByTestId("profile-about")).toBeInTheDocument();
+  });
+
+  it("shows no card at all when the profile has none of the four", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada" } },
+    });
+
+    renderPage("/profile/u2", "me");
+
+    // Absent, not empty: four independent early returns gave nothing before.
+    expect(screen.queryByTestId("profile-info-card")).not.toBeInTheDocument();
+  });
+
+  it("carries only the sections that have something", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", bio: "just a bio" } },
+    });
+
+    renderPage("/profile/u2", "me");
+
+    const card = within(screen.getByTestId("profile-info-card"));
+    expect(card.getByTestId("profile-about")).toBeInTheDocument();
+    expect(card.queryByTestId("profile-languages")).not.toBeInTheDocument();
+    expect(card.queryByTestId("profile-learning")).not.toBeInTheDocument();
+  });
+});

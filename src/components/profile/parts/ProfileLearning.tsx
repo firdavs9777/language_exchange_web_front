@@ -6,6 +6,8 @@ import SurfaceCard from "../../../design/SurfaceCard";
 export interface ProfileLearningProps {
   /** The user document. `learningStats` only exists on an own profile. */
   user?: any;
+  /** Render the contents alone, for a caller that draws the card itself. */
+  bare?: boolean;
 }
 
 function positive(value: any): number | null {
@@ -36,17 +38,34 @@ function formatCount(value: number, language: string): string {
  * on own profiles only; `streakDays`/`totalXp` are read as a fallback because
  * the public field list names them (they are not on the schema today).
  */
-const ProfileLearning: React.FC<ProfileLearningProps> = ({ user }) => {
-  const { t, i18n } = useTranslation();
-  const language = (i18n && i18n.language) || "en";
-
+/**
+ * The three numbers this section can show, nulls dropped.
+ *
+ * Exported and used BOTH by the component and by `hasLearning`, so the question
+ * "is there anything here" has one answer rather than two that can drift.
+ */
+export function learningValues(user: any): { streak: number | null; xp: number | null; level: number | null } {
   const stats = (user && user.learningStats) || {};
   const streak = positive(stats.currentStreak != null ? stats.currentStreak : user && user.streakDays);
   const xp = positive(stats.totalXP != null ? stats.totalXP : user && user.totalXp);
   // Level 1 is the schema default and means "has not levelled up", so it is
-  // not a fact worth a tile — `positive` alone would let it through.
+  // not a fact worth a tile -- `positive` alone would let it through.
   const rawLevel = positive(stats.level);
   const level = rawLevel !== null && rawLevel > 1 ? rawLevel : null;
+  return { streak, xp, level };
+}
+
+/** Whether this section has anything to show. */
+export const hasLearning = (user: any): boolean => {
+  const v = learningValues(user);
+  return v.streak !== null || v.xp !== null || v.level !== null;
+};
+
+const ProfileLearning: React.FC<ProfileLearningProps> = ({ user, bare }) => {
+  const { t, i18n } = useTranslation();
+  const language = (i18n && i18n.language) || "en";
+
+  const { streak, xp, level } = learningValues(user);
 
   const tiles = [
     {
@@ -74,8 +93,8 @@ const ProfileLearning: React.FC<ProfileLearningProps> = ({ user }) => {
 
   if (tiles.length === 0) return null;
 
-  return (
-    <SurfaceCard padding="lg">
+  const body = (
+    <>
       <div data-testid="profile-learning">
         <h2 className="mb-3 text-eyebrow font-extrabold uppercase text-ink-500 dark:text-ink-400">
           {t("profile.learning.title") || "Learning progress"}
@@ -104,8 +123,10 @@ const ProfileLearning: React.FC<ProfileLearningProps> = ({ user }) => {
           })}
         </div>
       </div>
-    </SurfaceCard>
+    </>
   );
+
+  return bare ? body : <SurfaceCard padding="lg">{body}</SurfaceCard>;
 };
 
 export default ProfileLearning;
