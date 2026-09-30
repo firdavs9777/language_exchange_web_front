@@ -269,7 +269,8 @@
       "close": "Schließen",
       "previous": "Vorheriges Foto",
       "next": "Nächstes Foto",
-      "counter": "{{index}} von {{total}}"
+      "counter": "{{index}} von {{total}}",
+      "openAvatar": "Foto von {{name}} öffnen"
     },
     "messages": {
       "image_update_success": "Profilbild erfolgreich aktualisiert",

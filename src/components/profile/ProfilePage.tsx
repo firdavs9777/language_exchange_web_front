@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -188,6 +188,11 @@ const ProfilePage: React.FC = () => {
 
   const images = (user && user.imageUrls) || [];
 
+  // Tapping the profile picture opens the photo viewer on it. The avatar IS
+  // the first photo (`images[0]` below), so this is index 0 rather than a
+  // second copy of the image.
+  const [avatarOpenAt, setAvatarOpenAt] = useState<number | null>(null);
+
   // What the About panel would actually contain. Photos sit above the tabs, so
   // they are not part of it -- but they are worth landing next to, which is why
   // they count towards "About has something to show".
@@ -297,6 +302,7 @@ const ProfilePage: React.FC = () => {
             name={displayName}
             username={user.username}
             avatarUrl={images[0]}
+            onAvatarClick={() => setAvatarOpenAt(0)}
             isOnline={user.isOnline}
             birthYear={user.birth_year}
             birthMonth={user.birth_month}
@@ -342,7 +348,13 @@ const ProfilePage: React.FC = () => {
               `display:none` keeps the other out of the accessibility tree as
               well as off the screen, and the images come from cache. */}
           <div data-testid="profile-photos-phone" className="lg:hidden">
-            <ProfilePhotos images={images} isOwn={isOwn} name={name} />
+            <ProfilePhotos
+              images={images}
+              isOwn={isOwn}
+              name={name}
+              openAt={avatarOpenAt}
+              onOpenHandled={() => setAvatarOpenAt(null)}
+            />
           </div>
 
           {/* Below 1024px the two columns become two tabs, as on the app's
@@ -428,7 +440,13 @@ const ProfilePage: React.FC = () => {
             >
               {/* The desktop half of the pair declared in the About panel. */}
               <div data-testid="profile-photos-desktop" className="hidden lg:block">
-                <ProfilePhotos images={images} isOwn={isOwn} name={name} />
+                <ProfilePhotos
+              images={images}
+              isOwn={isOwn}
+              name={name}
+              openAt={avatarOpenAt}
+              onOpenHandled={() => setAvatarOpenAt(null)}
+            />
               </div>
               {!isOwn && (
                 <ConversationStarters

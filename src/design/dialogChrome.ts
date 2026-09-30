@@ -65,13 +65,36 @@ export function trapTab(container: HTMLElement | null, event: React.KeyboardEven
  * gesture. Touched in an effect, restored to whatever it was on close — never
  * hardcoded back to `""`, because a second overlay may still want it hidden.
  */
+/**
+ * How many dialogs currently want the page still, and what it looked like
+ * before the first of them asked.
+ *
+ * Counted, because more than one can hold the lock at a time -- the member
+ * profile mounts its photo viewer twice, a phone copy and a desktop copy with
+ * one hidden by CSS, and a modal over a modal is an ordinary pattern. Saving
+ * and restoring per holder looks right and is not: the second holder captures
+ * the first's "hidden" as the value to put back, so whichever order they let
+ * go in, one of them can restore "hidden" after the last dialog has gone and
+ * leave the page unscrollable with nothing on screen.
+ */
+let lockCount = 0;
+let overflowBeforeFirstLock = "";
+
 export function useBodyScrollLock(active: boolean): void {
   useEffect(() => {
     if (!active) return undefined;
-    const previous = document.body.style.overflow;
+
+    if (lockCount === 0) {
+      overflowBeforeFirstLock = document.body.style.overflow;
+    }
+    lockCount += 1;
     document.body.style.overflow = "hidden";
+
     return () => {
-      document.body.style.overflow = previous;
+      lockCount -= 1;
+      if (lockCount === 0) {
+        document.body.style.overflow = overflowBeforeFirstLock;
+      }
     };
   }, [active]);
 }

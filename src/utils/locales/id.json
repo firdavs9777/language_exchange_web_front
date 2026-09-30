@@ -269,7 +269,8 @@
       "close": "Tutup",
       "previous": "Foto sebelumnya",
       "next": "Foto berikutnya",
-      "counter": "{{index}} dari {{total}}"
+      "counter": "{{index}} dari {{total}}",
+      "openAvatar": "Buka foto {{name}}"
     },
     "messages": {
       "image_update_success": "Foto profil berhasil diperbarui",

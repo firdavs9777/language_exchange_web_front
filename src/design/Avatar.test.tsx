@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import Avatar from "./Avatar";
 
 it("renders the image when a src is given", () => {
@@ -83,4 +83,38 @@ it("carries a dark-mode surface variant on the story ring", () => {
   expect(screen.getByTestId("avatar-story-ring").firstChild).toHaveClass(
     "dark:bg-cardbg-dark"
   );
+});
+
+// A profile picture that cannot be opened is a dead control: people tap it
+// expecting to see the photo. Only when a caller supplies a handler — the
+// avatar is decoration in a list row, and a button there would be noise.
+describe("Avatar as a control", () => {
+  it("stays plain decoration when no handler is given", () => {
+    render(<Avatar name="Ada" src="a.jpg" />);
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
+  it("becomes a real button when one is", () => {
+    const onClick = jest.fn();
+    render(<Avatar name="Ada" src="a.jpg" onClick={onClick} label="Open Ada's photo" />);
+
+    const button = screen.getByRole("button", { name: "Open Ada's photo" });
+    fireEvent.click(button);
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("answers the keyboard by being a real button, not a div with a handler", () => {
+    // jsdom does not synthesise a click from Enter, so asserting that would
+    // test the harness. What delivers keyboard support is the element itself:
+    // a native button is focusable and activates on Enter and Space for free,
+    // which a div with onClick never does.
+    const onClick = jest.fn();
+    render(<Avatar name="Ada" src="a.jpg" onClick={onClick} label="Open Ada's photo" />);
+
+    const button = screen.getByRole("button");
+    expect(button.tagName).toBe("BUTTON");
+    expect(button).toHaveAttribute("type", "button");
+    button.focus();
+    expect(button).toHaveFocus();
+  });
 });

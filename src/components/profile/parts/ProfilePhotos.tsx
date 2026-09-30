@@ -11,6 +11,14 @@ export interface ProfilePhotosProps {
   isOwn: boolean;
   /** Whose photos these are; used for the alt text. */
   name?: string;
+  /**
+   * Open the viewer on this index from outside — the profile header's avatar
+   * is the same picture as tile 0, and tapping it should show the photo.
+   * Set it to a number to open, and the owner clears it back to null when
+   * `onOpenHandled` fires.
+   */
+  openAt?: number | null;
+  onOpenHandled?: () => void;
 }
 
 /** The URLs that are actually renderable, in order, blanks dropped. */
@@ -36,9 +44,17 @@ function cleanImages(images: any): string[] {
  * The first photo is also the avatar, so it is deliberately left in the grid —
  * a person's photo set reads wrong with its best-known picture missing.
  */
-const ProfilePhotos: React.FC<ProfilePhotosProps> = ({ images, isOwn, name }) => {
+const ProfilePhotos: React.FC<ProfilePhotosProps> = ({ images, isOwn, name, openAt, onOpenHandled }) => {
   const { t } = useTranslation();
   const photos = useMemo(() => cleanImages(images), [images]);
+
+  // An open asked for from outside. Guarded on the index existing, so a stale
+  // request cannot open an empty viewer on a profile whose photos have gone.
+  useEffect(() => {
+    if (openAt === null || openAt === undefined) return;
+    if (openAt >= 0 && openAt < photos.length) setOpenIndex(openAt);
+    if (onOpenHandled) onOpenHandled();
+  }, [openAt, photos.length, onOpenHandled]);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const dialogRef = useRef<HTMLDivElement | null>(null);

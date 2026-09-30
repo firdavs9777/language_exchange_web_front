@@ -269,7 +269,8 @@
       "close": "बंद करें",
       "previous": "पिछली फ़ोटो",
       "next": "अगली फ़ोटो",
-      "counter": "{{total}} में से {{index}}"
+      "counter": "{{total}} में से {{index}}",
+      "openAvatar": "{{name}} की फ़ोटो खोलें"
     },
     "messages": {
       "image_update_success": "प्रोफ़ाइल इमेज सफलतापूर्वक अपडेट की गई",

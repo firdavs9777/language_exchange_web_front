@@ -269,7 +269,8 @@
       "close": "닫기",
       "previous": "이전 사진",
       "next": "다음 사진",
-      "counter": "{{index}} / {{total}}"
+      "counter": "{{index}} / {{total}}",
+      "openAvatar": "{{name}}님의 사진 열기"
     },
     "messages": {
       "image_update_success": "프로필 사진을 변경했어요",

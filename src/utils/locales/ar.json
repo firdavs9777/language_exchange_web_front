@@ -269,7 +269,8 @@
       "close": "إغلاق",
       "previous": "الصورة السابقة",
       "next": "الصورة التالية",
-      "counter": "{{index}} من {{total}}"
+      "counter": "{{index}} من {{total}}",
+      "openAvatar": "فتح صورة {{name}}"
     },
     "messages": {
       "image_update_success": "تم تحديث صورة الملف الشخصي بنجاح",

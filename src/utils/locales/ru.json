@@ -269,7 +269,8 @@
       "close": "Закрыть",
       "previous": "Предыдущее фото",
       "next": "Следующее фото",
-      "counter": "{{index}} из {{total}}"
+      "counter": "{{index}} из {{total}}",
+      "openAvatar": "Открыть фото {{name}}"
     },
     "messages": {
       "image_update_success": "Изображение профиля успешно обновлено",

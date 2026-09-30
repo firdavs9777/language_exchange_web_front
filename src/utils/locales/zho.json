@@ -269,7 +269,8 @@
       "close": "关闭",
       "previous": "上一张",
       "next": "下一张",
-      "counter": "{{index}} / {{total}}"
+      "counter": "{{index}} / {{total}}",
+      "openAvatar": "打开 {{name}} 的照片"
     },
     "messages": {
       "image_update_success": "头像已更新",

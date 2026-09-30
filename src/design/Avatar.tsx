@@ -15,6 +15,14 @@ export interface AvatarProps {
   isOnline?: boolean;
   /** Native-language flag, rendered bottom-left. */
   flag?: string;
+  /**
+   * Makes the avatar a real button. Opt-in: in a list row the avatar is
+   * decoration and a button there would be noise, but a profile picture people
+   * tap to see the photo is a control and has to behave like one.
+   */
+  onClick?: () => void;
+  /** The button's accessible name. Required whenever `onClick` is given. */
+  label?: string;
 }
 
 const Avatar: React.FC<AvatarProps> = ({
@@ -24,6 +32,8 @@ const Avatar: React.FC<AvatarProps> = ({
   hasStory = false,
   isOnline = false,
   flag,
+  onClick,
+  label,
 }) => {
   const initial = (name || "").trim().charAt(0).toUpperCase() || "?";
   const dot = size >= 72 ? "h-4 w-4" : "h-3 w-3";
@@ -47,10 +57,15 @@ const Avatar: React.FC<AvatarProps> = ({
     </div>
   );
 
+  const Box: any = onClick ? "button" : "div";
+
   return (
-    <div
+    <Box
       data-testid="avatar"
-      className="relative shrink-0"
+      type={onClick ? "button" : undefined}
+      onClick={onClick}
+      aria-label={onClick ? label || name : undefined}
+      className={`relative shrink-0${onClick ? " cursor-pointer" : ""}`}
       style={{ width: size, height: size }}
     >
       {hasStory ? (
@@ -84,7 +99,7 @@ const Avatar: React.FC<AvatarProps> = ({
           className={`absolute -bottom-0.5 -right-0.5 ${dot} rounded-full border-2 border-surface bg-[#4CAF50] dark:border-cardbg-dark`}
         />
       )}
-    </div>
+    </Box>
   );
 };
 
