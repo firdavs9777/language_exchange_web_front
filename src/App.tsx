@@ -9,7 +9,7 @@ import RouteMeta from "./seo/RouteMeta";
 
 import MainNavbar from "./components/navbar/MainNavbar";
 import { Container } from "react-bootstrap";
-import { Outlet } from "react-router-dom";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -46,6 +46,14 @@ const App = () => {
         <Container fluid>
           <Outlet />
         </Container>
+        {/* Every route change started where the last one left off: clicking a
+            suggested member at the foot of a profile loaded the new profile
+            with the window still scrolled to the bottom, because the route
+            param changes without remounting the page component.
+            React Router's own restorer rather than a scrollTo(0, 0) effect:
+            it sends a NEW navigation to the top but puts BACK where it was,
+            which is what a reader expects and what a manual reset destroys. */}
+        <ScrollRestoration />
         <FooterMain />
         <ConsentBar />
         <AdsBootstrap />
