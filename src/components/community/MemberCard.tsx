@@ -141,7 +141,9 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
           />
         ) : (
           <div
-            data-testid="member-card-photo-placeholder"
+            data-testid={
+              compact ? "member-card-avatar-placeholder" : "member-card-photo-placeholder"
+            }
             className={`w-full h-full bg-gradient-to-br from-teal-100 to-yellow-50 flex items-center justify-center font-semibold text-teal-600 ${compact ? "text-lg" : "text-4xl"}`}
           >
             {user.name?.charAt(0)?.toUpperCase() || "?"}
@@ -150,13 +152,21 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
         {user.hasActiveStory && (
           <span
             data-testid="member-card-story-ring"
-            className="absolute left-2 top-2 rounded-full ring-2 ring-teal-400 w-3 h-3 bg-white"
+            className={
+              compact
+                ? "absolute left-0 top-0 rounded-full ring-2 ring-teal-400 w-2.5 h-2.5 bg-white"
+                : "absolute left-2 top-2 rounded-full ring-2 ring-teal-400 w-3 h-3 bg-white"
+            }
           />
         )}
         {user.isOnline && (
           <span
             data-testid="member-card-online-dot"
-            className="absolute right-2 top-2 w-3 h-3 rounded-full bg-green-500 border-2 border-white"
+            className={
+              compact
+                ? "absolute right-0 top-0 w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-white"
+                : "absolute right-2 top-2 w-3 h-3 rounded-full bg-green-500 border-2 border-white"
+            }
           />
         )}
       </div>

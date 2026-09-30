@@ -358,3 +358,35 @@ describe("MemberCard compact", () => {
     expect(screen.queryByTestId("member-card-photo")).not.toBeInTheDocument();
   });
 });
+
+// The dots were positioned and sized for the 16:10 banner. Inside a 56px
+// avatar, 12px dots inset 8px sit almost in the middle of the picture.
+describe("MemberCard compact indicators", () => {
+  it("tucks the online dot into the avatar's corner, not its middle", () => {
+    render(
+      <MemberCard user={baseUser} compact onWave={jest.fn()} onOpen={jest.fn()} />
+    );
+    const dot = screen.getByTestId("member-card-online-dot");
+    expect(dot.className).toContain("w-2.5");
+    expect(dot.className).toContain("right-0");
+  });
+
+  it("keeps the banner sizing when it is a cell", () => {
+    render(<MemberCard user={baseUser} onWave={jest.fn()} onOpen={jest.fn()} />);
+    const dot = screen.getByTestId("member-card-online-dot");
+    expect(dot.className).toContain("w-3");
+    expect(dot.className).toContain("right-2");
+  });
+
+  it("names the placeholder the same way in both modes", () => {
+    render(
+      <MemberCard
+        user={{ ...baseUser, imageUrls: [] }}
+        compact
+        onWave={jest.fn()}
+        onOpen={jest.fn()}
+      />
+    );
+    expect(screen.getByTestId("member-card-avatar-placeholder")).toBeInTheDocument();
+  });
+});
