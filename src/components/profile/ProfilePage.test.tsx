@@ -496,23 +496,32 @@ describe("the phone tab switcher", () => {
     });
   });
 
-  it("opens on Moments and hides the About panel below 1024px", () => {
+  it("opens on About below 1024px, so a phone lands on who someone is", () => {
     renderPage("/profile", "me");
 
+    expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByTestId("profile-moments-panel").className).toContain("hidden");
+    expect(screen.getByTestId("profile-about-panel").className).not.toContain("hidden");
+  });
+
+  it("still honours ?tab=moments, so existing links keep working", () => {
+    renderPage("/profile?tab=moments", "me");
+
     expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByTestId("profile-about-panel").className).toContain("hidden");
     expect(screen.getByTestId("profile-moments-panel").className).not.toContain("hidden");
+    expect(screen.getByTestId("profile-about-panel").className).toContain("hidden");
   });
 
   it("writes the chosen tab into the URL", () => {
     renderPage("/profile", "me");
 
-    fireEvent.click(screen.getByTestId("profile-tab-about"));
+    // About is the default now, so Moments is the one a click has to move to.
+    fireEvent.click(screen.getByTestId("profile-tab-moments"));
 
-    expect(screen.getByTestId("location-search")).toHaveTextContent("tab=about");
-    expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByTestId("profile-moments-panel").className).toContain("hidden");
-    expect(screen.getByTestId("profile-about-panel").className).not.toContain("hidden");
+    expect(screen.getByTestId("location-search")).toHaveTextContent("tab=moments");
+    expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByTestId("profile-about-panel").className).toContain("hidden");
+    expect(screen.getByTestId("profile-moments-panel").className).not.toContain("hidden");
   });
 
   it("reads the tab back off the URL", () => {
@@ -550,15 +559,18 @@ describe("the phone tab switcher", () => {
     );
   });
 
-  it("gives the tablist one tab stop", () => {
+  it("gives the tablist one tab stop, on whichever tab is selected", () => {
     renderPage("/profile", "me");
 
-    expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("tabindex", "0");
-    expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("tabindex", "-1");
+    // About is the default, so it carries the tab stop.
+    expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("tabindex", "0");
+    expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("tabindex", "-1");
   });
 
   it("moves between tabs with the arrow keys, and focus follows", () => {
-    renderPage("/profile", "me");
+    // Anchored to Moments: this proves the journey from the FIRST tab in the
+    // order, which is independent of which tab happens to be the default.
+    renderPage("/profile?tab=moments", "me");
 
     fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "ArrowRight" });
 
@@ -573,7 +585,7 @@ describe("the phone tab switcher", () => {
   });
 
   it("wraps at the ends and answers Home and End", () => {
-    renderPage("/profile", "me");
+    renderPage("/profile?tab=moments", "me");
 
     // Moments is first: ArrowLeft wraps round to About.
     fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "ArrowLeft" });
@@ -591,7 +603,7 @@ describe("the phone tab switcher", () => {
 
     fireEvent.keyDown(screen.getByTestId("profile-tabs"), { key: "a" });
 
-    expect(screen.getByTestId("profile-tab-moments")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByTestId("profile-tab-about")).toHaveAttribute("aria-selected", "true");
     expect(screen.getByTestId("location-search")).not.toHaveTextContent("tab=");
   });
 });

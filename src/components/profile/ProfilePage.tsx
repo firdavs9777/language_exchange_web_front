@@ -142,7 +142,11 @@ const ProfilePage: React.FC = () => {
   // tab; `useSearchParams` rather than `window.location`, because nothing
   // here may touch a browser global during render.
   const [searchParams, setSearchParams] = useSearchParams();
-  const tab: ProfileTab = searchParams.get("tab") === "about" ? "about" : "moments";
+  // About, not Moments. On a phone the tabs are the whole navigation, and
+  // landing on someone's posts before knowing who they are is the wrong first
+  // screen. `?tab=moments` still works, so existing links are unaffected, and
+  // desktop is untouched -- both panels are `lg:block` regardless of this.
+  const tab: ProfileTab = searchParams.get("tab") === "moments" ? "moments" : "about";
   const selectTab = (next: ProfileTab): void => {
     const params = new URLSearchParams(searchParams);
     params.set("tab", next);
