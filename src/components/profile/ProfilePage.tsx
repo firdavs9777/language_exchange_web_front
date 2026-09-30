@@ -303,6 +303,21 @@ const ProfilePage: React.FC = () => {
           {!isOwn && <LanguageMatchCard viewer={viewer} user={user} />}
           {!isOwn && <EngagementStats user={user} />}
 
+          {/* The photo set is the fastest read of who someone is, and it
+              renders nothing at all when the account has no photos — so an
+              empty profile shows no empty card.
+              On a phone it sits ABOVE the tabs rather than inside one: it is
+              worth seeing on either tab, and behind a tab it cost a tap to
+              reach. On a desktop it belongs to the right-hand column, where
+              the left would otherwise carry the info against a near-empty
+              half. A grid child cannot move between columns with CSS, so it
+              is declared twice and exactly one is ever displayed —
+              `display:none` keeps the other out of the accessibility tree as
+              well as off the screen, and the images come from cache. */}
+          <div data-testid="profile-photos-phone" className="lg:hidden">
+            <ProfilePhotos images={images} isOwn={isOwn} name={name} />
+          </div>
+
           {/* Below 1024px the two columns become two tabs, as on the app's
               member page. Both panels stay mounted and the inactive one is
               hidden with a class, so switching costs no refetch and the
@@ -353,19 +368,6 @@ const ProfilePage: React.FC = () => {
               <ProfileAbout user={user} />
               <ProfileLearning user={user} />
               {!isOwn && <MutualInterests viewer={viewer} user={user} />}
-              {/* The photo set is the fastest read of who someone is, and it
-                  renders nothing at all when the account has no photos — so
-                  an empty profile shows no empty card.
-                  It belongs to the About tab on a phone (app parity) and to
-                  the right-hand column on a desktop, where the left column
-                  would otherwise carry four cards against a near-empty half.
-                  A grid child cannot move between columns with CSS, so it is
-                  declared in both and exactly one is ever displayed —
-                  `display:none` keeps the other out of the accessibility tree
-                  as well as off the screen, and the images come from cache. */}
-              <div data-testid="profile-photos-phone" className="lg:hidden">
-                <ProfilePhotos images={images} isOwn={isOwn} name={name} />
-              </div>
               {isOwn && <AdUnit slot={AD_SLOTS.profile} className="pt-1" />}
             </div>
 

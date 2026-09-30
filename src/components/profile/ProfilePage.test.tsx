@@ -286,10 +286,12 @@ describe("moderation", () => {
 });
 
 describe("photos", () => {
-  // The photo card is declared in both panels -- About on a phone, the right
-  // column on a desktop -- with exactly one displayed at any width, so every
-  // assertion here names which panel it means.
-  const about = () => within(screen.getByTestId("profile-about-panel"));
+  // The photo card is declared twice -- once ABOVE the tabs for a phone, once
+  // in the right-hand column (inside the Moments panel) for a desktop -- with
+  // exactly one displayed at any width. The phone copy is deliberately outside
+  // both panels so it needs no tap, so it is queried from the page, not from a
+  // panel.
+  const phoneCopy = () => within(screen.getByTestId("profile-photos-phone"));
   const moments = () => within(screen.getByTestId("profile-moments-panel"));
 
   it("shows the photo set, and Add photos on an own profile", () => {
@@ -301,9 +303,9 @@ describe("photos", () => {
 
     renderPage("/profile", "me");
 
-    expect(about().getByTestId("profile-photos")).toBeInTheDocument();
-    expect(about().getAllByTestId("photo-tile")).toHaveLength(2);
-    expect(about().getByTestId("photos-add")).toHaveAttribute("href", "/profile/edit");
+    expect(phoneCopy().getByTestId("profile-photos")).toBeInTheDocument();
+    expect(phoneCopy().getAllByTestId("photo-tile")).toHaveLength(2);
+    expect(phoneCopy().getByTestId("photos-add")).toHaveAttribute("href", "/profile/edit");
   });
 
   it("puts the desktop copy in the right-hand column", () => {
@@ -315,8 +317,8 @@ describe("photos", () => {
 
     renderPage("/profile", "me");
 
-    // Phone: the About copy shows, the column copy is held back to lg.
-    const phone = about().getByTestId("profile-photos-phone");
+    // Phone: the above-the-tabs copy shows, the column copy is held back to lg.
+    const phone = screen.getByTestId("profile-photos-phone");
     const desktop = moments().getByTestId("profile-photos-desktop");
     expect(phone.className).toContain("lg:hidden");
     expect(desktop.className).toContain("hidden lg:block");
@@ -333,7 +335,7 @@ describe("photos", () => {
 
     renderPage("/profile/u2", "me");
 
-    expect(about().getAllByTestId("photo-tile")).toHaveLength(1);
+    expect(phoneCopy().getAllByTestId("photo-tile")).toHaveLength(1);
     expect(screen.queryByTestId("photos-add")).not.toBeInTheDocument();
   });
 
@@ -670,5 +672,38 @@ describe("the story highlights rail", () => {
       "src",
       "https://cdn/s1.jpg"
     );
+  });
+});
+
+describe("the photo set on a phone", () => {
+  const withPhotos = () => {
+    mockGetUserProfile.mockReturnValue({
+      ...idle,
+      refetch: ownRefetch,
+      data: { data: { _id: "me", name: "Me", imageUrls: ["a.jpg", "b.jpg"] } },
+    });
+  };
+
+  it("sits above the tabs, outside both panels, so it needs no tap", () => {
+    withPhotos();
+    const { container } = renderPage("/profile", "me");
+
+    const photos = screen.getByTestId("profile-photos-phone");
+    const tablist = container.querySelector('[role="tablist"]') as HTMLElement;
+
+    // Not inside a panel: it must not disappear when the tab changes.
+    expect(photos.closest('[role="tabpanel"]')).toBeNull();
+    // And it comes before the tablist in document order.
+    expect(
+      photos.compareDocumentPosition(tablist) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
+  it("keeps the desktop copy inside the Moments panel", () => {
+    withPhotos();
+    renderPage("/profile", "me");
+
+    const desktop = screen.getByTestId("profile-photos-desktop");
+    expect(desktop.closest('[data-testid="profile-moments-panel"]')).not.toBeNull();
   });
 });
