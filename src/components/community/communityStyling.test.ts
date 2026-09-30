@@ -166,3 +166,18 @@ describe("type sizes come from the scale", () => {
     expect(offenders).toEqual([]);
   });
 });
+
+describe("the page's own rhythm comes from the scale", () => {
+  const pageRule = (selector: string): string => {
+    const m = scss.match(new RegExp(`\\${selector}\\s*\\{([^}]*)\\}`));
+    return m ? m[1] : "";
+  };
+
+  it("pads the page container from the scale", () => {
+    expect(pageRule(".community-page__container")).toMatch(/var\(--bt-space-\d\)/);
+  });
+
+  it("spaces the member grid from the scale", () => {
+    expect(pageRule(".community-grid")).toMatch(/margin-top:\s*var\(--bt-space-\d\)/);
+  });
+});
