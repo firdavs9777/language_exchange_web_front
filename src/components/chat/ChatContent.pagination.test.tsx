@@ -580,3 +580,41 @@ it("writes a message we sent into it too", async () => {
     expect.any(Function)
   );
 });
+
+// --- A deleted message must not come back ----------------------------------
+//
+// The mirror of the bug above. `merge` on the getConversation entry only ever
+// ADDS incoming messages and UPDATES ones it already holds — it has no branch
+// that removes. So invalidating the tag after a delete refetches the thread
+// and merges it, and the deleted message survives in the cache untouched.
+//
+// Both delete paths only filtered local state, and local state is rebuilt from
+// that cache wholesale on a conversation switch. Delete a message, step into
+// another room, come back, and it was there again.
+
+it("takes a deleted message out of the thread cache, not just the screen", async () => {
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+
+  expect(renderedIds()).toContain("newer-a");
+
+  socket.fire("messageDeleted", { messageId: "newer-a" });
+
+  await waitFor(() => expect(renderedIds()).not.toContain("newer-a"));
+
+  expect(mockUpdateQueryData).toHaveBeenCalledWith(
+    "getConversation",
+    expect.objectContaining({ senderId: "me", receiverId: "u2" }),
+    expect.any(Function)
+  );
+
+  // The recipe has to actually drop it, not merely be handed over.
+  const recipe = mockUpdateQueryData.mock.calls
+    .map((c: any[]) => c[2])
+    .pop() as (draft: any) => void;
+  const draft = { data: [{ _id: "newer-a" }, { _id: "newer-b" }], count: 2 };
+  recipe(draft);
+  expect(draft.data.map((m: any) => m._id)).toEqual(["newer-b"]);
+  expect(draft.count).toBe(1);
+});
