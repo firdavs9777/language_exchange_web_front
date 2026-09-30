@@ -205,9 +205,10 @@ describe("what a mount costs", () => {
     avatars.forEach((img) => {
       expect(img).toHaveAttribute("loading", "lazy");
       expect(img).toHaveAttribute("decoding", "async");
-      // A box the browser can reserve before a byte arrives.
-      expect(img).toHaveAttribute("width", "72");
-      expect(img).toHaveAttribute("height", "72");
+      // A box the browser can reserve before a byte arrives. 320x200 is the
+      // 16:10 grid photo; it was 72x72 when the card was a list row.
+      expect(img).toHaveAttribute("width", "320");
+      expect(img).toHaveAttribute("height", "200");
     });
   });
 

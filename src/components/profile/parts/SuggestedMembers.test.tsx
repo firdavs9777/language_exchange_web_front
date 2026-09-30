@@ -105,7 +105,7 @@ it("opens a suggestion on the member page", () => {
 it("waves from the card without leaving the profile", () => {
   mockGetMembers.mockReturnValue({ data: { data: [member("u3")] } });
   renderStrip();
-  fireEvent.click(screen.getByTestId("member-card-wave-button"));
+  fireEvent.click(screen.getByTestId("member-card-wave"));
   expect(mockNavigate).not.toHaveBeenCalled();
   expect(screen.getByTestId("wave-sheet")).toBeInTheDocument();
 });

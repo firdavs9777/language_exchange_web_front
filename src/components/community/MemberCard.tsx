@@ -91,68 +91,45 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, onWave, onOpen }) => {
       aria-label={user.name}
       onClick={() => onOpen(user)}
       onKeyDown={handleCardKeyDown}
-      className="flex items-center gap-4 bg-white/80 backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-white/30 hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
+      className="flex flex-col bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
     >
-      {/* Avatar */}
-      <div className="relative shrink-0 w-[72px] h-[72px] aspect-square">
-        <div
-          data-testid={user.hasActiveStory ? "member-card-story-ring" : undefined}
-          className={
-            user.hasActiveStory
-              ? "absolute inset-0 rounded-[22px] bg-gradient-to-tr from-[#00BFA5] via-[#FFD700] to-[#00ACC1] p-[3px]"
-              : ""
-          }
-        >
+      {/* Photo — 16:10 so a row of three is not a wall of portraits. The
+          width/height are the reserved box, not the painted size. */}
+      <div data-testid="member-card-photo" className="relative w-full aspect-[16/10]">
+        {avatar ? (
+          <img
+            src={avatar}
+            alt={user.name}
+            width={320}
+            height={200}
+            loading="lazy"
+            decoding="async"
+            className="block w-full h-full object-cover"
+          />
+        ) : (
           <div
-            className={
-              user.hasActiveStory
-                ? "w-full h-full rounded-[19px] bg-white p-[2px] overflow-hidden"
-                : "w-full h-full rounded-[22px] overflow-hidden"
-            }
+            data-testid="member-card-photo-placeholder"
+            className="w-full h-full bg-gradient-to-br from-teal-100 to-yellow-50 flex items-center justify-center text-4xl font-semibold text-teal-600"
           >
-            {avatar ? (
-              // Width/height + a square box mean the row has its final height
-              // before a single byte of the picture arrives, so a list that
-              // loads 20 avatars never reflows. `lazy` keeps the ones below
-              // the fold off the network until they are scrolled towards.
-              <img
-                src={avatar}
-                alt={user.name}
-                width={72}
-                height={72}
-                loading="lazy"
-                decoding="async"
-                className="block w-full h-full object-cover rounded-[19px]"
-              />
-            ) : (
-              <div className="w-full h-full rounded-[19px] bg-gradient-to-br from-teal-100 to-yellow-50 flex items-center justify-center text-2xl font-semibold text-teal-600">
-                {user.name?.[0]?.toUpperCase() || "?"}
-              </div>
-            )}
+            {user.name?.charAt(0)?.toUpperCase()}
           </div>
-        </div>
-
-        {/* Native-language flag overlay */}
-        <span
-          className="absolute -bottom-1 -left-1 text-base leading-none bg-white rounded-full w-6 h-6 flex items-center justify-center shadow border border-white"
-          aria-hidden
-          title={user.native_language}
-        >
-          {nativeFlag}
-        </span>
-
-        {/* Online dot */}
+        )}
+        {user.hasActiveStory && (
+          <span
+            data-testid="member-card-story-ring"
+            className="absolute left-2 top-2 rounded-full ring-2 ring-teal-400 w-3 h-3 bg-white"
+          />
+        )}
         {user.isOnline && (
           <span
             data-testid="member-card-online-dot"
-            className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-green-500 border-2 border-white"
-            aria-label="Online"
+            className="absolute right-2 top-2 w-3 h-3 rounded-full bg-green-500 border-2 border-white"
           />
         )}
       </div>
 
       {/* Info column */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 p-4">
         <div className="flex items-center gap-2 flex-wrap">
           <span data-testid="member-card-name" className="font-semibold text-gray-900 truncate">
             {user.name}
@@ -180,7 +157,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, onWave, onOpen }) => {
 
         {/* Language exchange row */}
         <div className="flex items-center gap-1.5 mt-1 text-sm text-gray-600">
-          <span aria-hidden>{nativeFlag}</span>
+          <span aria-hidden title={user.native_language}>{nativeFlag}</span>
           <ArrowRight className="w-3 h-3 text-gray-400" />
           <span aria-hidden>{learningFlag}</span>
           {user.languageLevel && (
@@ -213,10 +190,10 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, onWave, onOpen }) => {
       {/* Wave button */}
       <button
         type="button"
-        data-testid="member-card-wave-button"
+        data-testid="member-card-wave"
         onClick={handleWaveClick}
         aria-label={`Wave at ${user.name}`}
-        className="shrink-0 flex items-center justify-center w-11 h-11 rounded-full text-white bg-gradient-to-r from-[#00BFA5] to-[#00ACC1] shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all"
+        className="w-full min-h-[44px] flex items-center justify-center gap-2 text-white bg-gradient-to-r from-[#00BFA5] to-[#00ACC1] hover:brightness-105 active:scale-[.99] transition-all"
       >
         <span className="text-lg leading-none" aria-hidden>
           👋

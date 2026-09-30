@@ -211,7 +211,7 @@ describe("the community tabs", () => {
   it("keeps the wave sheet reachable on every tab", async () => {
     renderList(["/communities?tab=foryou"]);
 
-    const waveButtons = await screen.findAllByTestId("member-card-wave-button");
+    const waveButtons = await screen.findAllByTestId("member-card-wave");
     fireEvent.click(waveButtons[0]);
     expect(await screen.findByTestId("wave-sheet")).toBeInTheDocument();
   });
