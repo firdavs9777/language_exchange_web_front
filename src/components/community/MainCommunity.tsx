@@ -26,6 +26,7 @@ import { AD_SLOTS } from "../ads/adsenseConfig";
 import { CommunityFilters, buildCommunityQuery } from "./lib/buildCommunityQuery";
 import * as filterStorage from "./lib/filterStorage";
 import { DEFAULT_FILTERS } from "./lib/filterStorage";
+import { showsAdAfter, showsCarouselAfter } from "./lib/gridInterleave";
 import {
   CommunityUrlState,
   decodeCommunityState,
@@ -540,6 +541,16 @@ const ModernCommunity: React.FC = () => {
     return [...pros, ...fillers].slice(0, 12);
   }, [allMembers]);
 
+  // One source of truth for what goes BETWEEN the members. The ad and the
+  // carousel are both full-row items and were decided separately inline, which
+  // is how they came to claim the same index.
+  const interleave = {
+    total: allMembers.length,
+    isAllTab: activeTab === "all",
+    hasHighlights: highlightedProfiles.length > 0,
+  };
+
+
   const visitorsCount = useMemo(() => {
     const raw = (visitorsData?.data ?? visitorsData?.visitors ?? []) as any[];
     return raw.length;
@@ -887,39 +898,15 @@ const ModernCommunity: React.FC = () => {
                       onWave={handleWaveMember}
                     />
                   </div>
-                  {/* Interleave a community ad every 6 members, but never after
-                      the last item. No-op until AdSense is configured. As a
-                      direct child of the grid it must span the full row
-                      (community-grid__ad), or it lands in one of the three
-                      columns and shifts every following member across. */}
-                  {(index + 1) % 6 === 0 &&
-                    index !== allMembers.length - 1 && (
-                      <AdUnit slot={AD_SLOTS.community} className="my-3 community-grid__ad" />
-                    )}
-                  {/* The carousel is the front page of the community, not
-                      furniture that follows you into every tab: on Online,
-                      New and For you the list is the whole point. It sits
-                      after the first six members -- the first index that is
-                      a row boundary at 3, 2 AND 1 columns (the grid drops to
-                      2 columns at <=1024px and 1 at narrower still), so it
-                      never tears a hole in the grid the way index 2 did at
-                      the 2-column breakpoint. The index is intentionally not
-                      responsive: that would make the component know a
-                      breakpoint the CSS already owns. */}
-                  {index === 5 && activeTab === "all" && highlightedProfiles.length > 0 && (
-                    <div className="community-grid__feature">
-                      <HighlightedProfilesCarousel
-                        profiles={highlightedProfiles as any}
-                        currentUser={currentUser}
-                      />
-                    </div>
+                  {/* What goes BETWEEN the members -- a periodic ad and, on
+                      the All tab, the highlighted carousel -- is decided by
+                      lib/gridInterleave. Both are full-row items, and deciding
+                      them inline here is how they came to land on the same
+                      index without anyone noticing. */}
+                  {showsAdAfter(index, interleave) && (
+                    <AdUnit slot={AD_SLOTS.community} className="my-3 community-grid__ad" />
                   )}
-                  {/* A thread shorter than six members never reaches index 5,
-                      so the carousel still has to land after the last member. */}
-                  {allMembers.length < 6 &&
-                    index === allMembers.length - 1 &&
-                    activeTab === "all" &&
-                    highlightedProfiles.length > 0 && (
+                  {showsCarouselAfter(index, interleave) && (
                     <div className="community-grid__feature">
                       <HighlightedProfilesCarousel
                         profiles={highlightedProfiles as any}
