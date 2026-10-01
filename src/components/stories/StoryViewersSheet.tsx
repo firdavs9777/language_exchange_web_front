@@ -4,8 +4,11 @@ import { useTranslation } from "react-i18next";
 import { Eye, X } from "lucide-react";
 import DialogShell from "../../design/DialogShell";
 import Avatar from "../../design/Avatar";
-import { useGetStoryViewersQuery } from "../../store/slices/storiesSlice";
-import { StoryView } from "./types";
+import {
+  useGetStoryReactionsQuery,
+  useGetStoryViewersQuery,
+} from "../../store/slices/storiesSlice";
+import { StoryReaction, StoryView } from "./types";
 import timeAgo from "../../utils/timeAgo";
 
 export interface StoryViewersSheetProps {
@@ -21,10 +24,16 @@ const PANEL = [
 ].join(" ");
 
 /**
- * Who watched an own story. Owner-only on the server too:
- * `GET /stories/:id/views` 403s for anyone else, so the viewer only mounts
- * this for the story's author and a 403 still lands on the error state
- * rather than an empty list pretending nobody watched.
+ * Who watched an own story, and which of them reacted.
+ *
+ * Owner-only on the server too: `GET /stories/:id/views` 403s for anyone else,
+ * so the viewer only mounts this for the story's author and a 403 still lands
+ * on the error state rather than an empty list pretending nobody watched.
+ *
+ * Reactions come from a second request and are merged onto the viewer rows by
+ * user id, the way the app's `story_viewers_sheet.dart` does it. They are an
+ * enrichment, so only the viewers request drives the loading and error states:
+ * a failure there must not blank a sheet that already has its list.
  */
 const StoryViewersSheet: React.FC<StoryViewersSheetProps> = ({
   storyId,
@@ -35,13 +44,44 @@ const StoryViewersSheet: React.FC<StoryViewersSheetProps> = ({
     skip: !storyId,
   });
 
+  const { data: reactionsData } = useGetStoryReactionsQuery(storyId, {
+    skip: !storyId,
+  });
+
   const payload = (data as any)?.data || {};
   const views: StoryView[] = Array.isArray(payload.views) ? payload.views : [];
   // A view whose user was deleted comes back with a null `user`; it still
   // counts toward viewCount but there is nothing to link to.
-  const rows = views.filter((view) => view && view.user && view.user._id);
+  const rows = React.useMemo(
+    () =>
+      views
+        .filter((view) => view && view.user && view.user._id)
+        // The server returns views in the order they were recorded, oldest
+        // first. Everyone reads this list newest first.
+        .slice()
+        .sort(
+          (a, b) =>
+            new Date(b.viewedAt).getTime() - new Date(a.viewedAt).getTime()
+        ),
+    [views]
+  );
   const viewCount =
     typeof payload.viewCount === "number" ? payload.viewCount : rows.length;
+
+  const reactions: StoryReaction[] = Array.isArray(
+    (reactionsData as any)?.data?.reactions
+  )
+    ? (reactionsData as any).data.reactions
+    : [];
+  // One reaction per user — the server removes by user, not by emoji — so a
+  // plain map is enough, and a reaction whose user was deleted is dropped
+  // rather than keyed under an empty id that would match nothing.
+  const emojiByUserId = new Map<string, string>();
+  reactions.forEach((reaction) => {
+    if (reaction && reaction.user && reaction.user._id && reaction.emoji) {
+      emojiByUserId.set(reaction.user._id, reaction.emoji);
+    }
+  });
 
   return (
     <DialogShell
@@ -106,6 +146,7 @@ const StoryViewersSheet: React.FC<StoryViewersSheetProps> = ({
           rows.map((view, index) => {
             const user = view.user;
             const image = user.imageUrls?.[0] || user.images?.[0];
+            const emoji = emojiByUserId.get(user._id);
             return (
               <Link
                 key={`${user._id}-${index}`}
@@ -118,6 +159,16 @@ const StoryViewersSheet: React.FC<StoryViewersSheetProps> = ({
                 <span className="min-w-0 flex-1 truncate text-sm font-medium">
                   {user.name}
                 </span>
+                {emoji && (
+                  <span
+                    data-testid="story-viewer-reaction"
+                    role="img"
+                    aria-label={t("stories.reacted") || "Reacted"}
+                    className="shrink-0 text-base leading-none"
+                  >
+                    {emoji}
+                  </span>
+                )}
                 <span className="shrink-0 text-xs text-gray-500">
                   {timeAgo(view.viewedAt, t, { withAgo: true })}
                 </span>
