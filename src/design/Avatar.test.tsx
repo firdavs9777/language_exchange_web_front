@@ -118,3 +118,30 @@ describe("Avatar as a control", () => {
     expect(button).toHaveFocus();
   });
 });
+
+// Avatar is the shared face across eight surfaces -- the stories rail, the
+// viewers sheet, chat's info panel, the connections list, the profile header.
+// Its <img> carried no loading hint, no decoding hint and no dimensions, so
+// every list of people fired a burst of eager, unsized requests.
+describe("Avatar image loading", () => {
+  it("reserves a box from the size it already knows", () => {
+    render(<Avatar name="Ada" src="a.jpg" size={54} />);
+    const img = screen.getByTestId("avatar-image");
+
+    expect(img).toHaveAttribute("width", "54");
+    expect(img).toHaveAttribute("height", "54");
+    expect(img).toHaveAttribute("decoding", "async");
+  });
+
+  it("is lazy by default, because most of them are in a list", () => {
+    render(<Avatar name="Ada" src="a.jpg" />);
+    expect(screen.getByTestId("avatar-image")).toHaveAttribute("loading", "lazy");
+  });
+
+  it("can be told to load eagerly, for the one above the fold", () => {
+    // The profile header's avatar is the page's main subject; deferring it
+    // would be the wrong trade.
+    render(<Avatar name="Ada" src="a.jpg" size={80} priority />);
+    expect(screen.getByTestId("avatar-image")).toHaveAttribute("loading", "eager");
+  });
+});
