@@ -913,7 +913,7 @@ const MainMoments: React.FC = () => {
               <ErrorState t={t} refetch={handleRefetch} />
             ) : paginatedMoments.length > 0 ? (
               <>
-                <div className="space-y-3 sm:space-y-6 px-2 sm:px-4 pb-4 sm:pb-6 lg:px-6">
+                <div className="space-y-3 sm:space-y-4 px-2 sm:px-4 pb-4 sm:pb-6 lg:px-6">
                   {paginatedMoments.map((moment, index) => (
                     <React.Fragment key={moment._id}>
                       <div

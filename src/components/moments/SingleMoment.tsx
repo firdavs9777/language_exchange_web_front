@@ -362,16 +362,24 @@ const SingleMoment: React.FC<MomentProps> = ({
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Header */}
-        <header className="p-2 xs:p-3 sm:p-4 md:p-5">
+        <header className="p-2 xs:p-3 sm:p-4">
           <div className="flex items-center justify-between gap-2">
             <div
               onClick={handleUserClick}
               className="flex items-center flex-1 min-w-0 group/user no-underline cursor-pointer"
             >
               <div className="relative flex-shrink-0">
+                {/* Lazy, like the content image below it. Ten feed cards meant
+                    ten eager avatar requests competing with the photos people
+                    actually came to see. 56 is the largest the avatar renders
+                    (md:w-14), so the reserved box is never too small. */}
                 <img
                   src={user?.imageUrls?.[0] || defaultProfileImage}
                   alt={user?.name || "User"}
+                  width={56}
+                  height={56}
+                  loading="lazy"
+                  decoding="async"
                   className="w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full object-cover border-2 border-transparent group-hover/user:border-blue-100 transition-all duration-200"
                 />
               </div>
@@ -410,7 +418,7 @@ const SingleMoment: React.FC<MomentProps> = ({
         </header>
 
         {/* Content */}
-        <div className="px-2 xs:px-3 sm:px-4 md:px-5">
+        <div className="px-2 xs:px-3 sm:px-4">
           {/* Text Content */}
           {title && (
             <h2 className="font-semibold text-gray-900 text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl mb-1 xs:mb-2 leading-tight no-underline decoration-none">
@@ -451,7 +459,7 @@ const SingleMoment: React.FC<MomentProps> = ({
 
         {/* Media — precedence: video → audio → text/gradient → images */}
         {video?.url ? (
-          <div className="mt-2 xs:mt-3 px-2 xs:px-3 sm:px-4 md:px-5">
+          <div className="mt-2 xs:mt-3 px-2 xs:px-3 sm:px-4">
             <div className="relative" onDoubleClick={handleDoubleTapLike}>
               <MomentVideoPlayer video={video} />
               {showHeartBurst && (
@@ -462,12 +470,12 @@ const SingleMoment: React.FC<MomentProps> = ({
             </div>
           </div>
         ) : audio?.url ? (
-          <div className="mt-2 xs:mt-3 px-2 xs:px-3 sm:px-4 md:px-5">
+          <div className="mt-2 xs:mt-3 px-2 xs:px-3 sm:px-4">
             <VoiceNotePlayer audio={audio} />
           </div>
         ) : mediaType === "text" ||
           (backgroundColor && !(imageUrls && imageUrls.length > 0)) ? (
-          <div className="mt-2 xs:mt-3 px-2 xs:px-3 sm:px-4 md:px-5">
+          <div className="mt-2 xs:mt-3 px-2 xs:px-3 sm:px-4">
             <GradientMomentCard
               text={description}
               backgroundColor={backgroundColor}
@@ -484,6 +492,7 @@ const SingleMoment: React.FC<MomentProps> = ({
                 alt={title || "Post image"}
                 className="w-full h-auto max-h-64 xs:max-h-80 sm:max-h-96 md:max-h-[450px] lg:max-h-[500px] xl:max-h-[600px] object-cover transition-transform duration-300 group-hover:scale-[1.01]"
                 loading="lazy"
+                decoding="async"
               />
 
               {showHeartBurst && (
@@ -505,7 +514,7 @@ const SingleMoment: React.FC<MomentProps> = ({
 
         {/* Engagement Stats */}
         {(currentLikeCount > 0 || commentCountNumber > 0) && (
-          <div className="px-2 xs:px-3 sm:px-4 md:px-5 py-1.5 xs:py-2 border-b border-gray-100">
+          <div className="px-2 xs:px-3 sm:px-4 py-1.5 xs:py-2 border-b border-gray-100">
             <div className="flex items-center justify-between text-xs xs:text-sm text-gray-500">
               <div className="flex items-center gap-2 xs:gap-3">
                 {currentLikeCount > 0 && (
@@ -534,7 +543,7 @@ const SingleMoment: React.FC<MomentProps> = ({
 
         {/* Reactions + Save bar */}
         <div
-          className="flex items-center justify-between gap-2 px-2 xs:px-3 sm:px-4 md:px-5 py-1.5 border-t border-gray-100"
+          className="flex items-center justify-between gap-2 px-2 xs:px-3 sm:px-4 py-1.5 border-t border-gray-100"
           onClick={stopLink}
         >
           <div className="flex items-center gap-1 min-w-0">

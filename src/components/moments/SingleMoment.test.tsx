@@ -133,3 +133,45 @@ describe("SingleMoment translate on tap", () => {
     );
   });
 });
+
+// A feed card's cost is mostly its media. The author avatar was eagerly
+// loaded on every card -- ten per page, all competing with the content images
+// for connections, which delays the images and makes the layout shift land
+// later and feel worse.
+describe("SingleMoment media loading", () => {
+  const renderWithMedia = () =>
+    render(
+      <MemoryRouter>
+        <SingleMoment
+          _id="moment-1"
+          title="Title"
+          description={DESCRIPTION}
+          likeCount={0}
+          likedUsers={[]}
+          commentCount={0}
+          createdAt={new Date().toISOString()}
+          imageUrls={["https://example.test/photo.jpg"]}
+          user={{ _id: "author-1", name: "Author", imageUrls: ["https://example.test/a.jpg"] }}
+        />
+      </MemoryRouter>
+    );
+
+  it("leaves the author's avatar to the browser, with a box reserved", () => {
+    renderWithMedia();
+    const avatar = screen.getByAltText("Author") as HTMLImageElement;
+
+    expect(avatar).toHaveAttribute("loading", "lazy");
+    expect(avatar).toHaveAttribute("decoding", "async");
+    // The largest the avatar ever renders, so the browser reserves enough.
+    expect(avatar).toHaveAttribute("width", "56");
+    expect(avatar).toHaveAttribute("height", "56");
+  });
+
+  it("keeps the content image lazy and asynchronous too", () => {
+    renderWithMedia();
+    const photo = screen.getByAltText("Title") as HTMLImageElement;
+
+    expect(photo).toHaveAttribute("loading", "lazy");
+    expect(photo).toHaveAttribute("decoding", "async");
+  });
+});
