@@ -908,7 +908,8 @@
     },
     "visitors": {
       "pill_one": "1 persona ha visitato il tuo profilo",
-      "pill_other": "{{count}} persone hanno visitato il tuo profilo"
+      "pill_other": "{{count}} persone hanno visitato il tuo profilo",
+      "pill_many": "{{count}} persone hanno visitato il tuo profilo"
     },
     "tandemCard": {
       "newChip": "NUOVO",
