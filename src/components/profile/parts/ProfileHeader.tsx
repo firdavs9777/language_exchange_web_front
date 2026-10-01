@@ -157,6 +157,9 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               name={name}
               size={80}
               isOnline={isOnline}
+              /* This one IS the page -- deferring it would delay the main
+                 subject behind whatever else is loading. */
+              priority
               onClick={avatarUrl ? onAvatarClick : undefined}
               label={t("profile.photos.openAvatar", { name }) || `Open ${name}'s photo`}
             />

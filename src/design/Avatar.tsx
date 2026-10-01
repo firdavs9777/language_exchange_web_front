@@ -23,6 +23,12 @@ export interface AvatarProps {
   onClick?: () => void;
   /** The button's accessible name. Required whenever `onClick` is given. */
   label?: string;
+  /**
+   * Load eagerly instead of lazily. For the one avatar that IS the page --
+   * a profile header -- where deferring the main subject is the wrong trade.
+   * Everywhere else this component appears in a list, so lazy is the default.
+   */
+  priority?: boolean;
 }
 
 const Avatar: React.FC<AvatarProps> = ({
@@ -34,6 +40,7 @@ const Avatar: React.FC<AvatarProps> = ({
   flag,
   onClick,
   label,
+  priority = false,
 }) => {
   const initial = (name || "").trim().charAt(0).toUpperCase() || "?";
   const dot = size >= 72 ? "h-4 w-4" : "h-3 w-3";
@@ -43,6 +50,13 @@ const Avatar: React.FC<AvatarProps> = ({
       data-testid="avatar-image"
       src={src}
       alt={name}
+      /* The component already knows its size, so the box can always be
+         reserved -- an unsized avatar in a list shifts every row below it
+         as the faces arrive. */
+      width={size}
+      height={size}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
       className="h-full w-full rounded-full object-cover"
     />
   ) : (
