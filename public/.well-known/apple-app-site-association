@@ -3,11 +3,12 @@
     "apps": [],
     "details": [
       {
-        "appIDs": ["TODO_APPLE_TEAM_ID.com.bananatalk.bananatalkApp"],
+        "appIDs": ["RJF4T5CJ76.com.bananatalk.bananatalkApp"],
         "components": [
           { "/": "/moment/*" },
           { "/": "/profile/*" },
-          { "/": "/community/*" }
+          { "/": "/community/*" },
+          { "/": "/chat/*" }
         ]
       }
     ]
