@@ -2241,5 +2241,17 @@
     "reply_failed": "Couldn't send your message",
     "vote_failed": "Couldn't save your vote"
   },
-  "_note": "English source for the homepage promo carousel (src/data/promoSlides.ts, src/components/growth/PromoCarousel.tsx). NOT yet merged into src/utils/locales/*.json: localeParity.test.ts requires all 18 locales to carry the same key set, so this namespace lands in one translation pass. Until then every call site is t(key) || the English below."
+  "_note": "English source for the homepage promo carousel (src/data/promoSlides.ts, src/components/growth/PromoCarousel.tsx). NOT yet merged into src/utils/locales/*.json: localeParity.test.ts requires all 18 locales to carry the same key set, so this namespace lands in one translation pass. Until then every call site is t(key) || the English below.",
+  "invite": {
+    "title": "You're invited to BananaTalk",
+    "subtitle": "Practice languages with real people. Join with your friend's invite code and you both get coins.",
+    "genericTitle": "Join BananaTalk",
+    "yourCode": "Your invite code",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "openInApp": "Open in the app",
+    "stepsTitle": "How to join",
+    "step1": "Install BananaTalk",
+    "step2": "Open this link again, or enter the code after you complete your profile"
+  }
 }

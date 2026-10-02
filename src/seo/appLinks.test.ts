@@ -30,7 +30,7 @@ describe("apple-app-site-association", () => {
 
   it("claims every path type the app can route", () => {
     const paths = detail.components.map((c: any) => c["/"]).sort();
-    expect(paths).toEqual(["/chat/*", "/community/*", "/moment/*", "/profile/*"]);
+    expect(paths).toEqual(["/chat/*", "/community/*", "/i/*", "/moment/*", "/profile/*"]);
   });
 });
 

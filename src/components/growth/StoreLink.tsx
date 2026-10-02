@@ -22,7 +22,8 @@ export type StorePlacement =
   | "footer"
   | "meet"
   | "learn-korean"
-  | "communities";
+  | "communities"
+  | "invite";
 
 export type StoreVariant = "badge" | "button";
 

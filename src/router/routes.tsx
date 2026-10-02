@@ -109,6 +109,11 @@ const NearbyUsers = lazyWithRetry("../components/community/NearbyUsers", () => i
 const Waves = lazyWithRetry("../components/community/Waves", () => import("../components/community/Waves"));
 const Topics = lazyWithRetry("../components/community/Topics", () => import("../components/community/Topics"));
 
+// Invite landing (/i/:code). Public, never prerendered (the code is dynamic):
+// it falls back to the SPA shell like /profile/:userId. Lazy for the same
+// reason as the profile page -- nothing in the eager graph shares its code.
+const InvitePage = lazyWithRetry("../components/invite/InvitePage", () => import("../components/invite/InvitePage"));
+
 // Courses
 const CoursesMain = lazyWithRetry("../components/courses/CoursesMain", () => import("../components/courses/CoursesMain"));
 
@@ -236,6 +241,8 @@ export const routes = createRoutesFromElements(
     <Route path="download" element={<DownloadApp />} />
     <Route path="meet" element={<MeetLanding />} />
     <Route path="learn-korean" element={<LearnKoreanLanding />} />
+    {/* Public invite link target; no auth guard. */}
+    <Route path="i/:code" element={lazyRoute(<InvitePage />)} />
 
     {/* Settings */}
     <Route path="settings" element={lazyRoute(<Settings />)} />
