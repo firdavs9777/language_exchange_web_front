@@ -82,6 +82,9 @@ const rejected = (error: any = { data: { message: "nope" } }) => ({
 const USER = {
   _id: "me",
   name: "Ada",
+  birth_year: "1990",
+  birth_month: "6",
+  birth_day: "15",
   username: "ada",
   email: "ada@example.com",
   gender: "Female",
@@ -177,7 +180,8 @@ describe("accessibility", () => {
   it("names every toggle group programmatically", () => {
     renderEditor();
     const groups = screen.getAllByRole("group");
-    expect(groups).toHaveLength(5);
+    // Gender, level, intents, topics, MBTI, blood type.
+    expect(groups).toHaveLength(6);
     groups.forEach((group) => {
       const id = group.getAttribute("aria-labelledby") || "";
       expect(id).toBeTruthy();
@@ -315,6 +319,104 @@ describe("saving", () => {
       expect(mockUpdate.mock.calls[0][0][field]).toBeUndefined();
     }
   );
+
+  // Why someone is here: learn / meet / date. Stored on the user and ranked on
+  // in lib/matchIntent.js, and the web had no control for it at all — every
+  // web-registered account sat on the default [] for good while app users
+  // could set theirs.
+  describe("intents", () => {
+    it("fills the toggles from the loaded document", () => {
+      renderEditor({ data: { ...USER, intents: ["meet"] } });
+      expect(screen.getByTestId("edit-intent-meet")).toHaveAttribute(
+        "aria-pressed",
+        "true"
+      );
+      expect(screen.getByTestId("edit-intent-learn")).toHaveAttribute(
+        "aria-pressed",
+        "false"
+      );
+    });
+
+    it("saves them through the endpoint that accepts them", async () => {
+      renderEditor();
+      fireEvent.click(screen.getByTestId("edit-intent-learn"));
+      fireEvent.click(screen.getByTestId("edit-save"));
+
+      await waitFor(() => expect(mockUpdateUserById).toHaveBeenCalledTimes(1));
+      expect(mockUpdateUserById).toHaveBeenCalledWith({
+        id: "me",
+        body: { intents: ["learn"] },
+      });
+      expect(mockUpdate.mock.calls[0][0].intents).toBeUndefined();
+    });
+
+    it("stores the canonical order, not the order they were tapped", async () => {
+      renderEditor();
+      fireEvent.click(screen.getByTestId("edit-intent-date"));
+      fireEvent.click(screen.getByTestId("edit-intent-learn"));
+      fireEvent.click(screen.getByTestId("edit-save"));
+
+      await waitFor(() => expect(mockUpdateUserById).toHaveBeenCalledTimes(1));
+      expect(mockUpdateUserById.mock.calls[0][0].body.intents).toEqual([
+        "learn",
+        "date",
+      ]);
+    });
+
+    it("turns one off again", async () => {
+      renderEditor({ data: { ...USER, intents: ["learn", "meet"] } });
+      fireEvent.click(screen.getByTestId("edit-intent-meet"));
+      fireEvent.click(screen.getByTestId("edit-save"));
+
+      await waitFor(() => expect(mockUpdateUserById).toHaveBeenCalledTimes(1));
+      expect(mockUpdateUserById.mock.calls[0][0].body.intents).toEqual(["learn"]);
+    });
+
+    it("counts as a change, and as no change when put back", () => {
+      renderEditor({ data: { ...USER, intents: ["learn"] } });
+      expect(screen.getByTestId("edit-save")).toBeDisabled();
+
+      fireEvent.click(screen.getByTestId("edit-intent-meet"));
+      expect(screen.getByTestId("edit-save")).not.toBeDisabled();
+
+      fireEvent.click(screen.getByTestId("edit-intent-meet"));
+      expect(screen.getByTestId("edit-save")).toBeDisabled();
+    });
+
+    it("resends nothing when the intents were never touched", async () => {
+      renderEditor({ data: { ...USER, intents: ["learn"] } });
+      fireEvent.change(screen.getByTestId("edit-bio"), {
+        target: { name: "bio", value: "Hi there" },
+      });
+      fireEvent.click(screen.getByTestId("edit-save"));
+
+      await waitFor(() => expect(mockUpdate).toHaveBeenCalledTimes(1));
+      expect(mockUpdateUserById).not.toHaveBeenCalled();
+    });
+
+    it("offers dating to a known adult", () => {
+      renderEditor();
+      expect(screen.getByTestId("edit-intent-date")).toBeInTheDocument();
+    });
+
+    it.each([
+      ["a minor", { birth_year: "2015", birth_month: "1", birth_day: "1" }],
+      ["an unknown age", { birth_year: "", birth_month: "", birth_day: "" }],
+    ])("withholds dating from %s", (unused, birth) => {
+      // sanitizeIntents strips `date` on the write for anyone who is not a
+      // KNOWN adult, so offering the choice would mean offering one the server
+      // is about to discard.
+      renderEditor({ data: { ...USER, ...birth } });
+      expect(screen.queryByTestId("edit-intent-date")).not.toBeInTheDocument();
+      expect(screen.getByTestId("edit-intent-learn")).toBeInTheDocument();
+      expect(screen.getByTestId("edit-intent-meet")).toBeInTheDocument();
+    });
+
+    it("says what stays private, because a promise nobody sees cannot be acted on", () => {
+      renderEditor();
+      expect(screen.getByTestId("edit-intent-note")).toBeInTheDocument();
+    });
+  });
 
   it("sends one request for everything that endpoint owns, not one each", async () => {
     renderEditor();

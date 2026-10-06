@@ -477,7 +477,12 @@
       "leave_title": "Kaydetmeden çıkılsın mı?",
       "leave_body": "Bu profildeki değişikliklerin kaybolacak.",
       "leave_confirm": "Vazgeç",
-      "stay": "Düzenlemeye dön"
+      "stay": "Düzenlemeye dön",
+      "intent_title": "Neden buradasın",
+      "intent_learn": "Öğrenmek için buradayım",
+      "intent_meet": "Yeni insanlarla tanışmaya açığım",
+      "intent_date": "Flörte açığım",
+      "intent_privacy_note": "Seçimlerini başkaları görür; flört seçeneği gizli kalır."
     },
     "myMoments": {
       "title": "Anlarım",

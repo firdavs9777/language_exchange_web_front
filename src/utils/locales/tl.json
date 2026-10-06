@@ -477,7 +477,12 @@
       "leave_title": "Aalis nang hindi nagse-save?",
       "leave_body": "Mawawala ang mga pagbabago mo sa profile na ito.",
       "leave_confirm": "I-discard ang mga pagbabago",
-      "stay": "Magpatuloy sa pag-edit"
+      "stay": "Magpatuloy sa pag-edit",
+      "intent_title": "Bakit ka nandito",
+      "intent_learn": "Narito para matuto",
+      "intent_meet": "Bukas makipagkilala",
+      "intent_date": "Bukas sa pakikipag-date",
+      "intent_privacy_note": "Nakikita ng iba ang pinili mo, maliban sa pakikipag-date na nananatiling pribado."
     },
     "myMoments": {
       "title": "Mga Sandali Ko",

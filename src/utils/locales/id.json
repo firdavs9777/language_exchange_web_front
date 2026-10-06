@@ -477,7 +477,12 @@
       "leave_title": "Keluar tanpa menyimpan?",
       "leave_body": "Perubahan Anda pada profil ini akan hilang.",
       "leave_confirm": "Buang perubahan",
-      "stay": "Lanjut mengedit"
+      "stay": "Lanjut mengedit",
+      "intent_title": "Kamu di sini untuk apa",
+      "intent_learn": "Di sini untuk belajar",
+      "intent_meet": "Terbuka untuk berkenalan",
+      "intent_date": "Terbuka untuk kencan",
+      "intent_privacy_note": "Orang lain melihat pilihanmu, kecuali kencan yang tetap privat."
     },
     "myMoments": {
       "title": "Momen saya",

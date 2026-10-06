@@ -25,6 +25,8 @@ export interface UserProfileData {
   languageLevel?: string;
   occupation?: string;
   school?: string;
+  /** Why they are here: learn / meet / date. See `../intents.ts`. */
+  intents?: string[];
   location?: any;
   isOnline?: boolean;
   lastActive?: string;
