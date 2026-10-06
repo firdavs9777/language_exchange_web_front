@@ -477,7 +477,12 @@
       "leave_title": "保存せずに戻りますか？",
       "leave_body": "プロフィールの変更内容は失われます。",
       "leave_confirm": "変更を破棄",
-      "stay": "編集を続ける"
+      "stay": "編集を続ける",
+      "intent_title": "ここに来た目的",
+      "intent_learn": "学びに来ました",
+      "intent_meet": "人と出会いたい",
+      "intent_date": "デートに興味があります",
+      "intent_privacy_note": "選んだ内容は表示されます。デートは非公開です。"
     },
     "myMoments": {
       "title": "マイモーメント",

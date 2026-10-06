@@ -23,6 +23,7 @@ import {
   FileText,
   Globe,
   GraduationCap,
+  Heart,
   Images,
   Loader2,
   Mail,
@@ -30,10 +31,18 @@ import {
   Save,
   Trash2,
   User,
+  Users,
 } from "lucide-react";
 import ConfirmDialog from "../../design/ConfirmDialog";
 import SurfaceCard from "../../design/SurfaceCard";
 import { UserProfileData } from "./ProfileTypes/types";
+import {
+  Intent,
+  availableIntents,
+  normalizeIntents,
+  sameIntents,
+  toggleIntent,
+} from "./intents";
 
 const MBTI_TYPES = [
   "INTJ", "INTP", "ENTJ", "ENTP",
@@ -150,7 +159,26 @@ const SAVED_FIELDS = [
  * Only what actually changed is sent, so a save that touches none of them
  * makes no second request at all.
  */
-const BY_ID_FIELDS = ["languageLevel", "mbti", "bloodType", "occupation", "school"];
+const BY_ID_FIELDS = [
+  "languageLevel",
+  "mbti",
+  "bloodType",
+  "occupation",
+  "school",
+  "intents",
+];
+
+/**
+ * How a field in `BY_ID_FIELDS` is compared against the loaded document.
+ *
+ * `intents` is an array, and `!==` on two arrays asks whether they are the
+ * same object rather than whether they hold the same thing. Everything else
+ * in the group is a string, where the two questions coincide.
+ */
+function movedFrom(before: any, after: any, field: string): boolean {
+  if (field === "intents") return !sameIntents(before, after);
+  return before !== after;
+}
 
 /** The blank form. Fields the editor does not own are absent, not empty. */
 const EMPTY: UserProfileData = {
@@ -172,6 +200,7 @@ const EMPTY: UserProfileData = {
   topics: [],
   occupation: "",
   school: "",
+  intents: [],
 };
 
 function formFrom(user: any): UserProfileData {
@@ -196,8 +225,16 @@ function formFrom(user: any): UserProfileData {
     topics: Array.isArray(source.topics) ? source.topics : [],
     occupation: source.occupation || "",
     school: source.school || "",
+    intents: normalizeIntents(source.intents),
   };
 }
+
+/** One icon per intent, in the same order the picker shows them. */
+const INTENT_ICONS: Record<Intent, any> = {
+  learn: GraduationCap,
+  meet: Users,
+  date: Heart,
+};
 
 const TOAST = { autoClose: 2500, theme: "dark" as "dark", transition: Bounce };
 
@@ -339,6 +376,10 @@ const EditProfile: React.FC = () => {
     });
   }, []);
 
+  const handleIntentToggle = useCallback((intent: Intent) => {
+    setFormData((prev) => ({ ...prev, intents: toggleIntent(prev.intents, intent) }));
+  }, []);
+
   const handleSave = async (): Promise<void> => {
     // The backend validates gender lowercase, so the form and the payload
     // agree on the lowercased value -- otherwise the render after a save is
@@ -455,6 +496,12 @@ const EditProfile: React.FC = () => {
 
   const photos = formData.imageUrls || [];
   const topics = formData.topics || [];
+  const intents = normalizeIntents(formData.intents);
+  // `date` is only offered to a known adult: sanitizeIntents strips it from
+  // the write for everyone else, and a choice the server is about to discard
+  // is worse than no choice. Derived from the form rather than the loaded
+  // document, so correcting a birthday in this session offers it at once.
+  const intentOptions = availableIntents(formData);
   const bio = formData.bio || "";
 
   return (
@@ -809,6 +856,42 @@ const EditProfile: React.FC = () => {
                   placeholder={t("profile.edit.school_placeholder") || "Where do you study?"}
                   className={FIELD}
                 />
+              </div>
+
+              <div>
+                <span id="edit-intents-label" className={LABEL}>
+                  {t("profile.edit.intent_title") || "What you're here for"}
+                </span>
+                <div
+                  role="group"
+                  aria-labelledby="edit-intents-label"
+                  aria-describedby="edit-intent-note"
+                  className="flex flex-wrap gap-2 pt-2"
+                >
+                  {intentOptions.map((intent) => {
+                    const on = intents.indexOf(intent) > -1;
+                    const Icon = INTENT_ICONS[intent];
+                    return (
+                      <button
+                        key={intent}
+                        type="button"
+                        data-testid={`edit-intent-${intent}`}
+                        onClick={() => handleIntentToggle(intent)}
+                        aria-pressed={on}
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold transition-colors ${
+                          on ? CHOICE_ON : CHOICE_OFF
+                        }`}
+                      >
+                        <Icon className="h-3.5 w-3.5" aria-hidden />
+                        {t(`profile.edit.intent_${intent}`) || intent}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p id="edit-intent-note" data-testid="edit-intent-note" className={HINT}>
+                  {t("profile.edit.intent_privacy_note") ||
+                    "Others see what you pick, except dating, which stays private."}
+                </p>
               </div>
 
               <div>

@@ -458,7 +458,12 @@
       "leave_title": "Quitter sans enregistrer ?",
       "leave_body": "Vos modifications de ce profil seront perdues.",
       "leave_confirm": "Abandonner",
-      "stay": "Continuer l'édition"
+      "stay": "Continuer l'édition",
+      "intent_title": "Ce que vous cherchez",
+      "intent_learn": "Ici pour apprendre",
+      "intent_meet": "Ouvert aux rencontres",
+      "intent_date": "Ouvert aux rendez-vous",
+      "intent_privacy_note": "Les autres voient vos choix, sauf les rendez-vous, qui restent privés."
     },
     "myMoments": {
       "title": "Mes moments",

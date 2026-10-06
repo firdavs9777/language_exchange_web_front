@@ -477,7 +477,12 @@
       "leave_title": "Ohne Speichern verlassen?",
       "leave_body": "Deine Änderungen an diesem Profil gehen verloren.",
       "leave_confirm": "Verwerfen",
-      "stay": "Weiter bearbeiten"
+      "stay": "Weiter bearbeiten",
+      "intent_title": "Weshalb du hier bist",
+      "intent_learn": "Zum Lernen hier",
+      "intent_meet": "Offen für neue Leute",
+      "intent_date": "Offen für Dates",
+      "intent_privacy_note": "Andere sehen deine Auswahl — außer Dates, das bleibt privat."
     },
     "myMoments": {
       "title": "Meine Momente",

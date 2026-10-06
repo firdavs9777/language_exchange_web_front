@@ -477,7 +477,12 @@
       "leave_title": "不保存就离开？",
       "leave_body": "你对这份资料的修改会丢失。",
       "leave_confirm": "放弃修改",
-      "stay": "继续编辑"
+      "stay": "继续编辑",
+      "intent_title": "你来这里的目的",
+      "intent_learn": "来学习",
+      "intent_meet": "想认识新朋友",
+      "intent_date": "对约会持开放态度",
+      "intent_privacy_note": "你的选择会公开显示，约会除外，它会保持私密。"
     },
     "myMoments": {
       "title": "我的动态",

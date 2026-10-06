@@ -477,7 +477,12 @@
       "leave_title": "Leave without saving?",
       "leave_body": "Your changes to this profile will be lost.",
       "leave_confirm": "Discard changes",
-      "stay": "Keep editing"
+      "stay": "Keep editing",
+      "intent_title": "What you're here for",
+      "intent_learn": "Here to learn",
+      "intent_meet": "Open to meeting people",
+      "intent_date": "Open to dating",
+      "intent_privacy_note": "Others see what you pick, except dating, which stays private."
     },
     "myMoments": {
       "title": "My moments",

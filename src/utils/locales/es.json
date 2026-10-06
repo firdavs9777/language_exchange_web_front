@@ -458,7 +458,12 @@
       "leave_title": "¿Salir sin guardar?",
       "leave_body": "Se perderán los cambios que hiciste en este perfil.",
       "leave_confirm": "Descartar",
-      "stay": "Seguir editando"
+      "stay": "Seguir editando",
+      "intent_title": "Para qué estás aquí",
+      "intent_learn": "Aquí para aprender",
+      "intent_meet": "Abierto a conocer gente",
+      "intent_date": "Abierto a citas",
+      "intent_privacy_note": "Los demás ven lo que elijas, salvo las citas, que son privadas."
     },
     "myMoments": {
       "title": "Mis momentos",

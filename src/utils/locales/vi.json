@@ -477,7 +477,12 @@
       "leave_title": "Rời đi mà không lưu?",
       "leave_body": "Những thay đổi của bạn ở hồ sơ này sẽ mất.",
       "leave_confirm": "Bỏ thay đổi",
-      "stay": "Tiếp tục chỉnh sửa"
+      "stay": "Tiếp tục chỉnh sửa",
+      "intent_title": "Bạn ở đây để làm gì",
+      "intent_learn": "Ở đây để học",
+      "intent_meet": "Muốn gặp gỡ mọi người",
+      "intent_date": "Sẵn sàng hẹn hò",
+      "intent_privacy_note": "Người khác thấy lựa chọn của bạn, trừ hẹn hò — mục đó được giữ riêng tư."
     },
     "myMoments": {
       "title": "Khoảnh khắc của tôi",

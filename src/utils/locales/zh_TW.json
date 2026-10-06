@@ -477,7 +477,12 @@
       "leave_title": "不儲存就離開？",
       "leave_body": "你對個人檔案做的變更會消失。",
       "leave_confirm": "捨棄變更",
-      "stay": "繼續編輯"
+      "stay": "繼續編輯",
+      "intent_title": "你來這裡的目的",
+      "intent_learn": "來學習",
+      "intent_meet": "想認識新朋友",
+      "intent_date": "對約會持開放態度",
+      "intent_privacy_note": "你的選擇會公開顯示，約會除外，它會保持私密。"
     },
     "myMoments": {
       "title": "我的動態",
