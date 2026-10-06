@@ -233,13 +233,13 @@ describe("saving", () => {
 
     await waitFor(() => expect(mockUpdate).toHaveBeenCalledTimes(1));
     const payload = mockUpdate.mock.calls[0][0];
-    expect(payload.school).toBe("SNU");
-    expect(payload.occupation).toBe("Engineer");
-    // The level is not part of this body — it has its own endpoint.
+    // Neither the level nor the school belongs in this body — the endpoint
+    // discards both.
     expect(payload.languageLevel).toBeUndefined();
+    expect(payload.school).toBeUndefined();
     expect(mockUpdateUserById).toHaveBeenCalledWith({
       id: "me",
-      body: { languageLevel: "C1" },
+      body: { languageLevel: "C1", school: "SNU" },
     });
     expect(payload.topics).toEqual(["music", "travel"]);
     expect(payload.gender).toBe("female");
@@ -264,19 +264,100 @@ describe("saving", () => {
         "birth_day",
         "birth_month",
         "birth_year",
-        "bloodType",
         "email",
         "gender",
         "imageUrls",
         "language_to_learn",
-        "mbti",
         "name",
         "native_language",
-        "occupation",
-        "school",
         "topics",
         "username",
       ].sort()
+    );
+  });
+
+  // `PUT /auth/updatedetails` destructures a fixed list of field names and
+  // builds its update from exactly those. MBTI, blood type, occupation and
+  // school are not on it, so the editor could collect them, send them, show
+  // "Profile updated successfully" and change nothing at all. They go where
+  // the app sends them, and where the CEFR level already went.
+  it.each(["mbti", "bloodType", "occupation", "school"])(
+    "saves %s through the endpoint that accepts it, not the one that drops it",
+    async (field) => {
+      const edit: Record<string, () => void> = {
+        mbti: () => fireEvent.click(screen.getByTestId("edit-mbti-ENFP")),
+        bloodType: () => fireEvent.click(screen.getByTestId("edit-blood-O")),
+        occupation: () =>
+          fireEvent.change(screen.getByTestId("edit-occupation"), {
+            target: { name: "occupation", value: "Teacher" },
+          }),
+        school: () =>
+          fireEvent.change(screen.getByTestId("edit-school"), {
+            target: { name: "school", value: "SNU" },
+          }),
+      };
+      const expected: Record<string, string> = {
+        mbti: "ENFP",
+        bloodType: "O",
+        occupation: "Teacher",
+        school: "SNU",
+      };
+
+      renderEditor();
+      edit[field]();
+      fireEvent.click(screen.getByTestId("edit-save"));
+
+      await waitFor(() => expect(mockUpdateUserById).toHaveBeenCalledTimes(1));
+      expect(mockUpdateUserById).toHaveBeenCalledWith({
+        id: "me",
+        body: { [field]: expected[field] },
+      });
+      expect(mockUpdate.mock.calls[0][0][field]).toBeUndefined();
+    }
+  );
+
+  it("sends one request for everything that endpoint owns, not one each", async () => {
+    renderEditor();
+    fireEvent.click(screen.getByTestId("edit-level-C1"));
+    fireEvent.click(screen.getByTestId("edit-mbti-ENFP"));
+    fireEvent.change(screen.getByTestId("edit-occupation"), {
+      target: { name: "occupation", value: "Teacher" },
+    });
+    fireEvent.click(screen.getByTestId("edit-save"));
+
+    await waitFor(() => expect(mockUpdateUserById).toHaveBeenCalledTimes(1));
+    expect(mockUpdateUserById).toHaveBeenCalledWith({
+      id: "me",
+      body: { languageLevel: "C1", mbti: "ENFP", occupation: "Teacher" },
+    });
+  });
+
+  it("skips the second request entirely when none of its fields moved", async () => {
+    renderEditor();
+    fireEvent.change(screen.getByTestId("edit-bio"), {
+      target: { name: "bio", value: "Hi there" },
+    });
+    fireEvent.click(screen.getByTestId("edit-save"));
+
+    await waitFor(() => expect(mockUpdate).toHaveBeenCalledTimes(1));
+    expect(mockUpdateUserById).not.toHaveBeenCalled();
+  });
+
+  it("puts the fields back when the second request is rejected", async () => {
+    // The first call already persisted. Reporting the whole save as failed
+    // would tell someone nothing stuck when everything but these four did —
+    // but the form must not go on claiming a value the server never took.
+    mockUpdateUserById.mockReturnValue(rejected());
+    renderEditor();
+    fireEvent.change(screen.getByTestId("edit-occupation"), {
+      target: { name: "occupation", value: "Teacher" },
+    });
+    fireEvent.click(screen.getByTestId("edit-save"));
+
+    await waitFor(() => expect(mockToastSuccess).toHaveBeenCalled());
+    expect(mockToastError).toHaveBeenCalled();
+    expect((screen.getByTestId("edit-occupation") as HTMLInputElement).value).toBe(
+      "Engineer"
     );
   });
 
@@ -308,15 +389,17 @@ describe("saving", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/profile");
   });
 
-  it("leaves the level endpoint alone when the level did not move", async () => {
+  it("leaves an unmoved level out of the body its endpoint does receive", async () => {
     renderEditor();
     fireEvent.change(screen.getByTestId("edit-school"), {
       target: { name: "school", value: "SNU" },
     });
     fireEvent.click(screen.getByTestId("edit-save"));
 
-    await waitFor(() => expect(mockUpdate).toHaveBeenCalledTimes(1));
-    expect(mockUpdateUserById).not.toHaveBeenCalled();
+    await waitFor(() => expect(mockUpdateUserById).toHaveBeenCalledTimes(1));
+    const body = mockUpdateUserById.mock.calls[0][0].body;
+    expect(body).toEqual({ school: "SNU" });
+    expect("languageLevel" in body).toBe(false);
   });
 
   it("stays on the form and says so when the save is rejected", async () => {

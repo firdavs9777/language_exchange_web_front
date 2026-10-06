@@ -112,8 +112,8 @@ const Section: React.FC<SectionProps> = ({ title, icon: Icon, children, testId }
 
 /**
  * Exactly the fields `PUT /auth/updatedetails` is sent, in order. The form
- * state carries a couple more (`email` and `username` are read-only, shown
- * but never edited; `languageLevel` goes to a different endpoint), so the
+ * state carries more (`email` and `username` are read-only, shown but never
+ * edited; everything in `BY_ID_FIELDS` goes to a different endpoint), so the
  * payload is an explicit pick rather than a spread of the whole form: an
  * earlier draft posted `{...formData}` and sent `image: ""`, `images: []` and
  * `createdAt: ""` along with it, which would blank the avatar on any server
@@ -132,12 +132,25 @@ const SAVED_FIELDS = [
   "native_language",
   "language_to_learn",
   "imageUrls",
-  "mbti",
-  "bloodType",
   "topics",
-  "occupation",
-  "school",
 ];
+
+/**
+ * The fields `PUT /auth/updatedetails` does NOT accept, which go to
+ * `PUT /auth/users/:id` instead — the endpoint the app has always used for
+ * them.
+ *
+ * `updatedetails` destructures a fixed list of names off the body and builds
+ * its update from exactly those; anything else in the request is dropped
+ * without a word. So this form collected an MBTI, a blood type, an occupation
+ * and a school, sent them, and showed "Profile updated successfully" while the
+ * stored document never moved. `languageLevel` had already been routed around
+ * the same hole one field at a time; this is that fix, generalised.
+ *
+ * Only what actually changed is sent, so a save that touches none of them
+ * makes no second request at all.
+ */
+const BY_ID_FIELDS = ["languageLevel", "mbti", "bloodType", "occupation", "school"];
 
 /** The blank form. Fields the editor does not own are absent, not empty. */
 const EMPTY: UserProfileData = {
@@ -340,31 +353,38 @@ const EditProfile: React.FC = () => {
       const result = await updateUserProfile(payload).unwrap();
       dispatch(setCredentials({ ...result }));
 
-      // Only when it actually moved: the endpoint is a different one, and an
-      // unchanged level is not worth a second round trip.
+      // Only what actually moved: the endpoint is a different one, and
+      // unchanged fields are not worth a second round trip. One request for
+      // the whole group rather than one per field.
       //
-      // Its own try/catch on purpose. The 17 fields above are already saved by
+      // Its own try/catch on purpose. The fields above are already saved by
       // the time this runs, so a rejection here must not report the whole save
-      // as failed -- the user would be told nothing persisted while everything
-      // but the level did. The level gets its own, secondary message and the
-      // save still finishes: success toast, clean baseline, redirect.
-      if (userId && next.languageLevel !== baseline.languageLevel) {
+      // as failed -- the user would be told nothing persisted while most of it
+      // did. This group gets its own, secondary message and the save still
+      // finishes: success toast, clean baseline, redirect.
+      const moved = BY_ID_FIELDS.filter(
+        (field) => next[field] !== (baseline as any)[field]
+      );
+      if (userId && moved.length > 0) {
+        const body: any = {};
+        moved.forEach((field) => {
+          body[field] = next[field];
+        });
         try {
-          await updateUserById({
-            id: userId,
-            body: { languageLevel: next.languageLevel },
-          }).unwrap();
-        } catch (levelError) {
+          await updateUserById({ id: userId, body }).unwrap();
+        } catch (extrasError) {
           toast.error(
-            t("profile.messages.level_update_failure") ||
-              "Your profile was saved, but the language level did not update",
+            t("profile.messages.extras_update_failure") ||
+              "Your profile was saved, but some details did not update",
             TOAST
           );
-          // The level did not persist, so neither the form nor the new
-          // baseline may claim it did: both go back to the stored value.
-          // (`updateUserById` invalidates "User", so a level that DID save is
+          // They did not persist, so neither the form nor the new baseline may
+          // claim they did: both go back to the stored values.
+          // (`updateUserById` invalidates "User", so anything that DID save is
           // picked up by the profile's own query on the next render.)
-          next.languageLevel = baseline.languageLevel;
+          moved.forEach((field) => {
+            next[field] = (baseline as any)[field];
+          });
         }
       }
 
