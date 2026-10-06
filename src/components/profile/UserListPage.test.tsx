@@ -151,11 +151,6 @@ describe("tabs", () => {
   });
 
   it("selects Visitors on /visitors", () => {
-    mockGetVipStatus.mockReturnValue({
-      ...idle,
-      data: { data: { isActive: true } },
-    });
-
     renderList("/visitors", "me");
 
     expect(screen.getByTestId("tab-visitors")).toHaveAttribute(
@@ -432,7 +427,37 @@ describe("states", () => {
 });
 
 describe("visitors", () => {
-  it("locks the tab for a free account and points at the VIP page", () => {
+  // Who may see this list is the server's ruling, and it sends it: `locked` is
+  // the NUMBER of visitors it withheld, 0 when it withheld none. The page used
+  // to decide for itself from the VIP status endpoint and skip the request
+  // whenever that said no — which locked out everyone the server would have
+  // let in by another door: an active `who_waved` grant (24h, bought with
+  // coins) and a VIP inside the expiry grace period both open the list in
+  // `controllers/profileVisits.js` and neither shows up as `isActive`.
+  const teaser = (locked: number, rows = 1) => ({
+    ...idle,
+    refetch: visitorsRefetch,
+    locked,
+    data: {
+      count: rows,
+      locked,
+      stats: { totalVisits: 42, uniqueVisitors: 17 },
+      data: Array.from({ length: rows }, (unused, i) => ({
+        user: person(`u${i + 5}`, `Lin${i}`),
+        lastVisit: new Date().toISOString(),
+        visitCount: 1,
+        source: "search",
+      })),
+    },
+  });
+
+  it("asks for the list whatever the client believes about VIP", () => {
+    renderList("/visitors", "me");
+    expect(mockGetVisitors.mock.calls[0][1].skip).toBe(false);
+  });
+
+  it("locks on the count the server withheld, and points at the VIP page", () => {
+    mockGetVisitors.mockReturnValue(teaser(16));
     renderList("/visitors", "me");
 
     expect(screen.getByTestId("visitors-locked")).toBeInTheDocument();
@@ -440,20 +465,43 @@ describe("visitors", () => {
       "href",
       "/settings/vip",
     );
-    // Nothing is fetched for a list the viewer may not see.
-    expect(mockGetVisitors.mock.calls[0][1].skip).toBe(true);
+  });
+
+  it("still shows the teaser the paywall is built on", () => {
+    // Free accounts get the counters and the single most recent visitor —
+    // "the primary paywall in the monetization spec". Hiding them left the
+    // upsell arguing for something the reader had seen no evidence of.
+    mockGetVisitors.mockReturnValue(teaser(16));
+    renderList("/visitors", "me");
+
+    expect(screen.getByTestId("list-row-u5")).toBeInTheDocument();
+    expect(screen.getByTestId("visitor-stat-uniqueVisitors")).toHaveTextContent("17");
+  });
+
+  it("unlocks on the server's word alone, with no VIP signal of its own", () => {
+    // A who_waved grant or a grace-period VIP: `isActive` is false, the server
+    // still returns the whole list.
+    mockGetVisitors.mockReturnValue(teaser(0, 2));
+    renderList("/visitors", "me");
+
+    expect(screen.queryByTestId("visitors-locked")).not.toBeInTheDocument();
+    expect(screen.getByTestId("list-row-u5")).toBeInTheDocument();
+    expect(screen.getByTestId("list-row-u6")).toBeInTheDocument();
+  });
+
+  it("does not call it locked while the list is still loading", () => {
+    mockGetVisitors.mockReturnValue({ ...idle, isLoading: true, refetch: visitorsRefetch });
+    renderList("/visitors", "me");
+    expect(screen.queryByTestId("visitors-locked")).not.toBeInTheDocument();
   });
 
   it("lists the visitors for a VIP account", () => {
-    mockGetVipStatus.mockReturnValue({
-      ...idle,
-      data: { data: { isActive: true } },
-    });
     mockGetVisitors.mockReturnValue({
       ...idle,
       refetch: visitorsRefetch,
       data: {
         count: 1,
+        locked: 0,
         data: [
           {
             user: person("u5", "Lin"),
@@ -480,12 +528,12 @@ describe("visitors", () => {
     // with the comments and the story sheets. Its `beyondWeek: "days"` option
     // is what preserves this screen's own behaviour: here the distance is the
     // point, so a visit from last spring reads "400d", not a calendar date.
-    mockGetVipStatus.mockReturnValue({ ...idle, data: { data: { isActive: true } } });
     mockGetVisitors.mockReturnValue({
       ...idle,
       refetch: visitorsRefetch,
       data: {
         count: 2,
+        locked: 0,
         data: [
           {
             user: person("u5", "Lin"),
@@ -510,11 +558,11 @@ describe("visitors", () => {
   });
 
   it("shows the counters the endpoint sent, and only those", () => {
-    mockGetVipStatus.mockReturnValue({ ...idle, data: { data: { isActive: true } } });
     mockGetVisitors.mockReturnValue({
       ...idle,
       refetch: visitorsRefetch,
       data: {
+        locked: 0,
         data: [{ user: person("u5", "Lin"), lastVisit: new Date().toISOString() }],
         // visitsThisWeek absent on purpose: an omitted field gets no tile.
         stats: { totalVisits: 42, uniqueVisitors: 17, visitsToday: 3 },
@@ -530,7 +578,6 @@ describe("visitors", () => {
   });
 
   it("renders no stats row when the response carries no stats", () => {
-    mockGetVipStatus.mockReturnValue({ ...idle, data: { data: { isActive: true } } });
     mockGetVisitors.mockReturnValue({
       ...idle,
       refetch: visitorsRefetch,

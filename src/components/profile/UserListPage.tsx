@@ -12,7 +12,6 @@ import {
   useGetFollowersQuery,
   useGetFollowingsQuery,
   useGetProfileVisitorsQuery,
-  useGetVipStatusQuery,
 } from "../../store/slices/usersSlice";
 import { useGetCommunityDetailsQuery } from "../../store/slices/communitySlice";
 import timeAgo from "../../utils/timeAgo";
@@ -277,11 +276,6 @@ const UserListPage: React.FC = () => {
   const viewerId = useSelector(
     (state: any) => state.auth.userInfo?.user?._id || state.auth.userInfo?._id
   );
-  const userMode = useSelector(
-    (state: any) =>
-      state.auth.userInfo?.user?.userMode || state.auth.userInfo?.data?.userMode || ""
-  );
-
   const isOwn = !userId || userId === viewerId;
   const ownerId = userId || viewerId || "";
   const tab = tabForPath(location.pathname);
@@ -290,11 +284,6 @@ const UserListPage: React.FC = () => {
   const activeTab: Tab = tab === "visitors" && !isOwn ? "followers" : tab;
 
   const [query, setQuery] = useState("");
-
-  const vip = useGetVipStatusQuery(viewerId || "", {
-    skip: !viewerId || activeTab !== "visitors",
-  });
-  const isVip = userMode === "vip" || Boolean((vip.data as any)?.data?.isActive);
 
   const followers = useGetFollowersQuery(
     { userId: ownerId },
@@ -306,7 +295,7 @@ const UserListPage: React.FC = () => {
   );
   const visitors = useGetProfileVisitorsQuery(
     { userId: ownerId, page: 1, limit: 50 },
-    { skip: !ownerId || activeTab !== "visitors" || !isOwn || !isVip }
+    { skip: !ownerId || activeTab !== "visitors" || !isOwn }
   );
   // The viewer's own following list, for the row labels. On an own "Following"
   // tab this is the identical query argument, which RTK Query serves once.
@@ -372,11 +361,20 @@ const UserListPage: React.FC = () => {
     heading = t("profile.lists.title_other") || "Connections";
   }
 
-  const locked = activeTab === "visitors" && !isVip;
-  const loading = !locked && Boolean(active.isLoading);
-  const failed = !locked && !loading && Boolean(active.error);
-  const empty = !locked && !loading && !failed && rows.length === 0;
-  const searchEmpty = !locked && !loading && !failed && rows.length > 0 && visible.length === 0;
+  // Who may see this list is the server's ruling, and it sends it: `locked` is
+  // the NUMBER of visitors `controllers/profileVisits.js` withheld, 0 when it
+  // withheld none. Deciding it here instead — from the VIP status endpoint —
+  // locked out everyone the server would have let in by another door: an
+  // active `who_waved` grant (24h, bought with coins) and a VIP inside the
+  // expiry grace period both open the list there, and neither reports
+  // `isActive`. Someone who had just spent coins on exactly this was shown an
+  // ad for it.
+  const withheld = Number((visitors.data as any)?.locked) || 0;
+  const locked = activeTab === "visitors" && withheld > 0;
+  const loading = Boolean(active.isLoading);
+  const failed = !loading && Boolean(active.error);
+  const empty = !loading && !failed && rows.length === 0;
+  const searchEmpty = !loading && !failed && rows.length > 0 && visible.length === 0;
 
   const emptyCopy = (): string => {
     if (activeTab === "visitors") {
@@ -452,23 +450,7 @@ const UserListPage: React.FC = () => {
           )}
 
           <SurfaceCard padding="lg">
-            {locked && (
-              <div data-testid="visitors-locked" className="py-4 text-center">
-                <Crown className="mx-auto h-8 w-8 text-banana-dark" aria-hidden />
-                <h2 className="pt-3 font-display text-lg text-ink-900 dark:text-ink-50">
-                  {t("profile.visitors.vipOnly") || "VIP Feature"}
-                </h2>
-                <p className="mx-auto max-w-sm pt-1 text-sm text-ink-500 dark:text-ink-400">
-                  {t("profile.visitors.vipOnlyDesc") ||
-                    "See who visited your profile by upgrading to VIP. This feature is available exclusively for VIP members."}
-                </p>
-                <Link to="/settings/vip" data-testid="visitors-vip-link" className={`mt-4 ${CTA}`}>
-                  {t("profile.visitors.learnMore") || "Learn More About VIP"}
-                </Link>
-              </div>
-            )}
-
-            {activeTab === "visitors" && !locked && !loading && !failed && (
+            {activeTab === "visitors" && !loading && !failed && (
               <VisitorStatsRow payload={visitors.data} />
             )}
 
@@ -513,7 +495,7 @@ const UserListPage: React.FC = () => {
               </p>
             )}
 
-            {!locked && !loading && !failed && visible.length > 0 && (
+            {!loading && !failed && visible.length > 0 && (
               <ul className="divide-y divide-line dark:divide-line-dark">
                 {visible.map((row) => (
                   <PersonRow
@@ -524,6 +506,25 @@ const UserListPage: React.FC = () => {
                   />
                 ))}
               </ul>
+            )}
+
+            {locked && !loading && !failed && (
+              <div
+                data-testid="visitors-locked"
+                className="border-t border-line py-4 text-center dark:border-line-dark"
+              >
+                <Crown className="mx-auto h-8 w-8 text-banana-dark" aria-hidden />
+                <h2 className="pt-3 font-display text-lg text-ink-900 dark:text-ink-50">
+                  {t("profile.visitors.vipOnly") || "VIP Feature"}
+                </h2>
+                <p className="mx-auto max-w-sm pt-1 text-sm text-ink-500 dark:text-ink-400">
+                  {t("profile.visitors.vipOnlyDesc") ||
+                    "See who visited your profile by upgrading to VIP. This feature is available exclusively for VIP members."}
+                </p>
+                <Link to="/settings/vip" data-testid="visitors-vip-link" className={`mt-4 ${CTA}`}>
+                  {t("profile.visitors.learnMore") || "Learn More About VIP"}
+                </Link>
+              </div>
             )}
           </SurfaceCard>
         </div>
