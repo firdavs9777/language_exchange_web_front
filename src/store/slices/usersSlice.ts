@@ -201,10 +201,18 @@ export const usersApiSlice = apiSlice.injectEndpoints({
     }),
 
     // Profile Visitors
+    //
+    // `controllers/profileVisits.js` reads `source` and `deviceType` off the
+    // body and defaults the device to 'ios' when it is missing, so a web visit
+    // sent without one is filed under iOS in the owner's visitors list and in
+    // the bySource breakdown. 'web' has been a valid value in the ProfileVisit
+    // schema's enum all along. `direct` is the source the app sends for the
+    // same screen (single_community_screen.dart:146).
     recordProfileVisit: builder.mutation({
       query: (userId: string) => ({
         url: `${COMMUNITY_URL}/${userId}/profile-visit`,
         method: "POST",
+        body: { source: "direct", deviceType: "web" },
       }),
     }),
     getProfileVisitors: builder.query({

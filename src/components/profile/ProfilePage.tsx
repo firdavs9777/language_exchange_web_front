@@ -9,6 +9,7 @@ import AdUnit from "../ads/AdUnit";
 import { AD_SLOTS } from "../ads/adsenseConfig";
 import { useGetUserProfileQuery } from "../../store/slices/usersSlice";
 import useProfileData from "./useProfileData";
+import useRecordProfileVisit from "./useRecordProfileVisit";
 import ProfileHeader from "./parts/ProfileHeader";
 import ProfileStats from "./parts/ProfileStats";
 import ProfileActions from "./parts/ProfileActions";
@@ -185,6 +186,10 @@ const ProfilePage: React.FC = () => {
   // The moments section and the hook must ask for the same id, or RTK Query
   // keys them separately and the one request becomes two.
   const profileId = userId || (user && user._id) || "";
+
+  // Someone looked at this profile. Fires once the id is known, for a
+  // signed-in viewer on somebody else's page, and never blocks the render.
+  useRecordProfileVisit(profileId, isOwn);
 
   const images = (user && user.imageUrls) || [];
 

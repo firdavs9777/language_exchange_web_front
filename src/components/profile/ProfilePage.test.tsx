@@ -22,6 +22,7 @@ const mockFollow = jest.fn();
 const mockUnfollow = jest.fn();
 const mockBlock = jest.fn();
 const mockReport = jest.fn();
+const mockRecordVisit = jest.fn();
 const mockCreateChatRoom = jest.fn();
 const mockGetCommunityMembers = jest.fn();
 const mockSendWave = jest.fn();
@@ -44,6 +45,7 @@ jest.mock("../../store/slices/usersSlice", () => ({
   useBlockUserMutation: () => [mockBlock, { isLoading: false }],
   useUnblockUserMutation: () => [jest.fn(), { isLoading: false }],
   useReportUserMutation: () => [mockReport, { isLoading: false }],
+  useRecordProfileVisitMutation: () => [mockRecordVisit, { isLoading: false }],
   // ProfileActions asks whether the viewer already blocked this person.
   useGetBlockStatusQuery: () => ({ data: undefined }),
 }));
@@ -118,6 +120,7 @@ beforeEach(() => {
   mockUnfollow.mockReturnValue(resolved());
   mockReport.mockReturnValue(resolved());
   mockCreateChatRoom.mockReturnValue(resolved());
+  mockRecordVisit.mockReturnValue(resolved());
 });
 
 afterEach(() => {
@@ -180,6 +183,39 @@ describe("another person's profile", () => {
     // isFollowing comes from the target's followers list.
     expect(screen.getByTestId("action-follow")).toHaveAttribute("aria-pressed", "true");
     expect(mockGetUserProfile.mock.calls[0][1].skip).toBe(true);
+  });
+
+  it("records the visit, which is what fills the owner's visitors list", async () => {
+    // The mutation and its hook existed in usersSlice from the start and had
+    // no caller, so no visit from the web was ever recorded — an app user's
+    // visitors list could only contain app users.
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada" } },
+    });
+
+    renderPage("/profile/u2", "me");
+
+    await waitFor(() => expect(mockRecordVisit).toHaveBeenCalledWith("u2"));
+  });
+
+  it("records nothing on an own profile or for a signed-out reader", () => {
+    mockGetUserProfile.mockReturnValue({
+      ...idle,
+      refetch: ownRefetch,
+      data: { data: { _id: "me", name: "Me" } },
+    });
+    renderPage("/profile", "me");
+    expect(mockRecordVisit).not.toHaveBeenCalled();
+
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada" } },
+    });
+    renderPage("/profile/u2", null);
+    expect(mockRecordVisit).not.toHaveBeenCalled();
   });
 
   it("asks for the profile's moments with the same argument the hook uses", () => {
