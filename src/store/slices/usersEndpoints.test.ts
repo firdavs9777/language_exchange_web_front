@@ -17,7 +17,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "./apiSlice";
 import { usersApiSlice } from "./usersSlice";
 import * as usersSliceExports from "./usersSlice";
-import { BLOCK_USER_URL, REPORTS_URL } from "../../constants";
+import { BLOCK_USER_URL, COMMUNITY_URL, REPORTS_URL } from "../../constants";
 
 function makeStore() {
   return configureStore({
@@ -158,5 +158,27 @@ describe("reportUser hits POST /api/v1/reports with the Report model's body", ()
       })
     );
     expect(new URL(calls[0].url).pathname).not.toMatch(/\/users\/[^/]+\/report$/);
+  });
+});
+
+describe("recordProfileVisit hits POST /auth/users/:userId/profile-visit", () => {
+  // The visit carries a source and a device type. `controllers/profileVisits.js`
+  // reads both off the body and defaults deviceType to 'ios' when it is absent,
+  // so a web visit sent without one is filed under iOS — in the owner's
+  // visitors list, in profileStats, and in the bySource breakdown. 'web' has
+  // been a valid value in the ProfileVisit schema's enum all along.
+  it("sends source and deviceType, so a web visit is not filed as iOS", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch(
+      (usersApiSlice.endpoints as any).recordProfileVisit.initiate("u2")
+    );
+    expect(calls).toHaveLength(1);
+    expect(new URL(calls[0].url).pathname).toBe(`${COMMUNITY_URL}/u2/profile-visit`);
+    expect(calls[0].method).toBe("POST");
+    expect(JSON.parse(calls[0].body as string)).toEqual({
+      source: "direct",
+      deviceType: "web",
+    });
   });
 });
