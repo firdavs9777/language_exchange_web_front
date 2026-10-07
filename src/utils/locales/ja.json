@@ -1285,6 +1285,23 @@
       "premium": "プレミアム",
       "features": "特典",
       "upgrade": "VIPにアップグレード"
+    },
+    "password": {
+      "title": "パスワードを変更",
+      "current": "現在のパスワード",
+      "current_hint": "現在のパスワードを入力",
+      "new": "新しいパスワード",
+      "new_hint": "8文字以上、A-Z、a-z、0-9",
+      "confirm": "新しいパスワードを確認",
+      "confirm_hint": "新しいパスワードを再入力",
+      "rule_upper": "大文字を1つ",
+      "rule_lower": "小文字を1つ",
+      "rule_number": "数字を1つ",
+      "mismatch": "パスワードが一致しません。",
+      "same_as_current": "新しいパスワードは現在のものと異なる必要があります。",
+      "success": "パスワードが変更されました",
+      "failed": "更新に失敗しました",
+      "symbols": "使用できる記号は @ $ ! % * ? & のみです"
     }
   },
   "waves": {

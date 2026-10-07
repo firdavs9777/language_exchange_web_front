@@ -1285,6 +1285,23 @@
       "premium": "Premium",
       "features": "Fitur",
       "upgrade": "Upgrade ke VIP"
+    },
+    "password": {
+      "title": "Ubah kata sandi",
+      "current": "Kata sandi saat ini",
+      "current_hint": "Masukkan kata sandi saat ini",
+      "new": "Kata sandi baru",
+      "new_hint": "Minimal 8 karakter, A-Z, a-z, 0-9",
+      "confirm": "Konfirmasi kata sandi baru",
+      "confirm_hint": "Masukkan kembali kata sandi baru",
+      "rule_upper": "Satu huruf besar",
+      "rule_lower": "Satu huruf kecil",
+      "rule_number": "Satu angka",
+      "mismatch": "Kata sandi tidak cocok.",
+      "same_as_current": "Kata sandi baru harus berbeda dari yang sekarang.",
+      "success": "Kata sandi berhasil diubah",
+      "failed": "Gagal memperbarui",
+      "symbols": "Hanya simbol ini yang diizinkan: @ $ ! % * ? &"
     }
   },
   "waves": {

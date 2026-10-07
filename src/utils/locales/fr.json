@@ -1267,6 +1267,23 @@
       "premium": "Premium",
       "features": "Fonctionnalités",
       "upgrade": "Passer au VIP"
+    },
+    "password": {
+      "title": "Changer le mot de passe",
+      "current": "Mot de passe actuel",
+      "current_hint": "Saisissez votre mot de passe actuel",
+      "new": "Nouveau mot de passe",
+      "new_hint": "Au moins 8 caractères, A-Z, a-z, 0-9",
+      "confirm": "Confirmer le nouveau mot de passe",
+      "confirm_hint": "Ressaisissez le nouveau mot de passe",
+      "rule_upper": "Une lettre majuscule",
+      "rule_lower": "Une lettre minuscule",
+      "rule_number": "Un chiffre",
+      "mismatch": "Les mots de passe ne correspondent pas.",
+      "same_as_current": "Le nouveau mot de passe doit être différent de l'actuel.",
+      "success": "Mot de passe modifié avec succès",
+      "failed": "Échec de la mise à jour",
+      "symbols": "Seuls ces symboles sont autorisés : @ $ ! % * ? &"
     }
   },
   "waves": {

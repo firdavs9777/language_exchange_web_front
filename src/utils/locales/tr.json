@@ -1285,6 +1285,23 @@
       "premium": "Premium",
       "features": "Özellikler",
       "upgrade": "VIP'e Yükselt"
+    },
+    "password": {
+      "title": "Şifreyi değiştir",
+      "current": "Mevcut şifre",
+      "current_hint": "Mevcut şifrenizi girin",
+      "new": "Yeni şifre",
+      "new_hint": "En az 8 karakter, A-Z, a-z, 0-9",
+      "confirm": "Yeni şifreyi onayla",
+      "confirm_hint": "Yeni şifreyi tekrar girin",
+      "rule_upper": "Bir büyük harf",
+      "rule_lower": "Bir küçük harf",
+      "rule_number": "Bir rakam",
+      "mismatch": "Şifreler eşleşmiyor.",
+      "same_as_current": "Yeni şifre mevcut şifreden farklı olmalı.",
+      "success": "Şifre başarıyla değiştirildi",
+      "failed": "Güncelleme başarısız",
+      "symbols": "Yalnızca şu semboller kullanılabilir: @ $ ! % * ? &"
     }
   },
   "waves": {

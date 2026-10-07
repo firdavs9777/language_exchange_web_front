@@ -1267,6 +1267,23 @@
       "premium": "Premium",
       "features": "Funzionalità",
       "upgrade": "Passa a VIP"
+    },
+    "password": {
+      "title": "Cambia password",
+      "current": "Password attuale",
+      "current_hint": "Inserisci la password attuale",
+      "new": "Nuova password",
+      "new_hint": "Almeno 8 caratteri, A-Z, a-z, 0-9",
+      "confirm": "Conferma nuova password",
+      "confirm_hint": "Reinserisci la nuova password",
+      "rule_upper": "Una lettera maiuscola",
+      "rule_lower": "Una lettera minuscola",
+      "rule_number": "Un numero",
+      "mismatch": "Le password non corrispondono.",
+      "same_as_current": "La nuova password deve essere diversa da quella attuale.",
+      "success": "Password cambiata correttamente",
+      "failed": "Aggiornamento fallito",
+      "symbols": "Sono ammessi solo questi simboli: @ $ ! % * ? &"
     }
   },
   "waves": {

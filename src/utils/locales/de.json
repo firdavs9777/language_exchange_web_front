@@ -1285,6 +1285,23 @@
       "premium": "Premium",
       "features": "Funktionen",
       "upgrade": "Auf VIP upgraden"
+    },
+    "password": {
+      "title": "Passwort ändern",
+      "current": "Aktuelles Passwort",
+      "current_hint": "Aktuelles Passwort eingeben",
+      "new": "Neues Passwort",
+      "new_hint": "Mindestens 8 Zeichen, A-Z, a-z, 0-9",
+      "confirm": "Neues Passwort bestätigen",
+      "confirm_hint": "Neues Passwort erneut eingeben",
+      "rule_upper": "Ein Großbuchstabe",
+      "rule_lower": "Ein Kleinbuchstabe",
+      "rule_number": "Eine Ziffer",
+      "mismatch": "Passwörter stimmen nicht überein.",
+      "same_as_current": "Das neue Passwort muss sich vom aktuellen unterscheiden.",
+      "success": "Passwort erfolgreich geändert",
+      "failed": "Aktualisierung fehlgeschlagen",
+      "symbols": "Nur diese Sonderzeichen sind erlaubt: @ $ ! % * ? &"
     }
   },
   "waves": {

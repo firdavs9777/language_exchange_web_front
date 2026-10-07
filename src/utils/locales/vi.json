@@ -1285,6 +1285,23 @@
       "premium": "Premium",
       "features": "Tính Năng",
       "upgrade": "Nâng Cấp Lên VIP"
+    },
+    "password": {
+      "title": "Đổi mật khẩu",
+      "current": "Mật khẩu hiện tại",
+      "current_hint": "Nhập mật khẩu hiện tại",
+      "new": "Mật khẩu mới",
+      "new_hint": "Tối thiểu 8 ký tự, A-Z, a-z, 0-9",
+      "confirm": "Xác nhận mật khẩu mới",
+      "confirm_hint": "Nhập lại mật khẩu mới",
+      "rule_upper": "Một chữ hoa",
+      "rule_lower": "Một chữ thường",
+      "rule_number": "Một chữ số",
+      "mismatch": "Mật khẩu không khớp.",
+      "same_as_current": "Mật khẩu mới phải khác mật khẩu hiện tại.",
+      "success": "Đã đổi mật khẩu thành công",
+      "failed": "Cập nhật thất bại",
+      "symbols": "Chỉ được dùng các ký hiệu sau: @ $ ! % * ? &"
     }
   },
   "waves": {

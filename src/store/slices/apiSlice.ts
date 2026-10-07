@@ -47,6 +47,27 @@ const loggedBaseQuery: typeof baseQuery = async (args, api, extraOptions) => {
 };
 
 // Token refresh wrapper
+/**
+ * Endpoints whose 401 means "the password you typed is wrong", not "your
+ * session has expired".
+ *
+ * `PUT /auth/updatepassword` checks the CURRENT password itself and answers
+ * 401 when it does not match. Read as an expired token, a typo in that field
+ * would refresh and re-send the change (a second PASSWORD_UPDATE_FAILED
+ * security event against the account) or, with no refresh token stored, sign
+ * the user out mid-form. These go straight back to the caller, which shows the
+ * server's own message — and that message also distinguishes the rare case of
+ * a token that really had expired, since `protect` words its 401 differently.
+ */
+const CREDENTIAL_CHECKS = ["/api/v1/auth/updatepassword"];
+
+function answersCredentials(args: any): boolean {
+  const url = typeof args === "string" ? args : args && args.url;
+  if (typeof url !== "string") return false;
+  const path = url.split("?")[0];
+  return CREDENTIAL_CHECKS.indexOf(path) > -1;
+}
+
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
@@ -73,7 +94,7 @@ const baseQueryWithReauth: BaseQueryFn<
   // body (a refresh can't fix it either — the token is fine, the account
   // isn't), so we log out on it below but still return the error unchanged so
   // the caller can show it.
-  if (result.error && result.error.status === 401) {
+  if (result.error && result.error.status === 401 && !answersCredentials(args)) {
     const userInfo = (api.getState() as RootState).auth.userInfo as any;
     const refreshToken = userInfo?.refreshToken;
 

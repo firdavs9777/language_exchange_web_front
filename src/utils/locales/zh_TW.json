@@ -1285,6 +1285,23 @@
       "premium": "進階版",
       "features": "功能",
       "upgrade": "升級 VIP"
+    },
+    "password": {
+      "title": "修改密碼",
+      "current": "目前密碼",
+      "current_hint": "輸入目前密碼",
+      "new": "新密碼",
+      "new_hint": "至少8位，A-Z、a-z、0-9",
+      "confirm": "確認新密碼",
+      "confirm_hint": "再次輸入新密碼",
+      "rule_upper": "一個大寫字母",
+      "rule_lower": "一個小寫字母",
+      "rule_number": "一個數字",
+      "mismatch": "兩次密碼不一致。",
+      "same_as_current": "新密碼必須與目前密碼不同。",
+      "success": "密碼修改成功",
+      "failed": "更新失敗",
+      "symbols": "只能使用以下符號：@ $ ! % * ? &"
     }
   },
   "waves": {

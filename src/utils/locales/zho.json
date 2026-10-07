@@ -1285,6 +1285,23 @@
       "premium": "高级版",
       "features": "功能",
       "upgrade": "升级 VIP"
+    },
+    "password": {
+      "title": "修改密码",
+      "current": "当前密码",
+      "current_hint": "输入当前密码",
+      "new": "新密码",
+      "new_hint": "至少8位，A-Z、a-z、0-9",
+      "confirm": "确认新密码",
+      "confirm_hint": "再次输入新密码",
+      "rule_upper": "一个大写字母",
+      "rule_lower": "一个小写字母",
+      "rule_number": "一个数字",
+      "mismatch": "两次密码不一致。",
+      "same_as_current": "新密码必须与当前密码不同。",
+      "success": "密码修改成功",
+      "failed": "更新失败",
+      "symbols": "只能使用以下符号：@ $ ! % * ? &"
     }
   },
   "waves": {

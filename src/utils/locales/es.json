@@ -1267,6 +1267,23 @@
       "premium": "Premium",
       "features": "Características",
       "upgrade": "Actualizar a VIP"
+    },
+    "password": {
+      "title": "Cambiar contraseña",
+      "current": "Contraseña actual",
+      "current_hint": "Introduce tu contraseña actual",
+      "new": "Nueva contraseña",
+      "new_hint": "Mínimo 8 caracteres, A-Z, a-z, 0-9",
+      "confirm": "Confirmar nueva contraseña",
+      "confirm_hint": "Vuelve a introducir la nueva contraseña",
+      "rule_upper": "Una letra mayúscula",
+      "rule_lower": "Una letra minúscula",
+      "rule_number": "Un número",
+      "mismatch": "Las contraseñas no coinciden.",
+      "same_as_current": "La nueva contraseña debe ser distinta de la actual.",
+      "success": "Contraseña cambiada correctamente",
+      "failed": "Error al actualizar",
+      "symbols": "Solo se permiten estos símbolos: @ $ ! % * ? &"
     }
   },
   "waves": {
