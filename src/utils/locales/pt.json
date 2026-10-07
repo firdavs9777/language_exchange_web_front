@@ -275,7 +275,8 @@
       "no_following": "Você ainda não está seguindo ninguém.",
       "following_error": "Erro ao carregar lista de seguindo. Por favor, tente novamente mais tarde.",
       "moments": "Momentos",
-      "visitors": "Visitantes"
+      "visitors": "Visitantes",
+      "visited": "Visitados"
     },
     "visitors": {
       "title": "Visitantes do Perfil",
@@ -297,7 +298,8 @@
       "learnMore": "Saiba Mais Sobre VIP",
       "clear": "Limpar histórico",
       "clear_title": "Limpar seu histórico de visitas?",
-      "clear_body": "Todas as pessoas que viram seu perfil são removidas e seus contadores voltam a zero. Não é possível desfazer."
+      "clear_body": "Todas as pessoas que viram seu perfil são removidas e seus contadores voltam a zero. Não é possível desfazer.",
+      "no_visited": "Os perfis que você vir aparecerão aqui"
     },
     "sections": {
       "personal_info": "Informações Pessoais",

@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { Link, Navigate, useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Crown, Eye, RefreshCw, Search, Trash2, UserPlus, Users } from "lucide-react";
+import { Crown, Eye, History, RefreshCw, Search, Trash2, UserPlus, Users } from "lucide-react";
 import PageMeta from "../../seo/PageMeta";
 import SurfaceCard from "../../design/SurfaceCard";
 import Avatar from "../../design/Avatar";
@@ -13,12 +13,13 @@ import {
   useGetFollowersQuery,
   useGetFollowingsQuery,
   useGetProfileVisitorsQuery,
+  useGetVisitedProfilesQuery,
   useClearVisitorsMutation,
 } from "../../store/slices/usersSlice";
 import { useGetCommunityDetailsQuery } from "../../store/slices/communitySlice";
 import timeAgo from "../../utils/timeAgo";
 
-type Tab = "followers" | "following" | "visitors";
+type Tab = "followers" | "following" | "visitors" | "visited";
 
 interface PersonRowData {
   id: string;
@@ -26,7 +27,7 @@ interface PersonRowData {
   avatar: string;
   native: string;
   learning: string;
-  /** Visitors only: when they last came by. */
+  /** Visitors: when they last came by. Visited: when you last went. */
   visitedAt?: string;
 }
 
@@ -59,6 +60,7 @@ export function tabForPath(pathname: string): Tab {
     path.length >= suffix.length && path.lastIndexOf(suffix) === path.length - suffix.length;
 
   if (path === "/visitors") return "visitors";
+  if (path === "/visited") return "visited";
   if (path === "/followingslist" || endsWith("/following")) return "following";
   return "followers";
 }
@@ -95,7 +97,13 @@ function rowsOf(payload: any): PersonRowData[] {
       avatar: firstImage(person),
       native: person.native_language || person.nativeLanguage || "",
       learning: person.language_to_learn || person.languageToLearn || "",
-      visitedAt: entry && typeof entry.lastVisit === "string" ? entry.lastVisit : undefined,
+      // `lastVisit` on who-viewed-me, `visitedAt` on who-I-viewed.
+      visitedAt:
+        entry && typeof entry.lastVisit === "string"
+          ? entry.lastVisit
+          : entry && typeof entry.visitedAt === "string"
+          ? entry.visitedAt
+          : undefined,
     });
   }
   return rows;
@@ -283,7 +291,7 @@ const UserListPage: React.FC = () => {
   const tab = tabForPath(location.pathname);
   // Visitors is an own-profile idea; a tab bar that offered it on someone
   // else's list would be offering a page that does not exist.
-  const activeTab: Tab = tab === "visitors" && !isOwn ? "followers" : tab;
+  const activeTab: Tab = (tab === "visitors" || tab === "visited") && !isOwn ? "followers" : tab;
 
   const [query, setQuery] = useState("");
 
@@ -306,6 +314,12 @@ const UserListPage: React.FC = () => {
     { userId: ownerId, page: 1, limit: 50 },
     { skip: !ownerId || activeTab !== "visitors" || !isOwn }
   );
+  // Profiles the viewer opened, newest first. Not paywalled — it is your own
+  // browsing — and the server drops rows for accounts deleted since.
+  const visited = useGetVisitedProfilesQuery(
+    { limit: 50 },
+    { skip: !viewerId || activeTab !== "visited" || !isOwn }
+  );
   // The viewer's own following list, for the row labels. On an own "Following"
   // tab this is the identical query argument, which RTK Query serves once.
   const viewerFollowing = useGetFollowingsQuery(
@@ -321,7 +335,13 @@ const UserListPage: React.FC = () => {
   );
 
   const active: any =
-    activeTab === "followers" ? followers : activeTab === "following" ? following : visitors;
+    activeTab === "followers"
+      ? followers
+      : activeTab === "following"
+      ? following
+      : activeTab === "visited"
+      ? visited
+      : visitors;
 
   const rows = useMemo(() => rowsOf(active.data), [active.data]);
 
@@ -372,6 +392,12 @@ const UserListPage: React.FC = () => {
       label: t("profile.stats.visitors") || "Visitors",
       icon: Eye,
     });
+    tabs.push({
+      key: "visited",
+      to: "/visited",
+      label: t("profile.stats.visited") || "Visited",
+      icon: History,
+    });
   }
 
   const activeLabel = (tabs.filter((entry) => entry.key === activeTab)[0] || tabs[0]).label;
@@ -403,6 +429,9 @@ const UserListPage: React.FC = () => {
   const emptyCopy = (): string => {
     if (activeTab === "visitors") {
       return t("profile.visitors.no_visitors_desc") || "When people visit your profile, they'll appear here";
+    }
+    if (activeTab === "visited") {
+      return t("profile.visitors.no_visited") || "Profiles you look at will appear here";
     }
     if (activeTab === "following") {
       return isOwn

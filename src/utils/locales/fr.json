@@ -275,7 +275,8 @@
       "no_following": "Vous ne suivez personne pour le moment.",
       "following_error": "Erreur lors du chargement de la liste des abonnements. Veuillez réessayer plus tard.",
       "moments": "Moments",
-      "visitors": "Visiteurs"
+      "visitors": "Visiteurs",
+      "visited": "Visités"
     },
     "visitors": {
       "title": "Visiteurs du profil",
@@ -297,7 +298,8 @@
       "learnMore": "En savoir plus sur le VIP",
       "clear": "Effacer l'historique",
       "clear_title": "Effacer votre historique de visites ?",
-      "clear_body": "Toutes les personnes ayant vu votre profil sont supprimées et vos compteurs reviennent à zéro. Cette action est irréversible."
+      "clear_body": "Toutes les personnes ayant vu votre profil sont supprimées et vos compteurs reviennent à zéro. Cette action est irréversible.",
+      "no_visited": "Les profils que vous consultez apparaîtront ici"
     },
     "sections": {
       "personal_info": "Informations personnelles",

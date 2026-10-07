@@ -294,7 +294,8 @@
       "no_following": "Anda belum mengikuti siapa pun.",
       "following_error": "Gagal memuat daftar mengikuti. Silakan coba lagi nanti.",
       "moments": "Momen",
-      "visitors": "Pengunjung"
+      "visitors": "Pengunjung",
+      "visited": "Dikunjungi"
     },
     "visitors": {
       "title": "Pengunjung Profil",
@@ -316,7 +317,8 @@
       "learnMore": "Pelajari Lebih Lanjut Tentang VIP",
       "clear": "Hapus riwayat",
       "clear_title": "Hapus riwayat pengunjung?",
-      "clear_body": "Semua orang yang melihat profilmu akan dihapus dan penghitung kunjungan kembali ke nol. Ini tidak bisa dibatalkan."
+      "clear_body": "Semua orang yang melihat profilmu akan dihapus dan penghitung kunjungan kembali ke nol. Ini tidak bisa dibatalkan.",
+      "no_visited": "Profil yang kamu lihat akan muncul di sini"
     },
     "sections": {
       "personal_info": "Informasi Pribadi",

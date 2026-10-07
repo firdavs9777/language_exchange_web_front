@@ -294,7 +294,8 @@
       "no_following": "아직 팔로우한 사람이 없어요.",
       "following_error": "팔로잉 목록을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.",
       "moments": "모멘트",
-      "visitors": "방문자"
+      "visitors": "방문자",
+      "visited": "방문한 프로필"
     },
     "visitors": {
       "title": "프로필 방문자",
@@ -316,7 +317,8 @@
       "learnMore": "VIP 자세히 보기",
       "clear": "기록 지우기",
       "clear_title": "방문자 기록을 지울까요?",
-      "clear_body": "내 프로필을 본 사람이 모두 삭제되고 방문 수치가 0으로 돌아갑니다. 되돌릴 수 없습니다."
+      "clear_body": "내 프로필을 본 사람이 모두 삭제되고 방문 수치가 0으로 돌아갑니다. 되돌릴 수 없습니다.",
+      "no_visited": "내가 본 프로필이 여기에 표시됩니다"
     },
     "sections": {
       "personal_info": "기본 정보",

@@ -275,7 +275,8 @@
       "no_following": "Non segui ancora nessuno.",
       "following_error": "Errore nel caricamento della lista dei seguiti. Riprova più tardi.",
       "moments": "Momenti",
-      "visitors": "Visitatori"
+      "visitors": "Visitatori",
+      "visited": "Visitati"
     },
     "visitors": {
       "title": "Visitatori del Profilo",
@@ -297,7 +298,8 @@
       "learnMore": "Scopri di più su VIP",
       "clear": "Cancella cronologia",
       "clear_title": "Cancellare la cronologia dei visitatori?",
-      "clear_body": "Tutte le persone che hanno visto il tuo profilo vengono rimosse e i contatori tornano a zero. L'operazione è irreversibile."
+      "clear_body": "Tutte le persone che hanno visto il tuo profilo vengono rimosse e i contatori tornano a zero. L'operazione è irreversibile.",
+      "no_visited": "I profili che guardi appariranno qui"
     },
     "sections": {
       "personal_info": "Informazioni Personali",

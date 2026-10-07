@@ -294,7 +294,8 @@
       "no_following": "Henüz kimseyi takip etmiyorsunuz.",
       "following_error": "Takip listesi yüklenirken hata. Lütfen daha sonra tekrar deneyin.",
       "moments": "Anlar",
-      "visitors": "Ziyaretçiler"
+      "visitors": "Ziyaretçiler",
+      "visited": "Ziyaret edilenler"
     },
     "visitors": {
       "title": "Profil Ziyaretçileri",
@@ -316,7 +317,8 @@
       "learnMore": "VIP Hakkında Daha Fazla Bilgi",
       "clear": "Geçmişi temizle",
       "clear_title": "Ziyaretçi geçmişin temizlensin mi?",
-      "clear_body": "Profiline bakan herkes silinir ve ziyaret sayaçların sıfırlanır. Bu geri alınamaz."
+      "clear_body": "Profiline bakan herkes silinir ve ziyaret sayaçların sıfırlanır. Bu geri alınamaz.",
+      "no_visited": "Baktığın profiller burada görünecek"
     },
     "sections": {
       "personal_info": "Kişisel Bilgiler",
