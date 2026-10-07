@@ -294,7 +294,8 @@
       "no_following": "Du folgst noch niemandem.",
       "following_error": "Fehler beim Laden der Folge-ich-Liste. Bitte versuche es später erneut.",
       "moments": "Momente",
-      "visitors": "Besucher"
+      "visitors": "Besucher",
+      "visited": "Besucht"
     },
     "visitors": {
       "title": "Profilbesucher",
@@ -316,7 +317,8 @@
       "learnMore": "Mehr über VIP erfahren",
       "clear": "Verlauf löschen",
       "clear_title": "Besucherverlauf löschen?",
-      "clear_body": "Alle, die dein Profil angesehen haben, werden entfernt und deine Besuchszähler auf null gesetzt. Das lässt sich nicht rückgängig machen."
+      "clear_body": "Alle, die dein Profil angesehen haben, werden entfernt und deine Besuchszähler auf null gesetzt. Das lässt sich nicht rückgängig machen.",
+      "no_visited": "Profile, die du ansiehst, erscheinen hier"
     },
     "sections": {
       "personal_info": "Persönliche Informationen",

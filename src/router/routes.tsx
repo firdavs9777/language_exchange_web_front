@@ -218,6 +218,7 @@ export const routes = createRoutesFromElements(
     <Route path="followersList" element={lazyRoute(<UserListPage />)} />
     <Route path="followingsList" element={lazyRoute(<UserListPage />)} />
     <Route path="visitors" element={lazyRoute(<UserListPage />)} />
+    <Route path="visited" element={lazyRoute(<UserListPage />)} />
     <Route path="profile/:userId/followers" element={lazyRoute(<UserListPage />)} />
     <Route path="profile/:userId/following" element={lazyRoute(<UserListPage />)} />
     <Route path="chat/new" element={lazyRoute(<NewChat />)} />

@@ -294,7 +294,8 @@
       "no_following": "You're not following anyone yet.",
       "following_error": "Error loading following list. Please try again later.",
       "moments": "Moments",
-      "visitors": "Visitors"
+      "visitors": "Visitors",
+      "visited": "Visited"
     },
     "visitors": {
       "title": "Profile Visitors",
@@ -316,7 +317,8 @@
       "learnMore": "Learn More About VIP",
       "clear": "Clear history",
       "clear_title": "Clear your visitor history?",
-      "clear_body": "Everyone who viewed your profile is removed, and your visit counters go back to zero. This cannot be undone."
+      "clear_body": "Everyone who viewed your profile is removed, and your visit counters go back to zero. This cannot be undone.",
+      "no_visited": "Profiles you look at will appear here"
     },
     "sections": {
       "personal_info": "Personal Information",

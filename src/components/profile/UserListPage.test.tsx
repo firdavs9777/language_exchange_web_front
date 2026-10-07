@@ -10,6 +10,7 @@ import UserListPage from "./UserListPage";
 const mockGetFollowers = jest.fn();
 const mockGetFollowings = jest.fn();
 const mockGetVisitors = jest.fn();
+const mockGetVisited = jest.fn();
 const mockGetVipStatus = jest.fn();
 const mockClearVisitors = jest.fn();
 const mockGetCommunityDetails = jest.fn();
@@ -29,6 +30,7 @@ jest.mock("react-router-dom", () => ({
 jest.mock("../../store/slices/usersSlice", () => ({
   useGetFollowersQuery: (arg: any, opts: any) => mockGetFollowers(arg, opts),
   useGetFollowingsQuery: (arg: any, opts: any) => mockGetFollowings(arg, opts),
+  useGetVisitedProfilesQuery: (arg: any, opts: any) => mockGetVisited(arg, opts),
   useGetProfileVisitorsQuery: (arg: any, opts: any) =>
     mockGetVisitors(arg, opts),
   useGetVipStatusQuery: (arg: any, opts: any) => mockGetVipStatus(arg, opts),
@@ -84,6 +86,7 @@ function renderList(path: string, viewerId: string | null = "me") {
             <Route path="/followersList" element={<UserListPage />} />
             <Route path="/followingsList" element={<UserListPage />} />
             <Route path="/visitors" element={<UserListPage />} />
+            <Route path="/visited" element={<UserListPage />} />
             <Route
               path="/profile/:userId/followers"
               element={<UserListPage />}
@@ -104,6 +107,7 @@ beforeEach(() => {
   mockGetFollowers.mockReturnValue({ ...idle, refetch: followersRefetch });
   mockGetFollowings.mockReturnValue({ ...idle, refetch: followingsRefetch });
   mockGetVisitors.mockReturnValue({ ...idle, refetch: visitorsRefetch });
+  mockGetVisited.mockReturnValue({ ...idle, refetch: jest.fn() });
   mockGetVipStatus.mockReturnValue({ ...idle });
   mockClearVisitors.mockReturnValue({ unwrap: () => Promise.resolve({ success: true }) });
   mockGetCommunityDetails.mockReturnValue({ ...idle });
@@ -679,5 +683,53 @@ describe("signed out", () => {
     expect(screen.getByTestId("list-row-u2")).toBeInTheDocument();
     // Nobody to follow as: no button rather than one that bounces to login.
     expect(screen.queryByTestId("list-follow-u2")).not.toBeInTheDocument();
+  });
+});
+
+// GET /me/visited-profiles existed with a generated hook and no caller. The
+// app lists the profiles you looked at; the web had no way to find someone
+// again whose profile you had opened and lost.
+describe("profiles I visited", () => {
+  it("is its own tab, on the own lists only", () => {
+    renderList("/visited", "me");
+    expect(screen.getByTestId("tab-visited")).toHaveAttribute("aria-current", "page");
+    expect(mockGetVisited.mock.calls[0][1].skip).toBe(false);
+  });
+
+  it("lists who you looked at, newest first, linking to them", () => {
+    mockGetVisited.mockReturnValue({
+      ...idle,
+      refetch: jest.fn(),
+      data: {
+        count: 2,
+        data: [
+          { user: person("u7", "Kim"), visitedAt: new Date(Date.now() - 5 * 60000).toISOString() },
+          { user: person("u8", "Lee"), visitedAt: new Date(Date.now() - 3 * 86400000).toISOString() },
+        ],
+      },
+    });
+    renderList("/visited", "me");
+
+    expect(screen.getByTestId("list-name-u7")).toHaveAttribute("href", "/profile/u7");
+    expect(screen.getByTestId("list-row-u7")).toHaveTextContent("5m");
+    expect(screen.getByTestId("list-row-u8")).toHaveTextContent("3d");
+  });
+
+  it("is not paywalled, and offers no clear-history control", () => {
+    mockGetVisited.mockReturnValue({
+      ...idle,
+      refetch: jest.fn(),
+      data: { data: [{ user: person("u7", "Kim"), visitedAt: new Date().toISOString() }] },
+    });
+    renderList("/visited", "me");
+    expect(screen.queryByTestId("visitors-locked")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("visitors-clear")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("visitor-stats")).not.toBeInTheDocument();
+  });
+
+  it("is not offered on someone else's lists", () => {
+    mockGetCommunityDetails.mockReturnValue({ ...idle, data: { data: { name: "Ada" } } });
+    renderList("/profile/u2/followers", "me");
+    expect(screen.queryByTestId("tab-visited")).not.toBeInTheDocument();
   });
 });

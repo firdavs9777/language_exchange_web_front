@@ -294,7 +294,8 @@
       "no_following": "你还没有关注任何人。",
       "following_error": "关注列表加载失败，请稍后再试。",
       "moments": "动态",
-      "visitors": "访客"
+      "visitors": "访客",
+      "visited": "我看过的"
     },
     "visitors": {
       "title": "谁看过我",
@@ -316,7 +317,8 @@
       "learnMore": "了解更多 VIP 详情",
       "clear": "清除记录",
       "clear_title": "要清除访客记录吗？",
-      "clear_body": "查看过你主页的人都会被删除，访问计数归零。此操作无法撤销。"
+      "clear_body": "查看过你主页的人都会被删除，访问计数归零。此操作无法撤销。",
+      "no_visited": "你看过的个人主页会显示在这里"
     },
     "sections": {
       "personal_info": "个人信息",

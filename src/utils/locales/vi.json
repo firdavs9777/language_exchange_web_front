@@ -294,7 +294,8 @@
       "no_following": "Bạn chưa theo dõi ai.",
       "following_error": "Lỗi khi tải danh sách theo dõi. Vui lòng thử lại sau.",
       "moments": "Khoảnh Khắc",
-      "visitors": "Khách Truy Cập"
+      "visitors": "Khách Truy Cập",
+      "visited": "Đã xem"
     },
     "visitors": {
       "title": "Khách Truy Cập Hồ Sơ",
@@ -316,7 +317,8 @@
       "learnMore": "Tìm Hiểu Thêm Về VIP",
       "clear": "Xoá lịch sử",
       "clear_title": "Xoá lịch sử người xem?",
-      "clear_body": "Tất cả những người đã xem hồ sơ của bạn sẽ bị xoá và bộ đếm lượt xem trở về 0. Không thể hoàn tác."
+      "clear_body": "Tất cả những người đã xem hồ sơ của bạn sẽ bị xoá và bộ đếm lượt xem trở về 0. Không thể hoàn tác.",
+      "no_visited": "Những hồ sơ bạn đã xem sẽ hiện ở đây"
     },
     "sections": {
       "personal_info": "Thông Tin Cá Nhân",

@@ -294,7 +294,8 @@
       "no_following": "Hindi ka pa sumusunod sa sinuman.",
       "following_error": "Error sa pag-load ng listahan ng sinusundan. Subukan muli mamaya.",
       "moments": "Mga Sandali",
-      "visitors": "Mga Bisita"
+      "visitors": "Mga Bisita",
+      "visited": "Binisita"
     },
     "visitors": {
       "title": "Mga Bumisita sa Profile",
@@ -316,7 +317,8 @@
       "learnMore": "Alamin pa ang tungkol sa VIP",
       "clear": "I-clear ang history",
       "clear_title": "I-clear ang visitor history mo?",
-      "clear_body": "Maaalis ang lahat ng tumingin sa profile mo at babalik sa zero ang mga counter. Hindi ito maibabalik."
+      "clear_body": "Maaalis ang lahat ng tumingin sa profile mo at babalik sa zero ang mga counter. Hindi ito maibabalik.",
+      "no_visited": "Lalabas dito ang mga profile na tiningnan mo"
     },
     "sections": {
       "personal_info": "Personal na Impormasyon",

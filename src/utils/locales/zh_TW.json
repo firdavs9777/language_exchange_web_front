@@ -294,7 +294,8 @@
       "no_following": "你還沒有追蹤任何人。",
       "following_error": "追蹤名單載入失敗，請稍後再試。",
       "moments": "動態",
-      "visitors": "訪客"
+      "visitors": "訪客",
+      "visited": "我看過的"
     },
     "visitors": {
       "title": "誰看過我",
@@ -316,7 +317,8 @@
       "learnMore": "進一步了解 VIP",
       "clear": "清除紀錄",
       "clear_title": "要清除訪客紀錄嗎？",
-      "clear_body": "看過你個人檔案的人都會被刪除，造訪計數歸零。此操作無法復原。"
+      "clear_body": "看過你個人檔案的人都會被刪除，造訪計數歸零。此操作無法復原。",
+      "no_visited": "你看過的個人檔案會顯示在這裡"
     },
     "sections": {
       "personal_info": "個人資訊",
