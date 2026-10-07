@@ -485,7 +485,8 @@
       "intent_learn": "Here to learn",
       "intent_meet": "Open to meeting people",
       "intent_date": "Open to dating",
-      "intent_privacy_note": "Others see what you pick, except dating, which stays private."
+      "intent_privacy_note": "Others see what you pick, except dating, which stays private.",
+      "completion": "Profile Completion"
     },
     "myMoments": {
       "title": "My moments",

@@ -36,6 +36,7 @@ import {
 import ConfirmDialog from "../../design/ConfirmDialog";
 import SurfaceCard from "../../design/SurfaceCard";
 import { UserProfileData } from "./ProfileTypes/types";
+import { profileCompletion } from "./profileCompletion";
 import {
   Intent,
   availableIntents,
@@ -495,6 +496,9 @@ const EditProfile: React.FC = () => {
   }
 
   const photos = formData.imageUrls || [];
+  // Live from the form, so it moves as fields are filled. Address is not in
+  // the form, so the loaded document supplies it underneath.
+  const completion = profileCompletion({ ...(user || {}), ...formData });
   const topics = formData.topics || [];
   const intents = normalizeIntents(formData.intents);
   // `date` is only offered to a known adult: sanitizeIntents strips it from
@@ -521,6 +525,31 @@ const EditProfile: React.FC = () => {
             {t("profile.edit_profile") || "Edit profile"}
           </h1>
         </div>
+        {completion.percent < 100 && (
+          <div data-testid="edit-completion" className="px-1 pt-3">
+            <div className="flex items-baseline justify-between pb-1.5 text-xs font-semibold">
+              <span id="edit-completion-label" className="text-ink-700 dark:text-ink-200">
+                {t("profile.edit.completion") || "Profile Completion"}
+              </span>
+              <span data-testid="edit-completion-percent" className="text-brand">
+                {completion.percent}%
+              </span>
+            </div>
+            <div
+              role="progressbar"
+              aria-labelledby="edit-completion-label"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={completion.percent}
+              className="h-1.5 w-full overflow-hidden rounded-full bg-ink-100 dark:bg-white/10"
+            >
+              <div
+                className="h-full rounded-full bg-brand transition-all duration-300"
+                style={{ width: `${completion.percent}%` }}
+              />
+            </div>
+          </div>
+        )}
       </header>
 
       <div className={COLUMN}>

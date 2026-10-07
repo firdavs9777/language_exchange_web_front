@@ -205,6 +205,30 @@ describe("accessibility", () => {
   });
 });
 
+describe("completion", () => {
+  // The app's ten fields (completion_calculator.dart), so a profile reads the
+  // same percentage on either platform.
+  it("shows how far along the profile is, and moves as it is filled", () => {
+    // USER has 8 of 10: no address, no intents.
+    renderEditor();
+    expect(screen.getByTestId("edit-completion-percent")).toHaveTextContent("80%");
+    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "80");
+
+    fireEvent.click(screen.getByTestId("edit-intent-learn"));
+    expect(screen.getByTestId("edit-completion-percent")).toHaveTextContent("90%");
+  });
+
+  it("takes the address from the loaded document, which the form cannot edit", () => {
+    renderEditor({ data: { ...USER, location: { city: "Seoul" } } });
+    expect(screen.getByTestId("edit-completion-percent")).toHaveTextContent("90%");
+  });
+
+  it("gets out of the way at 100%", () => {
+    renderEditor({ data: { ...USER, location: { city: "Seoul" }, intents: ["learn"] } });
+    expect(screen.queryByTestId("edit-completion")).not.toBeInTheDocument();
+  });
+});
+
 describe("saving", () => {
   it("keeps Save disabled until something actually changes", () => {
     renderEditor();
