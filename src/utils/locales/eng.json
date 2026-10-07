@@ -313,7 +313,10 @@
       "vipOnly": "VIP Feature",
       "vipOnlyDesc": "See who visited your profile by upgrading to VIP. This feature is available exclusively for VIP members.",
       "vipBenefits": "VIP Benefits",
-      "learnMore": "Learn More About VIP"
+      "learnMore": "Learn More About VIP",
+      "clear": "Clear history",
+      "clear_title": "Clear your visitor history?",
+      "clear_body": "Everyone who viewed your profile is removed, and your visit counters go back to zero. This cannot be undone."
     },
     "sections": {
       "personal_info": "Personal Information",

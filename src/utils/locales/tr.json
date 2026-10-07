@@ -313,7 +313,10 @@
       "vipOnly": "VIP Özelliği",
       "vipOnlyDesc": "VIP'e yükselerek profilinizi kimin ziyaret ettiğini görün. Bu özellik yalnızca VIP üyeler için mevcuttur.",
       "vipBenefits": "VIP Avantajları",
-      "learnMore": "VIP Hakkında Daha Fazla Bilgi"
+      "learnMore": "VIP Hakkında Daha Fazla Bilgi",
+      "clear": "Geçmişi temizle",
+      "clear_title": "Ziyaretçi geçmişin temizlensin mi?",
+      "clear_body": "Profiline bakan herkes silinir ve ziyaret sayaçların sıfırlanır. Bu geri alınamaz."
     },
     "sections": {
       "personal_info": "Kişisel Bilgiler",

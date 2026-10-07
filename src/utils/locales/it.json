@@ -294,7 +294,10 @@
       "vipOnly": "Funzione VIP",
       "vipOnlyDesc": "Scopri chi ha visitato il tuo profilo passando a VIP. Questa funzione è disponibile esclusivamente per i membri VIP.",
       "vipBenefits": "Vantaggi VIP",
-      "learnMore": "Scopri di più su VIP"
+      "learnMore": "Scopri di più su VIP",
+      "clear": "Cancella cronologia",
+      "clear_title": "Cancellare la cronologia dei visitatori?",
+      "clear_body": "Tutte le persone che hanno visto il tuo profilo vengono rimosse e i contatori tornano a zero. L'operazione è irreversibile."
     },
     "sections": {
       "personal_info": "Informazioni Personali",

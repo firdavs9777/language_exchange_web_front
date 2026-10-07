@@ -294,7 +294,10 @@
       "vipOnly": "Función VIP",
       "vipOnlyDesc": "Descubre quién visitó tu perfil actualizando a VIP. Esta función está disponible exclusivamente para miembros VIP.",
       "vipBenefits": "Beneficios VIP",
-      "learnMore": "Más Información sobre VIP"
+      "learnMore": "Más Información sobre VIP",
+      "clear": "Borrar historial",
+      "clear_title": "¿Borrar tu historial de visitas?",
+      "clear_body": "Se eliminan todas las personas que vieron tu perfil y tus contadores vuelven a cero. No se puede deshacer."
     },
     "sections": {
       "personal_info": "Información Personal",

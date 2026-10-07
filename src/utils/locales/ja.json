@@ -313,7 +313,10 @@
       "vipOnly": "VIP限定機能",
       "vipOnlyDesc": "VIPにアップグレードすると、プロフィールを訪れた人がわかります。VIP会員だけが使える機能です。",
       "vipBenefits": "VIP特典",
-      "learnMore": "VIPについて詳しく見る"
+      "learnMore": "VIPについて詳しく見る",
+      "clear": "履歴を消去",
+      "clear_title": "訪問者の履歴を消去しますか？",
+      "clear_body": "プロフィールを見た人がすべて削除され、訪問数はゼロに戻ります。元に戻せません。"
     },
     "sections": {
       "personal_info": "基本情報",

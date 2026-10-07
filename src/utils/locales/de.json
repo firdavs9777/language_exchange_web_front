@@ -313,7 +313,10 @@
       "vipOnly": "VIP-Funktion",
       "vipOnlyDesc": "Sieh, wer dein Profil besucht hat, indem du auf VIP upgradest. Diese Funktion ist exklusiv für VIP-Mitglieder verfügbar.",
       "vipBenefits": "VIP-Vorteile",
-      "learnMore": "Mehr über VIP erfahren"
+      "learnMore": "Mehr über VIP erfahren",
+      "clear": "Verlauf löschen",
+      "clear_title": "Besucherverlauf löschen?",
+      "clear_body": "Alle, die dein Profil angesehen haben, werden entfernt und deine Besuchszähler auf null gesetzt. Das lässt sich nicht rückgängig machen."
     },
     "sections": {
       "personal_info": "Persönliche Informationen",

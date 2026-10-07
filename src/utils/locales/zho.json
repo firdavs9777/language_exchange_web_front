@@ -313,7 +313,10 @@
       "vipOnly": "VIP 专属功能",
       "vipOnlyDesc": "升级 VIP 就能看到谁访问过你的资料。此功能仅面向 VIP 会员开放。",
       "vipBenefits": "VIP 权益",
-      "learnMore": "了解更多 VIP 详情"
+      "learnMore": "了解更多 VIP 详情",
+      "clear": "清除记录",
+      "clear_title": "要清除访客记录吗？",
+      "clear_body": "查看过你主页的人都会被删除，访问计数归零。此操作无法撤销。"
     },
     "sections": {
       "personal_info": "个人信息",

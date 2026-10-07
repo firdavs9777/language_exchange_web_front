@@ -313,7 +313,10 @@
       "vipOnly": "VIP 專屬功能",
       "vipOnlyDesc": "升級 VIP 就能看到誰來看過你的個人檔案。此功能僅開放給 VIP 會員。",
       "vipBenefits": "VIP 權益",
-      "learnMore": "進一步了解 VIP"
+      "learnMore": "進一步了解 VIP",
+      "clear": "清除紀錄",
+      "clear_title": "要清除訪客紀錄嗎？",
+      "clear_body": "看過你個人檔案的人都會被刪除，造訪計數歸零。此操作無法復原。"
     },
     "sections": {
       "personal_info": "個人資訊",

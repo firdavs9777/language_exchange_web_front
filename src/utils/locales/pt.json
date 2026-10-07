@@ -294,7 +294,10 @@
       "vipOnly": "Recurso VIP",
       "vipOnlyDesc": "Veja quem visitou seu perfil fazendo upgrade para VIP. Este recurso está disponível exclusivamente para membros VIP.",
       "vipBenefits": "Benefícios VIP",
-      "learnMore": "Saiba Mais Sobre VIP"
+      "learnMore": "Saiba Mais Sobre VIP",
+      "clear": "Limpar histórico",
+      "clear_title": "Limpar seu histórico de visitas?",
+      "clear_body": "Todas as pessoas que viram seu perfil são removidas e seus contadores voltam a zero. Não é possível desfazer."
     },
     "sections": {
       "personal_info": "Informações Pessoais",

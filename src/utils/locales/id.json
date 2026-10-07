@@ -313,7 +313,10 @@
       "vipOnly": "Fitur VIP",
       "vipOnlyDesc": "Lihat siapa yang mengunjungi profil Anda dengan upgrade ke VIP. Fitur ini tersedia khusus untuk anggota VIP.",
       "vipBenefits": "Manfaat VIP",
-      "learnMore": "Pelajari Lebih Lanjut Tentang VIP"
+      "learnMore": "Pelajari Lebih Lanjut Tentang VIP",
+      "clear": "Hapus riwayat",
+      "clear_title": "Hapus riwayat pengunjung?",
+      "clear_body": "Semua orang yang melihat profilmu akan dihapus dan penghitung kunjungan kembali ke nol. Ini tidak bisa dibatalkan."
     },
     "sections": {
       "personal_info": "Informasi Pribadi",

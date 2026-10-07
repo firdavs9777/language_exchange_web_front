@@ -313,7 +313,10 @@
       "vipOnly": "VIP Feature",
       "vipOnlyDesc": "Tingnan kung sino ang bumisita sa iyong profile sa pamamagitan ng pag-upgrade sa VIP. Ang feature na ito ay eksklusibo para sa mga VIP member.",
       "vipBenefits": "Mga Benepisyo ng VIP",
-      "learnMore": "Alamin pa ang tungkol sa VIP"
+      "learnMore": "Alamin pa ang tungkol sa VIP",
+      "clear": "I-clear ang history",
+      "clear_title": "I-clear ang visitor history mo?",
+      "clear_body": "Maaalis ang lahat ng tumingin sa profile mo at babalik sa zero ang mga counter. Hindi ito maibabalik."
     },
     "sections": {
       "personal_info": "Personal na Impormasyon",

@@ -313,7 +313,10 @@
       "vipOnly": "VIP 전용 기능",
       "vipOnlyDesc": "VIP로 업그레이드하면 내 프로필을 방문한 사람을 볼 수 있어요. VIP 회원만 쓸 수 있는 기능이에요.",
       "vipBenefits": "VIP 혜택",
-      "learnMore": "VIP 자세히 보기"
+      "learnMore": "VIP 자세히 보기",
+      "clear": "기록 지우기",
+      "clear_title": "방문자 기록을 지울까요?",
+      "clear_body": "내 프로필을 본 사람이 모두 삭제되고 방문 수치가 0으로 돌아갑니다. 되돌릴 수 없습니다."
     },
     "sections": {
       "personal_info": "기본 정보",

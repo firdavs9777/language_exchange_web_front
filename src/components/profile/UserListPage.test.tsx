@@ -11,6 +11,7 @@ const mockGetFollowers = jest.fn();
 const mockGetFollowings = jest.fn();
 const mockGetVisitors = jest.fn();
 const mockGetVipStatus = jest.fn();
+const mockClearVisitors = jest.fn();
 const mockGetCommunityDetails = jest.fn();
 const mockFollow = jest.fn();
 const mockUnfollow = jest.fn();
@@ -31,6 +32,7 @@ jest.mock("../../store/slices/usersSlice", () => ({
   useGetProfileVisitorsQuery: (arg: any, opts: any) =>
     mockGetVisitors(arg, opts),
   useGetVipStatusQuery: (arg: any, opts: any) => mockGetVipStatus(arg, opts),
+  useClearVisitorsMutation: () => [mockClearVisitors, { isLoading: false }],
   useFollowUserMutation: () => [mockFollow, { isLoading: false }],
   useUnFollowUserMutation: () => [mockUnfollow, { isLoading: false }],
 }));
@@ -103,6 +105,7 @@ beforeEach(() => {
   mockGetFollowings.mockReturnValue({ ...idle, refetch: followingsRefetch });
   mockGetVisitors.mockReturnValue({ ...idle, refetch: visitorsRefetch });
   mockGetVipStatus.mockReturnValue({ ...idle });
+  mockClearVisitors.mockReturnValue({ unwrap: () => Promise.resolve({ success: true }) });
   mockGetCommunityDetails.mockReturnValue({ ...idle });
   mockFollow.mockReturnValue(resolved());
   mockUnfollow.mockReturnValue(resolved());
@@ -521,6 +524,60 @@ describe("visitors", () => {
       "href",
       "/profile/u5",
     );
+  });
+
+  describe("clearing the history", () => {
+    // DELETE /me/visitors deletes every ProfileVisit row pointing at the owner
+    // and zeroes profileStats. Irreversible, so it asks first.
+    const withRows = () =>
+      mockGetVisitors.mockReturnValue({
+        ...idle,
+        refetch: visitorsRefetch,
+        data: {
+          count: 1,
+          locked: 0,
+          stats: { totalVisits: 42, uniqueVisitors: 17 },
+          data: [{ user: person("u5", "Lin"), lastVisit: new Date().toISOString() }],
+        },
+      });
+
+    it("offers the control only once there is something to clear", () => {
+      mockGetVisitors.mockReturnValue({
+        ...idle,
+        refetch: visitorsRefetch,
+        data: { count: 0, locked: 0, data: [] },
+      });
+      renderList("/visitors", "me");
+      expect(screen.queryByTestId("visitors-clear")).not.toBeInTheDocument();
+
+      withRows();
+      renderList("/visitors", "me");
+      expect(screen.getAllByTestId("visitors-clear").length).toBeGreaterThan(0);
+    });
+
+    it("asks before deleting, and does nothing if the answer is no", () => {
+      withRows();
+      renderList("/visitors", "me");
+      fireEvent.click(screen.getByTestId("visitors-clear"));
+      expect(screen.getByTestId("confirm-dialog-cancel")).toBeInTheDocument();
+      fireEvent.click(screen.getByTestId("confirm-dialog-cancel"));
+      expect(mockClearVisitors).not.toHaveBeenCalled();
+    });
+
+    it("clears and refetches once the answer is yes", async () => {
+      withRows();
+      renderList("/visitors", "me");
+      fireEvent.click(screen.getByTestId("visitors-clear"));
+      fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
+
+      await waitFor(() => expect(mockClearVisitors).toHaveBeenCalledTimes(1));
+      await waitFor(() => expect(visitorsRefetch).toHaveBeenCalled());
+    });
+
+    it("keeps the control off the followers and following tabs", () => {
+      renderList("/followersList", "me");
+      expect(screen.queryByTestId("visitors-clear")).not.toBeInTheDocument();
+    });
   });
 
   it("keeps counting days on an old visit instead of printing a date", () => {

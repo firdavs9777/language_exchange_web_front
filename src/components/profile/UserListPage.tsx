@@ -2,16 +2,18 @@ import React, { useMemo, useState } from "react";
 import { Link, Navigate, useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Crown, Eye, RefreshCw, Search, UserPlus, Users } from "lucide-react";
+import { Crown, Eye, RefreshCw, Search, Trash2, UserPlus, Users } from "lucide-react";
 import PageMeta from "../../seo/PageMeta";
 import SurfaceCard from "../../design/SurfaceCard";
 import Avatar from "../../design/Avatar";
+import ConfirmDialog from "../../design/ConfirmDialog";
 import LanguageExchangePill from "../../design/LanguageExchangePill";
 import useFollowToggle from "./useFollowToggle";
 import {
   useGetFollowersQuery,
   useGetFollowingsQuery,
   useGetProfileVisitorsQuery,
+  useClearVisitorsMutation,
 } from "../../store/slices/usersSlice";
 import { useGetCommunityDetailsQuery } from "../../store/slices/communitySlice";
 import timeAgo from "../../utils/timeAgo";
@@ -285,6 +287,13 @@ const UserListPage: React.FC = () => {
 
   const [query, setQuery] = useState("");
 
+  // DELETE /me/visitors removes every visit to this profile and zeroes the
+  // counters. Irreversible, so it goes through a confirmation, and a failure
+  // stays in the dialog rather than closing it as though it had worked.
+  const [clearVisitors, { isLoading: clearing }] = useClearVisitorsMutation();
+  const [confirmClear, setConfirmClear] = useState(false);
+  const [clearError, setClearError] = useState("");
+
   const followers = useGetFollowersQuery(
     { userId: ownerId },
     { skip: !ownerId || activeTab !== "followers" }
@@ -315,6 +324,21 @@ const UserListPage: React.FC = () => {
     activeTab === "followers" ? followers : activeTab === "following" ? following : visitors;
 
   const rows = useMemo(() => rowsOf(active.data), [active.data]);
+
+  const handleClear = async (): Promise<void> => {
+    setClearError("");
+    try {
+      await clearVisitors(undefined).unwrap();
+      setConfirmClear(false);
+      // The list is not tagged by anything the mutation invalidates, so it is
+      // refetched by hand rather than left showing the people just removed.
+      if (visitors.refetch) visitors.refetch();
+    } catch (error) {
+      setClearError(
+        t("profile.lists.error_body") || "Check your connection and try again."
+      );
+    }
+  };
   const followingIds = useMemo(() => idsOf(viewerFollowing.data), [viewerFollowing.data]);
 
   const needle = query.trim().toLowerCase();
@@ -454,6 +478,20 @@ const UserListPage: React.FC = () => {
               <VisitorStatsRow payload={visitors.data} />
             )}
 
+            {activeTab === "visitors" && !loading && !failed && rows.length > 0 && (
+              <div className="flex justify-end pb-2">
+                <button
+                  type="button"
+                  data-testid="visitors-clear"
+                  onClick={() => setConfirmClear(true)}
+                  className="inline-flex min-h-[40px] items-center gap-1.5 rounded-chip px-3 text-sm font-semibold text-ink-500 hover:bg-ink-50 hover:text-ink-700 dark:text-ink-400 dark:hover:bg-white/5"
+                >
+                  <Trash2 className="h-4 w-4" aria-hidden />
+                  {t("profile.visitors.clear") || "Clear history"}
+                </button>
+              </div>
+            )}
+
             {loading && <ListSkeleton />}
 
             {failed && (
@@ -529,6 +567,25 @@ const UserListPage: React.FC = () => {
           </SurfaceCard>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={confirmClear}
+        danger
+        title={t("profile.visitors.clear_title") || "Clear your visitor history?"}
+        body={
+          t("profile.visitors.clear_body") ||
+          "Everyone who viewed your profile is removed, and your visit counters go back to zero. This cannot be undone."
+        }
+        confirmLabel={t("profile.visitors.clear") || "Clear history"}
+        cancelLabel={t("profile.actions.cancel") || "Cancel"}
+        busy={clearing}
+        error={clearError || undefined}
+        onConfirm={handleClear}
+        onCancel={() => {
+          setConfirmClear(false);
+          setClearError("");
+        }}
+      />
     </div>
   );
 };
