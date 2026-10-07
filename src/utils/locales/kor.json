@@ -485,7 +485,8 @@
       "intent_learn": "배우러 왔어요",
       "intent_meet": "사람들을 만나고 싶어요",
       "intent_date": "데이트에 열려 있어요",
-      "intent_privacy_note": "선택한 항목이 표시됩니다. 데이트는 비공개로 유지됩니다."
+      "intent_privacy_note": "선택한 항목이 표시됩니다. 데이트는 비공개로 유지됩니다.",
+      "completion": "프로필 완성도"
     },
     "myMoments": {
       "title": "내 모멘트",

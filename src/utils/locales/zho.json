@@ -485,7 +485,8 @@
       "intent_learn": "来学习",
       "intent_meet": "想认识新朋友",
       "intent_date": "对约会持开放态度",
-      "intent_privacy_note": "你的选择会公开显示，约会除外，它会保持私密。"
+      "intent_privacy_note": "你的选择会公开显示，约会除外，它会保持私密。",
+      "completion": "资料完成度"
     },
     "myMoments": {
       "title": "我的动态",

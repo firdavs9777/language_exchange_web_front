@@ -485,7 +485,8 @@
       "intent_learn": "Di sini untuk belajar",
       "intent_meet": "Terbuka untuk berkenalan",
       "intent_date": "Terbuka untuk kencan",
-      "intent_privacy_note": "Orang lain melihat pilihanmu, kecuali kencan yang tetap privat."
+      "intent_privacy_note": "Orang lain melihat pilihanmu, kecuali kencan yang tetap privat.",
+      "completion": "Kelengkapan Profil"
     },
     "myMoments": {
       "title": "Momen saya",

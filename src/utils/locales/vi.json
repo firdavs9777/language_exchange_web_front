@@ -485,7 +485,8 @@
       "intent_learn": "Ở đây để học",
       "intent_meet": "Muốn gặp gỡ mọi người",
       "intent_date": "Sẵn sàng hẹn hò",
-      "intent_privacy_note": "Người khác thấy lựa chọn của bạn, trừ hẹn hò — mục đó được giữ riêng tư."
+      "intent_privacy_note": "Người khác thấy lựa chọn của bạn, trừ hẹn hò — mục đó được giữ riêng tư.",
+      "completion": "Hoàn thành hồ sơ"
     },
     "myMoments": {
       "title": "Khoảnh khắc của tôi",

@@ -466,7 +466,8 @@
       "intent_learn": "Qui per imparare",
       "intent_meet": "Aperto a conoscere gente",
       "intent_date": "Aperto agli appuntamenti",
-      "intent_privacy_note": "Gli altri vedono le tue scelte, tranne gli appuntamenti, che restano privati."
+      "intent_privacy_note": "Gli altri vedono le tue scelte, tranne gli appuntamenti, che restano privati.",
+      "completion": "Completamento profilo"
     },
     "myMoments": {
       "title": "I miei momenti",

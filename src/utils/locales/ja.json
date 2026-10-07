@@ -485,7 +485,8 @@
       "intent_learn": "学びに来ました",
       "intent_meet": "人と出会いたい",
       "intent_date": "デートに興味があります",
-      "intent_privacy_note": "選んだ内容は表示されます。デートは非公開です。"
+      "intent_privacy_note": "選んだ内容は表示されます。デートは非公開です。",
+      "completion": "プロフィール完成度"
     },
     "myMoments": {
       "title": "マイモーメント",

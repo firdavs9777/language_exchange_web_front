@@ -485,7 +485,8 @@
       "intent_learn": "Öğrenmek için buradayım",
       "intent_meet": "Yeni insanlarla tanışmaya açığım",
       "intent_date": "Flörte açığım",
-      "intent_privacy_note": "Seçimlerini başkaları görür; flört seçeneği gizli kalır."
+      "intent_privacy_note": "Seçimlerini başkaları görür; flört seçeneği gizli kalır.",
+      "completion": "Profil Tamamlama"
     },
     "myMoments": {
       "title": "Anlarım",

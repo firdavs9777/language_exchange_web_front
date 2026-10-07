@@ -485,7 +485,8 @@
       "intent_learn": "Narito para matuto",
       "intent_meet": "Bukas makipagkilala",
       "intent_date": "Bukas sa pakikipag-date",
-      "intent_privacy_note": "Nakikita ng iba ang pinili mo, maliban sa pakikipag-date na nananatiling pribado."
+      "intent_privacy_note": "Nakikita ng iba ang pinili mo, maliban sa pakikipag-date na nananatiling pribado.",
+      "completion": "Pagkumpleto ng Profile"
     },
     "myMoments": {
       "title": "Mga Sandali Ko",
