@@ -1285,6 +1285,23 @@
       "premium": "Premium",
       "features": "Mga Feature",
       "upgrade": "Mag-upgrade sa VIP"
+    },
+    "password": {
+      "title": "Baguhin ang password",
+      "current": "Kasalukuyang password",
+      "current_hint": "Ilagay ang kasalukuyang password",
+      "new": "Bagong password",
+      "new_hint": "Hindi bababa sa 8 character, A-Z, a-z, 0-9",
+      "confirm": "Kumpirmahin ang bagong password",
+      "confirm_hint": "Ilagay muli ang bagong password",
+      "rule_upper": "Isang malaking titik",
+      "rule_lower": "Isang maliit na titik",
+      "rule_number": "Isang numero",
+      "mismatch": "Hindi tugma ang mga password.",
+      "same_as_current": "Dapat iba ang bagong password sa kasalukuyan.",
+      "success": "Matagumpay na nabago ang password",
+      "failed": "Hindi na-update",
+      "symbols": "Ito lang ang mga simbolong pinapayagan: @ $ ! % * ? &"
     }
   },
   "waves": {

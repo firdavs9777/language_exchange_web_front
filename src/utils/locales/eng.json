@@ -1285,6 +1285,23 @@
       "premium": "Premium",
       "features": "Features",
       "upgrade": "Upgrade to VIP"
+    },
+    "password": {
+      "title": "Change password",
+      "current": "Current password",
+      "current_hint": "Enter your current password",
+      "new": "New password",
+      "new_hint": "At least 8 chars, A-Z, a-z, 0-9",
+      "confirm": "Confirm new password",
+      "confirm_hint": "Re-enter the new password",
+      "rule_upper": "One uppercase letter",
+      "rule_lower": "One lowercase letter",
+      "rule_number": "One number",
+      "mismatch": "Passwords don't match.",
+      "same_as_current": "New password must be different from current.",
+      "success": "Password changed successfully",
+      "failed": "Failed to update",
+      "symbols": "Only these symbols are allowed: @ $ ! % * ? &"
     }
   },
   "waves": {

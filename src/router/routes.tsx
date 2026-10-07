@@ -100,6 +100,7 @@ const VipSettings = lazyWithRetry("../components/settings/VipSettings", () => im
 const LanguageSettings = lazyWithRetry("../components/settings/LanguageSettings", () => import("../components/settings/LanguageSettings"));
 const BlockedUsers = lazyWithRetry("../components/settings/BlockedUsers", () => import("../components/settings/BlockedUsers"));
 const CloseFriends = lazyWithRetry("../components/settings/CloseFriends", () => import("../components/settings/CloseFriends"));
+const ChangePassword = lazyWithRetry("../components/settings/ChangePassword", () => import("../components/settings/ChangePassword"));
 
 // Community, authenticated. /communities itself (MainCommnity, which renders
 // PublicCommunities for logged-out visitors) is prerendered and stays eager.
@@ -247,6 +248,7 @@ export const routes = createRoutesFromElements(
     {/* Settings */}
     <Route path="settings" element={lazyRoute(<Settings />)} />
     <Route path="settings/privacy" element={lazyRoute(<PrivacySettings />)} />
+    <Route path="settings/password" element={lazyRoute(<ChangePassword />)} />
     <Route path="settings/notifications" element={lazyRoute(<NotificationSettings />)} />
     <Route path="settings/vip" element={lazyRoute(<VipSettings />)} />
     <Route path="settings/language" element={lazyRoute(<LanguageSettings />)} />

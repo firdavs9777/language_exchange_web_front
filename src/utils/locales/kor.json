@@ -1285,6 +1285,23 @@
       "premium": "프리미엄",
       "features": "혜택",
       "upgrade": "VIP로 업그레이드"
+    },
+    "password": {
+      "title": "비밀번호 변경",
+      "current": "현재 비밀번호",
+      "current_hint": "현재 비밀번호를 입력하세요",
+      "new": "새 비밀번호",
+      "new_hint": "최소 8자, A-Z, a-z, 0-9",
+      "confirm": "새 비밀번호 확인",
+      "confirm_hint": "새 비밀번호를 다시 입력하세요",
+      "rule_upper": "대문자 1자",
+      "rule_lower": "소문자 1자",
+      "rule_number": "숫자 1자",
+      "mismatch": "비밀번호가 일치하지 않습니다.",
+      "same_as_current": "새 비밀번호는 현재 비밀번호와 달라야 합니다.",
+      "success": "비밀번호가 성공적으로 변경되었습니다",
+      "failed": "업데이트 실패",
+      "symbols": "사용할 수 있는 기호는 @ $ ! % * ? & 뿐입니다"
     }
   },
   "waves": {

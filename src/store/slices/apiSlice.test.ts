@@ -155,3 +155,50 @@ it("logs out on a 401 with no refresh token", async () => {
   expect(calls).toHaveLength(1);
   expect((store.getState() as any).auth.userInfo).toBeNull();
 });
+
+// PUT /auth/updatepassword answers 401 for a wrong CURRENT password — the
+// controller's own "Current password is incorrect", not `protect`'s expired
+// token. Read as an expired session, a typo in that field would refresh and
+// re-send the password change (logging a second PASSWORD_UPDATE_FAILED
+// security event against the account) or, with no refresh token stored, sign
+// the user out mid-form. The caller gets the 401 and the server's message.
+const passwordSlice: any = apiSlice.injectEndpoints({
+  endpoints: (builder: any) => ({
+    probePassword: builder.mutation({
+      query: () => ({
+        url: "/api/v1/auth/updatepassword",
+        method: "PUT",
+        body: { currentPassword: "wrong", newPassword: "Abcdefg1" },
+      }),
+      extraOptions: { maxRetries: 0 },
+    }),
+  }),
+});
+
+it("hands a wrong current password back to the form instead of refreshing", async () => {
+  const calls = mockFetch([
+    { status: 401, body: { success: false, message: "Current password is incorrect" } },
+  ]);
+  const store = makeStore();
+
+  const result: any = await store.dispatch(
+    passwordSlice.endpoints.probePassword.initiate({})
+  );
+
+  expect(calls).toHaveLength(1);
+  expect(result.error.status).toBe(401);
+  expect(result.error.data.message).toBe("Current password is incorrect");
+  expect((store.getState() as any).auth.userInfo.token).toBe("old-token");
+});
+
+it("does not sign anyone out over a mistyped current password", async () => {
+  const calls = mockFetch([
+    { status: 401, body: { success: false, message: "Current password is incorrect" } },
+  ]);
+  const store = makeStore({ user: { _id: "me" }, token: "old-token" });
+
+  await store.dispatch(passwordSlice.endpoints.probePassword.initiate({}));
+
+  expect(calls).toHaveLength(1);
+  expect((store.getState() as any).auth.userInfo).toBeTruthy();
+});

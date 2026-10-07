@@ -1267,6 +1267,23 @@
       "premium": "Premium",
       "features": "Recursos",
       "upgrade": "Fazer Upgrade para VIP"
+    },
+    "password": {
+      "title": "Alterar senha",
+      "current": "Senha atual",
+      "current_hint": "Digite sua senha atual",
+      "new": "Nova senha",
+      "new_hint": "Pelo menos 8 caracteres, A-Z, a-z, 0-9",
+      "confirm": "Confirmar nova senha",
+      "confirm_hint": "Digite a nova senha novamente",
+      "rule_upper": "Uma letra maiúscula",
+      "rule_lower": "Uma letra minúscula",
+      "rule_number": "Um número",
+      "mismatch": "As senhas não coincidem.",
+      "same_as_current": "A nova senha deve ser diferente da atual.",
+      "success": "Senha alterada com sucesso",
+      "failed": "Falha ao atualizar",
+      "symbols": "Apenas estes símbolos são permitidos: @ $ ! % * ? &"
     }
   },
   "waves": {

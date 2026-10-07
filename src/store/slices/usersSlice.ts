@@ -200,6 +200,18 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       providesTags: ["User"],
     }),
 
+    // PUT /auth/updatepassword. A 401 here is the controller's "Current
+    // password is incorrect", and apiSlice's reauth wrapper is told not to read
+    // it as an expired session (see CREDENTIAL_CHECKS there). The success body
+    // is a fresh sendTokenResponse: { token, refreshToken?, user }.
+    updatePassword: builder.mutation({
+      query: (body: { currentPassword: string; newPassword: string }) => ({
+        url: "/api/v1/auth/updatepassword",
+        method: "PUT",
+        body,
+      }),
+    }),
+
     // Profile Visitors
     //
     // `controllers/profileVisits.js` reads `source` and `deviceType` off the
@@ -391,6 +403,7 @@ export const {
   useDeleteUserPhotoMutation,
   // New hooks
   useRecordProfileVisitMutation,
+  useUpdatePasswordMutation,
   useGetProfileVisitorsQuery,
   useGetMyVisitorStatsQuery,
   useClearVisitorsMutation,
