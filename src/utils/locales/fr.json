@@ -294,7 +294,10 @@
       "vipOnly": "Fonctionnalité VIP",
       "vipOnlyDesc": "Découvrez qui a visité votre profil en passant à VIP. Cette fonctionnalité est réservée aux membres VIP.",
       "vipBenefits": "Avantages VIP",
-      "learnMore": "En savoir plus sur le VIP"
+      "learnMore": "En savoir plus sur le VIP",
+      "clear": "Effacer l'historique",
+      "clear_title": "Effacer votre historique de visites ?",
+      "clear_body": "Toutes les personnes ayant vu votre profil sont supprimées et vos compteurs reviennent à zéro. Cette action est irréversible."
     },
     "sections": {
       "personal_info": "Informations personnelles",

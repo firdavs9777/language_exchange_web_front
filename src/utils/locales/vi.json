@@ -313,7 +313,10 @@
       "vipOnly": "Tính Năng VIP",
       "vipOnlyDesc": "Xem ai đã truy cập hồ sơ của bạn bằng cách nâng cấp lên VIP. Tính năng này chỉ dành riêng cho thành viên VIP.",
       "vipBenefits": "Quyền Lợi VIP",
-      "learnMore": "Tìm Hiểu Thêm Về VIP"
+      "learnMore": "Tìm Hiểu Thêm Về VIP",
+      "clear": "Xoá lịch sử",
+      "clear_title": "Xoá lịch sử người xem?",
+      "clear_body": "Tất cả những người đã xem hồ sơ của bạn sẽ bị xoá và bộ đếm lượt xem trở về 0. Không thể hoàn tác."
     },
     "sections": {
       "personal_info": "Thông Tin Cá Nhân",
