@@ -6,7 +6,6 @@ import {
   AiOutlineComment,
   AiOutlineLike,
 } from "react-icons/ai";
-import { HiDotsHorizontal } from "react-icons/hi";
 import { Bookmark, Heart, Smile } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -24,6 +23,7 @@ import {
 } from "../../store/slices/momentsSlice";
 import { useTargetLanguage } from "../../hooks/useTargetLanguage";
 import { useMomentViews } from "./useMomentViews";
+import MomentOverflowMenu from "./actions/MomentOverflowMenu";
 import TranslatableText from "./TranslatableText";
 import MomentReactionRow from "./actions/MomentReactionRow";
 import ShareButton from "../linking/ShareButton";
@@ -408,12 +408,7 @@ const SingleMoment: React.FC<MomentProps> = ({
               </div>
             </div>
 
-            <button
-              className="flex-shrink-0 p-1 xs:p-2 -mr-1 xs:-mr-2 rounded-full hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-200"
-              aria-label="More options"
-            >
-              <HiDotsHorizontal className="w-4 h-4 xs:w-5 xs:h-5 text-gray-500" />
-            </button>
+            <MomentOverflowMenu momentId={_id} author={user} />
           </div>
         </header>
 

@@ -23,6 +23,7 @@ import MomentReactionRow from "./actions/MomentReactionRow";
 import MomentVideoPlayer from "./media/MomentVideoPlayer";
 import VoiceNotePlayer from "./media/VoiceNotePlayer";
 import GradientMomentCard from "./media/GradientMomentCard";
+import MomentOverflowMenu from "./actions/MomentOverflowMenu";
 import TranslatableText from "./TranslatableText";
 import CommentList from "./comments/CommentList";
 import AdUnit from "../ads/AdUnit";
@@ -576,6 +577,7 @@ const MomentDetail: React.FC = () => {
                 {formattedDate}
               </p>
             </div>
+            <MomentOverflowMenu momentId={momentDetails._id} author={momentDetails.user} />
           </div>
 
           {/* Moment Content */}
