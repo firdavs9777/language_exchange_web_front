@@ -649,6 +649,98 @@
       "reply": "Balas",
       "replyPlaceholder": "Tulis balasan…",
       "viewReplies": "Lihat {{count}} balasan"
+    },
+    "filters": {
+      "button": "Filter",
+      "searchPlaceholder": "Cari momen",
+      "search": "Cari",
+      "category": "Kategori",
+      "language": "Bahasa",
+      "mood": "Suasana hati",
+      "tag": "Tag",
+      "tagPlaceholder": "Tag apa saja",
+      "any": "Semua",
+      "clear": "Hapus filter",
+      "emptyTitle": "Tidak ada momen yang cocok dengan filter ini",
+      "emptyBody": "Coba hapus satu filter atau cari hal lain."
+    },
+    "categories": {
+      "general": "Umum",
+      "language-learning": "Belajar bahasa",
+      "culture": "Budaya",
+      "food": "Makanan",
+      "travel": "Perjalanan",
+      "music": "Musik",
+      "books": "Buku",
+      "hobbies": "Hobi",
+      "daily-life": "Kehidupan sehari-hari",
+      "technology": "Teknologi",
+      "entertainment": "Hiburan",
+      "sports": "Olahraga",
+      "movies": "Film",
+      "study": "Belajar",
+      "work": "Kerja",
+      "question": "Pertanyaan"
+    },
+    "moods": {
+      "happy": "Senang",
+      "excited": "Bersemangat",
+      "grateful": "Bersyukur",
+      "motivated": "Termotivasi",
+      "relaxed": "Santai",
+      "curious": "Penasaran",
+      "sad": "Sedih",
+      "love": "Jatuh cinta",
+      "funny": "Lucu",
+      "thoughtful": "Merenung",
+      "cool": "Keren",
+      "tired": "Lelah"
+    },
+    "report": {
+      "menu": "Opsi lainnya",
+      "report": "Laporkan",
+      "title": "Laporkan momen ini",
+      "reasonLabel": "Kenapa kamu melaporkannya?",
+      "descriptionLabel": "Ada lagi? (opsional)",
+      "submit": "Kirim laporan",
+      "cancel": "Batal",
+      "sent": "Terima kasih — moderator kami akan meninjaunya.",
+      "already": "Kamu sudah melaporkan momen ini.",
+      "failed": "Laporan gagal dikirim. Coba lagi.",
+      "reasons": {
+        "spam": "Spam",
+        "harassment": "Pelecehan",
+        "hate_speech": "Ujaran kebencian",
+        "violence": "Kekerasan",
+        "nudity": "Ketelanjangan",
+        "false_information": "Informasi palsu",
+        "copyright": "Hak cipta",
+        "other": "Lainnya"
+      }
+    },
+    "schedule": {
+      "label": "Jadwalkan",
+      "hint": "Biarkan kosong untuk posting sekarang",
+      "past": "Pilih waktu di masa depan",
+      "badge": "Dijadwalkan untuk {{time}}",
+      "clear": "Posting sekarang saja"
+    },
+    "fields": {
+      "privacy": "Siapa yang bisa melihat",
+      "privacyPublic": "Semua orang",
+      "privacyFriends": "Teman",
+      "privacyPrivate": "Hanya saya",
+      "background": "Latar",
+      "backgroundNone": "Tidak ada",
+      "location": "Lokasi",
+      "addLocation": "Tambahkan lokasiku",
+      "removeLocation": "Hapus lokasi",
+      "noMood": "Tanpa suasana hati",
+      "tags": "Tag",
+      "tagPlaceholder": "Tambahkan tag…",
+      "addTag": "Tambah",
+      "tagsUsed": "{{count}}/5 tag",
+      "tagsMax": "Maksimal 5 tag"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "Perbarui Momen",
       "updatingButton": "Memperbarui...",
       "cancelButton": "Batal",
-      "removeImage": "Hapus gambar"
+      "removeImage": "Hapus gambar",
+      "nothingToSave": "Belum ada yang diubah",
+      "descriptionRequired": "Deskripsi wajib diisi"
+    },
+    "media": {
+      "video": "Video",
+      "audio": "Pesan suara",
+      "replace": "Ganti",
+      "remove": "Hapus",
+      "removeVideoTitle": "Hapus videonya?",
+      "removeAudioTitle": "Hapus pesan suaranya?",
+      "removeBody": "Ini tidak bisa dibatalkan.",
+      "done": "Diperbarui",
+      "failed": "Gagal. Coba lagi."
     }
   },
   "authentication": {

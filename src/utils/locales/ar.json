@@ -649,6 +649,98 @@
       "reply": "رد",
       "replyPlaceholder": "اكتب ردًا…",
       "viewReplies": "عرض {{count}} من الردود"
+    },
+    "filters": {
+      "button": "عوامل التصفية",
+      "searchPlaceholder": "ابحث في اللحظات",
+      "search": "بحث",
+      "category": "الفئة",
+      "language": "اللغة",
+      "mood": "المزاج",
+      "tag": "الوسم",
+      "tagPlaceholder": "أي وسم",
+      "any": "الكل",
+      "clear": "مسح عوامل التصفية",
+      "emptyTitle": "لا توجد لحظات تطابق عوامل التصفية هذه",
+      "emptyBody": "جرّب إزالة أحد عوامل التصفية أو البحث عن شيء آخر."
+    },
+    "categories": {
+      "general": "عام",
+      "language-learning": "تعلّم اللغات",
+      "culture": "ثقافة",
+      "food": "طعام",
+      "travel": "سفر",
+      "music": "موسيقى",
+      "books": "كتب",
+      "hobbies": "هوايات",
+      "daily-life": "الحياة اليومية",
+      "technology": "تقنية",
+      "entertainment": "ترفيه",
+      "sports": "رياضة",
+      "movies": "أفلام",
+      "study": "دراسة",
+      "work": "عمل",
+      "question": "سؤال"
+    },
+    "moods": {
+      "happy": "سعيد",
+      "excited": "متحمس",
+      "grateful": "ممتن",
+      "motivated": "متحفز",
+      "relaxed": "مسترخٍ",
+      "curious": "فضولي",
+      "sad": "حزين",
+      "love": "عاشق",
+      "funny": "مضحك",
+      "thoughtful": "متأمل",
+      "cool": "رائع",
+      "tired": "متعب"
+    },
+    "report": {
+      "menu": "خيارات أخرى",
+      "report": "إبلاغ",
+      "title": "الإبلاغ عن هذه اللحظة",
+      "reasonLabel": "لماذا تبلغ عنها؟",
+      "descriptionLabel": "هل هناك شيء آخر؟ (اختياري)",
+      "submit": "إرسال البلاغ",
+      "cancel": "إلغاء",
+      "sent": "شكرًا — سيراجعه المشرفون.",
+      "already": "لقد أبلغت عن هذه اللحظة من قبل.",
+      "failed": "تعذّر إرسال البلاغ. حاول مرة أخرى.",
+      "reasons": {
+        "spam": "رسائل مزعجة",
+        "harassment": "تحرش",
+        "hate_speech": "خطاب كراهية",
+        "violence": "عنف",
+        "nudity": "عُري",
+        "false_information": "معلومات كاذبة",
+        "copyright": "حقوق النشر",
+        "other": "سبب آخر"
+      }
+    },
+    "schedule": {
+      "label": "جدولة",
+      "hint": "اتركه فارغًا للنشر الآن",
+      "past": "اختر وقتًا في المستقبل",
+      "badge": "مجدولة في {{time}}",
+      "clear": "النشر الآن بدلًا من ذلك"
+    },
+    "fields": {
+      "privacy": "من يمكنه رؤيتها",
+      "privacyPublic": "الجميع",
+      "privacyFriends": "الأصدقاء",
+      "privacyPrivate": "أنا فقط",
+      "background": "الخلفية",
+      "backgroundNone": "بلا",
+      "location": "الموقع",
+      "addLocation": "إضافة موقعي",
+      "removeLocation": "إزالة الموقع",
+      "noMood": "بلا مزاج",
+      "tags": "الوسوم",
+      "tagPlaceholder": "أضف وسمًا…",
+      "addTag": "إضافة",
+      "tagsUsed": "{{count}}/5 وسوم",
+      "tagsMax": "5 وسوم كحد أقصى"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "تحديث اللحظة",
       "updatingButton": "جارٍ التحديث...",
       "cancelButton": "إلغاء",
-      "removeImage": "إزالة الصورة"
+      "removeImage": "إزالة الصورة",
+      "nothingToSave": "لا يوجد ما يتغير بعد",
+      "descriptionRequired": "الوصف مطلوب"
+    },
+    "media": {
+      "video": "فيديو",
+      "audio": "ملاحظة صوتية",
+      "replace": "استبدال",
+      "remove": "إزالة",
+      "removeVideoTitle": "إزالة الفيديو؟",
+      "removeAudioTitle": "إزالة الملاحظة الصوتية؟",
+      "removeBody": "لا يمكن التراجع عن هذا.",
+      "done": "تم التحديث",
+      "failed": "لم ينجح ذلك. حاول مرة أخرى."
     }
   },
   "authentication": {

@@ -649,6 +649,98 @@
       "reply": "Sagot",
       "replyPlaceholder": "Sumulat ng sagot…",
       "viewReplies": "Tingnan ang {{count}} sagot"
+    },
+    "filters": {
+      "button": "Mga filter",
+      "searchPlaceholder": "Maghanap ng moments",
+      "search": "Hanapin",
+      "category": "Kategorya",
+      "language": "Wika",
+      "mood": "Mood",
+      "tag": "Tag",
+      "tagPlaceholder": "Kahit anong tag",
+      "any": "Lahat",
+      "clear": "I-clear ang mga filter",
+      "emptyTitle": "Walang moment na tugma sa mga filter na ito",
+      "emptyBody": "Subukang mag-alis ng filter o maghanap ng iba."
+    },
+    "categories": {
+      "general": "Pangkalahatan",
+      "language-learning": "Pag-aaral ng wika",
+      "culture": "Kultura",
+      "food": "Pagkain",
+      "travel": "Paglalakbay",
+      "music": "Musika",
+      "books": "Mga libro",
+      "hobbies": "Mga libangan",
+      "daily-life": "Pang-araw-araw",
+      "technology": "Teknolohiya",
+      "entertainment": "Libangan",
+      "sports": "Sports",
+      "movies": "Mga pelikula",
+      "study": "Pag-aaral",
+      "work": "Trabaho",
+      "question": "Tanong"
+    },
+    "moods": {
+      "happy": "Masaya",
+      "excited": "Excited",
+      "grateful": "Nagpapasalamat",
+      "motivated": "Motivated",
+      "relaxed": "Relaxed",
+      "curious": "Curious",
+      "sad": "Malungkot",
+      "love": "In love",
+      "funny": "Nakakatawa",
+      "thoughtful": "Nag-iisip",
+      "cool": "Cool",
+      "tired": "Pagod"
+    },
+    "report": {
+      "menu": "Iba pang opsyon",
+      "report": "I-report",
+      "title": "I-report ang moment na ito",
+      "reasonLabel": "Bakit mo ito nire-report?",
+      "descriptionLabel": "May iba pa? (opsyonal)",
+      "submit": "Ipadala ang report",
+      "cancel": "Kanselahin",
+      "sent": "Salamat — titingnan ito ng aming mga moderator.",
+      "already": "Na-report mo na ang moment na ito.",
+      "failed": "Hindi naipadala ang report. Subukan ulit.",
+      "reasons": {
+        "spam": "Spam",
+        "harassment": "Panliligalig",
+        "hate_speech": "Mapoot na pananalita",
+        "violence": "Karahasan",
+        "nudity": "Kahubaran",
+        "false_information": "Maling impormasyon",
+        "copyright": "Copyright",
+        "other": "Iba pa"
+      }
+    },
+    "schedule": {
+      "label": "I-schedule",
+      "hint": "Iwanang blangko para i-post ngayon",
+      "past": "Pumili ng oras sa hinaharap",
+      "badge": "Naka-schedule sa {{time}}",
+      "clear": "I-post na lang ngayon"
+    },
+    "fields": {
+      "privacy": "Sino ang makakakita",
+      "privacyPublic": "Lahat",
+      "privacyFriends": "Mga kaibigan",
+      "privacyPrivate": "Ako lang",
+      "background": "Background",
+      "backgroundNone": "Wala",
+      "location": "Lokasyon",
+      "addLocation": "Idagdag ang lokasyon ko",
+      "removeLocation": "Alisin ang lokasyon",
+      "noMood": "Walang mood",
+      "tags": "Mga tag",
+      "tagPlaceholder": "Magdagdag ng tag…",
+      "addTag": "Idagdag",
+      "tagsUsed": "{{count}}/5 tag",
+      "tagsMax": "Hanggang 5 tag lang"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "I-update ang Sandali",
       "updatingButton": "Nag-a-update...",
       "cancelButton": "Kanselahin",
-      "removeImage": "Alisin ang larawan"
+      "removeImage": "Alisin ang larawan",
+      "nothingToSave": "Wala pang babaguhin",
+      "descriptionRequired": "Kailangan ng paglalarawan"
+    },
+    "media": {
+      "video": "Video",
+      "audio": "Voice note",
+      "replace": "Palitan",
+      "remove": "Alisin",
+      "removeVideoTitle": "Alisin ang video?",
+      "removeAudioTitle": "Alisin ang voice note?",
+      "removeBody": "Hindi na ito maibabalik.",
+      "done": "Na-update",
+      "failed": "Hindi gumana. Subukan ulit."
     }
   },
   "authentication": {

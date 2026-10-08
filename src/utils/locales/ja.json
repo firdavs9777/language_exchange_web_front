@@ -649,6 +649,98 @@
       "reply": "返信",
       "replyPlaceholder": "返信を入力…",
       "viewReplies": "返信を{{count}}件見る"
+    },
+    "filters": {
+      "button": "フィルター",
+      "searchPlaceholder": "モーメントを検索",
+      "search": "検索",
+      "category": "カテゴリー",
+      "language": "言語",
+      "mood": "気分",
+      "tag": "タグ",
+      "tagPlaceholder": "すべてのタグ",
+      "any": "すべて",
+      "clear": "フィルターをクリア",
+      "emptyTitle": "条件に合うモーメントがありません",
+      "emptyBody": "フィルターを外すか、別のキーワードで検索してみてください。"
+    },
+    "categories": {
+      "general": "一般",
+      "language-learning": "語学学習",
+      "culture": "文化",
+      "food": "グルメ",
+      "travel": "旅行",
+      "music": "音楽",
+      "books": "本",
+      "hobbies": "趣味",
+      "daily-life": "日常",
+      "technology": "テクノロジー",
+      "entertainment": "エンタメ",
+      "sports": "スポーツ",
+      "movies": "映画",
+      "study": "勉強",
+      "work": "仕事",
+      "question": "質問"
+    },
+    "moods": {
+      "happy": "ハッピー",
+      "excited": "ワクワク",
+      "grateful": "感謝",
+      "motivated": "やる気",
+      "relaxed": "リラックス",
+      "curious": "興味津々",
+      "sad": "悲しい",
+      "love": "恋してる",
+      "funny": "おもしろい",
+      "thoughtful": "考え中",
+      "cool": "クール",
+      "tired": "疲れた"
+    },
+    "report": {
+      "menu": "その他のオプション",
+      "report": "報告",
+      "title": "このモーメントを報告",
+      "reasonLabel": "報告の理由は？",
+      "descriptionLabel": "補足があれば（任意）",
+      "submit": "報告を送信",
+      "cancel": "キャンセル",
+      "sent": "ありがとうございます。モデレーターが確認します。",
+      "already": "このモーメントはすでに報告済みです。",
+      "failed": "報告を送信できませんでした。もう一度お試しください。",
+      "reasons": {
+        "spam": "スパム",
+        "harassment": "嫌がらせ",
+        "hate_speech": "ヘイトスピーチ",
+        "violence": "暴力",
+        "nudity": "ヌード",
+        "false_information": "誤った情報",
+        "copyright": "著作権",
+        "other": "その他"
+      }
+    },
+    "schedule": {
+      "label": "予約投稿",
+      "hint": "空欄ならすぐに投稿されます",
+      "past": "未来の日時を選んでください",
+      "badge": "{{time}} に予約済み",
+      "clear": "今すぐ投稿する"
+    },
+    "fields": {
+      "privacy": "公開範囲",
+      "privacyPublic": "全員",
+      "privacyFriends": "友達",
+      "privacyPrivate": "自分のみ",
+      "background": "背景",
+      "backgroundNone": "なし",
+      "location": "位置情報",
+      "addLocation": "現在地を追加",
+      "removeLocation": "位置情報を削除",
+      "noMood": "気分なし",
+      "tags": "タグ",
+      "tagPlaceholder": "タグを追加…",
+      "addTag": "追加",
+      "tagsUsed": "タグ {{count}}/5",
+      "tagsMax": "タグは最大5個です"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "モーメントを更新",
       "updatingButton": "更新中…",
       "cancelButton": "キャンセル",
-      "removeImage": "画像を削除"
+      "removeImage": "画像を削除",
+      "nothingToSave": "まだ変更はありません",
+      "descriptionRequired": "説明を入力してください"
+    },
+    "media": {
+      "video": "動画",
+      "audio": "ボイスメモ",
+      "replace": "差し替え",
+      "remove": "削除",
+      "removeVideoTitle": "動画を削除しますか？",
+      "removeAudioTitle": "ボイスメモを削除しますか？",
+      "removeBody": "この操作は取り消せません。",
+      "done": "更新しました",
+      "failed": "うまくいきませんでした。もう一度お試しください。"
     }
   },
   "authentication": {

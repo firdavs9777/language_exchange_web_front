@@ -649,6 +649,98 @@
       "reply": "Phản hồi",
       "replyPlaceholder": "Viết phản hồi…",
       "viewReplies": "Xem {{count}} phản hồi"
+    },
+    "filters": {
+      "button": "Bộ lọc",
+      "searchPlaceholder": "Tìm khoảnh khắc",
+      "search": "Tìm",
+      "category": "Danh mục",
+      "language": "Ngôn ngữ",
+      "mood": "Tâm trạng",
+      "tag": "Thẻ",
+      "tagPlaceholder": "Thẻ bất kỳ",
+      "any": "Tất cả",
+      "clear": "Xóa bộ lọc",
+      "emptyTitle": "Không có khoảnh khắc nào khớp với bộ lọc này",
+      "emptyBody": "Hãy thử bỏ một bộ lọc hoặc tìm thứ khác."
+    },
+    "categories": {
+      "general": "Chung",
+      "language-learning": "Học ngôn ngữ",
+      "culture": "Văn hóa",
+      "food": "Ẩm thực",
+      "travel": "Du lịch",
+      "music": "Âm nhạc",
+      "books": "Sách",
+      "hobbies": "Sở thích",
+      "daily-life": "Đời sống hằng ngày",
+      "technology": "Công nghệ",
+      "entertainment": "Giải trí",
+      "sports": "Thể thao",
+      "movies": "Phim",
+      "study": "Học tập",
+      "work": "Công việc",
+      "question": "Câu hỏi"
+    },
+    "moods": {
+      "happy": "Vui vẻ",
+      "excited": "Hào hứng",
+      "grateful": "Biết ơn",
+      "motivated": "Có động lực",
+      "relaxed": "Thư giãn",
+      "curious": "Tò mò",
+      "sad": "Buồn",
+      "love": "Đang yêu",
+      "funny": "Hài hước",
+      "thoughtful": "Trầm ngâm",
+      "cool": "Ngầu",
+      "tired": "Mệt mỏi"
+    },
+    "report": {
+      "menu": "Tùy chọn khác",
+      "report": "Báo cáo",
+      "title": "Báo cáo khoảnh khắc này",
+      "reasonLabel": "Vì sao bạn báo cáo?",
+      "descriptionLabel": "Còn gì nữa không? (không bắt buộc)",
+      "submit": "Gửi báo cáo",
+      "cancel": "Hủy",
+      "sent": "Cảm ơn — đội kiểm duyệt sẽ xem xét.",
+      "already": "Bạn đã báo cáo khoảnh khắc này rồi.",
+      "failed": "Không gửi được báo cáo. Hãy thử lại.",
+      "reasons": {
+        "spam": "Spam",
+        "harassment": "Quấy rối",
+        "hate_speech": "Ngôn từ thù ghét",
+        "violence": "Bạo lực",
+        "nudity": "Khỏa thân",
+        "false_information": "Thông tin sai",
+        "copyright": "Bản quyền",
+        "other": "Lý do khác"
+      }
+    },
+    "schedule": {
+      "label": "Lên lịch",
+      "hint": "Để trống để đăng ngay",
+      "past": "Hãy chọn thời điểm trong tương lai",
+      "badge": "Đã lên lịch lúc {{time}}",
+      "clear": "Đăng ngay"
+    },
+    "fields": {
+      "privacy": "Ai có thể xem",
+      "privacyPublic": "Mọi người",
+      "privacyFriends": "Bạn bè",
+      "privacyPrivate": "Chỉ mình tôi",
+      "background": "Nền",
+      "backgroundNone": "Không có",
+      "location": "Vị trí",
+      "addLocation": "Thêm vị trí của tôi",
+      "removeLocation": "Xóa vị trí",
+      "noMood": "Không có tâm trạng",
+      "tags": "Thẻ",
+      "tagPlaceholder": "Thêm thẻ…",
+      "addTag": "Thêm",
+      "tagsUsed": "{{count}}/5 thẻ",
+      "tagsMax": "Tối đa 5 thẻ"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "Cập Nhật Khoảnh Khắc",
       "updatingButton": "Đang cập nhật...",
       "cancelButton": "Hủy",
-      "removeImage": "Gỡ ảnh"
+      "removeImage": "Gỡ ảnh",
+      "nothingToSave": "Chưa có gì để thay đổi",
+      "descriptionRequired": "Cần có mô tả"
+    },
+    "media": {
+      "video": "Video",
+      "audio": "Ghi âm giọng nói",
+      "replace": "Thay thế",
+      "remove": "Xóa",
+      "removeVideoTitle": "Xóa video?",
+      "removeAudioTitle": "Xóa ghi âm?",
+      "removeBody": "Không thể hoàn tác.",
+      "done": "Đã cập nhật",
+      "failed": "Không thành công. Hãy thử lại."
     }
   },
   "authentication": {

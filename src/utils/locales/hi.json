@@ -649,6 +649,98 @@
       "reply": "जवाब दें",
       "replyPlaceholder": "जवाब लिखें…",
       "viewReplies": "{{count}} जवाब देखें"
+    },
+    "filters": {
+      "button": "फ़िल्टर",
+      "searchPlaceholder": "मोमेंट खोजें",
+      "search": "खोजें",
+      "category": "श्रेणी",
+      "language": "भाषा",
+      "mood": "मूड",
+      "tag": "टैग",
+      "tagPlaceholder": "कोई भी टैग",
+      "any": "सभी",
+      "clear": "फ़िल्टर हटाएँ",
+      "emptyTitle": "इन फ़िल्टर से कोई मोमेंट मेल नहीं खाता",
+      "emptyBody": "कोई फ़िल्टर हटाकर या कुछ और खोजकर देखें।"
+    },
+    "categories": {
+      "general": "सामान्य",
+      "language-learning": "भाषा सीखना",
+      "culture": "संस्कृति",
+      "food": "खाना",
+      "travel": "यात्रा",
+      "music": "संगीत",
+      "books": "किताबें",
+      "hobbies": "शौक",
+      "daily-life": "रोज़मर्रा",
+      "technology": "तकनीक",
+      "entertainment": "मनोरंजन",
+      "sports": "खेल",
+      "movies": "फ़िल्में",
+      "study": "पढ़ाई",
+      "work": "काम",
+      "question": "सवाल"
+    },
+    "moods": {
+      "happy": "खुश",
+      "excited": "उत्साहित",
+      "grateful": "आभारी",
+      "motivated": "प्रेरित",
+      "relaxed": "सुकून में",
+      "curious": "जिज्ञासु",
+      "sad": "उदास",
+      "love": "प्यार में",
+      "funny": "मज़ेदार",
+      "thoughtful": "सोच में",
+      "cool": "कूल",
+      "tired": "थका हुआ"
+    },
+    "report": {
+      "menu": "और विकल्प",
+      "report": "रिपोर्ट करें",
+      "title": "इस मोमेंट की रिपोर्ट करें",
+      "reasonLabel": "आप इसकी रिपोर्ट क्यों कर रहे हैं?",
+      "descriptionLabel": "कुछ और? (वैकल्पिक)",
+      "submit": "रिपोर्ट भेजें",
+      "cancel": "रद्द करें",
+      "sent": "धन्यवाद — हमारे मॉडरेटर इसे देखेंगे।",
+      "already": "आप इस मोमेंट की पहले ही रिपोर्ट कर चुके हैं।",
+      "failed": "रिपोर्ट नहीं भेजी जा सकी। फिर से कोशिश करें।",
+      "reasons": {
+        "spam": "स्पैम",
+        "harassment": "उत्पीड़न",
+        "hate_speech": "नफ़रत भरी बातें",
+        "violence": "हिंसा",
+        "nudity": "नग्नता",
+        "false_information": "गलत जानकारी",
+        "copyright": "कॉपीराइट",
+        "other": "कुछ और"
+      }
+    },
+    "schedule": {
+      "label": "शेड्यूल करें",
+      "hint": "अभी पोस्ट करने के लिए खाली छोड़ें",
+      "past": "भविष्य का समय चुनें",
+      "badge": "{{time}} के लिए शेड्यूल",
+      "clear": "इसके बजाय अभी पोस्ट करें"
+    },
+    "fields": {
+      "privacy": "कौन देख सकता है",
+      "privacyPublic": "सभी",
+      "privacyFriends": "दोस्त",
+      "privacyPrivate": "सिर्फ़ मैं",
+      "background": "बैकग्राउंड",
+      "backgroundNone": "कोई नहीं",
+      "location": "लोकेशन",
+      "addLocation": "मेरी लोकेशन जोड़ें",
+      "removeLocation": "लोकेशन हटाएँ",
+      "noMood": "कोई मूड नहीं",
+      "tags": "टैग",
+      "tagPlaceholder": "टैग जोड़ें…",
+      "addTag": "जोड़ें",
+      "tagsUsed": "{{count}}/5 टैग",
+      "tagsMax": "ज़्यादा से ज़्यादा 5 टैग"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "मोमेंट अपडेट करें",
       "updatingButton": "अपडेट हो रहा है...",
       "cancelButton": "रद्द करें",
-      "removeImage": "इमेज हटाएँ"
+      "removeImage": "इमेज हटाएँ",
+      "nothingToSave": "अभी कुछ बदला नहीं है",
+      "descriptionRequired": "विवरण ज़रूरी है"
+    },
+    "media": {
+      "video": "वीडियो",
+      "audio": "वॉइस नोट",
+      "replace": "बदलें",
+      "remove": "हटाएँ",
+      "removeVideoTitle": "वीडियो हटाएँ?",
+      "removeAudioTitle": "वॉइस नोट हटाएँ?",
+      "removeBody": "इसे वापस नहीं किया जा सकता।",
+      "done": "अपडेट हो गया",
+      "failed": "यह नहीं हो पाया। फिर से कोशिश करें।"
     }
   },
   "authentication": {
