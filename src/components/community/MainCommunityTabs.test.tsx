@@ -168,11 +168,16 @@ describe("the community tabs", () => {
     expect(last).toContain("gender=female");
   });
 
-  it("locks newUsersOnly on the New tab", async () => {
+  // The server reads `joinedWithin`; it has never read `newUsersOnly`, and
+  // this test used to pin exactly that dead parameter -- which is how the New
+  // tab came to return the All list without anything going red.
+  it("locks the New tab to members who joined in the last week", async () => {
     renderList(["/communities?tab=new"]);
 
     await waitFor(() => expect(memberRequests().length).toBeGreaterThan(0));
-    expect(memberRequests()[memberRequests().length - 1]).toContain("newUsersOnly=true");
+    const last = memberRequests()[memberRequests().length - 1];
+    expect(last).toContain("joinedWithin=7d");
+    expect(last).not.toContain("newUsersOnly");
   });
 
   // The lock is a property of the tab, not a filter the member set: leaving
@@ -184,13 +189,39 @@ describe("the community tabs", () => {
     expect(router.state.location.search).toBe("?tab=online");
   });
 
+  // The page matched on the languages saved at LOGIN. Change your native
+  // language in the app and the web kept matching the old one until you logged
+  // in again. /auth/me is the account as it is now.
+  it("matches on the account's current languages, not the login snapshot", async () => {
+    const realFetch = global.fetch;
+    (global as any).fetch = jest.fn((input: any) => {
+      const url = typeof input === "string" ? input : input?.url || "";
+      if (/\/auth\/me(\?|$)/.test(url)) {
+        return Promise.resolve(new Response(JSON.stringify({
+          success: true,
+          data: { _id: "u1", native_language: "Japanese", language_to_learn: "Korean" },
+        }), { status: 200, headers: { "content-type": "application/json" } }));
+      }
+      return (realFetch as any)(input);
+    });
+
+    try {
+      renderList(["/communities"]);
+      await waitFor(() =>
+        expect(memberRequests().some((u) => u.indexOf("nativeLanguage=Japanese") >= 0)).toBe(true)
+      );
+    } finally {
+      global.fetch = realFetch;
+    }
+  });
+
   it("asks the All tab for no lock at all", async () => {
     renderList(["/communities"]);
 
     await waitFor(() => expect(memberRequests().length).toBeGreaterThan(0));
     const first = memberRequests()[0];
     expect(first).not.toContain("onlineOnly");
-    expect(first).not.toContain("newUsersOnly");
+    expect(first).not.toContain("joinedWithin");
   });
 
   // Reported from production: "highlighted profiles came to the middle". The

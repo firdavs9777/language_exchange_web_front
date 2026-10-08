@@ -180,15 +180,20 @@ const cardNames = () =>
   screen.queryAllByTestId("member-card-name").map((el) => el.textContent);
 
 describe("what a mount costs", () => {
-  // Three, and the same three every time: the list, the topic vocabulary the
-  // chips and the sheet both need, and the visitors banner. Anything else on
-  // this page is a regression.
-  it("asks for the list, the topics and the visitors -- and nothing else", async () => {
+  // Four, and the same four every time: the list, the topic vocabulary the
+  // chips and the sheet both need, the visitors banner, and /auth/me -- the
+  // account's CURRENT languages, which the default match is built from. The
+  // login snapshot it replaces went stale whenever languages were changed in
+  // the app. The list does not wait for it, and a /auth/me that agrees with the
+  // snapshot builds the same params, so it never causes a second list request
+  // (asserted below). Anything else on this page is a regression.
+  it("asks for the list, the topics, the visitors and the account -- and nothing else", async () => {
     renderList();
 
     await waitFor(() => expect(cards().length).toBe(PAGE_LIMIT));
 
-    expect(requestedUrls).toHaveLength(3);
+    expect(requestedUrls).toHaveLength(4);
+    expect(requestedUrls.filter((u) => /\/auth\/me(\?|$)/.test(u))).toHaveLength(1);
     expect(requestedUrls.filter((u) => /\/auth\/users\?/.test(u))).toHaveLength(1);
     expect(requestedUrls.filter((u) => u.indexOf("/topics") >= 0)).toHaveLength(1);
     expect(requestedUrls.filter((u) => u.indexOf("/visitors") >= 0)).toHaveLength(1);

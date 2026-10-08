@@ -71,3 +71,19 @@ it('passes gender, onlineOnly, country, languageLevel, topics(csv), topicsAtLeas
     limit: '20',
   });
 });
+
+// Reported while checking filters: the New tab and the "New users only"
+// switch sent `newUsersOnly=true`, which controllers/users.js has never read --
+// it honours `joinedWithin=7d|30d`. So "New" returned exactly the All list.
+// 7d is the app's New members segment, and the window the card's New badge
+// already uses.
+it('asks for new members the way the server understands: joinedWithin=7d', () => {
+  const q = buildCommunityQuery({ newUsersOnly: true } as any, { native_language: 'English', language_to_learn: 'Korean' }, 1, 20);
+  expect(q.joinedWithin).toBe('7d');
+  expect(q.newUsersOnly).toBeUndefined();
+});
+
+it('sends no joinedWithin when new members are not asked for', () => {
+  const q = buildCommunityQuery({} as any, { native_language: 'English', language_to_learn: 'Korean' }, 1, 20);
+  expect(q.joinedWithin).toBeUndefined();
+});

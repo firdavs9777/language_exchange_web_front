@@ -88,7 +88,10 @@ export function buildCommunityQuery(
   if (filters.search) query.search = filters.search;
   if (filters.sort) query.sort = filters.sort;
   if (filters.onlineOnly) query.onlineOnly = 'true';
-  if (filters.newUsersOnly) query.newUsersOnly = 'true';
+  // The server has never read `newUsersOnly`; it honours `joinedWithin=7d|30d`
+  // (controllers/users.js). Sending the old name made the New tab return the
+  // All list. 7d is the app's New members segment and the card's New badge.
+  if (filters.newUsersOnly) query.joinedWithin = '7d';
 
   query.page = String(page);
   query.limit = String(limit);
