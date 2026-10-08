@@ -15,6 +15,7 @@ import {
 import { Bookmark, Heart } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import routeId from "../../utils/routeId";
 import { Bounce, toast } from "react-toastify";
 import ImageLightbox from "./ImageLightbox";
 import ShareButton from "../linking/ShareButton";
@@ -273,7 +274,10 @@ const LoadingSpinner = React.memo<{ message?: string }>(({ message }) => (
 
 const MomentDetail: React.FC = () => {
   const { t } = useTranslation();
-  const { id: momentId } = useParams<{ id: string }>();
+  const { id: rawMomentId } = useParams<{ id: string }>();
+  // Shared links arrive with the description glued on; the id at the front is
+  // still good.
+  const momentId = rawMomentId ? routeId(rawMomentId) : rawMomentId;
   const navigate = useNavigate();
 
   // User data - memoized to prevent unnecessary re-renders
