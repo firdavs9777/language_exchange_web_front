@@ -37,7 +37,7 @@ afterEach(() => { global.fetch = originalFetch; });
 function renderList() {
   const router = createMemoryRouter(
     createRoutesFromElements(<Route path="/communities" element={<MainCommunity />} />),
-    { initialEntries: ["/communities"] }
+    { initialEntries: ["/communities?tab=all"] }
   );
   return render(
     <Provider store={makeStore({ auth: { userInfo: { user: { _id: "u1", native_language: "English", language_to_learn: "Korean" }, token: "t" } } } as any)}>

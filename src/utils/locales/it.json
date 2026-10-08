@@ -834,7 +834,8 @@
       "new": "Nuovi",
       "forYou": "Per te",
       "online": "Online",
-      "label": "Schede della community"
+      "label": "Schede della community",
+      "today": "Oggi"
     },
     "filters": {
       "language": "Lingua",
@@ -953,6 +954,26 @@
       "online_now": "Online ora",
       "active_today": "Attivo oggi",
       "same_country": "Stesso paese"
+    },
+    "today": {
+      "title": "Match di oggi ({{count}})",
+      "refreshes": "Si aggiorna alle {{time}}",
+      "refreshesMidnight": "Si aggiorna a mezzanotte",
+      "emptyTitle": "Per oggi è tutto",
+      "emptyBody": "Domani nuovi match. Intanto, guarda tutti i partner.",
+      "browse": "Guarda i partner",
+      "repliesFast": "Risponde velocemente",
+      "boosted": "In evidenza",
+      "reasonReciprocal": "State imparando la lingua l'uno dell'altro",
+      "reasonSameTarget": "Impara anche {{language}}",
+      "reasonActiveToday": "Attivo oggi",
+      "reasonSameCity": "Vive nella tua città",
+      "reasonSharedTopic": "Interesse in comune: {{topic}}",
+      "sayHi": "Saluta",
+      "wave": "Fai ciao",
+      "skip": "Salta",
+      "error": "Impossibile caricare i match di oggi",
+      "retry": "Riprova"
     }
   },
   "communityDetail": {

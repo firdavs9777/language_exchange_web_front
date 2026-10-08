@@ -853,7 +853,8 @@
       "new": "最新",
       "forYou": "推荐",
       "online": "在线",
-      "label": "社区标签页"
+      "label": "社区标签页",
+      "today": "今天"
     },
     "filters": {
       "language": "语言",
@@ -971,6 +972,26 @@
       "online_now": "在线",
       "active_today": "今天活跃",
       "same_country": "同一国家"
+    },
+    "today": {
+      "title": "今天为你匹配了 {{count}} 位",
+      "refreshes": "{{time}} 刷新",
+      "refreshesMidnight": "午夜刷新",
+      "emptyTitle": "今天就这些了",
+      "emptyBody": "明天会有新的匹配。先去看看其他伙伴吧。",
+      "browse": "浏览伙伴",
+      "repliesFast": "回复很快",
+      "boosted": "已加速",
+      "reasonReciprocal": "你们在学习彼此的语言",
+      "reasonSameTarget": "也在学{{language}}",
+      "reasonActiveToday": "今天活跃",
+      "reasonSameCity": "住在同一座城市",
+      "reasonSharedTopic": "共同兴趣：{{topic}}",
+      "sayHi": "打个招呼",
+      "wave": "挥手",
+      "skip": "跳过",
+      "error": "无法加载今日匹配",
+      "retry": "重试"
     }
   },
   "communityDetail": {

@@ -133,6 +133,24 @@ export const communityApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Recommendations"],
     }),
 
+    // "Today": the day's batch of partners (GET /api/v1/matching/daily,
+    // protected). The server picks and caches it until `nextRefreshAt`
+    // (midnight UTC) and answers 404 when DAILY_MATCHES_ENABLED is off --
+    // which the page reads as "this feature is not here", not as an error.
+    getDailyMatches: builder.query({
+      query: () => ({ url: "/api/v1/matching/daily" }),
+      keepUnusedDataFor: 60,
+    }),
+    // POST /api/v1/interactions/skip { targetUserId }. Fire-and-forget from
+    // the Today card: the card leaves at once whatever this answers.
+    skipUser: builder.mutation({
+      query: (targetUserId: string) => ({
+        url: "/api/v1/interactions/skip",
+        method: "POST",
+        body: { targetUserId },
+      }),
+    }),
+
     // Nearby Users (Discovery)
     getNearbyUsers: builder.query({
       query: ({ latitude, longitude, radius = 50, page = 1, limit = 20 }: {
@@ -297,6 +315,8 @@ export const {
   useGetPublicUserProfileQuery,
   // "For you"
   useGetRecommendationsQuery,
+  useGetDailyMatchesQuery,
+  useSkipUserMutation,
   // Nearby
   useGetNearbyUsersQuery,
   // Waves (real backend routes)

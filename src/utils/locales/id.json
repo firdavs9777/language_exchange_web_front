@@ -853,7 +853,8 @@
       "new": "Baru",
       "forYou": "Untuk Anda",
       "online": "Online",
-      "label": "Tab komunitas"
+      "label": "Tab komunitas",
+      "today": "Hari ini"
     },
     "filters": {
       "language": "Bahasa",
@@ -971,6 +972,26 @@
       "online_now": "Sedang online",
       "active_today": "Aktif hari ini",
       "same_country": "Negara yang sama"
+    },
+    "today": {
+      "title": "{{count}} kecocokanmu hari ini",
+      "refreshes": "Diperbarui pukul {{time}}",
+      "refreshesMidnight": "Diperbarui tengah malam",
+      "emptyTitle": "Itu semua untuk hari ini",
+      "emptyBody": "Kecocokan baru besok. Sementara itu, lihat semua partner.",
+      "browse": "Lihat partner",
+      "repliesFast": "Cepat membalas",
+      "boosted": "Di-boost",
+      "reasonReciprocal": "Kalian saling mempelajari bahasa masing-masing",
+      "reasonSameTarget": "Juga belajar {{language}}",
+      "reasonActiveToday": "Aktif hari ini",
+      "reasonSameCity": "Tinggal di kotamu",
+      "reasonSharedTopic": "Minat yang sama: {{topic}}",
+      "sayHi": "Sapa",
+      "wave": "Lambaikan tangan",
+      "skip": "Lewati",
+      "error": "Gagal memuat kecocokan hari ini",
+      "retry": "Coba lagi"
     }
   },
   "communityDetail": {

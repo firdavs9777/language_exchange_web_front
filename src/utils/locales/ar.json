@@ -853,7 +853,8 @@
       "new": "جديد",
       "forYou": "لك",
       "online": "متصل",
-      "label": "تبويبات المجتمع"
+      "label": "تبويبات المجتمع",
+      "today": "اليوم"
     },
     "filters": {
       "language": "اللغة",
@@ -975,6 +976,26 @@
       "online_now": "متصل الآن",
       "active_today": "نشط اليوم",
       "same_country": "البلد نفسه"
+    },
+    "today": {
+      "title": "مطابقاتك اليوم: {{count}}",
+      "refreshes": "تتجدد في {{time}}",
+      "refreshesMidnight": "تتجدد عند منتصف الليل",
+      "emptyTitle": "هذا كل شيء لليوم",
+      "emptyBody": "مطابقات جديدة غدًا. في الأثناء، تصفّح كل الشركاء.",
+      "browse": "تصفّح الشركاء",
+      "repliesFast": "يرد بسرعة",
+      "boosted": "مُعزَّز",
+      "reasonReciprocal": "تتعلمان لغة بعضكما",
+      "reasonSameTarget": "يتعلم {{language}} أيضًا",
+      "reasonActiveToday": "نشط اليوم",
+      "reasonSameCity": "يعيش في مدينتك",
+      "reasonSharedTopic": "اهتمام مشترك: {{topic}}",
+      "sayHi": "قل مرحبًا",
+      "wave": "لوّح",
+      "skip": "تخطَّ",
+      "error": "تعذّر تحميل مطابقات اليوم",
+      "retry": "حاول مجددًا"
     }
   },
   "communityDetail": {

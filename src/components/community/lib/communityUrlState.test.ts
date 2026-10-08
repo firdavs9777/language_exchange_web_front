@@ -70,7 +70,8 @@ describe('communityUrlState', () => {
         filters: { minAge: 18, maxAge: 100 },
         search: '',
         sort: undefined,
-        tab: 'all',
+        // all is written since today became the default landing
+        tab: 'today',
       });
       expect(encoded.toString()).toBe('');
     });
@@ -230,7 +231,8 @@ describe('communityUrlState', () => {
     });
 
     it('is a fixed point for the empty state', () => {
-      const once = encodeCommunityState({ filters: {}, search: '', tab: 'all' });
+      // all is written since today became the default landing
+      const once = encodeCommunityState({ filters: {}, search: '', tab: 'today' });
       expect(once.toString()).toBe('');
       expect(encodeCommunityState(decodeCommunityState(once) as any).toString()).toBe('');
     });
@@ -255,5 +257,21 @@ describe('communityUrlState', () => {
       );
       expect(merged.toString()).toBe('ref=a&online=1');
     });
+  });
+});
+
+describe("today is the default tab", () => {
+  it("leaves `today` out of the URL", () => {
+    expect(encodeCommunityState({ filters: {}, search: "", tab: "today" } as any).get("tab")).toBeNull();
+  });
+  it("writes `all` like any other tab", () => {
+    expect(encodeCommunityState({ filters: {}, search: "", tab: "all" } as any).get("tab")).toBe("all");
+  });
+  it("reads tab=today and tab=all back", () => {
+    expect(decodeCommunityState(new URLSearchParams("tab=today")).tab).toBe("today");
+    expect(decodeCommunityState(new URLSearchParams("tab=all")).tab).toBe("all");
+  });
+  it("an absent tab decodes as absent -- the page decides the default", () => {
+    expect(decodeCommunityState(new URLSearchParams("native=Korean")).tab).toBeUndefined();
   });
 });

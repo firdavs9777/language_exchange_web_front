@@ -853,7 +853,8 @@
       "new": "नया",
       "forYou": "आपके लिए",
       "online": "ऑनलाइन",
-      "label": "समुदाय टैब"
+      "label": "समुदाय टैब",
+      "today": "आज"
     },
     "filters": {
       "language": "भाषा",
@@ -971,6 +972,26 @@
       "online_now": "अभी ऑनलाइन",
       "active_today": "आज सक्रिय",
       "same_country": "एक ही देश"
+    },
+    "today": {
+      "title": "आज के आपके {{count}} मैच",
+      "refreshes": "{{time}} पर नए होंगे",
+      "refreshesMidnight": "आधी रात को नए होंगे",
+      "emptyTitle": "आज के लिए इतना ही",
+      "emptyBody": "कल नए मैच आएँगे। तब तक सभी पार्टनर देखें।",
+      "browse": "पार्टनर देखें",
+      "repliesFast": "जल्दी जवाब देते हैं",
+      "boosted": "बूस्टेड",
+      "reasonReciprocal": "आप एक-दूसरे की भाषा सीख रहे हैं",
+      "reasonSameTarget": "{{language}} भी सीख रहे हैं",
+      "reasonActiveToday": "आज सक्रिय",
+      "reasonSameCity": "आपके शहर में रहते हैं",
+      "reasonSharedTopic": "साझा रुचि: {{topic}}",
+      "sayHi": "हाय कहें",
+      "wave": "हाथ हिलाएँ",
+      "skip": "छोड़ें",
+      "error": "आज के मैच लोड नहीं हो सके",
+      "retry": "फिर से कोशिश करें"
     }
   },
   "communityDetail": {

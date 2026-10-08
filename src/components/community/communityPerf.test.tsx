@@ -155,7 +155,7 @@ const SIGNED_IN = {
   },
 };
 
-function renderList(entries: string[] = ["/communities"]) {
+function renderList(entries: string[] = ["/communities?tab=all"]) {
   const router = createMemoryRouter(
     createRoutesFromElements(
       <Route path="/">
@@ -180,19 +180,22 @@ const cardNames = () =>
   screen.queryAllByTestId("member-card-name").map((el) => el.textContent);
 
 describe("what a mount costs", () => {
-  // Four, and the same four every time: the list, the topic vocabulary the
+  // Five, and the same five every time: the list, the topic vocabulary the
   // chips and the sheet both need, the visitors banner, and /auth/me -- the
   // account's CURRENT languages, which the default match is built from. The
   // login snapshot it replaces went stale whenever languages were changed in
   // the app. The list does not wait for it, and a /auth/me that agrees with the
   // snapshot builds the same params, so it never causes a second list request
-  // (asserted below). Anything else on this page is a regression.
-  it("asks for the list, the topics, the visitors and the account -- and nothing else", async () => {
+  // (asserted below). Plus /matching/daily: whether the Today tab exists at
+  // all is the server's answer (404 = the feature is off), so a signed-in
+  // mount asks once even on All. Anything else on this page is a regression.
+  it("asks for the list, the topics, the visitors, the account and today's batch -- and nothing else", async () => {
     renderList();
 
     await waitFor(() => expect(cards().length).toBe(PAGE_LIMIT));
 
-    expect(requestedUrls).toHaveLength(4);
+    expect(requestedUrls).toHaveLength(5);
+    expect(requestedUrls.filter((u) => u.indexOf("/matching/daily") >= 0)).toHaveLength(1);
     expect(requestedUrls.filter((u) => /\/auth\/me(\?|$)/.test(u))).toHaveLength(1);
     expect(requestedUrls.filter((u) => /\/auth\/users\?/.test(u))).toHaveLength(1);
     expect(requestedUrls.filter((u) => u.indexOf("/topics") >= 0)).toHaveLength(1);
@@ -311,14 +314,14 @@ describe("typing in the search box", () => {
       // Every keystroke is already on screen...
       expect((box as HTMLInputElement).value).toBe("annab");
       // ...and none of them has touched the URL yet.
-      expect(router.state.location.search).toBe("");
+      expect(router.state.location.search).toBe("?tab=all");  // all is written since today became the default landing
       expect(navigations).toHaveLength(0);
 
       act(() => {
         jest.advanceTimersByTime(600);
       });
 
-      expect(router.state.location.search).toBe("?q=annab");
+      expect(router.state.location.search).toBe("?q=annab&tab=all");  // all is written since today became the default landing
       expect(navigations.filter((search) => search.indexOf("q=") >= 0)).toHaveLength(1);
       unsubscribe();
     } finally {
@@ -330,5 +333,15 @@ describe("typing in the search box", () => {
       expect(memberRequests().filter((u) => u.indexOf("search=") >= 0)).toHaveLength(1)
     );
     expect(memberRequests().filter((u) => u.indexOf("search=annab") >= 0)).toHaveLength(1);
+  });
+});
+
+describe("what the Today landing costs", () => {
+  // Today is the default landing: it asks for the day's batch and NOT for the
+  // All list, which waits until the member switches tabs.
+  it("asks for /matching/daily once and never for /auth/users", async () => {
+    renderList(["/communities"]);
+    await waitFor(() => expect(requestedUrls.filter((u) => u.indexOf("/matching/daily") >= 0)).toHaveLength(1));
+    expect(requestedUrls.filter((u) => /\/auth\/users\?/.test(u))).toHaveLength(0);
   });
 });

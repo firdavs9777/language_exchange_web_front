@@ -853,7 +853,8 @@
       "new": "Новые",
       "forYou": "Для вас",
       "online": "Онлайн",
-      "label": "Вкладки сообщества"
+      "label": "Вкладки сообщества",
+      "today": "Сегодня"
     },
     "filters": {
       "language": "Язык",
@@ -973,6 +974,26 @@
       "online_now": "Сейчас в сети",
       "active_today": "Был(а) сегодня",
       "same_country": "Та же страна"
+    },
+    "today": {
+      "title": "Ваши совпадения на сегодня: {{count}}",
+      "refreshes": "Обновится в {{time}}",
+      "refreshesMidnight": "Обновится в полночь",
+      "emptyTitle": "На сегодня всё",
+      "emptyBody": "Завтра будут новые совпадения. А пока посмотрите всех партнёров.",
+      "browse": "Смотреть партнёров",
+      "repliesFast": "Быстро отвечает",
+      "boosted": "Продвигается",
+      "reasonReciprocal": "Вы изучаете языки друг друга",
+      "reasonSameTarget": "Тоже учит {{language}}",
+      "reasonActiveToday": "Сегодня в сети",
+      "reasonSameCity": "Живёт в вашем городе",
+      "reasonSharedTopic": "Общий интерес: {{topic}}",
+      "sayHi": "Поздороваться",
+      "wave": "Помахать",
+      "skip": "Пропустить",
+      "error": "Не удалось загрузить совпадения на сегодня",
+      "retry": "Повторить"
     }
   },
   "communityDetail": {

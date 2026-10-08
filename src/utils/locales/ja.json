@@ -853,7 +853,8 @@
       "new": "新着",
       "forYou": "おすすめ",
       "online": "オンライン",
-      "label": "コミュニティタブ"
+      "label": "コミュニティタブ",
+      "today": "今日"
     },
     "filters": {
       "language": "言語",
@@ -971,6 +972,26 @@
       "online_now": "オンライン",
       "active_today": "今日アクティブ",
       "same_country": "同じ国"
+    },
+    "today": {
+      "title": "今日のマッチ {{count}}人",
+      "refreshes": "{{time}}に更新",
+      "refreshesMidnight": "深夜0時に更新",
+      "emptyTitle": "今日はここまでです",
+      "emptyBody": "明日また新しいマッチが届きます。それまでパートナーを探してみましょう。",
+      "browse": "パートナーを見る",
+      "repliesFast": "返信が早い",
+      "boosted": "ブースト中",
+      "reasonReciprocal": "お互いの言語を学んでいます",
+      "reasonSameTarget": "{{language}}も学習中",
+      "reasonActiveToday": "今日アクティブ",
+      "reasonSameCity": "同じ街に住んでいます",
+      "reasonSharedTopic": "共通の興味：{{topic}}",
+      "sayHi": "あいさつする",
+      "wave": "手を振る",
+      "skip": "スキップ",
+      "error": "今日のマッチを読み込めませんでした",
+      "retry": "再試行"
     }
   },
   "communityDetail": {

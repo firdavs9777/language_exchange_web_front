@@ -32,6 +32,7 @@ import { CommunityFilters } from './buildCommunityQuery';
  * link or an old URL says so.
  */
 export type CommunityUrlTab =
+  | 'today'
   | 'foryou'
   | 'all'
   | 'online'
@@ -79,6 +80,7 @@ const GENDERS = ['male', 'female', 'other'];
 const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 const SORTS = ['recently_active'];
 const TABS: CommunityUrlTab[] = [
+  'today',
   'foryou',
   'all',
   'online',
@@ -177,8 +179,9 @@ export function encodeCommunityState(
   if (search.trim()) params.set('q', search);
 
   const tab = text(state.tab).toLowerCase() as CommunityUrlTab;
-  // `all` is the default, so it is never spelled out.
-  if (tab !== 'all' && TABS.indexOf(tab) >= 0) params.set('tab', tab);
+  // `today` is the default landing, so it is never spelled out; `all` now is,
+  // or a bare /communities would mean Today and All could never be reached.
+  if (tab !== 'today' && TABS.indexOf(tab) >= 0) params.set('tab', tab);
 
   return params;
 }

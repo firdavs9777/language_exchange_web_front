@@ -853,7 +853,8 @@
       "new": "Yeni",
       "forYou": "Senin İçin",
       "online": "Çevrimiçi",
-      "label": "Topluluk sekmeleri"
+      "label": "Topluluk sekmeleri",
+      "today": "Bugün"
     },
     "filters": {
       "language": "Dil",
@@ -971,6 +972,26 @@
       "online_now": "Şu an çevrimiçi",
       "active_today": "Bugün aktif",
       "same_country": "Aynı ülke"
+    },
+    "today": {
+      "title": "Bugünkü {{count}} eşleşmen",
+      "refreshes": "{{time}} yenilenir",
+      "refreshesMidnight": "Gece yarısı yenilenir",
+      "emptyTitle": "Bugünlük bu kadar",
+      "emptyBody": "Yarın yeni eşleşmeler var. Bu arada tüm partnerlere göz at.",
+      "browse": "Partnerlere göz at",
+      "repliesFast": "Hızlı yanıt verir",
+      "boosted": "Öne çıkarıldı",
+      "reasonReciprocal": "Birbirinizin dilini öğreniyorsunuz",
+      "reasonSameTarget": "O da {{language}} öğreniyor",
+      "reasonActiveToday": "Bugün aktif",
+      "reasonSameCity": "Senin şehrinde yaşıyor",
+      "reasonSharedTopic": "Ortak ilgi: {{topic}}",
+      "sayHi": "Merhaba de",
+      "wave": "El salla",
+      "skip": "Geç",
+      "error": "Bugünkü eşleşmeler yüklenemedi",
+      "retry": "Tekrar dene"
     }
   },
   "communityDetail": {

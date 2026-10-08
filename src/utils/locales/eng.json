@@ -853,7 +853,8 @@
       "new": "New",
       "forYou": "For you",
       "online": "Online",
-      "label": "Community tabs"
+      "label": "Community tabs",
+      "today": "Today"
     },
     "filters": {
       "language": "Language",
@@ -971,6 +972,26 @@
       "online_now": "Online now",
       "active_today": "Active today",
       "same_country": "Same country"
+    },
+    "today": {
+      "title": "Today's matches ({{count}})",
+      "refreshes": "Refreshes at {{time}}",
+      "refreshesMidnight": "Refreshes at midnight",
+      "emptyTitle": "That's everyone for today",
+      "emptyBody": "Fresh matches tomorrow. Meanwhile, browse all partners.",
+      "browse": "Browse partners",
+      "repliesFast": "Replies fast",
+      "boosted": "Boosted",
+      "reasonReciprocal": "You're learning each other's language",
+      "reasonSameTarget": "Also learning {{language}}",
+      "reasonActiveToday": "Active today",
+      "reasonSameCity": "Lives in your city",
+      "reasonSharedTopic": "Shared interest: {{topic}}",
+      "sayHi": "Say hi",
+      "wave": "Wave",
+      "skip": "Skip",
+      "error": "We couldn't load today's matches",
+      "retry": "Try again"
     }
   },
   "communityDetail": {

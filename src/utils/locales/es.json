@@ -834,7 +834,8 @@
       "new": "Nuevos",
       "forYou": "Para ti",
       "online": "En línea",
-      "label": "Pestañas de la comunidad"
+      "label": "Pestañas de la comunidad",
+      "today": "Hoy"
     },
     "filters": {
       "language": "Idioma",
@@ -953,6 +954,26 @@
       "online_now": "En línea",
       "active_today": "Activo hoy",
       "same_country": "Mismo país"
+    },
+    "today": {
+      "title": "Coincidencias de hoy ({{count}})",
+      "refreshes": "Se renueva a las {{time}}",
+      "refreshesMidnight": "Se renueva a medianoche",
+      "emptyTitle": "Eso es todo por hoy",
+      "emptyBody": "Mañana habrá nuevas coincidencias. Mientras tanto, explora todos los compañeros.",
+      "browse": "Ver compañeros",
+      "repliesFast": "Responde rápido",
+      "boosted": "Destacado",
+      "reasonReciprocal": "Están aprendiendo el idioma del otro",
+      "reasonSameTarget": "También aprende {{language}}",
+      "reasonActiveToday": "Activo hoy",
+      "reasonSameCity": "Vive en tu ciudad",
+      "reasonSharedTopic": "Interés en común: {{topic}}",
+      "sayHi": "Saludar",
+      "wave": "Saludar con la mano",
+      "skip": "Omitir",
+      "error": "No pudimos cargar las coincidencias de hoy",
+      "retry": "Reintentar"
     }
   },
   "communityDetail": {
