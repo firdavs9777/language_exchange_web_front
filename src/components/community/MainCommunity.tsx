@@ -570,7 +570,15 @@ const ModernCommunity: React.FC = () => {
     );
   }, [visitorsData, visitorsCount]);
 
-  const hasMore = communityData?.data?.length === PAGE_LIMIT;
+  // The server says how many pages there are (GET /auth/users returns `pages`).
+  // Guessing from a full page showed a phantom "load more" -- and fetched an
+  // empty page -- whenever the last page was exactly full. The guess remains
+  // only as the fallback for a response that carries no count.
+  const serverPages = (communityData as any)?.pages;
+  const hasMore =
+    typeof serverPages === "number"
+      ? page < serverPages
+      : communityData?.data?.length === PAGE_LIMIT;
 
   // The observer callback lives outside React's render, so it reads the paging
   // state through a ref rather than through a closure that would be one render
