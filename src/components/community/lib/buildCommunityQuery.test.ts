@@ -87,3 +87,16 @@ it('sends no joinedWithin when new members are not asked for', () => {
   const q = buildCommunityQuery({} as any, { native_language: 'English', language_to_learn: 'Korean' }, 1, 20);
   expect(q.joinedWithin).toBeUndefined();
 });
+
+// matchLanguage=true joins the two language params with OR -- right for the
+// default exchange match (they speak what I learn, OR learn what I speak),
+// wrong for two explicit filters: "native Korean" + "learning English" came
+// back as anyone who speaks Korean plus anyone learning English. With both set
+// the query takes the server's other branch, which applies both (AND), with
+// the params in their direct meaning there.
+it('two explicit language filters must both hold: no matchLanguage, direct params', () => {
+  const q = buildCommunityQuery({ nativeLanguage: 'Korean', learningLanguage: 'English' }, me, 1, 20);
+  expect(q.matchLanguage).toBeUndefined();
+  expect(q.nativeLanguage).toBe('Korean');
+  expect(q.learningLanguage).toBe('English');
+});
