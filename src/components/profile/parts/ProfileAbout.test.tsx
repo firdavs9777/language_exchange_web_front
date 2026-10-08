@@ -129,3 +129,30 @@ describe("hasAbout", () => {
     expect(wrapped.container.querySelector("[data-testid='surface-card']")).not.toBeNull();
   });
 });
+
+describe("intents", () => {
+  it("shows learn and meet, in the canonical order", () => {
+    render(<ProfileAbout user={{ intents: ["meet", "learn"] }} />);
+    const chips = screen.getAllByTestId(/^about-intent-/);
+    expect(chips.map((chip) => chip.getAttribute("data-testid"))).toEqual([
+      "about-intent-learn",
+      "about-intent-meet",
+    ]);
+  });
+
+  it("never shows dating, even on an own profile read from /auth/me", () => {
+    render(<ProfileAbout user={{ intents: ["date", "learn"] }} />);
+    expect(screen.queryByTestId("about-intent-date")).not.toBeInTheDocument();
+    expect(screen.getByTestId("about-intent-learn")).toBeInTheDocument();
+  });
+
+  it("counts toward the card having something to show", () => {
+    expect(hasAbout({ intents: ["meet"] })).toBe(true);
+  });
+
+  it("does not, when dating is all there is", () => {
+    expect(hasAbout({ intents: ["date"] })).toBe(false);
+    const { container } = render(<ProfileAbout user={{ intents: ["date"] }} />);
+    expect(container).toBeEmptyDOMElement();
+  });
+});

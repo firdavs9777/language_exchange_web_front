@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Brain, Briefcase, Droplet, GraduationCap, Hash } from "lucide-react";
+import { Brain, Briefcase, Droplet, GraduationCap, Hash, Users } from "lucide-react";
+import { publicIntents } from "../intents";
 import SurfaceCard from "../../../design/SurfaceCard";
 
 export interface ProfileAboutProps {
@@ -37,7 +38,8 @@ export const hasAbout = (user: any): boolean => {
     text(user && user.school) ||
     text(user && user.mbti) ||
     text(user && user.bloodType) ||
-    topics.length
+    topics.length ||
+    publicIntents(user && user.intents).length
   );
 };
 
@@ -53,6 +55,10 @@ const ProfileAbout: React.FC<ProfileAboutProps> = ({ user, bare }) => {
   const topics: string[] = Array.isArray(user && user.topics)
     ? user.topics.filter((topic: any) => text(topic))
     : [];
+
+  // Learn / meet only — dating is never printed on a profile, own included.
+  const intents = publicIntents(user && user.intents);
+  const INTENT_ICONS = { learn: GraduationCap, meet: Users } as const;
 
   if (!hasAbout(user)) return null;
 
@@ -142,6 +148,30 @@ const ProfileAbout: React.FC<ProfileAboutProps> = ({ user, bare }) => {
               );
             })}
           </dl>
+        )}
+
+        {intents.length > 0 && (
+          <div data-testid="about-intents" className="mt-4">
+            <p className="mb-2 text-[11px] uppercase tracking-wide text-ink-500 dark:text-ink-400">
+              {t("profile.edit.intent_title") || "What you're here for"}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {intents.map((intent) => {
+                const Icon = INTENT_ICONS[intent as "learn" | "meet"];
+                return (
+                  <span
+                    key={intent}
+                    data-testid={`about-intent-${intent}`}
+                    className="inline-flex items-center gap-1 rounded-chip bg-banana/20 px-2.5 py-1 text-xs font-semibold text-ink-800 dark:bg-banana/15 dark:text-ink-100"
+                  >
+                    <Icon className="h-3 w-3" aria-hidden />
+                    {t(`profile.edit.intent_${intent}`) ||
+                      (intent === "learn" ? "Here to learn" : "Open to meeting people")}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
         )}
 
         {topics.length > 0 && (
