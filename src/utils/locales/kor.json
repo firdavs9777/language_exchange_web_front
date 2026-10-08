@@ -2268,5 +2268,21 @@
     "more": "더보기",
     "reply_failed": "메시지를 보내지 못했어요",
     "vote_failed": "투표를 저장하지 못했어요"
+  },
+  "card": {
+    "title": "언어 카드",
+    "my_card": "내 카드",
+    "speaks": "구사 언어",
+    "learning": "배우는 언어",
+    "practice_with": "{{name}}님과 {{language}} 연습하기",
+    "view_profile": "전체 프로필 보기",
+    "continue_web": "브라우저에서 계속하기",
+    "share": "내 카드 공유하기",
+    "share_text": "BananaTalk에서 저와 {{language}} 연습해요",
+    "edit": "카드 내용 수정",
+    "tagline": "BananaTalk에서 언어 교환",
+    "not_found": "존재하지 않는 카드입니다",
+    "not_found_body": "계정이 삭제되었을 수 있습니다.",
+    "find_partners": "언어 파트너 찾기"
   }
 }

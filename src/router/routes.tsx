@@ -101,6 +101,7 @@ const LanguageSettings = lazyWithRetry("../components/settings/LanguageSettings"
 const BlockedUsers = lazyWithRetry("../components/settings/BlockedUsers", () => import("../components/settings/BlockedUsers"));
 const CloseFriends = lazyWithRetry("../components/settings/CloseFriends", () => import("../components/settings/CloseFriends"));
 const ChangePassword = lazyWithRetry("../components/settings/ChangePassword", () => import("../components/settings/ChangePassword"));
+const LanguageCard = lazyWithRetry("../components/card/LanguageCard", () => import("../components/card/LanguageCard"));
 
 // Community, authenticated. /communities itself (MainCommnity, which renders
 // PublicCommunities for logged-out visitors) is prerendered and stays eager.
@@ -190,6 +191,9 @@ export const routes = createRoutesFromElements(
         /community/<id> link still resolves; only the component behind it
         changed. */}
     <Route path="community/:userId" element={lazyRoute(<ProfilePage />)} />
+    {/* Public, like the profile it is built from: a card is opened from a link,
+        usually by someone with no account yet. */}
+    <Route path="card/:userId" element={lazyRoute(<LanguageCard />)} />
     <Route path="moments" element={<MainMoments />} />
     <Route path="moment/:id" element={<MomentDetail />} />
     <Route path="add-moment" element={lazyRoute(<CreateMoment />)} />

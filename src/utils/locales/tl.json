@@ -2268,5 +2268,21 @@
     "more": "Iba pa",
     "reply_failed": "Hindi maipadala ang mensahe mo",
     "vote_failed": "Hindi ma-save ang boto mo"
+  },
+  "card": {
+    "title": "Language Card",
+    "my_card": "Card ko",
+    "speaks": "Nagsasalita ng",
+    "learning": "Nag-aaral ng",
+    "practice_with": "Mag-practice ng {{language}} kasama si {{name}}",
+    "view_profile": "Tingnan ang buong profile",
+    "continue_web": "Ituloy sa browser",
+    "share": "I-share ang card ko",
+    "share_text": "Mag-practice tayo ng {{language}} sa BananaTalk",
+    "edit": "I-edit ang laman",
+    "tagline": "Language exchange sa BananaTalk",
+    "not_found": "Walang ganitong card",
+    "not_found_body": "Maaaring natanggal na ang account.",
+    "find_partners": "Maghanap ng language partner"
   }
 }

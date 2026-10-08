@@ -2268,5 +2268,21 @@
     "more": "Mehr",
     "reply_failed": "Deine Nachricht konnte nicht gesendet werden",
     "vote_failed": "Deine Stimme konnte nicht gespeichert werden"
+  },
+  "card": {
+    "title": "Sprachkarte",
+    "my_card": "Meine Karte",
+    "speaks": "Spricht",
+    "learning": "Lernt",
+    "practice_with": "{{language}} üben mit {{name}}",
+    "view_profile": "Ganzes Profil ansehen",
+    "continue_web": "Im Browser weiter",
+    "share": "Meine Karte teilen",
+    "share_text": "Üb {{language}} mit mir auf BananaTalk",
+    "edit": "Inhalt bearbeiten",
+    "tagline": "Sprachaustausch auf BananaTalk",
+    "not_found": "Diese Karte gibt es nicht",
+    "not_found_body": "Das Konto wurde möglicherweise entfernt.",
+    "find_partners": "Sprachpartner finden"
   }
 }

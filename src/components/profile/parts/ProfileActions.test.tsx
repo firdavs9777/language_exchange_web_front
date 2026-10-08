@@ -81,6 +81,11 @@ describe("own profile", () => {
     expect(screen.queryByTestId("action-follow")).not.toBeInTheDocument();
     expect(screen.queryByTestId("action-more")).not.toBeInTheDocument();
   });
+
+  it("links to your own language card, the page you share", () => {
+    renderActions({ isOwn: true, userId: "me" });
+    expect(screen.getByTestId("action-card")).toHaveAttribute("href", "/card/me");
+  });
 });
 
 describe("another user's profile", () => {

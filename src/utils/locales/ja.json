@@ -2268,5 +2268,21 @@
     "more": "その他",
     "reply_failed": "メッセージを送信できませんでした",
     "vote_failed": "投票を保存できませんでした"
+  },
+  "card": {
+    "title": "ランゲージカード",
+    "my_card": "マイカード",
+    "speaks": "話せる言語",
+    "learning": "学習中",
+    "practice_with": "{{name}}さんと{{language}}を練習",
+    "view_profile": "プロフィールを見る",
+    "continue_web": "ブラウザで続ける",
+    "share": "カードをシェア",
+    "share_text": "BananaTalkで一緒に{{language}}を練習しよう",
+    "edit": "内容を編集",
+    "tagline": "BananaTalkで言語交換",
+    "not_found": "このカードは存在しません",
+    "not_found_body": "アカウントが削除された可能性があります。",
+    "find_partners": "言語パートナーを探す"
   }
 }

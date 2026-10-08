@@ -2268,5 +2268,21 @@
     "more": "Thêm",
     "reply_failed": "Không thể gửi tin nhắn của bạn",
     "vote_failed": "Không thể lưu lượt bình chọn của bạn"
+  },
+  "card": {
+    "title": "Thẻ ngôn ngữ",
+    "my_card": "Thẻ của tôi",
+    "speaks": "Nói",
+    "learning": "Đang học",
+    "practice_with": "Luyện {{language}} cùng {{name}}",
+    "view_profile": "Xem toàn bộ hồ sơ",
+    "continue_web": "Tiếp tục trên trình duyệt",
+    "share": "Chia sẻ thẻ của tôi",
+    "share_text": "Luyện {{language}} cùng mình trên BananaTalk",
+    "edit": "Sửa nội dung thẻ",
+    "tagline": "Trao đổi ngôn ngữ trên BananaTalk",
+    "not_found": "Thẻ này không tồn tại",
+    "not_found_body": "Tài khoản có thể đã bị xoá.",
+    "find_partners": "Tìm bạn học ngôn ngữ"
   }
 }
