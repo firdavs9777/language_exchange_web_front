@@ -28,6 +28,9 @@ import LanguageField from "./fields/LanguageField";
 import MoodField, { moodEmoji, moodLabel } from "./fields/MoodField";
 import PrivacyField, { privacyLabel, privacyOption } from "./fields/PrivacyField";
 import TagsField from "./fields/TagsField";
+import ScheduleField from "./fields/ScheduleField";
+import { isFutureInput, localInputToIso } from "./lib/scheduling";
+import { useMomentSchedulingEnabled } from "./lib/useMomentSchedulingEnabled";
 import { useCurrentLocation } from "./fields/useCurrentLocation";
 import VoiceNoteRecorder from "./media/VoiceNoteRecorder";
 
@@ -105,7 +108,9 @@ const CreateMoment: React.FC = () => {
   const [privacy, setPrivacy] = useState<string>("public");
   const [language, setLanguage] = useState<string>("en");
   const [category, setCategory] = useState<string>("general");
-  const [scheduledDate, setScheduledDate] = useState<string>("");
+  const [scheduledFor, setScheduledFor] = useState<string>(""); // datetime-local; "" = now
+  const schedulingEnabled = useMomentSchedulingEnabled();
+  const scheduleBlocked = schedulingEnabled && Boolean(scheduledFor) && !isFutureInput(scheduledFor);
 
   // UI state
   const [showOptions, setShowOptions] = useState<boolean>(false);
@@ -214,7 +219,7 @@ const CreateMoment: React.FC = () => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (!isButtonEnabled || isSubmitting) return;
+    if (!isButtonEnabled || isSubmitting || scheduleBlocked) return;
 
     setIsSubmitting(true);
 
@@ -233,8 +238,10 @@ const CreateMoment: React.FC = () => {
         privacy,
         language,
         category,
-        scheduledDate,
       };
+      // Only while the server enforces scheduling: otherwise it would post now.
+      const scheduledIso = schedulingEnabled && scheduledFor ? localInputToIso(scheduledFor) : null;
+      if (scheduledIso) payload.scheduledFor = scheduledIso;
       if (mediaMode === "text") {
         payload.mediaType = "text";
         if (backgroundColor) payload.backgroundColor = backgroundColor;
@@ -336,9 +343,9 @@ const CreateMoment: React.FC = () => {
             </div>
             <button
               onClick={handleSubmit}
-              disabled={!isButtonEnabled || isSubmitting}
+              disabled={!isButtonEnabled || isSubmitting || scheduleBlocked}
               className={`px-6 py-2 rounded-full font-medium text-sm transition-all ${
-                isButtonEnabled && !isSubmitting
+                isButtonEnabled && !isSubmitting && !scheduleBlocked
                   ? 'bg-blue-500 hover:bg-blue-600 text-white'
                   : 'bg-gray-200 text-gray-400 cursor-not-allowed'
               }`}
@@ -658,17 +665,11 @@ const CreateMoment: React.FC = () => {
             </div>
           )}
 
-          {/* Schedule Option */}
-          <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Schedule (optional)</label>
-            <input
-              type="datetime-local"
-              value={scheduledDate}
-              onChange={(e) => setScheduledDate(e.target.value)}
-              min={new Date().toISOString().slice(0, 16)}
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          {schedulingEnabled && (
+            <div className="mt-4">
+              <ScheduleField value={scheduledFor} onChange={setScheduledFor} />
+            </div>
+          )}
         </div>
 
         <input

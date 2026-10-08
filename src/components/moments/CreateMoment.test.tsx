@@ -122,3 +122,43 @@ it("chooses who can see it", async () => {
   await waitFor(() => expect(mockCreate).toHaveBeenCalled());
   expect(payload().privacy).toBe("private");
 });
+
+describe("scheduling", () => {
+  it("offers no schedule while the server does not enforce it", () => {
+    renderCreate();
+    expect(screen.queryByLabelText("Schedule")).not.toBeInTheDocument();
+  });
+
+  it("offers no schedule when app-config fails", () => {
+    mockAppConfig = { data: undefined, isError: true };
+    renderCreate();
+    expect(screen.queryByLabelText("Schedule")).not.toBeInTheDocument();
+  });
+
+  it("never sends the old scheduledDate field", async () => {
+    renderCreate();
+    describe_("Hi");
+    share();
+    await waitFor(() => expect(mockCreate).toHaveBeenCalled());
+    expect(payload()).not.toHaveProperty("scheduledDate");
+    expect(payload()).not.toHaveProperty("scheduledFor");
+  });
+
+  it("sends scheduledFor as an ISO instant when enforced", async () => {
+    mockAppConfig = { data: { momentSchedulingEnforced: true }, isError: false };
+    renderCreate();
+    describe_("Hi");
+    fireEvent.change(screen.getByLabelText("Schedule"), { target: { value: "2099-01-02T09:30" } });
+    share();
+    await waitFor(() => expect(mockCreate).toHaveBeenCalled());
+    expect(payload().scheduledFor).toBe(new Date("2099-01-02T09:30").toISOString());
+  });
+
+  it("a past time blocks sharing", () => {
+    mockAppConfig = { data: { momentSchedulingEnforced: true }, isError: false };
+    renderCreate();
+    describe_("Hi");
+    fireEvent.change(screen.getByLabelText("Schedule"), { target: { value: "2020-01-02T09:30" } });
+    expect(screen.getByRole("button", { name: "Share" })).toBeDisabled();
+  });
+});

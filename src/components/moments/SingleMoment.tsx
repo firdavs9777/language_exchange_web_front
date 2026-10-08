@@ -24,6 +24,8 @@ import {
 import { useTargetLanguage } from "../../hooks/useTargetLanguage";
 import { useMomentViews } from "./useMomentViews";
 import MomentOverflowMenu from "./actions/MomentOverflowMenu";
+import ScheduledBadge from "./ScheduledBadge";
+import { isScheduledLater } from "./lib/scheduling";
 import TranslatableText from "./TranslatableText";
 import MomentReactionRow from "./actions/MomentReactionRow";
 import ShareButton from "../linking/ShareButton";
@@ -66,6 +68,7 @@ interface MomentProps {
   };
   audio?: { url: string; duration: number; waveform: number[] };
   backgroundColor?: string;
+  scheduledFor?: string | null;
 }
 
 interface AuthState {
@@ -98,10 +101,15 @@ const SingleMoment: React.FC<MomentProps> = ({
   video,
   audio,
   backgroundColor,
+  scheduledFor,
 }) => {
   const userId = useSelector(
     (state: RootState) => state.auth.userInfo?.user?._id
   );
+  // The author's own unpublished moment: its createdAt is in the future, so a
+  // relative time would read nonsense.
+  const isOwnScheduled =
+    Boolean(userId) && user?._id === userId && isScheduledLater({ scheduledFor });
 
   // Mock mutation hooks - replace with your actual hooks
   const [likeMoment] = useLikeMomentMutation();
@@ -391,7 +399,11 @@ const SingleMoment: React.FC<MomentProps> = ({
                   </h3>
                 </div>
                 <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 mt-0.5">
-                  <time dateTime={createdAt} className="truncate">{formatDate(createdAt)}</time>
+                  {isOwnScheduled ? (
+                    <ScheduledBadge at={scheduledFor as string} />
+                  ) : (
+                    <time dateTime={createdAt} className="truncate">{formatDate(createdAt)}</time>
+                  )}
                   <span className="hidden xs:inline">•</span>
                   <svg
                     className="w-3 h-3 text-gray-400 hidden xs:block"

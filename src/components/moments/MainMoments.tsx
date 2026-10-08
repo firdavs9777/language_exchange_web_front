@@ -517,6 +517,7 @@ const MainMoments: React.FC = () => {
                             video={moment.video}
                             audio={moment.audio}
                             backgroundColor={moment.backgroundColor}
+                            scheduledFor={moment.scheduledFor}
                           />
                         </div>
                       </div>

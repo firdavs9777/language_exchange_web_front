@@ -37,6 +37,12 @@ jest.mock("../../store/slices/momentsSlice", () => ({
   useRecordMomentViewsMutation: () => [jest.fn(() => ({ unwrap: () => Promise.resolve({}) })), {}],
 }));
 
+// The "⋯" menu's report dialog posts through usersSlice, which needs a real
+// store; this file mocks react-redux, so the mutation is stubbed instead.
+jest.mock("../../store/slices/usersSlice", () => ({
+  useReportUserMutation: () => [jest.fn(), { isLoading: false }],
+}));
+
 const DESCRIPTION = "오늘 날씨가 정말 좋아요";
 
 const renderMoment = (description: string = DESCRIPTION) =>
@@ -173,5 +179,36 @@ describe("SingleMoment media loading", () => {
 
     expect(photo).toHaveAttribute("loading", "lazy");
     expect(photo).toHaveAttribute("decoding", "async");
+  });
+});
+
+describe("SingleMoment scheduled badge", () => {
+  const renderScheduled = (authorId: string) =>
+    render(
+      <MemoryRouter>
+        <SingleMoment
+          _id="moment-2"
+          title="Later"
+          description="d"
+          likeCount={0}
+          likedUsers={[]}
+          commentCount={0}
+          createdAt="2099-01-01T00:00:00.000Z"
+          scheduledFor="2099-01-01T00:00:00.000Z"
+          user={{ _id: authorId, name: "Author" }}
+        />
+      </MemoryRouter>
+    );
+
+  it("the author sees when it will go out instead of a relative time", () => {
+    mockUserId = "me-1";
+    renderScheduled("me-1");
+    expect(screen.getByTestId("scheduled-badge")).toBeInTheDocument();
+  });
+
+  it("nobody else sees the badge", () => {
+    mockUserId = "me-1";
+    renderScheduled("someone-else");
+    expect(screen.queryByTestId("scheduled-badge")).not.toBeInTheDocument();
   });
 });
