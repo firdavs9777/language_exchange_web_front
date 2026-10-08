@@ -26,7 +26,7 @@ import { AD_SLOTS } from "../ads/adsenseConfig";
 import { CommunityFilters, buildCommunityQuery } from "./lib/buildCommunityQuery";
 import * as filterStorage from "./lib/filterStorage";
 import { DEFAULT_FILTERS } from "./lib/filterStorage";
-import { showsAdAfter, showsCarouselAfter } from "./lib/gridInterleave";
+import { showsAdAfter } from "./lib/gridInterleave";
 import {
   CommunityUrlState,
   decodeCommunityState,
@@ -541,14 +541,11 @@ const ModernCommunity: React.FC = () => {
     return [...pros, ...fillers].slice(0, 12);
   }, [allMembers]);
 
-  // One source of truth for what goes BETWEEN the members. The ad and the
-  // carousel are both full-row items and were decided separately inline, which
-  // is how they came to claim the same index.
-  const interleave = {
-    total: allMembers.length,
-    isAllTab: activeTab === "all",
-    hasHighlights: highlightedProfiles.length > 0,
-  };
+  // What goes BETWEEN the members: the periodic ad (lib/gridInterleave).
+  const interleave = { total: allMembers.length };
+  // The highlighted carousel is the All tab's showcase, so it leads the page
+  // rather than sitting halfway down the grid.
+  const showHighlights = activeTab === "all" && highlightedProfiles.length > 0;
 
 
   const visitorsCount = useMemo(() => {
@@ -888,6 +885,14 @@ const ModernCommunity: React.FC = () => {
           </div>
         ) : (
           <>
+            {showHighlights && (
+              <div className="community-highlights">
+                <HighlightedProfilesCarousel
+                  profiles={highlightedProfiles as any}
+                  currentUser={currentUser}
+                />
+              </div>
+            )}
             <div className="community-grid">
               {allMembers.map((member, index) => (
                 <Fragment key={member._id}>
@@ -898,21 +903,10 @@ const ModernCommunity: React.FC = () => {
                       onWave={handleWaveMember}
                     />
                   </div>
-                  {/* What goes BETWEEN the members -- a periodic ad and, on
-                      the All tab, the highlighted carousel -- is decided by
-                      lib/gridInterleave. Both are full-row items, and deciding
-                      them inline here is how they came to land on the same
-                      index without anyone noticing. */}
+                  {/* What goes BETWEEN the members -- a periodic ad -- is
+                      decided by lib/gridInterleave. */}
                   {showsAdAfter(index, interleave) && (
                     <AdUnit slot={AD_SLOTS.community} className="my-3 community-grid__ad" />
-                  )}
-                  {showsCarouselAfter(index, interleave) && (
-                    <div className="community-grid__feature">
-                      <HighlightedProfilesCarousel
-                        profiles={highlightedProfiles as any}
-                        currentUser={currentUser}
-                      />
-                    </div>
                   )}
                 </Fragment>
               ))}

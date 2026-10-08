@@ -668,9 +668,9 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 /* A full-row item in the member grid, like .community-grid__ad: a carousel
    that took one of three columns would shift every member after it. */
-.community-grid__feature {
-  grid-column: 1 / -1;
-  margin: var(--bt-space-2) 0;
+/* The highlighted carousel, above the grid it showcases. */
+.community-highlights {
+  margin-bottom: var(--bt-space-3);
 }
 
 .community-grid__count {
