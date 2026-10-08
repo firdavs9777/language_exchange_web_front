@@ -74,13 +74,26 @@ A new RTK Query endpoint in `communitySlice.ts`:
 - `CommunityUrlTab` / `CommunityNavTab` gain **`today`**, the first entry in the sub-nav. It is rendered in place by the list, like `foryou`.
 - **Default tab: `today` becomes the URL's left-out default, and `all` is written explicitly.**
   - Today, `encodeCommunityState` leaves out `tab` when it is `all`, and `MainCommunity` reads `decoded.tab || "all"`. If "no `?tab=`" simply meant Today, clicking All would write a bare `/communities` and show Today again, and All would be unreachable.
-  - So `encodeCommunityState` now leaves `tab` out when it is **`today`** and writes `tab=all` like any other tab. The decoder reads an absent tab as `today`, and `TABS` includes `today`.
+  - So `encodeCommunityState` now leaves `tab` out when it is **`today`** and writes `tab=all` like any other tab. `TABS` includes `today`.
+  - **An absent `tab` means `today` only when the URL carries no filter, search or sort params; otherwise it means `all`.**
+    - Every filtered or searched All link shared before today has no `tab` (for example `/communities?native=ko&learning=en` or `?q=anna`). Read as Today, it would open on a tab that ignores filters, and the canonical-URL rewrite would then strip the shared params.
+    - The rule stays canonical: `encode` never writes filter params for `today`, so `encode(decode(encode(x)))` still holds.
+    - This lives where the default is applied (`listState.tab = decoded.tab || (url carries filters/search/sort ? "all" : "today")`), not inside `decodeCommunityState`, whose contract is to return only what the URL said.
   - Every path that targets All therefore writes `?tab=all`: the tab itself, `handleResetAll`, and Browse partners. Reload, Back and shared links all keep it.
   - An explicit `?tab=…` always wins.
-  - Accepted consequence: old bare `/communities` links, which used to mean All, now open on Today. That is what the user chose.
+  - Accepted consequence: old **bare** `/communities` links, which used to mean All, now open on Today. That is what the user chose.
+  - **Internal links audited.** The links into `/communities` from these places stay bare and open on Today, since they are entry points:
+    - `MainNavbar`, `FooterMain`, `MainMoments`;
+    - LanguageCard's missing-card link;
+    - ProfilePage's `AFTER_BLOCK`;
+    - Register's post-signup redirect;
+    - `Topics.tsx`'s back link.
+
+    `SuggestedMembers`' "see more" means "browse everyone", so it points at `/communities?tab=all`.
 - **When the feature is off** (404), the fallback is **display-only**:
   - `activeTab` = the URL tab, except that `today` is shown as `all` while the feature is off.
   - The canonical-URL effect (`writeUrl`) keeps writing the **URL-derived** tab (`listState.tab`), not the displayed one. So a bare `/communities` or `?tab=today` stays as it is in the address bar while All is shown.
+  - **User-driven writes use the displayed tab.** That covers `applyState`'s base state and the Copy-link encode. A filter change while the feature is off therefore writes `?tab=all`, which describes what is on screen.
   - The Today tab button is hidden.
 - **The All list is requested only after `/matching/daily` answers 404.** For members with the feature off, that costs one round-trip before the list shows. This is intended; the alternative is fetching All on every Today landing.
 - **No filter params on Today.** Like `foryou` it writes none, and the stored filters stand in. The `forYouWithoutFilters` special case in `listState` and `writeUrl` is extended to `today`. Otherwise the default landing would become `/communities?native=…&learning=…`.
@@ -168,6 +181,7 @@ A new `communityMain.today.*` namespace, in all 18 locales and parity-guarded. T
   - `communityUrlState` round-trips with `today` as the left-out default and `all` written explicitly;
   - its existing tests that assumed `all` is left out are updated.
 - **Feature off:** a bare `/communities` shows All while the address bar keeps no `tab`, and `?tab=today` likewise. The Today button is hidden.
+- **Old filtered links:** `/communities?native=ko` (no `tab`) lands on **All** and keeps its params. So do `?q=anna` and `?sort=recently_active`.
 - **Today writes no filter params.**
 - **Skips:** a skipped card stays gone after a remount within the same batch `date`, and comes back once the `date` changes.
 - **Existing suites stay green.**
