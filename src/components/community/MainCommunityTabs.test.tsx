@@ -193,15 +193,19 @@ describe("the community tabs", () => {
     expect(first).not.toContain("newUsersOnly");
   });
 
-  it("keeps the highlighted carousel on All only, below the first row", async () => {
+  // Reported from production: "highlighted profiles came to the middle". The
+  // carousel had been interleaved into the grid after the sixth member -- the
+  // first row boundary shared by the 3, 2 and 1 column layouts -- which put the
+  // page's showcase halfway down the list. It sits above the grid now, the
+  // first thing on the All tab, and never inside it.
+  it("keeps the highlighted carousel on All only, above the grid", async () => {
     const { container, router } = renderList();
 
     await waitFor(() =>
       expect(container.querySelector(".highlighted-banner")).toBeInTheDocument()
     );
-    // It is inside the grid now, not a sibling above it.
     const grid = container.querySelector(".community-grid")!;
-    expect(grid.querySelector(".highlighted-banner")).toBeInTheDocument();
+    expect(grid.querySelector(".highlighted-banner")).not.toBeInTheDocument();
     expect(container.querySelector(".visitors-banner")).not.toBeInTheDocument();
 
     fireEvent.click(tab("communityMain.tabs.online"));
@@ -210,17 +214,14 @@ describe("the community tabs", () => {
     expect(container.querySelector(".highlighted-banner")).not.toBeInTheDocument();
   });
 
-  it("places the carousel after the first six members, spanning the row", async () => {
-    // Six is the first index that is a row boundary at 3, 2 AND 1 columns, so
-    // the default 3-member mock is not enough to reach the index === 5
-    // branch; this test supplies six members to exercise it.
+  it("puts the carousel before the first member, whatever the list length", async () => {
     const realFetch = global.fetch;
     (global as any).fetch = jest.fn((input: any) => {
       const url = typeof input === "string" ? input : input?.url || "";
       if (/\/auth\/users\?/.test(url)) {
         return Promise.resolve(new Response(JSON.stringify({
           success: true,
-          data: [member(1), member(2), member(3), member(4), member(5), member(6)],
+          data: [member(1), member(2), member(3), member(4), member(5), member(6), member(7)],
         }), { status: 200, headers: { "Content-Type": "application/json" } }));
       }
       return (realFetch as any)(input);
@@ -231,42 +232,13 @@ describe("the community tabs", () => {
       await waitFor(() =>
         expect(container.querySelector(".highlighted-banner")).toBeInTheDocument()
       );
+      const banner = container.querySelector(".highlighted-banner")!;
       const grid = container.querySelector(".community-grid")!;
-
-      const feature = grid.querySelector(".community-grid__feature")!;
-      expect(feature).toBeInTheDocument();
-      // Six members before it, so the carousel is the seventh child of the grid.
-      expect(Array.from(grid.children).indexOf(feature)).toBe(6);
-    } finally {
-      global.fetch = realFetch;
-    }
-  });
-
-  it("still places the carousel when a search returns fewer than six members", async () => {
-    // The shared mock returns a full page; this one returns two members so the
-    // index === 5 branch is never reached and the fallback has to carry it.
-    const realFetch = global.fetch;
-    (global as any).fetch = jest.fn((input: any) => {
-      const url = typeof input === "string" ? input : input?.url || "";
-      if (/\/auth\/users\?/.test(url)) {
-        return Promise.resolve(new Response(JSON.stringify({
-          data: [
-            { _id: "m1", name: "Ada", imageUrls: [], native_language: "English", language_to_learn: "Korean" },
-            { _id: "m2", name: "Bo", imageUrls: [], native_language: "Korean", language_to_learn: "English" },
-          ],
-          total: 2,
-        }), { status: 200, headers: { "Content-Type": "application/json" } }));
-      }
-      return (realFetch as any)(input);
-    });
-
-    try {
-      const { container } = renderList();
-      await waitFor(() =>
-        expect(container.querySelector(".highlighted-banner")).toBeInTheDocument()
-      );
-      const grid = container.querySelector(".community-grid")!;
-      expect(grid.querySelector(".highlighted-banner")).toBeInTheDocument();
+      // Document order: the banner comes before the grid that holds the members.
+      expect(
+        banner.compareDocumentPosition(grid) & Node.DOCUMENT_POSITION_FOLLOWING
+      ).toBeTruthy();
+      expect(grid.querySelector(".community-grid__feature")).not.toBeInTheDocument();
     } finally {
       global.fetch = realFetch;
     }
