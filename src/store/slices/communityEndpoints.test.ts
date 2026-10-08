@@ -250,3 +250,24 @@ describe('the "For you" recommendation feed', () => {
     expect(new URL(calls[0].url).searchParams.get("limit")).toBe("20");
   });
 });
+
+describe("Today's matches endpoints hit the live backend routes", () => {
+  it("getDailyMatches -> GET /api/v1/matching/daily", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch((communityApiSlice.endpoints as any).getDailyMatches.initiate());
+    expect(calls).toHaveLength(1);
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/matching/daily");
+    expect(calls[0].method).toBe("GET");
+  });
+
+  it("skipUser -> POST /api/v1/interactions/skip with {targetUserId}", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch((communityApiSlice.endpoints as any).skipUser.initiate("u-9"));
+    expect(calls).toHaveLength(1);
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/interactions/skip");
+    expect(calls[0].method).toBe("POST");
+    expect(JSON.parse(calls[0].body as string)).toEqual({ targetUserId: "u-9" });
+  });
+});
