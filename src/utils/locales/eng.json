@@ -2281,5 +2281,21 @@
     "stepsTitle": "How to join",
     "step1": "Install BananaTalk",
     "step2": "Open this link again, or enter the code after you complete your profile"
+  },
+  "card": {
+    "title": "Language Card",
+    "my_card": "My card",
+    "speaks": "Speaks",
+    "learning": "Learning",
+    "practice_with": "Practice {{language}} with {{name}}",
+    "view_profile": "See full profile",
+    "continue_web": "Continue in the browser",
+    "share": "Share my card",
+    "share_text": "Practice {{language}} with me on BananaTalk",
+    "edit": "Edit what's on it",
+    "tagline": "Language exchange on BananaTalk",
+    "not_found": "This card doesn't exist",
+    "not_found_body": "The account may have been removed.",
+    "find_partners": "Find language partners"
   }
 }

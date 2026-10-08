@@ -2268,5 +2268,21 @@
     "more": "更多",
     "reply_failed": "訊息傳送失敗",
     "vote_failed": "投票儲存失敗"
+  },
+  "card": {
+    "title": "語言卡片",
+    "my_card": "我的卡片",
+    "speaks": "會說",
+    "learning": "正在學",
+    "practice_with": "和{{name}}練習{{language}}",
+    "view_profile": "查看完整檔案",
+    "continue_web": "在瀏覽器中繼續",
+    "share": "分享我的卡片",
+    "share_text": "來 BananaTalk 和我一起練習{{language}}",
+    "edit": "編輯卡片內容",
+    "tagline": "在 BananaTalk 進行語言交換",
+    "not_found": "這張卡片不存在",
+    "not_found_body": "該帳號可能已被刪除。",
+    "find_partners": "尋找語言夥伴"
   }
 }

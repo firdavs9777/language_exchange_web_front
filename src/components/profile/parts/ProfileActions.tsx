@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Ban, Flag, MessageCircle, MoreHorizontal, Pencil, Settings, ShieldOff } from "lucide-react";
+import { Ban, Flag, IdCard, MessageCircle, MoreHorizontal, Pencil, Settings, ShieldOff } from "lucide-react";
 import ConfirmDialog from "../../../design/ConfirmDialog";
 import useFollowToggle from "../useFollowToggle";
 import {
@@ -189,6 +189,12 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
           <Settings className="h-4 w-4" aria-hidden />
           {t("profile.actions.settings") || "Settings"}
         </Link>
+        {userId && (
+          <Link to={`/card/${userId}`} data-testid="action-card" className={SECONDARY}>
+            <IdCard className="h-4 w-4" aria-hidden />
+            {t("card.my_card") || "My card"}
+          </Link>
+        )}
       </div>
     );
   }

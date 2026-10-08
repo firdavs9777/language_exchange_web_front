@@ -2268,5 +2268,21 @@
     "more": "เพิ่มเติม",
     "reply_failed": "ส่งข้อความไม่สำเร็จ",
     "vote_failed": "บันทึกการโหวตไม่สำเร็จ"
+  },
+  "card": {
+    "title": "การ์ดภาษา",
+    "my_card": "การ์ดของฉัน",
+    "speaks": "พูด",
+    "learning": "กำลังเรียน",
+    "practice_with": "ฝึก{{language}}กับ {{name}}",
+    "view_profile": "ดูโปรไฟล์เต็ม",
+    "continue_web": "ใช้งานต่อในเบราว์เซอร์",
+    "share": "แชร์การ์ดของฉัน",
+    "share_text": "มาฝึก{{language}}กับฉันบน BananaTalk",
+    "edit": "แก้ไขข้อมูลบนการ์ด",
+    "tagline": "แลกเปลี่ยนภาษาบน BananaTalk",
+    "not_found": "ไม่พบการ์ดนี้",
+    "not_found_body": "บัญชีนี้อาจถูกลบไปแล้ว",
+    "find_partners": "หาคู่ฝึกภาษา"
   }
 }

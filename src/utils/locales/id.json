@@ -2268,5 +2268,21 @@
     "more": "Lainnya",
     "reply_failed": "Pesan Anda tidak dapat dikirim",
     "vote_failed": "Suara Anda tidak dapat disimpan"
+  },
+  "card": {
+    "title": "Kartu Bahasa",
+    "my_card": "Kartu saya",
+    "speaks": "Berbicara",
+    "learning": "Belajar",
+    "practice_with": "Latihan {{language}} dengan {{name}}",
+    "view_profile": "Lihat profil lengkap",
+    "continue_web": "Lanjutkan di browser",
+    "share": "Bagikan kartu saya",
+    "share_text": "Latihan {{language}} bareng aku di BananaTalk",
+    "edit": "Ubah isinya",
+    "tagline": "Pertukaran bahasa di BananaTalk",
+    "not_found": "Kartu ini tidak ada",
+    "not_found_body": "Akun ini mungkin sudah dihapus.",
+    "find_partners": "Cari partner bahasa"
   }
 }

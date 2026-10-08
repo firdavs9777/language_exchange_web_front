@@ -2272,5 +2272,21 @@
     "more": "المزيد",
     "reply_failed": "تعذر إرسال رسالتك",
     "vote_failed": "تعذر حفظ تصويتك"
+  },
+  "card": {
+    "title": "بطاقة اللغة",
+    "my_card": "بطاقتي",
+    "speaks": "يتحدث",
+    "learning": "يتعلم",
+    "practice_with": "تدرّب على {{language}} مع {{name}}",
+    "view_profile": "عرض الملف الكامل",
+    "continue_web": "المتابعة في المتصفح",
+    "share": "مشاركة بطاقتي",
+    "share_text": "تدرّب على {{language}} معي على BananaTalk",
+    "edit": "تعديل محتوى البطاقة",
+    "tagline": "تبادل لغوي على BananaTalk",
+    "not_found": "هذه البطاقة غير موجودة",
+    "not_found_body": "ربما تمت إزالة الحساب.",
+    "find_partners": "ابحث عن شركاء لغة"
   }
 }

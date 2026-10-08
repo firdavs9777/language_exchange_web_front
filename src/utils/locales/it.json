@@ -2269,5 +2269,21 @@
     "more": "Altro",
     "reply_failed": "Impossibile inviare il messaggio",
     "vote_failed": "Impossibile salvare il tuo voto"
+  },
+  "card": {
+    "title": "Carta delle lingue",
+    "my_card": "La mia carta",
+    "speaks": "Parla",
+    "learning": "Impara",
+    "practice_with": "Pratica {{language}} con {{name}}",
+    "view_profile": "Vedi profilo completo",
+    "continue_web": "Continua nel browser",
+    "share": "Condividi la mia carta",
+    "share_text": "Pratica {{language}} con me su BananaTalk",
+    "edit": "Modifica il contenuto",
+    "tagline": "Scambio linguistico su BananaTalk",
+    "not_found": "Questa carta non esiste",
+    "not_found_body": "L'account potrebbe essere stato rimosso.",
+    "find_partners": "Trova partner linguistici"
   }
 }

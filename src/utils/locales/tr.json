@@ -2268,5 +2268,21 @@
     "more": "Daha fazla",
     "reply_failed": "Mesajın gönderilemedi",
     "vote_failed": "Oyun kaydedilemedi"
+  },
+  "card": {
+    "title": "Dil Kartı",
+    "my_card": "Kartım",
+    "speaks": "Konuşuyor",
+    "learning": "Öğreniyor",
+    "practice_with": "{{name}} ile {{language}} pratiği yap",
+    "view_profile": "Profilin tamamını gör",
+    "continue_web": "Tarayıcıda devam et",
+    "share": "Kartımı paylaş",
+    "share_text": "BananaTalk'ta benimle {{language}} pratiği yap",
+    "edit": "İçeriği düzenle",
+    "tagline": "BananaTalk'ta dil değişimi",
+    "not_found": "Böyle bir kart yok",
+    "not_found_body": "Hesap kaldırılmış olabilir.",
+    "find_partners": "Dil partneri bul"
   }
 }
