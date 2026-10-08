@@ -1191,6 +1191,10 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   contain-intrinsic-size: auto 420px;
   padding: 8px 8px 20px;
   margin: -8px -8px -20px;
+  /* The grid stretches the slot to its row; this passes that height on to the
+   * card, so every card in a row ends on the same line. */
+  display: flex;
+  flex-direction: column;
 }
 
 /* A card-shaped placeholder, the same height and silhouette as the card it
