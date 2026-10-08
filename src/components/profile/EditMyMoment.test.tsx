@@ -237,3 +237,17 @@ it("uses no react-bootstrap markup and no emoji", () => {
     /[\u{1F300}-\u{1FAFF}\u{2190}-\u{21FF}\u{2700}-\u{27BF}]/u
   );
 });
+
+describe("media", () => {
+  it("a video moment shows its video editor and no photo section", () => {
+    renderEditor({ data: { ...MOMENT, imageUrls: [], mediaType: "video", video: { url: "https://cdn/v.mp4" } } });
+    expect(screen.getByTestId("media-editor")).toBeInTheDocument();
+    expect(screen.queryByTestId("edit-moment-add-images")).not.toBeInTheDocument();
+  });
+
+  it("a photo moment has no media editor", () => {
+    renderEditor();
+    expect(screen.queryByTestId("media-editor")).not.toBeInTheDocument();
+    expect(screen.getByTestId("edit-moment-add-images")).toBeInTheDocument();
+  });
+});

@@ -126,6 +126,18 @@ describe("momentsSlice new endpoints hit the REAL backend routes", () => {
     expect(calls[0].method).toBe("DELETE");
   });
 
+  it("deleteMomentAudio -> DELETE /api/v1/moments/:momentId/audio", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch(
+      (momentsApiSlice.endpoints as any).deleteMomentAudio.initiate("moment-1")
+    );
+    expect(calls).toHaveLength(1);
+    const url = new URL(calls[0].url);
+    expect(url.pathname).toBe(`${MOMENTS_URL}/moment-1/audio`);
+    expect(calls[0].method).toBe("DELETE");
+  });
+
   it("uploadMomentAudio -> PUT /api/v1/moments/:momentId/audio with FormData (fields: audio, duration, waveform)", async () => {
     const calls = mockFetch();
     const store = makeStore();

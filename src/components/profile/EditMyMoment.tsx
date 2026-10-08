@@ -13,6 +13,7 @@ import {
 import BackgroundField from "../moments/fields/BackgroundField";
 import CategoryField from "../moments/fields/CategoryField";
 import LanguageField from "../moments/fields/LanguageField";
+import MediaEditor from "../moments/fields/MediaEditor";
 import MoodField from "../moments/fields/MoodField";
 import PrivacyField from "../moments/fields/PrivacyField";
 import ScheduleField from "../moments/fields/ScheduleField";
@@ -99,6 +100,9 @@ const EditMyMoment: React.FC = () => {
   const canSchedule = schedulingEnabled && isScheduledLater(original);
   const scheduleBlocked = canSchedule && Boolean(scheduleInput) && !isFutureInput(scheduleInput);
   const isTextMoment = moment && moment.mediaType === "text";
+  // A moment carries one kind of media: a video or voice note is edited in
+  // its own section, and photos cannot be added beside it.
+  const hasAvMedia = Boolean(moment && (moment.mediaType === "video" || moment.mediaType === "audio"));
 
   // Leaving someone else's moment open in an editor they cannot save is worse
   // than bouncing them: the save would 403 after they had typed.
@@ -310,6 +314,11 @@ const EditMyMoment: React.FC = () => {
             </div>
           </SurfaceCard>
 
+{hasAvMedia ? (
+          <SurfaceCard padding="lg">
+            <MediaEditor moment={moment} />
+          </SurfaceCard>
+          ) : (
           <SurfaceCard padding="lg">
             <h2 className={LABEL}>{t("editMoment.form.imagesLabel") || "Images"}</h2>
             <p className="pb-3 text-xs text-ink-400 dark:text-ink-500">
@@ -378,6 +387,7 @@ const EditMyMoment: React.FC = () => {
               className="hidden"
             />
           </SurfaceCard>
+          )}
 
           <div className="flex items-center justify-end gap-2">
             {notice && (

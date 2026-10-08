@@ -331,6 +331,13 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Moments"],
     }),
+    deleteMomentAudio: builder.mutation({
+      query: (momentId: string) => ({
+        url: `${MOMENTS_URL}/${momentId}/audio`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Moments"],
+    }),
     // Audio attachment — PUT /api/v1/moments/:momentId/audio with FormData
     // (fields: audio (blob), duration, waveform (JSON.stringify of number[]))
     uploadMomentAudio: builder.mutation({
@@ -398,6 +405,7 @@ export const {
   useShareMomentMutation,
   useUploadMomentVideoMutation,
   useDeleteMomentVideoMutation,
+  useDeleteMomentAudioMutation,
   useUploadMomentAudioMutation,
   useGetPromptOfDayQuery,
   useGetReelsFeedQuery,
