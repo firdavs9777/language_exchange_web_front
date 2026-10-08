@@ -45,7 +45,13 @@ All verified against the backend code and production `/app-config` on 2026-10-08
   - `BATCH_SIZE` is 6. With an extra-matches pool (bought with coins) it can be larger, so the web never assumes 6.
 
 - **`matchReasons` on `/daily` are CODES**, not English. They are produced by `lib/dailyMatches.js` `structuredReasons`: `reciprocal_pair`, `same_target_language`, `shared_topic:<topicId>` (more than one possible), `active_today`, `same_city`.
-- **`POST /interactions/skip`** with body `{ targetUserId }` records a skip, and the server leaves skipped people out of future batches.
+- **`POST /interactions/skip`** with body `{ targetUserId }` records a skip, which expires after 24 hours. `getDailyMatches` does **not** read skips. Its exclusions are:
+  - the viewer;
+  - blocked users;
+  - anyone messaged in the last 14 days;
+  - anyone shown in a daily batch in the prior 7 days.
+
+  So a skipped person stays out of tomorrow's batch only because they were already shown. Today's batch is cached for the whole UTC day, so the server sends a skipped card again on every load that day.
 - **The web already has:**
   - `WaveSheet` (`src/components/community/WaveSheet.tsx`, wired through `handleWaveMember` in `MainCommunity`);
   - chat at `/chat/:userId`;
@@ -66,8 +72,18 @@ A new RTK Query endpoint in `communitySlice.ts`:
 ### The tab
 
 - `CommunityUrlTab` / `CommunityNavTab` gain **`today`**, the first entry in the sub-nav. It is rendered in place by the list, like `foryou`.
-- **Default tab.** A signed-in member opening `/communities` with no `?tab=` lands on `today`. An explicit `?tab=…` always wins, so existing links keep working.
-- **When the feature is off** (404), the tab disappears and a default landing falls back to `all`. A link that says `?tab=today` also shows `all`. The address bar is not rewritten.
+- **Default tab: `today` becomes the URL's left-out default, and `all` is written explicitly.**
+  - Today, `encodeCommunityState` leaves out `tab` when it is `all`, and `MainCommunity` reads `decoded.tab || "all"`. If "no `?tab=`" simply meant Today, clicking All would write a bare `/communities` and show Today again, and All would be unreachable.
+  - So `encodeCommunityState` now leaves `tab` out when it is **`today`** and writes `tab=all` like any other tab. The decoder reads an absent tab as `today`, and `TABS` includes `today`.
+  - Every path that targets All therefore writes `?tab=all`: the tab itself, `handleResetAll`, and Browse partners. Reload, Back and shared links all keep it.
+  - An explicit `?tab=…` always wins.
+  - Accepted consequence: old bare `/communities` links, which used to mean All, now open on Today. That is what the user chose.
+- **When the feature is off** (404), the fallback is **display-only**:
+  - `activeTab` = the URL tab, except that `today` is shown as `all` while the feature is off.
+  - The canonical-URL effect (`writeUrl`) keeps writing the **URL-derived** tab (`listState.tab`), not the displayed one. So a bare `/communities` or `?tab=today` stays as it is in the address bar while All is shown.
+  - The Today tab button is hidden.
+- **The All list is requested only after `/matching/daily` answers 404.** For members with the feature off, that costs one round-trip before the list shows. This is intended; the alternative is fetching All on every Today landing.
+- **No filter params on Today.** Like `foryou` it writes none, and the stored filters stand in. The `forYouWithoutFilters` special case in `listState` and `writeUrl` is extended to `today`. Otherwise the default landing would become `/communities?native=…&learning=…`.
 - **Before the first answer,** the Today tab shows a skeleton of match cards. It does not switch tabs while loading, so nothing jumps.
 - **Signed out:** no Today tab, because the endpoint is behind `protect`. Logged-out visitors keep seeing `PublicCommunities` as today; the prerendered `/communities` page is unaffected.
 - **Hidden on the Today tab:** the filter button, search, sort and the highlighted carousel. The batch is the server's choice; filters do not apply to it.
@@ -76,7 +92,7 @@ A new RTK Query endpoint in `communitySlice.ts`:
 
 - **"Your {{count}} matches today"**, counting the cards still showing — skips decrease it.
 - **"Refreshes at {{time}}"**, with `nextRefreshAt` in the reader's local time (`Intl.DateTimeFormat`, hour and minute). If it is missing: "Refreshes at midnight".
-- **Rollover:** when the clock passes `nextRefreshAt` while the tab is open, the query refetches once. This is checked on window focus and with one timer set for that moment.
+- **Rollover:** when the clock passes `nextRefreshAt` while the tab is open, the query refetches once. This is checked on window focus and with one timer set for that moment. The timer is cleared on unmount and re-armed whenever `nextRefreshAt` changes, so no stale timer outlives its batch.
 
 ### The card — `src/components/community/MatchCard.tsx`
 
@@ -91,16 +107,21 @@ A row card, not the grid's photo cell, matching the app's layout:
   |---|---|
   | `reciprocal_pair` | "You're learning each other's language" |
   | `same_target_language` | "Also learning {{language}}", where language is the card user's `language_to_learn` |
-  | `shared_topic:<id>` | "Shared interest: {{topic}}", where topic is `t('profile.topics.<id>')`, falling back to the id |
+  | `shared_topic:<id>` | "Shared interest: {{topic}}", where topic is `t('profile.topics.<id>', { defaultValue: id })`. A plain `t(...) \|\| id` never falls back, because a missing key returns the key itself. |
   | `active_today` | "Active today" |
   | `same_city` | "Lives in your city" |
 
   An unknown code renders nothing. These are codes, so there is no English string to fall back to, and a raw code is never shown.
-- **"Replies fast"** when `responseRate >= 0.7`. **"Boosted"** when `boosted`.
+- **"Replies fast"** when `responseRate` is a number `>= 0.7`. The server sends `null` when it has no rate, so the type is `number | null`.
+- **"Boosted"** when `boosted`.
 - **Actions:**
   - **Say hi** — a link to `/chat/<id>`. It is primary.
-  - **Wave** — opens the existing `WaveSheet` for this person.
-  - **Skip** — the card leaves at once and `POST /interactions/skip` is sent. If the request fails, the card stays gone and nothing is reported, the same as the app. Skips are kept for the rest of the session so a refetch does not bring the card back.
+  - **Wave** — opens the existing `WaveSheet` for this person. `WaveSheet` takes its avatar from `imageUrls?.[0]`, so the card passes the user with `imageUrls: [<resolved photo URL>]`, the same URL its own avatar uses.
+  - **Skip** — the card leaves at once and `POST /interactions/skip` is sent. If the request fails, the card stays gone and nothing is reported, the same as the app.
+- **Skips survive a reload.** The server sends the same cached batch all day, skipped cards included. So skipped ids are kept in `sessionStorage` under `bt.todaySkips.<date>`, with `date` taken from the payload, and filtered out on every render.
+  - When the batch's `date` changes, the old key is ignored and the new day starts clean.
+  - Reads and writes are wrapped, so blocked storage only means skips last until reload.
+  - This deliberately improves on the app, which keeps skips in memory only.
 - **Name or avatar** opens `/community/<id>`.
 
 ### Empty state
@@ -143,4 +164,12 @@ A new `communityMain.today.*` namespace, in all 18 locales and parity-guarded. T
 - **Empty state** after the last skip, with Browse partners switching to All.
 - **Rollover** refetches once after `nextRefreshAt`.
 - **Locale parity** for `communityMain.today.*`.
-- **Existing suites stay green**, and the mount-request budget in `communityPerf.test.tsx` is updated with its reason. Today is the default tab, so `/matching/daily` replaces the All list's request on first load. The budget changes in composition, not necessarily in count.
+- **URL state:**
+  - `communityUrlState` round-trips with `today` as the left-out default and `all` written explicitly;
+  - its existing tests that assumed `all` is left out are updated.
+- **Feature off:** a bare `/communities` shows All while the address bar keeps no `tab`, and `?tab=today` likewise. The Today button is hidden.
+- **Today writes no filter params.**
+- **Skips:** a skipped card stays gone after a remount within the same batch `date`, and comes back once the `date` changes.
+- **Existing suites stay green.**
+  - `communityPerf.test.tsx` is **reworked, not just re-counted**. Almost every test there renders a bare `/communities` and asserts on the All grid (cards, `/auth/users?` requests, visitors, paging, search). Those tests switch to `?tab=all`, and a new one pins the Today default's mount budget.
+  - `MainCommunityTabs.test.tsx` and `MainCommunityUrlState.test.tsx` get the same treatment wherever they relied on bare-URL = All.
