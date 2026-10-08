@@ -350,3 +350,24 @@ describe("the For you tab", () => {
     );
   });
 });
+
+describe("For You reason chips", () => {
+  it("renders the localised key when the server sends codes", async () => {
+    recommendations = [
+      {
+        ...member(1),
+        matchReasons: ["Native Korean speaker"],
+        matchReasonCodes: [{ code: "native_speaker", native: "Korean" }],
+      },
+    ];
+    renderList(["/communities?tab=foryou"]);
+    // This file's `t` mock returns "<key> <values...>".
+    expect(await screen.findByText("communityMain.reasons.native_speaker Korean")).toBeInTheDocument();
+  });
+
+  it("falls back to the English strings when there are no codes", async () => {
+    recommendations = [{ ...member(1), matchReasons: ["Native Korean speaker"] }];
+    renderList(["/communities?tab=foryou"]);
+    expect(await screen.findByText("Native Korean speaker")).toBeInTheDocument();
+  });
+});

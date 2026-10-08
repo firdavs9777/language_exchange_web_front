@@ -946,6 +946,13 @@
         "message": "Añade los idiomas que hablas y quieres aprender, tu nivel y algunos intereses, y encontraremos compañeros que encajen contigo.",
         "action": "Completa tu perfil"
       }
+    },
+    "reasons": {
+      "perfect_pair": "Habla {{native}}, aprende {{learning}}",
+      "native_speaker": "Hablante nativo de {{native}}",
+      "online_now": "En línea",
+      "active_today": "Activo hoy",
+      "same_country": "Mismo país"
     }
   },
   "communityDetail": {

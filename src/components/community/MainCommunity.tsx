@@ -27,6 +27,7 @@ import { CommunityFilters, buildCommunityQuery } from "./lib/buildCommunityQuery
 import * as filterStorage from "./lib/filterStorage";
 import { DEFAULT_FILTERS } from "./lib/filterStorage";
 import { showsAdAfter } from "./lib/gridInterleave";
+import { reasonChips, MatchReasonCode } from "./lib/matchReasonChips";
 import {
   CommunityUrlState,
   decodeCommunityState,
@@ -89,6 +90,8 @@ const CardSkeleton: React.FC = () => (
 interface RecommendedMember extends CommunityMemberCard {
   matchScore?: number;
   matchReasons?: string[];
+  /** Same reasons as codes, for the reader's language (absent on older/cached responses). */
+  matchReasonCodes?: MatchReasonCode[];
 }
 
 /** Count how many discovery filters are active (drives the SubNav badge). */
@@ -167,7 +170,7 @@ const ForYouTab: React.FC<{
           <div key={member._id} className={CARD_SLOT}>
             <MemberCard
               user={member}
-              reasons={member.matchReasons}
+              reasons={reasonChips(member.matchReasonCodes, member.matchReasons, t)}
               onOpen={onOpen}
               onWave={onWave}
             />
@@ -570,7 +573,15 @@ const ModernCommunity: React.FC = () => {
     );
   }, [visitorsData, visitorsCount]);
 
-  const hasMore = communityData?.data?.length === PAGE_LIMIT;
+  // The server says how many pages there are (GET /auth/users returns `pages`).
+  // Guessing from a full page showed a phantom "load more" -- and fetched an
+  // empty page -- whenever the last page was exactly full. The guess remains
+  // only as the fallback for a response that carries no count.
+  const serverPages = (communityData as any)?.pages;
+  const hasMore =
+    typeof serverPages === "number"
+      ? page < serverPages
+      : communityData?.data?.length === PAGE_LIMIT;
 
   // The observer callback lives outside React's render, so it reads the paging
   // state through a ref rather than through a closure that would be one render

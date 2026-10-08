@@ -968,6 +968,13 @@
         "message": "أضف اللغات التي تتحدثها وتريد تعلّمها، ومستواك، وبعض الاهتمامات، وسنجد لك شركاء مناسبين.",
         "action": "أكمل ملفك الشخصي"
       }
+    },
+    "reasons": {
+      "perfect_pair": "يتحدث {{native}} ويتعلم {{learning}}",
+      "native_speaker": "متحدث أصلي لـ {{native}}",
+      "online_now": "متصل الآن",
+      "active_today": "نشط اليوم",
+      "same_country": "البلد نفسه"
     }
   },
   "communityDetail": {

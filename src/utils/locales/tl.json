@@ -964,6 +964,13 @@
         "message": "Idagdag ang mga wikang alam mo at gusto mong matutunan, ang level mo, at ilang interes, at hahanapin namin ang mga kasamang tugma.",
         "action": "Kumpletuhin ang iyong profile"
       }
+    },
+    "reasons": {
+      "perfect_pair": "Nagsasalita ng {{native}}, nag-aaral ng {{learning}}",
+      "native_speaker": "Native speaker ng {{native}}",
+      "online_now": "Online ngayon",
+      "active_today": "Aktibo ngayon",
+      "same_country": "Parehong bansa"
     }
   },
   "communityDetail": {

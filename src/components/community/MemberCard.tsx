@@ -1,6 +1,7 @@
 import React from "react";
 import { MapPin, ArrowRight } from "lucide-react";
 import { languageFlag } from "../../utils/languages";
+import { ReasonChip } from "./lib/matchReasonChips";
 
 /**
  * Normalized member shape as produced by `communityApiSlice.getCommunityMembers`
@@ -32,7 +33,7 @@ export interface CommunityMemberCard {
 export interface MemberCardProps {
   user: CommunityMemberCard;
   /** From the matching engine. 0-3 strings; see controllers/matching.js. */
-  reasons?: string[];
+  reasons?: Array<string | ReasonChip>;
   /**
    * The row shape this card had before it was rebuilt as a grid cell. The
    * profile page's suggestion strip is a horizontal carousel, not a grid, and
@@ -75,9 +76,18 @@ const formatLocation = (location?: CommunityMemberCard["location"]): string | un
 const isLanguageReason = (reason: string): boolean =>
   /^Speaks |^Native /.test(reason);
 
-const orderReasons = (reasons: string[]): string[] => {
-  const clean = reasons.filter(Boolean);
-  return [...clean.filter(isLanguageReason), ...clean.filter((r) => !isLanguageReason(r))];
+/**
+ * Every reason as an entry, language match first. A plain string is English
+ * from the server and is classified by its wording; an entry already knows
+ * (localised text cannot be read by an English pattern).
+ */
+const orderReasons = (reasons: Array<string | ReasonChip>): ReasonChip[] => {
+  const chips = reasons
+    .map((reason) =>
+      typeof reason === "string" ? { text: reason, primary: isLanguageReason(reason) } : reason
+    )
+    .filter((chip) => chip && chip.text);
+  return [...chips.filter((chip) => chip.primary), ...chips.filter((chip) => !chip.primary)];
 };
 
 const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWave, onOpen }) => {
@@ -259,10 +269,10 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
         {orderedReasons.length > 0 && (
         <div data-testid="member-card-reasons" className="flex flex-nowrap gap-1.5">
           {orderedReasons.map((reason) => {
-            const primary = isLanguageReason(reason);
+            const primary = reason.primary;
             return (
               <span
-                key={reason}
+                key={reason.text}
                 data-testid={primary ? "member-card-reason-primary" : "member-card-reason-secondary"}
                 className={
                   primary
@@ -270,7 +280,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
                     : "shrink-0 whitespace-nowrap text-[11px] text-gray-600 bg-gray-100 border border-gray-200 rounded-full px-2 py-0.5"
                 }
               >
-                {reason}
+                {reason.text}
               </span>
             );
           })}
@@ -326,10 +336,14 @@ export const areMemberRowsEqual = (
   // chips would freeze at whatever first rendered.
   if (prev.compact !== next.compact) return false;
 
-  const ra = prev.reasons || [];
-  const rb = next.reasons || [];
+  // Entries are compared by what they draw, not by identity: a fresh array of
+  // equal chips must not re-render, a changed text or flag must.
+  const ra = orderReasons(prev.reasons || []);
+  const rb = orderReasons(next.reasons || []);
   if (ra.length !== rb.length) return false;
-  if (ra.some((reason, index) => reason !== rb[index])) return false;
+  if (ra.some((chip, index) => chip.text !== rb[index].text || chip.primary !== rb[index].primary)) {
+    return false;
+  }
 
   const a = prev.user;
   const b = next.user;

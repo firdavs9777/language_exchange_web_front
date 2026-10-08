@@ -461,3 +461,41 @@ describe("one card shape in the grid", () => {
     expect(screen.getByTestId("member-card-root").className).not.toMatch(/\bh-full\b/);
   });
 });
+
+// Reason chips may arrive as { text, primary } entries -- localised text the
+// English /^Speaks |^Native / test cannot read -- and the card must take the
+// flag as given.
+describe("localised reason chips", () => {
+  it("draws a primary entry in the primary style, first, whatever its language", () => {
+    render(
+      <MemberCard
+        user={baseUser}
+        reasons={[
+          { text: "지금 온라인", primary: false },
+          { text: "한국어 원어민", primary: true },
+        ]}
+        onOpen={jest.fn()}
+        onWave={jest.fn()}
+      />
+    );
+    const chips = screen.getByTestId("member-card-reasons").children;
+    expect(chips[0]).toHaveTextContent("한국어 원어민");
+    expect(chips[0]).toHaveAttribute("data-testid", "member-card-reason-primary");
+    expect(chips[1]).toHaveAttribute("data-testid", "member-card-reason-secondary");
+  });
+
+  it("still reads plain English strings the old way", () => {
+    render(<MemberCard user={baseUser} reasons={["Online now", "Native Korean speaker"]} onOpen={jest.fn()} onWave={jest.fn()} />);
+    const chips = screen.getByTestId("member-card-reasons").children;
+    expect(chips[0]).toHaveTextContent("Native Korean speaker");
+    expect(chips[0]).toHaveAttribute("data-testid", "member-card-reason-primary");
+  });
+
+  it("redraws when an entry's text changes, even if the user object is reused", () => {
+    const { rerender } = render(
+      <MemberCard user={baseUser} reasons={[{ text: "A", primary: false }]} onOpen={jest.fn()} onWave={jest.fn()} />
+    );
+    rerender(<MemberCard user={baseUser} reasons={[{ text: "B", primary: false }]} onOpen={jest.fn()} onWave={jest.fn()} />);
+    expect(screen.getByTestId("member-card-reasons")).toHaveTextContent("B");
+  });
+});

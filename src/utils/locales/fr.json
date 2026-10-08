@@ -946,6 +946,13 @@
         "message": "Ajoutez les langues que vous parlez et celles que vous voulez apprendre, votre niveau et quelques centres d'intérêt, et nous vous trouverons des partenaires compatibles.",
         "action": "Compléter votre profil"
       }
+    },
+    "reasons": {
+      "perfect_pair": "Parle {{native}}, apprend {{learning}}",
+      "native_speaker": "Locuteur natif de {{native}}",
+      "online_now": "En ligne",
+      "active_today": "Actif aujourd'hui",
+      "same_country": "Même pays"
     }
   },
   "communityDetail": {
