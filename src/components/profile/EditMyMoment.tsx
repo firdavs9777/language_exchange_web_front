@@ -3,13 +3,24 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Bounce, toast } from "react-toastify";
-import { ArrowLeft, Loader2, Plus, X } from "lucide-react";
+import { ArrowLeft, Loader2, MapPin, Plus, X } from "lucide-react";
 import SurfaceCard from "../../design/SurfaceCard";
 import {
   useGetMomentDetailsQuery,
   useUpdateMomentMutation,
   useUploadMomentPhotosMutation,
 } from "../../store/slices/momentsSlice";
+import BackgroundField from "../moments/fields/BackgroundField";
+import CategoryField from "../moments/fields/CategoryField";
+import LanguageField from "../moments/fields/LanguageField";
+import MoodField from "../moments/fields/MoodField";
+import PrivacyField from "../moments/fields/PrivacyField";
+import ScheduleField from "../moments/fields/ScheduleField";
+import TagsField from "../moments/fields/TagsField";
+import { useCurrentLocation } from "../moments/fields/useCurrentLocation";
+import { EditableMoment, editableFrom, momentEditDiff } from "../moments/lib/momentEditDiff";
+import { isFutureInput, isScheduledLater, localInputToIso, toLocalInput } from "../moments/lib/scheduling";
+import { useMomentSchedulingEnabled } from "../moments/lib/useMomentSchedulingEnabled";
 
 const MAX_IMAGES = 10;
 
@@ -44,8 +55,11 @@ const EditMyMoment: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [original, setOriginal] = useState<EditableMoment>(() => editableFrom(null));
+  const [draft, setDraft] = useState<EditableMoment>(() => editableFrom(null));
+  const [scheduleInput, setScheduleInput] = useState("");
+  const [notice, setNotice] = useState("");
+  const schedulingEnabled = useMomentSchedulingEnabled();
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]);
@@ -63,10 +77,28 @@ const EditMyMoment: React.FC = () => {
 
   useEffect(() => {
     if (!moment) return;
-    setTitle(moment.title || "");
-    setDescription(moment.description || "");
+    const editable = editableFrom(moment);
+    setOriginal(editable);
+    setDraft(editable);
+    setScheduleInput(editable.scheduledFor ? toLocalInput(editable.scheduledFor) : "");
     setExistingImages(Array.isArray(moment.imageUrls) ? moment.imageUrls : []);
   }, [moment]);
+
+  const set = <K extends keyof EditableMoment>(key: K, value: EditableMoment[K]) => {
+    setNotice("");
+    setDraft((previous) => ({ ...previous, [key]: value }));
+  };
+  const setLocation = React.useCallback((location: any) => {
+    setNotice("");
+    setDraft((previous) => ({ ...previous, location }));
+  }, []);
+  const addLocation = useCurrentLocation(setLocation);
+
+  // The schedule is editable only while the moment has not gone out, and only
+  // while the server enforces scheduling (otherwise it would publish now).
+  const canSchedule = schedulingEnabled && isScheduledLater(original);
+  const scheduleBlocked = canSchedule && Boolean(scheduleInput) && !isFutureInput(scheduleInput);
+  const isTextMoment = moment && moment.mediaType === "text";
 
   // Leaving someone else's moment open in an editor they cannot save is worse
   // than bouncing them: the save would 403 after they had typed.
@@ -87,7 +119,9 @@ const EditMyMoment: React.FC = () => {
   );
 
   const total = existingImages.length + imagePreviews.length;
-  const canSubmit = title !== "" && description !== "" && !isUpdating && !isUploading;
+  // The server requires a description; a title is optional.
+  const canSubmit =
+    draft.description.trim() !== "" && !scheduleBlocked && !isUpdating && !isUploading;
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>): void => {
     const files = Array.prototype.slice.call(event.target.files || []) as File[];
@@ -116,19 +150,24 @@ const EditMyMoment: React.FC = () => {
     setImagePreviews((previous) => previous.filter((unused, i) => i !== index));
   };
 
-  const handleRemoveExistingImage = (index: number): void => {
-    setExistingImages((previous) => previous.filter((unused, i) => i !== index));
-  };
-
   const handleSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
     if (!canSubmit) return;
 
+    const next: EditableMoment = {
+      ...draft,
+      scheduledFor: canSchedule ? (scheduleInput ? localInputToIso(scheduleInput) : null) : original.scheduledFor,
+    };
+    const changes = momentEditDiff(original, next);
+    if (Object.keys(changes).length === 0 && selectedImages.length === 0) {
+      setNotice(t("editMoment.form.nothingToSave") || "Nothing to change yet");
+      return;
+    }
+
     try {
-      await updateMoment({
-        id: momentId,
-        momentData: { title, description, existingImages },
-      }).unwrap();
+      if (Object.keys(changes).length > 0) {
+        await updateMoment({ id: momentId, momentData: changes }).unwrap();
+      }
 
       if (selectedImages.length > 0) {
         const upload = new FormData();
@@ -190,11 +229,11 @@ const EditMyMoment: React.FC = () => {
                   id="moment-title"
                   data-testid="edit-moment-title"
                   type="text"
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
+                  value={draft.title}
+                  maxLength={100}
+                  onChange={(event) => set("title", event.target.value)}
                   placeholder={t("editMoment.form.titlePlaceholder") || ""}
                   className={FIELD}
-                  required
                 />
               </div>
 
@@ -206,13 +245,68 @@ const EditMyMoment: React.FC = () => {
                   id="moment-description"
                   data-testid="edit-moment-description"
                   rows={5}
-                  value={description}
-                  onChange={(event) => setDescription(event.target.value)}
+                  value={draft.description}
+                  maxLength={2000}
+                  onChange={(event) => set("description", event.target.value)}
                   placeholder={t("editMoment.form.descriptionPlaceholder") || ""}
                   className={`${FIELD} resize-none`}
                   required
                 />
               </div>
+            </div>
+          </SurfaceCard>
+
+          <SurfaceCard padding="lg">
+            <div className="space-y-4">
+              <div>
+                <span className={LABEL}>{t("moments_section.filters.mood") || "Mood"}</span>
+                <MoodField value={draft.mood} onChange={(value) => set("mood", value)} allowNone plain />
+              </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <CategoryField value={draft.category} onChange={(value) => set("category", value)} />
+                <LanguageField value={draft.language} onChange={(value) => set("language", value)} />
+              </div>
+              <div>
+                <span className={LABEL}>{t("moments_section.fields.tags") || "Tags"}</span>
+                <TagsField value={draft.tags} onChange={(value) => set("tags", value)} />
+              </div>
+              <div>
+                <span className={LABEL}>{t("moments_section.fields.privacy") || "Who can see it"}</span>
+                <PrivacyField value={draft.privacy} onChange={(value) => set("privacy", value)} />
+              </div>
+              {isTextMoment && (
+                <div>
+                  <span className={LABEL}>{t("moments_section.fields.background") || "Background"}</span>
+                  <BackgroundField value={draft.backgroundColor} onChange={(value) => set("backgroundColor", value)} />
+                </div>
+              )}
+              <div>
+                <span className={LABEL}>{t("moments_section.fields.location") || "Location"}</span>
+                {draft.location ? (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm text-green-800">
+                    <MapPin className="h-3 w-3" aria-hidden />
+                    {draft.location.formattedAddress}
+                    <button
+                      type="button"
+                      onClick={() => setLocation(null)}
+                      aria-label={t("moments_section.fields.removeLocation") || "Remove location"}
+                      className="ml-1 hover:text-green-900"
+                    >
+                      <X className="h-3 w-3" aria-hidden />
+                    </button>
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={addLocation}
+                    className="inline-flex items-center gap-1 rounded-chip border border-line px-3 py-1.5 text-sm text-ink-700 hover:bg-ink-100 dark:border-line-dark dark:text-ink-200"
+                  >
+                    <MapPin className="h-4 w-4" aria-hidden />
+                    {t("moments_section.fields.addLocation") || "Add my location"}
+                  </button>
+                )}
+              </div>
+              {canSchedule && <ScheduleField value={scheduleInput} onChange={(value) => { setNotice(""); setScheduleInput(value); }} />}
             </div>
           </SurfaceCard>
 
@@ -230,16 +324,8 @@ const EditMyMoment: React.FC = () => {
                 <ul className="grid grid-cols-3 gap-2 pb-4 sm:grid-cols-4">
                   {existingImages.map((url, index) => (
                     <li key={`existing-${index}-${url}`} data-testid="existing-image" className={tile}>
+                      {/* No remove: the server keeps stored photos on update. */}
                       <img src={url} alt="" className="h-full w-full object-cover" />
-                      <button
-                        type="button"
-                        data-testid={`remove-existing-${index}`}
-                        onClick={() => handleRemoveExistingImage(index)}
-                        aria-label={t("editMoment.form.removeImage") || "Remove image"}
-                        className={REMOVE}
-                      >
-                        <X className="h-4 w-4" aria-hidden />
-                      </button>
                     </li>
                   ))}
                 </ul>
@@ -294,6 +380,11 @@ const EditMyMoment: React.FC = () => {
           </SurfaceCard>
 
           <div className="flex items-center justify-end gap-2">
+            {notice && (
+              <p role="status" className="mr-auto text-sm text-ink-500 dark:text-ink-400">
+                {notice}
+              </p>
+            )}
             <button
               type="button"
               data-testid="edit-moment-cancel"

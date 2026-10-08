@@ -26,11 +26,13 @@ export const moodEmoji = (value: string) => {
 };
 
 /** The twelve moods as a grid of buttons; `allowNone` adds "No mood". */
-const MoodField: React.FC<{ value: string; onChange: (v: string) => void; allowNone?: boolean }> = ({
-  value,
-  onChange,
-  allowNone,
-}) => {
+const MoodField: React.FC<{
+  value: string;
+  onChange: (v: string) => void;
+  allowNone?: boolean;
+  /** Labels only, no emoji (the design-system editor). */
+  plain?: boolean;
+}> = ({ value, onChange, allowNone, plain }) => {
   const { t } = useTranslation();
   const chip = (active: boolean) =>
     `flex items-center gap-2 p-2 rounded text-left text-sm ${active ? "bg-yellow-100 text-yellow-800" : "hover:bg-gray-100"}`;
@@ -38,7 +40,7 @@ const MoodField: React.FC<{ value: string; onChange: (v: string) => void; allowN
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
       {allowNone && (
         <button type="button" onClick={() => onChange("")} className={chip(value === "")} aria-pressed={value === ""}>
-          <span>—</span>
+          {!plain && <span>—</span>}
           <span>{t("moments_section.fields.noMood") || "No mood"}</span>
         </button>
       )}
@@ -50,7 +52,7 @@ const MoodField: React.FC<{ value: string; onChange: (v: string) => void; allowN
           className={chip(value === m.value)}
           aria-pressed={value === m.value}
         >
-          <span>{m.emoji}</span>
+          {!plain && <span>{m.emoji}</span>}
           <span>{moodLabel(t, m.value)}</span>
         </button>
       ))}

@@ -34,6 +34,15 @@ jest.mock("../../store/slices/momentsSlice", () => ({
   useGetMomentDetailsQuery: (arg: any) => mockGetMomentDetails(arg),
   useUpdateMomentMutation: () => [mockUpdateMoment, { isLoading: false }],
   useUploadMomentPhotosMutation: () => [mockUploadPhotos, { isLoading: false }],
+  useUploadMomentVideoMutation: () => [jest.fn(), { isLoading: false }],
+  useUploadMomentAudioMutation: () => [jest.fn(), { isLoading: false }],
+  useDeleteMomentVideoMutation: () => [jest.fn(), { isLoading: false }],
+  useDeleteMomentAudioMutation: () => [jest.fn(), { isLoading: false }],
+}));
+
+let mockSchedulingEnabled = false;
+jest.mock("../moments/lib/useMomentSchedulingEnabled", () => ({
+  useMomentSchedulingEnabled: () => mockSchedulingEnabled,
 }));
 
 const resolved = () => ({ unwrap: () => Promise.resolve({ success: true }) });
@@ -65,6 +74,7 @@ function renderEditor(data: any = { data: MOMENT }, isLoading = false) {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockSchedulingEnabled = false;
   mockUpdateMoment.mockReturnValue(resolved());
   mockUploadPhotos.mockReturnValue(resolved());
 });
@@ -83,16 +93,10 @@ it("shows a spinner while the moment loads", () => {
   expect(screen.getByTestId("edit-moment-loading")).toBeInTheDocument();
 });
 
-it("removes an existing image from the set that will be saved", async () => {
+it("offers no remove on a stored photo: the server cannot remove one", () => {
   renderEditor();
-  fireEvent.click(screen.getByTestId("remove-existing-0"));
-  expect(screen.getAllByTestId("existing-image")).toHaveLength(1);
-
-  fireEvent.submit(screen.getByTestId("edit-moment-form"));
-  await waitFor(() => expect(mockUpdateMoment).toHaveBeenCalledTimes(1));
-  expect(mockUpdateMoment.mock.calls[0][0].momentData.existingImages).toEqual([
-    "https://cdn.test/b.jpg",
-  ]);
+  expect(screen.getAllByTestId("existing-image")).toHaveLength(2);
+  expect(screen.queryByTestId("remove-existing-0")).not.toBeInTheDocument();
 });
 
 it("saves the edited title and description, then leaves for the list", async () => {
@@ -103,13 +107,10 @@ it("saves the edited title and description, then leaves for the list", async () 
   fireEvent.submit(screen.getByTestId("edit-moment-form"));
 
   await waitFor(() => expect(mockUpdateMoment).toHaveBeenCalledTimes(1));
+  // Only what changed is sent.
   expect(mockUpdateMoment.mock.calls[0][0]).toEqual({
     id: "m1",
-    momentData: {
-      title: "Busan at night",
-      description: "Sunset by the sea",
-      existingImages: MOMENT.imageUrls,
-    },
+    momentData: { title: "Busan at night" },
   });
   // No new files were chosen, so the photo endpoint is left alone.
   expect(mockUploadPhotos).not.toHaveBeenCalled();
@@ -119,19 +120,106 @@ it("saves the edited title and description, then leaves for the list", async () 
 it("reports a failed save and stays on the form", async () => {
   mockUpdateMoment.mockReturnValue(rejected());
   renderEditor();
+  fireEvent.change(screen.getByTestId("edit-moment-description"), { target: { value: "Changed" } });
   fireEvent.submit(screen.getByTestId("edit-moment-form"));
 
   await waitFor(() => expect(mockToastError).toHaveBeenCalled());
   expect(mockNavigate).not.toHaveBeenCalledWith("/my-moments");
 });
 
-it("refuses to save an empty title", async () => {
-  renderEditor();
-  fireEvent.change(screen.getByTestId("edit-moment-title"), { target: { value: "" } });
-  expect(screen.getByTestId("edit-moment-save")).toBeDisabled();
+it("saves a moment that has no title", async () => {
+  renderEditor({ data: { ...MOMENT, title: "" } });
+  fireEvent.change(screen.getByTestId("edit-moment-description"), { target: { value: "Only words" } });
+  expect(screen.getByTestId("edit-moment-save")).not.toBeDisabled();
+  fireEvent.submit(screen.getByTestId("edit-moment-form"));
+  await waitFor(() => expect(mockUpdateMoment).toHaveBeenCalledTimes(1));
+  expect(mockUpdateMoment.mock.calls[0][0].momentData).toEqual({ description: "Only words" });
+});
 
+it("refuses to save an empty description", async () => {
+  renderEditor();
+  fireEvent.change(screen.getByTestId("edit-moment-description"), { target: { value: "  " } });
+  expect(screen.getByTestId("edit-moment-save")).toBeDisabled();
   fireEvent.submit(screen.getByTestId("edit-moment-form"));
   await waitFor(() => expect(mockUpdateMoment).not.toHaveBeenCalled());
+});
+
+it("saving with nothing changed sends nothing", async () => {
+  renderEditor();
+  fireEvent.submit(screen.getByTestId("edit-moment-form"));
+  expect(await screen.findByText("Nothing to change yet")).toBeInTheDocument();
+  expect(mockUpdateMoment).not.toHaveBeenCalled();
+});
+
+it("edits mood, category, language, privacy and tags", async () => {
+  renderEditor({ data: { ...MOMENT, tags: ["sea"], language: "ko" } });
+  fireEvent.click(screen.getByRole("button", { name: /Grateful/ }));
+  fireEvent.change(screen.getByLabelText("Category"), { target: { value: "food" } });
+  fireEvent.change(screen.getByLabelText("Language"), { target: { value: "ja" } });
+  fireEvent.click(screen.getByRole("button", { name: /Only me/ }));
+  fireEvent.click(screen.getByRole("button", { name: "Remove sea" }));
+  fireEvent.submit(screen.getByTestId("edit-moment-form"));
+  await waitFor(() => expect(mockUpdateMoment).toHaveBeenCalledTimes(1));
+  expect(mockUpdateMoment.mock.calls[0][0].momentData).toEqual({
+    mood: "grateful",
+    category: "food",
+    language: "ja",
+    privacy: "private",
+    tags: [],
+  });
+});
+
+it("a text moment can change its background; a photo moment is not offered one", () => {
+  renderEditor();
+  expect(screen.queryByLabelText("gradient_ocean")).not.toBeInTheDocument();
+});
+
+it("changes a text moment's background", async () => {
+  renderEditor({ data: { ...MOMENT, imageUrls: [], mediaType: "text", backgroundColor: "" } });
+  fireEvent.click(screen.getByLabelText("gradient_ocean"));
+  fireEvent.submit(screen.getByTestId("edit-moment-form"));
+  await waitFor(() => expect(mockUpdateMoment).toHaveBeenCalledTimes(1));
+  expect(mockUpdateMoment.mock.calls[0][0].momentData).toEqual({ backgroundColor: "gradient_ocean" });
+});
+
+it("removes a location", async () => {
+  renderEditor({
+    data: { ...MOMENT, location: { formattedAddress: "Busan, Korea", type: "Point", coordinates: [129, 35] } },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Remove location" }));
+  fireEvent.submit(screen.getByTestId("edit-moment-form"));
+  await waitFor(() => expect(mockUpdateMoment).toHaveBeenCalledTimes(1));
+  expect(mockUpdateMoment.mock.calls[0][0].momentData).toEqual({ location: null });
+});
+
+describe("schedule", () => {
+  const later = { ...MOMENT, scheduledFor: "2099-05-01T09:00:00.000Z" };
+
+  it("is offered while the moment is unpublished and scheduling is enforced", () => {
+    mockSchedulingEnabled = true;
+    renderEditor({ data: later });
+    expect(screen.getByLabelText("Schedule")).toBeInTheDocument();
+  });
+
+  it("is not offered for a published moment", () => {
+    mockSchedulingEnabled = true;
+    renderEditor();
+    expect(screen.queryByLabelText("Schedule")).not.toBeInTheDocument();
+  });
+
+  it("is not offered while scheduling is not enforced", () => {
+    renderEditor({ data: later });
+    expect(screen.queryByLabelText("Schedule")).not.toBeInTheDocument();
+  });
+
+  it("Post now instead sends a cleared schedule", async () => {
+    mockSchedulingEnabled = true;
+    renderEditor({ data: later });
+    fireEvent.click(screen.getByRole("button", { name: "Post now instead" }));
+    fireEvent.submit(screen.getByTestId("edit-moment-form"));
+    await waitFor(() => expect(mockUpdateMoment).toHaveBeenCalledTimes(1));
+    expect(mockUpdateMoment.mock.calls[0][0].momentData).toEqual({ scheduledFor: null });
+  });
 });
 
 it("bounces someone who does not own the moment", () => {
