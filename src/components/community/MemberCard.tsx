@@ -116,7 +116,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
       className={
         compact
           ? "flex flex-row items-center gap-3 p-3 bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 hover:shadow-xl transition-all cursor-pointer"
-          : "flex flex-col bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
+          : "flex flex-col h-full bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
       }
     >
       {/* Photo. A grid cell gets a 16:10 banner; a carousel row gets a 56px
@@ -173,7 +173,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
 
       {/* Info column */}
       <div className={compact ? "flex-1 min-w-0" : "flex-1 min-w-0 p-4"}>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2">
           <span data-testid="member-card-name" className="font-semibold text-gray-900 truncate min-w-0">
             {user.name}
             {age !== undefined ? `, ${age}` : ""}
@@ -182,7 +182,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
           {isNew && (
             <span
               data-testid="member-card-new-badge"
-              className="text-[10px] font-bold uppercase tracking-wide text-white bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full px-2 py-0.5"
+              className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-white bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full px-2 py-0.5"
             >
               New
             </span>
@@ -191,7 +191,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
           {user.isVIP && (
             <span
               data-testid="member-card-vip-badge"
-              className="text-[10px] font-bold uppercase tracking-wide text-white bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded-full px-2 py-0.5"
+              className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-white bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded-full px-2 py-0.5"
             >
               VIP
             </span>
@@ -213,25 +213,51 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
           )}
         </div>
 
-        {/* Location row */}
-        {locationLabel && (
-          <div
-            data-testid="member-card-location"
-            className="flex items-center gap-1 mt-1 text-xs text-gray-500"
-          >
-            <MapPin className="w-3 h-3" />
-            <span className="truncate">{locationLabel}</span>
-          </div>
-        )}
-
-        {/* Bio */}
-        {user.bio && (
-          <p className="mt-1 text-xs text-gray-500 truncate">{user.bio}</p>
-        )}
+        {/* Location and bio. In the grid each is a FIXED line, drawn
+            whether or not the member filled it in: a card that grew a row
+            for every optional field made every card a different height and
+            the grid's rows ragged. The compact row keeps them optional. */}
+        {(() => {
+          const location = locationLabel ? (
+            <div
+              data-testid="member-card-location"
+              className="flex items-center gap-1 text-xs text-gray-500 min-w-0"
+            >
+              <MapPin className="w-3 h-3 shrink-0" />
+              <span className="truncate">{locationLabel}</span>
+            </div>
+          ) : null;
+          const bio = user.bio ? (
+            <p className="text-xs text-gray-500 truncate">{user.bio}</p>
+          ) : null;
+          if (compact) {
+            return (
+              <>
+                {location && <div className="mt-1">{location}</div>}
+                {bio && <div className="mt-1">{bio}</div>}
+              </>
+            );
+          }
+          return (
+            <>
+              <div data-testid="member-card-line-location" className="mt-1 h-4 overflow-hidden">
+                {location}
+              </div>
+              <div data-testid="member-card-line-bio" className="mt-1 h-4 overflow-hidden">
+                {bio}
+              </div>
+            </>
+          );
+        })()}
       </div>
 
-      {!compact && orderedReasons.length > 0 && (
-        <div data-testid="member-card-reasons" className="flex flex-wrap gap-1.5 px-4 pb-3">
+      {/* One line of chips, clipped, and reserved even when empty -- wrapping
+          chips were the biggest source of uneven card heights. The order puts
+          the language match first, so what is clipped is the least of it. */}
+      {!compact && (
+        <div data-testid="member-card-line-reasons" className="h-[22px] mb-3 px-4 overflow-hidden">
+        {orderedReasons.length > 0 && (
+        <div data-testid="member-card-reasons" className="flex flex-nowrap gap-1.5">
           {orderedReasons.map((reason) => {
             const primary = isLanguageReason(reason);
             return (
@@ -240,14 +266,16 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
                 data-testid={primary ? "member-card-reason-primary" : "member-card-reason-secondary"}
                 className={
                   primary
-                    ? "text-[11px] font-semibold text-teal-700 bg-teal-50 border border-teal-200 rounded-full px-2 py-0.5"
-                    : "text-[11px] text-gray-600 bg-gray-100 border border-gray-200 rounded-full px-2 py-0.5"
+                    ? "shrink-0 whitespace-nowrap text-[11px] font-semibold text-teal-700 bg-teal-50 border border-teal-200 rounded-full px-2 py-0.5"
+                    : "shrink-0 whitespace-nowrap text-[11px] text-gray-600 bg-gray-100 border border-gray-200 rounded-full px-2 py-0.5"
                 }
               >
                 {reason}
               </span>
             );
           })}
+        </div>
+        )}
         </div>
       )}
 
@@ -260,7 +288,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
         className={
           compact
             ? "shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-white bg-gradient-to-r from-[#00BFA5] to-[#00ACC1] hover:brightness-105 active:scale-95 transition-all"
-            : "w-full min-h-[44px] flex items-center justify-center gap-2 text-white bg-gradient-to-r from-[#00BFA5] to-[#00ACC1] hover:brightness-105 active:scale-[.99] transition-all"
+            : "mt-auto w-full min-h-[44px] flex items-center justify-center gap-2 text-white bg-gradient-to-r from-[#00BFA5] to-[#00ACC1] hover:brightness-105 active:scale-[.99] transition-all"
         }
       >
         <span className="text-lg leading-none" aria-hidden>

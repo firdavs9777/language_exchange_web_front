@@ -390,3 +390,74 @@ describe("MemberCard compact indicators", () => {
     expect(screen.getByTestId("member-card-avatar-placeholder")).toBeInTheDocument();
   });
 });
+
+// Reported from production: every card on /communities was a different
+// height, so the grid's rows came out ragged. The optional rows -- location,
+// bio, the reason chips -- appeared only when a member had them, and the
+// chips wrapped onto as many lines as there were reasons. A grid cell now has
+// one shape whatever the member has filled in: the optional lines always take
+// their space, the chips stay on one line, and the card fills its cell with
+// the wave button on the bottom edge. jsdom cannot measure height, so these
+// pin the structure that produces it.
+describe("one card shape in the grid", () => {
+  const sparse: CommunityMemberCard = { ...baseUser, bio: undefined, location: undefined } as any;
+  const full: CommunityMemberCard = {
+    ...baseUser,
+    bio: "A long bio that would otherwise wrap and push the card taller than its neighbours",
+    location: { city: "Seoul", country: "South Korea" },
+  } as any;
+  const manyReasons = ["Speaks English", "Learning Korean", "Online now", "Nearby", "Shares 3 interests"];
+
+  it("reserves the location and bio lines even when the member has neither", () => {
+    render(<MemberCard user={sparse} onOpen={jest.fn()} onWave={jest.fn()} />);
+    expect(screen.getByTestId("member-card-line-location")).toBeInTheDocument();
+    expect(screen.getByTestId("member-card-line-bio")).toBeInTheDocument();
+    // The content itself is still absent, as before.
+    expect(screen.queryByTestId("member-card-location")).not.toBeInTheDocument();
+  });
+
+  it("gives those lines a fixed height, filled or not", () => {
+    const { unmount } = render(<MemberCard user={sparse} onOpen={jest.fn()} onWave={jest.fn()} />);
+    const emptyLoc = screen.getByTestId("member-card-line-location").className;
+    const emptyBio = screen.getByTestId("member-card-line-bio").className;
+    unmount();
+    render(<MemberCard user={full} onOpen={jest.fn()} onWave={jest.fn()} />);
+    expect(screen.getByTestId("member-card-line-location").className).toBe(emptyLoc);
+    expect(screen.getByTestId("member-card-line-bio").className).toBe(emptyBio);
+    expect(emptyLoc).toMatch(/\bh-/);
+    expect(emptyBio).toMatch(/\bh-/);
+  });
+
+  it("keeps the reason chips to one clipped line, and reserves it when there are none", () => {
+    const { unmount } = render(
+      <MemberCard user={full} reasons={manyReasons} onOpen={jest.fn()} onWave={jest.fn()} />
+    );
+    const row = screen.getByTestId("member-card-line-reasons");
+    expect(row.className).toMatch(/\bh-/);
+    expect(row.className).toMatch(/overflow-hidden/);
+    expect(screen.getByTestId("member-card-reasons").className).toMatch(/flex-nowrap/);
+    unmount();
+
+    render(<MemberCard user={full} onOpen={jest.fn()} onWave={jest.fn()} />);
+    expect(screen.getByTestId("member-card-line-reasons")).toBeInTheDocument();
+  });
+
+  it("keeps the name row to one line, badges and all", () => {
+    render(<MemberCard user={{ ...full, isVIP: true, isNew: true } as any} onOpen={jest.fn()} onWave={jest.fn()} />);
+    const nameRow = screen.getByTestId("member-card-name").parentElement!;
+    expect(nameRow.className).not.toMatch(/flex-wrap/);
+    expect(screen.getByTestId("member-card-name").className).toMatch(/truncate/);
+  });
+
+  it("fills its grid cell and pins the wave button to the bottom", () => {
+    render(<MemberCard user={full} onOpen={jest.fn()} onWave={jest.fn()} />);
+    expect(screen.getByTestId("member-card-root").className).toMatch(/\bh-full\b/);
+    expect(screen.getByTestId("member-card-wave").className).toMatch(/\bmt-auto\b/);
+  });
+
+  it("leaves the compact row (the suggestion strip) as it was", () => {
+    render(<MemberCard user={sparse} compact onOpen={jest.fn()} onWave={jest.fn()} />);
+    expect(screen.queryByTestId("member-card-line-location")).not.toBeInTheDocument();
+    expect(screen.getByTestId("member-card-root").className).not.toMatch(/\bh-full\b/);
+  });
+});
