@@ -195,7 +195,10 @@ const ModernCommunity: React.FC = () => {
   // the source of truth. It is the fallback for a bare /communities; a URL
   // that carries state outranks it, so a shared link never silently picks up
   // the recipient's own saved filters.
-  const [storedFilters] = useState<CommunityFilters>(() =>
+  // Kept in step with every save below: the URL falls back to this whenever
+  // it names no filters, so a stale copy would put back a filter the member
+  // had just cleared.
+  const [storedFilters, setStoredFilters] = useState<CommunityFilters>(() =>
     typeof window === "undefined" ? { ...DEFAULT_FILTERS } : filterStorage.load()
   );
 
@@ -362,7 +365,10 @@ const ModernCommunity: React.FC = () => {
         tab: activeTab,
         ...patch,
       };
-      if (patch.filters) filterStorage.save(patch.filters);
+      if (patch.filters) {
+        filterStorage.save(patch.filters);
+        setStoredFilters(patch.filters);
+      }
       // Somebody other than the search box just decided what `search` is (a
       // dismissed chip, "Reset filters"). Drop the pending keystroke write so
       // it cannot land afterwards and undo them.

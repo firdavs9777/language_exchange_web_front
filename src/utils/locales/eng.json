@@ -974,7 +974,7 @@
       "same_country": "Same country"
     },
     "today": {
-      "title": "Your {{count}} matches today",
+      "title": "Today's matches ({{count}})",
       "refreshes": "Refreshes at {{time}}",
       "refreshesMidnight": "Refreshes at midnight",
       "emptyTitle": "That's everyone for today",

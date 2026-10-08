@@ -974,7 +974,7 @@
       "same_country": "Gleiches Land"
     },
     "today": {
-      "title": "Deine {{count}} Matches heute",
+      "title": "Heutige Matches ({{count}})",
       "refreshes": "Neu um {{time}}",
       "refreshesMidnight": "Neu um Mitternacht",
       "emptyTitle": "Das war's für heute",

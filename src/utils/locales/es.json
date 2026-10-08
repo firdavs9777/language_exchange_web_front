@@ -956,7 +956,7 @@
       "same_country": "Mismo país"
     },
     "today": {
-      "title": "Tus {{count}} coincidencias de hoy",
+      "title": "Coincidencias de hoy ({{count}})",
       "refreshes": "Se renueva a las {{time}}",
       "refreshesMidnight": "Se renueva a medianoche",
       "emptyTitle": "Eso es todo por hoy",

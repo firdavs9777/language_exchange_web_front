@@ -956,7 +956,7 @@
       "same_country": "Stesso paese"
     },
     "today": {
-      "title": "I tuoi {{count}} match di oggi",
+      "title": "Match di oggi ({{count}})",
       "refreshes": "Si aggiorna alle {{time}}",
       "refreshesMidnight": "Si aggiorna a mezzanotte",
       "emptyTitle": "Per oggi è tutto",

@@ -956,7 +956,7 @@
       "same_country": "Même pays"
     },
     "today": {
-      "title": "Vos {{count}} correspondances du jour",
+      "title": "Correspondances du jour ({{count}})",
       "refreshes": "Renouvelé à {{time}}",
       "refreshesMidnight": "Renouvelé à minuit",
       "emptyTitle": "C'est tout pour aujourd'hui",

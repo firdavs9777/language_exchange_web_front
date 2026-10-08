@@ -121,4 +121,16 @@ describe("TodayTab", () => {
     expect(onRetry).toHaveBeenCalledTimes(1);
     jest.useRealTimers();
   });
+
+  it("with storage blocked, skipping twice leaves both cards gone", () => {
+    const get = jest.spyOn(Storage.prototype, "getItem").mockImplementation(() => { throw new Error("blocked"); });
+    const set = jest.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new Error("blocked"); });
+    renderTab({ response: response({ date: "2026-10-11" }) });
+    fireEvent.click(screen.getAllByTestId("match-skip")[0]);
+    fireEvent.click(screen.getAllByTestId("match-skip")[0]);
+    expect(screen.getAllByTestId("match-card")).toHaveLength(1);
+    get.mockRestore();
+    set.mockRestore();
+  });
 });
+

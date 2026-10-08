@@ -270,3 +270,20 @@ describe("the community list keeps its state in the URL", () => {
     );
   });
 });
+
+// Review finding: the saved-filter fallback read a snapshot taken at mount and
+// never updated. Dismissing the last chip saved {} but the snapshot still said
+// gender=female, so the fallback put a filter back that the member had just
+// removed -- on Online/New (a regression) and on every All visit.
+describe("clearing the last filter with saved filters on record", () => {
+  it.each([["online"], ["all"]])("leaves %s with no filter at all", async (tab) => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ minAge: 18, maxAge: 100, gender: "female" }));
+    const { router } = renderList([`/communities?tab=${tab}&gender=male`]);
+
+    fireEvent.click(await screen.findByText("Gender: male"));
+
+    await waitFor(() => expect(router.state.location.search).toBe(`?tab=${tab}`));
+    expect(screen.queryByText("Gender: female")).not.toBeInTheDocument();
+  });
+});
+
