@@ -964,6 +964,13 @@
         "message": "話せる言語と学びたい言語、レベル、興味をいくつか追加すると、ぴったりのパートナーを見つけます。",
         "action": "プロフィールを完成させる"
       }
+    },
+    "reasons": {
+      "perfect_pair": "{{native}}を話し、{{learning}}を学習中",
+      "native_speaker": "{{native}}のネイティブ",
+      "online_now": "オンライン",
+      "active_today": "今日アクティブ",
+      "same_country": "同じ国"
     }
   },
   "communityDetail": {

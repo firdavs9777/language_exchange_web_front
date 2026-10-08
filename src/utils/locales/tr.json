@@ -964,6 +964,13 @@
         "message": "Konuştuğun ve öğrenmek istediğin dilleri, seviyeni ve birkaç ilgi alanını ekle; sana uygun ortaklar bulalım.",
         "action": "Profilini tamamla"
       }
+    },
+    "reasons": {
+      "perfect_pair": "{{native}} konuşuyor, {{learning}} öğreniyor",
+      "native_speaker": "Anadili {{native}}",
+      "online_now": "Şu an çevrimiçi",
+      "active_today": "Bugün aktif",
+      "same_country": "Aynı ülke"
     }
   },
   "communityDetail": {

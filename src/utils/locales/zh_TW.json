@@ -964,6 +964,13 @@
         "message": "新增你會說和想學的語言、你的程度和一些興趣，我們就能幫你找到合適的語伴。",
         "action": "完善個人檔案"
       }
+    },
+    "reasons": {
+      "perfect_pair": "說{{native}}，在學{{learning}}",
+      "native_speaker": "{{native}}母語者",
+      "online_now": "線上",
+      "active_today": "今天活躍",
+      "same_country": "同一個國家"
     }
   },
   "communityDetail": {

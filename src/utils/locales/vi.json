@@ -964,6 +964,13 @@
         "message": "Thêm ngôn ngữ bạn nói và muốn học, trình độ và một vài sở thích, chúng tôi sẽ tìm đối tác phù hợp cho bạn.",
         "action": "Hoàn thiện hồ sơ"
       }
+    },
+    "reasons": {
+      "perfect_pair": "Nói {{native}}, đang học {{learning}}",
+      "native_speaker": "Người bản ngữ {{native}}",
+      "online_now": "Đang trực tuyến",
+      "active_today": "Hoạt động hôm nay",
+      "same_country": "Cùng quốc gia"
     }
   },
   "communityDetail": {

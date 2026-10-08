@@ -27,6 +27,7 @@ import { CommunityFilters, buildCommunityQuery } from "./lib/buildCommunityQuery
 import * as filterStorage from "./lib/filterStorage";
 import { DEFAULT_FILTERS } from "./lib/filterStorage";
 import { showsAdAfter } from "./lib/gridInterleave";
+import { reasonChips, MatchReasonCode } from "./lib/matchReasonChips";
 import {
   CommunityUrlState,
   decodeCommunityState,
@@ -89,6 +90,8 @@ const CardSkeleton: React.FC = () => (
 interface RecommendedMember extends CommunityMemberCard {
   matchScore?: number;
   matchReasons?: string[];
+  /** Same reasons as codes, for the reader's language (absent on older/cached responses). */
+  matchReasonCodes?: MatchReasonCode[];
 }
 
 /** Count how many discovery filters are active (drives the SubNav badge). */
@@ -167,7 +170,7 @@ const ForYouTab: React.FC<{
           <div key={member._id} className={CARD_SLOT}>
             <MemberCard
               user={member}
-              reasons={member.matchReasons}
+              reasons={reasonChips(member.matchReasonCodes, member.matchReasons, t)}
               onOpen={onOpen}
               onWave={onWave}
             />

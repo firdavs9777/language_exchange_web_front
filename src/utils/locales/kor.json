@@ -964,6 +964,13 @@
         "message": "구사 언어와 배우고 싶은 언어, 레벨, 관심사 몇 가지를 추가하면 딱 맞는 파트너를 찾아드릴게요.",
         "action": "프로필 완성하기"
       }
+    },
+    "reasons": {
+      "perfect_pair": "{{native}} 사용, {{learning}} 학습 중",
+      "native_speaker": "{{native}} 원어민",
+      "online_now": "지금 온라인",
+      "active_today": "오늘 활동",
+      "same_country": "같은 나라"
     }
   },
   "communityDetail": {

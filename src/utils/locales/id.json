@@ -964,6 +964,13 @@
         "message": "Tambahkan bahasa yang Anda kuasai dan ingin pelajari, level Anda, dan beberapa minat, dan kami akan mencarikan mitra yang cocok.",
         "action": "Lengkapi profil Anda"
       }
+    },
+    "reasons": {
+      "perfect_pair": "Berbicara {{native}}, belajar {{learning}}",
+      "native_speaker": "Penutur asli {{native}}",
+      "online_now": "Sedang online",
+      "active_today": "Aktif hari ini",
+      "same_country": "Negara yang sama"
     }
   },
   "communityDetail": {

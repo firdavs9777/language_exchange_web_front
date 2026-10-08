@@ -964,6 +964,13 @@
         "message": "添加你会说和想学的语言、你的水平和一些兴趣爱好，我们就能为你找到合适的语伴。",
         "action": "完善资料"
       }
+    },
+    "reasons": {
+      "perfect_pair": "说{{native}}，在学{{learning}}",
+      "native_speaker": "{{native}}母语者",
+      "online_now": "在线",
+      "active_today": "今天活跃",
+      "same_country": "同一国家"
     }
   },
   "communityDetail": {

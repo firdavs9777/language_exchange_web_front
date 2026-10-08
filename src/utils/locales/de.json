@@ -964,6 +964,13 @@
         "message": "Füge die Sprachen hinzu, die du sprichst und lernen möchtest, dein Niveau und ein paar Interessen – wir finden dann passende Partner.",
         "action": "Profil vervollständigen"
       }
+    },
+    "reasons": {
+      "perfect_pair": "Spricht {{native}}, lernt {{learning}}",
+      "native_speaker": "{{native}}-Muttersprachler",
+      "online_now": "Jetzt online",
+      "active_today": "Heute aktiv",
+      "same_country": "Gleiches Land"
     }
   },
   "communityDetail": {

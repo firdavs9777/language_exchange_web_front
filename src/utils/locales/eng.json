@@ -964,6 +964,13 @@
         "message": "Add the languages you speak and want to learn, your level and a few interests, and we'll find partners who match.",
         "action": "Complete your profile"
       }
+    },
+    "reasons": {
+      "perfect_pair": "Speaks {{native}}, learning {{learning}}",
+      "native_speaker": "Native {{native}} speaker",
+      "online_now": "Online now",
+      "active_today": "Active today",
+      "same_country": "Same country"
     }
   },
   "communityDetail": {
