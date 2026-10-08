@@ -75,7 +75,7 @@ Each applies it before both `countDocuments` and `find`, so totals stay right.
 
 A moment whose `scheduledFor` is in the future is visible **only to its author** until that time.
 
-Every discovery read adds `scheduledFor: null, or <= now` to the public side of its query:
+While enforcement is on (see the switch below), every discovery read adds the scheduling filter to the public side of its query:
 
 - `getMoments`, in every mode;
 - `getTrendingMoments`;
@@ -85,11 +85,28 @@ Every discovery read adds `scheduledFor: null, or <= now` to the public side of 
 
 The author's own-posts branch is untouched, so authors keep seeing their scheduled moments.
 
-**Order on publish.** Feeds sort by `createdAt`, so a moment published tomorrow would surface buried at today's position. So whenever a moment is created or updated with a future `scheduledFor`, `createdAt` is set to `scheduledFor`, and the moment appears at its publish time. An update may move `createdAt` only while the moment is still unpublished (its stored `scheduledFor` is still in the future). Once it is public, `createdAt` is never rewritten.
+**The read filter** is `scheduledFor: { $not: { $gt: now } }`. That matches null, missing and past values without adding an `$or`, so it cannot collide with the logged-in feeds' existing top-level `$or` or with the search clause.
 
-`createMoment` already rejects a `scheduledFor` in the past. `updateMoment` gets the same check.
+**Reads deliberately left alone:** `getSavedMoments`, `getReelsFeed`, comments and translate. Each needs an id the viewer could only have got while the moment was visible, so leaving them is low risk.
 
-**Kill switch:** `MOMENT_SCHEDULING_ENFORCED`. On by default; `'false'` restores today's visibility. It is read per request.
+**One more read is covered:** `controllers/og.js`, the OG preview for `banatalk.com/moments/:id`. It serves the generic BananaTalk card for a scheduled moment, or a share preview would leak its text.
+
+**Order on publish.** Feeds sort by `createdAt`, so a moment published tomorrow would surface buried at today's position. So, **only while enforcement is on**, whenever a moment is created or updated with a future `scheduledFor`, `createdAt` is set to `scheduledFor` and the moment appears at its publish time. An update may move `createdAt` only while the moment is still unpublished (its stored `scheduledFor` is still in the future). Once it is public, `createdAt` is never rewritten.
+
+`createMoment` already rejects a `scheduledFor` in the past. `updateMoment` gets the same check, in the controller. The app's `updateMoment` never sends `scheduledFor`, so this cannot reject an app request.
+
+**Follower push.** `createMoment` currently calls `notificationService.sendFollowerMoment` straight away. While enforcement is on, it is skipped for a moment created with a future `scheduledFor`; otherwise a follower would tap the push and get a 404. A push at publish time stays out of scope.
+
+**Switch: `MOMENT_SCHEDULING_ENFORCED` — OFF by default.** Enforcement happens only when the value is `'true'`, read per request. The user chose to count first: moments already scheduled for a future time are public right now, and would vanish the moment enforcement starts.
+
+So this ships in two steps:
+
+1. **Count.** Deploy with the switch off — no behaviour change — and run a read-only script, `scripts/countFutureScheduledMoments.js` (`node scripts/countFutureScheduledMoments.js`). It prints how many non-deleted moments have `scheduledFor > now`, split by privacy, with their likes and comments, so the user can see what enforcement would hide.
+2. **Enable.** The user sets `MOMENT_SCHEDULING_ENFORCED=true` and restarts.
+
+**Switching it off again** stops the filter, the `createdAt` rewrite and the push skip. Any moment whose `createdAt` was already moved into the future then shows at the top of the feeds until that time passes. That is accepted: it is a handful of moments, for at most as long as they were scheduled.
+
+**Web.** In the author's own views, a scheduled moment shows "Scheduled for <time>" **instead of** its relative time. Its `createdAt` is in the future, so "posted X ago" would read negative.
 
 ### Web
 
@@ -108,11 +125,29 @@ The author's own-posts branch is untouched, so authors keep seeing their schedul
 - `reportedUser: moment.user`
 - the same `reason` and `description`
 
-It does this unless the reporter already has a pending report for this moment in that collection. The embedded `reports` push stays, because existing code reads it.
+The embedded `reports` push stays, because existing code reads it.
 
-If the request's `reason` is not in the `Report` model's enum, it is mapped to the closest value. The plan pins the exact mapping table after reading the enum.
+**Dedup.** No `Report` row is written if the reporter has **any** existing `Report` for this moment, whatever its status. `Report` has a unique index on `{ reportedBy, type, reportId }`, so a second row would throw. A duplicate-key error that slips through a race is caught and treated as "already recorded".
 
-A failure to write the `Report` record is logged and does not fail the request. The embedded write is the existing contract.
+**Reason mapping**, from the embedded enum the app sends to the `Report` enum:
+
+| App sends | `Report` gets |
+|---|---|
+| spam | spam |
+| harassment | harassment |
+| hate_speech | hate_speech |
+| violence | violence |
+| other | other |
+| misinformation | false_information |
+| inappropriate | other (the user's choice — "inappropriate" is broader than nudity) |
+
+**Record only.** The dual-write creates the row and nothing else. It does **not** run `createReport`'s side effects:
+- the reel auto-hide, where two reports on an `isReel` moment set `hiddenPendingReview`;
+- the admin email, `emailService.sendAdminReportAlert`.
+
+That was the user's choice. App reports reach the desk with no new automatic consequences.
+
+**Switch: `MOMENT_REPORTS_TO_DESK`.** On by default; `'false'` stops the dual-write. It is read per request. A failure to write the `Report` record is logged and does not fail the request: the embedded write is the existing contract.
 
 ### Web
 
@@ -166,9 +201,11 @@ This backend serves the production app. Every change follows these rules:
 
 1. **Additive only.** No field is renamed or removed and no response shape changes. The `Report` dual-write and `DELETE /:id/audio` are both additions.
 2. **Same request, same answer.** Requests with no new params return exactly today's results, except where a section deliberately changes visibility, which is behind a switch. Tests pin this for each feed, and `exploreMoments` is pinned to its current filtering.
-3. **Behaviour changes sit behind switches.** Scheduled visibility (section 2) is the one the app will notice. It sits behind `MOMENT_SCHEDULING_ENFORCED`. The report dual-write is invisible to the app.
-4. **No data migrations and no new indexes.** `createdAt` moves only on new writes of unpublished scheduled moments.
-5. **One merge per section.** Sections 1, 2, 3 and 5 ship as separate backend merges, so any of them can be reverted alone.
+3. **Behaviour changes sit behind switches.**
+   - Scheduled visibility (section 2) sits behind `MOMENT_SCHEDULING_ENFORCED`, which is **off** until the user has run the count and turned it on.
+   - The report dual-write (section 3) sits behind `MOMENT_REPORTS_TO_DESK`. It is on by default; it is record-only and invisible to the app.
+4. **No data migrations and no new indexes.** `createdAt` moves only on new writes of unpublished scheduled moments, and only while enforcement is on.
+5. **One merge per section, in this order: 1, then 2, then 3, then 5.** Each can be reverted alone. Sections 1 and 2 both touch `getMoments`, `getTrendingMoments` and `exploreMoments`, so 1 lands first and 2 builds on it.
 6. **Before every backend push:**
    - the full suite on Node 24;
    - `npm ci --omit=dev --dry-run` under npm 9.2.0.
@@ -188,15 +225,21 @@ Backend, with Node tests against an in-memory MongoDB:
   - Explore with today's params returns today's results;
   - For You with an explicit language replaces its language scope.
 - **Scheduling (2):**
-  - a future moment is hidden from other users on every listed read, and visible to its author;
-  - it appears once `scheduledFor` has passed;
-  - `createdAt` follows `scheduledFor` while unpublished and is frozen after;
-  - a past `scheduledFor` is rejected on update;
-  - the kill switch restores today's behaviour, read per request.
+  - **Switch off (the default):** every read, `createdAt`, and the follower push behave exactly as today.
+  - **Switch on:**
+    - a future moment is hidden from other users on every listed read, including the OG preview, and visible to its author;
+    - it appears once `scheduledFor` has passed;
+    - `createdAt` follows `scheduledFor` while unpublished and is frozen after;
+    - the follower push is skipped for a scheduled create.
+  - A past `scheduledFor` is rejected on update.
+  - The count script prints the right numbers against a seeded database.
 - **Reports (3):**
   - the legacy endpoint's response is unchanged;
-  - a `Report` row is created;
-  - no duplicate is created on a repeat report;
+  - a `Report` row is created with the mapped reason;
+  - no second row is written when any earlier `Report` exists, whatever its status;
+  - a duplicate-key race is swallowed;
+  - no admin email is sent and no reel is auto-hidden;
+  - `MOMENT_REPORTS_TO_DESK=false` stops the dual-write;
   - a `Report` write failure does not fail the request.
 - **Media (5):**
   - `DELETE /:id/audio` is owner-only, clears the audio and resets `mediaType`.
