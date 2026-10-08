@@ -102,3 +102,18 @@ export function sameIntents(a: any, b: any): boolean {
   if (left.length !== right.length) return false;
   return left.every((entry, index) => entry === right[index]);
 }
+
+/**
+ * What a profile page shows: learn and meet, never date.
+ *
+ * The server already strips `date` from every read about another user
+ * (lib/matchIntent.js:publicIntents), but an OWN profile is built from
+ * /auth/me, which returns the whole stored value. The page shows what others
+ * see, so it filters the same way rather than printing dating on your own
+ * profile and implying it is public.
+ */
+export function publicIntents(value: any): Intent[] {
+  return INTENTS.filter(
+    (entry) => entry !== "date" && normalizeIntents(value).indexOf(entry) > -1
+  );
+}
