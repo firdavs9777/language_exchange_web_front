@@ -108,6 +108,14 @@ So this ships in two steps:
 
 **Web.** In the author's own views, a scheduled moment shows "Scheduled for <time>" **instead of** its relative time. Its `createdAt` is in the future, so "posted X ago" would read negative.
 
+**The web picker only appears while enforcement is on.**
+- `GET /app-config` already exposes feature flags (`smartSortEnabled`, `matchesLayoutEnabled`, …). It gains one more, additive: `momentSchedulingEnforced: MOMENT_SCHEDULING_ENFORCED === 'true'`, read per request.
+- The Create and Edit schedule pickers render only when that flag is true. Otherwise a web user would schedule a post that publishes immediately — the bug this section exists to fix.
+
+**Reports already made are not backfilled.** The legacy endpoint returns early when the user already has an embedded report. So a user who reported a moment before this deploy gets no `Report` row from a repeat report. That is accepted and deliberate: the dual-write is forward-only. A test pins it, so nobody "fixes" it into a backfill.
+
+**The web's own reports keep their side effects.** They go through the canonical `POST /reports`, so the reel auto-hide and the admin email still apply to them. "Record only" describes the app's legacy path, not the web flow.
+
 ### Web
 
 - **Create:** an optional "Schedule" date-time picker, future times only.
