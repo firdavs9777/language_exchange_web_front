@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
+  CalendarHeart,
   Hash,
   MapPin,
   Radio,
@@ -38,6 +39,12 @@ const IN_PAGE_TABS: {
   fallback: string;
   Icon?: React.ComponentType<{ size?: number }>;
 }[] = [
+  {
+    id: "today",
+    copyKey: "communityMain.tabs.today",
+    fallback: "Today",
+    Icon: CalendarHeart,
+  },
   {
     id: "foryou",
     copyKey: "communityMain.tabs.forYou",
@@ -80,6 +87,12 @@ interface CommunitySubNavProps {
   showSearch?: boolean;
   /** How many people visited the viewer's profile. Absent or 0 renders nothing. */
   visitorsCount?: number;
+  /**
+   * Today's matches. Off for a signed-out visitor and when the server answers
+   * /matching/daily with 404 (DAILY_MATCHES_ENABLED off) -- a tab for a
+   * feature that is not there would lead nowhere.
+   */
+  showToday?: boolean;
 }
 
 const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
@@ -93,6 +106,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
   showFilterButton = true,
   showSearch = true,
   visitorsCount,
+  showToday = false,
 }) => {
   const { t } = useTranslation();
   const activeRef = useRef<HTMLButtonElement | null>(null);
@@ -119,7 +133,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
             aria-label={t("communityMain.tabs.label") || "Community tabs"}
             className="flex items-center gap-2 flex-nowrap"
           >
-            {IN_PAGE_TABS.map(({ id, copyKey, fallback, Icon }) => {
+            {IN_PAGE_TABS.filter(({ id }) => showToday || id !== "today").map(({ id, copyKey, fallback, Icon }) => {
               const active = activeTab === id;
               return (
                 <button

@@ -853,7 +853,8 @@
       "new": "Mới",
       "forYou": "Dành Cho Bạn",
       "online": "Trực Tuyến",
-      "label": "Các tab cộng đồng"
+      "label": "Các tab cộng đồng",
+      "today": "Hôm nay"
     },
     "filters": {
       "language": "Ngôn Ngữ",
@@ -971,6 +972,26 @@
       "online_now": "Đang trực tuyến",
       "active_today": "Hoạt động hôm nay",
       "same_country": "Cùng quốc gia"
+    },
+    "today": {
+      "title": "{{count}} người phù hợp hôm nay",
+      "refreshes": "Làm mới lúc {{time}}",
+      "refreshesMidnight": "Làm mới lúc nửa đêm",
+      "emptyTitle": "Hôm nay chỉ có vậy thôi",
+      "emptyBody": "Ngày mai sẽ có người phù hợp mới. Trong lúc chờ, hãy xem tất cả bạn học.",
+      "browse": "Xem bạn học",
+      "repliesFast": "Trả lời nhanh",
+      "boosted": "Được đẩy",
+      "reasonReciprocal": "Hai bạn đang học ngôn ngữ của nhau",
+      "reasonSameTarget": "Cũng đang học {{language}}",
+      "reasonActiveToday": "Hoạt động hôm nay",
+      "reasonSameCity": "Sống cùng thành phố với bạn",
+      "reasonSharedTopic": "Sở thích chung: {{topic}}",
+      "sayHi": "Chào",
+      "wave": "Vẫy tay",
+      "skip": "Bỏ qua",
+      "error": "Không tải được người phù hợp hôm nay",
+      "retry": "Thử lại"
     }
   },
   "communityDetail": {

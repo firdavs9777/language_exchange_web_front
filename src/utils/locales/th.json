@@ -853,7 +853,8 @@
       "new": "ใหม่",
       "forYou": "สำหรับคุณ",
       "online": "ออนไลน์",
-      "label": "แท็บชุมชน"
+      "label": "แท็บชุมชน",
+      "today": "วันนี้"
     },
     "filters": {
       "language": "ภาษา",
@@ -971,6 +972,26 @@
       "online_now": "ออนไลน์อยู่",
       "active_today": "ใช้งานวันนี้",
       "same_country": "ประเทศเดียวกัน"
+    },
+    "today": {
+      "title": "คู่ของคุณวันนี้ {{count}} คน",
+      "refreshes": "รีเฟรชเวลา {{time}}",
+      "refreshesMidnight": "รีเฟรชตอนเที่ยงคืน",
+      "emptyTitle": "วันนี้มีเท่านี้",
+      "emptyBody": "พรุ่งนี้จะมีคู่ใหม่ ระหว่างนี้ลองดูพาร์ตเนอร์ทั้งหมด",
+      "browse": "ดูพาร์ตเนอร์",
+      "repliesFast": "ตอบไว",
+      "boosted": "บูสต์อยู่",
+      "reasonReciprocal": "คุณกำลังเรียนภาษาของกันและกัน",
+      "reasonSameTarget": "เรียน{{language}}เหมือนกัน",
+      "reasonActiveToday": "ใช้งานวันนี้",
+      "reasonSameCity": "อยู่เมืองเดียวกับคุณ",
+      "reasonSharedTopic": "ความสนใจร่วม: {{topic}}",
+      "sayHi": "ทักทาย",
+      "wave": "โบกมือ",
+      "skip": "ข้าม",
+      "error": "โหลดคู่ของวันนี้ไม่สำเร็จ",
+      "retry": "ลองอีกครั้ง"
     }
   },
   "communityDetail": {

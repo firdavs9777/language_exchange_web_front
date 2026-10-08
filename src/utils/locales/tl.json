@@ -853,7 +853,8 @@
       "new": "Bago",
       "forYou": "Para sa iyo",
       "online": "Online",
-      "label": "Mga tab ng komunidad"
+      "label": "Mga tab ng komunidad",
+      "today": "Ngayon"
     },
     "filters": {
       "language": "Wika",
@@ -971,6 +972,26 @@
       "online_now": "Online ngayon",
       "active_today": "Aktibo ngayon",
       "same_country": "Parehong bansa"
+    },
+    "today": {
+      "title": "Ang {{count}} match mo ngayon",
+      "refreshes": "Magre-refresh nang {{time}}",
+      "refreshesMidnight": "Magre-refresh sa hatinggabi",
+      "emptyTitle": "Iyan na lahat para ngayon",
+      "emptyBody": "May bagong matches bukas. Habang naghihintay, tingnan ang lahat ng partner.",
+      "browse": "Tingnan ang mga partner",
+      "repliesFast": "Mabilis sumagot",
+      "boosted": "Naka-boost",
+      "reasonReciprocal": "Pinag-aaralan ninyo ang wika ng isa't isa",
+      "reasonSameTarget": "Nag-aaral din ng {{language}}",
+      "reasonActiveToday": "Aktibo ngayon",
+      "reasonSameCity": "Nakatira sa lungsod mo",
+      "reasonSharedTopic": "Parehong interes: {{topic}}",
+      "sayHi": "Mag-hi",
+      "wave": "Kumaway",
+      "skip": "Laktawan",
+      "error": "Hindi ma-load ang matches ngayon",
+      "retry": "Subukan ulit"
     }
   },
   "communityDetail": {

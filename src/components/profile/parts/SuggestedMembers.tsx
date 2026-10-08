@@ -80,7 +80,7 @@ const SuggestedMembers: React.FC<SuggestedMembersProps> = ({
             (who ? `More members like ${who}` : "More members")}
         </h2>
         <Link
-          to="/communities"
+          to="/communities?tab=all"
           data-testid="suggested-see-all"
           className="shrink-0 text-xs font-semibold text-brand-deep hover:text-brand-dark dark:text-brand-light"
         >

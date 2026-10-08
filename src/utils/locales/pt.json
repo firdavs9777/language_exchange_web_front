@@ -834,7 +834,8 @@
       "new": "Novo",
       "forYou": "Para você",
       "online": "Online",
-      "label": "Abas da comunidade"
+      "label": "Abas da comunidade",
+      "today": "Hoje"
     },
     "filters": {
       "language": "Idioma",
@@ -953,6 +954,26 @@
       "online_now": "Online agora",
       "active_today": "Ativo hoje",
       "same_country": "Mesmo país"
+    },
+    "today": {
+      "title": "Seus {{count}} matches de hoje",
+      "refreshes": "Atualiza às {{time}}",
+      "refreshesMidnight": "Atualiza à meia-noite",
+      "emptyTitle": "Isso é tudo por hoje",
+      "emptyBody": "Novos matches amanhã. Enquanto isso, veja todos os parceiros.",
+      "browse": "Ver parceiros",
+      "repliesFast": "Responde rápido",
+      "boosted": "Impulsionado",
+      "reasonReciprocal": "Vocês estão aprendendo o idioma um do outro",
+      "reasonSameTarget": "Também aprende {{language}}",
+      "reasonActiveToday": "Ativo hoje",
+      "reasonSameCity": "Mora na sua cidade",
+      "reasonSharedTopic": "Interesse em comum: {{topic}}",
+      "sayHi": "Dizer oi",
+      "wave": "Acenar",
+      "skip": "Pular",
+      "error": "Não foi possível carregar os matches de hoje",
+      "retry": "Tentar novamente"
     }
   },
   "communityDetail": {

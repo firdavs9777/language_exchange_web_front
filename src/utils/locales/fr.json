@@ -834,7 +834,8 @@
       "new": "Nouveaux",
       "forYou": "Pour vous",
       "online": "En ligne",
-      "label": "Onglets de la communauté"
+      "label": "Onglets de la communauté",
+      "today": "Aujourd'hui"
     },
     "filters": {
       "language": "Langue",
@@ -953,6 +954,26 @@
       "online_now": "En ligne",
       "active_today": "Actif aujourd'hui",
       "same_country": "Même pays"
+    },
+    "today": {
+      "title": "Vos {{count}} correspondances du jour",
+      "refreshes": "Renouvelé à {{time}}",
+      "refreshesMidnight": "Renouvelé à minuit",
+      "emptyTitle": "C'est tout pour aujourd'hui",
+      "emptyBody": "De nouvelles correspondances demain. En attendant, parcourez tous les partenaires.",
+      "browse": "Voir les partenaires",
+      "repliesFast": "Répond vite",
+      "boosted": "Boosté",
+      "reasonReciprocal": "Vous apprenez la langue l'un de l'autre",
+      "reasonSameTarget": "Apprend aussi le {{language}}",
+      "reasonActiveToday": "Actif aujourd'hui",
+      "reasonSameCity": "Vit dans votre ville",
+      "reasonSharedTopic": "Intérêt commun : {{topic}}",
+      "sayHi": "Dire bonjour",
+      "wave": "Faire coucou",
+      "skip": "Passer",
+      "error": "Impossible de charger les correspondances du jour",
+      "retry": "Réessayer"
     }
   },
   "communityDetail": {

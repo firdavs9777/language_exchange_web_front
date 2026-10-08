@@ -853,7 +853,8 @@
       "new": "最新",
       "forYou": "推薦",
       "online": "線上",
-      "label": "社群標籤"
+      "label": "社群標籤",
+      "today": "今天"
     },
     "filters": {
       "language": "語言",
@@ -971,6 +972,26 @@
       "online_now": "線上",
       "active_today": "今天活躍",
       "same_country": "同一個國家"
+    },
+    "today": {
+      "title": "今天為你配對了 {{count}} 位",
+      "refreshes": "{{time}} 更新",
+      "refreshesMidnight": "午夜更新",
+      "emptyTitle": "今天就這些了",
+      "emptyBody": "明天會有新的配對。先去看看其他夥伴吧。",
+      "browse": "瀏覽夥伴",
+      "repliesFast": "回覆很快",
+      "boosted": "已加速",
+      "reasonReciprocal": "你們在學習彼此的語言",
+      "reasonSameTarget": "也在學{{language}}",
+      "reasonActiveToday": "今天活躍",
+      "reasonSameCity": "住在同一個城市",
+      "reasonSharedTopic": "共同興趣：{{topic}}",
+      "sayHi": "打個招呼",
+      "wave": "揮手",
+      "skip": "略過",
+      "error": "無法載入今日配對",
+      "retry": "重試"
     }
   },
   "communityDetail": {

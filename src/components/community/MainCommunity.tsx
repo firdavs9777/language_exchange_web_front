@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import {
   useGetCommunityMembersQuery,
   useGetRecommendationsQuery,
+  useGetDailyMatchesQuery,
   useGetTopicsQuery,
 } from "../../store/slices/communitySlice";
 import { useGetProfileVisitorsQuery, useGetUserProfileQuery } from "../../store/slices/usersSlice";
@@ -14,6 +15,9 @@ import { RootState } from "../../store";
 import { useDebounce } from "./utils";
 
 import CommunitySubNav, { CommunityNavTab } from "./tandem/CommunitySubNav";
+import TodayTab from "./today/TodayTab";
+import { DailyMatch } from "./today/types";
+import { photoUrl } from "./today/dailyMatchView";
 import HighlightedProfilesCarousel from "./tandem/HighlightedProfilesCarousel";
 import MemberCard, { CommunityMemberCard } from "./MemberCard";
 import CommunityFilterSheet from "./CommunityFilterSheet";
@@ -32,7 +36,6 @@ import {
   CommunityUrlState,
   decodeCommunityState,
   encodeCommunityState,
-  hasCommunityUrlState,
   mergeCommunityParams,
 } from "./lib/communityUrlState";
 import notify from "../../design/notify";
@@ -202,29 +205,57 @@ const ModernCommunity: React.FC = () => {
   // the URL and this recomputes.
   const listState = useMemo<CommunityUrlState>(() => {
     const decoded = decodeCommunityState(searchParams);
-    const fromUrl = hasCommunityUrlState(searchParams);
-    // "For you" deliberately writes no filter params (they describe nothing
-    // it uses), so on that tab an absent set of filters means "unknown", not
-    // "none" -- the stored ones stand in so that walking For you -> All gets
-    // the member's own list back rather than a cleared one.
-    const forYouWithoutFilters =
-      decoded.tab === "foryou" && decoded.filters === undefined;
+    // Today is the default landing, so it is the tab a bare URL means -- but
+    // only a BARE one. Every filtered or searched All link shared before
+    // Today existed has no `tab` (`all` used to be left out), and reading it
+    // as Today would open a tab that ignores filters and then strip them from
+    // the address bar.
+    const carriesList =
+      decoded.filters !== undefined ||
+      decoded.search !== undefined ||
+      decoded.sort !== undefined;
+    const tab: CommunityNavTab = decoded.tab || (carriesList ? "all" : "today");
+    // "For you" and "Today" deliberately write no filter params (they describe
+    // nothing those tabs use), so there an absent set of filters means
+    // "unknown", not "none" -- the stored ones stand in so that walking to All
+    // gets the member's own list back rather than a cleared one.
+    const serverPickedWithoutFilters =
+      (tab === "foryou" || tab === "today") && decoded.filters === undefined;
     return {
       filters:
-        fromUrl && !forYouWithoutFilters
+        // The member's saved filters stand in whenever the URL says nothing
+        // about the list. A tab alone is not an opinion about filters: with
+        // Today as the default, All is reached as ?tab=all, and treating that
+        // as "a shared link with state" would drop the member's own filters.
+        carriesList && !serverPickedWithoutFilters
           ? { ...DEFAULT_FILTERS, ...(decoded.filters || {}) }
           : { ...storedFilters },
       search: decoded.search || "",
       sort: decoded.sort,
-      tab: decoded.tab || "all",
+      tab,
     };
   }, [searchParams, storedFilters]);
 
   const filters = listState.filters;
   const sort = listState.sort;
   const search = listState.search;
-  const activeTab: CommunityNavTab = listState.tab;
+  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
+  const signedIn = Boolean(userInfo && (userInfo as any).user && (userInfo as any).user._id);
+  // What the URL says. The canonical-URL effect writes THIS, so a fallback
+  // below never rewrites the address bar.
+  const urlTab: CommunityNavTab = listState.tab;
+  const {
+    data: dailyData,
+    isLoading: dailyLoading,
+    error: dailyError,
+    refetch: refetchDaily,
+  } = useGetDailyMatchesQuery(undefined, { skip: !signedIn });
+  // 404 = DAILY_MATCHES_ENABLED is off: the feature is not here, not an error.
+  const todayOff = !signedIn || (dailyError as any)?.status === 404;
+  // Display-only fallback: the URL keeps saying today; the page shows All.
+  const activeTab: CommunityNavTab = urlTab === "today" && todayOff ? "all" : urlTab;
   const isForYou = activeTab === "foryou";
+  const isToday = activeTab === "today";
 
   /**
    * Online and New are the All list with one switch held down. The member
@@ -307,7 +338,7 @@ const ModernCommunity: React.FC = () => {
       // filters are still in localStorage and come back the moment they
       // return to a tab that uses them.
       const forUrl: CommunityUrlState =
-        next.tab === "foryou" ? { ...next, filters: {} } : next;
+        next.tab === "foryou" || next.tab === "today" ? { ...next, filters: {} } : next;
       const merged = mergeCommunityParams(searchParams, encodeCommunityState(forUrl));
       if (merged.toString() === searchParams.toString()) return;
       setSearchParams(merged, { replace: true });
@@ -359,10 +390,9 @@ const ModernCommunity: React.FC = () => {
   // a hand-edited query into its canonical spelling. `writeUrl` compares the
   // encoded string first, so a URL that already says this does nothing.
   useEffect(() => {
-    writeUrl({ filters, search, sort, tab: activeTab });
-  }, [filters, search, sort, activeTab, writeUrl]);
+    writeUrl({ filters, search, sort, tab: urlTab });
+  }, [filters, search, sort, urlTab, writeUrl]);
 
-  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
 
   const currentUser = useMemo(
     () => ({
@@ -421,7 +451,7 @@ const ModernCommunity: React.FC = () => {
     isFetching,
     error: errorInfo,
     refetch,
-  } = useGetCommunityMembersQuery(queryArg, { skip: isForYou });
+  } = useGetCommunityMembersQuery(queryArg, { skip: isForYou || isToday });
 
   // "For you" asks a different server a different question: no filters, no
   // paging, one scored set. It is skipped entirely off the tab so the tab
@@ -784,6 +814,12 @@ const ModernCommunity: React.FC = () => {
     setWaveTarget(user);
   }, []);
 
+  // WaveSheet reads its avatar from imageUrls[0]; daily users carry raw images.
+  const handleWaveDaily = useCallback((match: DailyMatch) => {
+    const photo = photoUrl(match.user.images);
+    setWaveTarget({ ...(match.user as any), imageUrls: photo ? [photo] : [] });
+  }, []);
+
   const handleResetAll = useCallback(() => {
     const next = { ...DEFAULT_FILTERS };
     setDraftFilters(next);
@@ -818,8 +854,9 @@ const ModernCommunity: React.FC = () => {
         onOpenFilters={openFilterSheet}
         hasActiveFilters={activeFilterCount > 0}
         activeFilterCount={activeFilterCount}
-        showFilterButton={!isForYou}
-        showSearch={!isForYou}
+        showFilterButton={!isForYou && !isToday}
+        showSearch={!isForYou && !isToday}
+        showToday={signedIn && !todayOff}
         visitorsCount={activeTab === "all" ? visitorsTotal : 0}
       />
 
@@ -866,7 +903,16 @@ const ModernCommunity: React.FC = () => {
           </>
         )}
 
-        {isForYou ? (
+        {isToday ? (
+          <TodayTab
+            response={dailyData as any}
+            isLoading={dailyLoading}
+            isError={Boolean(dailyError)}
+            onRetry={refetchDaily}
+            onWave={handleWaveDaily}
+            onBrowse={() => applyState({ tab: "all" })}
+          />
+        ) : isForYou ? (
           <ForYouTab
             members={recommendations}
             isFetching={isRecommendationsFetching}

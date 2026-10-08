@@ -109,7 +109,7 @@ const SIGNED_IN = {
   },
 };
 
-function renderList(entries: string[] = ["/communities"]) {
+function renderList(entries: string[] = ["/communities?tab=all"]) {
   const router = createMemoryRouter(
     createRoutesFromElements(
       <Route path="/">
@@ -148,7 +148,7 @@ describe("the community tabs", () => {
 
     // `all` is the default: it is normalised back out of the query.
     fireEvent.click(tab("communityMain.tabs.all"));
-    await waitFor(() => expect(router.state.location.search).toBe(""));
+    await waitFor(() => expect(router.state.location.search).toBe("?tab=all"));  // all is written since today became the default landing
   });
 
   it("reads the tab back out of a pasted link", async () => {
@@ -206,7 +206,7 @@ describe("the community tabs", () => {
     });
 
     try {
-      renderList(["/communities"]);
+      renderList(["/communities?tab=all"]);
       await waitFor(() =>
         expect(memberRequests().some((u) => u.indexOf("nativeLanguage=Japanese") >= 0)).toBe(true)
       );
@@ -216,7 +216,7 @@ describe("the community tabs", () => {
   });
 
   it("asks the All tab for no lock at all", async () => {
-    renderList(["/communities"]);
+    renderList(["/communities?tab=all"]);
 
     await waitFor(() => expect(memberRequests().length).toBeGreaterThan(0));
     const first = memberRequests()[0];
@@ -294,7 +294,7 @@ describe("the For you tab", () => {
   });
 
   it("costs nothing to a member who never opens it", async () => {
-    renderList(["/communities"]);
+    renderList(["/communities?tab=all"]);
 
     await waitFor(() => expect(memberRequests().length).toBeGreaterThan(0));
     expect(recommendationRequests()).toEqual([]);

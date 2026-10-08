@@ -853,7 +853,8 @@
       "new": "신규",
       "forYou": "추천",
       "online": "온라인",
-      "label": "커뮤니티 탭"
+      "label": "커뮤니티 탭",
+      "today": "오늘"
     },
     "filters": {
       "language": "언어",
@@ -971,6 +972,26 @@
       "online_now": "지금 온라인",
       "active_today": "오늘 활동",
       "same_country": "같은 나라"
+    },
+    "today": {
+      "title": "오늘의 매칭 {{count}}명",
+      "refreshes": "{{time}}에 새로고침",
+      "refreshesMidnight": "자정에 새로고침",
+      "emptyTitle": "오늘은 여기까지예요",
+      "emptyBody": "내일 새로운 매칭이 와요. 그동안 다른 파트너를 둘러보세요.",
+      "browse": "파트너 둘러보기",
+      "repliesFast": "답장이 빨라요",
+      "boosted": "부스트됨",
+      "reasonReciprocal": "서로의 언어를 배우고 있어요",
+      "reasonSameTarget": "{{language}}도 배우는 중",
+      "reasonActiveToday": "오늘 활동",
+      "reasonSameCity": "같은 도시에 살아요",
+      "reasonSharedTopic": "공통 관심사: {{topic}}",
+      "sayHi": "인사하기",
+      "wave": "손 흔들기",
+      "skip": "건너뛰기",
+      "error": "오늘의 매칭을 불러오지 못했어요",
+      "retry": "다시 시도"
     }
   },
   "communityDetail": {

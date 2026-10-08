@@ -88,7 +88,7 @@ const SIGNED_IN = {
   },
 };
 
-function renderList(entries: string[] = ["/communities"], initialIndex?: number) {
+function renderList(entries: string[] = ["/communities?tab=all"], initialIndex?: number) {
   const router = createMemoryRouter(
     createRoutesFromElements(
       <Route path="/">
@@ -131,23 +131,23 @@ describe("the community list keeps its state in the URL", () => {
       JSON.stringify({ minAge: 18, maxAge: 100, gender: "female" })
     );
 
-    const { router } = renderList(["/communities"]);
+    const { router } = renderList(["/communities?tab=all"]);
 
     expect(await screen.findByText("Gender: female")).toBeInTheDocument();
     await waitFor(() =>
-      expect(router.state.location.search).toBe("?gender=female")
+      expect(router.state.location.search).toBe("?gender=female&tab=all")  // all is written since today became the default landing
     );
   });
 
   it("leaves the URL clean when there is nothing to say", async () => {
-    const { router } = renderList(["/communities"]);
+    const { router } = renderList(["/communities?tab=all"]);
     await waitFor(() => expect(memberRequests().length).toBeGreaterThan(0));
-    expect(router.state.location.search).toBe("");
+    expect(router.state.location.search).toBe("?tab=all");  // all is written since today became the default landing
   });
 
   it("rewrites the URL and goes back to page 1 when a filter changes", async () => {
     memberCount = 20; // a full page, so "Load more" is offered
-    const { router } = renderList(["/communities"]);
+    const { router } = renderList(["/communities?tab=all"]);
 
     fireEvent.click(await screen.findByText("communityMain.loadMore.button"));
     await waitFor(() =>
@@ -156,21 +156,21 @@ describe("the community list keeps its state in the URL", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /communityMain.chips.onlineNow/ }));
 
-    await waitFor(() => expect(router.state.location.search).toBe("?online=1"));
+    await waitFor(() => expect(router.state.location.search).toBe("?online=1&tab=all"));  // all is written since today became the default landing
     const last = memberRequests()[memberRequests().length - 1];
     expect(last).toContain("onlineOnly=true");
     expect(last).toMatch(/[?&]page=1\b/);
   });
 
   it("puts what is typed in the search box straight into the URL", async () => {
-    const { router } = renderList(["/communities"]);
+    const { router } = renderList(["/communities?tab=all"]);
     const box = await screen.findByPlaceholderText(
       "communityMain.subnav.searchPlaceholder"
     );
 
     fireEvent.change(box, { target: { value: "anna" } });
 
-    await waitFor(() => expect(router.state.location.search).toBe("?q=anna"));
+    await waitFor(() => expect(router.state.location.search).toBe("?q=anna&tab=all"));  // all is written since today became the default landing
     expect((box as HTMLInputElement).value).toBe("anna");
     // The box is immediate; the query waits for the typing to settle.
     await waitFor(() =>
@@ -190,15 +190,15 @@ describe("the community list keeps its state in the URL", () => {
   });
 
   it("keeps the sort chip in the URL", async () => {
-    const { router } = renderList(["/communities"]);
+    const { router } = renderList(["/communities?tab=all"]);
 
     fireEvent.click(await screen.findByRole("button", { name: /communityMain.chips.recentlyActive/ }));
     await waitFor(() =>
-      expect(router.state.location.search).toBe("?sort=recently_active")
+      expect(router.state.location.search).toBe("?sort=recently_active&tab=all")  // all is written since today became the default landing
     );
 
     fireEvent.click(screen.getByRole("button", { name: /communityMain.chips.recentlyActive/ }));
-    await waitFor(() => expect(router.state.location.search).toBe(""));
+    await waitFor(() => expect(router.state.location.search).toBe("?tab=all"));  // all is written since today became the default landing
   });
 
   it("restores the previous filters on Back", async () => {
@@ -222,7 +222,7 @@ describe("the community list keeps its state in the URL", () => {
 
     fireEvent.click(await screen.findByText("Gender: male"));
 
-    await waitFor(() => expect(router.state.location.search).toBe("?online=1"));
+    await waitFor(() => expect(router.state.location.search).toBe("?online=1&tab=all"));  // all is written since today became the default landing
     expect(screen.queryByText("Gender: male")).not.toBeInTheDocument();
     expect(screen.getByText("Online now")).toBeInTheDocument();
   });
@@ -232,7 +232,7 @@ describe("the community list keeps its state in the URL", () => {
 
     fireEvent.click(await screen.findByText("Clear"));
 
-    await waitFor(() => expect(router.state.location.search).toBe(""));
+    await waitFor(() => expect(router.state.location.search).toBe("?tab=all"));  // all is written since today became the default landing
   });
 
   it("copies a link to the list as it stands", async () => {
@@ -259,7 +259,7 @@ describe("the community list keeps its state in the URL", () => {
     const { router } = renderList(["/communities?tab=all&gender=male"]);
     expect(await screen.findByText("Gender: male")).toBeInTheDocument();
     // `all` is the default, so it is normalised out of the query.
-    await waitFor(() => expect(router.state.location.search).toBe("?gender=male"));
+    await waitFor(() => expect(router.state.location.search).toBe("?gender=male&tab=all"));  // all is written since today became the default landing
   });
 
   it("keeps params it does not own", async () => {

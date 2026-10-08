@@ -853,7 +853,8 @@
       "new": "Neu",
       "forYou": "Für dich",
       "online": "Online",
-      "label": "Community-Tabs"
+      "label": "Community-Tabs",
+      "today": "Heute"
     },
     "filters": {
       "language": "Sprache",
@@ -971,6 +972,26 @@
       "online_now": "Jetzt online",
       "active_today": "Heute aktiv",
       "same_country": "Gleiches Land"
+    },
+    "today": {
+      "title": "Deine {{count}} Matches heute",
+      "refreshes": "Neu um {{time}}",
+      "refreshesMidnight": "Neu um Mitternacht",
+      "emptyTitle": "Das war's für heute",
+      "emptyBody": "Morgen gibt es neue Matches. Schau dir bis dahin alle Partner an.",
+      "browse": "Partner ansehen",
+      "repliesFast": "Antwortet schnell",
+      "boosted": "Geboostet",
+      "reasonReciprocal": "Ihr lernt die Sprache des anderen",
+      "reasonSameTarget": "Lernt auch {{language}}",
+      "reasonActiveToday": "Heute aktiv",
+      "reasonSameCity": "Wohnt in deiner Stadt",
+      "reasonSharedTopic": "Gemeinsames Interesse: {{topic}}",
+      "sayHi": "Hallo sagen",
+      "wave": "Winken",
+      "skip": "Überspringen",
+      "error": "Die heutigen Matches konnten nicht geladen werden",
+      "retry": "Erneut versuchen"
     }
   },
   "communityDetail": {
