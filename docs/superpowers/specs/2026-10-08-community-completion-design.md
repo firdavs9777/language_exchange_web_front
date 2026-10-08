@@ -41,6 +41,8 @@ The server cannot see whether the language params were typed by the member or fi
 
   "If and only if" is load-bearing. One explicit filter is sent as `matchLanguage=true` with a **single** swapped param (`buildCommunityQuery.ts`). "Native speakers of Korean", from someone learning Korean, sends `learningLanguage=Korean` alone. A looser "absent or equal" rule would mistake that for the default and drop the most common filter of all during a search. Because the viewer has a native language, the default would also have sent `nativeLanguage`; its absence is what marks the request as explicit.
 
+- **Set** means a non-empty string after trimming. An empty or whitespace-only `native_language` / `language_to_learn` counts as unset. That is the same reading `buildUsersQuery`'s own `if (nativeLanguage)` gives a param, so both sides of the comparison agree.
+- **The web, before `/auth/me` answers.** Until then the page may still send the languages saved at login. If those differ from `req.user`, the request counts as explicit and the search stays narrowed — today's behaviour, and safe. It corrects itself once `/auth/me` answers. This is expected, not a bug.
 - **Equal** means the same `matchKey` (`lib/matchLanguage.js`). `matchKey` returns `null` for values it does not recognise — American Sign Language, Hawaiian and Dari are real production values — so two `null` keys are **not** equal. In that case the values are compared as trimmed, case-insensitive strings, the same fallback `equivalentValues` uses.
 - **Search-everyone condition.** `search` is non-empty, does not start with `@` (the `@username` branch already clears language filters), and `req.user` exists.
 
