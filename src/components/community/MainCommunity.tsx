@@ -9,7 +9,7 @@ import {
   useGetRecommendationsQuery,
   useGetTopicsQuery,
 } from "../../store/slices/communitySlice";
-import { useGetProfileVisitorsQuery } from "../../store/slices/usersSlice";
+import { useGetProfileVisitorsQuery, useGetUserProfileQuery } from "../../store/slices/usersSlice";
 import { RootState } from "../../store";
 import { useDebounce } from "./utils";
 
@@ -372,12 +372,20 @@ const ModernCommunity: React.FC = () => {
 
   // `me` drives the default language-exchange match inside buildCommunityQuery
   // (and the quick chips' "Speaks / Learning" labels).
+  // The account as it is NOW (/auth/me), falling back to the login snapshot
+  // until that arrives. The snapshot is written once at login and kept in
+  // localStorage, so languages changed in the app since then were invisible
+  // here and the list kept matching the old ones. The member query is keyed
+  // on the built params, so a /auth/me that agrees with the snapshot costs no
+  // second request.
+  const { data: meData } = useGetUserProfileQuery({}, { skip: !userInfo?.user });
+  const current: any = (meData as any)?.data || (meData as any)?.user;
   const me = useMemo(
     () => ({
-      native_language: userInfo?.user?.native_language,
-      language_to_learn: userInfo?.user?.language_to_learn,
+      native_language: current?.native_language || userInfo?.user?.native_language,
+      language_to_learn: current?.language_to_learn || userInfo?.user?.language_to_learn,
     }),
-    [userInfo]
+    [current?.native_language, current?.language_to_learn, userInfo]
   );
 
   // Identifies the question the list is currently asking. Paging is tagged

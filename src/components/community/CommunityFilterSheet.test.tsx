@@ -160,23 +160,32 @@ describe("the filter sheet's controls", () => {
     );
   });
 
-  it("sets the country", () => {
+  // A list, not a text box: free text was matched by substring, so "Korea"
+  // found both Koreas and "Niger" found Nigeria.
+  it("picks the country from a list of real countries", () => {
     const { onChange } = renderSheet();
+    const select = screen.getByTestId("filter-country") as HTMLSelectElement;
+    expect(select.tagName).toBe("SELECT");
+    expect(Array.from(select.options).some((o) => o.value === "North Korea")).toBe(true);
 
-    fireEvent.change(screen.getByPlaceholderText("e.g. South Korea"), {
-      target: { value: "Japan" },
-    });
+    fireEvent.change(select, { target: { value: "Japan" } });
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ country: "Japan" }));
   });
 
-  // An emptied box is no country filter at all, not `country=""`.
-  it("drops the country filter when the box is emptied", () => {
+  // "Any" is no country filter at all, not `country=""`.
+  it("drops the country filter on Any", () => {
     const { onChange } = renderSheet({ country: "Japan" });
-
-    fireEvent.change(screen.getByPlaceholderText("e.g. South Korea"), {
-      target: { value: "" },
-    });
+    fireEvent.change(screen.getByTestId("filter-country"), { target: { value: "" } });
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ country: undefined }));
+  });
+
+  // A link or saved filter from the text-box days can carry a value the list
+  // does not have. It stays selected and visible rather than silently
+  // reading as "Any" while still filtering.
+  it("keeps a country typed before the list existed", () => {
+    renderSheet({ country: "Korea" });
+    const select = screen.getByTestId("filter-country") as HTMLSelectElement;
+    expect(select.value).toBe("Korea");
   });
 
   it("sets a CEFR level and takes it off again", () => {
@@ -255,7 +264,7 @@ describe("the filter sheet's live count", () => {
     expect(countRequests()[0]).toContain("onlineOnly=true");
   });
 
-  // Every keystroke in the country box must not become a request.
+  // Quick changes in a row must not each become a request.
   it("waits for the editing to settle before counting again", async () => {
     render(
       <Provider store={makeStore(SIGNED_IN)}>
@@ -264,10 +273,10 @@ describe("the filter sheet's live count", () => {
     );
     await waitFor(() => expect(countRequests().length).toBe(1));
 
-    const input = screen.getByPlaceholderText("e.g. South Korea");
-    fireEvent.change(input, { target: { value: "J" } });
-    fireEvent.change(input, { target: { value: "Ja" } });
-    fireEvent.change(input, { target: { value: "Japan" } });
+    const select = screen.getByTestId("filter-country");
+    fireEvent.change(select, { target: { value: "Jamaica" } });
+    fireEvent.change(select, { target: { value: "Jordan" } });
+    fireEvent.change(select, { target: { value: "Japan" } });
 
     await waitFor(() => expect(countRequests().length).toBe(2));
     expect(countRequests()[1]).toContain("country=Japan");

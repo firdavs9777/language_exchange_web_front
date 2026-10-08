@@ -46,7 +46,6 @@ export function buildCommunityQuery(
   limit: number
 ): Record<string, string> {
   const query: Record<string, string> = {};
-  query.matchLanguage = 'true';
 
   const hasFilterNative =
     filters.nativeLanguage !== undefined && filters.nativeLanguage !== '';
@@ -56,18 +55,29 @@ export function buildCommunityQuery(
   let apiNativeParam: string | undefined; // API nativeLanguage: finds users LEARNING this language
   let apiLearningParam: string | undefined; // API learningLanguage: finds users who SPEAK this natively
 
-  if (hasFilterNative || hasFilterLearning) {
-    // Explicit filters — apply only what was selected (inverted).
-    if (hasFilterNative) apiLearningParam = filters.nativeLanguage;
-    if (hasFilterLearning) apiNativeParam = filters.learningLanguage;
+  if (hasFilterNative && hasFilterLearning) {
+    // BOTH explicit: they must both hold. matchLanguage=true would OR them --
+    // "native Korean" + "learning English" came back as anyone who speaks
+    // Korean plus anyone learning English. Without matchLanguage the server
+    // takes its direct branch, which ANDs the two and reads each param in its
+    // plain meaning (native = native, learning = learning), by substring --
+    // so "Chinese" still covers "Chinese (Simplified)".
+    query.nativeLanguage = filters.nativeLanguage as string;
+    query.learningLanguage = filters.learningLanguage as string;
   } else {
-    // Default: language-exchange matching using my own languages (direct, not swapped).
-    apiNativeParam = me.native_language;
-    apiLearningParam = me.language_to_learn;
+    query.matchLanguage = 'true';
+    if (hasFilterNative || hasFilterLearning) {
+      // One explicit filter — inverted, per the rule above.
+      if (hasFilterNative) apiLearningParam = filters.nativeLanguage;
+      if (hasFilterLearning) apiNativeParam = filters.learningLanguage;
+    } else {
+      // Default: language-exchange matching using my own languages (direct, not swapped).
+      apiNativeParam = me.native_language;
+      apiLearningParam = me.language_to_learn;
+    }
+    if (apiNativeParam) query.nativeLanguage = apiNativeParam;
+    if (apiLearningParam) query.learningLanguage = apiLearningParam;
   }
-
-  if (apiNativeParam) query.nativeLanguage = apiNativeParam;
-  if (apiLearningParam) query.learningLanguage = apiLearningParam;
 
   if (filters.minAge !== undefined && filters.minAge > 18) {
     query.minAge = String(filters.minAge);
@@ -88,7 +98,10 @@ export function buildCommunityQuery(
   if (filters.search) query.search = filters.search;
   if (filters.sort) query.sort = filters.sort;
   if (filters.onlineOnly) query.onlineOnly = 'true';
-  if (filters.newUsersOnly) query.newUsersOnly = 'true';
+  // The server has never read `newUsersOnly`; it honours `joinedWithin=7d|30d`
+  // (controllers/users.js). Sending the old name made the New tab return the
+  // All list. 7d is the app's New members segment and the card's New badge.
+  if (filters.newUsersOnly) query.joinedWithin = '7d';
 
   query.page = String(page);
   query.limit = String(limit);

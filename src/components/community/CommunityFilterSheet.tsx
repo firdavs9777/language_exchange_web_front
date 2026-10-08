@@ -6,6 +6,7 @@ import { RootState } from "../../store";
 import { COMMON_LANGUAGES } from "./type";
 import { CommunityFilters, Me, buildCommunityQuery } from "./lib/buildCommunityQuery";
 import { DEFAULT_FILTERS } from "./lib/filterStorage";
+import { countryOptions } from "./lib/countries";
 import {
   useGetCommunityCountQuery,
   useGetTopicsQuery,
@@ -122,7 +123,10 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
   canCopyLink = true,
   lockedTab,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  // Labels in the reader's language; recomputed only when it changes.
+  const uiLocale = (i18n && i18n.language) || "en";
+  const countries = useMemo(() => countryOptions(uiLocale), [uiLocale]);
 
   const me = useSelector(
     (state: RootState) => state.auth.userInfo?.user
@@ -377,13 +381,29 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
               {t("communityMain.filterSheet.country") || "Country"}
             </h3>
-            <input
-              type="text"
+            {/* A list of real countries, labelled in the reader's language,
+                each sending its English name -- what the server stores and
+                matches exactly. The text box it replaces was matched by
+                substring, so "Korea" found both Koreas. */}
+            <select
+              data-testid="filter-country"
               value={value.country || ""}
               onChange={(e) => set("country", e.target.value || undefined)}
-              placeholder={t("communityMain.filterSheet.countryPlaceholder") || "e.g. South Korea"}
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
-            />
+              aria-label={t("communityMain.filterSheet.country") || "Country"}
+              className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+            >
+              <option value="">{t("communityMain.filterSheet.any") || "Any"}</option>
+              {value.country &&
+                !countries.some((option) => option.value === value.country) && (
+                  // Kept from a link or saved filter from the text-box days.
+                  <option value={value.country}>{value.country}</option>
+                )}
+              {countries.map((option) => (
+                <option key={option.code} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </section>
 
           {/* CEFR level */}
