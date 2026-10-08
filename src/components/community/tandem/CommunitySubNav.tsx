@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next";
  * middle-click or open them in a new tab.
  */
 export type CommunityNavTab =
+  | "today"
   | "foryou"
   | "all"
   | "online"
