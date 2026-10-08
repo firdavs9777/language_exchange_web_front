@@ -212,3 +212,27 @@ describe("SingleMoment scheduled badge", () => {
     expect(screen.queryByTestId("scheduled-badge")).not.toBeInTheDocument();
   });
 });
+
+describe("SingleMoment prerendered date", () => {
+  // The prerender runs on the deploy runner (UTC); visitors hydrate in their
+  // own timezone. The pre-hydration date must be the same string in both, or
+  // React discards the whole server tree (#418/#425).
+  it("is written in UTC, whatever timezone renders it", () => {
+    const { renderToString } = require("react-dom/server");
+    const html = renderToString(
+      <MemoryRouter>
+        <SingleMoment
+          _id="moment-tz"
+          title="Late"
+          description="d"
+          likeCount={0}
+          likedUsers={[]}
+          commentCount={0}
+          createdAt="2026-10-07T23:30:00.000Z"
+          user={{ _id: "author-1", name: "Author" }}
+        />
+      </MemoryRouter>
+    );
+    expect(html).toContain("Oct 7, 2026");
+  });
+});

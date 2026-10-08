@@ -330,7 +330,10 @@ const SingleMoment: React.FC<MomentProps> = ({
    */
   const hasHydrated = useHasHydrated();
   const formatDate = (dateString: string): string =>
-    hasHydrated ? moment(dateString).fromNow() : moment(dateString).format("ll");
+    // The stable form is written in UTC: the prerender runs on the deploy
+    // runner (UTC) and a visitor hydrates in their own timezone, so a local
+    // date reads "Oct 8" on one side of midnight and "Oct 7" on the other.
+    hasHydrated ? moment(dateString).fromNow() : moment.utc(dateString).format("ll");
 
   const toggleDescription = useCallback(() => {
     setShowFullDescription(!showFullDescription);
