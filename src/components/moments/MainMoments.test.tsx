@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { MemoryRouter } from "react-router-dom";
 import MainMoments from "./MainMoments";
+import { clearPrerendered, markPrerendered } from "../../seo/prerender/hydrationFlag";
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "" }),
@@ -211,4 +212,20 @@ describe("filters run on the server", () => {
 it("no client-side filtering remains", () => {
   const source = require("fs").readFileSync(require("path").join(__dirname, "MainMoments.tsx"), "utf8");
   expect(source).not.toMatch(/filteredMoments|paginatedMoments|filteredPagination/);
+});
+
+describe("a shared filtered link on the prerendered page", () => {
+  afterEach(() => clearPrerendered());
+
+  it("hydrates the unfiltered markup first, then applies the URL's filters", () => {
+    markPrerendered();
+    renderMainMoments(undefined, "/moments?lang=ko");
+    expect(mockUseGetMomentsQuery.mock.calls[0][0].filters).toBeUndefined();
+    expect(lastArgs(mockUseGetMomentsQuery).filters).toEqual({ language: "ko" });
+  });
+
+  it("a page the client rendered itself filters from the first render", () => {
+    renderMainMoments(undefined, "/moments?lang=ko");
+    expect(mockUseGetMomentsQuery.mock.calls[0][0].filters).toEqual({ language: "ko" });
+  });
 });

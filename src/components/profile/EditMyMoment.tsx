@@ -76,13 +76,22 @@ const EditMyMoment: React.FC = () => {
 
   const moment = momentDetails && (momentDetails as any).data;
 
+  // Seeded once per moment. A media replace/remove invalidates the detail
+  // query and refetches a new object; re-seeding then would throw away
+  // whatever the reader had typed.
+  const seededFor = useRef<string | null>(null);
+  const [seededSchedule, setSeededSchedule] = useState("");
   useEffect(() => {
     if (!moment) return;
+    setExistingImages(Array.isArray(moment.imageUrls) ? moment.imageUrls : []);
+    if (seededFor.current === moment._id) return;
+    seededFor.current = moment._id;
     const editable = editableFrom(moment);
     setOriginal(editable);
     setDraft(editable);
-    setScheduleInput(editable.scheduledFor ? toLocalInput(editable.scheduledFor) : "");
-    setExistingImages(Array.isArray(moment.imageUrls) ? moment.imageUrls : []);
+    const scheduleText = editable.scheduledFor ? toLocalInput(editable.scheduledFor) : "";
+    setScheduleInput(scheduleText);
+    setSeededSchedule(scheduleText);
   }, [moment]);
 
   const set = <K extends keyof EditableMoment>(key: K, value: EditableMoment[K]) => {
@@ -98,7 +107,11 @@ const EditMyMoment: React.FC = () => {
   // The schedule is editable only while the moment has not gone out, and only
   // while the server enforces scheduling (otherwise it would publish now).
   const canSchedule = schedulingEnabled && isScheduledLater(original);
-  const scheduleBlocked = canSchedule && Boolean(scheduleInput) && !isFutureInput(scheduleInput);
+  // The input shows minutes only; an untouched schedule keeps its exact
+  // stored instant (seconds included) and is never re-sent or re-validated.
+  const scheduleTouched = scheduleInput !== seededSchedule;
+  const scheduleBlocked =
+    canSchedule && scheduleTouched && Boolean(scheduleInput) && !isFutureInput(scheduleInput);
   const isTextMoment = moment && moment.mediaType === "text";
   // A moment carries one kind of media: a video or voice note is edited in
   // its own section, and photos cannot be added beside it.
@@ -160,7 +173,12 @@ const EditMyMoment: React.FC = () => {
 
     const next: EditableMoment = {
       ...draft,
-      scheduledFor: canSchedule ? (scheduleInput ? localInputToIso(scheduleInput) : null) : original.scheduledFor,
+      scheduledFor:
+        canSchedule && scheduleTouched
+          ? scheduleInput
+            ? localInputToIso(scheduleInput)
+            : null
+          : original.scheduledFor,
     };
     const changes = momentEditDiff(original, next);
     if (Object.keys(changes).length === 0 && selectedImages.length === 0) {

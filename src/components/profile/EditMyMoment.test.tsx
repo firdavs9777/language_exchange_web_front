@@ -251,3 +251,43 @@ describe("media", () => {
     expect(screen.getByTestId("edit-moment-add-images")).toBeInTheDocument();
   });
 });
+
+describe("review fixes", () => {
+  it("a refetch after a media change keeps what the reader has typed", () => {
+    const video = { ...MOMENT, imageUrls: [], mediaType: "video", video: { url: "https://cdn/v1.mp4" } };
+    mockGetMomentDetails.mockReturnValue({ data: { data: video }, isLoading: false });
+    const store = configureStore({
+      reducer: { auth: (state: any = { userInfo: { user: { _id: "me" } } }) => state },
+    });
+    const tree = (
+      <Provider store={store}>
+        <MemoryRouter initialEntries={["/edit-moment/m1"]}>
+          <Routes>
+            <Route path="/edit-moment/:id" element={<EditMyMoment />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
+    );
+    const { rerender } = render(tree);
+    fireEvent.change(screen.getByTestId("edit-moment-description"), { target: { value: "Rewritten" } });
+    // The video was replaced: the detail query refetches a new object.
+    mockGetMomentDetails.mockReturnValue({
+      data: { data: { ...video, video: { url: "https://cdn/v2.mp4" } } },
+      isLoading: false,
+    });
+    rerender(tree);
+    // Any state change re-renders the editor with the refetched moment.
+    fireEvent.change(screen.getByTestId("edit-moment-title"), { target: { value: "New title" } });
+    expect((screen.getByTestId("edit-moment-description") as HTMLTextAreaElement).value).toBe("Rewritten");
+    expect((screen.getByTestId("edit-moment-title") as HTMLInputElement).value).toBe("New title");
+  });
+
+  it("an untouched schedule with seconds is never re-sent", async () => {
+    mockSchedulingEnabled = true;
+    renderEditor({ data: { ...MOMENT, scheduledFor: "2099-05-01T09:00:42.000Z" } });
+    fireEvent.click(screen.getByRole("button", { name: /Grateful/ }));
+    fireEvent.submit(screen.getByTestId("edit-moment-form"));
+    await waitFor(() => expect(mockUpdateMoment).toHaveBeenCalledTimes(1));
+    expect(mockUpdateMoment.mock.calls[0][0].momentData).toEqual({ mood: "grateful" });
+  });
+});

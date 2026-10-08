@@ -19,6 +19,8 @@ import {
 } from "../../store/slices/momentsSlice";
 import EmptyState from "./EmptyState";
 import MomentFiltersBar from "./MomentFiltersBar";
+import { isPrerendered } from "../../seo/prerender/hydrationFlag";
+import { useHasHydrated } from "../../seo/prerender/useHasHydrated";
 import {
   MomentFilters,
   decodeMomentFilters,
@@ -202,7 +204,15 @@ const MainMoments: React.FC = () => {
 
   // Filters live in the URL (?cat=&lang=&mood=&tag=&q=) and run on the server.
   const [searchParams, setSearchParams] = useSearchParams();
-  const filterKey = encodeMomentFilters(decodeMomentFilters(searchParams)).toString();
+  // A shared filtered link is served the unfiltered prerendered page, so a
+  // prerendered document hydrates unfiltered first (matching its markup) and
+  // applies the URL's filters on the render after.
+  const [hydratingPrerender] = useState(() => isPrerendered());
+  const hasHydrated = useHasHydrated();
+  const filtersLive = !hydratingPrerender || hasHydrated;
+  const filterKey = filtersLive
+    ? encodeMomentFilters(decodeMomentFilters(searchParams)).toString()
+    : "";
   const filters = useMemo<MomentFilters>(
     () => decodeMomentFilters(new URLSearchParams(filterKey)),
     [filterKey]
