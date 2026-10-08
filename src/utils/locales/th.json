@@ -649,6 +649,98 @@
       "reply": "ตอบกลับ",
       "replyPlaceholder": "เขียนการตอบกลับ…",
       "viewReplies": "ดู {{count}} การตอบกลับ"
+    },
+    "filters": {
+      "button": "ตัวกรอง",
+      "searchPlaceholder": "ค้นหาโมเมนต์",
+      "search": "ค้นหา",
+      "category": "หมวดหมู่",
+      "language": "ภาษา",
+      "mood": "อารมณ์",
+      "tag": "แท็ก",
+      "tagPlaceholder": "แท็กใดก็ได้",
+      "any": "ทั้งหมด",
+      "clear": "ล้างตัวกรอง",
+      "emptyTitle": "ไม่มีโมเมนต์ที่ตรงกับตัวกรองเหล่านี้",
+      "emptyBody": "ลองเอาตัวกรองออกหนึ่งตัว หรือค้นหาคำอื่นดู"
+    },
+    "categories": {
+      "general": "ทั่วไป",
+      "language-learning": "เรียนภาษา",
+      "culture": "วัฒนธรรม",
+      "food": "อาหาร",
+      "travel": "ท่องเที่ยว",
+      "music": "ดนตรี",
+      "books": "หนังสือ",
+      "hobbies": "งานอดิเรก",
+      "daily-life": "ชีวิตประจำวัน",
+      "technology": "เทคโนโลยี",
+      "entertainment": "บันเทิง",
+      "sports": "กีฬา",
+      "movies": "ภาพยนตร์",
+      "study": "การเรียน",
+      "work": "งาน",
+      "question": "คำถาม"
+    },
+    "moods": {
+      "happy": "มีความสุข",
+      "excited": "ตื่นเต้น",
+      "grateful": "ซาบซึ้ง",
+      "motivated": "มีแรงบันดาลใจ",
+      "relaxed": "ผ่อนคลาย",
+      "curious": "อยากรู้",
+      "sad": "เศร้า",
+      "love": "กำลังมีความรัก",
+      "funny": "ตลก",
+      "thoughtful": "ครุ่นคิด",
+      "cool": "เท่",
+      "tired": "เหนื่อย"
+    },
+    "report": {
+      "menu": "ตัวเลือกเพิ่มเติม",
+      "report": "รายงาน",
+      "title": "รายงานโมเมนต์นี้",
+      "reasonLabel": "ทำไมคุณถึงรายงาน?",
+      "descriptionLabel": "มีอะไรเพิ่มเติมไหม? (ไม่บังคับ)",
+      "submit": "ส่งรายงาน",
+      "cancel": "ยกเลิก",
+      "sent": "ขอบคุณ — ทีมผู้ดูแลจะตรวจสอบ",
+      "already": "คุณรายงานโมเมนต์นี้ไปแล้ว",
+      "failed": "ส่งรายงานไม่สำเร็จ ลองอีกครั้ง",
+      "reasons": {
+        "spam": "สแปม",
+        "harassment": "การคุกคาม",
+        "hate_speech": "ถ้อยคำแสดงความเกลียดชัง",
+        "violence": "ความรุนแรง",
+        "nudity": "ภาพโป๊เปลือย",
+        "false_information": "ข้อมูลเท็จ",
+        "copyright": "ลิขสิทธิ์",
+        "other": "อื่น ๆ"
+      }
+    },
+    "schedule": {
+      "label": "ตั้งเวลา",
+      "hint": "เว้นว่างไว้เพื่อโพสต์ทันที",
+      "past": "เลือกเวลาในอนาคต",
+      "badge": "ตั้งเวลาไว้ที่ {{time}}",
+      "clear": "โพสต์ตอนนี้แทน"
+    },
+    "fields": {
+      "privacy": "ใครเห็นได้บ้าง",
+      "privacyPublic": "ทุกคน",
+      "privacyFriends": "เพื่อน",
+      "privacyPrivate": "เฉพาะฉัน",
+      "background": "พื้นหลัง",
+      "backgroundNone": "ไม่มี",
+      "location": "ตำแหน่ง",
+      "addLocation": "เพิ่มตำแหน่งของฉัน",
+      "removeLocation": "ลบตำแหน่ง",
+      "noMood": "ไม่มีอารมณ์",
+      "tags": "แท็ก",
+      "tagPlaceholder": "เพิ่มแท็ก…",
+      "addTag": "เพิ่ม",
+      "tagsUsed": "แท็ก {{count}}/5",
+      "tagsMax": "แท็กได้สูงสุด 5 อัน"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "อัปเดตโมเมนต์",
       "updatingButton": "กำลังอัปเดต...",
       "cancelButton": "ยกเลิก",
-      "removeImage": "นำรูปออก"
+      "removeImage": "นำรูปออก",
+      "nothingToSave": "ยังไม่มีอะไรเปลี่ยน",
+      "descriptionRequired": "ต้องใส่คำอธิบาย"
+    },
+    "media": {
+      "video": "วิดีโอ",
+      "audio": "ข้อความเสียง",
+      "replace": "แทนที่",
+      "remove": "ลบ",
+      "removeVideoTitle": "ลบวิดีโอไหม?",
+      "removeAudioTitle": "ลบข้อความเสียงไหม?",
+      "removeBody": "การกระทำนี้ย้อนกลับไม่ได้",
+      "done": "อัปเดตแล้ว",
+      "failed": "ไม่สำเร็จ ลองอีกครั้ง"
     }
   },
   "authentication": {

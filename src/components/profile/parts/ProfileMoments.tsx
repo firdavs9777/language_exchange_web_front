@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Heart, MessageCircle } from "lucide-react";
 import SurfaceCard from "../../../design/SurfaceCard";
+import ScheduledBadge from "../../moments/ScheduledBadge";
+import { isScheduledLater } from "../../moments/lib/scheduling";
 import { useGetMyMomentsQuery } from "../../../store/slices/momentsSlice";
 
 export interface ProfileMomentsProps {
@@ -136,6 +138,12 @@ const ProfileMoments: React.FC<ProfileMomentsProps> = ({ userId, isOwn, limit })
                     </span>
                   )}
 
+                  {isOwn && isScheduledLater(moment) && (
+                    <ScheduledBadge
+                      at={moment.scheduledFor}
+                      className="absolute left-1 top-1 inline-flex items-center gap-1 rounded-full bg-amber-100/95 px-2 py-0.5 text-[10px] font-semibold text-amber-800"
+                    />
+                  )}
                   <span className="absolute inset-x-0 bottom-0 flex items-center gap-3 bg-ink-950/50 px-2 py-1 text-[11px] font-semibold text-white">
                     <span data-testid="moment-likes" className="inline-flex items-center gap-1">
                       <Heart className="h-3 w-3" aria-hidden />

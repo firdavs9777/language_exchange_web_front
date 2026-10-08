@@ -649,6 +649,98 @@
       "reply": "Antworten",
       "replyPlaceholder": "Schreib eine Antwort…",
       "viewReplies": "{{count}} Antworten ansehen"
+    },
+    "filters": {
+      "button": "Filter",
+      "searchPlaceholder": "Momente durchsuchen",
+      "search": "Suchen",
+      "category": "Kategorie",
+      "language": "Sprache",
+      "mood": "Stimmung",
+      "tag": "Tag",
+      "tagPlaceholder": "Beliebiger Tag",
+      "any": "Alle",
+      "clear": "Filter zurücksetzen",
+      "emptyTitle": "Keine Momente passen zu diesen Filtern",
+      "emptyBody": "Entferne einen Filter oder suche nach etwas anderem."
+    },
+    "categories": {
+      "general": "Allgemein",
+      "language-learning": "Sprachenlernen",
+      "culture": "Kultur",
+      "food": "Essen",
+      "travel": "Reisen",
+      "music": "Musik",
+      "books": "Bücher",
+      "hobbies": "Hobbys",
+      "daily-life": "Alltag",
+      "technology": "Technik",
+      "entertainment": "Unterhaltung",
+      "sports": "Sport",
+      "movies": "Filme",
+      "study": "Lernen",
+      "work": "Arbeit",
+      "question": "Frage"
+    },
+    "moods": {
+      "happy": "Glücklich",
+      "excited": "Aufgeregt",
+      "grateful": "Dankbar",
+      "motivated": "Motiviert",
+      "relaxed": "Entspannt",
+      "curious": "Neugierig",
+      "sad": "Traurig",
+      "love": "Verliebt",
+      "funny": "Lustig",
+      "thoughtful": "Nachdenklich",
+      "cool": "Cool",
+      "tired": "Müde"
+    },
+    "report": {
+      "menu": "Weitere Optionen",
+      "report": "Melden",
+      "title": "Diesen Moment melden",
+      "reasonLabel": "Warum meldest du ihn?",
+      "descriptionLabel": "Noch etwas? (optional)",
+      "submit": "Meldung senden",
+      "cancel": "Abbrechen",
+      "sent": "Danke — unsere Moderatoren sehen es sich an.",
+      "already": "Du hast diesen Moment bereits gemeldet.",
+      "failed": "Die Meldung konnte nicht gesendet werden. Versuch es noch einmal.",
+      "reasons": {
+        "spam": "Spam",
+        "harassment": "Belästigung",
+        "hate_speech": "Hassrede",
+        "violence": "Gewalt",
+        "nudity": "Nacktheit",
+        "false_information": "Falschinformation",
+        "copyright": "Urheberrecht",
+        "other": "Etwas anderes"
+      }
+    },
+    "schedule": {
+      "label": "Planen",
+      "hint": "Leer lassen, um sofort zu posten",
+      "past": "Wähle einen Zeitpunkt in der Zukunft",
+      "badge": "Geplant für {{time}}",
+      "clear": "Stattdessen jetzt posten"
+    },
+    "fields": {
+      "privacy": "Wer kann es sehen",
+      "privacyPublic": "Alle",
+      "privacyFriends": "Freunde",
+      "privacyPrivate": "Nur ich",
+      "background": "Hintergrund",
+      "backgroundNone": "Keiner",
+      "location": "Standort",
+      "addLocation": "Meinen Standort hinzufügen",
+      "removeLocation": "Standort entfernen",
+      "noMood": "Keine Stimmung",
+      "tags": "Tags",
+      "tagPlaceholder": "Tag hinzufügen…",
+      "addTag": "Hinzufügen",
+      "tagsUsed": "{{count}}/5 Tags",
+      "tagsMax": "Höchstens 5 Tags"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "Moment aktualisieren",
       "updatingButton": "Wird aktualisiert…",
       "cancelButton": "Abbrechen",
-      "removeImage": "Bild entfernen"
+      "removeImage": "Bild entfernen",
+      "nothingToSave": "Noch nichts geändert",
+      "descriptionRequired": "Eine Beschreibung ist erforderlich"
+    },
+    "media": {
+      "video": "Video",
+      "audio": "Sprachnachricht",
+      "replace": "Ersetzen",
+      "remove": "Entfernen",
+      "removeVideoTitle": "Video entfernen?",
+      "removeAudioTitle": "Sprachnachricht entfernen?",
+      "removeBody": "Das kann nicht rückgängig gemacht werden.",
+      "done": "Aktualisiert",
+      "failed": "Das hat nicht geklappt. Versuch es noch einmal."
     }
   },
   "authentication": {

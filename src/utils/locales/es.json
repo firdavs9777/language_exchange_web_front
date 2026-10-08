@@ -630,6 +630,98 @@
       "reply": "Responder",
       "replyPlaceholder": "Escribe una respuesta…",
       "viewReplies": "Ver {{count}} respuestas"
+    },
+    "filters": {
+      "button": "Filtros",
+      "searchPlaceholder": "Buscar momentos",
+      "search": "Buscar",
+      "category": "Categoría",
+      "language": "Idioma",
+      "mood": "Estado de ánimo",
+      "tag": "Etiqueta",
+      "tagPlaceholder": "Cualquier etiqueta",
+      "any": "Todos",
+      "clear": "Borrar filtros",
+      "emptyTitle": "Ningún momento coincide con estos filtros",
+      "emptyBody": "Prueba a quitar un filtro o a buscar otra cosa."
+    },
+    "categories": {
+      "general": "General",
+      "language-learning": "Aprender idiomas",
+      "culture": "Cultura",
+      "food": "Comida",
+      "travel": "Viajes",
+      "music": "Música",
+      "books": "Libros",
+      "hobbies": "Aficiones",
+      "daily-life": "Vida diaria",
+      "technology": "Tecnología",
+      "entertainment": "Entretenimiento",
+      "sports": "Deportes",
+      "movies": "Películas",
+      "study": "Estudio",
+      "work": "Trabajo",
+      "question": "Pregunta"
+    },
+    "moods": {
+      "happy": "Feliz",
+      "excited": "Emocionado",
+      "grateful": "Agradecido",
+      "motivated": "Motivado",
+      "relaxed": "Relajado",
+      "curious": "Curioso",
+      "sad": "Triste",
+      "love": "Enamorado",
+      "funny": "Divertido",
+      "thoughtful": "Pensativo",
+      "cool": "Genial",
+      "tired": "Cansado"
+    },
+    "report": {
+      "menu": "Más opciones",
+      "report": "Denunciar",
+      "title": "Denunciar este momento",
+      "reasonLabel": "¿Por qué lo denuncias?",
+      "descriptionLabel": "¿Algo más? (opcional)",
+      "submit": "Enviar denuncia",
+      "cancel": "Cancelar",
+      "sent": "Gracias: nuestros moderadores lo revisarán.",
+      "already": "Ya denunciaste este momento.",
+      "failed": "No se pudo enviar la denuncia. Inténtalo de nuevo.",
+      "reasons": {
+        "spam": "Spam",
+        "harassment": "Acoso",
+        "hate_speech": "Discurso de odio",
+        "violence": "Violencia",
+        "nudity": "Desnudos",
+        "false_information": "Información falsa",
+        "copyright": "Derechos de autor",
+        "other": "Otro motivo"
+      }
+    },
+    "schedule": {
+      "label": "Programar",
+      "hint": "Déjalo vacío para publicar ahora",
+      "past": "Elige una hora futura",
+      "badge": "Programado para {{time}}",
+      "clear": "Publicar ahora"
+    },
+    "fields": {
+      "privacy": "Quién puede verlo",
+      "privacyPublic": "Todos",
+      "privacyFriends": "Amigos",
+      "privacyPrivate": "Solo yo",
+      "background": "Fondo",
+      "backgroundNone": "Ninguno",
+      "location": "Ubicación",
+      "addLocation": "Añadir mi ubicación",
+      "removeLocation": "Quitar ubicación",
+      "noMood": "Sin estado de ánimo",
+      "tags": "Etiquetas",
+      "tagPlaceholder": "Añade una etiqueta…",
+      "addTag": "Añadir",
+      "tagsUsed": "{{count}}/5 etiquetas",
+      "tagsMax": "Máximo 5 etiquetas"
     }
   },
   "createMoment": {
@@ -673,7 +765,20 @@
       "updateButton": "Actualizar Momento",
       "updatingButton": "Actualizando...",
       "cancelButton": "Cancelar",
-      "removeImage": "Quitar imagen"
+      "removeImage": "Quitar imagen",
+      "nothingToSave": "Aún no hay nada que cambiar",
+      "descriptionRequired": "La descripción es obligatoria"
+    },
+    "media": {
+      "video": "Vídeo",
+      "audio": "Nota de voz",
+      "replace": "Reemplazar",
+      "remove": "Quitar",
+      "removeVideoTitle": "¿Quitar el vídeo?",
+      "removeAudioTitle": "¿Quitar la nota de voz?",
+      "removeBody": "No se puede deshacer.",
+      "done": "Actualizado",
+      "failed": "No funcionó. Inténtalo de nuevo."
     }
   },
   "authentication": {

@@ -649,6 +649,98 @@
       "reply": "Yanıtla",
       "replyPlaceholder": "Bir yanıt yazın…",
       "viewReplies": "{{count}} yanıtı görüntüle"
+    },
+    "filters": {
+      "button": "Filtreler",
+      "searchPlaceholder": "Anlarda ara",
+      "search": "Ara",
+      "category": "Kategori",
+      "language": "Dil",
+      "mood": "Ruh hali",
+      "tag": "Etiket",
+      "tagPlaceholder": "Herhangi bir etiket",
+      "any": "Tümü",
+      "clear": "Filtreleri temizle",
+      "emptyTitle": "Bu filtrelere uyan an yok",
+      "emptyBody": "Bir filtreyi kaldırmayı ya da başka bir şey aramayı dene."
+    },
+    "categories": {
+      "general": "Genel",
+      "language-learning": "Dil öğrenme",
+      "culture": "Kültür",
+      "food": "Yemek",
+      "travel": "Seyahat",
+      "music": "Müzik",
+      "books": "Kitaplar",
+      "hobbies": "Hobiler",
+      "daily-life": "Günlük hayat",
+      "technology": "Teknoloji",
+      "entertainment": "Eğlence",
+      "sports": "Spor",
+      "movies": "Filmler",
+      "study": "Ders",
+      "work": "İş",
+      "question": "Soru"
+    },
+    "moods": {
+      "happy": "Mutlu",
+      "excited": "Heyecanlı",
+      "grateful": "Minnettar",
+      "motivated": "Motive",
+      "relaxed": "Rahat",
+      "curious": "Meraklı",
+      "sad": "Üzgün",
+      "love": "Aşık",
+      "funny": "Komik",
+      "thoughtful": "Düşünceli",
+      "cool": "Havalı",
+      "tired": "Yorgun"
+    },
+    "report": {
+      "menu": "Diğer seçenekler",
+      "report": "Bildir",
+      "title": "Bu anı bildir",
+      "reasonLabel": "Neden bildiriyorsun?",
+      "descriptionLabel": "Eklemek istediğin bir şey var mı? (isteğe bağlı)",
+      "submit": "Bildirimi gönder",
+      "cancel": "İptal",
+      "sent": "Teşekkürler — moderatörlerimiz inceleyecek.",
+      "already": "Bu anı zaten bildirdin.",
+      "failed": "Bildirim gönderilemedi. Tekrar dene.",
+      "reasons": {
+        "spam": "Spam",
+        "harassment": "Taciz",
+        "hate_speech": "Nefret söylemi",
+        "violence": "Şiddet",
+        "nudity": "Çıplaklık",
+        "false_information": "Yanlış bilgi",
+        "copyright": "Telif hakkı",
+        "other": "Başka bir şey"
+      }
+    },
+    "schedule": {
+      "label": "Zamanla",
+      "hint": "Hemen paylaşmak için boş bırak",
+      "past": "Gelecekte bir zaman seç",
+      "badge": "{{time}} için zamanlandı",
+      "clear": "Bunun yerine şimdi paylaş"
+    },
+    "fields": {
+      "privacy": "Kimler görebilir",
+      "privacyPublic": "Herkes",
+      "privacyFriends": "Arkadaşlar",
+      "privacyPrivate": "Yalnızca ben",
+      "background": "Arka plan",
+      "backgroundNone": "Yok",
+      "location": "Konum",
+      "addLocation": "Konumumu ekle",
+      "removeLocation": "Konumu kaldır",
+      "noMood": "Ruh hali yok",
+      "tags": "Etiketler",
+      "tagPlaceholder": "Etiket ekle…",
+      "addTag": "Ekle",
+      "tagsUsed": "{{count}}/5 etiket",
+      "tagsMax": "En fazla 5 etiket"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "Anı Güncelle",
       "updatingButton": "Güncelleniyor…",
       "cancelButton": "İptal",
-      "removeImage": "Görseli kaldır"
+      "removeImage": "Görseli kaldır",
+      "nothingToSave": "Henüz değişen bir şey yok",
+      "descriptionRequired": "Açıklama gerekli"
+    },
+    "media": {
+      "video": "Video",
+      "audio": "Sesli not",
+      "replace": "Değiştir",
+      "remove": "Kaldır",
+      "removeVideoTitle": "Video kaldırılsın mı?",
+      "removeAudioTitle": "Sesli not kaldırılsın mı?",
+      "removeBody": "Bu geri alınamaz.",
+      "done": "Güncellendi",
+      "failed": "Olmadı. Tekrar dene."
     }
   },
   "authentication": {

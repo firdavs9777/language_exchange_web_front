@@ -649,6 +649,98 @@
       "reply": "답글",
       "replyPlaceholder": "답글을 입력하세요…",
       "viewReplies": "답글 {{count}}개 보기"
+    },
+    "filters": {
+      "button": "필터",
+      "searchPlaceholder": "모먼트 검색",
+      "search": "검색",
+      "category": "카테고리",
+      "language": "언어",
+      "mood": "기분",
+      "tag": "태그",
+      "tagPlaceholder": "모든 태그",
+      "any": "전체",
+      "clear": "필터 지우기",
+      "emptyTitle": "이 필터에 맞는 모먼트가 없어요",
+      "emptyBody": "필터를 하나 빼거나 다른 검색어로 찾아보세요."
+    },
+    "categories": {
+      "general": "일반",
+      "language-learning": "언어 학습",
+      "culture": "문화",
+      "food": "음식",
+      "travel": "여행",
+      "music": "음악",
+      "books": "책",
+      "hobbies": "취미",
+      "daily-life": "일상",
+      "technology": "기술",
+      "entertainment": "엔터테인먼트",
+      "sports": "스포츠",
+      "movies": "영화",
+      "study": "공부",
+      "work": "일",
+      "question": "질문"
+    },
+    "moods": {
+      "happy": "행복",
+      "excited": "신남",
+      "grateful": "감사",
+      "motivated": "의욕 충만",
+      "relaxed": "편안",
+      "curious": "궁금",
+      "sad": "슬픔",
+      "love": "사랑",
+      "funny": "웃김",
+      "thoughtful": "생각 중",
+      "cool": "쿨함",
+      "tired": "피곤"
+    },
+    "report": {
+      "menu": "더보기",
+      "report": "신고",
+      "title": "이 모먼트 신고",
+      "reasonLabel": "신고 이유가 무엇인가요?",
+      "descriptionLabel": "더 알려줄 내용이 있나요? (선택)",
+      "submit": "신고 보내기",
+      "cancel": "취소",
+      "sent": "감사합니다 — 운영진이 검토할게요.",
+      "already": "이미 이 모먼트를 신고했어요.",
+      "failed": "신고를 보내지 못했어요. 다시 시도해 주세요.",
+      "reasons": {
+        "spam": "스팸",
+        "harassment": "괴롭힘",
+        "hate_speech": "혐오 발언",
+        "violence": "폭력",
+        "nudity": "노출",
+        "false_information": "허위 정보",
+        "copyright": "저작권",
+        "other": "기타"
+      }
+    },
+    "schedule": {
+      "label": "예약",
+      "hint": "비워두면 바로 게시돼요",
+      "past": "미래 시간을 선택하세요",
+      "badge": "{{time}}에 게시 예약됨",
+      "clear": "지금 게시하기"
+    },
+    "fields": {
+      "privacy": "공개 범위",
+      "privacyPublic": "전체 공개",
+      "privacyFriends": "친구",
+      "privacyPrivate": "나만 보기",
+      "background": "배경",
+      "backgroundNone": "없음",
+      "location": "위치",
+      "addLocation": "내 위치 추가",
+      "removeLocation": "위치 삭제",
+      "noMood": "기분 없음",
+      "tags": "태그",
+      "tagPlaceholder": "태그 추가…",
+      "addTag": "추가",
+      "tagsUsed": "태그 {{count}}/5",
+      "tagsMax": "태그는 최대 5개예요"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "모멘트 수정",
       "updatingButton": "수정 중…",
       "cancelButton": "취소",
-      "removeImage": "이미지 제거"
+      "removeImage": "이미지 제거",
+      "nothingToSave": "아직 바뀐 내용이 없어요",
+      "descriptionRequired": "설명을 입력해 주세요"
+    },
+    "media": {
+      "video": "동영상",
+      "audio": "음성 메모",
+      "replace": "바꾸기",
+      "remove": "삭제",
+      "removeVideoTitle": "동영상을 삭제할까요?",
+      "removeAudioTitle": "음성 메모를 삭제할까요?",
+      "removeBody": "되돌릴 수 없어요.",
+      "done": "업데이트됨",
+      "failed": "실패했어요. 다시 시도해 주세요."
     }
   },
   "authentication": {

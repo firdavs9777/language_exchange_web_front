@@ -23,6 +23,9 @@ import MomentReactionRow from "./actions/MomentReactionRow";
 import MomentVideoPlayer from "./media/MomentVideoPlayer";
 import VoiceNotePlayer from "./media/VoiceNotePlayer";
 import GradientMomentCard from "./media/GradientMomentCard";
+import MomentOverflowMenu from "./actions/MomentOverflowMenu";
+import ScheduledBadge from "./ScheduledBadge";
+import { isScheduledLater } from "./lib/scheduling";
 import TranslatableText from "./TranslatableText";
 import CommentList from "./comments/CommentList";
 import AdUnit from "../ads/AdUnit";
@@ -572,10 +575,15 @@ const MomentDetail: React.FC = () => {
               <h2 className="font-bold text-gray-800 text-sm sm:text-base truncate">
                 {momentDetails.user.name}
               </h2>
-              <p className="text-xs sm:text-sm text-gray-500">
-                {formattedDate}
-              </p>
+              {userId && momentDetails.user?._id === userId && isScheduledLater(momentDetails) ? (
+                <ScheduledBadge at={momentDetails.scheduledFor as string} />
+              ) : (
+                <p className="text-xs sm:text-sm text-gray-500">
+                  {formattedDate}
+                </p>
+              )}
             </div>
+            <MomentOverflowMenu momentId={momentDetails._id} author={momentDetails.user} />
           </div>
 
           {/* Moment Content */}

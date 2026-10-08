@@ -115,3 +115,17 @@ it("anchors the section so the stats tile can link to it", () => {
   renderMoments({}, { data: { data: [imageMoment] } });
   expect(screen.getByTestId("profile-moments")).toHaveAttribute("id", "moments");
 });
+
+describe("scheduled moments", () => {
+  const scheduled = { ...textMoment, _id: "m3", scheduledFor: "2099-01-01T00:00:00.000Z" };
+
+  it("the author's grid marks a moment that has not gone out yet", () => {
+    renderMoments({ isOwn: true, userId: "me" }, { data: { data: [scheduled, imageMoment] } });
+    expect(screen.getAllByTestId("scheduled-badge")).toHaveLength(1);
+  });
+
+  it("nobody else's grid does", () => {
+    renderMoments({ isOwn: false }, { data: { data: [scheduled] } });
+    expect(screen.queryByTestId("scheduled-badge")).not.toBeInTheDocument();
+  });
+});

@@ -649,6 +649,98 @@
       "reply": "Ответить",
       "replyPlaceholder": "Напишите ответ…",
       "viewReplies": "Показать {{count}} ответов"
+    },
+    "filters": {
+      "button": "Фильтры",
+      "searchPlaceholder": "Поиск моментов",
+      "search": "Найти",
+      "category": "Категория",
+      "language": "Язык",
+      "mood": "Настроение",
+      "tag": "Тег",
+      "tagPlaceholder": "Любой тег",
+      "any": "Все",
+      "clear": "Сбросить фильтры",
+      "emptyTitle": "Нет моментов, подходящих под эти фильтры",
+      "emptyBody": "Попробуйте убрать фильтр или поискать что-то другое."
+    },
+    "categories": {
+      "general": "Общее",
+      "language-learning": "Изучение языков",
+      "culture": "Культура",
+      "food": "Еда",
+      "travel": "Путешествия",
+      "music": "Музыка",
+      "books": "Книги",
+      "hobbies": "Хобби",
+      "daily-life": "Повседневная жизнь",
+      "technology": "Технологии",
+      "entertainment": "Развлечения",
+      "sports": "Спорт",
+      "movies": "Фильмы",
+      "study": "Учёба",
+      "work": "Работа",
+      "question": "Вопрос"
+    },
+    "moods": {
+      "happy": "Радость",
+      "excited": "Восторг",
+      "grateful": "Благодарность",
+      "motivated": "Мотивация",
+      "relaxed": "Спокойствие",
+      "curious": "Любопытство",
+      "sad": "Грусть",
+      "love": "Влюблённость",
+      "funny": "Смешно",
+      "thoughtful": "Задумчивость",
+      "cool": "Круто",
+      "tired": "Усталость"
+    },
+    "report": {
+      "menu": "Другие действия",
+      "report": "Пожаловаться",
+      "title": "Пожаловаться на момент",
+      "reasonLabel": "Почему вы жалуетесь?",
+      "descriptionLabel": "Что-то ещё? (необязательно)",
+      "submit": "Отправить жалобу",
+      "cancel": "Отмена",
+      "sent": "Спасибо — модераторы всё проверят.",
+      "already": "Вы уже пожаловались на этот момент.",
+      "failed": "Не удалось отправить жалобу. Попробуйте ещё раз.",
+      "reasons": {
+        "spam": "Спам",
+        "harassment": "Травля",
+        "hate_speech": "Язык вражды",
+        "violence": "Насилие",
+        "nudity": "Обнажённость",
+        "false_information": "Ложная информация",
+        "copyright": "Авторские права",
+        "other": "Другое"
+      }
+    },
+    "schedule": {
+      "label": "Запланировать",
+      "hint": "Оставьте пустым, чтобы опубликовать сейчас",
+      "past": "Выберите время в будущем",
+      "badge": "Запланировано на {{time}}",
+      "clear": "Опубликовать сейчас"
+    },
+    "fields": {
+      "privacy": "Кто видит",
+      "privacyPublic": "Все",
+      "privacyFriends": "Друзья",
+      "privacyPrivate": "Только я",
+      "background": "Фон",
+      "backgroundNone": "Нет",
+      "location": "Место",
+      "addLocation": "Добавить моё местоположение",
+      "removeLocation": "Убрать место",
+      "noMood": "Без настроения",
+      "tags": "Теги",
+      "tagPlaceholder": "Добавьте тег…",
+      "addTag": "Добавить",
+      "tagsUsed": "Тегов: {{count}}/5",
+      "tagsMax": "Не больше 5 тегов"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "Обновить Момент",
       "updatingButton": "Обновление…",
       "cancelButton": "Отмена",
-      "removeImage": "Удалить изображение"
+      "removeImage": "Удалить изображение",
+      "nothingToSave": "Пока нечего менять",
+      "descriptionRequired": "Нужно добавить описание"
+    },
+    "media": {
+      "video": "Видео",
+      "audio": "Голосовая заметка",
+      "replace": "Заменить",
+      "remove": "Удалить",
+      "removeVideoTitle": "Удалить видео?",
+      "removeAudioTitle": "Удалить голосовую заметку?",
+      "removeBody": "Это нельзя отменить.",
+      "done": "Обновлено",
+      "failed": "Не получилось. Попробуйте ещё раз."
     }
   },
   "authentication": {

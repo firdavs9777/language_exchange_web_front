@@ -649,6 +649,98 @@
       "reply": "回复",
       "replyPlaceholder": "写下你的回复…",
       "viewReplies": "查看 {{count}} 条回复"
+    },
+    "filters": {
+      "button": "筛选",
+      "searchPlaceholder": "搜索动态",
+      "search": "搜索",
+      "category": "分类",
+      "language": "语言",
+      "mood": "心情",
+      "tag": "标签",
+      "tagPlaceholder": "任意标签",
+      "any": "全部",
+      "clear": "清除筛选",
+      "emptyTitle": "没有符合这些筛选条件的动态",
+      "emptyBody": "试试去掉一个筛选条件，或换个关键词搜索。"
+    },
+    "categories": {
+      "general": "综合",
+      "language-learning": "语言学习",
+      "culture": "文化",
+      "food": "美食",
+      "travel": "旅行",
+      "music": "音乐",
+      "books": "书籍",
+      "hobbies": "爱好",
+      "daily-life": "日常生活",
+      "technology": "科技",
+      "entertainment": "娱乐",
+      "sports": "运动",
+      "movies": "电影",
+      "study": "学习",
+      "work": "工作",
+      "question": "提问"
+    },
+    "moods": {
+      "happy": "开心",
+      "excited": "兴奋",
+      "grateful": "感恩",
+      "motivated": "干劲十足",
+      "relaxed": "放松",
+      "curious": "好奇",
+      "sad": "难过",
+      "love": "恋爱中",
+      "funny": "搞笑",
+      "thoughtful": "若有所思",
+      "cool": "酷",
+      "tired": "累了"
+    },
+    "report": {
+      "menu": "更多选项",
+      "report": "举报",
+      "title": "举报这条动态",
+      "reasonLabel": "举报原因是什么？",
+      "descriptionLabel": "还有其他要补充的吗？（选填）",
+      "submit": "提交举报",
+      "cancel": "取消",
+      "sent": "谢谢——我们的审核员会处理。",
+      "already": "你已经举报过这条动态了。",
+      "failed": "举报发送失败，请重试。",
+      "reasons": {
+        "spam": "垃圾信息",
+        "harassment": "骚扰",
+        "hate_speech": "仇恨言论",
+        "violence": "暴力",
+        "nudity": "裸露",
+        "false_information": "虚假信息",
+        "copyright": "版权",
+        "other": "其他"
+      }
+    },
+    "schedule": {
+      "label": "定时发布",
+      "hint": "留空则立即发布",
+      "past": "请选择未来的时间",
+      "badge": "定时于 {{time}} 发布",
+      "clear": "改为立即发布"
+    },
+    "fields": {
+      "privacy": "谁可以看到",
+      "privacyPublic": "所有人",
+      "privacyFriends": "好友",
+      "privacyPrivate": "仅自己",
+      "background": "背景",
+      "backgroundNone": "无",
+      "location": "位置",
+      "addLocation": "添加我的位置",
+      "removeLocation": "移除位置",
+      "noMood": "无心情",
+      "tags": "标签",
+      "tagPlaceholder": "添加标签…",
+      "addTag": "添加",
+      "tagsUsed": "{{count}}/5 个标签",
+      "tagsMax": "最多 5 个标签"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "更新动态",
       "updatingButton": "更新中…",
       "cancelButton": "取消",
-      "removeImage": "移除图片"
+      "removeImage": "移除图片",
+      "nothingToSave": "还没有需要修改的内容",
+      "descriptionRequired": "请填写描述"
+    },
+    "media": {
+      "video": "视频",
+      "audio": "语音",
+      "replace": "替换",
+      "remove": "删除",
+      "removeVideoTitle": "删除视频？",
+      "removeAudioTitle": "删除语音？",
+      "removeBody": "此操作无法撤销。",
+      "done": "已更新",
+      "failed": "操作失败，请重试。"
     }
   },
   "authentication": {

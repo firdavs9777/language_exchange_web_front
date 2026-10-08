@@ -6,7 +6,6 @@ import {
   AiOutlineComment,
   AiOutlineLike,
 } from "react-icons/ai";
-import { HiDotsHorizontal } from "react-icons/hi";
 import { Bookmark, Heart, Smile } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -24,6 +23,9 @@ import {
 } from "../../store/slices/momentsSlice";
 import { useTargetLanguage } from "../../hooks/useTargetLanguage";
 import { useMomentViews } from "./useMomentViews";
+import MomentOverflowMenu from "./actions/MomentOverflowMenu";
+import ScheduledBadge from "./ScheduledBadge";
+import { isScheduledLater } from "./lib/scheduling";
 import TranslatableText from "./TranslatableText";
 import MomentReactionRow from "./actions/MomentReactionRow";
 import ShareButton from "../linking/ShareButton";
@@ -66,6 +68,7 @@ interface MomentProps {
   };
   audio?: { url: string; duration: number; waveform: number[] };
   backgroundColor?: string;
+  scheduledFor?: string | null;
 }
 
 interface AuthState {
@@ -98,10 +101,15 @@ const SingleMoment: React.FC<MomentProps> = ({
   video,
   audio,
   backgroundColor,
+  scheduledFor,
 }) => {
   const userId = useSelector(
     (state: RootState) => state.auth.userInfo?.user?._id
   );
+  // The author's own unpublished moment: its createdAt is in the future, so a
+  // relative time would read nonsense.
+  const isOwnScheduled =
+    Boolean(userId) && user?._id === userId && isScheduledLater({ scheduledFor });
 
   // Mock mutation hooks - replace with your actual hooks
   const [likeMoment] = useLikeMomentMutation();
@@ -322,7 +330,10 @@ const SingleMoment: React.FC<MomentProps> = ({
    */
   const hasHydrated = useHasHydrated();
   const formatDate = (dateString: string): string =>
-    hasHydrated ? moment(dateString).fromNow() : moment(dateString).format("ll");
+    // The stable form is written in UTC: the prerender runs on the deploy
+    // runner (UTC) and a visitor hydrates in their own timezone, so a local
+    // date reads "Oct 8" on one side of midnight and "Oct 7" on the other.
+    hasHydrated ? moment(dateString).fromNow() : moment.utc(dateString).format("ll");
 
   const toggleDescription = useCallback(() => {
     setShowFullDescription(!showFullDescription);
@@ -391,7 +402,11 @@ const SingleMoment: React.FC<MomentProps> = ({
                   </h3>
                 </div>
                 <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 mt-0.5">
-                  <time dateTime={createdAt} className="truncate">{formatDate(createdAt)}</time>
+                  {isOwnScheduled ? (
+                    <ScheduledBadge at={scheduledFor as string} />
+                  ) : (
+                    <time dateTime={createdAt} className="truncate">{formatDate(createdAt)}</time>
+                  )}
                   <span className="hidden xs:inline">•</span>
                   <svg
                     className="w-3 h-3 text-gray-400 hidden xs:block"
@@ -408,12 +423,7 @@ const SingleMoment: React.FC<MomentProps> = ({
               </div>
             </div>
 
-            <button
-              className="flex-shrink-0 p-1 xs:p-2 -mr-1 xs:-mr-2 rounded-full hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-200"
-              aria-label="More options"
-            >
-              <HiDotsHorizontal className="w-4 h-4 xs:w-5 xs:h-5 text-gray-500" />
-            </button>
+            <MomentOverflowMenu momentId={_id} author={user} />
           </div>
         </header>
 

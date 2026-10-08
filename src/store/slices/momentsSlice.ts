@@ -1,5 +1,6 @@
 import { MOMENTS_URL, COMMENTS_URL } from "../../constants";
 import { apiSlice } from "./apiSlice";
+import { MomentFilters, momentFilterQuery } from "../../components/moments/lib/momentFilterState";
 
 export const momentsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder: any) => ({
@@ -8,8 +9,9 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
       // serializes to the exact same cache key/URL as before it existed -- the
       // prerender prefetch (src/seo/prerender/prefetch.ts) and its snapshot in
       // the preloaded state depend on that match.
-      query: ({ page = 1, limit = 10, feed }: { page?: number; limit?: number; feed?: "forYou" | "following" } = {}) => ({
-        url: `${MOMENTS_URL}?page=${page}&limit=${limit}${feed ? `&feed=${feed}` : ""}`,
+      // `filters` likewise only adds params when one is set.
+      query: ({ page = 1, limit = 10, feed, filters }: { page?: number; limit?: number; feed?: "forYou" | "following"; filters?: MomentFilters } = {}) => ({
+        url: `${MOMENTS_URL}?page=${page}&limit=${limit}${feed ? `&feed=${feed}` : ""}${momentFilterQuery(filters)}`,
       }),
       keepUnusedDataFor: 5,
       providesTags: ['Moments'],
@@ -21,16 +23,17 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
     }),
     // Trending moments
     getTrendingMoments: builder.query({
-      query: ({ page = 1, limit = 10 } = {}) => ({
-        url: `${MOMENTS_URL}/trending?page=${page}&limit=${limit}`,
+      query: ({ page = 1, limit = 10, filters }: { page?: number; limit?: number; filters?: MomentFilters } = {}) => ({
+        url: `${MOMENTS_URL}/trending?page=${page}&limit=${limit}${momentFilterQuery(filters)}`,
       }),
       keepUnusedDataFor: 5,
       providesTags: ['Moments'],
     }),
     // Explore moments
     getExploreMoments: builder.query({
-      query: ({ page = 1, limit = 10, category }: { page?: number; limit?: number; category?: string } = {}) => ({
-        url: `${MOMENTS_URL}/explore?page=${page}&limit=${limit}${category ? `&category=${category}` : ''}`,
+      // A `filters.category` wins over the legacy `category` argument.
+      query: ({ page = 1, limit = 10, category, filters }: { page?: number; limit?: number; category?: string; filters?: MomentFilters } = {}) => ({
+        url: `${MOMENTS_URL}/explore?page=${page}&limit=${limit}${momentFilterQuery(filters && filters.category ? filters : { ...filters, category })}`,
       }),
       keepUnusedDataFor: 5,
       providesTags: ['Moments'],
@@ -328,6 +331,13 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Moments"],
     }),
+    deleteMomentAudio: builder.mutation({
+      query: (momentId: string) => ({
+        url: `${MOMENTS_URL}/${momentId}/audio`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Moments"],
+    }),
     // Audio attachment — PUT /api/v1/moments/:momentId/audio with FormData
     // (fields: audio (blob), duration, waveform (JSON.stringify of number[]))
     uploadMomentAudio: builder.mutation({
@@ -395,6 +405,7 @@ export const {
   useShareMomentMutation,
   useUploadMomentVideoMutation,
   useDeleteMomentVideoMutation,
+  useDeleteMomentAudioMutation,
   useUploadMomentAudioMutation,
   useGetPromptOfDayQuery,
   useGetReelsFeedQuery,

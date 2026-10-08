@@ -630,6 +630,98 @@
       "reply": "Répondre",
       "replyPlaceholder": "Écrivez une réponse…",
       "viewReplies": "Voir {{count}} réponses"
+    },
+    "filters": {
+      "button": "Filtres",
+      "searchPlaceholder": "Rechercher des moments",
+      "search": "Rechercher",
+      "category": "Catégorie",
+      "language": "Langue",
+      "mood": "Humeur",
+      "tag": "Tag",
+      "tagPlaceholder": "N'importe quel tag",
+      "any": "Tous",
+      "clear": "Effacer les filtres",
+      "emptyTitle": "Aucun moment ne correspond à ces filtres",
+      "emptyBody": "Essaie de retirer un filtre ou de chercher autre chose."
+    },
+    "categories": {
+      "general": "Général",
+      "language-learning": "Apprentissage des langues",
+      "culture": "Culture",
+      "food": "Cuisine",
+      "travel": "Voyage",
+      "music": "Musique",
+      "books": "Livres",
+      "hobbies": "Loisirs",
+      "daily-life": "Vie quotidienne",
+      "technology": "Technologie",
+      "entertainment": "Divertissement",
+      "sports": "Sport",
+      "movies": "Films",
+      "study": "Études",
+      "work": "Travail",
+      "question": "Question"
+    },
+    "moods": {
+      "happy": "Heureux",
+      "excited": "Enthousiaste",
+      "grateful": "Reconnaissant",
+      "motivated": "Motivé",
+      "relaxed": "Détendu",
+      "curious": "Curieux",
+      "sad": "Triste",
+      "love": "Amoureux",
+      "funny": "Drôle",
+      "thoughtful": "Pensif",
+      "cool": "Cool",
+      "tired": "Fatigué"
+    },
+    "report": {
+      "menu": "Plus d'options",
+      "report": "Signaler",
+      "title": "Signaler ce moment",
+      "reasonLabel": "Pourquoi le signales-tu ?",
+      "descriptionLabel": "Autre chose ? (facultatif)",
+      "submit": "Envoyer le signalement",
+      "cancel": "Annuler",
+      "sent": "Merci — nos modérateurs vont l'examiner.",
+      "already": "Tu as déjà signalé ce moment.",
+      "failed": "Impossible d'envoyer le signalement. Réessaie.",
+      "reasons": {
+        "spam": "Spam",
+        "harassment": "Harcèlement",
+        "hate_speech": "Discours haineux",
+        "violence": "Violence",
+        "nudity": "Nudité",
+        "false_information": "Fausse information",
+        "copyright": "Droits d'auteur",
+        "other": "Autre chose"
+      }
+    },
+    "schedule": {
+      "label": "Programmer",
+      "hint": "Laisse vide pour publier maintenant",
+      "past": "Choisis une heure dans le futur",
+      "badge": "Programmé pour {{time}}",
+      "clear": "Publier maintenant"
+    },
+    "fields": {
+      "privacy": "Qui peut le voir",
+      "privacyPublic": "Tout le monde",
+      "privacyFriends": "Amis",
+      "privacyPrivate": "Moi uniquement",
+      "background": "Arrière-plan",
+      "backgroundNone": "Aucun",
+      "location": "Lieu",
+      "addLocation": "Ajouter ma position",
+      "removeLocation": "Retirer le lieu",
+      "noMood": "Aucune humeur",
+      "tags": "Tags",
+      "tagPlaceholder": "Ajouter un tag…",
+      "addTag": "Ajouter",
+      "tagsUsed": "{{count}}/5 tags",
+      "tagsMax": "5 tags maximum"
     }
   },
   "createMoment": {
@@ -673,7 +765,20 @@
       "updateButton": "Mettre à jour le moment",
       "updatingButton": "Mise à jour en cours...",
       "cancelButton": "Annuler",
-      "removeImage": "Retirer l'image"
+      "removeImage": "Retirer l'image",
+      "nothingToSave": "Rien à modifier pour l'instant",
+      "descriptionRequired": "Une description est obligatoire"
+    },
+    "media": {
+      "video": "Vidéo",
+      "audio": "Note vocale",
+      "replace": "Remplacer",
+      "remove": "Retirer",
+      "removeVideoTitle": "Retirer la vidéo ?",
+      "removeAudioTitle": "Retirer la note vocale ?",
+      "removeBody": "Cette action est irréversible.",
+      "done": "Mis à jour",
+      "failed": "Ça n'a pas marché. Réessaie."
     }
   },
   "authentication": {

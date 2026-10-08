@@ -649,6 +649,98 @@
       "reply": "回覆",
       "replyPlaceholder": "寫下你的回覆…",
       "viewReplies": "查看 {{count}} 則回覆"
+    },
+    "filters": {
+      "button": "篩選",
+      "searchPlaceholder": "搜尋動態",
+      "search": "搜尋",
+      "category": "分類",
+      "language": "語言",
+      "mood": "心情",
+      "tag": "標籤",
+      "tagPlaceholder": "任何標籤",
+      "any": "全部",
+      "clear": "清除篩選",
+      "emptyTitle": "沒有符合這些篩選條件的動態",
+      "emptyBody": "試著移除一個篩選條件，或換個關鍵字搜尋。"
+    },
+    "categories": {
+      "general": "綜合",
+      "language-learning": "語言學習",
+      "culture": "文化",
+      "food": "美食",
+      "travel": "旅行",
+      "music": "音樂",
+      "books": "書籍",
+      "hobbies": "嗜好",
+      "daily-life": "日常生活",
+      "technology": "科技",
+      "entertainment": "娛樂",
+      "sports": "運動",
+      "movies": "電影",
+      "study": "學習",
+      "work": "工作",
+      "question": "提問"
+    },
+    "moods": {
+      "happy": "開心",
+      "excited": "興奮",
+      "grateful": "感恩",
+      "motivated": "充滿幹勁",
+      "relaxed": "放鬆",
+      "curious": "好奇",
+      "sad": "難過",
+      "love": "戀愛中",
+      "funny": "好笑",
+      "thoughtful": "若有所思",
+      "cool": "酷",
+      "tired": "累了"
+    },
+    "report": {
+      "menu": "更多選項",
+      "report": "檢舉",
+      "title": "檢舉這則動態",
+      "reasonLabel": "檢舉原因是什麼？",
+      "descriptionLabel": "還有其他要補充的嗎？（選填）",
+      "submit": "送出檢舉",
+      "cancel": "取消",
+      "sent": "謝謝——我們的審核人員會處理。",
+      "already": "你已經檢舉過這則動態了。",
+      "failed": "檢舉送出失敗，請再試一次。",
+      "reasons": {
+        "spam": "垃圾訊息",
+        "harassment": "騷擾",
+        "hate_speech": "仇恨言論",
+        "violence": "暴力",
+        "nudity": "裸露",
+        "false_information": "不實資訊",
+        "copyright": "著作權",
+        "other": "其他"
+      }
+    },
+    "schedule": {
+      "label": "排程發布",
+      "hint": "留空則立即發布",
+      "past": "請選擇未來的時間",
+      "badge": "排定於 {{time}} 發布",
+      "clear": "改為立即發布"
+    },
+    "fields": {
+      "privacy": "誰可以看到",
+      "privacyPublic": "所有人",
+      "privacyFriends": "好友",
+      "privacyPrivate": "僅限自己",
+      "background": "背景",
+      "backgroundNone": "無",
+      "location": "位置",
+      "addLocation": "加入我的位置",
+      "removeLocation": "移除位置",
+      "noMood": "無心情",
+      "tags": "標籤",
+      "tagPlaceholder": "新增標籤…",
+      "addTag": "新增",
+      "tagsUsed": "{{count}}/5 個標籤",
+      "tagsMax": "最多 5 個標籤"
     }
   },
   "createMoment": {
@@ -692,7 +784,20 @@
       "updateButton": "更新動態",
       "updatingButton": "更新中…",
       "cancelButton": "取消",
-      "removeImage": "移除圖片"
+      "removeImage": "移除圖片",
+      "nothingToSave": "還沒有需要修改的內容",
+      "descriptionRequired": "請填寫描述"
+    },
+    "media": {
+      "video": "影片",
+      "audio": "語音",
+      "replace": "替換",
+      "remove": "移除",
+      "removeVideoTitle": "移除影片？",
+      "removeAudioTitle": "移除語音？",
+      "removeBody": "此動作無法復原。",
+      "done": "已更新",
+      "failed": "操作失敗，請再試一次。"
     }
   },
   "authentication": {
