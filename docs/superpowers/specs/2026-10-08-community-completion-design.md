@@ -33,16 +33,26 @@ A plain search ignores the **default** language match, so that it searches every
 
 The server cannot see whether the language params were typed by the member or filled in as the default. It tells them apart by comparing them with the viewer's own languages:
 
-- **Default match.** All of the following hold:
+- **Default match.** The params are *exactly* what the default sends. All of the following hold:
   - `matchLanguage === 'true'`.
-  - `nativeLanguage` is absent, or has the same `matchKey` as `req.user.native_language`.
-  - `learningLanguage` is absent, or has the same `matchKey` as `req.user.language_to_learn`.
+  - `nativeLanguage` is present **if and only if** `req.user.native_language` is set, and when present it equals it.
+  - `learningLanguage` is present **if and only if** `req.user.language_to_learn` is set, and when present it equals it.
   - At least one of the two is present.
+
+  "If and only if" is load-bearing. One explicit filter is sent as `matchLanguage=true` with a **single** swapped param (`buildCommunityQuery.ts`). "Native speakers of Korean", from someone learning Korean, sends `learningLanguage=Korean` alone. A looser "absent or equal" rule would mistake that for the default and drop the most common filter of all during a search. Because the viewer has a native language, the default would also have sent `nativeLanguage`; its absence is what marks the request as explicit.
+
+- **Equal** means the same `matchKey` (`lib/matchLanguage.js`). `matchKey` returns `null` for values it does not recognise — American Sign Language, Hawaiian and Dari are real production values — so two `null` keys are **not** equal. In that case the values are compared as trimmed, case-insensitive strings, the same fallback `equivalentValues` uses.
 - **Search-everyone condition.** `search` is non-empty, does not start with `@` (the `@username` branch already clears language filters), and `req.user` exists.
 
-When both hold, the language `$or` is not applied. Every other filter — age, gender, country, level, topics, online, `joinedWithin` — still applies.
+When both hold, the language `$or` is not applied. Every other filter still applies:
 
-Accepted edge case: a member whose explicit filter happens to equal their own default languages is treated as having the default. The results are the same either way.
+- age, gender, country, level, topics, online and `joinedWithin`;
+- `reciprocal=true`. The app's "perfect partners" surface asks for it explicitly, and it is not the default match.
+
+Accepted edge case: a member who sets *both* language filters to mirror their own two languages.
+
+- **On the web,** that request takes the direct (AND) branch without `matchLanguage`, so it never reaches this rule.
+- **On the app,** both filters are still sent with `matchLanguage=true`, and the request is byte-identical to the default. The server cannot tell the two apart, so it treats it as the default and drops the language match during a search. This is accepted: the request asked for exactly the viewer's own exchange pairing.
 
 ### Kill switch
 
@@ -87,7 +97,7 @@ They reach the card as-is in all 18 locales.
 
 **Backend.** `getMatchReasons` is split into:
 
-- `matchReasonCodes(currentUser, matchedUser)`. Returns structured entries:
+- `matchReasonCodes(currentUser, matchedUser)`. It keeps today's conditions exactly, quirks included. `same_country` is emitted when `matchedUser.location?.country === currentUser.location?.country`, which is also true when **both are undefined**. Changing that would break the byte-identical strings. It returns structured entries:
   - `{ code: 'perfect_pair', native, learning }`
   - `{ code: 'native_speaker', native }`
   - `{ code: 'online_now' }`
@@ -115,10 +125,15 @@ The aggregation's own `matchReasons` projection (`'Perfect language exchange par
 - `areMemberRowsEqual` compares entries by `text` and `primary`.
 - Language names in the parameters are shown as stored — the same rule the card's own language row uses.
 
+**Rollout.** `/recommendations` responses are cached per viewer (`recommendations:${userId}`). Until each entry expires, it is still served without `matchReasonCodes`, and those cards show the English fallback. That is expected, not a bug.
+
 ### Touches
 
 - Backend: `controllers/matching.js`.
-- Web: the For You tab rendering in `MainCommunity.tsx`, `MemberCard.tsx` (ordering only), and 18 locale files. The `communityMain` namespace is already parity-guarded.
+- Web:
+  - `MainCommunity.tsx`: For You turns codes into chip entries;
+  - `MemberCard.tsx`: the `reasons` prop accepts `string[] | {text, primary}[]`, the render reads `primary`, and `areMemberRowsEqual` changes;
+  - 18 locale files. The `communityMain` namespace is already parity-guarded.
 
 ## Production safety (backend)
 
@@ -141,7 +156,11 @@ This backend serves the production app. Every change here follows these rules:
 Backend, with Node tests against an in-memory MongoDB, following `test/communityFilterMatching.test.js`:
 
 - **Search-everyone, positive:** a default-match request plus a name search returns a user outside the viewer's languages.
-- **Explicit filter still applies:** an explicit language filter different from the viewer's own, plus a search, keeps the language constraint.
+- **Explicit filter still applies:**
+  - an explicit language filter different from the viewer's own, plus a search, keeps the language constraint;
+  - so does a single explicit filter **equal to the viewer's own learning language** ("native Korean" from a Korean learner), which a looser rule would mistake for the default.
+- **Unrecognised languages:** two different unrecognised languages (both `matchKey` null) are not treated as equal.
+- **Reciprocal:** `reciprocal=true` plus a search keeps the reciprocal constraint.
 - **No search, no change:** without `search`, the result set is identical to today's.
 - **`@username` unchanged.**
 - **Kill switch:** with `COMMUNITY_SEARCH_EVERYONE=false`, today's narrowing returns. The env var is set inside the test, which proves it is read per request.
