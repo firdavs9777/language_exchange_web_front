@@ -9,6 +9,7 @@ import AdUnit from "../ads/AdUnit";
 import { AD_SLOTS } from "../ads/adsenseConfig";
 import { useGetUserProfileQuery } from "../../store/slices/usersSlice";
 import useProfileData from "./useProfileData";
+import routeId from "../../utils/routeId";
 import useRecordProfileVisit from "./useRecordProfileVisit";
 import ProfileHeader from "./parts/ProfileHeader";
 import ProfileStats from "./parts/ProfileStats";
@@ -120,7 +121,9 @@ const ProfileSkeleton: React.FC = () => (
  * moments, and the suggestion strip the old /community/:id page had.
  */
 const ProfilePage: React.FC = () => {
-  const { userId } = useParams<{ userId: string }>();
+  const { userId: rawUserId } = useParams<{ userId: string }>();
+  // Shared links arrive with text glued on; the id at the front is still good.
+  const userId = rawUserId ? routeId(rawUserId) : undefined;
   const { t } = useTranslation();
   const navigate = useNavigate();
 

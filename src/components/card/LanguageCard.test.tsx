@@ -145,6 +145,15 @@ describe("LanguageCard", () => {
     });
   });
 
+  it("opens from a link that came back with the share text glued on", () => {
+    // The exact link reported from production.
+    renderCard("/card/6a7eb3d492fdab67baeed15f%20Practice%20English%20with%20me%20on%20BananaTalk");
+    expect(mockProfile).toHaveBeenCalledWith(
+      "6a7eb3d492fdab67baeed15f",
+      expect.objectContaining({ skip: false })
+    );
+  });
+
   it("shows a skeleton while loading", () => {
     mockProfile.mockReturnValue({ data: undefined, isLoading: true, error: undefined });
     renderCard();

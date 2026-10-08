@@ -16,6 +16,7 @@ import {
 import PageMeta from "../../seo/PageMeta";
 import Avatar from "../../design/Avatar";
 import { useGetPublicUserProfileQuery } from "../../store/slices/communitySlice";
+import routeId from "../../utils/routeId";
 import { languageFlag, stripVariant } from "../../utils/languages";
 import { publicIntents } from "../profile/intents";
 import { shareContent } from "../linking/shareContent";
@@ -47,7 +48,9 @@ const SECONDARY = `${BUTTON} border border-line bg-surface text-ink-800 hover:bg
  * Kept `noindex` — a card is for the people it is sent to, not for search.
  */
 const LanguageCard: React.FC = () => {
-  const { userId = "" } = useParams<{ userId: string }>();
+  const { userId: rawUserId } = useParams<{ userId: string }>();
+  // Shared links arrive with text glued on; the id at the front is still good.
+  const userId = routeId(rawUserId);
   const { t } = useTranslation();
   const viewerId = useSelector(
     (state: any) => state.auth.userInfo?.user?._id || state.auth.userInfo?._id
