@@ -132,6 +132,7 @@ const AdminContent = lazyWithRetry("../components/admin/pages/AdminContent", () 
 const AdminAiUsage = lazyWithRetry("../components/admin/pages/AdminAiUsage", () => import("../components/admin/pages/AdminAiUsage"));
 const AdminAudit = lazyWithRetry("../components/admin/pages/AdminAudit", () => import("../components/admin/pages/AdminAudit"));
 const AdminAnnouncements = lazyWithRetry("../components/admin/pages/AdminAnnouncements", () => import("../components/admin/pages/AdminAnnouncements"));
+const AdminAnnouncementEditor = lazyWithRetry("../components/admin/pages/AdminAnnouncementEditor", () => import("../components/admin/pages/AdminAnnouncementEditor"));
 
 // The one fallback every lazy group shares: the app's existing spinner in a
 // block tall enough that the footer does not jump up and then back down while
@@ -279,6 +280,7 @@ export const routes = createRoutesFromElements(
       <Route path="ai-usage" element={lazyAdminRoute(<AdminAiUsage />)} />
       <Route path="audit" element={lazyAdminRoute(<AdminAudit />)} />
       <Route path="announcements" element={lazyAdminRoute(<AdminAnnouncements />)} />
+      <Route path="announcements/:id" element={lazyAdminRoute(<AdminAnnouncementEditor />)} />
     </Route>
 
     {/* Catch-all. Must stay last. */}
