@@ -8,6 +8,8 @@ The full owner/launch checklist lives in the app repo: `bananatalk_app/docs/REMA
 - [x] W2 form rules (buttonUrl mirrors backend: https://host or bananatalk:// only)
 - [x] W3 list page + nav
 - [x] W4 editor (route announcements/:id, "new" creates)
-- [ ] W5 publish/schedule/end with audience confirm
+- [x] W5 publish/schedule/end with audience confirm (editor also: keyed by id, reseed only when clean, in-flight guards, Save disabled during upload)
 - [ ] Usable only after the backend announcements deploy (B1–B11)
 - [ ] W4 note: PUT on a LIVE announcement must send only translations text, endsAt, priority (backend 400s on anything else); ended rows are read-only
+- [ ] Owner: first real announcement end-to-end (publish -> push -> notifications list -> in-app pop-up); QA matrix lives in the app repo (docs/qa/onboarding-matrix.md)
+- [ ] Announcement admin strings are English fallbacks (t(...) || "..."); add the admin.announcements.* keys when the admin console is localized

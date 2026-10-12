@@ -106,3 +106,19 @@ it("targeting summary", () => {
   expect(targetingSummary({ platforms: ["all"], languages: [] })).toBe("All platforms · all languages");
   expect(targetingSummary({ platforms: ["ios", "android"], languages: ["ko", "ja"] })).toBe("iOS + Android · ko, ja");
 });
+
+it("publishing now: an end time that is already past is caught before the request", () => {
+  const now = new Date("2030-01-01T00:00:00");
+  // No start time: the effective start is now, so an end at/before now can never be live.
+  expect(validateForm(filled({ endsAt: "2029-12-31T10:00" }), { publish: true, now }).endsAt).toBeTruthy();
+  expect(validateForm(filled({ endsAt: "2030-01-01T00:00" }), { publish: true, now }).endsAt).toBeTruthy();
+  expect(validateForm(filled({ endsAt: "2030-01-02T10:00" }), { publish: true, now }).endsAt).toBeUndefined();
+  expect(validateForm(filled(), { publish: true, now }).endsAt).toBeUndefined();
+  // Not publishing: a past end on a plain draft save is the server's call.
+  expect(validateForm(filled({ endsAt: "2029-12-31T10:00" }), { now }).endsAt).toBeUndefined();
+});
+
+it("emoji length is checked on the trimmed value", () => {
+  expect(validateForm(filled({ emoji: "  " + "a".repeat(16) + "  " })).emoji).toBeUndefined();
+  expect(validateForm(filled({ emoji: "a".repeat(17) })).emoji).toBeTruthy();
+});

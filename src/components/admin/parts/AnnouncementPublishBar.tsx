@@ -1,0 +1,185 @@
+import React from "react";
+import { useTranslation } from "react-i18next";
+import {
+  usePublishAnnouncementMutation,
+  useEndAnnouncementMutation,
+  useLazyGetAnnouncementAudienceQuery,
+  AnnouncementStatus,
+} from "../../../store/slices/adminSlice";
+import ConfirmDialog from "./ConfirmDialog";
+
+export interface AnnouncementPublishBarProps {
+  /** null until the first save of a new announcement. */
+  announcementId: string | null;
+  status: AnnouncementStatus;
+  /** The form's "Send notification" switch. */
+  notify: boolean;
+  /** The form's start time as ISO, sent as `at` when scheduling. */
+  startsAtIso: string | null;
+  /** Validate and save the form; resolves to the saved id, or null if it did not save. */
+  prepare: (mode: "publish" | "schedule") => Promise<string | null>;
+  onDone: (message: string) => void;
+  /** The editor is busy (e.g. an image is uploading): no action may start. */
+  disabled?: boolean;
+}
+
+type Mode = "publish" | "schedule";
+
+type Pending =
+  | { kind: "publish"; mode: Mode; id: string; count: number; listed: number }
+  | { kind: "end"; id: string }
+  | null;
+
+const errorMessage = (err: any, fallback: string): string =>
+  (err && err.data && err.data.message) || (err && err.message) || fallback;
+
+/**
+ * The three actions that reach users. Publishing with "Send notification" on
+ * pushes to everyone in the audience, so it always asks first and shows how
+ * many people that is — fetched fresh from the server, after the save, so the
+ * number matches the targeting that will actually be used.
+ */
+const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
+  announcementId, status, notify, startsAtIso, prepare, onDone, disabled = false,
+}) => {
+  const { t } = useTranslation();
+  const [publish, publishState] = usePublishAnnouncementMutation();
+  const [end, endState] = useEndAnnouncementMutation();
+  const [fetchAudience] = useLazyGetAnnouncementAudienceQuery();
+  const [pending, setPending] = React.useState<Pending>(null);
+  const [working, setWorking] = React.useState(false);
+  const [error, setError] = React.useState("");
+  const [dialogError, setDialogError] = React.useState("");
+  // Synchronous: state updates land a render late, so a fast second click would
+  // otherwise slip through before `busy` disables the button.
+  const inFlight = React.useRef(false);
+
+  const canPublish = status === "draft" || status === "scheduled";
+  const canEnd = status === "scheduled" || status === "live";
+  const fallback = t("admin.common.actionError") || "Something went wrong.";
+
+  const doneMessage = (mode: Mode) =>
+    mode === "schedule"
+      ? t("admin.announcements.scheduledDone") || "Scheduled."
+      : t("admin.announcements.publishedDone") || "Published.";
+  const atFor = (mode: Mode) => (mode === "schedule" ? startsAtIso || undefined : undefined);
+
+  const start = async (mode: Mode) => {
+    if (inFlight.current) return;
+    inFlight.current = true;
+    setError("");
+    setWorking(true);
+    try {
+      const id = await prepare(mode);
+      if (!id) return;
+      if (!notify) {
+        // No push: nothing irreversible reaches anyone's phone, so no dialog.
+        try {
+          await publish({ id, at: atFor(mode) }).unwrap();
+          onDone(doneMessage(mode));
+        } catch (err) {
+          setError(errorMessage(err, fallback));
+        }
+        return;
+      }
+      try {
+        const audience: { count: number; listed: number } = await fetchAudience(id).unwrap();
+        setDialogError("");
+        setPending({ kind: "publish", mode, id, count: audience.count, listed: audience.listed });
+      } catch (err) {
+        setError(errorMessage(err, t("admin.announcements.audienceError") || "Couldn't count the audience."));
+      }
+    } finally {
+      inFlight.current = false;
+      setWorking(false);
+    }
+  };
+
+  const confirm = async () => {
+    if (!pending || inFlight.current) return;
+    inFlight.current = true;
+    try {
+      if (pending.kind === "publish") {
+        const mode = pending.mode;
+        await publish({ id: pending.id, at: atFor(mode) }).unwrap();
+        setPending(null);
+        onDone(doneMessage(mode));
+      } else {
+        await end(pending.id).unwrap();
+        setPending(null);
+        onDone(t("admin.announcements.endedDone") || "Ended.");
+      }
+    } catch (err) {
+      setDialogError(errorMessage(err, fallback));
+    } finally {
+      inFlight.current = false;
+    }
+  };
+
+  const busy = disabled || working || publishState.isLoading || endState.isLoading;
+  const buttonClass = "rounded-chip px-3 py-1.5 text-sm font-medium disabled:opacity-60";
+
+  const dialogBody = () => {
+    if (!pending) return null;
+    if (pending.kind === "end") {
+      return t("admin.announcements.endBody") || "It disappears from the app now. Notifications already sent stay in people's lists.";
+    }
+    const when = pending.mode === "schedule"
+      ? t("admin.announcements.atStart") || "at the scheduled start"
+      : t("admin.announcements.now") || "now";
+    return `Sends a push notification to ${pending.count.toLocaleString("en-US")} people ${when} and adds it to ${pending.listed.toLocaleString("en-US")} notification lists.`;
+  };
+
+  if (!canPublish && !canEnd) return null;
+
+  return (
+    <div className="flex flex-wrap items-center gap-2" data-testid="publish-bar">
+      {canPublish ? (
+        <>
+          <button type="button" disabled={busy} onClick={() => start("schedule")}
+            className={`${buttonClass} border border-line text-ink-700 hover:bg-ink-100 dark:border-line-dark dark:text-ink-200`}>
+            {t("admin.announcements.schedule") || "Schedule"}
+          </button>
+          <button type="button" disabled={busy} onClick={() => start("publish")}
+            className={`${buttonClass} bg-brand-deep text-white hover:opacity-90`}>
+            {t("admin.announcements.publishNow") || "Publish now"}
+          </button>
+        </>
+      ) : null}
+      {canEnd && announcementId ? (
+        <button type="button" disabled={busy} onClick={() => { setDialogError(""); setPending({ kind: "end", id: announcementId }); }}
+          className={`${buttonClass} border border-red-300 text-red-700 hover:bg-red-50`}>
+          {t("admin.announcements.endNow") || "End now"}
+        </button>
+      ) : null}
+      {error ? <p role="alert" className="w-full text-sm text-red-600">{error}</p> : null}
+
+      <ConfirmDialog
+        open={!!pending}
+        title={
+          pending && pending.kind === "end"
+            ? t("admin.announcements.endTitle") || "End this announcement?"
+            : pending && pending.mode === "schedule"
+              ? t("admin.announcements.scheduleTitle") || "Schedule this announcement?"
+              : t("admin.announcements.publishTitle") || "Publish this announcement?"
+        }
+        body={dialogBody()}
+        confirmLabel={
+          pending && pending.kind === "end"
+            ? t("admin.announcements.endNow") || "End now"
+            : pending && pending.mode === "schedule"
+              ? t("admin.announcements.schedule") || "Schedule"
+              : t("admin.announcements.publishNow") || "Publish now"
+        }
+        cancelLabel={t("admin.common.cancel") || "Cancel"}
+        danger={!!pending && pending.kind === "end"}
+        busy={publishState.isLoading || endState.isLoading}
+        error={dialogError || undefined}
+        onConfirm={() => { confirm(); }}
+        onCancel={() => setPending(null)}
+      />
+    </div>
+  );
+};
+
+export default AnnouncementPublishBar;

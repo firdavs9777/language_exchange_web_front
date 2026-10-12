@@ -1,11 +1,12 @@
 import "@testing-library/jest-dom";
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AdminAnnouncementEditor from "./AdminAnnouncementEditor";
 
 jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
 
+const mockPrepared: any[] = [];
 const mockGet = jest.fn();
 const mockCreate = jest.fn();
 const mockUpdate = jest.fn();
@@ -15,6 +16,22 @@ jest.mock("../../../store/slices/adminSlice", () => ({
   useCreateAnnouncementMutation: () => mockCreate(),
   useUpdateAnnouncementMutation: () => mockUpdate(),
   useUploadAnnouncementImageMutation: () => mockUpload(),
+}));
+
+jest.mock("../parts/AnnouncementPublishBar", () => ({
+  __esModule: true,
+  default: (props: any) => (
+    <div>
+      <button type="button" data-testid="publish-bar" disabled={props.disabled}
+        onClick={() => props.prepare("schedule").then((id: any) => mockPrepared.push(["schedule", id]))}>
+        {props.status}
+      </button>
+      <button type="button" data-testid="publish-now" disabled={props.disabled}
+        onClick={() => props.prepare("publish").then((id: any) => mockPrepared.push(["publish", id]))}>
+        now
+      </button>
+    </div>
+  ),
 }));
 
 const LIVE = {
@@ -32,16 +49,26 @@ let uploadTrigger: jest.Mock;
 const resolved = (value: any) => jest.fn(() => ({ unwrap: () => Promise.resolve(value) }));
 
 const LocationProbe = () => <div data-testid="location">{useLocation().pathname}</div>;
+const GoTo = () => {
+  const navigate = useNavigate();
+  return (
+    <>
+      <button type="button" onClick={() => navigate("/admin/announcements/new")}>go-new</button>
+      <button type="button" onClick={() => navigate("/admin/announcements/a1")}>go-a1</button>
+    </>
+  );
+};
 const renderAt = (path: string) =>
   render(
     <MemoryRouter initialEntries={[path]}>
       <Routes>
-        <Route path="/admin/announcements/:id" element={<><AdminAnnouncementEditor /><LocationProbe /></>} />
+        <Route path="/admin/announcements/:id" element={<><AdminAnnouncementEditor /><LocationProbe /><GoTo /></>} />
       </Routes>
     </MemoryRouter>
   );
 
 beforeEach(() => {
+  mockPrepared.length = 0;
   mockGet.mockReset().mockReturnValue({ data: undefined, isLoading: false, isError: false });
   createTrigger = resolved({ ...LIVE, id: "a9", status: "draft" });
   updateTrigger = resolved(LIVE);
@@ -77,7 +104,7 @@ it("an invalid button link is caught before the request", () => {
   renderAt("/admin/announcements/new");
   fireEvent.change(screen.getByLabelText("Title"), { target: { value: "Hello" } });
   fireEvent.change(screen.getByLabelText("Body"), { target: { value: "World" } });
-  fireEvent.change(screen.getByLabelText("Button link"), { target: { value: "javascript:x" } });
+  fireEvent.change(screen.getByLabelText("Button link"), { target: { value: "ftp://x.example" } });
   fireEvent.click(screen.getByRole("button", { name: "Save draft" }));
   expect(screen.getByTestId("error-buttonUrl")).toBeInTheDocument();
   expect(createTrigger).not.toHaveBeenCalled();
@@ -137,4 +164,93 @@ it("shows an error state when the announcement fails to load", () => {
   mockGet.mockReturnValue({ data: undefined, isLoading: false, isError: true });
   renderAt("/admin/announcements/a1");
   expect(screen.getByRole("alert")).toHaveTextContent("Couldn't load this announcement.");
+});
+
+it("the publish bar gets the status and Schedule validates a future start before saving", () => {
+  renderAt("/admin/announcements/new");
+  expect(screen.getByTestId("publish-bar")).toHaveTextContent("draft");
+  fireEvent.change(screen.getByLabelText("Title"), { target: { value: "Hello" } });
+  fireEvent.change(screen.getByLabelText("Body"), { target: { value: "World" } });
+  fireEvent.click(screen.getByTestId("publish-bar"));
+  expect(screen.getByTestId("error-startsAt")).toHaveTextContent("Pick a start time to schedule.");
+  expect(createTrigger).not.toHaveBeenCalled();
+});
+
+it("Publish now with an end time already past is rejected before saving", () => {
+  renderAt("/admin/announcements/new");
+  fireEvent.change(screen.getByLabelText("Title"), { target: { value: "Hello" } });
+  fireEvent.change(screen.getByLabelText("Body"), { target: { value: "World" } });
+  fireEvent.change(screen.getByLabelText("Ends"), { target: { value: "2020-01-01T10:00" } });
+  fireEvent.click(screen.getByTestId("publish-now"));
+  expect(screen.getByTestId("error-endsAt")).toBeInTheDocument();
+  expect(createTrigger).not.toHaveBeenCalled();
+});
+
+it("prepare resolves to the saved id, and the editor survives its own create (no remount)", async () => {
+  createTrigger = resolved({
+    ...LIVE, id: "a9", status: "draft", translations: { en: { title: "Hello", body: "World", buttonLabel: "" } },
+  });
+  mockCreate.mockReturnValue([createTrigger, { isLoading: false }]);
+  renderAt("/admin/announcements/new");
+  fireEvent.change(screen.getByLabelText("Title"), { target: { value: "Hello" } });
+  fireEvent.change(screen.getByLabelText("Body"), { target: { value: "World" } });
+  fireEvent.click(screen.getByTestId("publish-now"));
+  await waitFor(() => expect(mockPrepared).toEqual([["publish", "a9"]]));
+  await waitFor(() => expect(screen.getByTestId("location")).toHaveTextContent("/admin/announcements/a9"));
+  // The bar is still mounted (its confirm dialog would live in it) and the text is intact.
+  expect(screen.getByTestId("publish-now")).toBeInTheDocument();
+  expect(screen.getByLabelText("Title")).toHaveValue("Hello");
+});
+
+it("Back/Forward between /new and an existing id never reuses the other's form (no duplicate create)", async () => {
+  mockGet.mockImplementation((arg: any) => ({ data: arg === "a1" ? LIVE : undefined, isLoading: false, isError: false }));
+  renderAt("/admin/announcements/new");
+  fireEvent.change(screen.getByLabelText("Title"), { target: { value: "Typed on new" } });
+  fireEvent.click(screen.getByText("go-a1"));
+  expect(screen.getByLabelText("Title")).toHaveValue("Live title");
+  fireEvent.click(screen.getByText("go-new"));
+  expect(screen.getByLabelText("Title")).toHaveValue("");
+  fireEvent.change(screen.getByLabelText("Body"), { target: { value: "World" } });
+  fireEvent.change(screen.getByLabelText("Title"), { target: { value: "Fresh" } });
+  fireEvent.click(screen.getByRole("button", { name: "Save draft" }));
+  await waitFor(() => expect(createTrigger).toHaveBeenCalledTimes(1));
+  expect(updateTrigger).not.toHaveBeenCalled();
+});
+
+it("a double click on Save sends one request", async () => {
+  let release: (v: any) => void = () => undefined;
+  createTrigger = jest.fn(() => ({ unwrap: () => new Promise((resolve) => { release = resolve; }) }));
+  mockCreate.mockReturnValue([createTrigger, { isLoading: false }]);
+  renderAt("/admin/announcements/new");
+  fireEvent.change(screen.getByLabelText("Title"), { target: { value: "Hello" } });
+  fireEvent.change(screen.getByLabelText("Body"), { target: { value: "World" } });
+  const save = screen.getByRole("button", { name: "Save draft" });
+  fireEvent.click(save);
+  fireEvent.click(save);
+  expect(createTrigger).toHaveBeenCalledTimes(1);
+  release({ ...LIVE, id: "a9", status: "draft" });
+  await waitFor(() => expect(screen.getByTestId("location")).toHaveTextContent("/admin/announcements/a9"));
+});
+
+it("a background refetch does not discard unsaved edits, but a clean form follows the server", () => {
+  mockGet.mockReturnValue({ data: LIVE, isLoading: false, isError: false });
+  const view = renderAt("/admin/announcements/a1");
+  expect(screen.getByLabelText("Title")).toHaveValue("Live title");
+  fireEvent.change(screen.getByLabelText("Title"), { target: { value: "Mid-edit" } });
+  mockGet.mockReturnValue({ data: { ...LIVE, updatedAt: "2026-10-12T09:30:00.000Z" }, isLoading: false, isError: false });
+  view.rerender(
+    <MemoryRouter initialEntries={["/admin/announcements/a1"]}>
+      <Routes>
+        <Route path="/admin/announcements/:id" element={<><AdminAnnouncementEditor /><LocationProbe /><GoTo /></>} />
+      </Routes>
+    </MemoryRouter>
+  );
+  expect(screen.getByLabelText("Title")).toHaveValue("Mid-edit");
+});
+
+it("Save is disabled while an image uploads", () => {
+  mockUpload.mockReturnValue([uploadTrigger, { isLoading: true }]);
+  renderAt("/admin/announcements/new");
+  expect(screen.getByRole("button", { name: "Save draft" })).toBeDisabled();
+  expect(screen.getByTestId("publish-bar")).toBeDisabled();
 });

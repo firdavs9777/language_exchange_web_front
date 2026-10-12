@@ -135,6 +135,8 @@ export const toInput = (form: AnnouncementForm, liveOnly = false): AnnouncementI
 export interface ValidateOptions {
   /** Scheduling requires a start time in the future. */
   schedule?: boolean;
+  /** Publishing right now: the effective start is now, so an end at or before now is an error. */
+  publish?: boolean;
   now?: Date;
 }
 
@@ -168,7 +170,7 @@ export const validateForm = (form: AnnouncementForm, opts: ValidateOptions = {})
     errors.buttonUrl = "Add a link for the button, or clear the button label.";
   }
 
-  if (form.emoji.length > L.emoji) errors.emoji = `Emoji is limited to ${L.emoji} characters.`;
+  if (form.emoji.trim().length > L.emoji) errors.emoji = `Emoji is limited to ${L.emoji} characters.`;
   if (!form.platforms.length) errors.platforms = "Pick at least one platform.";
   if (!form.showInApp && !form.notify) errors.channels = "Turn on Show in app, Send notification, or both.";
   if (!/^-?\d+$/.test(form.priority.trim())) errors.priority = "Priority is a whole number.";
@@ -178,6 +180,9 @@ export const validateForm = (form: AnnouncementForm, opts: ValidateOptions = {})
   if (form.startsAt && !start) errors.startsAt = "Not a valid date.";
   if (form.endsAt && !end) errors.endsAt = "Not a valid date.";
   if (start && end && new Date(end) <= new Date(start)) errors.endsAt = "End must be after start.";
+  if (opts.publish && end && new Date(end) <= (opts.now || new Date())) {
+    errors.endsAt = "The end time is already past, so this would end the moment it publishes.";
+  }
   if (opts.schedule) {
     const now = opts.now || new Date();
     if (!start) errors.startsAt = "Pick a start time to schedule.";

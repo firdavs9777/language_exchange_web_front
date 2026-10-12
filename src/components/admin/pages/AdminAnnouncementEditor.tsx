@@ -10,6 +10,7 @@ import {
 } from "../../../store/slices/adminSlice";
 import { Badge } from "../../../design";
 import AnnouncementPreview from "../parts/AnnouncementPreview";
+import AnnouncementPublishBar from "../parts/AnnouncementPublishBar";
 import {
   ANNOUNCEMENT_LOCALES,
   ANNOUNCEMENT_LIMITS,
@@ -20,6 +21,7 @@ import {
   blankTranslation,
   emptyForm,
   fromAnnouncement,
+  fromLocalInput,
   toInput,
   validateForm,
 } from "../parts/announcementForm";
@@ -47,18 +49,23 @@ const FieldError: React.FC<{ errors: FormErrors; name: string }> = ({ errors, na
     </p>
   ) : null;
 
-const AdminAnnouncementEditor: React.FC = () => {
+const snapshot = (form: AnnouncementForm): string => JSON.stringify(form);
+
+const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: string) => void }> = ({ id, onCreated }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const params = useParams<{ id: string }>();
-  const id = params.id && params.id !== "new" ? params.id : null;
 
   const existing = useGetAnnouncementQuery(id, { skip: !id });
   const [createAnnouncement, createState] = useCreateAnnouncementMutation();
   const [updateAnnouncement, updateState] = useUpdateAnnouncementMutation();
   const [uploadImage, uploadState] = useUploadAnnouncementImageMutation();
 
-  const doc: AdminAnnouncement | null = id && existing.data ? existing.data : null;
+  // The row this editor just saved. It stands in for the fetched row so that the
+  // editor (and the publish bar's open dialog) never flashes to "Loading…" in the
+  // gap between creating a draft and the first fetch of it.
+  const [saved, setSaved] = React.useState<AdminAnnouncement | null>(null);
+  const fetched: AdminAnnouncement | null = id && existing.data ? existing.data : null;
+  const doc: AdminAnnouncement | null = fetched || (id && saved && saved.id === id ? saved : null);
   const status = doc ? doc.status : "draft";
   const liveOnly = status === "live";
   const readOnly = status === "ended";
@@ -70,13 +77,24 @@ const AdminAnnouncementEditor: React.FC = () => {
   const [actionError, setActionError] = React.useState("");
   const [notice, setNotice] = React.useState("");
 
-  // Re-seed the form only when a different document (or a newer save) arrives,
-  // never on a refetch of the same version, so typing isn't overwritten.
+  // Re-seed the form from the server when a different document or a newer
+  // version arrives -- but never over unsaved edits: a background refetch (focus,
+  // an invalidation) must not throw away what the admin is typing. `baseline` is
+  // the form as last seeded or saved; the form is "dirty" when it differs.
+  const baseline = React.useRef(snapshot(emptyForm()));
+  const seededId = React.useRef<string | null>(null);
+  const inFlight = React.useRef(false);
   const docVersion = doc ? `${doc.id}:${doc.updatedAt}` : "";
   React.useEffect(() => {
     if (!doc) return;
-    setForm(fromAnnouncement(doc));
-    setTab(doc.defaultLocale || "en");
+    const firstOfThisDoc = seededId.current !== doc.id;
+    if (firstOfThisDoc || snapshot(form) === baseline.current) {
+      const seeded = fromAnnouncement(doc);
+      setForm(seeded);
+      baseline.current = snapshot(seeded);
+      if (firstOfThisDoc) setTab(doc.defaultLocale || "en");
+    }
+    seededId.current = doc.id;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [docVersion]);
 
@@ -94,23 +112,37 @@ const AdminAnnouncementEditor: React.FC = () => {
   const toggle = (list: string[], value: string): string[] =>
     list.indexOf(value) >= 0 ? list.filter((v) => v !== value) : list.concat(value);
 
-  /** Validate, then create or update. Resolves to the saved row, or null. W5 reuses it. */
-  const save = async (opts: { schedule?: boolean } = {}): Promise<AdminAnnouncement | null> => {
-    const found = validateForm(form, { schedule: opts.schedule });
+  /**
+   * Validate, then create or update. Resolves to the saved row, or null. The
+   * publish bar saves through it first. `inFlight` is a ref, not state, so a
+   * double click can't start a second create before the first returns.
+   */
+  const save = async (opts: { schedule?: boolean; publish?: boolean } = {}): Promise<AdminAnnouncement | null> => {
+    if (inFlight.current || uploadState.isLoading) return null;
+    const found = validateForm(form, { schedule: opts.schedule, publish: opts.publish });
     setErrors(found);
     setActionError("");
     setNotice("");
     if (Object.keys(found).length) return null;
+    inFlight.current = true;
     try {
       const body = toInput(form, liveOnly);
-      const saved: AdminAnnouncement = id
+      const result: AdminAnnouncement = id
         ? await updateAnnouncement({ id, ...body }).unwrap()
         : await createAnnouncement(body).unwrap();
-      if (!id) navigate(`/admin/announcements/${saved.id}`, { replace: true });
-      return saved;
+      baseline.current = snapshot(form);
+      setSaved(result);
+      if (!id) {
+        seededId.current = result.id;
+        onCreated(result.id);
+        navigate(`/admin/announcements/${result.id}`, { replace: true });
+      }
+      return result;
     } catch (err) {
       setActionError(errorMessage(err, t("admin.common.actionError") || "Something went wrong."));
       return null;
+    } finally {
+      inFlight.current = false;
     }
   };
 
@@ -141,7 +173,7 @@ const AdminAnnouncementEditor: React.FC = () => {
     return <p className="text-sm text-ink-500">{t("admin.common.loading") || "Loading…"}</p>;
   }
 
-  const busy = createState.isLoading || updateState.isLoading;
+  const busy = createState.isLoading || updateState.isLoading || uploadState.isLoading;
   const filled = (locale: string) => {
     const tr = form.translations[locale];
     return !!tr && (tr.title.trim() !== "" || tr.body.trim() !== "");
@@ -309,14 +341,26 @@ const AdminAnnouncementEditor: React.FC = () => {
           ) : null}
           {notice ? <p className="text-sm text-ink-600 dark:text-ink-300">{notice}</p> : null}
 
-          {!readOnly ? (
-            <div className="flex flex-wrap gap-2" data-testid="editor-actions">
+          <div className="flex flex-wrap items-center gap-2" data-testid="editor-actions">
+            {!readOnly ? (
               <button type="button" disabled={busy} onClick={onSave}
                 className="rounded-chip border border-line px-3 py-1.5 text-sm font-medium text-ink-700 hover:bg-ink-100 disabled:opacity-60 dark:border-line-dark dark:text-ink-200 dark:hover:bg-ink-800">
                 {status === "draft" ? t("admin.announcements.saveDraft") || "Save draft" : t("admin.announcements.save") || "Save"}
               </button>
-            </div>
-          ) : null}
+            ) : null}
+            <AnnouncementPublishBar
+              announcementId={id}
+              status={status}
+              notify={form.notify}
+              startsAtIso={fromLocalInput(form.startsAt)}
+              disabled={busy}
+              prepare={async (mode) => {
+                const result = await save({ schedule: mode === "schedule", publish: mode === "publish" });
+                return result ? result.id : null;
+              }}
+              onDone={(message) => setNotice(message)}
+            />
+          </div>
         </form>
 
         <aside>
@@ -332,6 +376,25 @@ const AdminAnnouncementEditor: React.FC = () => {
       </div>
     </div>
   );
+};
+
+/**
+ * Keyed by the announcement id, so Back/Forward between /new and an existing
+ * row (or between two rows) always starts from that row's own state -- reusing
+ * the old form would let a second "Save" create a duplicate. The one exception
+ * is this editor's own first save, which moves /new to the new id: that is the
+ * same editing session, so it keeps its key and the publish bar's open dialog.
+ */
+const AdminAnnouncementEditor: React.FC = () => {
+  const params = useParams<{ id: string }>();
+  const id = params.id && params.id !== "new" ? params.id : null;
+  const adopted = React.useRef<string | null>(null);
+  const last = React.useRef<{ id: string | null; key: number }>({ id, key: 0 });
+  if (last.current.id !== id) {
+    const ownCreate = last.current.id === null && id !== null && id === adopted.current;
+    last.current = { id, key: ownCreate ? last.current.key : last.current.key + 1 };
+  }
+  return <AnnouncementEditorBody key={last.current.key} id={id} onCreated={(created) => { adopted.current = created; }} />;
 };
 
 export default AdminAnnouncementEditor;
