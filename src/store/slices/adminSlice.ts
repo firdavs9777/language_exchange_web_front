@@ -124,6 +124,7 @@ export interface AdminReportRow {
 /** Announcements (spec 2026-10-12 §5.1/§5.3). Mirrors models/Announcement.js. */
 export type AnnouncementStatus = "draft" | "scheduled" | "live" | "ended";
 export type AnnouncementPlatform = "all" | "ios" | "android";
+export type AnnouncementDeliveryState = "none" | "queued" | "running" | "done" | "failed";
 
 export interface AnnouncementTranslation {
   title: string;
@@ -151,13 +152,19 @@ export interface AdminAnnouncement {
   publishedAt: string | null;
   endedAt: string | null;
   delivery: {
-    state: "none" | "queued" | "running" | "done" | "failed";
+    state: AnnouncementDeliveryState;
     targeted: number;
     pushed: number;
     listed: number;
     failed: number;
     startedAt: string | null;
     finishedAt: string | null;
+    /** Touched every batch while running; a run idle >10 min is taken over. */
+    heartbeatAt?: string | null;
+    /** Claims so far (first run, stale takeovers, failed retries); the job stops retrying at 3. */
+    attempts?: number;
+    /** Last failure message (cleared on the next claim). */
+    error?: string | null;
   };
   createdAt: string;
   updatedAt: string;

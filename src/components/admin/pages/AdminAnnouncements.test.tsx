@@ -86,3 +86,56 @@ it("shows an error state when the list fails, and a loading state while it loads
   renderPage();
   expect(screen.getByText("Loading…")).toBeInTheDocument();
 });
+
+it("shows delivery state, attempts and an exhausted failed send with its error", () => {
+  mockList.mockReturnValue(ok([
+    ROWS[0],
+    {
+      ...ROWS[0], id: "a3", _id: "a3", translations: { en: { title: "Broken send" } },
+      delivery: { state: "failed", targeted: 900, pushed: 120, listed: 300, failed: 0, attempts: 3, error: "FCM quota exceeded" },
+    },
+  ]));
+  renderPage();
+  expect(screen.getAllByTestId("delivery-state").map((n) => n.textContent)).toEqual(["Sent", "Failed"]);
+  expect(screen.getByText("Attempts 3/3")).toBeInTheDocument();
+  expect(screen.getByTestId("delivery-exhausted")).toHaveTextContent("Gave up after 3 attempts");
+  expect(screen.getByTestId("delivery-error")).toHaveTextContent("FCM quota exceeded");
+});
+
+it("a failed send still under the cap is not called exhausted", () => {
+  mockList.mockReturnValue(ok([{ ...ROWS[0], delivery: { state: "failed", attempts: 1, error: "boom", targeted: 1, pushed: 0, listed: 0, failed: 0 } }]));
+  renderPage();
+  expect(screen.getByText("Attempts 1/3")).toBeInTheDocument();
+  expect(screen.queryByTestId("delivery-exhausted")).not.toBeInTheDocument();
+});
+
+it("search filters loaded rows by any locale's title or body and lives in ?q=", () => {
+  renderPage();
+  fireEvent.change(screen.getByRole("searchbox", { name: "Search title or text" }), { target: { value: "study" } });
+  expect(screen.getByTestId("location")).toHaveTextContent("/admin/announcements?q=study");
+  expect(screen.getByText("🎉 Study Hub is here")).toBeInTheDocument();
+  expect(screen.queryByText("공지")).not.toBeInTheDocument();
+  // The search never goes to the server: it isn't a backend parameter.
+  expect(mockList).toHaveBeenLastCalledWith({});
+});
+
+it("empty states: none at all, none for a status, none matching a search", () => {
+  mockList.mockReturnValue(ok([]));
+  const first = renderPage();
+  expect(screen.getByText("No announcements yet.")).toBeInTheDocument();
+  first.unmount();
+  const second = renderPage("/admin/announcements?status=live");
+  expect(screen.getByText("No announcements with this status.")).toBeInTheDocument();
+  second.unmount();
+  mockList.mockReturnValue(ok(ROWS));
+  renderPage("/admin/announcements?q=nothing-like-this");
+  expect(screen.getByText("No announcements match this search.")).toBeInTheDocument();
+});
+
+it("the error state offers a retry", () => {
+  const refetch = jest.fn();
+  mockList.mockReturnValue(ok(undefined, { isError: true, refetch }));
+  renderPage();
+  fireEvent.click(screen.getByRole("button", { name: "Try again" }));
+  expect(refetch).toHaveBeenCalled();
+});

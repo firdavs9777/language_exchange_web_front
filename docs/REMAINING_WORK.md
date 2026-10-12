@@ -12,6 +12,11 @@ The full owner/launch checklist lives in the app repo: `bananatalk_app/docs/REMA
 - [x] W5 fix round 1: bar survives the first fetch of a just-created id; bar disabled until status refetches after publish/end
 - [x] Usable only after the backend announcements deploy (B1–B11) _(backend deployed 2026-10-12, 8bad823)_
 - [x] W4 note: PUT on a LIVE announcement sends only translations text, endsAt, priority (`toInput(form, liveOnly)`); ended rows are read-only
-- [ ] List page: show delivery state + attempts + error so an exhausted `failed` delivery (3 attempts) is visible (backend REMAINING_WORK item)
+- [x] List page: show delivery state + attempts + error so an exhausted `failed` delivery (3 attempts) is visible (backend REMAINING_WORK item) _(list cell + editor "Push delivery" panel, 2026-10-12 gap audit)_
+- [x] Gap audit 2026-10-12: client-side search (`?q=`, any locale's title/body), priority column, per-status and no-match empty states, retry on the list error, "Delete draft" with confirm (DELETE is draft-only), editor hint that language targeting can't reach live 2.6.1 users
+- [ ] Needs backend: manual "Retry delivery" for an exhausted `failed` send. No endpoint exists (only the minute job retries, max 3 attempts, while live); add e.g. `POST /admin/announcements/:id/retry-delivery` (reset attempts, state `queued`, audited), then a button in the delivery panel
+- [ ] Needs backend: server-side search and paging. `GET /admin/announcements` takes only `?status=` and returns the newest 200, so the console's search only covers those rows
+- [ ] Needs backend (optional): "Duplicate" / archive. Ended rows can't be edited or deleted and there is no archive state; re-running an ended announcement means creating a new one by hand
+- [ ] Owner: the language-targeting hint in the editor goes stale once the new app is the majority; drop or reword it then (backend item "Admin editor could say that language targeting can't reach live 2.6.1 users" is done on the web side)
 - [ ] Owner: first real announcement end-to-end (publish -> push -> notifications list -> in-app pop-up); QA matrix lives in the app repo (docs/qa/onboarding-matrix.md)
 - [ ] Announcement admin strings are English fallbacks (t(...) || "..."); add the admin.announcements.* keys when the admin console is localized

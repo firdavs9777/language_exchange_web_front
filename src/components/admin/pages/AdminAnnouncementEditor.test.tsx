@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AdminAnnouncementEditor from "./AdminAnnouncementEditor";
 
@@ -11,11 +11,13 @@ const mockGet = jest.fn();
 const mockCreate = jest.fn();
 const mockUpdate = jest.fn();
 const mockUpload = jest.fn();
+const mockDelete = jest.fn();
 jest.mock("../../../store/slices/adminSlice", () => ({
   useGetAnnouncementQuery: (...args: any[]) => mockGet(...args),
   useCreateAnnouncementMutation: () => mockCreate(),
   useUpdateAnnouncementMutation: () => mockUpdate(),
   useUploadAnnouncementImageMutation: () => mockUpload(),
+  useDeleteAnnouncementMutation: () => mockDelete(),
 }));
 
 jest.mock("../parts/AnnouncementPublishBar", () => ({
@@ -46,6 +48,7 @@ const LIVE = {
 let createTrigger: jest.Mock;
 let updateTrigger: jest.Mock;
 let uploadTrigger: jest.Mock;
+let deleteTrigger: jest.Mock;
 const resolved = (value: any) => jest.fn(() => ({ unwrap: () => Promise.resolve(value) }));
 
 const LocationProbe = () => <div data-testid="location">{useLocation().pathname}</div>;
@@ -63,6 +66,7 @@ const renderAt = (path: string) =>
     <MemoryRouter initialEntries={[path]}>
       <Routes>
         <Route path="/admin/announcements/:id" element={<><AdminAnnouncementEditor /><LocationProbe /><GoTo /></>} />
+        <Route path="/admin/announcements" element={<LocationProbe />} />
       </Routes>
     </MemoryRouter>
   );
@@ -76,6 +80,8 @@ beforeEach(() => {
   mockCreate.mockReset().mockReturnValue([createTrigger, { isLoading: false }]);
   mockUpdate.mockReset().mockReturnValue([updateTrigger, { isLoading: false }]);
   mockUpload.mockReset().mockReturnValue([uploadTrigger, { isLoading: false }]);
+  deleteTrigger = resolved({ id: "a1" });
+  mockDelete.mockReset().mockReturnValue([deleteTrigger, { isLoading: false }]);
 });
 
 it("new: Save draft with no text shows the default-language errors and sends nothing", () => {
@@ -269,4 +275,68 @@ it("while the new id's first fetch is loading, the publish bar stays mounted", a
   await waitFor(() => expect(screen.getByTestId("location")).toHaveTextContent("/admin/announcements/a9"));
   expect(screen.queryByText("Loading…")).toBeNull();
   expect(screen.getByTestId("publish-now")).toBeInTheDocument();
+});
+
+const DRAFT = { ...LIVE, status: "draft", startsAt: null };
+
+it("says that language targeting does not reach 2.6.1 users", () => {
+  renderAt("/admin/announcements/new");
+  expect(screen.getByTestId("language-hint")).toHaveTextContent("2.6.1");
+  expect(screen.getByTestId("language-hint")).toHaveTextContent("all languages");
+});
+
+it("a saved draft can be deleted after confirming; the editor returns to the list", async () => {
+  mockGet.mockReturnValue({ data: DRAFT, isLoading: false, isError: false });
+  renderAt("/admin/announcements/a1");
+  fireEvent.click(screen.getByRole("button", { name: "Delete draft" }));
+  expect(deleteTrigger).not.toHaveBeenCalled();
+  const dialog = screen.getByRole("dialog");
+  fireEvent.click(within(dialog).getByRole("button", { name: "Delete draft" }));
+  await waitFor(() => expect(deleteTrigger).toHaveBeenCalledWith("a1"));
+  await waitFor(() => expect(screen.getByTestId("location")).toHaveTextContent(/^\/admin\/announcements$/));
+});
+
+it("a refused delete shows the server message in the dialog", async () => {
+  mockGet.mockReturnValue({ data: DRAFT, isLoading: false, isError: false });
+  deleteTrigger = jest.fn(() => ({ unwrap: () => Promise.reject({ data: { message: "Only a draft can be deleted; end it instead" } }) }));
+  mockDelete.mockReturnValue([deleteTrigger, { isLoading: false }]);
+  renderAt("/admin/announcements/a1");
+  fireEvent.click(screen.getByRole("button", { name: "Delete draft" }));
+  fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Delete draft" }));
+  expect(await screen.findByText("Only a draft can be deleted; end it instead")).toBeInTheDocument();
+});
+
+it("Delete is offered only for a saved draft", () => {
+  const first = renderAt("/admin/announcements/new");
+  expect(screen.queryByRole("button", { name: "Delete draft" })).not.toBeInTheDocument();
+  first.unmount();
+  mockGet.mockReturnValue({ data: LIVE, isLoading: false, isError: false });
+  renderAt("/admin/announcements/a1");
+  expect(screen.queryByRole("button", { name: "Delete draft" })).not.toBeInTheDocument();
+});
+
+it("shows the push delivery panel with attempts and an exhausted failure", () => {
+  mockGet.mockReturnValue({
+    data: { ...LIVE, notify: true, delivery: { ...LIVE.delivery, state: "failed", targeted: 50, pushed: 10, attempts: 3, error: "FCM down" } },
+    isLoading: false, isError: false,
+  });
+  renderAt("/admin/announcements/a1");
+  const panel = screen.getByTestId("delivery-panel");
+  expect(within(panel).getByTestId("delivery-state")).toHaveTextContent("Failed");
+  expect(panel).toHaveTextContent("Attempts 3/3");
+  expect(within(panel).getByTestId("delivery-error")).toHaveTextContent("FCM down");
+  expect(within(panel).getByTestId("delivery-exhausted")).toHaveTextContent("Gave up after 3 attempts");
+});
+
+it("a live failed send under the cap says the job retries it; no panel without notify", () => {
+  mockGet.mockReturnValue({
+    data: { ...LIVE, notify: true, delivery: { ...LIVE.delivery, state: "failed", attempts: 1, error: "x" } },
+    isLoading: false, isError: false,
+  });
+  const first = renderAt("/admin/announcements/a1");
+  expect(screen.getByTestId("delivery-note")).toHaveTextContent("retries");
+  first.unmount();
+  mockGet.mockReturnValue({ data: LIVE, isLoading: false, isError: false });
+  renderAt("/admin/announcements/a1");
+  expect(screen.queryByTestId("delivery-panel")).not.toBeInTheDocument();
 });

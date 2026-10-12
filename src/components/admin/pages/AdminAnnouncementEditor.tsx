@@ -6,11 +6,14 @@ import {
   useCreateAnnouncementMutation,
   useUpdateAnnouncementMutation,
   useUploadAnnouncementImageMutation,
+  useDeleteAnnouncementMutation,
   AdminAnnouncement,
 } from "../../../store/slices/adminSlice";
 import { Badge } from "../../../design";
 import AnnouncementPreview from "../parts/AnnouncementPreview";
 import AnnouncementPublishBar from "../parts/AnnouncementPublishBar";
+import AnnouncementDeliveryStatus from "../parts/AnnouncementDeliveryStatus";
+import ConfirmDialog from "../parts/ConfirmDialog";
 import {
   ANNOUNCEMENT_LOCALES,
   ANNOUNCEMENT_LIMITS,
@@ -32,7 +35,8 @@ import {
  * `/admin/announcements/new` creates a draft; after the first save the URL
  * moves to the real id (replace, so Back returns to the list). What may be
  * edited follows the backend: draft/scheduled everything, live only text,
- * end time and priority, ended nothing.
+ * end time and priority, ended nothing. Only a draft can be deleted (the
+ * backend refuses the rest: end it instead).
  */
 
 const errorMessage = (err: any, fallback: string): string =>
@@ -59,6 +63,9 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
   const [createAnnouncement, createState] = useCreateAnnouncementMutation();
   const [updateAnnouncement, updateState] = useUpdateAnnouncementMutation();
   const [uploadImage, uploadState] = useUploadAnnouncementImageMutation();
+  const [deleteAnnouncement, deleteState] = useDeleteAnnouncementMutation();
+  const [confirmDelete, setConfirmDelete] = React.useState(false);
+  const [deleteError, setDeleteError] = React.useState("");
 
   // The row this editor just saved. It stands in for the fetched row so that the
   // editor (and the publish bar's open dialog) never flashes to "Loading…" in the
@@ -162,6 +169,21 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
     }
   };
 
+  const onDelete = async () => {
+    if (!id || inFlight.current) return;
+    inFlight.current = true;
+    setDeleteError("");
+    try {
+      await deleteAnnouncement(id).unwrap();
+      setConfirmDelete(false);
+      navigate("/admin/announcements", { replace: true });
+    } catch (err) {
+      setDeleteError(errorMessage(err, t("admin.common.actionError") || "Something went wrong."));
+    } finally {
+      inFlight.current = false;
+    }
+  };
+
   if (id && existing.isError) {
     return (
       <p role="alert" className="rounded-card border border-line p-4 text-sm text-red-600 dark:border-line-dark">
@@ -173,7 +195,7 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
     return <p className="text-sm text-ink-500">{t("admin.common.loading") || "Loading…"}</p>;
   }
 
-  const busy = createState.isLoading || updateState.isLoading || uploadState.isLoading;
+  const busy = createState.isLoading || updateState.isLoading || uploadState.isLoading || deleteState.isLoading;
   const filled = (locale: string) => {
     const tr = form.translations[locale];
     return !!tr && (tr.title.trim() !== "" || tr.body.trim() !== "");
@@ -299,6 +321,10 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
                 </label>
               ))}
             </div>
+            <p data-testid="language-hint" className="mt-1 text-xs text-ink-500">
+              {t("admin.announcements.languageHint") ||
+                "Language targeting only reaches the new app. People on app 2.6.1 (most users today) only get announcements sent to all languages, so pick no language to reach everyone."}
+            </p>
           </fieldset>
 
           <div className="grid gap-4 sm:grid-cols-3">
@@ -360,7 +386,30 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
               }}
               onDone={(message) => setNotice(message)}
             />
+            {id && status === "draft" ? (
+              <button type="button" disabled={busy} onClick={() => { setDeleteError(""); setConfirmDelete(true); }}
+                className="ml-auto rounded-chip border border-red-300 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-60">
+                {t("admin.announcements.deleteDraft") || "Delete draft"}
+              </button>
+            ) : null}
           </div>
+
+          {doc && (doc.notify || (doc.delivery && doc.delivery.state !== "none")) ? (
+            <AnnouncementDeliveryStatus row={doc} />
+          ) : null}
+
+          <ConfirmDialog
+            open={confirmDelete}
+            title={t("admin.announcements.deleteTitle") || "Delete this draft?"}
+            body={t("admin.announcements.deleteBody") || "The draft and its text are removed for good. Nobody has seen it."}
+            confirmLabel={t("admin.announcements.deleteDraft") || "Delete draft"}
+            cancelLabel={t("admin.common.cancel") || "Cancel"}
+            danger
+            busy={deleteState.isLoading}
+            error={deleteError || undefined}
+            onConfirm={() => { onDelete(); }}
+            onCancel={() => setConfirmDelete(false)}
+          />
         </form>
 
         <aside>

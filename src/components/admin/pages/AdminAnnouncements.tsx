@@ -5,18 +5,18 @@ import { useListAnnouncementsQuery } from "../../../store/slices/adminSlice";
 import { Badge } from "../../../design";
 import DataTable from "../parts/DataTable";
 import RefreshButton from "../parts/RefreshButton";
-import { targetingSummary, defaultTitle } from "../parts/announcementForm";
+import AnnouncementDeliveryStatus from "../parts/AnnouncementDeliveryStatus";
+import { targetingSummary, defaultTitle, matchesSearch } from "../parts/announcementForm";
 
 /**
  * Every announcement, newest first, with what it targets and what its send
  * did. The status filter lives in `?status=` (like AdminContent's `?tab=`)
- * so a refresh or a pasted link lands on the same view.
+ * so a refresh or a pasted link lands on the same view, and so does the
+ * search (`?q=`). The search is client-side over the rows already loaded: the
+ * backend has no search parameter and returns the newest 200.
  */
 
 const FILTERS = ["all", "draft", "scheduled", "live", "ended"];
-
-const num = (value: any): string =>
-  typeof value === "number" && isFinite(value) ? value.toLocaleString("en-US") : "—";
 
 const formatWhen = (value: any): string => {
   if (!value) return "—";
@@ -32,7 +32,9 @@ const AdminAnnouncements: React.FC = () => {
   const status = FILTERS.indexOf(requested) >= 0 ? requested : "all";
 
   const list = useListAnnouncementsQuery(status === "all" ? {} : { status });
-  const rows: any[] = Array.isArray(list.data) ? list.data : [];
+  const query = searchParams.get("q") || "";
+  const loaded: any[] = Array.isArray(list.data) ? list.data : [];
+  const rows = query.trim() ? loaded.filter((row) => matchesSearch(row, query)) : loaded;
 
   const filterLabel = (value: string): string => {
     if (value === "all") return t("admin.announcements.all") || "All";
@@ -40,6 +42,13 @@ const AdminAnnouncements: React.FC = () => {
     if (value === "scheduled") return t("admin.announcements.scheduled") || "Scheduled";
     if (value === "live") return t("admin.announcements.live") || "Live";
     return t("admin.announcements.ended") || "Ended";
+  };
+
+  const setQuery = (value: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (value) params.set("q", value);
+    else params.delete("q");
+    setSearchParams(params, { replace: true });
   };
 
   const selectFilter = (value: string) => {
@@ -82,13 +91,16 @@ const AdminAnnouncements: React.FC = () => {
         `${formatWhen(row.startsAt)} → ${row.endsAt ? formatWhen(row.endsAt) : t("admin.announcements.noEnd") || "no end"}`,
     },
     {
-      key: "delivery",
-      header: t("admin.announcements.deliveryHeader") || "Targeted / pushed / listed / failed",
+      key: "priority",
+      header: t("admin.announcements.priority") || "Priority",
       className: "text-right tabular-nums",
-      render: (row: any) => {
-        const d = row.delivery || {};
-        return row.notify ? `${num(d.targeted)} / ${num(d.pushed)} / ${num(d.listed)} / ${num(d.failed)}` : "—";
-      },
+      render: (row: any) => (typeof row.priority === "number" ? String(row.priority) : "0"),
+    },
+    {
+      key: "delivery",
+      header: t("admin.announcements.deliveryHeader") || "Push: targeted / pushed / listed / failed",
+      className: "text-right",
+      render: (row: any) => <AnnouncementDeliveryStatus row={row} compact />,
     },
   ];
 
@@ -121,7 +133,7 @@ const AdminAnnouncements: React.FC = () => {
         </div>
       </header>
 
-      <div className="flex flex-wrap gap-2" aria-label={t("admin.announcements.filter") || "Filter by status"}>
+      <div className="flex flex-wrap items-center gap-2" aria-label={t("admin.announcements.filter") || "Filter by status"}>
         {FILTERS.map((value) => (
           <button
             key={value}
@@ -133,11 +145,22 @@ const AdminAnnouncements: React.FC = () => {
             {filterLabel(value)}
           </button>
         ))}
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          aria-label={t("admin.announcements.search") || "Search title or text"}
+          placeholder={t("admin.announcements.searchPlaceholder") || "Search title or text…"}
+          className="ml-auto w-full rounded-card border border-line bg-white px-3 py-1.5 text-sm text-ink-900 sm:w-64 dark:border-line-dark dark:bg-ink-900 dark:text-ink-50"
+        />
       </div>
 
       {list.isError ? (
         <p role="alert" className="rounded-card border border-line p-4 text-sm text-red-600 dark:border-line-dark">
-          {t("admin.announcements.loadError") || "Couldn't load announcements."}
+          {t("admin.announcements.loadError") || "Couldn't load announcements."}{" "}
+          <button type="button" className="font-medium underline" onClick={() => list.refetch()}>
+            {t("admin.common.retry") || "Try again"}
+          </button>
         </p>
       ) : list.isLoading ? (
         <p className="text-sm text-ink-500">{t("admin.common.loading") || "Loading…"}</p>
@@ -147,7 +170,13 @@ const AdminAnnouncements: React.FC = () => {
           rows={rows}
           rowKey="id"
           onRowClick={(row: any) => navigate(`/admin/announcements/${row.id}`)}
-          emptyText={t("admin.announcements.empty") || "No announcements yet."}
+          emptyText={
+            query.trim()
+              ? t("admin.announcements.noMatch") || "No announcements match this search."
+              : status !== "all"
+                ? t("admin.announcements.emptyStatus") || "No announcements with this status."
+                : t("admin.announcements.empty") || "No announcements yet."
+          }
         />
       )}
     </div>
