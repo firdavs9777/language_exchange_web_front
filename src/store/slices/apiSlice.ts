@@ -188,6 +188,10 @@ export const apiSlice = createApi({
     "AdminContentStats",
     "AdminMoments",
     "AdminReports",
+    // Admin announcements (spec 2026-10-12 §5.3): the list, and one per id
+    // for the editor, so saving one announcement doesn't refetch another.
+    "AdminAnnouncements",
+    "AdminAnnouncement",
   ],
   refetchOnFocus: false,
   refetchOnReconnect: true,

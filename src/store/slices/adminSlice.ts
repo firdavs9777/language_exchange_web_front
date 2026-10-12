@@ -121,6 +121,70 @@ export interface AdminReportRow {
   updatedAt: string;
 }
 
+/** Announcements (spec 2026-10-12 §5.1/§5.3). Mirrors models/Announcement.js. */
+export type AnnouncementStatus = "draft" | "scheduled" | "live" | "ended";
+export type AnnouncementPlatform = "all" | "ios" | "android";
+
+export interface AnnouncementTranslation {
+  title: string;
+  body: string;
+  buttonLabel?: string;
+}
+
+/** A row of `GET /admin/announcements` (translations flattened to an object). */
+export interface AdminAnnouncement {
+  id: string;
+  _id: string;
+  status: AnnouncementStatus;
+  priority: number;
+  translations: { [locale: string]: AnnouncementTranslation };
+  defaultLocale: string;
+  emoji: string | null;
+  imageUrl: string | null;
+  buttonUrl: string | null;
+  platforms: AnnouncementPlatform[];
+  languages: string[];
+  startsAt: string | null;
+  endsAt: string | null;
+  showInApp: boolean;
+  notify: boolean;
+  publishedAt: string | null;
+  endedAt: string | null;
+  delivery: {
+    state: "none" | "queued" | "running" | "done" | "failed";
+    targeted: number;
+    pushed: number;
+    listed: number;
+    failed: number;
+    startedAt: string | null;
+    finishedAt: string | null;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** `POST`/`PUT /admin/announcements` body — anything absent is unchanged. */
+export interface AnnouncementInput {
+  translations?: { [locale: string]: AnnouncementTranslation };
+  defaultLocale?: string;
+  emoji?: string;
+  imageUrl?: string | null;
+  buttonUrl?: string | null;
+  platforms?: AnnouncementPlatform[];
+  languages?: string[];
+  startsAt?: string | null;
+  endsAt?: string | null;
+  showInApp?: boolean;
+  notify?: boolean;
+  priority?: number;
+}
+
+/** `GET /admin/announcements/:id/audience-count`: push audience and list audience. */
+export interface AudienceCount {
+  count: number;
+  listed: number;
+}
+
 /**
  * The admin console's data layer: one endpoint per route in the backend's
  * `routes/admin.js`, and nothing the backend doesn't serve. Every route below
@@ -497,6 +561,83 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       query: () => ({ url: `${ADMIN_URL}/analytics/visits` }),
       transformResponse: unwrap,
     }),
+
+    // --- Announcements (spec 2026-10-12 §5.3) --------------------------------
+    // Writes are never retried: a publish that silently repeats is a second
+    // push to every user (the backend dedupes per user, but it should never
+    // have to).
+    listAnnouncements: builder.query({
+      query: (arg: { status?: AnnouncementStatus } = {}) => ({
+        url: `${ADMIN_URL}/announcements`,
+        params: params(arg),
+      }),
+      transformResponse: unwrap,
+      providesTags: ["AdminAnnouncements"],
+    }),
+    getAnnouncement: builder.query({
+      query: (id: string) => ({ url: `${ADMIN_URL}/announcements/${id}` }),
+      transformResponse: unwrap,
+      providesTags: (_r: any, _e: any, id: string) => [{ type: "AdminAnnouncement", id }],
+    }),
+    createAnnouncement: builder.mutation({
+      query: (body: AnnouncementInput) => ({ url: `${ADMIN_URL}/announcements`, method: "POST", body }),
+      transformResponse: unwrap,
+      extraOptions: { maxRetries: 0 },
+      invalidatesTags: ["AdminAnnouncements"],
+    }),
+    updateAnnouncement: builder.mutation({
+      query: ({ id, ...body }: { id: string } & AnnouncementInput) => ({
+        url: `${ADMIN_URL}/announcements/${id}`,
+        method: "PUT",
+        body,
+      }),
+      transformResponse: unwrap,
+      extraOptions: { maxRetries: 0 },
+      invalidatesTags: (_r: any, _e: any, arg: { id: string }) => [
+        { type: "AdminAnnouncement", id: arg.id },
+        "AdminAnnouncements",
+      ],
+    }),
+    publishAnnouncement: builder.mutation({
+      query: ({ id, at }: { id: string; at?: string }) => ({
+        url: `${ADMIN_URL}/announcements/${id}/publish`,
+        method: "POST",
+        body: at ? { at } : {},
+      }),
+      transformResponse: unwrap,
+      extraOptions: { maxRetries: 0 },
+      invalidatesTags: (_r: any, _e: any, arg: { id: string }) => [
+        { type: "AdminAnnouncement", id: arg.id },
+        "AdminAnnouncements",
+      ],
+    }),
+    endAnnouncement: builder.mutation({
+      query: (id: string) => ({ url: `${ADMIN_URL}/announcements/${id}/end`, method: "POST" }),
+      transformResponse: unwrap,
+      extraOptions: { maxRetries: 0 },
+      invalidatesTags: (_r: any, _e: any, id: string) => [{ type: "AdminAnnouncement", id }, "AdminAnnouncements"],
+    }),
+    deleteAnnouncement: builder.mutation({
+      query: (id: string) => ({ url: `${ADMIN_URL}/announcements/${id}`, method: "DELETE" }),
+      transformResponse: unwrap,
+      extraOptions: { maxRetries: 0 },
+      invalidatesTags: ["AdminAnnouncements"],
+    }),
+    // Asked right before the confirm dialog; never served from cache.
+    getAnnouncementAudience: builder.query({
+      query: (id: string) => ({ url: `${ADMIN_URL}/announcements/${id}/audience-count` }),
+      transformResponse: unwrap,
+      keepUnusedDataFor: 0,
+    }),
+    uploadAnnouncementImage: builder.mutation({
+      query: (file: File) => {
+        const form = new FormData();
+        form.append("image", file);
+        return { url: `${ADMIN_URL}/announcements/upload-image`, method: "POST", body: form };
+      },
+      transformResponse: unwrap,
+      extraOptions: { maxRetries: 0 },
+    }),
   }),
 });
 
@@ -528,4 +669,13 @@ export const {
   useDismissReportMutation,
   useGetAnalyticsEventsQuery,
   useGetAnalyticsVisitsQuery,
+  useListAnnouncementsQuery,
+  useGetAnnouncementQuery,
+  useCreateAnnouncementMutation,
+  useUpdateAnnouncementMutation,
+  usePublishAnnouncementMutation,
+  useEndAnnouncementMutation,
+  useDeleteAnnouncementMutation,
+  useLazyGetAnnouncementAudienceQuery,
+  useUploadAnnouncementImageMutation,
 } = adminApiSlice;
