@@ -1,6 +1,7 @@
 import {
   ANNOUNCEMENT_LOCALES, emptyForm, fromAnnouncement, toInput, validateForm,
   toLocalInput, fromLocalInput, targetingSummary, AnnouncementForm,
+  deliveryInfo, matchesSearch, MAX_DELIVERY_ATTEMPTS,
 } from "./announcementForm";
 
 const filled = (over: Partial<AnnouncementForm> = {}): AnnouncementForm => ({
@@ -121,4 +122,26 @@ it("publishing now: an end time that is already past is caught before the reques
 it("emoji length is checked on the trimmed value", () => {
   expect(validateForm(filled({ emoji: "  " + "a".repeat(16) + "  " })).emoji).toBeUndefined();
   expect(validateForm(filled({ emoji: "a".repeat(17) })).emoji).toBeTruthy();
+});
+
+it("deliveryInfo: failed under the cap is retried only while live; at the cap it is exhausted", () => {
+  expect(MAX_DELIVERY_ATTEMPTS).toBe(3);
+  expect(deliveryInfo({ status: "draft" })).toEqual({ state: "none", attempts: 0, error: "", exhausted: false, retrying: false });
+  const failedOnce = { state: "failed", attempts: 1, error: "fcm down" };
+  expect(deliveryInfo({ status: "live", delivery: failedOnce })).toMatchObject({ retrying: true, exhausted: false, error: "fcm down" });
+  expect(deliveryInfo({ status: "ended", delivery: failedOnce })).toMatchObject({ retrying: false, exhausted: false });
+  expect(deliveryInfo({ status: "live", delivery: { state: "failed", attempts: 3, error: "x" } }))
+    .toMatchObject({ retrying: false, exhausted: true, attempts: 3 });
+  expect(deliveryInfo({ status: "live", delivery: { state: "done", attempts: 1, error: null } }))
+    .toMatchObject({ state: "done", exhausted: false, error: "" });
+});
+
+it("matchesSearch looks at every locale's title and body, case-insensitively", () => {
+  const a = { translations: { en: { title: "Study Hub", body: "New daily pack" }, ko: { title: "공지", body: "새 소식" } } };
+  expect(matchesSearch(a, "")).toBe(true);
+  expect(matchesSearch(a, "  hub ")).toBe(true);
+  expect(matchesSearch(a, "DAILY")).toBe(true);
+  expect(matchesSearch(a, "소식")).toBe(true);
+  expect(matchesSearch(a, "calls")).toBe(false);
+  expect(matchesSearch({}, "x")).toBe(false);
 });

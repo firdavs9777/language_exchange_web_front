@@ -205,3 +205,56 @@ export const defaultTitle = (a: { translations?: { [l: string]: { title: string 
   const t = a.translations && a.defaultLocale ? a.translations[a.defaultLocale] : null;
   return (t && t.title) || "";
 };
+
+/** services/announcementDelivery.js MAX_ATTEMPTS: the minute job stops retrying after this many claims. */
+export const MAX_DELIVERY_ATTEMPTS = 3;
+
+export interface DeliveryInfo {
+  state: string;
+  attempts: number;
+  error: string;
+  /** `failed` with no retries left: nothing will send the rest without a new announcement. */
+  exhausted: boolean;
+  /** `failed` that the minute job will still retry (only while live and under the cap). */
+  retrying: boolean;
+}
+
+/** What the delivery block of a row says, independent of how it is drawn. */
+export const deliveryInfo = (a: {
+  status?: string;
+  delivery?: { state?: string; attempts?: number; error?: string | null } | null;
+}): DeliveryInfo => {
+  const d = a.delivery || {};
+  const state = d.state || "none";
+  const attempts = typeof d.attempts === "number" && isFinite(d.attempts) ? d.attempts : 0;
+  const failed = state === "failed";
+  const exhausted = failed && attempts >= MAX_DELIVERY_ATTEMPTS;
+  return {
+    state,
+    attempts,
+    error: d.error ? String(d.error) : "",
+    exhausted,
+    retrying: failed && !exhausted && a.status === "live",
+  };
+};
+
+/**
+ * Client-side search over what the list already loaded (the backend has no
+ * search parameter and returns at most 200 rows): any locale's title or body,
+ * case-insensitive. Blank matches everything.
+ */
+export const matchesSearch = (
+  a: { translations?: { [l: string]: { title?: string; body?: string } } },
+  query: string
+): boolean => {
+  const q = query.trim().toLowerCase();
+  if (!q) return true;
+  const translations = a.translations || {};
+  return Object.keys(translations).some((locale) => {
+    const tr = translations[locale] || {};
+    return (
+      String(tr.title || "").toLowerCase().indexOf(q) >= 0 ||
+      String(tr.body || "").toLowerCase().indexOf(q) >= 0
+    );
+  });
+};
