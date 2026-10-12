@@ -19,6 +19,7 @@ const SECTIONS: { to: string; key: string; label: string; end?: boolean }[] = [
   { to: "/admin/reach", key: "admin.nav.reach", label: "Reach" },
   { to: "/admin/users", key: "admin.nav.users", label: "Users" },
   { to: "/admin/content", key: "admin.nav.content", label: "Content" },
+  { to: "/admin/announcements", key: "admin.nav.announcements", label: "Announcements" },
   { to: "/admin/ai-usage", key: "admin.nav.aiUsage", label: "AI usage" },
   { to: "/admin/audit", key: "admin.nav.audit", label: "Audit log" },
 ];

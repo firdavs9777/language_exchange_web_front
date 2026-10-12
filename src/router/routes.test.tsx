@@ -49,7 +49,7 @@ it("puts an error boundary on the root route", () => {
 // import until something renders it, and nothing prerenders /admin.
 it("matches the admin console paths to real routes, not the catch-all", () => {
   const { routes } = require("./routes");
-  for (const path of ["/admin", "/admin/reach", "/admin/users", "/admin/content", "/admin/ai-usage", "/admin/audit"]) {
+  for (const path of ["/admin", "/admin/reach", "/admin/users", "/admin/content", "/admin/ai-usage", "/admin/audit", "/admin/announcements"]) {
     const matches = matchRoutes(routes, path);
     expect(matches && matches.length).toBe(3); // App -> AdminLayout -> page
     for (const m of matches!) {
