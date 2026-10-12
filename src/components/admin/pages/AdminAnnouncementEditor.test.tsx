@@ -254,3 +254,19 @@ it("Save is disabled while an image uploads", () => {
   expect(screen.getByRole("button", { name: "Save draft" })).toBeDisabled();
   expect(screen.getByTestId("publish-bar")).toBeDisabled();
 });
+
+it("while the new id's first fetch is loading, the publish bar stays mounted", async () => {
+  mockGet.mockReturnValue({ data: undefined, isLoading: true, isError: false });
+  createTrigger = resolved({
+    ...LIVE, id: "a9", status: "draft", translations: { en: { title: "Hello", body: "World", buttonLabel: "" } },
+  });
+  mockCreate.mockReturnValue([createTrigger, { isLoading: false }]);
+  renderAt("/admin/announcements/new");
+  fireEvent.change(screen.getByLabelText("Title"), { target: { value: "Hello" } });
+  fireEvent.change(screen.getByLabelText("Body"), { target: { value: "World" } });
+  fireEvent.click(screen.getByTestId("publish-now"));
+  await waitFor(() => expect(mockPrepared).toEqual([["publish", "a9"]]));
+  await waitFor(() => expect(screen.getByTestId("location")).toHaveTextContent("/admin/announcements/a9"));
+  expect(screen.queryByText("Loading…")).toBeNull();
+  expect(screen.getByTestId("publish-now")).toBeInTheDocument();
+});

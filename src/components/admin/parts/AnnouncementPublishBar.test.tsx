@@ -166,3 +166,15 @@ it("actions are disabled while the editor says it is busy (image upload)", () =>
   expect(screen.getByRole("button", { name: "Publish now" })).toBeDisabled();
   expect(screen.getByRole("button", { name: "Schedule" })).toBeDisabled();
 });
+
+it("after a successful publish the actions stay disabled until the status changes", async () => {
+  const view = renderBar({ notify: false });
+  fireEvent.click(screen.getByRole("button", { name: "Publish now" }));
+  await waitFor(() => expect(onDone).toHaveBeenCalled());
+  expect(screen.getByRole("button", { name: "Publish now" })).toBeDisabled();
+  view.rerender(
+    <AnnouncementPublishBar announcementId="a1" status="live" notify={false}
+      startsAtIso={null} prepare={prepare} onDone={onDone} />
+  );
+  expect(screen.getByRole("button", { name: "End now" })).not.toBeDisabled();
+});

@@ -169,7 +169,7 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
       </p>
     );
   }
-  if (id && (existing.isLoading || !doc)) {
+  if (id && !doc) {
     return <p className="text-sm text-ink-500">{t("admin.common.loading") || "Loading…"}</p>;
   }
 
@@ -388,13 +388,16 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
 const AdminAnnouncementEditor: React.FC = () => {
   const params = useParams<{ id: string }>();
   const id = params.id && params.id !== "new" ? params.id : null;
+  const [session, setSession] = React.useState<{ id: string | null; key: number }>({ id, key: 0 });
   const adopted = React.useRef<string | null>(null);
-  const last = React.useRef<{ id: string | null; key: number }>({ id, key: 0 });
-  if (last.current.id !== id) {
-    const ownCreate = last.current.id === null && id !== null && id === adopted.current;
-    last.current = { id, key: ownCreate ? last.current.key : last.current.key + 1 };
+  if (session.id !== id) {
+    // State derived from the previous render: a new key unless this is the
+    // editor's own first save moving /new to the id it just created.
+    const ownCreate = session.id === null && id !== null && id === adopted.current;
+    adopted.current = null;
+    setSession({ id, key: ownCreate ? session.key : session.key + 1 });
   }
-  return <AnnouncementEditorBody key={last.current.key} id={id} onCreated={(created) => { adopted.current = created; }} />;
+  return <AnnouncementEditorBody key={session.key} id={id} onCreated={(created) => { adopted.current = created; }} />;
 };
 
 export default AdminAnnouncementEditor;

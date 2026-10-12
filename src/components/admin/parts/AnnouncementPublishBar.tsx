@@ -50,6 +50,10 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
   const [working, setWorking] = React.useState(false);
   const [error, setError] = React.useState("");
   const [dialogError, setDialogError] = React.useState("");
+  // After a successful action the buttons stay off until the refetched status
+  // (or start time) arrives, so Publish now can't be clicked again in the gap.
+  const [finished, setFinished] = React.useState(false);
+  React.useEffect(() => { setFinished(false); }, [status, startsAtIso]);
   // Synchronous: state updates land a render late, so a fast second click would
   // otherwise slip through before `busy` disables the button.
   const inFlight = React.useRef(false);
@@ -76,6 +80,7 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
         // No push: nothing irreversible reaches anyone's phone, so no dialog.
         try {
           await publish({ id, at: atFor(mode) }).unwrap();
+          setFinished(true);
           onDone(doneMessage(mode));
         } catch (err) {
           setError(errorMessage(err, fallback));
@@ -103,10 +108,12 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
         const mode = pending.mode;
         await publish({ id: pending.id, at: atFor(mode) }).unwrap();
         setPending(null);
+        setFinished(true);
         onDone(doneMessage(mode));
       } else {
         await end(pending.id).unwrap();
         setPending(null);
+        setFinished(true);
         onDone(t("admin.announcements.endedDone") || "Ended.");
       }
     } catch (err) {
@@ -116,7 +123,7 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
     }
   };
 
-  const busy = disabled || working || publishState.isLoading || endState.isLoading;
+  const busy = disabled || finished || working || publishState.isLoading || endState.isLoading;
   const buttonClass = "rounded-chip px-3 py-1.5 text-sm font-medium disabled:opacity-60";
 
   const dialogBody = () => {
