@@ -184,3 +184,10 @@ it("routes old /moments/:id links to the redirect without touching /moments or /
   expect(last("/moments/saved").path).toBe("moments/saved");
   expect(last("/moments").path).toBe("moments");
 });
+
+it("routes /announcement/:id to its own page, not the catch-all", () => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, "/announcement/abc");
+  expect(matches && matches.length).toBe(2);
+  expect(matches![1].route.path).toBe("announcement/:id");
+});

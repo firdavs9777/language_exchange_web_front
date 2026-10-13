@@ -81,6 +81,9 @@ const EditMyMoment = lazyWithRetry("../components/profile/EditMyMoment", () => i
 const CreateMoment = lazyWithRetry("../components/moments/CreateMoment", () => import("../components/moments/CreateMoment"));
 const SavedMoments = lazyWithRetry("../components/moments/SavedMoments", () => import("../components/moments/SavedMoments"));
 
+// Full announcement page (login required; opened from "read more" links)
+const AnnouncementPage = lazyWithRetry("../components/announcements/AnnouncementPage", () => import("../components/announcements/AnnouncementPage"));
+
 // Chat. The heaviest group: socket plumbing, media galleries, emoji.
 const MainChat = lazyWithRetry("../components/chat/MainChat", () => import("../components/chat/MainChat"));
 const NewChat = lazyWithRetry("../components/chat/NewChat", () => import("../components/chat/NewChat"));
@@ -199,6 +202,7 @@ export const routes = createRoutesFromElements(
     <Route path="card/:userId" element={lazyRoute(<LanguageCard />)} />
     <Route path="moments" element={<MainMoments />} />
     <Route path="moment/:id" element={<MomentDetail />} />
+    <Route path="announcement/:id" element={lazyRoute(<AnnouncementPage />)} />
     <Route path="add-moment" element={lazyRoute(<CreateMoment />)} />
     <Route path="edit-moment/:id" element={lazyRoute(<EditMyMoment />)} />
     <Route path="my-moments" element={lazyRoute(<MyMoments />)} />
