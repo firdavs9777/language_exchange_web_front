@@ -26,6 +26,12 @@ backend `language_exchange_backend_application/docs/REMAINING_WORK.md` (server e
 
 ## 4. Code work — open
 
+Web announcements (plan 2026-10-13)
+- [x] Data layer: app-config `platform`/`lang` args, `webTargetFor` link mapping, dismissals storage, `useWebAnnouncements` hook.
+- [ ] Popup component + banner component (render `popup` / `banner` from the hook).
+- [ ] Mount in the app shell and route `/announcement/:id` if the link mapper's target needs a page.
+- [ ] Localize any fixed strings; QA against a live backend announcement.
+
 Announcements console
 - [ ] "Retry delivery" button for an exhausted `failed` send — needs the backend endpoint first (backend file). S
 - [ ] Server-side search + paging — needs backend support (today the console searches the newest 200 client-side). S
