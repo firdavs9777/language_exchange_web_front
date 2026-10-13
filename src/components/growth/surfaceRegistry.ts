@@ -34,3 +34,7 @@ export function _resetSurfacesForTests(): void {
   open.clear();
   listeners.clear();
 }
+
+export function isSurfaceOpen(key: string): boolean {
+  return open.has(key);
+}

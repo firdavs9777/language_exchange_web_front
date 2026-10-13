@@ -18,6 +18,7 @@ const ConsentBar: React.FC = () => {
   const { state, accept, decline } = useConsentChoice();
   const [manage, setManage] = useState(false);
   const popupOpen = useSurfaceOpen("download-popup");
+  const annOpen = useSurfaceOpen("announcement-popup");
   const closeManage = useCallback(() => setManage(false), []);
 
   // The footer link, the settings row and the policy page all reach the
@@ -66,7 +67,7 @@ const ConsentBar: React.FC = () => {
     );
   }
 
-  if (state !== null || popupOpen) return null;
+  if (state !== null || popupOpen || annOpen) return null;
 
   return (
     <div

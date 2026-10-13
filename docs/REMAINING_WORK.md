@@ -29,7 +29,8 @@ backend `language_exchange_backend_application/docs/REMAINING_WORK.md` (server e
 Web announcements (plan 2026-10-13)
 - [x] Data layer: app-config `platform`/`lang` args, `webTargetFor` link mapping, dismissals storage, `useWebAnnouncements` hook.
 - [x] Popup component + banner component (`AnnouncementModal` hero card, `AnnouncementBanner` floating card, `useAnnouncementActions`, 5 `announcements.*` strings in 18 locales); not yet mounted.
-- [ ] Mount in the app shell and route `/announcement/:id` if the link mapper's target needs a page.
+- [x] Mount in the app shell (`AnnouncementSurfaces`: every page except /admin, pop-up once per page load, takes turns with consent bar / download pop-up / sticky banner).
+- [ ] Route `/announcement/:id` if the link mapper's target needs a page.
 - [ ] Localize any fixed strings; QA against a live backend announcement.
 
 Announcements console

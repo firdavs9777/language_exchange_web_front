@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { isSuppressed, recordDismissal } from "./growthGate";
-import { openSurface, closeSurface } from "./surfaceRegistry";
+import { openSurface, closeSurface, isSurfaceOpen } from "./surfaceRegistry";
 import StoreLink from "./StoreLink";
 
 const DWELL_MS = 20000;
@@ -24,7 +24,7 @@ const AppDownloadPopup: React.FC = () => {
     if (gated()) return;
 
     const fire = () => {
-      if (!gated()) setOpen(true);
+      if (!gated() && !isSurfaceOpen("announcement-popup")) setOpen(true);
     };
 
     const timer = window.setTimeout(fire, DWELL_MS);

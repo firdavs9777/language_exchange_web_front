@@ -18,6 +18,7 @@ import "./design/toastTheme.css";
 import FooterMain from "./components/footer/FooterMain";
 import { SocketProvider } from "./components/chat/hooks/useSocket";
 import AppBanner from "./components/linking/AppBanner";
+import AnnouncementSurfaces from "./components/announcements/AnnouncementSurfaces";
 import { usePageView } from "./analytics/usePageView";
 import ConsentBar from "./components/growth/ConsentBar";
 import AdsBootstrap from "./components/ads/AdsBootstrap";
@@ -43,6 +44,7 @@ const App = () => {
       <SocketProvider>
         <MainNavbar />
         <AppBanner />
+        <AnnouncementSurfaces />
         <Container fluid>
           <Outlet />
         </Container>

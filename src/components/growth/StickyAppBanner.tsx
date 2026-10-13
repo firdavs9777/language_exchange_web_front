@@ -2,10 +2,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { isSuppressed, recordDismissal } from "./growthGate";
 import StoreLink, { StoreId } from "./StoreLink";
+import { useSurfaceOpen } from "./surfaceRegistry";
 
 const StickyAppBanner: React.FC = () => {
   // Hidden until mounted, for the same reason as PromoCarousel.
   const [hidden, setHidden] = useState(true);
+  // Take turns with the announcement banner.
+  const annBanner = useSurfaceOpen("announcement-banner");
 
   // "ios" until the user agent says otherwise, and it only says so after
   // mount: reading navigator during render would bake one store into the
@@ -29,7 +32,7 @@ const StickyAppBanner: React.FC = () => {
     setHidden(true);
   }, []);
 
-  if (hidden) return null;
+  if (hidden || annBanner) return null;
 
   return (
     // `line`/`ink` rather than `gray-*`: Tailwind's gray is cool-blue and
