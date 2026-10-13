@@ -2417,5 +2417,12 @@
     "not_found": "Böyle bir kart yok",
     "not_found_body": "Hesap kaldırılmış olabilir.",
     "find_partners": "Dil partneri bul"
+  },
+  "announcements": {
+    "new": "Yeni",
+    "readMore": "Devamını oku",
+    "close": "Kapat",
+    "ended": "Bu duyuru sona erdi.",
+    "back": "Geri"
   }
 }

@@ -2417,5 +2417,12 @@
     "not_found": "このカードは存在しません",
     "not_found_body": "アカウントが削除された可能性があります。",
     "find_partners": "言語パートナーを探す"
+  },
+  "announcements": {
+    "new": "新着",
+    "readMore": "詳しく見る",
+    "close": "閉じる",
+    "ended": "このお知らせは終了しました。",
+    "back": "戻る"
   }
 }

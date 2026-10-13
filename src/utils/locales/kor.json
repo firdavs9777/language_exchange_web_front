@@ -2417,5 +2417,12 @@
     "not_found": "존재하지 않는 카드입니다",
     "not_found_body": "계정이 삭제되었을 수 있습니다.",
     "find_partners": "언어 파트너 찾기"
+  },
+  "announcements": {
+    "new": "새 소식",
+    "readMore": "더 보기",
+    "close": "닫기",
+    "ended": "이 공지는 종료되었습니다.",
+    "back": "뒤로"
   }
 }

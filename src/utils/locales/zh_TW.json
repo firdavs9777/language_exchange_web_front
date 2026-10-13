@@ -2417,5 +2417,12 @@
     "not_found": "這張卡片不存在",
     "not_found_body": "該帳號可能已被刪除。",
     "find_partners": "尋找語言夥伴"
+  },
+  "announcements": {
+    "new": "新消息",
+    "readMore": "了解更多",
+    "close": "關閉",
+    "ended": "此公告已結束。",
+    "back": "返回"
   }
 }

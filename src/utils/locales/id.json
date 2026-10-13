@@ -2417,5 +2417,12 @@
     "not_found": "Kartu ini tidak ada",
     "not_found_body": "Akun ini mungkin sudah dihapus.",
     "find_partners": "Cari partner bahasa"
+  },
+  "announcements": {
+    "new": "Baru",
+    "readMore": "Selengkapnya",
+    "close": "Tutup",
+    "ended": "Pengumuman ini telah berakhir.",
+    "back": "Kembali"
   }
 }

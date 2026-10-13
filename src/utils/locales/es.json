@@ -2418,5 +2418,12 @@
     "not_found": "Esta tarjeta no existe",
     "not_found_body": "Puede que la cuenta se haya eliminado.",
     "find_partners": "Buscar compañeros de idiomas"
+  },
+  "announcements": {
+    "new": "Novedad",
+    "readMore": "Leer más",
+    "close": "Cerrar",
+    "ended": "Este anuncio ha finalizado.",
+    "back": "Atrás"
   }
 }

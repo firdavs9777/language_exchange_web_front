@@ -2417,5 +2417,12 @@
     "not_found": "Diese Karte gibt es nicht",
     "not_found_body": "Das Konto wurde möglicherweise entfernt.",
     "find_partners": "Sprachpartner finden"
+  },
+  "announcements": {
+    "new": "Neu",
+    "readMore": "Mehr erfahren",
+    "close": "Schließen",
+    "ended": "Diese Ankündigung ist beendet.",
+    "back": "Zurück"
   }
 }

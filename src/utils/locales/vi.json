@@ -2417,5 +2417,12 @@
     "not_found": "Thẻ này không tồn tại",
     "not_found_body": "Tài khoản có thể đã bị xoá.",
     "find_partners": "Tìm bạn học ngôn ngữ"
+  },
+  "announcements": {
+    "new": "Mới",
+    "readMore": "Xem thêm",
+    "close": "Đóng",
+    "ended": "Thông báo này đã kết thúc.",
+    "back": "Quay lại"
   }
 }

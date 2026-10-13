@@ -2430,5 +2430,12 @@
     "not_found": "This card doesn't exist",
     "not_found_body": "The account may have been removed.",
     "find_partners": "Find language partners"
+  },
+  "announcements": {
+    "new": "New",
+    "readMore": "Read more",
+    "close": "Close",
+    "ended": "This announcement has ended.",
+    "back": "Back"
   }
 }

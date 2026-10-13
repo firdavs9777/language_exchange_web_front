@@ -2417,5 +2417,12 @@
     "not_found": "Walang ganitong card",
     "not_found_body": "Maaaring natanggal na ang account.",
     "find_partners": "Maghanap ng language partner"
+  },
+  "announcements": {
+    "new": "Bago",
+    "readMore": "Magbasa pa",
+    "close": "Isara",
+    "ended": "Tapos na ang anunsyo na ito.",
+    "back": "Bumalik"
   }
 }
