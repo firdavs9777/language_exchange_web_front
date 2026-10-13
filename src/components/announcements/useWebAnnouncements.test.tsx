@@ -1,5 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
-import { useWebAnnouncements } from "./useWebAnnouncements";
+import { useWebAnnouncements, _resetBannerForTests } from "./useWebAnnouncements";
 import { _resetDismissalsForTests } from "./dismissals";
 
 const mockQuery = jest.fn();
@@ -9,7 +9,7 @@ jest.mock("react-i18next", () => ({ useTranslation: () => ({ i18n: { language: "
 const a = (id: string, displayStyle: string, priority = 0) =>
   ({ id, title: id, body: "b", emoji: "🎉", imageUrl: null, buttonLabel: null, buttonUrl: null, priority, displayStyle });
 
-beforeEach(() => { window.localStorage.clear(); _resetDismissalsForTests(); mockQuery.mockReset(); });
+beforeEach(() => { window.localStorage.clear(); _resetDismissalsForTests(); _resetBannerForTests(); mockQuery.mockReset(); });
 
 test("asks app-config for platform=web in the site language", () => {
   mockQuery.mockReturnValue({ data: { announcements: [] } });
@@ -24,11 +24,22 @@ test("first popup and first banner (server order = priority); unknown style is a
   expect(result.current.banner!.id).toBe("b1");
 });
 
-test("dismissed ones are skipped and dismiss moves to the next", () => {
-  mockQuery.mockReturnValue({ data: { announcements: [a("b1", "banner"), a("b2", "banner")] } });
+test("dismissed ones are skipped; a pop-up dismissal moves to the next pop-up", () => {
+  mockQuery.mockReturnValue({ data: { announcements: [a("p1", "popup"), a("p2", "popup")] } });
   const { result } = renderHook(() => useWebAnnouncements());
+  act(() => result.current.dismiss("p1"));
+  expect(result.current.popup!.id).toBe("p2");
+});
+
+test("after a banner is dismissed, no other banner shows until the next page load", () => {
+  mockQuery.mockReturnValue({ data: { announcements: [a("b1", "banner"), a("b2", "banner")] } });
+  const { result, unmount } = renderHook(() => useWebAnnouncements());
   act(() => result.current.dismiss("b1"));
-  expect(result.current.banner!.id).toBe("b2");
+  expect(result.current.banner).toBeNull();
+  unmount();
+  expect(renderHook(() => useWebAnnouncements()).result.current.banner).toBeNull();
+  _resetBannerForTests(); // simulates a reload; b1 stays dismissed
+  expect(renderHook(() => useWebAnnouncements()).result.current.banner!.id).toBe("b2");
 });
 
 test("no data or error → nothing", () => {

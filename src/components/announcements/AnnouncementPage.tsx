@@ -32,15 +32,22 @@ const AnnouncementPage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const loggedIn = useSelector((s: any) => !!(s.auth && s.auth.userInfo));
-  const { data, error, isLoading } = useGetPublicAnnouncementQuery({ id, lang: i18n.language }, { skip: !loggedIn });
+  const { currentData, error, isFetching } = useGetPublicAnnouncementQuery({ id, lang: i18n.language }, { skip: !loggedIn });
+  // Only ever render the announcement that belongs to this route.
+  const data = currentData && currentData.id === id ? currentData : undefined;
+  const goBack = () => {
+    const idx = (window.history.state as any)?.idx;
+    if (typeof idx === "number" && idx > 0) navigate(-1);
+    else navigate("/");
+  };
 
   if (!loggedIn) return <Navigate to={`/login?redirect=${encodeURIComponent(`/announcement/${id}`)}`} replace />;
-  if (isLoading) return <Loader />;
+  if (isFetching && !data) return <Loader />;
   if (error || !data) {
     return (
       <div className="mx-auto my-16 max-w-md text-center">
         <p className="text-ink-600 dark:text-ink-300">{t("announcements.ended")}</p>
-        <button type="button" onClick={() => navigate(-1)} className="mt-4 text-sm font-semibold text-brand-deep">{t("announcements.back")}</button>
+        <button type="button" onClick={goBack} className="mt-4 text-sm font-semibold text-brand-deep">{t("announcements.back")}</button>
       </div>
     );
   }

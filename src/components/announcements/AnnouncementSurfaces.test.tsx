@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import React from "react";
 import { render, screen, fireEvent, within } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useNavigate } from "react-router-dom";
 import AnnouncementSurfaces, { _resetPopupForTests } from "./AnnouncementSurfaces";
 import { isSurfaceOpen, _resetSurfacesForTests } from "../growth/surfaceRegistry";
 
@@ -65,4 +65,30 @@ test("a parent re-render does not move focus out of the modal", () => {
   rerender(<Wrap n={1} />);
   rerender(<Wrap n={2} />);
   expect(document.activeElement).toBe(btn);
+});
+
+test.each(["/login", "/register", "/forgot-password", "/auth/callback", "/verify-email", "/set-new-password"])(
+  "no pop-up or banner on auth route %s", (path) => {
+    mockHook.mockReturnValue({ popup: P, banner: B, dismiss: jest.fn() });
+    render(<MemoryRouter initialEntries={[path]}><AnnouncementSurfaces /></MemoryRouter>);
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(screen.queryByTestId("ann-banner")).toBeNull();
+  });
+
+test("an auth route does not use up the once-per-load pop-up", () => {
+  mockHook.mockReturnValue({ popup: P, banner: null, dismiss: jest.fn() });
+  const Nav = () => { const n = useNavigate(); return <button onClick={() => n("/feed")}>go</button>; };
+  render(<MemoryRouter initialEntries={["/login"]}><Nav /><AnnouncementSurfaces /></MemoryRouter>);
+  expect(screen.queryByRole("dialog")).toBeNull();
+  fireEvent.click(screen.getByText("go"));
+  expect(screen.getByRole("dialog")).toBeInTheDocument();
+});
+
+test("no pop-up over /announcement/<same id>, but one over another announcement", () => {
+  mockHook.mockReturnValue({ popup: P, banner: null, dismiss: jest.fn() });
+  const { unmount } = render(<MemoryRouter initialEntries={["/announcement/p1"]}><AnnouncementSurfaces /></MemoryRouter>);
+  expect(screen.queryByRole("dialog")).toBeNull();
+  unmount();
+  render(<MemoryRouter initialEntries={["/announcement/other"]}><AnnouncementSurfaces /></MemoryRouter>);
+  expect(screen.getByRole("dialog")).toBeInTheDocument();
 });

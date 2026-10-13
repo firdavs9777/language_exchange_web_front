@@ -491,3 +491,12 @@ test("banner warning: shown for iOS-only, not for empty platforms (empty means e
   fireEvent.click(screen.getByLabelText("iOS"));
   expect(screen.queryByText(/banner only appears on the website/i)).toBeNull();
 });
+
+test("Show in app switch is labelled for the website too; off hides the website preview", () => {
+  renderAt("/admin/announcements/new");
+  const sw = screen.getByRole("switch", { name: "Show in app and on website" });
+  expect(screen.getByTestId("ann-modal")).toBeInTheDocument();
+  fireEvent.click(sw);
+  expect(screen.queryByTestId("ann-modal")).toBeNull();
+  expect(screen.getByText("Not shown on the website or in the app (push only)")).toBeInTheDocument();
+});

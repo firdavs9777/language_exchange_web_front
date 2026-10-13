@@ -95,3 +95,22 @@ test("Tab from the last button wraps to the close button, and focus returns to t
   expect(opener).toHaveFocus();
   opener.remove();
 });
+
+test("a new imageUrl replaces the gradient, and a new URL after an error is tried again", () => {
+  const { rerender } = renderAt(<AnnouncementModal announcement={A} onClose={() => {}} />);
+  expect(screen.queryByTestId("ann-hero-image")).toBeNull();
+  const wrap = (a: any) => (
+    <MemoryRouter initialEntries={["/feed"]}><Routes><Route path="*" element={<AnnouncementModal announcement={a} onClose={() => {}} />} /></Routes></MemoryRouter>);
+  rerender(wrap({ ...A, imageUrl: "https://cdn.example.com/1.png" }));
+  expect(screen.getByTestId("ann-hero-image")).toHaveAttribute("src", "https://cdn.example.com/1.png");
+  fireEvent.error(screen.getByTestId("ann-hero-image"));
+  expect(screen.queryByTestId("ann-hero-image")).toBeNull();
+  rerender(wrap({ ...A, imageUrl: "https://cdn.example.com/2.png" }));
+  expect(screen.getByTestId("ann-hero-image")).toHaveAttribute("src", "https://cdn.example.com/2.png");
+});
+
+test("the live card is height-capped and scrollable so buttons stay reachable", () => {
+  renderAt(<AnnouncementModal announcement={A} onClose={() => {}} />);
+  expect(screen.getByTestId("ann-modal").className).toMatch(/max-h-\[90dvh\]/);
+  expect(screen.getByTestId("ann-modal").className).toMatch(/overflow-y-auto/);
+});

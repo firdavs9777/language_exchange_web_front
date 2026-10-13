@@ -9,20 +9,26 @@ import { openSurface, closeSurface } from "../growth/surfaceRegistry";
 let popupShownThisLoad = false;
 export function _resetPopupForTests() { popupShownThisLoad = false; }
 
+const AUTH_PATH = /^\/(login|register|forgot-password|verify[^/]*|set-new-password|auth(\/.*)?)\/?$/;
+
 const AnnouncementSurfaces: React.FC = () => {
   const { pathname } = useLocation();
   const { popup, banner, dismiss } = useWebAnnouncements();
   const [popupOpen, setPopupOpen] = useState(false);
   const onAdmin = pathname.startsWith("/admin");
+  const onAuth = AUTH_PATH.test(pathname);
+  const onSelfPage = !!popup && pathname === `/announcement/${popup.id}`;
+  const suppressed = onAdmin || onAuth;
+  const popupBlocked = suppressed || onSelfPage;
 
   useEffect(() => {
-    if (onAdmin || !popup || popupShownThisLoad) return;
+    if (popupBlocked || !popup || popupShownThisLoad) return;
     popupShownThisLoad = true;
     setPopupOpen(true);
-  }, [popup, onAdmin]);
+  }, [popup, popupBlocked]);
 
-  const showPopup = popupOpen && !!popup && !onAdmin;
-  const showBanner = !!banner && !onAdmin;
+  const showPopup = popupOpen && !!popup && !popupBlocked;
+  const showBanner = !!banner && !suppressed;
 
   useEffect(() => {
     if (!showPopup) return;

@@ -15,7 +15,9 @@ interface Props {
 const AnnouncementModal: React.FC<Props> = ({ announcement: a, onClose, preview = false }) => {
   const { t } = useTranslation();
   const { primary, readMore } = useAnnouncementActions(a, preview);
-  const [imageOk, setImageOk] = useState(!!a.imageUrl);
+  // Track the URL that failed, so a new URL (or a first upload) is tried afresh.
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const imageOk = !!a.imageUrl && failedUrl !== a.imageUrl;
   const closeRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = `ann-title-${a.id}`;
@@ -41,13 +43,14 @@ const AnnouncementModal: React.FC<Props> = ({ announcement: a, onClose, preview 
         : { role: "dialog", "aria-modal": true, "aria-labelledby": titleId })}
       onKeyDown={preview ? undefined : (e) => trapTab(panelRef.current, e)}
       onClick={(e) => e.stopPropagation()}
-      className="relative w-full overflow-hidden rounded-t-3xl bg-surface shadow-float dark:bg-cardbg-dark sm:max-w-[420px] sm:rounded-3xl">
+      className={`relative w-full rounded-t-3xl bg-surface shadow-float dark:bg-cardbg-dark sm:max-w-[420px] sm:rounded-3xl ${
+        preview ? "overflow-hidden" : "max-h-[90dvh] overflow-y-auto"}`}>
       <button ref={closeRef} type="button" aria-label={t("announcements.close")} onClick={() => onClose(true)}
         className="absolute right-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-white/25 text-white backdrop-blur hover:bg-white/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
         <X size={16} />
       </button>
       {imageOk && a.imageUrl ? (
-        <img data-testid="ann-hero-image" src={a.imageUrl} alt="" onError={() => setImageOk(false)}
+        <img data-testid="ann-hero-image" src={a.imageUrl} alt="" onError={() => setFailedUrl(a.imageUrl)}
           className="h-40 w-full object-cover sm:h-44" />
       ) : (
         <div className="grid h-36 place-items-center bg-gradient-to-br from-brand-deepest via-brand to-brand-light sm:h-40">

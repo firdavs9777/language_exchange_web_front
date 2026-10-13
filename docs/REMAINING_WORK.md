@@ -32,6 +32,7 @@ Web announcements (plan 2026-10-13)
 - [x] Mount in the app shell (`AnnouncementSurfaces`: every page except /admin, pop-up once per page load, takes turns with consent bar / download pop-up / sticky banner).
 - [x] Route `/announcement/:id` if the link mapper's target needs a page.
 - [x] Admin console: Web platform, Pop-up/Banner display style, notify switched off when the app can't be reached, website previews use the real components.
+- [x] Final-review fixes: modal image reset + max-height, "Show in app and on website" label/preview, one banner per load, no pop-up/banner on auth routes or over its own page, page Back fallback, stale-id content.
 - [ ] Localize any fixed strings; live QA against a deployed backend announcement (web-only + banner).
 
 Announcements console

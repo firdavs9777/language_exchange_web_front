@@ -440,7 +440,7 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" role="switch" checked={form.showInApp} disabled={lockTargeting}
                 onChange={(e) => setField("showInApp", e.target.checked)} />
-              {t("admin.announcements.showInApp") || "Show in app"}
+              {t("admin.announcements.showInApp") || "Show in app and on website"}
             </label>
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" role="switch" checked={form.notify} disabled={lockTargeting || !canReachApp}
@@ -525,7 +525,9 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
             </div>
             <div>
               <div className="mb-1 text-xs font-semibold text-ink-500">{form.displayStyle === "banner" ? "Website banner" : "Website pop-up"}</div>
-              {form.displayStyle === "banner" ? (
+              {!form.showInApp ? (
+                <p className="text-sm text-ink-500">Not shown on the website or in the app (push only)</p>
+              ) : form.displayStyle === "banner" ? (
                 <AnnouncementBanner preview onClose={() => {}} announcement={webPreview} />
               ) : (
                 <AnnouncementModal preview onClose={() => {}} announcement={webPreview} />
