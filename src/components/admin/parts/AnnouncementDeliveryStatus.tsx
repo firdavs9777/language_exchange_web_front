@@ -25,6 +25,7 @@ export interface DeliveryRow {
     startedAt?: string | null;
     finishedAt?: string | null;
     heartbeatAt?: string | null;
+    stoppedReason?: string | null;
   } | null;
 }
 
@@ -53,6 +54,7 @@ const AnnouncementDeliveryStatus: React.FC<{ row: DeliveryRow; compact?: boolean
   const stateLabel = (state: string): string => {
     if (state === "queued") return t("admin.announcements.deliveryQueued") || "Queued";
     if (state === "running") return t("admin.announcements.deliveryRunning") || "Sending";
+    if (state === "done" && info.stoppedAtEnd) return t("admin.announcements.deliveryStoppedAtEnd") || "Stopped at end time";
     if (state === "done") return t("admin.announcements.deliveryDone") || "Sent";
     if (state === "failed") return t("admin.announcements.deliveryFailed") || "Failed";
     return t("admin.announcements.deliveryNone") || "Not sent";
@@ -70,6 +72,9 @@ const AnnouncementDeliveryStatus: React.FC<{ row: DeliveryRow; compact?: boolean
 
   const attemptsText = `${t("admin.announcements.deliveryAttempts") || "Attempts"} ${info.attempts}/${MAX_DELIVERY_ATTEMPTS}`;
   const counts = `${num(d.targeted)} / ${num(d.pushed)} / ${num(d.listed)} / ${num(d.failed)}`;
+  const stoppedText = info.stoppedAtEnd
+    ? `${t("admin.announcements.deliveryStoppedAtEnd") || "Stopped at end time"} — sent to ${num(d.pushed)} of ${num(d.targeted)}`
+    : "";
   const note = info.exhausted
     ? t("admin.announcements.deliveryExhausted") ||
       "Gave up after 3 attempts. Nothing will retry it; people not reached yet won't get the push."
@@ -95,6 +100,7 @@ const AnnouncementDeliveryStatus: React.FC<{ row: DeliveryRow; compact?: boolean
           {badge}
           <span className="tabular-nums">{counts}</span>
         </div>
+        {stoppedText ? <div data-testid="delivery-stopped" className="text-xs text-ink-500">{stoppedText}</div> : null}
         {info.attempts > 0 ? <div className="text-xs text-ink-500">{attemptsText}</div> : null}
         {info.exhausted ? (
           <div data-testid="delivery-exhausted" className="text-xs font-medium text-red-600">
@@ -133,6 +139,7 @@ const AnnouncementDeliveryStatus: React.FC<{ row: DeliveryRow; compact?: boolean
           {t("admin.announcements.deliveryError") || "Last error:"} {info.error}
         </p>
       ) : null}
+      {stoppedText ? <p data-testid="delivery-stopped" className="text-xs text-ink-500">{stoppedText}</p> : null}
       {note ? (
         <p data-testid={info.exhausted ? "delivery-exhausted" : "delivery-note"}
           className={info.exhausted ? "text-xs font-medium text-red-600" : "text-xs text-ink-500"}>

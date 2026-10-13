@@ -163,6 +163,8 @@ export interface AdminAnnouncement {
     heartbeatAt?: string | null;
     /** Claims so far (first run, stale takeovers, failed retries); the job stops retrying at 3. */
     attempts?: number;
+    /** 'end_time': finished `done` because endsAt passed before every batch went out. Absent otherwise. */
+    stoppedReason?: string | null;
     /** Last failure message (cleared on the next claim). */
     error?: string | null;
   };

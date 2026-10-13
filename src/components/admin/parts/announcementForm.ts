@@ -223,12 +223,14 @@ export interface DeliveryInfo {
   exhausted: boolean;
   /** `failed` that the minute job will still retry (only while live and under the cap). */
   retrying: boolean;
+  /** `done`, but the end time passed before every batch went out (delivery.stoppedReason 'end_time'). */
+  stoppedAtEnd: boolean;
 }
 
 /** What the delivery block of a row says, independent of how it is drawn. */
 export const deliveryInfo = (a: {
   status?: string;
-  delivery?: { state?: string; attempts?: number; error?: string | null } | null;
+  delivery?: { state?: string; attempts?: number; error?: string | null; stoppedReason?: string | null } | null;
 }): DeliveryInfo => {
   const d = a.delivery || {};
   const state = d.state || "none";
@@ -241,6 +243,7 @@ export const deliveryInfo = (a: {
     error: d.error ? String(d.error) : "",
     exhausted,
     retrying: failed && !exhausted && a.status === "live",
+    stoppedAtEnd: state === "done" && d.stoppedReason === "end_time",
   };
 };
 

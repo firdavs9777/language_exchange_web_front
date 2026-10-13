@@ -126,7 +126,7 @@ it("emoji length is checked on the trimmed value", () => {
 
 it("deliveryInfo: failed under the cap is retried only while live; at the cap it is exhausted", () => {
   expect(MAX_DELIVERY_ATTEMPTS).toBe(3);
-  expect(deliveryInfo({ status: "draft" })).toEqual({ state: "none", attempts: 0, error: "", exhausted: false, retrying: false });
+  expect(deliveryInfo({ status: "draft" })).toEqual({ state: "none", attempts: 0, error: "", exhausted: false, retrying: false, stoppedAtEnd: false });
   const failedOnce = { state: "failed", attempts: 1, error: "fcm down" };
   expect(deliveryInfo({ status: "live", delivery: failedOnce })).toMatchObject({ retrying: true, exhausted: false, error: "fcm down" });
   expect(deliveryInfo({ status: "ended", delivery: failedOnce })).toMatchObject({ retrying: false, exhausted: false });
@@ -155,4 +155,11 @@ it("publishing keeps the start/end ordering rule (the backend model rejects it, 
   expect(validateForm(form, { now }).endsAt).toBe("End must be after start.");
   // A past end is still caught when publishing.
   expect(validateForm(filled({ startsAt: "2029-12-01T10:00", endsAt: "2029-12-31T10:00" }), { publish: true, now }).endsAt).toBeTruthy();
+});
+
+it("deliveryInfo: done with stoppedReason end_time is flagged; a missing field or another state is not", () => {
+  expect(deliveryInfo({ delivery: { state: "done", stoppedReason: "end_time" } }).stoppedAtEnd).toBe(true);
+  expect(deliveryInfo({ delivery: { state: "done" } }).stoppedAtEnd).toBe(false);
+  expect(deliveryInfo({ delivery: { state: "done", stoppedReason: null } }).stoppedAtEnd).toBe(false);
+  expect(deliveryInfo({ delivery: { state: "failed", stoppedReason: "end_time" } }).stoppedAtEnd).toBe(false);
 });

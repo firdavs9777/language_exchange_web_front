@@ -27,6 +27,7 @@ The full owner/launch checklist lives in the app repo: `bananatalk_app/docs/REMA
 - [x] M1 publish bar re-arms when the refetched row's updatedAt changes (re-schedule with the same start)
 - [x] M3 confirm of a Schedule re-checks the start is still future; done message follows the returned status
 - [x] M4 image input cleared after an upload attempt (same file can be re-picked)
+- [x] Delivery panel/list show "Stopped at end time — sent to N of M" for done + delivery.stoppedReason 'end_time' (missing field = plain Sent)
 - [ ] Needs backend (someone else is adding it): reject a past startsAt on PUT for scheduled rows; the web fix is client-side only
 - [ ] Owner: new strings added as English fallbacks (admin.announcements.startPassed)
 - [ ] Not yet deployed

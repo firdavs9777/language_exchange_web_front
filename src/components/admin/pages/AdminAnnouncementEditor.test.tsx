@@ -436,3 +436,20 @@ it("I1: a failed revert says the changes were saved and will go out at the start
   fireEvent.click(screen.getByTestId("bar-cancel"));
   expect(await screen.findByText(/changes were saved and notifications will go out at the start time/i)).toBeInTheDocument();
 });
+
+it("a done send that stopped at the end time says so with sent N of M; plain done does not", () => {
+  const done = { ...LIVE.delivery, state: "done", targeted: 50, pushed: 20 };
+  mockGet.mockReturnValue({
+    data: { ...LIVE, notify: true, delivery: { ...done, stoppedReason: "end_time" } },
+    isLoading: false, isError: false,
+  });
+  const view = renderAt("/admin/announcements/a1") as any;
+  const panel = screen.getByTestId("delivery-panel");
+  expect(within(panel).getByTestId("delivery-state")).toHaveTextContent("Stopped at end time");
+  expect(within(panel).getByTestId("delivery-stopped")).toHaveTextContent("Stopped at end time — sent to 20 of 50");
+  view.unmount();
+  mockGet.mockReturnValue({ data: { ...LIVE, notify: true, delivery: done }, isLoading: false, isError: false });
+  renderAt("/admin/announcements/a1");
+  expect(screen.getByTestId("delivery-state")).toHaveTextContent("Sent");
+  expect(screen.queryByTestId("delivery-stopped")).toBeNull();
+});
