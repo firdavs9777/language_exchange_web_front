@@ -54,6 +54,7 @@ const AnnouncementDeliveryStatus: React.FC<{ row: DeliveryRow; compact?: boolean
   const stateLabel = (state: string): string => {
     if (state === "queued") return t("admin.announcements.deliveryQueued") || "Queued";
     if (state === "running") return t("admin.announcements.deliveryRunning") || "Sending";
+    if (state === "done" && info.endedByAdmin) return t("admin.announcements.deliveryEndedByAdmin") || "Ended by admin";
     if (state === "done" && info.stoppedAtEnd) return t("admin.announcements.deliveryStoppedAtEnd") || "Stopped at end time";
     if (state === "done") return t("admin.announcements.deliveryDone") || "Sent";
     if (state === "failed") return t("admin.announcements.deliveryFailed") || "Failed";
@@ -72,9 +73,12 @@ const AnnouncementDeliveryStatus: React.FC<{ row: DeliveryRow; compact?: boolean
 
   const attemptsText = `${t("admin.announcements.deliveryAttempts") || "Attempts"} ${info.attempts}/${MAX_DELIVERY_ATTEMPTS}`;
   const counts = `${num(d.targeted)} / ${num(d.pushed)} / ${num(d.listed)} / ${num(d.failed)}`;
-  const stoppedText = info.stoppedAtEnd
-    ? `${t("admin.announcements.deliveryStoppedAtEnd") || "Stopped at end time"} — sent to ${num(d.pushed)} of ${num(d.targeted)}`
-    : "";
+  const stoppedLabel = info.endedByAdmin
+    ? t("admin.announcements.deliveryEndedByAdmin") || "Ended by admin"
+    : info.stoppedAtEnd
+      ? t("admin.announcements.deliveryStoppedAtEnd") || "Stopped at end time"
+      : "";
+  const stoppedText = stoppedLabel ? `${stoppedLabel} — sent to ${num(d.pushed)} of ${num(d.targeted)}` : "";
   const note = info.exhausted
     ? t("admin.announcements.deliveryExhausted") ||
       "Gave up after 3 attempts. Nothing will retry it; people not reached yet won't get the push."

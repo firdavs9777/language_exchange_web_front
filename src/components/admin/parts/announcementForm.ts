@@ -225,6 +225,8 @@ export interface DeliveryInfo {
   retrying: boolean;
   /** `done`, but the end time passed before every batch went out (delivery.stoppedReason 'end_time'). */
   stoppedAtEnd: boolean;
+  /** `done`, but an admin pressed End mid-send (stoppedReason 'admin_end'). */
+  endedByAdmin: boolean;
 }
 
 /** What the delivery block of a row says, independent of how it is drawn. */
@@ -244,6 +246,7 @@ export const deliveryInfo = (a: {
     exhausted,
     retrying: failed && !exhausted && a.status === "live",
     stoppedAtEnd: state === "done" && d.stoppedReason === "end_time",
+    endedByAdmin: state === "done" && d.stoppedReason === "admin_end",
   };
 };
 

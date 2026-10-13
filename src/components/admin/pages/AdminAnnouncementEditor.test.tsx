@@ -453,3 +453,19 @@ it("a done send that stopped at the end time says so with sent N of M; plain don
   expect(screen.getByTestId("delivery-state")).toHaveTextContent("Sent");
   expect(screen.queryByTestId("delivery-stopped")).toBeNull();
 });
+
+it("a done send ended by an admin says so; an unknown stoppedReason stays plain Sent", () => {
+  const done = { ...LIVE.delivery, state: "done", targeted: 50, pushed: 7 };
+  mockGet.mockReturnValue({
+    data: { ...LIVE, notify: true, delivery: { ...done, stoppedReason: "admin_end" } },
+    isLoading: false, isError: false,
+  });
+  const view = renderAt("/admin/announcements/a1") as any;
+  expect(screen.getByTestId("delivery-state")).toHaveTextContent("Ended by admin");
+  expect(screen.getByTestId("delivery-stopped")).toHaveTextContent("Ended by admin — sent to 7 of 50");
+  view.unmount();
+  mockGet.mockReturnValue({ data: { ...LIVE, notify: true, delivery: { ...done, stoppedReason: "mystery" } }, isLoading: false, isError: false });
+  renderAt("/admin/announcements/a1");
+  expect(screen.getByTestId("delivery-state")).toHaveTextContent("Sent");
+  expect(screen.queryByTestId("delivery-stopped")).toBeNull();
+});

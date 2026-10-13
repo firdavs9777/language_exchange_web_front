@@ -126,7 +126,7 @@ it("emoji length is checked on the trimmed value", () => {
 
 it("deliveryInfo: failed under the cap is retried only while live; at the cap it is exhausted", () => {
   expect(MAX_DELIVERY_ATTEMPTS).toBe(3);
-  expect(deliveryInfo({ status: "draft" })).toEqual({ state: "none", attempts: 0, error: "", exhausted: false, retrying: false, stoppedAtEnd: false });
+  expect(deliveryInfo({ status: "draft" })).toEqual({ state: "none", attempts: 0, error: "", exhausted: false, retrying: false, stoppedAtEnd: false, endedByAdmin: false });
   const failedOnce = { state: "failed", attempts: 1, error: "fcm down" };
   expect(deliveryInfo({ status: "live", delivery: failedOnce })).toMatchObject({ retrying: true, exhausted: false, error: "fcm down" });
   expect(deliveryInfo({ status: "ended", delivery: failedOnce })).toMatchObject({ retrying: false, exhausted: false });
@@ -162,4 +162,10 @@ it("deliveryInfo: done with stoppedReason end_time is flagged; a missing field o
   expect(deliveryInfo({ delivery: { state: "done" } }).stoppedAtEnd).toBe(false);
   expect(deliveryInfo({ delivery: { state: "done", stoppedReason: null } }).stoppedAtEnd).toBe(false);
   expect(deliveryInfo({ delivery: { state: "failed", stoppedReason: "end_time" } }).stoppedAtEnd).toBe(false);
+});
+
+it("deliveryInfo: admin_end is flagged only on done; unknown reasons are plain", () => {
+  expect(deliveryInfo({ delivery: { state: "done", stoppedReason: "admin_end" } })).toMatchObject({ endedByAdmin: true, stoppedAtEnd: false });
+  expect(deliveryInfo({ delivery: { state: "failed", stoppedReason: "admin_end" } }).endedByAdmin).toBe(false);
+  expect(deliveryInfo({ delivery: { state: "done", stoppedReason: "mystery" } })).toMatchObject({ endedByAdmin: false, stoppedAtEnd: false });
 });
