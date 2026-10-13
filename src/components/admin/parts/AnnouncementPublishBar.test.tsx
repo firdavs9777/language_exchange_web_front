@@ -245,3 +245,13 @@ it("cancelling an editor-requested schedule confirm tells the editor; a plain Sc
   fireEvent.click(screen.getByTestId("confirm-dialog-cancel"));
   expect(onScheduleCancelled).toHaveBeenCalledTimes(1);
 });
+
+it("a web-only audience says Website only instead of counts", async () => {
+  audienceTrigger = resolved({ count: 0, listed: 0, reason: "web_only" });
+  mockAudience.mockReturnValue([audienceTrigger, { isFetching: false }]);
+  renderBar();
+  fireEvent.click(screen.getByRole("button", { name: "Publish now" }));
+  await waitFor(() => expect(screen.getByTestId("confirm-dialog-confirm")).toBeInTheDocument());
+  expect(screen.getByText(/Website only/)).toBeInTheDocument();
+  expect(screen.queryByText(/push notification to/)).toBeNull();
+});

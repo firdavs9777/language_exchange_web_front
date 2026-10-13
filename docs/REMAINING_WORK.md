@@ -31,7 +31,8 @@ Web announcements (plan 2026-10-13)
 - [x] Popup component + banner component (`AnnouncementModal` hero card, `AnnouncementBanner` floating card, `useAnnouncementActions`, 5 `announcements.*` strings in 18 locales); not yet mounted.
 - [x] Mount in the app shell (`AnnouncementSurfaces`: every page except /admin, pop-up once per page load, takes turns with consent bar / download pop-up / sticky banner).
 - [x] Route `/announcement/:id` if the link mapper's target needs a page.
-- [ ] Localize any fixed strings; QA against a live backend announcement.
+- [x] Admin console: Web platform, Pop-up/Banner display style, notify switched off when the app can't be reached, website previews use the real components.
+- [ ] Localize any fixed strings; live QA against a deployed backend announcement (web-only + banner).
 
 Announcements console
 - [ ] "Retry delivery" button for an exhausted `failed` send — needs the backend endpoint first (backend file). S

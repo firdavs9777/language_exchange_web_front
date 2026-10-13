@@ -1,7 +1,7 @@
 import {
   ANNOUNCEMENT_LOCALES, emptyForm, fromAnnouncement, toInput, validateForm,
   toLocalInput, fromLocalInput, targetingSummary, AnnouncementForm,
-  deliveryInfo, matchesSearch, MAX_DELIVERY_ATTEMPTS,
+  deliveryInfo, matchesSearch, MAX_DELIVERY_ATTEMPTS, reachesApp,
 } from "./announcementForm";
 
 const filled = (over: Partial<AnnouncementForm> = {}): AnnouncementForm => ({
@@ -168,4 +168,23 @@ it("deliveryInfo: admin_end is flagged only on done; unknown reasons are plain",
   expect(deliveryInfo({ delivery: { state: "done", stoppedReason: "admin_end" } })).toMatchObject({ endedByAdmin: true, stoppedAtEnd: false });
   expect(deliveryInfo({ delivery: { state: "failed", stoppedReason: "admin_end" } }).endedByAdmin).toBe(false);
   expect(deliveryInfo({ delivery: { state: "done", stoppedReason: "mystery" } })).toMatchObject({ endedByAdmin: false, stoppedAtEnd: false });
+});
+
+test("displayStyle round-trips and defaults to popup", () => {
+  expect(emptyForm().displayStyle).toBe("popup");
+  const f = { ...emptyForm(), displayStyle: "banner" as const, platforms: ["web" as const] };
+  expect(toInput(f).displayStyle).toBe("banner");
+  expect(fromAnnouncement({ ...(toInput(f) as any), id: "x", _id: "x", status: "draft", translations: { en: { title: "t", body: "b" } }, delivery: {} } as any).displayStyle).toBe("banner");
+  expect(fromAnnouncement({ id: "x", _id: "x", status: "draft", translations: { en: { title: "t", body: "b" } }, delivery: {} } as any).displayStyle).toBe("popup");
+});
+
+test("reachesApp mirrors the backend rule; toInput forces notify off when it can't", () => {
+  expect(reachesApp({ ...emptyForm(), platforms: ["all"] })).toBe(true);
+  expect(reachesApp({ ...emptyForm(), platforms: ["web"] })).toBe(false);
+  expect(reachesApp({ ...emptyForm(), displayStyle: "banner" })).toBe(false);
+  expect(toInput({ ...emptyForm(), displayStyle: "banner", notify: true }).notify).toBe(false);
+});
+
+test("targeting summary names Web", () => {
+  expect(targetingSummary({ platforms: ["web", "ios"], languages: [] })).toContain("Web");
 });

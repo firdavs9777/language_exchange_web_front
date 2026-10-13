@@ -123,7 +123,8 @@ export interface AdminReportRow {
 
 /** Announcements (spec 2026-10-12 §5.1/§5.3). Mirrors models/Announcement.js. */
 export type AnnouncementStatus = "draft" | "scheduled" | "live" | "ended";
-export type AnnouncementPlatform = "all" | "ios" | "android";
+export type AnnouncementPlatform = "all" | "ios" | "android" | "web";
+export type AnnouncementDisplayStyle = "popup" | "banner";
 export type AnnouncementDeliveryState = "none" | "queued" | "running" | "done" | "failed";
 
 export interface AnnouncementTranslation {
@@ -144,6 +145,7 @@ export interface AdminAnnouncement {
   imageUrl: string | null;
   buttonUrl: string | null;
   platforms: AnnouncementPlatform[];
+  displayStyle?: AnnouncementDisplayStyle;
   languages: string[];
   startsAt: string | null;
   endsAt: string | null;
@@ -180,6 +182,7 @@ export interface AnnouncementInput {
   imageUrl?: string | null;
   buttonUrl?: string | null;
   platforms?: AnnouncementPlatform[];
+  displayStyle?: AnnouncementDisplayStyle;
   languages?: string[];
   startsAt?: string | null;
   endsAt?: string | null;
@@ -192,6 +195,8 @@ export interface AnnouncementInput {
 export interface AudienceCount {
   count: number;
   listed: number;
+  /** `web_only`: it cannot reach the app, so there is no push audience. */
+  reason?: "web_only";
 }
 
 /**

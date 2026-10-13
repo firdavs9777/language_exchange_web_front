@@ -4,6 +4,7 @@ import { render, screen, fireEvent, waitFor, within } from "@testing-library/rea
 import { MemoryRouter, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AdminAnnouncementEditor from "./AdminAnnouncementEditor";
 
+jest.mock("react-redux", () => ({ ...jest.requireActual("react-redux"), useSelector: (fn: any) => fn({ auth: { userInfo: null } }) }));
 jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
 
 const mockPrepared: any[] = [];
@@ -293,7 +294,7 @@ it("a saved draft can be deleted after confirming; the editor returns to the lis
   renderAt("/admin/announcements/a1");
   fireEvent.click(screen.getByRole("button", { name: "Delete draft" }));
   expect(deleteTrigger).not.toHaveBeenCalled();
-  const dialog = screen.getByRole("dialog");
+  const dialog = screen.getByTestId("confirm-dialog");
   fireEvent.click(within(dialog).getByRole("button", { name: "Delete draft" }));
   await waitFor(() => expect(deleteTrigger).toHaveBeenCalledWith("a1"));
   await waitFor(() => expect(screen.getByTestId("location")).toHaveTextContent(/^\/admin\/announcements$/));
@@ -305,7 +306,7 @@ it("a refused delete shows the server message in the dialog", async () => {
   mockDelete.mockReturnValue([deleteTrigger, { isLoading: false }]);
   renderAt("/admin/announcements/a1");
   fireEvent.click(screen.getByRole("button", { name: "Delete draft" }));
-  fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Delete draft" }));
+  fireEvent.click(within(screen.getByTestId("confirm-dialog")).getByRole("button", { name: "Delete draft" }));
   expect(await screen.findByText("Only a draft can be deleted; end it instead")).toBeInTheDocument();
 });
 
@@ -468,4 +469,15 @@ it("a done send ended by an admin says so; an unknown stoppedReason stays plain 
   renderAt("/admin/announcements/a1");
   expect(screen.getByTestId("delivery-state")).toHaveTextContent("Sent");
   expect(screen.queryByTestId("delivery-stopped")).toBeNull();
+});
+
+test("Web platform and Display style controls; banner disables Send notification with a hint; website previews render", () => {
+  renderAt("/admin/announcements/new");
+  fireEvent.click(screen.getByLabelText("Web"));
+  fireEvent.click(screen.getByLabelText("Banner"));
+  expect(screen.getByRole("switch", { name: "Send notification" })).toBeDisabled();
+  expect(screen.getByText(/website only — banners/i)).toBeInTheDocument();
+  expect(screen.getByTestId("ann-banner")).toBeInTheDocument();
+  fireEvent.click(screen.getByLabelText("Pop-up"));
+  expect(screen.getByTestId("ann-modal")).toBeInTheDocument();
 });

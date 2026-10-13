@@ -35,7 +35,7 @@ export interface AnnouncementPublishBarProps {
 type Mode = "publish" | "schedule";
 
 type Pending =
-  | { kind: "publish"; mode: Mode; id: string; count: number; listed: number }
+  | { kind: "publish"; mode: Mode; id: string; count: number; listed: number; webOnly?: boolean }
   | { kind: "end"; id: string }
   | null;
 
@@ -102,9 +102,9 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
         return;
       }
       try {
-        const audience: { count: number; listed: number } = await fetchAudience(id).unwrap();
+        const audience: { count: number; listed: number; reason?: string } = await fetchAudience(id).unwrap();
         setDialogError("");
-        setPending({ kind: "publish", mode, id, count: audience.count, listed: audience.listed });
+        setPending({ kind: "publish", mode, id, count: audience.count, listed: audience.listed, webOnly: audience.reason === "web_only" });
       } catch (err) {
         setError(errorMessage(err, t("admin.announcements.audienceError") || "Couldn't count the audience."));
         if (fromEditor.current) { fromEditor.current = false; if (onScheduleCancelled) onScheduleCancelled(); }
@@ -166,6 +166,7 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
     const when = pending.mode === "schedule"
       ? t("admin.announcements.atStart") || "at the scheduled start"
       : t("admin.announcements.now") || "now";
+    if (pending.webOnly) return "Website only — no push notifications, no app notification rows.";
     return `Sends a push notification to ${pending.count.toLocaleString("en-US")} people ${when} and adds it to ${pending.listed.toLocaleString("en-US")} notification lists.`;
   };
 

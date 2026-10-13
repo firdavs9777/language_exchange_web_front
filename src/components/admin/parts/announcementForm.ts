@@ -1,4 +1,4 @@
-import { AdminAnnouncement, AnnouncementInput, AnnouncementPlatform } from "../../../store/slices/adminSlice";
+import { AdminAnnouncement, AnnouncementDisplayStyle, AnnouncementInput, AnnouncementPlatform } from "../../../store/slices/adminSlice";
 
 /**
  * The announcement editor's form model. Every rule here mirrors
@@ -35,6 +35,7 @@ export interface AnnouncementForm {
   imageUrl: string;
   buttonUrl: string;
   platforms: AnnouncementPlatform[];
+  displayStyle: AnnouncementDisplayStyle;
   languages: string[];
   /** `<input type="datetime-local">` values, in the admin's local time. */
   startsAt: string;
@@ -55,6 +56,7 @@ export const emptyForm = (): AnnouncementForm => ({
   imageUrl: "",
   buttonUrl: "",
   platforms: ["all"],
+  displayStyle: "popup",
   languages: [],
   startsAt: "",
   endsAt: "",
@@ -91,6 +93,7 @@ export const fromAnnouncement = (a: AdminAnnouncement): AnnouncementForm => {
     imageUrl: a.imageUrl || "",
     buttonUrl: a.buttonUrl || "",
     platforms: a.platforms && a.platforms.length ? a.platforms : ["all"],
+    displayStyle: a.displayStyle === "banner" ? "banner" : "popup",
     languages: a.languages || [],
     startsAt: toLocalInput(a.startsAt),
     endsAt: toLocalInput(a.endsAt),
@@ -99,6 +102,11 @@ export const fromAnnouncement = (a: AdminAnnouncement): AnnouncementForm => {
     notify: !!a.notify,
   };
 };
+
+/** Same rule as backend lib/announcementReach.js: only these may notify or reach the app. */
+export const reachesApp = (f: Pick<AnnouncementForm, "platforms" | "displayStyle">): boolean =>
+  f.displayStyle !== "banner" &&
+  (f.platforms.length === 0 || f.platforms.some((p) => p === "all" || p === "ios" || p === "android"));
 
 const hasText = (t: TranslationDraft | undefined) =>
   !!t && (t.title.trim() !== "" || t.body.trim() !== "" || t.buttonLabel.trim() !== "");
@@ -123,11 +131,12 @@ export const toInput = (form: AnnouncementForm, liveOnly = false): AnnouncementI
     imageUrl: form.imageUrl || null,
     buttonUrl: form.buttonUrl.trim() || null,
     platforms: form.platforms.indexOf("all") >= 0 ? ["all"] : form.platforms,
+    displayStyle: form.displayStyle,
     languages: form.languages,
     startsAt: fromLocalInput(form.startsAt),
     endsAt: fromLocalInput(form.endsAt),
     showInApp: form.showInApp,
-    notify: form.notify,
+    notify: form.notify && reachesApp(form),
     priority,
   };
 };
@@ -201,7 +210,7 @@ export const targetingSummary = (a: { platforms?: string[]; languages?: string[]
   const platforms = a.platforms || [];
   const p = !platforms.length || platforms.indexOf("all") >= 0
     ? "All platforms"
-    : platforms.map((x) => (x === "ios" ? "iOS" : "Android")).join(" + ");
+    : platforms.map((x) => (x === "ios" ? "iOS" : x === "web" ? "Web" : "Android")).join(" + ");
   const languages = a.languages || [];
   return `${p} · ${languages.length ? languages.join(", ") : "all languages"}`;
 };

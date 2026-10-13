@@ -8,9 +8,12 @@ import {
   useUploadAnnouncementImageMutation,
   useDeleteAnnouncementMutation,
   AdminAnnouncement,
+  AnnouncementPlatform,
 } from "../../../store/slices/adminSlice";
 import { Badge } from "../../../design";
 import AnnouncementPreview from "../parts/AnnouncementPreview";
+import AnnouncementModal from "../../announcements/AnnouncementModal";
+import AnnouncementBanner from "../../announcements/AnnouncementBanner";
 import AnnouncementPublishBar from "../parts/AnnouncementPublishBar";
 import AnnouncementDeliveryStatus from "../parts/AnnouncementDeliveryStatus";
 import ConfirmDialog from "../parts/ConfirmDialog";
@@ -25,6 +28,7 @@ import {
   emptyForm,
   fromAnnouncement,
   fromLocalInput,
+  reachesApp,
   toInput,
   validateForm,
 } from "../parts/announcementForm";
@@ -106,6 +110,16 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
   }, [docVersion]);
 
   const text: TranslationDraft = form.translations[tab] || blankTranslation();
+  const canReachApp = reachesApp(form);
+  // Keep the switch honest: toInput saves notify=false when the app can't be reached.
+  React.useEffect(() => {
+    if (!canReachApp && form.notify) setForm((f) => ({ ...f, notify: false }));
+  }, [canReachApp, form.notify]);
+  const webPreview = {
+    id: "preview", title: text.title || "Your headline", body: text.body || "Your message", emoji: form.emoji || null,
+    imageUrl: form.imageUrl || null, buttonLabel: text.buttonLabel || null, buttonUrl: form.buttonUrl || null,
+    priority: 0, displayStyle: form.displayStyle,
+  };
 
   const setField = <K extends keyof AnnouncementForm>(key: K, value: AnnouncementForm[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
@@ -356,15 +370,32 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
           <fieldset>
             <legend className={labelClass}>{t("admin.announcements.platforms") || "Platforms"}</legend>
             <div className="mt-1 flex gap-4">
-              {(["all", "ios", "android"] as Array<"all" | "ios" | "android">).map((p) => (
+              {(["all", "ios", "android", "web"] as AnnouncementPlatform[]).map((p) => (
                 <label key={p} className="flex items-center gap-1 text-sm">
                   <input type="checkbox" checked={form.platforms.indexOf(p) >= 0} disabled={lockTargeting}
-                    onChange={() => setField("platforms", toggle(form.platforms, p) as Array<"all" | "ios" | "android">)} />
-                  {p === "all" ? "All platforms" : p === "ios" ? "iOS" : "Android"}
+                    onChange={() => setField("platforms", toggle(form.platforms, p) as AnnouncementPlatform[])} />
+                  {p === "all" ? "All platforms" : p === "ios" ? "iOS" : p === "web" ? "Web" : "Android"}
                 </label>
               ))}
             </div>
             <FieldError errors={errors} name="platforms" />
+          </fieldset>
+
+          <fieldset>
+            <legend className={labelClass}>{t("admin.announcements.displayStyle") || "Display style"}</legend>
+            <div className="mt-1 flex gap-4">
+              {(["popup", "banner"] as const).map((s) => (
+                <label key={s} className="flex items-center gap-1 text-sm">
+                  <input type="radio" name="ann-display-style" checked={form.displayStyle === s} disabled={lockTargeting}
+                    onChange={() => setField("displayStyle", s)} />
+                  {s === "popup" ? "Pop-up" : "Banner"}
+                </label>
+              ))}
+            </div>
+            <p className="mt-1 text-xs text-ink-500">Website only — the mobile app always shows a pop-up.</p>
+            {form.displayStyle === "banner" && !form.platforms.some((p) => p === "web" || p === "all") ? (
+              <p role="alert" className="mt-1 text-xs text-amber-700">A banner only appears on the website; add Web or All platforms.</p>
+            ) : null}
           </fieldset>
 
           <fieldset>
@@ -412,11 +443,14 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
               {t("admin.announcements.showInApp") || "Show in app"}
             </label>
             <label className="flex items-center gap-2 text-sm">
-              <input type="checkbox" role="switch" checked={form.notify} disabled={lockTargeting}
+              <input type="checkbox" role="switch" checked={form.notify} disabled={lockTargeting || !canReachApp}
                 onChange={(e) => setField("notify", e.target.checked)} />
               {t("admin.announcements.notify") || "Send notification"}
             </label>
           </div>
+          {!canReachApp ? (
+            <p className="text-xs text-ink-500">Website only — banners and web-only announcements don't send push notifications.</p>
+          ) : null}
           <FieldError errors={errors} name="channels" />
 
           {actionError ? (
@@ -474,13 +508,30 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
 
         <aside>
           <div className="mb-2 text-eyebrow uppercase text-ink-400">{t("admin.announcements.preview") || "Preview"}</div>
-          <AnnouncementPreview
-            emoji={form.emoji}
-            imageUrl={form.imageUrl}
-            title={text.title}
-            body={text.body}
-            buttonLabel={text.buttonLabel}
-          />
+          <div className="space-y-6">
+            <div>
+              <div className="mb-1 text-xs font-semibold text-ink-500">App</div>
+              {canReachApp ? (
+                <AnnouncementPreview
+                  emoji={form.emoji}
+                  imageUrl={form.imageUrl}
+                  title={text.title}
+                  body={text.body}
+                  buttonLabel={text.buttonLabel}
+                />
+              ) : (
+                <p className="text-sm text-ink-500">Not shown in the app</p>
+              )}
+            </div>
+            <div>
+              <div className="mb-1 text-xs font-semibold text-ink-500">{form.displayStyle === "banner" ? "Website banner" : "Website pop-up"}</div>
+              {form.displayStyle === "banner" ? (
+                <AnnouncementBanner preview onClose={() => {}} announcement={webPreview} />
+              ) : (
+                <AnnouncementModal preview onClose={() => {}} announcement={webPreview} />
+              )}
+            </div>
+          </div>
         </aside>
       </div>
     </div>
