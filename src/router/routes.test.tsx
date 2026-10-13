@@ -175,3 +175,12 @@ it("resolves the author's own stories page ahead of the story viewer", () => {
   const viewer = matchRoutes(routes, "/stories/some-user-id");
   expect(viewer![1].route.path).toBe("stories/:userId");
 });
+
+it("routes old /moments/:id links to the redirect without touching /moments or /moments/saved", () => {
+  const { routes } = require("./routes");
+  const MomentLinkRedirect = require("./MomentLinkRedirect").default;
+  const last = (path: string) => { const m = matchRoutes(routes, path)!; return m[m.length - 1].route; };
+  expect(last("/moments/abc").element.type).toBe(MomentLinkRedirect);
+  expect(last("/moments/saved").path).toBe("moments/saved");
+  expect(last("/moments").path).toBe("moments");
+});

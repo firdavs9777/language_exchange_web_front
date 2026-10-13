@@ -8,6 +8,7 @@ import App from "../App";
 import Loader from "../components/Loader";
 import RouteError from "../components/errors/RouteError";
 import { lazyWithRetry } from "./lazyWithRetry";
+import MomentLinkRedirect from "./MomentLinkRedirect";
 
 // --- Eager: the prerendered public pages ------------------------------------
 //
@@ -269,6 +270,8 @@ export const routes = createRoutesFromElements(
 
     {/* Moments */}
     <Route path="moments/saved" element={lazyRoute(<SavedMoments />)} />
+    {/* Old shared links: /moments/<id> -> /moment/<id>. "saved" above is static, so it outranks this. */}
+    <Route path="moments/:id" element={<MomentLinkRedirect />} />
 
     {/* Admin console. Guarded inside AdminLayout (RequireAdmin) and noindex
         by default — RouteMeta marks every path outside SEO_PAGES. */}

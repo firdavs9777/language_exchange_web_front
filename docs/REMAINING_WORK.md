@@ -31,3 +31,4 @@ The full owner/launch checklist lives in the app repo: `bananatalk_app/docs/REMA
 - [ ] Needs backend (someone else is adding it): reject a past startsAt on PUT for scheduled rows; the web fix is client-side only
 - [ ] Owner: new strings added as English fallbacks (admin.announcements.startPassed)
 - [ ] Not yet deployed
+- [x] Old shared `/moments/<id>` links redirect (replace) to `/moment/<id>`; `/moments` and `/moments/saved` unchanged
