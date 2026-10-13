@@ -153,12 +153,37 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
     }
   };
 
+  const [scheduleRequest, setScheduleRequest] = React.useState(0);
+
   const onSave = async () => {
+    if (status === "scheduled") {
+      // A scheduled row is a promise about who gets what when: its start must stay in
+      // the future, and changing the push or its audience re-asks (fresh count + confirm).
+      const savedForm = doc ? fromAnnouncement(doc) : null;
+      const sameSet = (a: string[], b: string[]) => a.slice().sort().join("|") === b.slice().sort().join("|");
+      const changed =
+        !!savedForm &&
+        (savedForm.notify !== form.notify ||
+          savedForm.startsAt !== form.startsAt ||
+          !sameSet(savedForm.platforms, form.platforms) ||
+          !sameSet(savedForm.languages, form.languages));
+      if (form.notify && changed) {
+        // Same path as the Schedule button: validates, saves, counts, confirms, publishes.
+        setErrors({});
+        setActionError("");
+        setNotice("");
+        setScheduleRequest((n) => n + 1);
+        return;
+      }
+      if (await save({ schedule: true })) setNotice(t("admin.announcements.saved") || "Saved.");
+      return;
+    }
     if (await save()) setNotice(t("admin.announcements.saved") || "Saved.");
   };
 
   const onImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files && event.target.files[0];
+    const input = event.target;
+    const file = input.files && input.files[0];
     if (!file) return;
     setActionError("");
     try {
@@ -166,6 +191,9 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
       setField("imageUrl", result.url);
     } catch (err) {
       setActionError(errorMessage(err, t("admin.announcements.uploadError") || "Couldn't upload the image."));
+    } finally {
+      // Otherwise picking the same file again after "Remove image" fires no change event.
+      input.value = "";
     }
   };
 
@@ -380,6 +408,8 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
               notify={form.notify}
               startsAtIso={fromLocalInput(form.startsAt)}
               disabled={busy}
+              updatedAt={doc ? doc.updatedAt : null}
+              scheduleRequest={scheduleRequest}
               prepare={async (mode) => {
                 const result = await save({ schedule: mode === "schedule", publish: mode === "publish" });
                 return result ? result.id : null;

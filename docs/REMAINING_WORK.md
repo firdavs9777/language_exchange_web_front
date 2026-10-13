@@ -1,6 +1,6 @@
 # Remaining work — web
 
-Last updated: 2026-10-12. Tick items off in the same commit that finishes them.
+Last updated: 2026-10-13. Tick items off in the same commit that finishes them.
 The full owner/launch checklist lives in the app repo: `bananatalk_app/docs/REMAINING_WORK.md`.
 
 ## Admin announcements (2026-10-12) — plan bananatalk_app/docs/superpowers/plans/parts/10-ops-backend-web.md
@@ -20,3 +20,13 @@ The full owner/launch checklist lives in the app repo: `bananatalk_app/docs/REMA
 - [ ] Owner: the language-targeting hint in the editor goes stale once the new app is the majority; drop or reword it then (backend item "Admin editor could say that language targeting can't reach live 2.6.1 users" is done on the web side)
 - [ ] Owner: first real announcement end-to-end (publish -> push -> notifications list -> in-app pop-up); QA matrix lives in the app repo (docs/qa/onboarding-matrix.md)
 - [ ] Announcement admin strings are English fallbacks (t(...) || "..."); add the admin.announcements.* keys when the admin console is localized
+
+## Admin announcements audit 2026-10-13 (fix/audit-2026-10-13)
+- [x] M2 Publish now no longer rejects a draft whose form start is in the future (server restarts at now); end is compared with now
+- [x] I1 Save on a scheduled row validates a future start; changing notify/platforms/languages/start with notify on goes through the Schedule confirm (fresh audience count)
+- [x] M1 publish bar re-arms when the refetched row's updatedAt changes (re-schedule with the same start)
+- [x] M3 confirm of a Schedule re-checks the start is still future; done message follows the returned status
+- [x] M4 image input cleared after an upload attempt (same file can be re-picked)
+- [ ] Needs backend (someone else is adding it): reject a past startsAt on PUT for scheduled rows; the web fix is client-side only
+- [ ] Owner: new strings added as English fallbacks (admin.announcements.startPassed)
+- [ ] Not yet deployed

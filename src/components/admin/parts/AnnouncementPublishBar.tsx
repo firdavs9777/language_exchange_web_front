@@ -21,6 +21,10 @@ export interface AnnouncementPublishBarProps {
   onDone: (message: string) => void;
   /** The editor is busy (e.g. an image is uploading): no action may start. */
   disabled?: boolean;
+  /** The saved row's updatedAt: a change means a refetch landed, so the buttons may re-arm. */
+  updatedAt?: string | null;
+  /** Bump to ask the bar to run the Schedule path (save, fresh count, confirm) on the editor's behalf. */
+  scheduleRequest?: number;
 }
 
 type Mode = "publish" | "schedule";
@@ -40,7 +44,7 @@ const errorMessage = (err: any, fallback: string): string =>
  * number matches the targeting that will actually be used.
  */
 const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
-  announcementId, status, notify, startsAtIso, prepare, onDone, disabled = false,
+  announcementId, status, notify, startsAtIso, prepare, onDone, disabled = false, updatedAt = null, scheduleRequest = 0,
 }) => {
   const { t } = useTranslation();
   const [publish, publishState] = usePublishAnnouncementMutation();
@@ -53,7 +57,9 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
   // After a successful action the buttons stay off until the refetched status
   // (or start time) arrives, so Publish now can't be clicked again in the gap.
   const [finished, setFinished] = React.useState(false);
-  React.useEffect(() => { setFinished(false); }, [status, startsAtIso]);
+  // updatedAt too: re-scheduling a scheduled row with the same start changes neither
+  // status nor start, but the refetched row has a new updatedAt.
+  React.useEffect(() => { setFinished(false); }, [status, startsAtIso, updatedAt]);
   // Synchronous: state updates land a render late, so a fast second click would
   // otherwise slip through before `busy` disables the button.
   const inFlight = React.useRef(false);
@@ -62,8 +68,9 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
   const canEnd = status === "scheduled" || status === "live";
   const fallback = t("admin.common.actionError") || "Something went wrong.";
 
-  const doneMessage = (mode: Mode) =>
-    mode === "schedule"
+  // Follows what the server did: a schedule whose start had passed goes live at once.
+  const doneMessage = (mode: Mode, result?: { status?: string } | null) =>
+    (result && result.status ? result.status === "scheduled" : mode === "schedule")
       ? t("admin.announcements.scheduledDone") || "Scheduled."
       : t("admin.announcements.publishedDone") || "Published.";
   const atFor = (mode: Mode) => (mode === "schedule" ? startsAtIso || undefined : undefined);
@@ -79,9 +86,9 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
       if (!notify) {
         // No push: nothing irreversible reaches anyone's phone, so no dialog.
         try {
-          await publish({ id, at: atFor(mode) }).unwrap();
+          const done = await publish({ id, at: atFor(mode) }).unwrap();
           setFinished(true);
-          onDone(doneMessage(mode));
+          onDone(doneMessage(mode, done));
         } catch (err) {
           setError(errorMessage(err, fallback));
         }
@@ -100,16 +107,32 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
     }
   };
 
+  // The editor's Save on a scheduled row routes here (see AdminAnnouncementEditor).
+  const lastRequest = React.useRef(scheduleRequest);
+  const startRef = React.useRef(start);
+  startRef.current = start;
+  React.useEffect(() => {
+    if (scheduleRequest === lastRequest.current) return;
+    lastRequest.current = scheduleRequest;
+    if (scheduleRequest > 0) startRef.current("schedule");
+  }, [scheduleRequest]);
+
   const confirm = async () => {
     if (!pending || inFlight.current) return;
     inFlight.current = true;
     try {
       if (pending.kind === "publish") {
         const mode = pending.mode;
-        await publish({ id: pending.id, at: atFor(mode) }).unwrap();
+        // The start was checked when the dialog opened; the admin may have sat on it.
+        // Past `at` is treated as "now" by the server, which would push immediately.
+        if (mode === "schedule" && startsAtIso && new Date(startsAtIso) <= new Date()) {
+          setDialogError(t("admin.announcements.startPassed") || "The start time has passed. Cancel, pick a later start and schedule again.");
+          return;
+        }
+        const done = await publish({ id: pending.id, at: atFor(mode) }).unwrap();
         setPending(null);
         setFinished(true);
-        onDone(doneMessage(mode));
+        onDone(doneMessage(mode, done));
       } else {
         await end(pending.id).unwrap();
         setPending(null);

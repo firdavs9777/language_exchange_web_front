@@ -28,6 +28,8 @@ jest.mock("../parts/AnnouncementPublishBar", () => ({
         onClick={() => props.prepare("schedule").then((id: any) => mockPrepared.push(["schedule", id]))}>
         {props.status}
       </button>
+      <span data-testid="schedule-request">{String(props.scheduleRequest || 0)}</span>
+      <span data-testid="bar-updated">{String(props.updatedAt || "")}</span>
       <button type="button" data-testid="publish-now" disabled={props.disabled}
         onClick={() => props.prepare("publish").then((id: any) => mockPrepared.push(["publish", id]))}>
         now
@@ -339,4 +341,69 @@ it("a live failed send under the cap says the job retries it; no panel without n
   mockGet.mockReturnValue({ data: LIVE, isLoading: false, isError: false });
   renderAt("/admin/announcements/a1");
   expect(screen.queryByTestId("delivery-panel")).not.toBeInTheDocument();
+});
+
+const SCHEDULED = {
+  ...LIVE, status: "scheduled", notify: false, platforms: ["ios"], languages: [],
+  startsAt: "2099-01-02T10:00:00.000Z", updatedAt: "2026-10-12T10:00:00.000Z",
+};
+const renderScheduled = (row: any = SCHEDULED) => {
+  mockGet.mockReturnValue({ data: row, isLoading: false, isError: false });
+  renderAt("/admin/announcements/a1");
+};
+
+it("I1: Save on a scheduled row whose start is already past is refused before the PUT", () => {
+  renderScheduled();
+  fireEvent.change(screen.getByLabelText("Starts"), { target: { value: "2020-01-01T10:00" } });
+  fireEvent.click(screen.getByRole("button", { name: "Save" }));
+  expect(screen.getByTestId("error-startsAt")).toHaveTextContent("A scheduled start must be in the future.");
+  expect(updateTrigger).not.toHaveBeenCalled();
+});
+
+it("I1: turning notify on for a scheduled row goes through the schedule confirm, not a silent PUT", async () => {
+  renderScheduled();
+  fireEvent.click(screen.getByRole("switch", { name: "Send notification" }));
+  fireEvent.click(screen.getByRole("button", { name: "Save" }));
+  await waitFor(() => expect(screen.getByTestId("schedule-request")).toHaveTextContent("1"));
+  expect(updateTrigger).not.toHaveBeenCalled();
+});
+
+it("I1: widening the languages of a notifying scheduled row also goes through the confirm", async () => {
+  renderScheduled({ ...SCHEDULED, notify: true });
+  fireEvent.click(screen.getByLabelText("Target Korean"));
+  fireEvent.click(screen.getByRole("button", { name: "Save" }));
+  await waitFor(() => expect(screen.getByTestId("schedule-request")).toHaveTextContent("1"));
+  expect(updateTrigger).not.toHaveBeenCalled();
+});
+
+it("I1: a text-only edit of a notifying scheduled row saves directly", async () => {
+  renderScheduled({ ...SCHEDULED, notify: true });
+  fireEvent.change(screen.getByLabelText("Title"), { target: { value: "Edited" } });
+  fireEvent.click(screen.getByRole("button", { name: "Save" }));
+  await waitFor(() => expect(updateTrigger).toHaveBeenCalled());
+  expect(screen.getByTestId("schedule-request")).toHaveTextContent("0");
+});
+
+it("I1: changes without notify on a scheduled row save directly", async () => {
+  renderScheduled();
+  fireEvent.click(screen.getByLabelText("Android"));
+  fireEvent.click(screen.getByRole("button", { name: "Save" }));
+  await waitFor(() => expect(updateTrigger).toHaveBeenCalled());
+  expect(screen.getByTestId("schedule-request")).toHaveTextContent("0");
+});
+
+it("M1: the bar is told the row's updatedAt", () => {
+  renderScheduled();
+  expect(screen.getByTestId("bar-updated")).toHaveTextContent("2026-10-12T10:00:00.000Z");
+});
+
+it("M4: the file input is cleared after an upload attempt so the same file can be picked again", async () => {
+  renderAt("/admin/announcements/new");
+  const input = screen.getByLabelText("Image") as HTMLInputElement;
+  const file = new File(["x"], "x.png", { type: "image/png" });
+  const spy = jest.fn();
+  Object.defineProperty(input, "value", { configurable: true, get: () => "x.png", set: spy });
+  fireEvent.change(input, { target: { files: [file] } });
+  await waitFor(() => expect(uploadTrigger).toHaveBeenCalled());
+  await waitFor(() => expect(spy).toHaveBeenCalledWith(""));
 });

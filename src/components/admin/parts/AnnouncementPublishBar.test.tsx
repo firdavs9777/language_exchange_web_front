@@ -66,6 +66,8 @@ it("publish without notify skips the dialog", async () => {
 });
 
 it("schedule passes the start time and says when", async () => {
+  publishTrigger = resolved({ status: "scheduled" });
+  mockPublish.mockReturnValue([publishTrigger, { isLoading: false }]);
   renderBar();
   fireEvent.click(screen.getByRole("button", { name: "Schedule" }));
   await waitFor(() => expect(screen.getByTestId("confirm-dialog-confirm")).toBeInTheDocument());
@@ -177,4 +179,54 @@ it("after a successful publish the actions stay disabled until the status change
       startsAtIso={null} prepare={prepare} onDone={onDone} />
   );
   expect(screen.getByRole("button", { name: "End now" })).not.toBeDisabled();
+});
+
+it("M1: re-scheduling a scheduled row re-enables the buttons once the row's updatedAt changes", async () => {
+  publishTrigger = resolved({ status: "scheduled" });
+  mockPublish.mockReturnValue([publishTrigger, { isLoading: false }]);
+  const base = { announcementId: "a1", status: "scheduled" as const, notify: false,
+    startsAtIso: "2030-01-02T10:00:00.000Z", prepare, onDone };
+  const view = render(<AnnouncementPublishBar {...base} updatedAt="t1" />);
+  fireEvent.click(screen.getByRole("button", { name: "Schedule" }));
+  await waitFor(() => expect(onDone).toHaveBeenCalledWith("Scheduled."));
+  expect(screen.getByRole("button", { name: "Schedule" })).toBeDisabled();
+  view.rerender(<AnnouncementPublishBar {...base} updatedAt="t2" />);
+  expect(screen.getByRole("button", { name: "Schedule" })).not.toBeDisabled();
+  expect(screen.getByRole("button", { name: "End now" })).not.toBeDisabled();
+});
+
+it("M3: a schedule confirmed after its start time is refused in the dialog", async () => {
+  jest.useFakeTimers({ doNotFake: ["setTimeout", "setInterval", "queueMicrotask", "nextTick", "setImmediate"] });
+  try {
+    jest.setSystemTime(new Date("2030-01-02T09:00:00.000Z"));
+    renderBar({ status: "draft" });
+    fireEvent.click(screen.getByRole("button", { name: "Schedule" }));
+    await waitFor(() => expect(screen.getByTestId("confirm-dialog-confirm")).toBeInTheDocument());
+    jest.setSystemTime(new Date("2030-01-02T10:01:00.000Z"));
+    fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
+    expect(await screen.findByTestId("confirm-dialog-error")).toHaveTextContent(/start time has passed/i);
+    expect(publishTrigger).not.toHaveBeenCalled();
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
+it("M3: the done message follows the returned status, not the mode", async () => {
+  publishTrigger = resolved({ status: "live" });
+  mockPublish.mockReturnValue([publishTrigger, { isLoading: false }]);
+  renderBar({ notify: false });
+  fireEvent.click(screen.getByRole("button", { name: "Schedule" }));
+  await waitFor(() => expect(onDone).toHaveBeenCalledWith("Published."));
+});
+
+it("a scheduleRequest from the editor starts the schedule path (save, count, confirm)", async () => {
+  const view = renderBar({ status: "scheduled", scheduleRequest: 0 });
+  expect(prepare).not.toHaveBeenCalled();
+  view.rerender(
+    <AnnouncementPublishBar announcementId="a1" status="scheduled" notify={true}
+      startsAtIso="2030-01-02T10:00:00.000Z" prepare={prepare} onDone={onDone} scheduleRequest={1} />
+  );
+  await waitFor(() => expect(screen.getByTestId("confirm-dialog-confirm")).toBeInTheDocument());
+  expect(prepare).toHaveBeenCalledWith("schedule");
+  expect(audienceTrigger).toHaveBeenCalledWith("a1");
 });
