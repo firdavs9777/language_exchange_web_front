@@ -25,6 +25,11 @@ export interface AnnouncementPublishBarProps {
   updatedAt?: string | null;
   /** Bump to ask the bar to run the Schedule path (save, fresh count, confirm) on the editor's behalf. */
   scheduleRequest?: number;
+  /**
+   * The editor asked for the schedule path and the admin backed out after the save
+   * (cancelled the confirm, or the audience count failed): the editor reverts the save.
+   */
+  onScheduleCancelled?: () => void;
 }
 
 type Mode = "publish" | "schedule";
@@ -44,7 +49,7 @@ const errorMessage = (err: any, fallback: string): string =>
  * number matches the targeting that will actually be used.
  */
 const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
-  announcementId, status, notify, startsAtIso, prepare, onDone, disabled = false, updatedAt = null, scheduleRequest = 0,
+  announcementId, status, notify, startsAtIso, prepare, onDone, disabled = false, updatedAt = null, scheduleRequest = 0, onScheduleCancelled,
 }) => {
   const { t } = useTranslation();
   const [publish, publishState] = usePublishAnnouncementMutation();
@@ -75,9 +80,11 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
       : t("admin.announcements.publishedDone") || "Published.";
   const atFor = (mode: Mode) => (mode === "schedule" ? startsAtIso || undefined : undefined);
 
-  const start = async (mode: Mode) => {
+  const fromEditor = React.useRef(false);
+  const start = async (mode: Mode, requested = false) => {
     if (inFlight.current) return;
     inFlight.current = true;
+    fromEditor.current = requested;
     setError("");
     setWorking(true);
     try {
@@ -100,6 +107,7 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
         setPending({ kind: "publish", mode, id, count: audience.count, listed: audience.listed });
       } catch (err) {
         setError(errorMessage(err, t("admin.announcements.audienceError") || "Couldn't count the audience."));
+        if (fromEditor.current) { fromEditor.current = false; if (onScheduleCancelled) onScheduleCancelled(); }
       }
     } finally {
       inFlight.current = false;
@@ -114,7 +122,7 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
   React.useEffect(() => {
     if (scheduleRequest === lastRequest.current) return;
     lastRequest.current = scheduleRequest;
-    if (scheduleRequest > 0) startRef.current("schedule");
+    if (scheduleRequest > 0) startRef.current("schedule", true);
   }, [scheduleRequest]);
 
   const confirm = async () => {
@@ -131,6 +139,7 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
         }
         const done = await publish({ id: pending.id, at: atFor(mode) }).unwrap();
         setPending(null);
+        fromEditor.current = false;
         setFinished(true);
         onDone(doneMessage(mode, done));
       } else {
@@ -206,7 +215,11 @@ const AnnouncementPublishBar: React.FC<AnnouncementPublishBarProps> = ({
         busy={publishState.isLoading || endState.isLoading}
         error={dialogError || undefined}
         onConfirm={() => { confirm(); }}
-        onCancel={() => setPending(null)}
+        onCancel={() => {
+          const revert = !!pending && pending.kind === "publish" && fromEditor.current;
+          setPending(null);
+          if (revert) { fromEditor.current = false; if (onScheduleCancelled) onScheduleCancelled(); }
+        }}
       />
     </div>
   );

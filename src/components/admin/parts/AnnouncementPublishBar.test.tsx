@@ -230,3 +230,18 @@ it("a scheduleRequest from the editor starts the schedule path (save, count, con
   expect(prepare).toHaveBeenCalledWith("schedule");
   expect(audienceTrigger).toHaveBeenCalledWith("a1");
 });
+
+it("cancelling an editor-requested schedule confirm tells the editor; a plain Schedule cancel does not", async () => {
+  const onScheduleCancelled = jest.fn();
+  const base = { announcementId: "a1", status: "scheduled" as const, notify: true,
+    startsAtIso: "2030-01-02T10:00:00.000Z", prepare, onDone, onScheduleCancelled };
+  const view = render(<AnnouncementPublishBar {...base} scheduleRequest={0} />);
+  fireEvent.click(screen.getByRole("button", { name: "Schedule" }));
+  await waitFor(() => expect(screen.getByTestId("confirm-dialog-confirm")).toBeInTheDocument());
+  fireEvent.click(screen.getByTestId("confirm-dialog-cancel"));
+  expect(onScheduleCancelled).not.toHaveBeenCalled();
+  view.rerender(<AnnouncementPublishBar {...base} scheduleRequest={1} />);
+  await waitFor(() => expect(screen.getByTestId("confirm-dialog-confirm")).toBeInTheDocument());
+  fireEvent.click(screen.getByTestId("confirm-dialog-cancel"));
+  expect(onScheduleCancelled).toHaveBeenCalledTimes(1);
+});

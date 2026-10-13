@@ -154,6 +154,32 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
   };
 
   const [scheduleRequest, setScheduleRequest] = React.useState(0);
+  // The four fields as the row had them before an I1 Save; see onScheduleCancelled.
+  const revertTo = React.useRef<Pick<AnnouncementForm, "notify" | "platforms" | "languages" | "startsAt"> | null>(null);
+
+  /**
+   * The admin backed out of the schedule confirm after the save already persisted the
+   * new push/targeting/start: put those four fields back, or the job would push anyway.
+   */
+  const onScheduleCancelled = async () => {
+    const prev = revertTo.current;
+    revertTo.current = null;
+    if (!prev || !id) return;
+    const reverted: AnnouncementForm = { ...form, ...prev };
+    try {
+      const result: AdminAnnouncement = await updateAnnouncement({ id, ...toInput(reverted, false) }).unwrap();
+      setForm(reverted);
+      baseline.current = snapshot(reverted);
+      setSaved(result);
+      setNotice(t("admin.announcements.changeNotApplied") || "Not applied: notification, targeting and start time are back to what was saved.");
+    } catch (err) {
+      setActionError(
+        t("admin.announcements.revertFailed") ||
+          "Your changes were saved and notifications will go out at the start time. Reverting them failed: " +
+            errorMessage(err, "Something went wrong.")
+      );
+    }
+  };
 
   const onSave = async () => {
     if (status === "scheduled") {
@@ -172,6 +198,9 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
         setErrors({});
         setActionError("");
         setNotice("");
+        revertTo.current = savedForm
+          ? { notify: savedForm.notify, platforms: savedForm.platforms, languages: savedForm.languages, startsAt: savedForm.startsAt }
+          : null;
         setScheduleRequest((n) => n + 1);
         return;
       }
@@ -410,6 +439,7 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
               disabled={busy}
               updatedAt={doc ? doc.updatedAt : null}
               scheduleRequest={scheduleRequest}
+              onScheduleCancelled={onScheduleCancelled}
               prepare={async (mode) => {
                 const result = await save({ schedule: mode === "schedule", publish: mode === "publish" });
                 return result ? result.id : null;

@@ -28,6 +28,7 @@ jest.mock("../parts/AnnouncementPublishBar", () => ({
         onClick={() => props.prepare("schedule").then((id: any) => mockPrepared.push(["schedule", id]))}>
         {props.status}
       </button>
+      <button type="button" data-testid="bar-cancel" onClick={() => props.onScheduleCancelled && props.onScheduleCancelled()}>cancel</button>
       <span data-testid="schedule-request">{String(props.scheduleRequest || 0)}</span>
       <span data-testid="bar-updated">{String(props.updatedAt || "")}</span>
       <button type="button" data-testid="publish-now" disabled={props.disabled}
@@ -406,4 +407,32 @@ it("M4: the file input is cleared after an upload attempt so the same file can b
   fireEvent.change(input, { target: { files: [file] } });
   await waitFor(() => expect(uploadTrigger).toHaveBeenCalled());
   await waitFor(() => expect(spy).toHaveBeenCalledWith(""));
+});
+
+it("I1: cancelling the schedule confirm reverts notify/targeting/start with one PUT", async () => {
+  renderScheduled();
+  fireEvent.click(screen.getByRole("switch", { name: "Send notification" }));
+  fireEvent.click(screen.getByLabelText("Android"));
+  fireEvent.click(screen.getByRole("button", { name: "Save" }));
+  await waitFor(() => expect(screen.getByTestId("schedule-request")).toHaveTextContent("1"));
+  fireEvent.click(screen.getByTestId("bar-cancel"));
+  await waitFor(() => expect(updateTrigger).toHaveBeenCalledTimes(1));
+  const arg = updateTrigger.mock.calls[0][0];
+  expect(arg.notify).toBe(false);
+  expect(arg.platforms).toEqual(["ios"]);
+  expect(arg.languages).toEqual([]);
+  expect(typeof arg.startsAt).toBe("string");
+  expect(await screen.findByText(/Not applied/)).toBeInTheDocument();
+  expect(screen.getByRole("switch", { name: "Send notification" })).not.toBeChecked();
+});
+
+it("I1: a failed revert says the changes were saved and will go out at the start time", async () => {
+  updateTrigger = jest.fn(() => ({ unwrap: () => Promise.reject({ data: { message: "boom" } }) }));
+  mockUpdate.mockReturnValue([updateTrigger, { isLoading: false }]);
+  renderScheduled();
+  fireEvent.click(screen.getByRole("switch", { name: "Send notification" }));
+  fireEvent.click(screen.getByRole("button", { name: "Save" }));
+  await waitFor(() => expect(screen.getByTestId("schedule-request")).toHaveTextContent("1"));
+  fireEvent.click(screen.getByTestId("bar-cancel"));
+  expect(await screen.findByText(/changes were saved and notifications will go out at the start time/i)).toBeInTheDocument();
 });

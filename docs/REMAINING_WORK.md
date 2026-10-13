@@ -22,8 +22,8 @@ The full owner/launch checklist lives in the app repo: `bananatalk_app/docs/REMA
 - [ ] Announcement admin strings are English fallbacks (t(...) || "..."); add the admin.announcements.* keys when the admin console is localized
 
 ## Admin announcements audit 2026-10-13 (fix/audit-2026-10-13)
-- [x] M2 Publish now no longer rejects a draft whose form start is in the future (server restarts at now); end is compared with now
-- [x] I1 Save on a scheduled row validates a future start; changing notify/platforms/languages/start with notify on goes through the Schedule confirm (fresh audience count)
+- [x] M2 won't fix: backend model rejects endsAt <= startsAt for non-ended rows and publish saves first, so the client rule stays; message now says to fix start or end before publishing
+- [x] I1 Save on a scheduled row validates a future start; changing notify/platforms/languages/start with notify on goes through the Schedule confirm (fresh audience count); cancelling that confirm (or a failed count) reverts notify/platforms/languages/start with one PUT
 - [x] M1 publish bar re-arms when the refetched row's updatedAt changes (re-schedule with the same start)
 - [x] M3 confirm of a Schedule re-checks the start is still future; done message follows the returned status
 - [x] M4 image input cleared after an upload attempt (same file can be re-picked)

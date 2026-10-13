@@ -179,9 +179,13 @@ export const validateForm = (form: AnnouncementForm, opts: ValidateOptions = {})
   const end = fromLocalInput(form.endsAt);
   if (form.startsAt && !start) errors.startsAt = "Not a valid date.";
   if (form.endsAt && !end) errors.endsAt = "Not a valid date.";
-  // Publishing now restarts the clock at now (the server overwrites startsAt), so the
-  // form's start is irrelevant to the end check; the check against now follows below.
-  if (!opts.publish && start && end && new Date(end) <= new Date(start)) errors.endsAt = "End must be after start.";
+  // The backend model rejects end <= start for every non-ended row, and publishing saves
+  // the form first, so this holds for publish too (no relaxation: the server would 400).
+  if (start && end && new Date(end) <= new Date(start)) {
+    errors.endsAt = opts.publish
+      ? "End must be after start. Fix the start or end time before publishing."
+      : "End must be after start.";
+  }
   if (opts.publish && end && new Date(end) <= (opts.now || new Date())) {
     errors.endsAt = "The end time is already past, so this would end the moment it publishes.";
   }

@@ -146,12 +146,13 @@ it("matchesSearch looks at every locale's title and body, case-insensitively", (
   expect(matchesSearch({}, "x")).toBe(false);
 });
 
-it("publishing now ignores a future form start when comparing the end (the server restarts at now)", () => {
+it("publishing keeps the start/end ordering rule (the backend model rejects it, and publish saves first)", () => {
   const now = new Date("2030-01-01T00:00:00");
   const form = filled({ startsAt: "2030-01-02T10:00", endsAt: "2030-01-01T18:00" });
-  expect(validateForm(form, { publish: true, now }).endsAt).toBeUndefined();
-  // Without publish the start/end order is still enforced.
+  expect(validateForm(form, { publish: true, now }).endsAt).toBe(
+    "End must be after start. Fix the start or end time before publishing."
+  );
   expect(validateForm(form, { now }).endsAt).toBe("End must be after start.");
-  // And a past end is still caught when publishing.
+  // A past end is still caught when publishing.
   expect(validateForm(filled({ startsAt: "2029-12-01T10:00", endsAt: "2029-12-31T10:00" }), { publish: true, now }).endsAt).toBeTruthy();
 });
