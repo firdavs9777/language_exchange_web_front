@@ -35,8 +35,11 @@ const AnnouncementModal: React.FC<Props> = ({ announcement: a, onClose, preview 
   }, [onClose, preview]);
 
   const card = (
-    <div ref={panelRef} role="dialog" aria-modal="true" aria-labelledby={titleId} data-testid="ann-modal"
-      onKeyDown={(e) => trapTab(panelRef.current, e)}
+    <div ref={panelRef} data-testid="ann-modal"
+      {...(preview
+        ? { role: "group", "aria-label": "Website pop-up preview" }
+        : { role: "dialog", "aria-modal": true, "aria-labelledby": titleId })}
+      onKeyDown={preview ? undefined : (e) => trapTab(panelRef.current, e)}
       onClick={(e) => e.stopPropagation()}
       className="relative w-full overflow-hidden rounded-t-3xl bg-surface shadow-float dark:bg-cardbg-dark sm:max-w-[420px] sm:rounded-3xl">
       <button ref={closeRef} type="button" aria-label={t("announcements.close")} onClick={() => onClose(true)}

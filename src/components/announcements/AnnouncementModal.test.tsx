@@ -26,6 +26,13 @@ test("renders the hero card as an accessible dialog", () => {
   expect(screen.getByTestId("ann-hero-emoji")).toHaveTextContent("🎉");
 });
 
+test("preview mode is not a dialog and does not claim modality", () => {
+  renderAt(<AnnouncementModal announcement={A} onClose={() => {}} preview />);
+  expect(screen.queryByRole("dialog")).toBeNull();
+  expect(screen.getByTestId("ann-modal")).not.toHaveAttribute("aria-modal");
+  expect(screen.getByRole("group", { name: "Website pop-up preview" })).toBeInTheDocument();
+});
+
 test("✕ and Escape close and remember; backdrop closes without remembering", () => {
   const onClose = jest.fn();
   renderAt(<AnnouncementModal announcement={A} onClose={onClose} />);

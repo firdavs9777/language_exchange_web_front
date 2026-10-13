@@ -294,7 +294,7 @@ it("a saved draft can be deleted after confirming; the editor returns to the lis
   renderAt("/admin/announcements/a1");
   fireEvent.click(screen.getByRole("button", { name: "Delete draft" }));
   expect(deleteTrigger).not.toHaveBeenCalled();
-  const dialog = screen.getByTestId("confirm-dialog");
+  const dialog = screen.getByRole("dialog");
   fireEvent.click(within(dialog).getByRole("button", { name: "Delete draft" }));
   await waitFor(() => expect(deleteTrigger).toHaveBeenCalledWith("a1"));
   await waitFor(() => expect(screen.getByTestId("location")).toHaveTextContent(/^\/admin\/announcements$/));
@@ -306,7 +306,7 @@ it("a refused delete shows the server message in the dialog", async () => {
   mockDelete.mockReturnValue([deleteTrigger, { isLoading: false }]);
   renderAt("/admin/announcements/a1");
   fireEvent.click(screen.getByRole("button", { name: "Delete draft" }));
-  fireEvent.click(within(screen.getByTestId("confirm-dialog")).getByRole("button", { name: "Delete draft" }));
+  fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Delete draft" }));
   expect(await screen.findByText("Only a draft can be deleted; end it instead")).toBeInTheDocument();
 });
 
@@ -480,4 +480,14 @@ test("Web platform and Display style controls; banner disables Send notification
   expect(screen.getByTestId("ann-banner")).toBeInTheDocument();
   fireEvent.click(screen.getByLabelText("Pop-up"));
   expect(screen.getByTestId("ann-modal")).toBeInTheDocument();
+});
+
+test("banner warning: shown for iOS-only, not for empty platforms (empty means everyone)", () => {
+  renderAt("/admin/announcements/new");
+  fireEvent.click(screen.getByLabelText("All platforms"));
+  fireEvent.click(screen.getByLabelText("iOS"));
+  fireEvent.click(screen.getByLabelText("Banner"));
+  expect(screen.getByText(/banner only appears on the website/i)).toBeInTheDocument();
+  fireEvent.click(screen.getByLabelText("iOS"));
+  expect(screen.queryByText(/banner only appears on the website/i)).toBeNull();
 });

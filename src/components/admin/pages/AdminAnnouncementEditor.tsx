@@ -116,7 +116,7 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
     if (!canReachApp && form.notify) setForm((f) => ({ ...f, notify: false }));
   }, [canReachApp, form.notify]);
   const webPreview = {
-    id: "preview", title: text.title || "Your headline", body: text.body || "Your message", emoji: form.emoji || null,
+    id: "preview", title: text.title || "Title", body: text.body || "Body", emoji: form.emoji || null,
     imageUrl: form.imageUrl || null, buttonLabel: text.buttonLabel || null, buttonUrl: form.buttonUrl || null,
     priority: 0, displayStyle: form.displayStyle,
   };
@@ -393,7 +393,7 @@ const AnnouncementEditorBody: React.FC<{ id: string | null; onCreated: (id: stri
               ))}
             </div>
             <p className="mt-1 text-xs text-ink-500">Website only — the mobile app always shows a pop-up.</p>
-            {form.displayStyle === "banner" && !form.platforms.some((p) => p === "web" || p === "all") ? (
+            {form.displayStyle === "banner" && form.platforms.length > 0 && !form.platforms.some((p) => p === "web" || p === "all") ? (
               <p role="alert" className="mt-1 text-xs text-amber-700">A banner only appears on the website; add Web or All platforms.</p>
             ) : null}
           </fieldset>
