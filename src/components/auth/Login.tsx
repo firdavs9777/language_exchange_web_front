@@ -25,7 +25,7 @@ const Login = () => {
 
   useEffect(() => {
     if (userInfo) {
-      navigate(redirect);
+      navigate(redirect, { replace: true });
     }
   }, [userInfo, redirect, navigate]);
 
@@ -46,7 +46,7 @@ const Login = () => {
         theme: "dark",
         transition: Bounce,
       });
-      navigate(redirect);
+      navigate(redirect, { replace: true });
     } catch (error: any) {
       toast.error(t("authentication.login.invalidCredentialsError"), {
         position: "top-right",

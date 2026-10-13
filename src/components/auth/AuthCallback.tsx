@@ -150,7 +150,7 @@ const AuthCallback = () => {
 
           const redirect = sessionStorage.getItem("oauth_redirect") || "/";
           sessionStorage.removeItem("oauth_redirect");
-          navigate(redirect);
+          navigate(redirect, { replace: true });
         }
       } catch (err: any) {
         console.error("OAuth callback error:", err);

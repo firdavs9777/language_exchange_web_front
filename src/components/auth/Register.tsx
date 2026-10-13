@@ -321,7 +321,7 @@ const Register = () => {
       }
 
       toastSuccess("Profile completed!");
-      navigate(redirect && redirect !== "/" ? redirect : "/communities");
+      navigate(redirect && redirect !== "/" ? redirect : "/communities", { replace: true });
     } catch (error: any) {
       toastError(
         error?.data?.error ||
@@ -391,7 +391,7 @@ const Register = () => {
 
       toastSuccess("Registration successful!");
       // Already signed in — honor ?redirect=, defaulting to communities.
-      navigate(redirect && redirect !== "/" ? redirect : "/communities");
+      navigate(redirect && redirect !== "/" ? redirect : "/communities", { replace: true });
     } catch (error: any) {
       toastError(
         error?.data?.error || error?.data?.message || "Error during registration"
