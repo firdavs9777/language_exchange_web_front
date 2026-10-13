@@ -28,7 +28,7 @@ The full owner/launch checklist lives in the app repo: `bananatalk_app/docs/REMA
 - [x] M3 confirm of a Schedule re-checks the start is still future; done message follows the returned status
 - [x] M4 image input cleared after an upload attempt (same file can be re-picked)
 - [x] Delivery panel/list show "Stopped at end time — sent to N of M" for done + delivery.stoppedReason 'end_time' (missing field = plain Sent); 'admin_end' reads "Ended by admin — sent to N of M"
-- [ ] Needs backend (someone else is adding it): reject a past startsAt on PUT for scheduled rows; the web fix is client-side only
+- [x] Backend guard: a scheduled row's startsAt can't be PUT to now-or-earlier (backend 72c2c9e, 400); an unchanged start still saves
 - [ ] Owner: new strings added as English fallbacks (admin.announcements.startPassed)
 - [ ] Not yet deployed
 - [x] Old shared `/moments/<id>` links redirect (replace) to `/moment/<id>`; `/moments` and `/moments/saved` unchanged
