@@ -572,3 +572,31 @@ describe("report and block (moments#10)", () => {
     expect(screen.getByTestId("report-dialog-stub")).toHaveTextContent("story:story-1");
   });
 });
+
+describe("hashtags (moments#25)", () => {
+  it("shows each tag once with a # under the caption, as plain labels", () => {
+    renderViewer([
+      story({
+        mediaType: "image",
+        mediaUrls: ["https://cdn/p.jpg"],
+        text: "Han river",
+        hashtags: ["seoul", "#travel", "", "  ", "seoul"],
+      }),
+    ]);
+    const tags = screen.getByTestId("story-hashtags");
+    expect(tags).toHaveTextContent("#seoul");
+    expect(tags).toHaveTextContent("#travel");
+    expect(tags.textContent).not.toContain("##");
+    expect(tags.querySelectorAll("span")).toHaveLength(2);
+    // Labels, not links: there is no hashtag search to send anyone to.
+    expect(tags.querySelector("a")).toBeNull();
+    expect(screen.getByTestId("story-caption")).toHaveTextContent("Han river");
+  });
+
+  it("shows them on a text story too, and nothing when there are none", () => {
+    renderViewer([story({ hashtags: ["kpop"] }), story({ _id: "story-2" })]);
+    expect(screen.getByTestId("story-hashtags")).toHaveTextContent("#kpop");
+    fireEvent.click(screen.getByTestId("story-next"));
+    expect(screen.queryByTestId("story-hashtags")).toBeNull();
+  });
+});

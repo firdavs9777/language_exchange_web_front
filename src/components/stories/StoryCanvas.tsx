@@ -41,6 +41,23 @@ export function storyLocationName(story: any): string {
 }
 
 /**
+ * The story's hashtags as the app shows them: `#` added when missing, blanks
+ * and repeats dropped. Labels only -- no hashtag search exists, and a chip
+ * that goes nowhere is the worse bug (the app's own reasoning).
+ */
+export function storyHashtags(story: any): string[] {
+  const raw: any[] = story && Array.isArray(story.hashtags) ? story.hashtags : [];
+  const out: string[] = [];
+  raw.forEach((tag) => {
+    const clean = typeof tag === "string" ? tag.trim().replace(/^#+/, "") : "";
+    if (!clean) return;
+    const label = "#" + clean;
+    if (out.indexOf(label) === -1) out.push(label);
+  });
+  return out;
+}
+
+/**
  * The cross-client rule for `text`.
  *
  * Text story: when it carries overlays, they ARE its words. The app sends a
@@ -103,6 +120,7 @@ const StoryCanvas: React.FC<StoryCanvasProps> = ({
   // An interactive sticker sits at the bottom of the picture; a caption moves
   // to the top rather than disappear under it.
   const hasBottomSticker = Boolean(story.poll || story.questionBox);
+  const tags = storyHashtags(story);
 
   return (
     <>
@@ -142,17 +160,36 @@ const StoryCanvas: React.FC<StoryCanvasProps> = ({
         />
       )}
 
-      {/* Caption: a media story's `text` (the app's caption field). */}
-      {!isText && body && (
-        <p
-          data-testid={testIdPrefix + "-caption"}
+      {/* Caption (a media story's `text`, the app's caption field) and the
+          hashtags under it, as one block so they never overlap. */}
+      {((!isText && body) || tags.length > 0) && (
+        <div
           className={[
-            "pointer-events-none absolute inset-x-4 z-[6] m-0 whitespace-pre-wrap break-words text-center text-base text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]",
+            "pointer-events-none absolute inset-x-4 z-[6] flex flex-col items-center gap-1.5 text-center",
             hasBottomSticker ? "top-24" : "bottom-40",
           ].join(" ")}
         >
-          {body}
-        </p>
+          {!isText && body && (
+            <p
+              data-testid={testIdPrefix + "-caption"}
+              className="m-0 whitespace-pre-wrap break-words text-base text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
+            >
+              {body}
+            </p>
+          )}
+          {tags.length > 0 && (
+            <p
+              data-testid={testIdPrefix + "-hashtags"}
+              className="m-0 flex flex-wrap justify-center gap-x-2 gap-y-1 text-sm font-semibold text-sky-200 drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
+            >
+              {tags.map((tag) => (
+                <span key={tag} dir="auto">
+                  {tag}
+                </span>
+              ))}
+            </p>
+          )}
+        </div>
       )}
 
       {/* Text and emoji overlays.
