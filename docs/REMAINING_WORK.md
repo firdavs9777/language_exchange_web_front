@@ -56,7 +56,7 @@ Phase 3 Chat (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-par
 - [x] P3-CHAT-6 Conversation list from `GET /conversations` only; typed previews; unread from the server (chat#10, chat#11, chat#19)
 - [x] P3-CHAT-7 Catch up after a reconnect; recover a kicked tab; refresh instead of logging out on `tokenExpired` (chat#12, chat#20)
 - [x] P3-CHAT-8 Videos go through `POST /messages/video` with the server's limits checked first (chat#16)
-- [ ] P3-CHAT-9 Voice recorder picks a type the browser supports (AAC first), names the file to match, and sends a waveform (chat#13)
+- [x] P3-CHAT-9 Voice recorder picks a type the browser supports (AAC first), names the file to match, and sends a waveform (chat#13)
 - [ ] P3-CHAT-10 App call-history messages render as a call card, not "File" (chat#6)
 - [ ] P3-CHAT-11 Location messages render as a map card, and the web can send one (chat#7, chat#17)
 - [ ] P3-CHAT-12 Waves are a greeting card, only 1–3 emoji are sticker-sized, and a bare-id sender lands on the right side (chat#8)

@@ -259,6 +259,9 @@
       "tooBig": "This video is too large. The limit is {{mb}} MB.",
       "tooLong": "This video is too long. The limit is {{minutes}} minutes.",
       "badType": "This video format can't be sent. Try an MP4."
+    },
+    "voice": {
+      "unavailable": "Voice recording isn't available. Check the microphone permission for this site."
     }
   },
   "newChat": {

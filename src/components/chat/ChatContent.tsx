@@ -36,6 +36,8 @@ import ConnectionBanner from "./ConnectionBanner";
 import { classifySendError } from "./lib/sendErrors";
 import { emitWithAck, SOCKET_ACK_TIMEOUT_MS } from "./lib/socketAck";
 import { checkVideo, limitsFromConfig, readVideoDuration } from "./lib/videoLimits";
+import { pickRecorderMime, extForMime, baseMime } from "../../utils/recorderMime";
+import { computeWaveform } from "../../utils/audioWaveform";
 import notify from "../../design/notify";
 import PinnedBar from "./actions/PinnedBar";
 import ReplyComposerBar from "./actions/ReplyComposerBar";
@@ -240,6 +242,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const [recordingDuration, setRecordingDuration] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const recorderMimeRef = useRef<string>("");
   const recordingIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const audioStreamRef = useRef<MediaStream | null>(null);
 
@@ -1564,11 +1567,17 @@ const ChatContent: React.FC<ChatContentProps> = ({
       audioStreamRef.current = stream;
       audioChunksRef.current = [];
 
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-          ? "audio/webm;codecs=opus"
-          : "audio/webm",
-      });
+      const choice = pickRecorderMime();
+      let mediaRecorder: MediaRecorder;
+      try {
+        mediaRecorder = choice.mimeType
+          ? new MediaRecorder(stream, { mimeType: choice.mimeType })
+          : new MediaRecorder(stream);
+      } catch (err) {
+        // A browser that said yes and then refused: let it pick.
+        mediaRecorder = new MediaRecorder(stream);
+      }
+      recorderMimeRef.current = mediaRecorder.mimeType || choice.mimeType || "";
       mediaRecorderRef.current = mediaRecorder;
 
       mediaRecorder.ondataavailable = (event) => {
@@ -1597,6 +1606,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
       }, 1000);
     } catch (err) {
       console.error("Failed to start recording:", err);
+      notify.error(
+        t("chatPage.voice.unavailable") ||
+          "Voice recording isn't available. Check the microphone permission for this site."
+      );
     }
   };
 
@@ -1633,7 +1646,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
     // Wait briefly for any remaining data
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+    const recordedType = baseMime(recorderMimeRef.current);
+    const audioBlob = new Blob(audioChunksRef.current, { type: recordedType });
     audioChunksRef.current = [];
     setRecordingDuration(0);
 
@@ -1665,9 +1679,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
     try {
       const formData = new FormData();
-      formData.append("voice", audioBlob, `voice-${Date.now()}.webm`);
+      formData.append("voice", audioBlob, `voice-${Date.now()}.${extForMime(recordedType)}`);
       formData.append("receiver", selectedUser);
       formData.append("duration", duration.toString());
+      const waveform = await computeWaveform(audioBlob, 30);
+      if (waveform && waveform.length) formData.append("waveform", JSON.stringify(waveform));
 
       const result: any = await sendVoiceMessage(formData).unwrap();
       const msgData = result.data || result;

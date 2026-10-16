@@ -25,6 +25,7 @@ const mockDeleteMessage = jest.fn();
 const mockInitiate = jest.fn();
 const mockSendVideo = jest.fn();
 const mockSendMedia = jest.fn();
+const mockSendVoice = jest.fn();
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -48,7 +49,7 @@ jest.mock("../../store/slices/chatSlice", () => ({
   // ForwardDialog, mounted (closed) by ChatContent.
   useGetConversationsQuery: () => ({ data: undefined, isLoading: false, isError: false }),
   useCreateMessageMutation: () => [mockCreateMessage, { isLoading: false }],
-  useSendVoiceMessageMutation: () => mutation(),
+  useSendVoiceMessageMutation: () => [mockSendVoice, { isLoading: false }],
   useSendMediaMessageMutation: () => [mockSendMedia, { isLoading: false }],
   useSendVideoMessageMutation: () => [mockSendVideo, { isLoading: false }],
   useGetVideoMessageConfigQuery: () => ({ data: { data: { video: { maxDuration: 600, maxSize: 1000 } } } }),
@@ -136,6 +137,7 @@ beforeEach(() => {
   mockDeleteMessage.mockReturnValue({ unwrap: () => Promise.resolve({ success: true, data: {} }) });
   mockInitiate.mockImplementation(() => ({ type: "chatApi/initiate" }));
   mockSendVideo.mockReturnValue({ unwrap: () => Promise.resolve({ data: { _id: "m-vid", messageType: "media", media: { type: "video", url: "v.mp4" }, sender: { _id: "me" }, receiver: "u2", createdAt: new Date().toISOString() } }) });
+  mockSendVoice.mockReturnValue({ unwrap: () => Promise.resolve({ data: { _id: "m-voice", messageType: "voice", sender: { _id: "me" }, media: { type: "voice", url: "v.m4a" } } }) });
   mockSendMedia.mockReturnValue({ unwrap: () => Promise.resolve({ data: { _id: "m-img", sender: { _id: "me" } } }) });
 });
 
@@ -786,4 +788,39 @@ it("refuses a video over the server's size cap before uploading", async () => {
   await waitFor(() => expect(messageBox()).toBeInTheDocument(), { timeout: 3500 });
   expect(screen.queryByTestId("msg-status-sending")).not.toBeInTheDocument();
   expect(mockSendVideo).not.toHaveBeenCalled();
+});
+
+// --- Voice notes ----------------------------------------------------------------
+
+it("records AAC where the browser can, and uploads it as .m4a with a matching type", async () => {
+  const stream = { getTracks: () => [{ stop: jest.fn() }] };
+  (navigator as any).mediaDevices = { getUserMedia: jest.fn(() => Promise.resolve(stream)) };
+  const created: any[] = [];
+  const FakeRecorder: any = function (this: any, _s: any, opts: any) {
+    created.push(opts);
+    this.mimeType = (opts && opts.mimeType) || "audio/webm";
+    this.state = "inactive";
+    this.start = () => {
+      this.state = "recording";
+      this.ondataavailable({ data: new Blob(["abc"], { type: this.mimeType }) });
+    };
+    this.stop = () => {
+      this.state = "inactive";
+    };
+  };
+  FakeRecorder.isTypeSupported = (type: string) => type === "audio/mp4";
+  (window as any).MediaRecorder = FakeRecorder;
+  mockUseSocket.mockReturnValue(offlineSocket());
+  renderChat("/chat/u2");
+
+  fireEvent.click(screen.getByLabelText("Voice message"));
+  await waitFor(() => expect(created).toHaveLength(1));
+  expect(created[0]).toEqual({ mimeType: "audio/mp4" });
+
+  fireEvent.click(document.querySelector(".recording-send-btn") as HTMLElement);
+  await waitFor(() => expect(mockSendVoice).toHaveBeenCalledTimes(1));
+  const form: FormData = mockSendVoice.mock.calls[0][0];
+  const file = form.get("voice") as File;
+  expect(file.name).toMatch(/\.m4a$/);
+  expect(file.type).toBe("audio/mp4");
 });
