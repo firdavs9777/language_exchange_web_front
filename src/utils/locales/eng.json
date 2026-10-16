@@ -3095,6 +3095,36 @@
       "topic": "Topic",
       "week": "This week",
       "when": "When"
+    },
+    "confirm": {
+      "cancel": "Not now",
+      "leaveBody": "The others are counting on the people who said yes.",
+      "leaveOk": "Give up my seat",
+      "leaveTitle": "Give up your seat?"
+    },
+    "detail": {
+      "askToJoin": "Ask to join",
+      "back": "See other gatherings",
+      "cancelRequest": "Cancel my request",
+      "capacity": "Up to {{count}} people · confirms at {{quorum}}",
+      "duration": "{{count}} min",
+      "edit": "Edit gathering",
+      "host": "Host",
+      "join": "I'm going",
+      "leave": "I can't go any more",
+      "online": "Online",
+      "requestSent": "Request sent. The host will decide.",
+      "someone": "A BananaTalk member",
+      "youreGoing": "You're going."
+    },
+    "safety": {
+      "blockHost": "Block the host",
+      "blockOwner": "Block the owner",
+      "more": "More",
+      "reportClub": "Report club",
+      "reportFailed": "Couldn't send the report. Try again.",
+      "reportGathering": "Report gathering",
+      "reported": "Thanks — our moderators will review it."
     }
   },
   "clubs": {
