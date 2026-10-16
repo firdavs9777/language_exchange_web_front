@@ -61,7 +61,12 @@
       "noMatchTitle": "Keine passenden Konversationen",
       "noMatchSubtitle": "Versuche, deine Suche anzupassen",
       "emptyTitle": "Noch keine Konversationen",
-      "emptySubtitle": "Beginne eine Konversation, um sie hier zu sehen"
+      "emptySubtitle": "Beginne eine Konversation, um sie hier zu sehen",
+      "loadError": "Deine Unterhaltungen konnten nicht geladen werden",
+      "loading": "Chats werden geladen…",
+      "noMessages": "Noch keine Nachrichten",
+      "tryAgain": "Erneut versuchen",
+      "typing": "tippt…"
     },
     "deleteModal": {
       "title": "Konversation löschen",
@@ -201,9 +206,232 @@
       "gradient_fire": "Feuer",
       "gradient_winter": "Winter",
       "gradient_lavender": "Lavendel",
-      "gradient_aurora": "Aurora"
+      "gradient_aurora": "Aurora",
+      "premiumInUse": "Dieser Chat nutzt ein Premium-Hintergrundbild aus der App. Wenn du ein anderes wählst, ändert es sich für euch beide."
     },
-    "jumpToLatest": "Zu den neuesten Nachrichten springen"
+    "jumpToLatest": "Zu den neuesten Nachrichten springen",
+    "archive": {
+      "archive": "Chat archivieren",
+      "archived": "Auf der Website archiviert. In der App wird er weiterhin angezeigt.",
+      "back": "Zurück zu den Chats",
+      "failed": "Archiv konnte nicht aktualisiert werden",
+      "toggle": "Archiviert ({{count}})",
+      "unarchive": "Chat wiederherstellen",
+      "unarchived": "Zurück in deinen Chats"
+    },
+    "blocked": {
+      "byMe": "Du hast diese Person blockiert. Hebe die Blockierung auf, um Nachrichten zu senden.",
+      "generic": "Du kannst in diesem Chat keine Nachrichten senden.",
+      "manage": "Verwalten"
+    },
+    "bookmarks": {
+      "addFailed": "Nachricht konnte nicht gespeichert werden",
+      "added": "Gespeichert",
+      "attachment": "Anhang",
+      "close": "Schließen",
+      "empty": "Noch keine gespeicherten Nachrichten",
+      "error": "Gespeicherte Nachrichten konnten nicht geladen werden",
+      "loading": "Gespeicherte Nachrichten werden geladen…",
+      "open": "Chat öffnen",
+      "remove": "Aus Gespeicherten entfernen",
+      "removeFailed": "Konnte nicht entfernt werden",
+      "removed": "Aus den gespeicherten Nachrichten entfernt",
+      "title": "Gespeicherte Nachrichten"
+    },
+    "call": {
+      "busy": "{{name}} war in einem anderen Anruf",
+      "cancelledVideo": "Videoanruf abgebrochen",
+      "cancelledVoice": "Sprachanruf abgebrochen",
+      "declinedIncomingVideo": "Videoanruf abgelehnt",
+      "declinedIncomingVoice": "Sprachanruf abgelehnt",
+      "declinedOutgoingVideo": "Videoanruf wurde abgelehnt",
+      "declinedOutgoingVoice": "Sprachanruf wurde abgelehnt",
+      "incomingVideo": "Eingehender Videoanruf",
+      "incomingVoice": "Eingehender Sprachanruf",
+      "missedVideo": "Verpasster Videoanruf",
+      "missedVoice": "Verpasster Sprachanruf",
+      "noAnswerVideo": "Videoanruf · Keine Antwort",
+      "noAnswerVoice": "Sprachanruf · Keine Antwort",
+      "outgoingVideo": "Ausgehender Videoanruf",
+      "outgoingVoice": "Ausgehender Sprachanruf"
+    },
+    "connection": {
+      "kicked": "Der Chat ist woanders geöffnet, deshalb empfängt dieser Tab keine Nachrichten mehr.",
+      "reconnect": "Hier verwenden"
+    },
+    "correction": {
+      "accept": "Korrektur annehmen",
+      "acceptFailed": "Korrektur konnte nicht angenommen werden",
+      "accepted": "Korrektur angenommen — zu deinem Lernverlauf hinzugefügt",
+      "accepting": "Wird angenommen…",
+      "corrected": "{{name}} hat korrigiert",
+      "you": "Du"
+    },
+    "correctionModal": {
+      "cancel": "Abbrechen",
+      "close": "Schließen",
+      "empty": "Bitte gib eine Korrektur ein",
+      "explanation": "Erklärung",
+      "explanationPlaceholder": "Erkläre, warum diese Korrektur hilfreich ist…",
+      "hint": "z. B. „‚went‘ statt ‚goed‘ – unregelmäßige Vergangenheitsform“",
+      "optional": "(optional)",
+      "original": "Ursprüngliche Nachricht",
+      "submit": "Korrektur senden",
+      "title": "Sprachkorrektur",
+      "unchanged": "Die Korrektur muss sich vom Original unterscheiden",
+      "yours": "Deine Korrektur",
+      "yoursPlaceholder": "Gib die korrigierte Version ein…"
+    },
+    "deleteMessage": {
+      "cancel": "Abbrechen",
+      "failed": "Nachricht konnte nicht gelöscht werden. Versuch es noch mal.",
+      "forEveryone": "Für alle löschen",
+      "forMe": "Für mich löschen",
+      "placeholder": "Diese Nachricht wurde gelöscht",
+      "title": "Nachricht löschen?",
+      "tooLate": "Du kannst eine Nachricht nur innerhalb von 1 Stunde nach dem Senden für alle löschen."
+    },
+    "editDialog": {
+      "cancel": "Abbrechen",
+      "failed": "Nachricht konnte nicht bearbeitet werden. Versuch es noch mal.",
+      "label": "Nachricht",
+      "save": "Speichern",
+      "title": "Nachricht bearbeiten",
+      "tooLate": "Du kannst eine Nachricht nur innerhalb von 15 Minuten nach dem Senden bearbeiten."
+    },
+    "editedLabel": "bearbeitet",
+    "forward": {
+      "close": "Schließen",
+      "empty": "Keine Unterhaltungen gefunden.",
+      "error": "Unterhaltungen konnten nicht geladen werden.",
+      "loading": "Unterhaltungen werden geladen…",
+      "search": "Suchen",
+      "submit": "Weiterleiten",
+      "submitCount": "Weiterleiten ({{count}})",
+      "title": "Weiterleiten an",
+      "unknownUser": "Unbekannt"
+    },
+    "forwarded": "Weitergeleitet",
+    "location": {
+      "cancel": "Abbrechen",
+      "confirmTitle": "Deinen Standort teilen?",
+      "denied": "Standortzugriff wurde verweigert",
+      "failed": "Dein Standort konnte nicht ermittelt werden",
+      "open": "In Karten öffnen",
+      "send": "Senden",
+      "sendFailed": "Dein Standort konnte nicht gesendet werden",
+      "share": "Standort teilen",
+      "title": "Standort",
+      "unsupported": "Dieser Browser kann keinen Standort teilen"
+    },
+    "mediaGallery": {
+      "back": "Zurück",
+      "emptyFiles": "Noch keine Dateien geteilt",
+      "emptyPhotos": "Noch keine Fotos geteilt",
+      "emptyVideos": "Noch keine Videos geteilt",
+      "error": "Fehler beim Laden der Medien",
+      "files": "Dateien",
+      "loading": "Medien werden geladen…",
+      "photos": "Fotos",
+      "title": "Geteilte Medien",
+      "unknownFile": "Unbekannte Datei",
+      "unknownSize": "Unbekannte Größe",
+      "videos": "Videos"
+    },
+    "menu": {
+      "bookmark": "Speichern",
+      "close": "Schließen",
+      "copy": "Kopieren",
+      "delete": "Löschen",
+      "edit": "Bearbeiten",
+      "forward": "Weiterleiten",
+      "listen": "Anhören",
+      "pin": "Anheften",
+      "reply": "Antworten"
+    },
+    "mute": {
+      "always": "Bis ich es wieder einschalte",
+      "cancel": "Abbrechen",
+      "eightHours": "Für 8 Stunden",
+      "oneHour": "Für 1 Stunde",
+      "oneWeek": "Für 1 Woche",
+      "title": "{{name}} stummschalten?"
+    },
+    "pinnedBar": {
+      "count": "{{count}} angeheftet",
+      "unpin": "Nachricht lösen"
+    },
+    "preview": {
+      "attachment": "📎 Anhang",
+      "call": "📞 Anruf",
+      "file": "📎 Datei",
+      "gif": "GIF",
+      "location": "📍 Standort",
+      "photo": "🖼️ Foto",
+      "poll": "📊 Umfrage",
+      "story": "📖 Story",
+      "video": "🎥 Video",
+      "voice": "🎤 Sprachnachricht"
+    },
+    "replyBar": {
+      "cancel": "Antwort abbrechen",
+      "replyingTo": "Antwort an {{name}}"
+    },
+    "search": {
+      "close": "Schließen",
+      "empty": "Keine Nachrichten gefunden",
+      "hint": "Gib mindestens 2 Zeichen ein",
+      "notLoaded": "Diese Nachricht liegt weiter zurück. Scroll nach oben, um sie zu laden.",
+      "open": "Nachrichten durchsuchen",
+      "placeholder": "Diesen Chat durchsuchen",
+      "searching": "Suche läuft…",
+      "title": "Nachrichten mit {{name}} durchsuchen",
+      "unavailable": "Die Suche ist gerade nicht verfügbar",
+      "you": "Du"
+    },
+    "sendErrors": {
+      "blockedBody": "Du kannst dieser Person keine Nachrichten senden.",
+      "blockedTitle": "Nachricht nicht gesendet",
+      "capBody": "Du hast heute so viele neue Unterhaltungen begonnen wie möglich. Hol dir VIP, um so viele zu beginnen, wie du willst.",
+      "capTitle": "Limit für neue Unterhaltungen erreicht",
+      "dailyBody": "Du hast alle Nachrichten für heute verschickt. Hol dir VIP für unbegrenzte Nachrichten oder komm morgen wieder.",
+      "dailyTitle": "Tageslimit für Nachrichten erreicht",
+      "firstChatBody": "Du kannst 5 Nachrichten senden, bis die Person antwortet. Sobald sie antwortet, kannst du wieder schreiben.",
+      "firstChatTitle": "Warte auf eine Antwort",
+      "generic": "Nachricht nicht gesendet. Tippe auf „Erneut versuchen“.",
+      "goVip": "VIP holen",
+      "ok": "OK",
+      "reattach": "Hänge die Datei erneut an, um sie zu senden.",
+      "tooFast": "Du sendest Nachrichten zu schnell. Warte einen Moment."
+    },
+    "story": {
+      "replied": "Hat auf deine Story geantwortet",
+      "shared": "Hat eine Story geteilt",
+      "unavailable": "Diese Story ist nicht mehr verfügbar",
+      "youReplied": "Du hast auf die Story geantwortet",
+      "youShared": "Du hast eine Story geteilt"
+    },
+    "translation": {
+      "close": "Übersetzung schließen",
+      "failed": "Nachricht konnte nicht übersetzt werden",
+      "label": "Übersetzung · {{lang}}",
+      "save": "Ausdruck speichern",
+      "saveFailed": "Ausdruck konnte nicht gespeichert werden",
+      "saved": "In deiner Lernliste gespeichert",
+      "saving": "Wird gespeichert…",
+      "translating": "Wird übersetzt…"
+    },
+    "video": {
+      "badType": "Dieses Videoformat kann nicht gesendet werden. Versuch es mit MP4.",
+      "tooBig": "Dieses Video ist zu groß. Das Limit liegt bei {{mb}} MB.",
+      "tooLong": "Dieses Video ist zu lang. Das Limit liegt bei {{minutes}} Minuten."
+    },
+    "voice": {
+      "unavailable": "Sprachaufnahme ist nicht verfügbar. Prüfe die Mikrofonberechtigung für diese Website."
+    },
+    "wave": {
+      "hi": "Hallo!"
+    }
   },
   "newChat": {
     "title": "Neuer Chat",

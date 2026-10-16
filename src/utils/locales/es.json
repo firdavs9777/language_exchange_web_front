@@ -61,7 +61,12 @@
       "noMatchTitle": "Sin conversaciones que coincidan",
       "noMatchSubtitle": "Intenta cambiar tu búsqueda",
       "emptyTitle": "Aún no tienes conversaciones",
-      "emptySubtitle": "Inicia una conversación para verla aquí"
+      "emptySubtitle": "Inicia una conversación para verla aquí",
+      "loadError": "No se pudieron cargar tus conversaciones",
+      "loading": "Cargando chats...",
+      "noMessages": "Aún no hay mensajes",
+      "tryAgain": "Reintentar",
+      "typing": "escribiendo..."
     },
     "deleteModal": {
       "title": "Eliminar conversación",
@@ -201,9 +206,232 @@
       "gradient_fire": "Fuego",
       "gradient_winter": "Invierno",
       "gradient_lavender": "Lavanda",
-      "gradient_aurora": "Aurora"
+      "gradient_aurora": "Aurora",
+      "premiumInUse": "Este chat usa un fondo Premium de la app. Si eliges otro, cambiará para los dos."
     },
-    "jumpToLatest": "Ir a los mensajes más recientes"
+    "jumpToLatest": "Ir a los mensajes más recientes",
+    "archive": {
+      "archive": "Archivar chat",
+      "archived": "Archivado en el sitio web. La app lo sigue mostrando.",
+      "back": "Volver a los chats",
+      "failed": "No se pudo actualizar el archivo",
+      "toggle": "Archivados ({{count}})",
+      "unarchive": "Desarchivar chat",
+      "unarchived": "Se movió de nuevo a tus chats"
+    },
+    "blocked": {
+      "byMe": "Bloqueaste a esta persona. Desbloquéala para enviarle mensajes.",
+      "generic": "No puedes enviar mensajes en este chat.",
+      "manage": "Gestionar"
+    },
+    "bookmarks": {
+      "addFailed": "No se pudo guardar el mensaje",
+      "added": "Guardado",
+      "attachment": "Archivo adjunto",
+      "close": "Cerrar",
+      "empty": "Aún no tienes mensajes guardados",
+      "error": "No se pudieron cargar los mensajes guardados",
+      "loading": "Cargando mensajes guardados…",
+      "open": "Abrir chat",
+      "remove": "Quitar de guardados",
+      "removeFailed": "No se pudo quitar",
+      "removed": "Se quitó de los mensajes guardados",
+      "title": "Mensajes guardados"
+    },
+    "call": {
+      "busy": "{{name}} estaba en otra llamada",
+      "cancelledVideo": "Videollamada cancelada",
+      "cancelledVoice": "Llamada de voz cancelada",
+      "declinedIncomingVideo": "Videollamada rechazada",
+      "declinedIncomingVoice": "Llamada de voz rechazada",
+      "declinedOutgoingVideo": "Rechazaron la videollamada",
+      "declinedOutgoingVoice": "Rechazaron la llamada de voz",
+      "incomingVideo": "Videollamada entrante",
+      "incomingVoice": "Llamada de voz entrante",
+      "missedVideo": "Videollamada perdida",
+      "missedVoice": "Llamada de voz perdida",
+      "noAnswerVideo": "Videollamada · Sin respuesta",
+      "noAnswerVoice": "Llamada de voz · Sin respuesta",
+      "outgoingVideo": "Videollamada saliente",
+      "outgoingVoice": "Llamada de voz saliente"
+    },
+    "connection": {
+      "kicked": "El chat está abierto en otro lugar, así que esta pestaña dejó de recibir mensajes.",
+      "reconnect": "Usar aquí"
+    },
+    "correction": {
+      "accept": "Aceptar corrección",
+      "acceptFailed": "No se pudo aceptar la corrección",
+      "accepted": "Corrección aceptada — añadida a tu registro de aprendizaje",
+      "accepting": "Aceptando…",
+      "corrected": "{{name}} corrigió",
+      "you": "Tú"
+    },
+    "correctionModal": {
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "empty": "Escribe una corrección",
+      "explanation": "Explicación",
+      "explanationPlaceholder": "Explica por qué esta corrección es útil...",
+      "hint": "p. ej., \"Usa 'went' en lugar de 'goed': pasado irregular\"",
+      "optional": "(opcional)",
+      "original": "Mensaje original",
+      "submit": "Enviar corrección",
+      "title": "Corrección de idioma",
+      "unchanged": "La corrección debe ser diferente del original",
+      "yours": "Tu corrección",
+      "yoursPlaceholder": "Escribe la versión corregida..."
+    },
+    "deleteMessage": {
+      "cancel": "Cancelar",
+      "failed": "No se pudo eliminar el mensaje. Inténtalo de nuevo.",
+      "forEveryone": "Eliminar para todos",
+      "forMe": "Eliminar para mí",
+      "placeholder": "Se eliminó este mensaje",
+      "title": "¿Eliminar mensaje?",
+      "tooLate": "Solo puedes eliminar un mensaje para todos durante la primera hora después de enviarlo."
+    },
+    "editDialog": {
+      "cancel": "Cancelar",
+      "failed": "No se pudo editar el mensaje. Inténtalo de nuevo.",
+      "label": "Mensaje",
+      "save": "Guardar",
+      "title": "Editar mensaje",
+      "tooLate": "Solo puedes editar un mensaje durante los 15 minutos después de enviarlo."
+    },
+    "editedLabel": "editado",
+    "forward": {
+      "close": "Cerrar",
+      "empty": "No se encontraron conversaciones.",
+      "error": "No se pudieron cargar las conversaciones.",
+      "loading": "Cargando conversaciones…",
+      "search": "Buscar",
+      "submit": "Reenviar",
+      "submitCount": "Reenviar ({{count}})",
+      "title": "Reenviar a",
+      "unknownUser": "Desconocido"
+    },
+    "forwarded": "Reenviado",
+    "location": {
+      "cancel": "Cancelar",
+      "confirmTitle": "¿Compartir tu ubicación?",
+      "denied": "Se denegó el permiso de ubicación",
+      "failed": "No se pudo obtener tu ubicación",
+      "open": "Abrir en Mapas",
+      "send": "Enviar",
+      "sendFailed": "No se pudo enviar tu ubicación",
+      "share": "Compartir ubicación",
+      "title": "Ubicación",
+      "unsupported": "Este navegador no puede compartir la ubicación"
+    },
+    "mediaGallery": {
+      "back": "Volver",
+      "emptyFiles": "Aún no se han compartido archivos",
+      "emptyPhotos": "Aún no se han compartido fotos",
+      "emptyVideos": "Aún no se han compartido videos",
+      "error": "Error al cargar los archivos multimedia",
+      "files": "Archivos",
+      "loading": "Cargando multimedia...",
+      "photos": "Fotos",
+      "title": "Multimedia compartida",
+      "unknownFile": "Archivo desconocido",
+      "unknownSize": "Tamaño desconocido",
+      "videos": "Videos"
+    },
+    "menu": {
+      "bookmark": "Guardar",
+      "close": "Cerrar",
+      "copy": "Copiar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "forward": "Reenviar",
+      "listen": "Escuchar",
+      "pin": "Fijar",
+      "reply": "Responder"
+    },
+    "mute": {
+      "always": "Hasta que lo reactive",
+      "cancel": "Cancelar",
+      "eightHours": "Durante 8 horas",
+      "oneHour": "Durante 1 hora",
+      "oneWeek": "Durante 1 semana",
+      "title": "¿Silenciar a {{name}}?"
+    },
+    "pinnedBar": {
+      "count": "Fijados: {{count}}",
+      "unpin": "Desfijar mensaje"
+    },
+    "preview": {
+      "attachment": "📎 Archivo adjunto",
+      "call": "📞 Llamada",
+      "file": "📎 Archivo",
+      "gif": "GIF",
+      "location": "📍 Ubicación",
+      "photo": "🖼️ Foto",
+      "poll": "📊 Encuesta",
+      "story": "📖 Historia",
+      "video": "🎥 Video",
+      "voice": "🎤 Mensaje de voz"
+    },
+    "replyBar": {
+      "cancel": "Cancelar respuesta",
+      "replyingTo": "Respondiendo a {{name}}"
+    },
+    "search": {
+      "close": "Cerrar",
+      "empty": "No se encontraron mensajes",
+      "hint": "Escribe al menos 2 caracteres",
+      "notLoaded": "Ese mensaje es más antiguo. Desplázate hacia arriba para cargarlo.",
+      "open": "Buscar mensajes",
+      "placeholder": "Buscar en este chat",
+      "searching": "Buscando…",
+      "title": "Buscar mensajes con {{name}}",
+      "unavailable": "La búsqueda no está disponible en este momento",
+      "you": "Tú"
+    },
+    "sendErrors": {
+      "blockedBody": "No puedes enviar mensajes a esta persona.",
+      "blockedTitle": "Mensaje no enviado",
+      "capBody": "Ya iniciaste todas las conversaciones nuevas que puedes hoy. Hazte VIP para iniciar todas las que quieras.",
+      "capTitle": "Límite de conversaciones nuevas alcanzado",
+      "dailyBody": "Ya enviaste todos tus mensajes de hoy. Hazte VIP para tener mensajes ilimitados, o vuelve mañana.",
+      "dailyTitle": "Límite diario de mensajes alcanzado",
+      "firstChatBody": "Puedes enviar 5 mensajes hasta que te respondan. Podrás escribir de nuevo cuando contesten.",
+      "firstChatTitle": "Espera una respuesta",
+      "generic": "Mensaje no enviado. Toca Reintentar para volver a intentarlo.",
+      "goVip": "Hazte VIP",
+      "ok": "OK",
+      "reattach": "Vuelve a adjuntar el archivo para enviarlo.",
+      "tooFast": "Estás enviando mensajes demasiado rápido. Espera un momento."
+    },
+    "story": {
+      "replied": "Respondió a tu historia",
+      "shared": "Compartió una historia",
+      "unavailable": "Esta historia ya no está disponible",
+      "youReplied": "Respondiste a su historia",
+      "youShared": "Compartiste una historia"
+    },
+    "translation": {
+      "close": "Cerrar traducción",
+      "failed": "No se pudo traducir el mensaje",
+      "label": "Traducción · {{lang}}",
+      "save": "Guardar frase",
+      "saveFailed": "No se pudo guardar la frase",
+      "saved": "Guardada en tu cola de estudio",
+      "saving": "Guardando…",
+      "translating": "Traduciendo…"
+    },
+    "video": {
+      "badType": "Este formato de video no se puede enviar. Prueba con un MP4.",
+      "tooBig": "Este video es demasiado grande. El límite es de {{mb}} MB.",
+      "tooLong": "Este video es demasiado largo. El límite es de {{minutes}} minutos."
+    },
+    "voice": {
+      "unavailable": "La grabación de voz no está disponible. Revisa el permiso del micrófono para este sitio."
+    },
+    "wave": {
+      "hi": "¡Hola!"
+    }
   },
   "notifications": "Notificaciones",
   "moments": "Momentos",

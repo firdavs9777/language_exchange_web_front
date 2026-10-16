@@ -61,7 +61,12 @@
       "noMatchTitle": "Walang tumutugmang usapan",
       "noMatchSubtitle": "Subukang ayusin ang paghahanap",
       "emptyTitle": "Wala pang usapan",
-      "emptySubtitle": "Magsimula ng usapan para makita rito"
+      "emptySubtitle": "Magsimula ng usapan para makita rito",
+      "loadError": "Hindi ma-load ang mga usapan mo",
+      "loading": "Nilo-load ang mga chat...",
+      "noMessages": "Wala pang mensahe",
+      "tryAgain": "Subukan muli",
+      "typing": "nagta-type..."
     },
     "deleteModal": {
       "title": "Burahin ang usapan",
@@ -201,9 +206,232 @@
       "gradient_fire": "Fire",
       "gradient_winter": "Winter",
       "gradient_lavender": "Lavender",
-      "gradient_aurora": "Aurora"
+      "gradient_aurora": "Aurora",
+      "premiumInUse": "Gumagamit ang chat na ito ng Premium wallpaper mula sa app. Kapag pumili ka ng iba, magbabago ito para sa inyong dalawa."
     },
-    "jumpToLatest": "Pumunta sa pinakabagong mensahe"
+    "jumpToLatest": "Pumunta sa pinakabagong mensahe",
+    "archive": {
+      "archive": "I-archive ang chat",
+      "archived": "Na-archive sa website. Makikita pa rin ito sa app.",
+      "back": "Bumalik sa mga chat",
+      "failed": "Hindi na-update ang archive",
+      "toggle": "Naka-archive ({{count}})",
+      "unarchive": "I-unarchive ang chat",
+      "unarchived": "Ibinalik sa mga chat mo"
+    },
+    "blocked": {
+      "byMe": "Na-block mo ang taong ito. I-unblock siya para makapag-message.",
+      "generic": "Hindi ka makakapagpadala ng mensahe sa chat na ito.",
+      "manage": "Pamahalaan"
+    },
+    "bookmarks": {
+      "addFailed": "Hindi na-save ang mensahe",
+      "added": "Na-save",
+      "attachment": "Attachment",
+      "close": "Isara",
+      "empty": "Wala pang naka-save na mensahe",
+      "error": "Hindi ma-load ang mga naka-save na mensahe",
+      "loading": "Nilo-load ang mga naka-save na mensahe…",
+      "open": "Buksan ang chat",
+      "remove": "Alisin sa naka-save",
+      "removeFailed": "Hindi ito naalis",
+      "removed": "Inalis sa mga naka-save na mensahe",
+      "title": "Mga naka-save na mensahe"
+    },
+    "call": {
+      "busy": "May ibang kausap sa tawag si {{name}}",
+      "cancelledVideo": "Kinanselang video call",
+      "cancelledVoice": "Kinanselang voice call",
+      "declinedIncomingVideo": "Tinanggihang video call",
+      "declinedIncomingVoice": "Tinanggihang voice call",
+      "declinedOutgoingVideo": "Tinanggihan ang video call",
+      "declinedOutgoingVoice": "Tinanggihan ang voice call",
+      "incomingVideo": "Papasok na video call",
+      "incomingVoice": "Papasok na voice call",
+      "missedVideo": "Hindi nasagot na video call",
+      "missedVoice": "Hindi nasagot na voice call",
+      "noAnswerVideo": "Video call · Walang sumagot",
+      "noAnswerVoice": "Voice call · Walang sumagot",
+      "outgoingVideo": "Palabas na video call",
+      "outgoingVoice": "Palabas na voice call"
+    },
+    "connection": {
+      "kicked": "Bukas ang chat sa ibang lugar, kaya hindi na tumatanggap ng mensahe ang tab na ito.",
+      "reconnect": "Gamitin dito"
+    },
+    "correction": {
+      "accept": "Tanggapin ang correction",
+      "acceptFailed": "Hindi natanggap ang correction",
+      "accepted": "Natanggap ang correction — idinagdag sa learning record mo",
+      "accepting": "Tinatanggap…",
+      "corrected": "Nag-correct si {{name}}",
+      "you": "Ikaw"
+    },
+    "correctionModal": {
+      "cancel": "Kanselahin",
+      "close": "Isara",
+      "empty": "Maglagay ng correction",
+      "explanation": "Paliwanag",
+      "explanationPlaceholder": "Ipaliwanag kung bakit makakatulong ang correction na ito...",
+      "hint": "hal., \"Gamitin ang 'went' imbes na 'goed' - irregular na past tense\"",
+      "optional": "(opsyonal)",
+      "original": "Orihinal na Mensahe",
+      "submit": "Ipadala ang Correction",
+      "title": "Language Correction",
+      "unchanged": "Dapat iba ang correction sa orihinal",
+      "yours": "Ang Correction Mo",
+      "yoursPlaceholder": "I-type ang itinamang bersyon..."
+    },
+    "deleteMessage": {
+      "cancel": "Kanselahin",
+      "failed": "Hindi nabura ang mensahe. Subukan muli.",
+      "forEveryone": "Burahin para sa lahat",
+      "forMe": "Burahin para sa akin",
+      "placeholder": "Binura ang mensaheng ito",
+      "title": "Burahin ang mensahe?",
+      "tooLate": "Mabubura mo lang ang mensahe para sa lahat sa loob ng 1 oras matapos itong ipadala."
+    },
+    "editDialog": {
+      "cancel": "Kanselahin",
+      "failed": "Hindi na-edit ang mensahe. Subukan muli.",
+      "label": "Mensahe",
+      "save": "I-save",
+      "title": "I-edit ang mensahe",
+      "tooLate": "Mae-edit mo lang ang mensahe sa loob ng 15 minuto matapos itong ipadala."
+    },
+    "editedLabel": "na-edit",
+    "forward": {
+      "close": "Isara",
+      "empty": "Walang nahanap na usapan.",
+      "error": "Hindi ma-load ang mga usapan.",
+      "loading": "Nilo-load ang mga usapan…",
+      "search": "Maghanap",
+      "submit": "I-forward",
+      "submitCount": "I-forward ({{count}})",
+      "title": "I-forward kay",
+      "unknownUser": "Hindi kilala"
+    },
+    "forwarded": "Na-forward",
+    "location": {
+      "cancel": "Kanselahin",
+      "confirmTitle": "I-share ang lokasyon mo?",
+      "denied": "Tinanggihan ang pahintulot sa lokasyon",
+      "failed": "Hindi makuha ang lokasyon mo",
+      "open": "Buksan sa Maps",
+      "send": "Ipadala",
+      "sendFailed": "Hindi naipadala ang lokasyon mo",
+      "share": "I-share ang lokasyon",
+      "title": "Lokasyon",
+      "unsupported": "Hindi kayang mag-share ng lokasyon ng browser na ito"
+    },
+    "mediaGallery": {
+      "back": "Bumalik",
+      "emptyFiles": "Wala pang na-share na file",
+      "emptyPhotos": "Wala pang na-share na larawan",
+      "emptyVideos": "Wala pang na-share na video",
+      "error": "Error sa pag-load ng media",
+      "files": "Mga File",
+      "loading": "Nilo-load ang media...",
+      "photos": "Mga Larawan",
+      "title": "Mga Na-share na Media",
+      "unknownFile": "Hindi kilalang file",
+      "unknownSize": "Hindi alam ang laki",
+      "videos": "Mga Video"
+    },
+    "menu": {
+      "bookmark": "I-save",
+      "close": "Isara",
+      "copy": "Kopyahin",
+      "delete": "Burahin",
+      "edit": "I-edit",
+      "forward": "I-forward",
+      "listen": "Pakinggan",
+      "pin": "I-pin",
+      "reply": "Sumagot"
+    },
+    "mute": {
+      "always": "Hanggang i-on ko ulit",
+      "cancel": "Kanselahin",
+      "eightHours": "Sa loob ng 8 oras",
+      "oneHour": "Sa loob ng 1 oras",
+      "oneWeek": "Sa loob ng 1 linggo",
+      "title": "I-mute si {{name}}?"
+    },
+    "pinnedBar": {
+      "count": "{{count}} naka-pin",
+      "unpin": "I-unpin ang mensahe"
+    },
+    "preview": {
+      "attachment": "📎 Attachment",
+      "call": "📞 Tawag",
+      "file": "📎 File",
+      "gif": "GIF",
+      "location": "📍 Lokasyon",
+      "photo": "🖼️ Larawan",
+      "poll": "📊 Poll",
+      "story": "📖 Story",
+      "video": "🎥 Video",
+      "voice": "🎤 Voice message"
+    },
+    "replyBar": {
+      "cancel": "Kanselahin ang reply",
+      "replyingTo": "Sumasagot kay {{name}}"
+    },
+    "search": {
+      "close": "Isara",
+      "empty": "Walang nahanap na mensahe",
+      "hint": "Mag-type ng hindi bababa sa 2 character",
+      "notLoaded": "Nasa mas itaas ang mensaheng iyon. Mag-scroll pataas para ma-load ito.",
+      "open": "Maghanap ng mensahe",
+      "placeholder": "Maghanap sa chat na ito",
+      "searching": "Naghahanap…",
+      "title": "Maghanap ng mensahe kasama si {{name}}",
+      "unavailable": "Hindi available ang search ngayon",
+      "you": "Ikaw"
+    },
+    "sendErrors": {
+      "blockedBody": "Hindi ka makakapagpadala ng mensahe sa taong ito.",
+      "blockedTitle": "Hindi naipadala ang mensahe",
+      "capBody": "Naabot mo na ang maximum na bagong usapan ngayong araw. Mag-VIP para makapagsimula ng kahit ilan.",
+      "capTitle": "Naabot na ang limit ng bagong usapan",
+      "dailyBody": "Naipadala mo na ang lahat ng mensahe mo ngayong araw. Mag-VIP para sa unlimited na mensahe, o bumalik bukas.",
+      "dailyTitle": "Naabot na ang daily message limit",
+      "firstChatBody": "Puwede kang magpadala ng 5 mensahe hanggang sumagot siya. Makakapag-message ka ulit kapag sumagot na siya.",
+      "firstChatTitle": "Maghintay ng sagot",
+      "generic": "Hindi naipadala ang mensahe. I-tap ang Subukan muli para ulitin.",
+      "goVip": "Mag-VIP",
+      "ok": "OK",
+      "reattach": "I-attach ulit ang file para maipadala ito.",
+      "tooFast": "Masyadong mabilis ang pagpapadala mo ng mensahe. Sandali lang."
+    },
+    "story": {
+      "replied": "Sumagot sa story mo",
+      "shared": "Nag-share ng story",
+      "unavailable": "Hindi na available ang story na ito",
+      "youReplied": "Sumagot ka sa story niya",
+      "youShared": "Nag-share ka ng story"
+    },
+    "translation": {
+      "close": "Isara ang salin",
+      "failed": "Hindi naisalin ang mensahe",
+      "label": "Salin · {{lang}}",
+      "save": "I-save ang parirala",
+      "saveFailed": "Hindi na-save ang parirala",
+      "saved": "Na-save sa study queue",
+      "saving": "Sine-save…",
+      "translating": "Isinasalin…"
+    },
+    "video": {
+      "badType": "Hindi maipapadala ang format ng video na ito. Subukan ang MP4.",
+      "tooBig": "Masyadong malaki ang video na ito. {{mb}} MB ang limit.",
+      "tooLong": "Masyadong mahaba ang video na ito. {{minutes}} minuto ang limit."
+    },
+    "voice": {
+      "unavailable": "Hindi available ang voice recording. Tingnan ang pahintulot sa mikropono para sa site na ito."
+    },
+    "wave": {
+      "hi": "Hi!"
+    }
   },
   "newChat": {
     "title": "Bagong Chat",

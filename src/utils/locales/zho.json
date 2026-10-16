@@ -39,7 +39,12 @@
       "noMatchTitle": "没有匹配的对话",
       "noMatchSubtitle": "换个关键词试试",
       "emptyTitle": "还没有对话",
-      "emptySubtitle": "发起对话后就会显示在这里"
+      "emptySubtitle": "发起对话后就会显示在这里",
+      "loadError": "对话列表加载失败",
+      "loading": "正在加载聊天…",
+      "noMessages": "还没有消息",
+      "tryAgain": "重试",
+      "typing": "正在输入…"
     },
     "actions": {
       "menuLabel": "对话操作",
@@ -201,9 +206,232 @@
       "gradient_fire": "火焰",
       "gradient_winter": "冬日",
       "gradient_lavender": "薰衣草紫",
-      "gradient_aurora": "极光"
+      "gradient_aurora": "极光",
+      "premiumInUse": "这个聊天使用的是 App 里的高级背景。换成其他背景后，你们双方的背景都会改变。"
     },
-    "jumpToLatest": "跳转到最新消息"
+    "jumpToLatest": "跳转到最新消息",
+    "archive": {
+      "archive": "归档聊天",
+      "archived": "已在网页端归档，App 里仍会显示。",
+      "back": "返回聊天列表",
+      "failed": "归档状态更新失败",
+      "toggle": "已归档（{{count}}）",
+      "unarchive": "取消归档",
+      "unarchived": "已移回聊天列表"
+    },
+    "blocked": {
+      "byMe": "你已拉黑对方。取消拉黑后才能发消息。",
+      "generic": "你无法在这个聊天中发送消息。",
+      "manage": "管理"
+    },
+    "bookmarks": {
+      "addFailed": "消息收藏失败",
+      "added": "已收藏",
+      "attachment": "附件",
+      "close": "关闭",
+      "empty": "还没有收藏的消息",
+      "error": "收藏的消息加载失败",
+      "loading": "正在加载收藏的消息…",
+      "open": "打开聊天",
+      "remove": "取消收藏",
+      "removeFailed": "取消收藏失败",
+      "removed": "已取消收藏",
+      "title": "收藏的消息"
+    },
+    "call": {
+      "busy": "{{name}} 正在通话中",
+      "cancelledVideo": "已取消视频通话",
+      "cancelledVoice": "已取消语音通话",
+      "declinedIncomingVideo": "已拒绝视频通话",
+      "declinedIncomingVoice": "已拒绝语音通话",
+      "declinedOutgoingVideo": "对方已拒绝视频通话",
+      "declinedOutgoingVoice": "对方已拒绝语音通话",
+      "incomingVideo": "视频来电",
+      "incomingVoice": "语音来电",
+      "missedVideo": "未接视频通话",
+      "missedVoice": "未接语音通话",
+      "noAnswerVideo": "视频通话 · 无人接听",
+      "noAnswerVoice": "语音通话 · 无人接听",
+      "outgoingVideo": "已拨出视频通话",
+      "outgoingVoice": "已拨出语音通话"
+    },
+    "connection": {
+      "kicked": "聊天已在其他地方打开，此标签页已停止接收消息。",
+      "reconnect": "在此使用"
+    },
+    "correction": {
+      "accept": "接受修改",
+      "acceptFailed": "接受修改失败",
+      "accepted": "已接受修改，已加入你的学习记录",
+      "accepting": "正在接受…",
+      "corrected": "{{name}} 修改了",
+      "you": "你"
+    },
+    "correctionModal": {
+      "cancel": "取消",
+      "close": "关闭",
+      "empty": "请输入修改内容",
+      "explanation": "说明",
+      "explanationPlaceholder": "说说为什么这样改更好…",
+      "hint": "例如：“用 went 而不是 goed，这是不规则过去式”",
+      "optional": "（可选）",
+      "original": "原消息",
+      "submit": "发送修改",
+      "title": "语言纠错",
+      "unchanged": "修改后的内容需要和原文不同",
+      "yours": "你的修改",
+      "yoursPlaceholder": "输入修改后的句子…"
+    },
+    "deleteMessage": {
+      "cancel": "取消",
+      "failed": "消息删除失败，请再试一次。",
+      "forEveryone": "为所有人删除",
+      "forMe": "仅为我删除",
+      "placeholder": "此消息已删除",
+      "title": "删除消息？",
+      "tooLate": "消息发送超过 1 小时后，就不能为所有人删除了。"
+    },
+    "editDialog": {
+      "cancel": "取消",
+      "failed": "消息编辑失败，请再试一次。",
+      "label": "消息",
+      "save": "保存",
+      "title": "编辑消息",
+      "tooLate": "消息只能在发送后 15 分钟内编辑。"
+    },
+    "editedLabel": "已编辑",
+    "forward": {
+      "close": "关闭",
+      "empty": "没有找到对话。",
+      "error": "对话加载失败。",
+      "loading": "正在加载对话…",
+      "search": "搜索",
+      "submit": "转发",
+      "submitCount": "转发（{{count}}）",
+      "title": "转发给",
+      "unknownUser": "未知用户"
+    },
+    "forwarded": "已转发",
+    "location": {
+      "cancel": "取消",
+      "confirmTitle": "要分享你的位置吗？",
+      "denied": "位置权限已被拒绝",
+      "failed": "无法获取你的位置",
+      "open": "在地图中打开",
+      "send": "发送",
+      "sendFailed": "位置发送失败",
+      "share": "分享位置",
+      "title": "位置",
+      "unsupported": "此浏览器不支持分享位置"
+    },
+    "mediaGallery": {
+      "back": "返回",
+      "emptyFiles": "还没有共享的文件",
+      "emptyPhotos": "还没有共享的照片",
+      "emptyVideos": "还没有共享的视频",
+      "error": "媒体加载失败",
+      "files": "文件",
+      "loading": "正在加载媒体…",
+      "photos": "照片",
+      "title": "共享的媒体",
+      "unknownFile": "未知文件",
+      "unknownSize": "大小未知",
+      "videos": "视频"
+    },
+    "menu": {
+      "bookmark": "收藏",
+      "close": "关闭",
+      "copy": "复制",
+      "delete": "删除",
+      "edit": "编辑",
+      "forward": "转发",
+      "listen": "朗读",
+      "pin": "置顶",
+      "reply": "回复"
+    },
+    "mute": {
+      "always": "直到我手动开启",
+      "cancel": "取消",
+      "eightHours": "8 小时",
+      "oneHour": "1 小时",
+      "oneWeek": "1 周",
+      "title": "将 {{name}} 设为静音？"
+    },
+    "pinnedBar": {
+      "count": "{{count}} 条置顶",
+      "unpin": "取消置顶消息"
+    },
+    "preview": {
+      "attachment": "📎 附件",
+      "call": "📞 通话",
+      "file": "📎 文件",
+      "gif": "GIF",
+      "location": "📍 位置",
+      "photo": "🖼️ 照片",
+      "poll": "📊 投票",
+      "story": "📖 限时动态",
+      "video": "🎥 视频",
+      "voice": "🎤 语音消息"
+    },
+    "replyBar": {
+      "cancel": "取消回复",
+      "replyingTo": "回复 {{name}}"
+    },
+    "search": {
+      "close": "关闭",
+      "empty": "没有找到消息",
+      "hint": "请至少输入 2 个字符",
+      "notLoaded": "这条消息比较早，向上滚动即可加载。",
+      "open": "搜索消息",
+      "placeholder": "搜索此聊天",
+      "searching": "正在搜索…",
+      "title": "搜索与 {{name}} 的消息",
+      "unavailable": "搜索暂时不可用",
+      "you": "你"
+    },
+    "sendErrors": {
+      "blockedBody": "你无法给对方发送消息。",
+      "blockedTitle": "消息未发送",
+      "capBody": "今天能发起的新对话已达上限。开通 VIP 即可不限次数发起对话。",
+      "capTitle": "已达新对话上限",
+      "dailyBody": "今天的消息条数已用完。开通 VIP 可无限发消息，或者明天再来。",
+      "dailyTitle": "已达每日消息上限",
+      "firstChatBody": "对方回复前，你最多可以发 5 条消息。等对方回复后就能继续聊了。",
+      "firstChatTitle": "等待对方回复",
+      "generic": "消息未发送。点击“重试”再试一次。",
+      "goVip": "开通 VIP",
+      "ok": "好的",
+      "reattach": "请重新添加文件后再发送。",
+      "tooFast": "发送太频繁了，请稍等一下。"
+    },
+    "story": {
+      "replied": "回复了你的限时动态",
+      "shared": "分享了一条限时动态",
+      "unavailable": "这条限时动态已无法查看",
+      "youReplied": "你回复了对方的限时动态",
+      "youShared": "你分享了一条限时动态"
+    },
+    "translation": {
+      "close": "关闭翻译",
+      "failed": "消息翻译失败",
+      "label": "翻译 · {{lang}}",
+      "save": "保存短语",
+      "saveFailed": "短语保存失败",
+      "saved": "已存进学习清单",
+      "saving": "保存中…",
+      "translating": "翻译中…"
+    },
+    "video": {
+      "badType": "无法发送这种视频格式，试试 MP4。",
+      "tooBig": "视频太大了，上限为 {{mb}} MB。",
+      "tooLong": "视频太长了，上限为 {{minutes}} 分钟。"
+    },
+    "voice": {
+      "unavailable": "无法录制语音。请检查此网站的麦克风权限。"
+    },
+    "wave": {
+      "hi": "你好！"
+    }
   },
   "newChat": {
     "title": "新建聊天",

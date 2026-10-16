@@ -61,7 +61,12 @@
       "noMatchTitle": "Aucune conversation correspondante",
       "noMatchSubtitle": "Essayez d'ajuster votre recherche",
       "emptyTitle": "Aucune conversation pour le moment",
-      "emptySubtitle": "Démarrez une conversation pour la voir ici"
+      "emptySubtitle": "Démarrez une conversation pour la voir ici",
+      "loadError": "Impossible de charger vos conversations",
+      "loading": "Chargement des discussions...",
+      "noMessages": "Pas encore de messages",
+      "tryAgain": "Réessayer",
+      "typing": "écrit..."
     },
     "deleteModal": {
       "title": "Supprimer la conversation",
@@ -201,9 +206,232 @@
       "gradient_fire": "Feu",
       "gradient_winter": "Hiver",
       "gradient_lavender": "Lavande",
-      "gradient_aurora": "Aurore"
+      "gradient_aurora": "Aurore",
+      "premiumInUse": "Cette discussion utilise un fond d'écran Premium de l'application. En choisir un autre le change pour vous deux."
     },
-    "jumpToLatest": "Aller aux derniers messages"
+    "jumpToLatest": "Aller aux derniers messages",
+    "archive": {
+      "archive": "Archiver la discussion",
+      "archived": "Archivée sur le site. L'application l'affiche toujours.",
+      "back": "Retour aux discussions",
+      "failed": "Impossible de modifier l'archive",
+      "toggle": "Archivées ({{count}})",
+      "unarchive": "Désarchiver la discussion",
+      "unarchived": "Remise dans vos discussions"
+    },
+    "blocked": {
+      "byMe": "Vous avez bloqué cette personne. Débloquez-la pour lui envoyer des messages.",
+      "generic": "Vous ne pouvez pas envoyer de messages dans cette discussion.",
+      "manage": "Gérer"
+    },
+    "bookmarks": {
+      "addFailed": "Impossible d'enregistrer le message",
+      "added": "Enregistré",
+      "attachment": "Pièce jointe",
+      "close": "Fermer",
+      "empty": "Aucun message enregistré pour le moment",
+      "error": "Impossible de charger les messages enregistrés",
+      "loading": "Chargement des messages enregistrés…",
+      "open": "Ouvrir la discussion",
+      "remove": "Retirer des enregistrés",
+      "removeFailed": "Impossible de le retirer",
+      "removed": "Retiré des messages enregistrés",
+      "title": "Messages enregistrés"
+    },
+    "call": {
+      "busy": "{{name}} était déjà en appel",
+      "cancelledVideo": "Appel vidéo annulé",
+      "cancelledVoice": "Appel vocal annulé",
+      "declinedIncomingVideo": "Appel vidéo refusé",
+      "declinedIncomingVoice": "Appel vocal refusé",
+      "declinedOutgoingVideo": "Appel vidéo refusé par le correspondant",
+      "declinedOutgoingVoice": "Appel vocal refusé par le correspondant",
+      "incomingVideo": "Appel vidéo entrant",
+      "incomingVoice": "Appel vocal entrant",
+      "missedVideo": "Appel vidéo manqué",
+      "missedVoice": "Appel vocal manqué",
+      "noAnswerVideo": "Appel vidéo · Pas de réponse",
+      "noAnswerVoice": "Appel vocal · Pas de réponse",
+      "outgoingVideo": "Appel vidéo sortant",
+      "outgoingVoice": "Appel vocal sortant"
+    },
+    "connection": {
+      "kicked": "La messagerie est ouverte ailleurs, cet onglet ne reçoit donc plus de messages.",
+      "reconnect": "Utiliser ici"
+    },
+    "correction": {
+      "accept": "Accepter la correction",
+      "acceptFailed": "Impossible d'accepter la correction",
+      "accepted": "Correction acceptée — ajoutée à votre historique d'apprentissage",
+      "accepting": "Acceptation…",
+      "corrected": "{{name}} a corrigé",
+      "you": "Vous"
+    },
+    "correctionModal": {
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "empty": "Veuillez saisir une correction",
+      "explanation": "Explication",
+      "explanationPlaceholder": "Expliquez pourquoi cette correction est utile...",
+      "hint": "ex. : « Utilisez 'went' au lieu de 'goed' : passé irrégulier »",
+      "optional": "(facultatif)",
+      "original": "Message original",
+      "submit": "Envoyer la correction",
+      "title": "Correction linguistique",
+      "unchanged": "La correction doit être différente de l'original",
+      "yours": "Votre correction",
+      "yoursPlaceholder": "Saisissez la version corrigée..."
+    },
+    "deleteMessage": {
+      "cancel": "Annuler",
+      "failed": "Impossible de supprimer le message. Réessayez.",
+      "forEveryone": "Supprimer pour tout le monde",
+      "forMe": "Supprimer pour moi",
+      "placeholder": "Ce message a été supprimé",
+      "title": "Supprimer le message ?",
+      "tooLate": "Vous ne pouvez supprimer un message pour tout le monde que dans l'heure qui suit son envoi."
+    },
+    "editDialog": {
+      "cancel": "Annuler",
+      "failed": "Impossible de modifier le message. Réessayez.",
+      "label": "Message",
+      "save": "Enregistrer",
+      "title": "Modifier le message",
+      "tooLate": "Vous ne pouvez modifier un message que dans les 15 minutes qui suivent son envoi."
+    },
+    "editedLabel": "modifié",
+    "forward": {
+      "close": "Fermer",
+      "empty": "Aucune conversation trouvée.",
+      "error": "Impossible de charger les conversations.",
+      "loading": "Chargement des conversations…",
+      "search": "Rechercher",
+      "submit": "Transférer",
+      "submitCount": "Transférer ({{count}})",
+      "title": "Transférer à",
+      "unknownUser": "Inconnu"
+    },
+    "forwarded": "Transféré",
+    "location": {
+      "cancel": "Annuler",
+      "confirmTitle": "Partager votre position ?",
+      "denied": "L'autorisation de localisation a été refusée",
+      "failed": "Impossible d'obtenir votre position",
+      "open": "Ouvrir dans Plans",
+      "send": "Envoyer",
+      "sendFailed": "Impossible d'envoyer votre position",
+      "share": "Partager la position",
+      "title": "Position",
+      "unsupported": "Ce navigateur ne peut pas partager de position"
+    },
+    "mediaGallery": {
+      "back": "Retour",
+      "emptyFiles": "Aucun fichier partagé pour le moment",
+      "emptyPhotos": "Aucune photo partagée pour le moment",
+      "emptyVideos": "Aucune vidéo partagée pour le moment",
+      "error": "Erreur lors du chargement des médias",
+      "files": "Fichiers",
+      "loading": "Chargement des médias...",
+      "photos": "Photos",
+      "title": "Médias partagés",
+      "unknownFile": "Fichier inconnu",
+      "unknownSize": "Taille inconnue",
+      "videos": "Vidéos"
+    },
+    "menu": {
+      "bookmark": "Enregistrer",
+      "close": "Fermer",
+      "copy": "Copier",
+      "delete": "Supprimer",
+      "edit": "Modifier",
+      "forward": "Transférer",
+      "listen": "Écouter",
+      "pin": "Épingler",
+      "reply": "Répondre"
+    },
+    "mute": {
+      "always": "Jusqu'à ce que je les réactive",
+      "cancel": "Annuler",
+      "eightHours": "Pendant 8 heures",
+      "oneHour": "Pendant 1 heure",
+      "oneWeek": "Pendant 1 semaine",
+      "title": "Mettre {{name}} en sourdine ?"
+    },
+    "pinnedBar": {
+      "count": "Épinglés : {{count}}",
+      "unpin": "Désépingler le message"
+    },
+    "preview": {
+      "attachment": "📎 Pièce jointe",
+      "call": "📞 Appel",
+      "file": "📎 Fichier",
+      "gif": "GIF",
+      "location": "📍 Position",
+      "photo": "🖼️ Photo",
+      "poll": "📊 Sondage",
+      "story": "📖 Story",
+      "video": "🎥 Vidéo",
+      "voice": "🎤 Message vocal"
+    },
+    "replyBar": {
+      "cancel": "Annuler la réponse",
+      "replyingTo": "Réponse à {{name}}"
+    },
+    "search": {
+      "close": "Fermer",
+      "empty": "Aucun message trouvé",
+      "hint": "Saisissez au moins 2 caractères",
+      "notLoaded": "Ce message est plus ancien. Faites défiler vers le haut pour le charger.",
+      "open": "Rechercher des messages",
+      "placeholder": "Rechercher dans cette discussion",
+      "searching": "Recherche…",
+      "title": "Rechercher des messages avec {{name}}",
+      "unavailable": "La recherche n'est pas disponible pour le moment",
+      "you": "Vous"
+    },
+    "sendErrors": {
+      "blockedBody": "Vous ne pouvez pas envoyer de messages à cette personne.",
+      "blockedTitle": "Message non envoyé",
+      "capBody": "Vous avez démarré le nombre maximal de nouvelles conversations pour aujourd'hui. Passez VIP pour en démarrer autant que vous voulez.",
+      "capTitle": "Limite de nouvelles conversations atteinte",
+      "dailyBody": "Vous avez envoyé tous vos messages du jour. Passez VIP pour des messages illimités, ou revenez demain.",
+      "dailyTitle": "Limite quotidienne de messages atteinte",
+      "firstChatBody": "Vous pouvez envoyer 5 messages tant que la personne n'a pas répondu. Vous pourrez réécrire dès qu'elle répondra.",
+      "firstChatTitle": "Attendez une réponse",
+      "generic": "Message non envoyé. Appuyez sur Réessayer pour recommencer.",
+      "goVip": "Passer VIP",
+      "ok": "OK",
+      "reattach": "Joignez de nouveau le fichier pour l'envoyer.",
+      "tooFast": "Vous envoyez des messages trop vite. Patientez un instant."
+    },
+    "story": {
+      "replied": "A répondu à votre story",
+      "shared": "A partagé une story",
+      "unavailable": "Cette story n'est plus disponible",
+      "youReplied": "Vous avez répondu à sa story",
+      "youShared": "Vous avez partagé une story"
+    },
+    "translation": {
+      "close": "Fermer la traduction",
+      "failed": "Impossible de traduire le message",
+      "label": "Traduction · {{lang}}",
+      "save": "Enregistrer l'expression",
+      "saveFailed": "Impossible d'enregistrer l'expression",
+      "saved": "Ajoutée à votre file de révision",
+      "saving": "Enregistrement…",
+      "translating": "Traduction…"
+    },
+    "video": {
+      "badType": "Ce format vidéo ne peut pas être envoyé. Essayez un MP4.",
+      "tooBig": "Cette vidéo est trop lourde. La limite est de {{mb}} MB.",
+      "tooLong": "Cette vidéo est trop longue. La limite est de {{minutes}} minutes."
+    },
+    "voice": {
+      "unavailable": "L'enregistrement vocal n'est pas disponible. Vérifiez l'autorisation du micro pour ce site."
+    },
+    "wave": {
+      "hi": "Salut !"
+    }
   },
   "notifications": "Notifications",
   "moments": "Moments",

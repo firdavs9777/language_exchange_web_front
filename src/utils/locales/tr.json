@@ -61,7 +61,12 @@
       "noMatchTitle": "Eşleşen sohbet yok",
       "noMatchSubtitle": "Aramanızı ayarlamayı deneyin",
       "emptyTitle": "Henüz sohbet yok",
-      "emptySubtitle": "Bir sohbet başlatın ve burada görelim"
+      "emptySubtitle": "Bir sohbet başlatın ve burada görelim",
+      "loadError": "Sohbetlerin yüklenemedi",
+      "loading": "Sohbetler yükleniyor…",
+      "noMessages": "Henüz mesaj yok",
+      "tryAgain": "Tekrar dene",
+      "typing": "yazıyor…"
     },
     "deleteModal": {
       "title": "Sohbeti sil",
@@ -201,9 +206,232 @@
       "gradient_fire": "Ateş",
       "gradient_winter": "Kış",
       "gradient_lavender": "Lavanta",
-      "gradient_aurora": "Aurora"
+      "gradient_aurora": "Aurora",
+      "premiumInUse": "Bu sohbet uygulamadan bir Premium duvar kağıdı kullanıyor. Başka birini seçersen ikiniz için de değişir."
     },
-    "jumpToLatest": "En son mesajlara git"
+    "jumpToLatest": "En son mesajlara git",
+    "archive": {
+      "archive": "Sohbeti arşivle",
+      "archived": "Web sitesinde arşivlendi. Uygulamada görünmeye devam ediyor.",
+      "back": "Sohbetlere dön",
+      "failed": "Arşiv güncellenemedi",
+      "toggle": "Arşivlenenler ({{count}})",
+      "unarchive": "Arşivden çıkar",
+      "unarchived": "Sohbetlerine geri taşındı"
+    },
+    "blocked": {
+      "byMe": "Bu kişiyi engelledin. Mesaj göndermek için engeli kaldır.",
+      "generic": "Bu sohbete mesaj gönderemezsin.",
+      "manage": "Yönet"
+    },
+    "bookmarks": {
+      "addFailed": "Mesaj kaydedilemedi",
+      "added": "Kaydedildi",
+      "attachment": "Ek",
+      "close": "Kapat",
+      "empty": "Henüz kaydedilen mesaj yok",
+      "error": "Kaydedilen mesajlar yüklenemedi",
+      "loading": "Kaydedilen mesajlar yükleniyor…",
+      "open": "Sohbeti aç",
+      "remove": "Kaydedilenlerden çıkar",
+      "removeFailed": "Kaldırılamadı",
+      "removed": "Kaydedilen mesajlardan çıkarıldı",
+      "title": "Kaydedilen mesajlar"
+    },
+    "call": {
+      "busy": "{{name}} başka bir aramadaydı",
+      "cancelledVideo": "İptal edilen görüntülü arama",
+      "cancelledVoice": "İptal edilen sesli arama",
+      "declinedIncomingVideo": "Reddedilen görüntülü arama",
+      "declinedIncomingVoice": "Reddedilen sesli arama",
+      "declinedOutgoingVideo": "Görüntülü arama reddedildi",
+      "declinedOutgoingVoice": "Sesli arama reddedildi",
+      "incomingVideo": "Gelen görüntülü arama",
+      "incomingVoice": "Gelen sesli arama",
+      "missedVideo": "Cevapsız görüntülü arama",
+      "missedVoice": "Cevapsız sesli arama",
+      "noAnswerVideo": "Görüntülü arama · Yanıt yok",
+      "noAnswerVoice": "Sesli arama · Yanıt yok",
+      "outgoingVideo": "Giden görüntülü arama",
+      "outgoingVoice": "Giden sesli arama"
+    },
+    "connection": {
+      "kicked": "Sohbet başka bir yerde açık olduğu için bu sekme artık mesaj almıyor.",
+      "reconnect": "Burada kullan"
+    },
+    "correction": {
+      "accept": "Düzeltmeyi kabul et",
+      "acceptFailed": "Düzeltme kabul edilemedi",
+      "accepted": "Düzeltme kabul edildi — öğrenme kaydına eklendi",
+      "accepting": "Kabul ediliyor…",
+      "corrected": "{{name}} düzeltti",
+      "you": "Sen"
+    },
+    "correctionModal": {
+      "cancel": "İptal",
+      "close": "Kapat",
+      "empty": "Lütfen bir düzeltme yaz",
+      "explanation": "Açıklama",
+      "explanationPlaceholder": "Bu düzeltmenin neden faydalı olduğunu açıkla…",
+      "hint": "ör. \"'goed' yerine 'went' kullan - düzensiz geçmiş zaman\"",
+      "optional": "(isteğe bağlı)",
+      "original": "Orijinal mesaj",
+      "submit": "Düzeltmeyi gönder",
+      "title": "Dil düzeltmesi",
+      "unchanged": "Düzeltme orijinalden farklı olmalı",
+      "yours": "Senin düzeltmen",
+      "yoursPlaceholder": "Düzeltilmiş hâlini yaz…"
+    },
+    "deleteMessage": {
+      "cancel": "İptal",
+      "failed": "Mesaj silinemedi. Tekrar dene.",
+      "forEveryone": "Herkesten sil",
+      "forMe": "Benden sil",
+      "placeholder": "Bu mesaj silindi",
+      "title": "Mesaj silinsin mi?",
+      "tooLate": "Bir mesajı herkesten yalnızca gönderdikten sonraki 1 saat içinde silebilirsin."
+    },
+    "editDialog": {
+      "cancel": "İptal",
+      "failed": "Mesaj düzenlenemedi. Tekrar dene.",
+      "label": "Mesaj",
+      "save": "Kaydet",
+      "title": "Mesajı düzenle",
+      "tooLate": "Bir mesajı yalnızca gönderdikten sonraki 15 dakika içinde düzenleyebilirsin."
+    },
+    "editedLabel": "düzenlendi",
+    "forward": {
+      "close": "Kapat",
+      "empty": "Sohbet bulunamadı.",
+      "error": "Sohbetler yüklenemedi.",
+      "loading": "Sohbetler yükleniyor…",
+      "search": "Ara",
+      "submit": "İlet",
+      "submitCount": "İlet ({{count}})",
+      "title": "Şuna ilet",
+      "unknownUser": "Bilinmiyor"
+    },
+    "forwarded": "İletildi",
+    "location": {
+      "cancel": "İptal",
+      "confirmTitle": "Konumun paylaşılsın mı?",
+      "denied": "Konum izni reddedildi",
+      "failed": "Konumun alınamadı",
+      "open": "Haritalar'da aç",
+      "send": "Gönder",
+      "sendFailed": "Konumun gönderilemedi",
+      "share": "Konum paylaş",
+      "title": "Konum",
+      "unsupported": "Bu tarayıcı konum paylaşamıyor"
+    },
+    "mediaGallery": {
+      "back": "Geri",
+      "emptyFiles": "Henüz paylaşılan dosya yok",
+      "emptyPhotos": "Henüz paylaşılan fotoğraf yok",
+      "emptyVideos": "Henüz paylaşılan video yok",
+      "error": "Medya yüklenirken hata oluştu",
+      "files": "Dosyalar",
+      "loading": "Medya yükleniyor…",
+      "photos": "Fotoğraflar",
+      "title": "Paylaşılan medya",
+      "unknownFile": "Bilinmeyen dosya",
+      "unknownSize": "Bilinmeyen boyut",
+      "videos": "Videolar"
+    },
+    "menu": {
+      "bookmark": "Kaydet",
+      "close": "Kapat",
+      "copy": "Kopyala",
+      "delete": "Sil",
+      "edit": "Düzenle",
+      "forward": "İlet",
+      "listen": "Dinle",
+      "pin": "Sabitle",
+      "reply": "Yanıtla"
+    },
+    "mute": {
+      "always": "Ben tekrar açana kadar",
+      "cancel": "İptal",
+      "eightHours": "8 saatliğine",
+      "oneHour": "1 saatliğine",
+      "oneWeek": "1 haftalığına",
+      "title": "{{name}} sessize alınsın mı?"
+    },
+    "pinnedBar": {
+      "count": "{{count}} sabitlenmiş",
+      "unpin": "Mesajın sabitlemesini kaldır"
+    },
+    "preview": {
+      "attachment": "📎 Ek",
+      "call": "📞 Arama",
+      "file": "📎 Dosya",
+      "gif": "GIF",
+      "location": "📍 Konum",
+      "photo": "🖼️ Fotoğraf",
+      "poll": "📊 Anket",
+      "story": "📖 Hikâye",
+      "video": "🎥 Video",
+      "voice": "🎤 Sesli mesaj"
+    },
+    "replyBar": {
+      "cancel": "Yanıtı iptal et",
+      "replyingTo": "{{name}} kişisine yanıt"
+    },
+    "search": {
+      "close": "Kapat",
+      "empty": "Mesaj bulunamadı",
+      "hint": "En az 2 karakter yaz",
+      "notLoaded": "Bu mesaj daha geride. Yüklemek için yukarı kaydır.",
+      "open": "Mesajlarda ara",
+      "placeholder": "Bu sohbette ara",
+      "searching": "Aranıyor…",
+      "title": "{{name}} ile mesajlarda ara",
+      "unavailable": "Arama şu anda kullanılamıyor",
+      "you": "Sen"
+    },
+    "sendErrors": {
+      "blockedBody": "Bu kişiye mesaj gönderemezsin.",
+      "blockedTitle": "Mesaj gönderilmedi",
+      "capBody": "Bugün başlatabileceğin tüm yeni sohbetleri başlattın. İstediğin kadar başlatmak için VIP'e geç.",
+      "capTitle": "Yeni sohbet sınırına ulaşıldı",
+      "dailyBody": "Bugünkü tüm mesajlarını gönderdin. Sınırsız mesaj için VIP'e geç ya da yarın tekrar gel.",
+      "dailyTitle": "Günlük mesaj sınırına ulaşıldı",
+      "firstChatBody": "Karşı taraf yanıt verene kadar 5 mesaj gönderebilirsin. Yanıt geldiğinde tekrar yazabilirsin.",
+      "firstChatTitle": "Yanıt bekle",
+      "generic": "Mesaj gönderilmedi. Tekrar denemek için Yeniden dene'ye dokun.",
+      "goVip": "VIP'e geç",
+      "ok": "Tamam",
+      "reattach": "Göndermek için dosyayı tekrar ekle.",
+      "tooFast": "Çok hızlı mesaj gönderiyorsun. Biraz bekle."
+    },
+    "story": {
+      "replied": "Hikâyene yanıt verdi",
+      "shared": "Bir hikâye paylaştı",
+      "unavailable": "Bu hikâye artık mevcut değil",
+      "youReplied": "Hikâyesine yanıt verdin",
+      "youShared": "Bir hikâye paylaştın"
+    },
+    "translation": {
+      "close": "Çeviriyi kapat",
+      "failed": "Mesaj çevrilemedi",
+      "label": "Çeviri · {{lang}}",
+      "save": "İfadeyi kaydet",
+      "saveFailed": "İfade kaydedilemedi",
+      "saved": "Çalışma listene kaydedildi",
+      "saving": "Kaydediliyor…",
+      "translating": "Çevriliyor…"
+    },
+    "video": {
+      "badType": "Bu video biçimi gönderilemiyor. MP4 dene.",
+      "tooBig": "Bu video çok büyük. Sınır {{mb}} MB.",
+      "tooLong": "Bu video çok uzun. Sınır {{minutes}} dakika."
+    },
+    "voice": {
+      "unavailable": "Ses kaydı kullanılamıyor. Bu site için mikrofon iznini kontrol et."
+    },
+    "wave": {
+      "hi": "Merhaba!"
+    }
   },
   "newChat": {
     "title": "Yeni Sohbet",

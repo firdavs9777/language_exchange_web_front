@@ -61,7 +61,12 @@
       "noMatchTitle": "Không có cuộc trò chuyện phù hợp",
       "noMatchSubtitle": "Hãy thử thay đổi tìm kiếm",
       "emptyTitle": "Chưa có cuộc trò chuyện",
-      "emptySubtitle": "Bắt đầu một cuộc trò chuyện để xem ở đây"
+      "emptySubtitle": "Bắt đầu một cuộc trò chuyện để xem ở đây",
+      "loadError": "Không thể tải các cuộc trò chuyện của bạn",
+      "loading": "Đang tải cuộc trò chuyện...",
+      "noMessages": "Chưa có tin nhắn nào",
+      "tryAgain": "Thử lại",
+      "typing": "đang nhập..."
     },
     "deleteModal": {
       "title": "Xóa cuộc trò chuyện",
@@ -201,9 +206,232 @@
       "gradient_fire": "Lửa",
       "gradient_winter": "Mùa đông",
       "gradient_lavender": "Oải hương",
-      "gradient_aurora": "Cực quang"
+      "gradient_aurora": "Cực quang",
+      "premiumInUse": "Cuộc trò chuyện này đang dùng hình nền Premium từ ứng dụng. Chọn hình nền khác sẽ thay đổi cho cả hai bạn."
     },
-    "jumpToLatest": "Chuyển đến tin nhắn mới nhất"
+    "jumpToLatest": "Chuyển đến tin nhắn mới nhất",
+    "archive": {
+      "archive": "Lưu trữ cuộc trò chuyện",
+      "archived": "Đã lưu trữ trên trang web. Ứng dụng vẫn hiển thị.",
+      "back": "Quay lại danh sách trò chuyện",
+      "failed": "Không thể cập nhật lưu trữ",
+      "toggle": "Đã lưu trữ ({{count}})",
+      "unarchive": "Bỏ lưu trữ",
+      "unarchived": "Đã chuyển lại vào danh sách trò chuyện"
+    },
+    "blocked": {
+      "byMe": "Bạn đã chặn người này. Bỏ chặn để gửi tin nhắn.",
+      "generic": "Bạn không thể gửi tin nhắn trong cuộc trò chuyện này.",
+      "manage": "Quản lý"
+    },
+    "bookmarks": {
+      "addFailed": "Không thể lưu tin nhắn",
+      "added": "Đã lưu",
+      "attachment": "Tệp đính kèm",
+      "close": "Đóng",
+      "empty": "Chưa có tin nhắn đã lưu",
+      "error": "Không thể tải tin nhắn đã lưu",
+      "loading": "Đang tải tin nhắn đã lưu…",
+      "open": "Mở cuộc trò chuyện",
+      "remove": "Bỏ lưu",
+      "removeFailed": "Không thể bỏ lưu",
+      "removed": "Đã xóa khỏi tin nhắn đã lưu",
+      "title": "Tin nhắn đã lưu"
+    },
+    "call": {
+      "busy": "{{name}} đang có cuộc gọi khác",
+      "cancelledVideo": "Đã hủy cuộc gọi video",
+      "cancelledVoice": "Đã hủy cuộc gọi thoại",
+      "declinedIncomingVideo": "Đã từ chối cuộc gọi video",
+      "declinedIncomingVoice": "Đã từ chối cuộc gọi thoại",
+      "declinedOutgoingVideo": "Cuộc gọi video bị từ chối",
+      "declinedOutgoingVoice": "Cuộc gọi thoại bị từ chối",
+      "incomingVideo": "Cuộc gọi video đến",
+      "incomingVoice": "Cuộc gọi thoại đến",
+      "missedVideo": "Cuộc gọi video nhỡ",
+      "missedVoice": "Cuộc gọi thoại nhỡ",
+      "noAnswerVideo": "Cuộc gọi video · Không trả lời",
+      "noAnswerVoice": "Cuộc gọi thoại · Không trả lời",
+      "outgoingVideo": "Cuộc gọi video đi",
+      "outgoingVoice": "Cuộc gọi thoại đi"
+    },
+    "connection": {
+      "kicked": "Cuộc trò chuyện đang mở ở nơi khác nên tab này đã ngừng nhận tin nhắn.",
+      "reconnect": "Dùng ở đây"
+    },
+    "correction": {
+      "accept": "Chấp nhận chỉnh sửa",
+      "acceptFailed": "Không thể chấp nhận chỉnh sửa",
+      "accepted": "Đã chấp nhận chỉnh sửa — đã thêm vào hồ sơ học tập của bạn",
+      "accepting": "Đang chấp nhận…",
+      "corrected": "{{name}} đã sửa",
+      "you": "Bạn"
+    },
+    "correctionModal": {
+      "cancel": "Hủy",
+      "close": "Đóng",
+      "empty": "Vui lòng nhập nội dung chỉnh sửa",
+      "explanation": "Giải thích",
+      "explanationPlaceholder": "Giải thích vì sao chỉnh sửa này hữu ích...",
+      "hint": "VD: \"Dùng 'went' thay vì 'goed' - quá khứ bất quy tắc\"",
+      "optional": "(không bắt buộc)",
+      "original": "Tin nhắn gốc",
+      "submit": "Gửi chỉnh sửa",
+      "title": "Sửa lỗi ngôn ngữ",
+      "unchanged": "Nội dung chỉnh sửa phải khác với bản gốc",
+      "yours": "Bản sửa của bạn",
+      "yoursPlaceholder": "Nhập phiên bản đã sửa..."
+    },
+    "deleteMessage": {
+      "cancel": "Hủy",
+      "failed": "Không thể xóa tin nhắn. Hãy thử lại.",
+      "forEveryone": "Xóa với mọi người",
+      "forMe": "Xóa với tôi",
+      "placeholder": "Tin nhắn này đã bị xóa",
+      "title": "Xóa tin nhắn?",
+      "tooLate": "Bạn chỉ có thể xóa tin nhắn với mọi người trong vòng 1 giờ sau khi gửi."
+    },
+    "editDialog": {
+      "cancel": "Hủy",
+      "failed": "Không thể chỉnh sửa tin nhắn. Hãy thử lại.",
+      "label": "Tin nhắn",
+      "save": "Lưu",
+      "title": "Chỉnh sửa tin nhắn",
+      "tooLate": "Bạn chỉ có thể chỉnh sửa tin nhắn trong vòng 15 phút sau khi gửi."
+    },
+    "editedLabel": "đã chỉnh sửa",
+    "forward": {
+      "close": "Đóng",
+      "empty": "Không tìm thấy cuộc trò chuyện nào.",
+      "error": "Không thể tải cuộc trò chuyện.",
+      "loading": "Đang tải cuộc trò chuyện…",
+      "search": "Tìm kiếm",
+      "submit": "Chuyển tiếp",
+      "submitCount": "Chuyển tiếp ({{count}})",
+      "title": "Chuyển tiếp đến",
+      "unknownUser": "Không xác định"
+    },
+    "forwarded": "Đã chuyển tiếp",
+    "location": {
+      "cancel": "Hủy",
+      "confirmTitle": "Chia sẻ vị trí của bạn?",
+      "denied": "Quyền truy cập vị trí đã bị từ chối",
+      "failed": "Không thể lấy vị trí của bạn",
+      "open": "Mở trong Bản đồ",
+      "send": "Gửi",
+      "sendFailed": "Không thể gửi vị trí của bạn",
+      "share": "Chia sẻ vị trí",
+      "title": "Vị trí",
+      "unsupported": "Trình duyệt này không thể chia sẻ vị trí"
+    },
+    "mediaGallery": {
+      "back": "Quay lại",
+      "emptyFiles": "Chưa có tệp nào được chia sẻ",
+      "emptyPhotos": "Chưa có ảnh nào được chia sẻ",
+      "emptyVideos": "Chưa có video nào được chia sẻ",
+      "error": "Lỗi khi tải nội dung",
+      "files": "Tệp",
+      "loading": "Đang tải nội dung...",
+      "photos": "Ảnh",
+      "title": "Nội dung đã chia sẻ",
+      "unknownFile": "Tệp không xác định",
+      "unknownSize": "Không rõ kích thước",
+      "videos": "Video"
+    },
+    "menu": {
+      "bookmark": "Lưu",
+      "close": "Đóng",
+      "copy": "Sao chép",
+      "delete": "Xóa",
+      "edit": "Chỉnh sửa",
+      "forward": "Chuyển tiếp",
+      "listen": "Nghe",
+      "pin": "Ghim",
+      "reply": "Trả lời"
+    },
+    "mute": {
+      "always": "Cho đến khi tôi bật lại",
+      "cancel": "Hủy",
+      "eightHours": "Trong 8 giờ",
+      "oneHour": "Trong 1 giờ",
+      "oneWeek": "Trong 1 tuần",
+      "title": "Tắt thông báo của {{name}}?"
+    },
+    "pinnedBar": {
+      "count": "{{count}} tin đã ghim",
+      "unpin": "Bỏ ghim tin nhắn"
+    },
+    "preview": {
+      "attachment": "📎 Tệp đính kèm",
+      "call": "📞 Cuộc gọi",
+      "file": "📎 Tệp",
+      "gif": "GIF",
+      "location": "📍 Vị trí",
+      "photo": "🖼️ Ảnh",
+      "poll": "📊 Bình chọn",
+      "story": "📖 Tin",
+      "video": "🎥 Video",
+      "voice": "🎤 Tin nhắn thoại"
+    },
+    "replyBar": {
+      "cancel": "Hủy trả lời",
+      "replyingTo": "Đang trả lời {{name}}"
+    },
+    "search": {
+      "close": "Đóng",
+      "empty": "Không tìm thấy tin nhắn",
+      "hint": "Nhập ít nhất 2 ký tự",
+      "notLoaded": "Tin nhắn đó ở xa hơn. Cuộn lên để tải.",
+      "open": "Tìm tin nhắn",
+      "placeholder": "Tìm trong cuộc trò chuyện này",
+      "searching": "Đang tìm…",
+      "title": "Tìm tin nhắn với {{name}}",
+      "unavailable": "Hiện không thể tìm kiếm",
+      "you": "Bạn"
+    },
+    "sendErrors": {
+      "blockedBody": "Bạn không thể gửi tin nhắn cho người này.",
+      "blockedTitle": "Chưa gửi được tin nhắn",
+      "capBody": "Hôm nay bạn đã bắt đầu đủ số cuộc trò chuyện mới cho phép. Nâng cấp VIP để bắt đầu bao nhiêu tùy thích.",
+      "capTitle": "Đã đạt giới hạn cuộc trò chuyện mới",
+      "dailyBody": "Bạn đã gửi hết tin nhắn của hôm nay. Nâng cấp VIP để nhắn tin không giới hạn, hoặc quay lại vào ngày mai.",
+      "dailyTitle": "Đã đạt giới hạn tin nhắn trong ngày",
+      "firstChatBody": "Bạn có thể gửi 5 tin nhắn cho đến khi người kia trả lời. Bạn có thể viết tiếp khi họ phản hồi.",
+      "firstChatTitle": "Chờ phản hồi",
+      "generic": "Chưa gửi được tin nhắn. Nhấn Thử lại để gửi lại.",
+      "goVip": "Nâng cấp VIP",
+      "ok": "OK",
+      "reattach": "Đính kèm lại tệp để gửi.",
+      "tooFast": "Bạn đang gửi tin nhắn quá nhanh. Hãy đợi một chút."
+    },
+    "story": {
+      "replied": "Đã trả lời tin của bạn",
+      "shared": "Đã chia sẻ một tin",
+      "unavailable": "Tin này không còn nữa",
+      "youReplied": "Bạn đã trả lời tin của họ",
+      "youShared": "Bạn đã chia sẻ một tin"
+    },
+    "translation": {
+      "close": "Đóng bản dịch",
+      "failed": "Không thể dịch tin nhắn",
+      "label": "Bản dịch · {{lang}}",
+      "save": "Lưu cụm từ",
+      "saveFailed": "Không thể lưu cụm từ",
+      "saved": "Đã lưu vào hàng đợi học tập",
+      "saving": "Đang lưu…",
+      "translating": "Đang dịch…"
+    },
+    "video": {
+      "badType": "Không thể gửi định dạng video này. Hãy thử MP4.",
+      "tooBig": "Video quá lớn. Giới hạn là {{mb}} MB.",
+      "tooLong": "Video quá dài. Giới hạn là {{minutes}} phút."
+    },
+    "voice": {
+      "unavailable": "Không thể ghi âm. Hãy kiểm tra quyền micro của trang web này."
+    },
+    "wave": {
+      "hi": "Xin chào!"
+    }
   },
   "newChat": {
     "title": "Trò Chuyện Mới",

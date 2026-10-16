@@ -39,7 +39,12 @@
       "noMatchTitle": "沒有符合的對話",
       "noMatchSubtitle": "換個關鍵字試試看",
       "emptyTitle": "還沒有任何對話",
-      "emptySubtitle": "開始聊天後就會出現在這裡"
+      "emptySubtitle": "開始聊天後就會出現在這裡",
+      "loadError": "對話列表載入失敗",
+      "loading": "正在載入聊天…",
+      "noMessages": "還沒有訊息",
+      "tryAgain": "再試一次",
+      "typing": "正在輸入…"
     },
     "actions": {
       "menuLabel": "對話操作",
@@ -201,9 +206,232 @@
       "gradient_fire": "火焰",
       "gradient_winter": "冬日",
       "gradient_lavender": "薰衣草紫",
-      "gradient_aurora": "極光"
+      "gradient_aurora": "極光",
+      "premiumInUse": "這個聊天室使用的是 App 裡的進階背景。換成其他背景後，你們雙方的背景都會改變。"
     },
-    "jumpToLatest": "跳至最新訊息"
+    "jumpToLatest": "跳至最新訊息",
+    "archive": {
+      "archive": "封存聊天",
+      "archived": "已在網頁版封存，App 裡仍會顯示。",
+      "back": "回到聊天列表",
+      "failed": "封存狀態更新失敗",
+      "toggle": "已封存（{{count}}）",
+      "unarchive": "取消封存",
+      "unarchived": "已移回聊天列表"
+    },
+    "blocked": {
+      "byMe": "你已封鎖對方。解除封鎖後才能傳訊息。",
+      "generic": "你無法在這個聊天室傳送訊息。",
+      "manage": "管理"
+    },
+    "bookmarks": {
+      "addFailed": "訊息儲存失敗",
+      "added": "已儲存",
+      "attachment": "附件",
+      "close": "關閉",
+      "empty": "還沒有儲存的訊息",
+      "error": "儲存的訊息載入失敗",
+      "loading": "正在載入儲存的訊息…",
+      "open": "開啟聊天",
+      "remove": "從已儲存中移除",
+      "removeFailed": "移除失敗",
+      "removed": "已從儲存的訊息中移除",
+      "title": "儲存的訊息"
+    },
+    "call": {
+      "busy": "{{name}} 正在通話中",
+      "cancelledVideo": "已取消視訊通話",
+      "cancelledVoice": "已取消語音通話",
+      "declinedIncomingVideo": "已拒接視訊通話",
+      "declinedIncomingVoice": "已拒接語音通話",
+      "declinedOutgoingVideo": "對方已拒接視訊通話",
+      "declinedOutgoingVoice": "對方已拒接語音通話",
+      "incomingVideo": "視訊來電",
+      "incomingVoice": "語音來電",
+      "missedVideo": "未接視訊通話",
+      "missedVoice": "未接語音通話",
+      "noAnswerVideo": "視訊通話 · 無人接聽",
+      "noAnswerVoice": "語音通話 · 無人接聽",
+      "outgoingVideo": "已撥出視訊通話",
+      "outgoingVoice": "已撥出語音通話"
+    },
+    "connection": {
+      "kicked": "聊天已在其他地方開啟，這個分頁已停止接收訊息。",
+      "reconnect": "在這裡使用"
+    },
+    "correction": {
+      "accept": "接受修改",
+      "acceptFailed": "接受修改失敗",
+      "accepted": "已接受修改，並加入你的學習紀錄",
+      "accepting": "正在接受…",
+      "corrected": "{{name}} 修改了",
+      "you": "你"
+    },
+    "correctionModal": {
+      "cancel": "取消",
+      "close": "關閉",
+      "empty": "請輸入修改內容",
+      "explanation": "說明",
+      "explanationPlaceholder": "說說為什麼這樣改比較好…",
+      "hint": "例如：「用 went 而不是 goed，這是不規則過去式」",
+      "optional": "（可選）",
+      "original": "原始訊息",
+      "submit": "送出修改",
+      "title": "語言修正",
+      "unchanged": "修改後的內容必須和原文不同",
+      "yours": "你的修改",
+      "yoursPlaceholder": "輸入修改後的句子…"
+    },
+    "deleteMessage": {
+      "cancel": "取消",
+      "failed": "訊息刪除失敗，請再試一次。",
+      "forEveryone": "為所有人刪除",
+      "forMe": "只為我刪除",
+      "placeholder": "這則訊息已刪除",
+      "title": "要刪除訊息嗎？",
+      "tooLate": "訊息傳送超過 1 小時後，就無法為所有人刪除。"
+    },
+    "editDialog": {
+      "cancel": "取消",
+      "failed": "訊息編輯失敗，請再試一次。",
+      "label": "訊息",
+      "save": "儲存",
+      "title": "編輯訊息",
+      "tooLate": "訊息只能在傳送後 15 分鐘內編輯。"
+    },
+    "editedLabel": "已編輯",
+    "forward": {
+      "close": "關閉",
+      "empty": "找不到對話。",
+      "error": "對話載入失敗。",
+      "loading": "正在載入對話…",
+      "search": "搜尋",
+      "submit": "轉傳",
+      "submitCount": "轉傳（{{count}}）",
+      "title": "轉傳給",
+      "unknownUser": "未知使用者"
+    },
+    "forwarded": "已轉傳",
+    "location": {
+      "cancel": "取消",
+      "confirmTitle": "要分享你的位置嗎？",
+      "denied": "位置權限已被拒絕",
+      "failed": "無法取得你的位置",
+      "open": "在地圖中開啟",
+      "send": "傳送",
+      "sendFailed": "位置傳送失敗",
+      "share": "分享位置",
+      "title": "位置",
+      "unsupported": "這個瀏覽器無法分享位置"
+    },
+    "mediaGallery": {
+      "back": "返回",
+      "emptyFiles": "還沒有分享的檔案",
+      "emptyPhotos": "還沒有分享的相片",
+      "emptyVideos": "還沒有分享的影片",
+      "error": "媒體載入失敗",
+      "files": "檔案",
+      "loading": "正在載入媒體…",
+      "photos": "相片",
+      "title": "共享的媒體",
+      "unknownFile": "未知檔案",
+      "unknownSize": "大小不明",
+      "videos": "影片"
+    },
+    "menu": {
+      "bookmark": "儲存",
+      "close": "關閉",
+      "copy": "複製",
+      "delete": "刪除",
+      "edit": "編輯",
+      "forward": "轉傳",
+      "listen": "朗讀",
+      "pin": "置頂",
+      "reply": "回覆"
+    },
+    "mute": {
+      "always": "直到我手動開啟",
+      "cancel": "取消",
+      "eightHours": "8 小時",
+      "oneHour": "1 小時",
+      "oneWeek": "1 週",
+      "title": "要將 {{name}} 設為靜音嗎？"
+    },
+    "pinnedBar": {
+      "count": "{{count}} 則置頂",
+      "unpin": "取消置頂訊息"
+    },
+    "preview": {
+      "attachment": "📎 附件",
+      "call": "📞 通話",
+      "file": "📎 檔案",
+      "gif": "GIF",
+      "location": "📍 位置",
+      "photo": "🖼️ 相片",
+      "poll": "📊 投票",
+      "story": "📖 限時動態",
+      "video": "🎥 影片",
+      "voice": "🎤 語音訊息"
+    },
+    "replyBar": {
+      "cancel": "取消回覆",
+      "replyingTo": "回覆 {{name}}"
+    },
+    "search": {
+      "close": "關閉",
+      "empty": "找不到訊息",
+      "hint": "請至少輸入 2 個字元",
+      "notLoaded": "這則訊息比較早，往上捲動就能載入。",
+      "open": "搜尋訊息",
+      "placeholder": "搜尋這個聊天室",
+      "searching": "正在搜尋…",
+      "title": "搜尋與 {{name}} 的訊息",
+      "unavailable": "目前無法使用搜尋",
+      "you": "你"
+    },
+    "sendErrors": {
+      "blockedBody": "你無法傳訊息給對方。",
+      "blockedTitle": "訊息未傳送",
+      "capBody": "今天可以開啟的新對話已達上限。升級 VIP 就能不限次數開啟新對話。",
+      "capTitle": "已達新對話上限",
+      "dailyBody": "今天的訊息額度已用完。升級 VIP 即可無限傳訊息，或明天再來。",
+      "dailyTitle": "已達每日訊息上限",
+      "firstChatBody": "對方回覆前，你最多可以傳 5 則訊息。等對方回覆後就能繼續聊。",
+      "firstChatTitle": "等待對方回覆",
+      "generic": "訊息未傳送。點一下「再試一次」重新傳送。",
+      "goVip": "升級 VIP",
+      "ok": "好",
+      "reattach": "請重新附加檔案後再傳送。",
+      "tooFast": "你傳訊息的速度太快了，請稍等一下。"
+    },
+    "story": {
+      "replied": "回覆了你的限時動態",
+      "shared": "分享了一則限時動態",
+      "unavailable": "這則限時動態已無法查看",
+      "youReplied": "你回覆了對方的限時動態",
+      "youShared": "你分享了一則限時動態"
+    },
+    "translation": {
+      "close": "關閉翻譯",
+      "failed": "訊息翻譯失敗",
+      "label": "翻譯 · {{lang}}",
+      "save": "儲存片語",
+      "saveFailed": "片語儲存失敗",
+      "saved": "已存到學習清單",
+      "saving": "儲存中…",
+      "translating": "翻譯中…"
+    },
+    "video": {
+      "badType": "無法傳送這種影片格式，請試試 MP4。",
+      "tooBig": "影片太大了，上限是 {{mb}} MB。",
+      "tooLong": "影片太長了，上限是 {{minutes}} 分鐘。"
+    },
+    "voice": {
+      "unavailable": "無法錄製語音。請檢查這個網站的麥克風權限。"
+    },
+    "wave": {
+      "hi": "嗨！"
+    }
   },
   "newChat": {
     "title": "新的聊天",

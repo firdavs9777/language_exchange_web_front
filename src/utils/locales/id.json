@@ -61,7 +61,12 @@
       "noMatchTitle": "Tidak ada percakapan yang cocok",
       "noMatchSubtitle": "Coba ubah pencarian",
       "emptyTitle": "Belum ada percakapan",
-      "emptySubtitle": "Mulai percakapan untuk melihatnya di sini"
+      "emptySubtitle": "Mulai percakapan untuk melihatnya di sini",
+      "loadError": "Gagal memuat percakapanmu",
+      "loading": "Memuat obrolan...",
+      "noMessages": "Belum ada pesan",
+      "tryAgain": "Coba lagi",
+      "typing": "sedang mengetik..."
     },
     "deleteModal": {
       "title": "Hapus percakapan",
@@ -201,9 +206,232 @@
       "gradient_fire": "Api",
       "gradient_winter": "Musim dingin",
       "gradient_lavender": "Lavender",
-      "gradient_aurora": "Aurora"
+      "gradient_aurora": "Aurora",
+      "premiumInUse": "Obrolan ini memakai wallpaper Premium dari aplikasi. Memilih yang lain akan mengubahnya untuk kalian berdua."
     },
-    "jumpToLatest": "Lompat ke pesan terbaru"
+    "jumpToLatest": "Lompat ke pesan terbaru",
+    "archive": {
+      "archive": "Arsipkan obrolan",
+      "archived": "Diarsipkan di situs web. Di aplikasi masih ditampilkan.",
+      "back": "Kembali ke obrolan",
+      "failed": "Gagal memperbarui arsip",
+      "toggle": "Diarsipkan ({{count}})",
+      "unarchive": "Keluarkan dari arsip",
+      "unarchived": "Dikembalikan ke daftar obrolan"
+    },
+    "blocked": {
+      "byMe": "Kamu memblokir orang ini. Buka blokir untuk mengirim pesan.",
+      "generic": "Kamu tidak bisa mengirim pesan di obrolan ini.",
+      "manage": "Kelola"
+    },
+    "bookmarks": {
+      "addFailed": "Gagal menyimpan pesan",
+      "added": "Disimpan",
+      "attachment": "Lampiran",
+      "close": "Tutup",
+      "empty": "Belum ada pesan tersimpan",
+      "error": "Gagal memuat pesan tersimpan",
+      "loading": "Memuat pesan tersimpan…",
+      "open": "Buka obrolan",
+      "remove": "Hapus dari tersimpan",
+      "removeFailed": "Gagal menghapus",
+      "removed": "Dihapus dari pesan tersimpan",
+      "title": "Pesan tersimpan"
+    },
+    "call": {
+      "busy": "{{name}} sedang dalam panggilan lain",
+      "cancelledVideo": "Panggilan video dibatalkan",
+      "cancelledVoice": "Panggilan suara dibatalkan",
+      "declinedIncomingVideo": "Panggilan video ditolak",
+      "declinedIncomingVoice": "Panggilan suara ditolak",
+      "declinedOutgoingVideo": "Panggilan video ditolak",
+      "declinedOutgoingVoice": "Panggilan suara ditolak",
+      "incomingVideo": "Panggilan video masuk",
+      "incomingVoice": "Panggilan suara masuk",
+      "missedVideo": "Panggilan video tak terjawab",
+      "missedVoice": "Panggilan suara tak terjawab",
+      "noAnswerVideo": "Panggilan video · Tidak dijawab",
+      "noAnswerVoice": "Panggilan suara · Tidak dijawab",
+      "outgoingVideo": "Panggilan video keluar",
+      "outgoingVoice": "Panggilan suara keluar"
+    },
+    "connection": {
+      "kicked": "Obrolan dibuka di tempat lain, jadi tab ini berhenti menerima pesan.",
+      "reconnect": "Gunakan di sini"
+    },
+    "correction": {
+      "accept": "Terima koreksi",
+      "acceptFailed": "Gagal menerima koreksi",
+      "accepted": "Koreksi diterima — ditambahkan ke catatan belajarmu",
+      "accepting": "Menerima…",
+      "corrected": "{{name}} mengoreksi",
+      "you": "Kamu"
+    },
+    "correctionModal": {
+      "cancel": "Batal",
+      "close": "Tutup",
+      "empty": "Tuliskan koreksinya",
+      "explanation": "Penjelasan",
+      "explanationPlaceholder": "Jelaskan kenapa koreksi ini membantu...",
+      "hint": "mis. \"Pakai 'went', bukan 'goed' - bentuk lampau tidak beraturan\"",
+      "optional": "(opsional)",
+      "original": "Pesan Asli",
+      "submit": "Kirim Koreksi",
+      "title": "Koreksi Bahasa",
+      "unchanged": "Koreksi harus berbeda dari pesan asli",
+      "yours": "Koreksimu",
+      "yoursPlaceholder": "Ketik versi yang sudah dikoreksi..."
+    },
+    "deleteMessage": {
+      "cancel": "Batal",
+      "failed": "Gagal menghapus pesan. Coba lagi.",
+      "forEveryone": "Hapus untuk semua",
+      "forMe": "Hapus untuk saya",
+      "placeholder": "Pesan ini telah dihapus",
+      "title": "Hapus pesan?",
+      "tooLate": "Pesan hanya bisa dihapus untuk semua dalam 1 jam setelah dikirim."
+    },
+    "editDialog": {
+      "cancel": "Batal",
+      "failed": "Gagal mengedit pesan. Coba lagi.",
+      "label": "Pesan",
+      "save": "Simpan",
+      "title": "Edit pesan",
+      "tooLate": "Pesan hanya bisa diedit dalam 15 menit setelah dikirim."
+    },
+    "editedLabel": "diedit",
+    "forward": {
+      "close": "Tutup",
+      "empty": "Percakapan tidak ditemukan.",
+      "error": "Gagal memuat percakapan.",
+      "loading": "Memuat percakapan…",
+      "search": "Cari",
+      "submit": "Teruskan",
+      "submitCount": "Teruskan ({{count}})",
+      "title": "Teruskan ke",
+      "unknownUser": "Tidak dikenal"
+    },
+    "forwarded": "Diteruskan",
+    "location": {
+      "cancel": "Batal",
+      "confirmTitle": "Bagikan lokasimu?",
+      "denied": "Izin lokasi ditolak",
+      "failed": "Gagal mendapatkan lokasimu",
+      "open": "Buka di Peta",
+      "send": "Kirim",
+      "sendFailed": "Gagal mengirim lokasimu",
+      "share": "Bagikan lokasi",
+      "title": "Lokasi",
+      "unsupported": "Browser ini tidak bisa membagikan lokasi"
+    },
+    "mediaGallery": {
+      "back": "Kembali",
+      "emptyFiles": "Belum ada file yang dibagikan",
+      "emptyPhotos": "Belum ada foto yang dibagikan",
+      "emptyVideos": "Belum ada video yang dibagikan",
+      "error": "Gagal memuat media",
+      "files": "File",
+      "loading": "Memuat media...",
+      "photos": "Foto",
+      "title": "Media yang Dibagikan",
+      "unknownFile": "File tidak dikenal",
+      "unknownSize": "Ukuran tidak diketahui",
+      "videos": "Video"
+    },
+    "menu": {
+      "bookmark": "Simpan",
+      "close": "Tutup",
+      "copy": "Salin",
+      "delete": "Hapus",
+      "edit": "Edit",
+      "forward": "Teruskan",
+      "listen": "Dengarkan",
+      "pin": "Sematkan",
+      "reply": "Balas"
+    },
+    "mute": {
+      "always": "Sampai saya aktifkan lagi",
+      "cancel": "Batal",
+      "eightHours": "Selama 8 jam",
+      "oneHour": "Selama 1 jam",
+      "oneWeek": "Selama 1 minggu",
+      "title": "Bisukan {{name}}?"
+    },
+    "pinnedBar": {
+      "count": "{{count}} disematkan",
+      "unpin": "Lepas sematan pesan"
+    },
+    "preview": {
+      "attachment": "📎 Lampiran",
+      "call": "📞 Panggilan",
+      "file": "📎 File",
+      "gif": "GIF",
+      "location": "📍 Lokasi",
+      "photo": "🖼️ Foto",
+      "poll": "📊 Polling",
+      "story": "📖 Story",
+      "video": "🎥 Video",
+      "voice": "🎤 Pesan suara"
+    },
+    "replyBar": {
+      "cancel": "Batal membalas",
+      "replyingTo": "Membalas {{name}}"
+    },
+    "search": {
+      "close": "Tutup",
+      "empty": "Pesan tidak ditemukan",
+      "hint": "Ketik minimal 2 karakter",
+      "notLoaded": "Pesan itu ada lebih jauh ke atas. Gulir ke atas untuk memuatnya.",
+      "open": "Cari pesan",
+      "placeholder": "Cari di obrolan ini",
+      "searching": "Mencari…",
+      "title": "Cari pesan dengan {{name}}",
+      "unavailable": "Pencarian sedang tidak tersedia",
+      "you": "Kamu"
+    },
+    "sendErrors": {
+      "blockedBody": "Kamu tidak bisa mengirim pesan ke orang ini.",
+      "blockedTitle": "Pesan tidak terkirim",
+      "capBody": "Kamu sudah memulai percakapan baru sebanyak batas hari ini. Jadi VIP untuk memulai sebanyak yang kamu mau.",
+      "capTitle": "Batas percakapan baru tercapai",
+      "dailyBody": "Kamu sudah mengirim semua pesan untuk hari ini. Jadi VIP untuk pesan tanpa batas, atau kembali besok.",
+      "dailyTitle": "Batas pesan harian tercapai",
+      "firstChatBody": "Kamu bisa mengirim 5 pesan sampai dia membalas. Kamu bisa menulis lagi setelah dia menjawab.",
+      "firstChatTitle": "Tunggu balasan",
+      "generic": "Pesan tidak terkirim. Ketuk Coba lagi untuk mengulang.",
+      "goVip": "Jadi VIP",
+      "ok": "OK",
+      "reattach": "Lampirkan file lagi untuk mengirimnya.",
+      "tooFast": "Kamu mengirim pesan terlalu cepat. Tunggu sebentar."
+    },
+    "story": {
+      "replied": "Membalas story kamu",
+      "shared": "Membagikan story",
+      "unavailable": "Story ini sudah tidak tersedia",
+      "youReplied": "Kamu membalas story-nya",
+      "youShared": "Kamu membagikan story"
+    },
+    "translation": {
+      "close": "Tutup terjemahan",
+      "failed": "Gagal menerjemahkan pesan",
+      "label": "Terjemahan · {{lang}}",
+      "save": "Simpan frasa",
+      "saveFailed": "Gagal menyimpan frasa",
+      "saved": "Disimpan ke antrean belajar",
+      "saving": "Menyimpan…",
+      "translating": "Menerjemahkan…"
+    },
+    "video": {
+      "badType": "Format video ini tidak bisa dikirim. Coba MP4.",
+      "tooBig": "Video ini terlalu besar. Batasnya {{mb}} MB.",
+      "tooLong": "Video ini terlalu panjang. Batasnya {{minutes}} menit."
+    },
+    "voice": {
+      "unavailable": "Rekaman suara tidak tersedia. Periksa izin mikrofon untuk situs ini."
+    },
+    "wave": {
+      "hi": "Hai!"
+    }
   },
   "newChat": {
     "title": "Obrolan Baru",

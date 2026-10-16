@@ -39,7 +39,12 @@
       "noMatchTitle": "一致する会話がありません",
       "noMatchSubtitle": "検索条件を変えてみてください",
       "emptyTitle": "まだ会話がありません",
-      "emptySubtitle": "会話を始めるとここに表示されます"
+      "emptySubtitle": "会話を始めるとここに表示されます",
+      "loadError": "会話を読み込めませんでした",
+      "loading": "チャットを読み込み中…",
+      "noMessages": "まだメッセージがありません",
+      "tryAgain": "再試行",
+      "typing": "入力中…"
     },
     "actions": {
       "menuLabel": "会話のメニュー",
@@ -201,9 +206,232 @@
       "gradient_fire": "ファイア",
       "gradient_winter": "ウィンター",
       "gradient_lavender": "ラベンダー",
-      "gradient_aurora": "オーロラ"
+      "gradient_aurora": "オーロラ",
+      "premiumInUse": "このチャットではアプリのプレミアム壁紙を使用しています。別の壁紙を選ぶと、お互いの壁紙が変更されます。"
     },
-    "jumpToLatest": "最新のメッセージへ移動"
+    "jumpToLatest": "最新のメッセージへ移動",
+    "archive": {
+      "archive": "チャットをアーカイブ",
+      "archived": "ウェブサイトでアーカイブしました。アプリには引き続き表示されます。",
+      "back": "チャット一覧に戻る",
+      "failed": "アーカイブを変更できませんでした",
+      "toggle": "アーカイブ（{{count}}）",
+      "unarchive": "アーカイブを解除",
+      "unarchived": "チャット一覧に戻しました"
+    },
+    "blocked": {
+      "byMe": "この相手をブロックしています。メッセージを送るにはブロックを解除してください。",
+      "generic": "このチャットではメッセージを送信できません。",
+      "manage": "管理"
+    },
+    "bookmarks": {
+      "addFailed": "メッセージを保存できませんでした",
+      "added": "保存しました",
+      "attachment": "添付ファイル",
+      "close": "閉じる",
+      "empty": "保存したメッセージはまだありません",
+      "error": "保存したメッセージを読み込めませんでした",
+      "loading": "保存したメッセージを読み込み中…",
+      "open": "チャットを開く",
+      "remove": "保存を解除",
+      "removeFailed": "削除できませんでした",
+      "removed": "保存したメッセージから削除しました",
+      "title": "保存したメッセージ"
+    },
+    "call": {
+      "busy": "{{name}}さんは別の通話中でした",
+      "cancelledVideo": "キャンセルされたビデオ通話",
+      "cancelledVoice": "キャンセルされた音声通話",
+      "declinedIncomingVideo": "拒否したビデオ通話",
+      "declinedIncomingVoice": "拒否した音声通話",
+      "declinedOutgoingVideo": "ビデオ通話が拒否されました",
+      "declinedOutgoingVoice": "音声通話が拒否されました",
+      "incomingVideo": "ビデオ通話の着信",
+      "incomingVoice": "音声通話の着信",
+      "missedVideo": "ビデオ通話の不在着信",
+      "missedVoice": "音声通話の不在着信",
+      "noAnswerVideo": "ビデオ通話・応答なし",
+      "noAnswerVoice": "音声通話・応答なし",
+      "outgoingVideo": "ビデオ通話の発信",
+      "outgoingVoice": "音声通話の発信"
+    },
+    "connection": {
+      "kicked": "別の場所でチャットが開かれたため、このタブではメッセージを受信できなくなりました。",
+      "reconnect": "ここで使う"
+    },
+    "correction": {
+      "accept": "添削を承認",
+      "acceptFailed": "添削を承認できませんでした",
+      "accepted": "添削を承認しました。学習記録に追加されました",
+      "accepting": "承認中…",
+      "corrected": "{{name}}さんの添削",
+      "you": "あなた"
+    },
+    "correctionModal": {
+      "cancel": "キャンセル",
+      "close": "閉じる",
+      "empty": "添削内容を入力してください",
+      "explanation": "説明",
+      "explanationPlaceholder": "この添削が役立つ理由を説明してください…",
+      "hint": "例：「'goed'ではなく'went'を使います - 不規則な過去形」",
+      "optional": "（任意）",
+      "original": "元のメッセージ",
+      "submit": "添削を送信",
+      "title": "言語の添削",
+      "unchanged": "元のメッセージと異なる内容にしてください",
+      "yours": "あなたの添削",
+      "yoursPlaceholder": "添削した文を入力…"
+    },
+    "deleteMessage": {
+      "cancel": "キャンセル",
+      "failed": "メッセージを削除できませんでした。もう一度お試しください。",
+      "forEveryone": "全員から削除",
+      "forMe": "自分だけ削除",
+      "placeholder": "このメッセージは削除されました",
+      "title": "メッセージを削除しますか？",
+      "tooLate": "全員から削除できるのは、送信後1時間以内のメッセージのみです。"
+    },
+    "editDialog": {
+      "cancel": "キャンセル",
+      "failed": "メッセージを編集できませんでした。もう一度お試しください。",
+      "label": "メッセージ",
+      "save": "保存",
+      "title": "メッセージを編集",
+      "tooLate": "メッセージを編集できるのは、送信後15分以内のみです。"
+    },
+    "editedLabel": "編集済み",
+    "forward": {
+      "close": "閉じる",
+      "empty": "会話が見つかりません。",
+      "error": "会話を読み込めませんでした。",
+      "loading": "会話を読み込み中…",
+      "search": "検索",
+      "submit": "転送",
+      "submitCount": "転送（{{count}}）",
+      "title": "転送先",
+      "unknownUser": "不明"
+    },
+    "forwarded": "転送済み",
+    "location": {
+      "cancel": "キャンセル",
+      "confirmTitle": "現在地を共有しますか？",
+      "denied": "位置情報の許可が拒否されました",
+      "failed": "現在地を取得できませんでした",
+      "open": "マップで開く",
+      "send": "送信",
+      "sendFailed": "位置情報を送信できませんでした",
+      "share": "位置情報を共有",
+      "title": "位置情報",
+      "unsupported": "このブラウザでは位置情報を共有できません"
+    },
+    "mediaGallery": {
+      "back": "戻る",
+      "emptyFiles": "共有されたファイルはまだありません",
+      "emptyPhotos": "共有された写真はまだありません",
+      "emptyVideos": "共有された動画はまだありません",
+      "error": "メディアを読み込めませんでした",
+      "files": "ファイル",
+      "loading": "メディアを読み込み中…",
+      "photos": "写真",
+      "title": "共有したメディア",
+      "unknownFile": "不明なファイル",
+      "unknownSize": "サイズ不明",
+      "videos": "動画"
+    },
+    "menu": {
+      "bookmark": "保存",
+      "close": "閉じる",
+      "copy": "コピー",
+      "delete": "削除",
+      "edit": "編集",
+      "forward": "転送",
+      "listen": "聞く",
+      "pin": "ピン留め",
+      "reply": "返信"
+    },
+    "mute": {
+      "always": "自分でオンにするまで",
+      "cancel": "キャンセル",
+      "eightHours": "8時間",
+      "oneHour": "1時間",
+      "oneWeek": "1週間",
+      "title": "{{name}}さんの通知をオフにしますか？"
+    },
+    "pinnedBar": {
+      "count": "{{count}}件のピン留め",
+      "unpin": "ピン留めを解除"
+    },
+    "preview": {
+      "attachment": "📎 添付ファイル",
+      "call": "📞 通話",
+      "file": "📎 ファイル",
+      "gif": "GIF",
+      "location": "📍 位置情報",
+      "photo": "🖼️ 写真",
+      "poll": "📊 投票",
+      "story": "📖 ストーリー",
+      "video": "🎥 動画",
+      "voice": "🎤 ボイスメッセージ"
+    },
+    "replyBar": {
+      "cancel": "返信をキャンセル",
+      "replyingTo": "{{name}}さんに返信"
+    },
+    "search": {
+      "close": "閉じる",
+      "empty": "メッセージが見つかりません",
+      "hint": "2文字以上入力してください",
+      "notLoaded": "さらに前のメッセージです。上にスクロールして読み込んでください。",
+      "open": "メッセージを検索",
+      "placeholder": "このチャットを検索",
+      "searching": "検索中…",
+      "title": "{{name}}さんとのメッセージを検索",
+      "unavailable": "現在、検索は利用できません",
+      "you": "あなた"
+    },
+    "sendErrors": {
+      "blockedBody": "この相手にはメッセージを送信できません。",
+      "blockedTitle": "メッセージを送信できませんでした",
+      "capBody": "今日始められる新しい会話の上限に達しました。VIPなら好きなだけ会話を始められます。",
+      "capTitle": "新しい会話の上限に達しました",
+      "dailyBody": "今日送信できるメッセージをすべて使いました。VIPならメッセージが無制限になります。また明日お試しください。",
+      "dailyTitle": "1日のメッセージ上限に達しました",
+      "firstChatBody": "相手が返信するまで、メッセージは5件まで送れます。返信があれば、また送れるようになります。",
+      "firstChatTitle": "返信をお待ちください",
+      "generic": "メッセージを送信できませんでした。「再試行」をタップしてください。",
+      "goVip": "VIPになる",
+      "ok": "OK",
+      "reattach": "送信するには、ファイルをもう一度添付してください。",
+      "tooFast": "メッセージの送信が速すぎます。少し待ってからお試しください。"
+    },
+    "story": {
+      "replied": "あなたのストーリーに返信しました",
+      "shared": "ストーリーをシェアしました",
+      "unavailable": "このストーリーは表示できなくなりました",
+      "youReplied": "相手のストーリーに返信しました",
+      "youShared": "ストーリーをシェアしました"
+    },
+    "translation": {
+      "close": "翻訳を閉じる",
+      "failed": "メッセージを翻訳できませんでした",
+      "label": "翻訳・{{lang}}",
+      "save": "フレーズを保存",
+      "saveFailed": "フレーズを保存できませんでした",
+      "saved": "学習リストに保存しました",
+      "saving": "保存中…",
+      "translating": "翻訳中…"
+    },
+    "video": {
+      "badType": "この動画形式は送信できません。MP4をお試しください。",
+      "tooBig": "動画のサイズが大きすぎます。上限は{{mb}} MBです。",
+      "tooLong": "動画が長すぎます。上限は{{minutes}}分です。"
+    },
+    "voice": {
+      "unavailable": "音声を録音できません。このサイトのマイクの許可を確認してください。"
+    },
+    "wave": {
+      "hi": "こんにちは！"
+    }
   },
   "newChat": {
     "title": "新しいチャット",
