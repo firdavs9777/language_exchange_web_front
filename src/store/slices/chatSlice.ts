@@ -133,6 +133,23 @@ export const chatApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Conversations"],
     }),
+    // Archive — web-only view state for now: the app has no archive screen and
+    // its list shows archived chats like any other (GET /conversations without
+    // `archived` returns both).
+    archiveConversation: builder.mutation({
+      query: (conversationId: string) => ({
+        url: `${CONVERSATIONS_URL}/${conversationId}/archive`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Conversations"],
+    }),
+    unarchiveConversation: builder.mutation({
+      query: (conversationId: string) => ({
+        url: `${CONVERSATIONS_URL}/${conversationId}/unarchive`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Conversations"],
+    }),
 
     // Wallpaper / theme — SHARED by both participants, which is the whole
     // point: the app writes it with PUT and the server pushes `themeChanged`
@@ -481,6 +498,8 @@ export const {
   useUnmuteConversationMutation,
   usePinConversationMutation,
   useUnpinConversationMutation,
+  useArchiveConversationMutation,
+  useUnarchiveConversationMutation,
   // Wallpaper
   useGetConversationThemeQuery,
   useSetConversationThemeMutation,

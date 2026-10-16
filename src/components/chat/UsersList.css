@@ -526,3 +526,22 @@
     opacity: 1;
   }
 }
+
+.users-list-archived-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 16px;
+  background: transparent;
+  border: 0;
+  border-block-end: 1px solid var(--chat-line);
+  color: var(--chat-muted);
+  font-size: 13px;
+  text-align: start;
+  cursor: pointer;
+}
+
+.users-list-archived-toggle:hover {
+  background: var(--chat-hover);
+}

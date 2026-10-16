@@ -15,6 +15,8 @@ const mockDelete = jest.fn();
 const mockPin = jest.fn();
 const mockUnpin = jest.fn();
 const mockMute = jest.fn();
+const mockArchive = jest.fn();
+const mockUnarchive = jest.fn();
 const mockUnmute = jest.fn();
 
 jest.mock("react-i18next", () => ({
@@ -32,6 +34,8 @@ jest.mock("../../store/slices/chatSlice", () => ({
   useUnpinConversationMutation: () => [mockUnpin, { isLoading: false }],
   useMuteConversationMutation: () => [mockMute, { isLoading: false }],
   useUnmuteConversationMutation: () => [mockUnmute, { isLoading: false }],
+  useArchiveConversationMutation: () => [mockArchive, { isLoading: false }],
+  useUnarchiveConversationMutation: () => [mockUnarchive, { isLoading: false }],
 }));
 
 const resolved = () => ({ unwrap: () => Promise.resolve({ success: true }) });
@@ -79,6 +83,8 @@ beforeEach(() => {
     refetch: jest.fn(),
   });
   mockMute.mockReturnValue(resolved());
+  mockArchive.mockReturnValue(resolved());
+  mockUnarchive.mockReturnValue(resolved());
   mockUnmute.mockReturnValue(resolved());
   mockDelete.mockReturnValue(resolved());
 });
@@ -115,6 +121,7 @@ it("resolves the conversation through the shared matcher, otherParticipant first
   renderList();
   fireEvent.click(screen.getByTestId("users-list-menu-u2"));
   fireEvent.click(screen.getByTestId("users-list-mute-u2"));
+  fireEvent.click(screen.getByTestId("mute-option-always"));
   expect(mockMute).toHaveBeenCalledWith({ conversationId: "c1" });
 });
 
@@ -137,6 +144,7 @@ it("mutes a conversation from the row's menu", async () => {
   renderList();
   fireEvent.click(screen.getByTestId("users-list-menu-u2"));
   fireEvent.click(screen.getByTestId("users-list-mute-u2"));
+  fireEvent.click(screen.getByTestId("mute-option-always"));
   expect(mockMute).toHaveBeenCalledWith({ conversationId: "c1" });
   await waitFor(() => expect(mockMute).toHaveBeenCalledTimes(1));
 });
@@ -294,4 +302,50 @@ it("words a call preview from the reader's side", () => {
   });
   renderList();
   expect(screen.getByText("Missed voice call")).toBeInTheDocument();
+});
+
+it("mutes from the row's menu for the chosen time", () => {
+  renderList();
+  fireEvent.click(screen.getByTestId("users-list-menu-u2"));
+  fireEvent.click(screen.getByTestId("users-list-mute-u2"));
+  fireEvent.click(screen.getByTestId("mute-option-1w"));
+  expect(mockMute).toHaveBeenCalledWith({ conversationId: "c1", duration: 604800000 });
+});
+
+it("hides archived chats from the list and shows them behind the Archived toggle", () => {
+  mockConversations.mockReturnValue({
+    data: {
+      data: [
+        conversation(),
+        conversation({
+          _id: "c2",
+          isArchived: true,
+          participants: [
+            { _id: "me", name: "Me", images: [] },
+            { _id: "u3", name: "Bo", images: [] },
+          ],
+        }),
+      ],
+    },
+    refetch: jest.fn(),
+  });
+  renderList();
+  expect(screen.getByText("Ada")).toBeInTheDocument();
+  expect(screen.queryByText("Bo")).toBeNull();
+
+  fireEvent.click(screen.getByTestId("users-list-archived-toggle"));
+  expect(screen.getByText("Bo")).toBeInTheDocument();
+  expect(screen.queryByText("Ada")).toBeNull();
+});
+
+it("archives from the row's menu", async () => {
+  renderList();
+  fireEvent.click(screen.getByTestId("users-list-menu-u2"));
+  fireEvent.click(screen.getByTestId("users-list-archive-u2"));
+  expect(mockArchive).toHaveBeenCalledWith("c1");
+});
+
+it("offers no Archived toggle when nothing is archived", () => {
+  renderList();
+  expect(screen.queryByTestId("users-list-archived-toggle")).toBeNull();
 });

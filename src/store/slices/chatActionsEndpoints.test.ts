@@ -243,4 +243,26 @@ describe("dead 404 message routes are removed", () => {
     expect(url.searchParams.get("page")).toBe("1");
     expect(url.searchParams.get("limit")).toBe("50");
   });
+
+  it("archiveConversation -> POST /api/v1/conversations/:id/archive", async () => {
+    const calls = mockFetch();
+    await makeStore().dispatch((chatApiSlice.endpoints as any).archiveConversation.initiate("c1"));
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/conversations/c1/archive");
+    expect(calls[0].method).toBe("POST");
+  });
+
+  it("unarchiveConversation -> POST /api/v1/conversations/:id/unarchive", async () => {
+    const calls = mockFetch();
+    await makeStore().dispatch((chatApiSlice.endpoints as any).unarchiveConversation.initiate("c1"));
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/conversations/c1/unarchive");
+  });
+
+  it("muteConversation sends the duration in ms, and no duration for 'always'", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch((chatApiSlice.endpoints as any).muteConversation.initiate({ conversationId: "c1", duration: 3600000 }));
+    await store.dispatch((chatApiSlice.endpoints as any).muteConversation.initiate({ conversationId: "c1" }));
+    expect(JSON.parse(calls[0].body as string)).toEqual({ duration: 3600000 });
+    expect(JSON.parse(calls[1].body as string)).toEqual({});
+  });
 });

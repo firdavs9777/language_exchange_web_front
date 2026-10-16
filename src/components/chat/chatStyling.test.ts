@@ -49,6 +49,7 @@ const STRICT_FILES = [
   "components/LocationMessageCard.tsx",
   "components/LocationShareButton.tsx",
   "components/MessageSearchDialog.tsx",
+  "components/MuteDurationDialog.tsx",
   "components/StoryReferenceCard.tsx",
   "components/CorrectionModal.tsx",
   "components/TranslationCard.tsx",

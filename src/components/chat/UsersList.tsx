@@ -7,16 +7,20 @@ import {
   useUnpinConversationMutation,
   useMuteConversationMutation,
   useUnmuteConversationMutation,
+  useArchiveConversationMutation,
+  useUnarchiveConversationMutation,
 } from "../../store/slices/chatSlice";
 import { Bounce, toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import { Bell, BellOff, MoreVertical, Pin, PinOff, Trash2 } from "lucide-react";
+import { Archive, ArchiveRestore, Bell, BellOff, MoreVertical, Pin, PinOff, Trash2 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/index";
 import { useSocket } from "./hooks/useSocket";
 import { findConversationWith, CONVERSATIONS_PAGE } from "./lib/conversationMatch";
 import { previewOf } from "./lib/conversationPreview";
 import { bumpUnread, displayUnread, pruneOverrides, Counts } from "./lib/unreadOverrides";
+import MuteDurationDialog from "./components/MuteDurationDialog";
+import { muteArgs } from "./lib/muteDurations";
 import { useTranslation } from "react-i18next";
 import "./UsersList.css";
 
@@ -37,6 +41,7 @@ interface User {
   conversationId?: string;
   isPinned?: boolean;
   isMuted?: boolean;
+  isArchived?: boolean;
 }
 
 interface OnlineUser {
@@ -125,6 +130,10 @@ const UsersList: React.FC<UsersListProps> = ({
   const [muteConversation] = useMuteConversationMutation();
   const [unmuteConversation] = useUnmuteConversationMutation();
   const [openMenuFor, setOpenMenuFor] = useState<string | null>(null);
+  const [showArchived, setShowArchived] = useState(false);
+  const [mutingPartner, setMutingPartner] = useState<User | null>(null);
+  const [archiveConversation] = useArchiveConversationMutation();
+  const [unarchiveConversation] = useUnarchiveConversationMutation();
   // Whether the action dropdown should open upward (when the kebab is near
   // the bottom of the viewport and a downward menu would clip).
   const [menuOpensUp, setMenuOpensUp] = useState(false);
@@ -155,11 +164,12 @@ const UsersList: React.FC<UsersListProps> = ({
       }
 
       try {
-        if (partner.isMuted) {
-          await unmuteConversation(resolvedConversationId).unwrap();
-        } else {
-          await muteConversation({ conversationId: resolvedConversationId }).unwrap();
+        if (!partner.isMuted) {
+          // How long is asked first; MuteDurationDialog calls handleMuteFor.
+          setMutingPartner(partner);
+          return;
         }
+        await unmuteConversation(resolvedConversationId).unwrap();
         toast.success(
           partner.isMuted
             ? t("chatPage.actions.unmuted") || "Notifications are back on"
@@ -177,6 +187,50 @@ const UsersList: React.FC<UsersListProps> = ({
       }
     },
     [muteConversation, unmuteConversation, refetchConversations, resolveConversationId, t]
+  );
+
+  const handleMuteFor = useCallback(
+    async (ms: number | null) => {
+      const partner = mutingPartner;
+      setMutingPartner(null);
+      const conversationId = partner ? resolveConversationId(partner) : undefined;
+      if (!conversationId) return;
+      try {
+        await muteConversation(muteArgs(conversationId, ms)).unwrap();
+        toast.success(t("chatPage.actions.muted") || "Notifications muted", {
+          autoClose: 1800,
+          theme: "colored",
+          transition: Bounce,
+        });
+        refetchConversations();
+      } catch (err: any) {
+        toast.error(
+          err?.data?.error || err?.data?.message || t("chatPage.actions.muteFailed") || "Couldn't update notifications",
+          { autoClose: 3000, theme: "colored", transition: Bounce }
+        );
+      }
+    },
+    [mutingPartner, muteConversation, refetchConversations, resolveConversationId, t]
+  );
+
+  const handleToggleArchive = useCallback(
+    async (e: React.MouseEvent, partner: User) => {
+      e.stopPropagation();
+      setOpenMenuFor(null);
+      const conversationId = resolveConversationId(partner);
+      if (!conversationId) return;
+      try {
+        if (partner.isArchived) await unarchiveConversation(conversationId).unwrap();
+        else await archiveConversation(conversationId).unwrap();
+        refetchConversations();
+      } catch (err: any) {
+        toast.error(
+          err?.data?.error || err?.data?.message || t("chatPage.archive.failed") || "Couldn't update the archive",
+          { autoClose: 3000, theme: "colored", transition: Bounce }
+        );
+      }
+    },
+    [archiveConversation, unarchiveConversation, refetchConversations, resolveConversationId, t]
   );
 
   const handleTogglePin = useCallback(
@@ -532,6 +586,7 @@ const UsersList: React.FC<UsersListProps> = ({
         conversationId: conversation._id,
         isPinned: Boolean(conversation.isPinned),
         isMuted: Boolean(conversation.isMuted),
+        isArchived: Boolean(conversation.isArchived),
       });
     });
 
@@ -544,15 +599,24 @@ const UsersList: React.FC<UsersListProps> = ({
     });
   }, [conversationsData, currentUser, userStatuses, getUserStatus, unreadCounts, serverUnread, activeUserId, t]);
 
+  const archivedCount = useMemo(
+    () => chatPartners.filter((u) => Boolean(u.isArchived)).length,
+    [chatPartners]
+  );
+
   const filteredChatPartners = useMemo(() => {
-    if (!searchQuery.trim()) return chatPartners;
+    // Archived chats live behind the toggle (web-only: the app lists them as usual).
+    const inView = chatPartners.filter((u) => Boolean(u.isArchived) === showArchived);
+    if (!searchQuery.trim()) return inView;
     const q = searchQuery.toLowerCase().trim();
-    return chatPartners.filter(
-      (u) =>
-        u.name.toLowerCase().includes(q) ||
-        u.lastMessage?.toLowerCase().includes(q)
+    return inView.filter(
+      (u) => u.name.toLowerCase().includes(q) || u.lastMessage?.toLowerCase().includes(q)
     );
-  }, [chatPartners, searchQuery]);
+  }, [chatPartners, searchQuery, showArchived]);
+
+  useEffect(() => {
+    if (showArchived && archivedCount === 0) setShowArchived(false);
+  }, [showArchived, archivedCount]);
 
   // ---------- Delete ----------
 
@@ -700,6 +764,22 @@ const UsersList: React.FC<UsersListProps> = ({
   return (
     <div className="users-list-wrapper">
       <div className="users-list-scroll">
+        {(archivedCount > 0 || showArchived) && (
+          <button
+            type="button"
+            className="users-list-archived-toggle"
+            data-testid="users-list-archived-toggle"
+            aria-pressed={showArchived}
+            onClick={() => setShowArchived((v) => !v)}
+          >
+            {showArchived ? <ArchiveRestore size={14} /> : <Archive size={14} />}
+            <span>
+              {showArchived
+                ? t("chatPage.archive.back") || "Back to chats"
+                : t("chatPage.archive.toggle", { count: archivedCount }) || `Archived (${archivedCount})`}
+            </span>
+          </button>
+        )}
         {filteredChatPartners.length > 0 ? (
           <ul className="users-list">
             {filteredChatPartners.map((user) => {
@@ -874,6 +954,19 @@ const UsersList: React.FC<UsersListProps> = ({
                         </button>
                         <button
                           type="button"
+                          className="users-list-action-item"
+                          data-testid={`users-list-archive-${user._id}`}
+                          onClick={(e) => handleToggleArchive(e, user)}
+                        >
+                          {user.isArchived ? <ArchiveRestore size={14} /> : <Archive size={14} />}
+                          <span>
+                            {user.isArchived
+                              ? t("chatPage.archive.unarchive") || "Unarchive chat"
+                              : t("chatPage.archive.archive") || "Archive chat"}
+                          </span>
+                        </button>
+                        <button
+                          type="button"
                           className="users-list-action-item users-list-action-item--danger"
                           data-testid={`users-list-delete-${user._id}`}
                           onClick={(e) => {
@@ -917,6 +1010,14 @@ const UsersList: React.FC<UsersListProps> = ({
           used to be: one dialog shell for the whole product means one Escape
           behaviour, one focus trap, one scroll lock — and colours that follow
           the tokens into dark mode. */}
+      {mutingPartner ? (
+        <MuteDurationDialog
+          name={mutingPartner.name}
+          onChoose={handleMuteFor}
+          onCancel={() => setMutingPartner(null)}
+        />
+      ) : null}
+
       <ConfirmDialog
         open={showDeleteModal}
         danger

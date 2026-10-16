@@ -330,6 +330,23 @@
       "removeFailed": "Couldn't remove it",
       "added": "Saved",
       "addFailed": "Couldn't save the message"
+    },
+    "mute": {
+      "title": "Mute {{name}}?",
+      "oneHour": "For 1 hour",
+      "eightHours": "For 8 hours",
+      "oneWeek": "For 1 week",
+      "always": "Until I turn it back on",
+      "cancel": "Cancel"
+    },
+    "archive": {
+      "archive": "Archive chat",
+      "unarchive": "Unarchive chat",
+      "archived": "Archived on the website. The app still shows it.",
+      "unarchived": "Moved back to your chats",
+      "failed": "Couldn't update the archive",
+      "toggle": "Archived ({{count}})",
+      "back": "Back to chats"
     }
   },
   "newChat": {

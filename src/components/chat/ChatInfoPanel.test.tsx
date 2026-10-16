@@ -14,6 +14,8 @@ const mockNavigate = jest.fn();
 const mockConversations = jest.fn();
 const mockBlockStatus = jest.fn();
 const mockMute = jest.fn();
+const mockArchive = jest.fn();
+const mockUnarchive = jest.fn();
 const mockUnmute = jest.fn();
 const mockDelete = jest.fn();
 const mockBlock = jest.fn();
@@ -43,6 +45,8 @@ jest.mock("../../store/slices/chatSlice", () => ({
   useSetConversationThemeMutation: () => [mockSetTheme, { isLoading: false }],
   useMuteConversationMutation: () => [mockMute, { isLoading: false }],
   useUnmuteConversationMutation: () => [mockUnmute, { isLoading: false }],
+  useArchiveConversationMutation: () => [mockArchive, { isLoading: false }],
+  useUnarchiveConversationMutation: () => [mockUnarchive, { isLoading: false }],
   useDeleteConversationMutation: () => [mockDelete, { isLoading: false }],
 }));
 
@@ -100,6 +104,8 @@ beforeEach(() => {
     data: { data: { native_language: "Korean", language_to_learn: "English", languageLevel: "B1" } },
   });
   mockMute.mockReturnValue(resolved());
+  mockArchive.mockReturnValue(resolved());
+  mockUnarchive.mockReturnValue(resolved());
   mockUnmute.mockReturnValue(resolved());
   mockDelete.mockReturnValue(resolved());
   mockBlock.mockReturnValue(resolved());
@@ -178,6 +184,7 @@ describe("the conversation the actions act on", () => {
     });
     renderPanel();
     fireEvent.click(screen.getByTestId("chat-info-mute"));
+    fireEvent.click(screen.getByTestId("mute-option-always"));
     expect(mockMute).toHaveBeenCalledWith({ conversationId: "c1" });
   });
 
@@ -230,11 +237,20 @@ describe("the profile section", () => {
 });
 
 describe("mute", () => {
-  it("mutes the conversation this pair actually has", async () => {
+  it("asks how long, then mutes the conversation this pair actually has", async () => {
     renderPanel();
     fireEvent.click(screen.getByTestId("chat-info-mute"));
+    expect(mockMute).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByTestId("mute-option-1h"));
+    expect(mockMute).toHaveBeenCalledWith({ conversationId: "c1", duration: 3600000 });
+    await waitFor(() => expect(screen.queryByTestId("mute-option-1h")).toBeNull());
+  });
+
+  it("mutes until unmuted when 'always' is chosen (no duration, like the app)", () => {
+    renderPanel();
+    fireEvent.click(screen.getByTestId("chat-info-mute"));
+    fireEvent.click(screen.getByTestId("mute-option-always"));
     expect(mockMute).toHaveBeenCalledWith({ conversationId: "c1" });
-    await waitFor(() => expect(mockMute).toHaveBeenCalledTimes(1));
   });
 
   it("unmutes when the conversation is already muted", async () => {
@@ -367,5 +383,30 @@ describe("delete", () => {
     fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
     await waitFor(() => expect(mockDelete).toHaveBeenCalled());
     expect(mockNavigate).not.toHaveBeenCalled();
+  });
+});
+
+describe("archive", () => {
+  it("archives the conversation", async () => {
+    renderPanel();
+    fireEvent.click(screen.getByTestId("chat-info-archive"));
+    expect(mockArchive).toHaveBeenCalledWith("c1");
+  });
+
+  it("unarchives one that is archived", () => {
+    mockConversations.mockReturnValue({
+      data: { data: [{ _id: "c1", participants: [{ _id: "me" }, { _id: "u2" }], isArchived: true }] },
+      isLoading: false,
+    });
+    renderPanel();
+    fireEvent.click(screen.getByTestId("chat-info-archive"));
+    expect(mockUnarchive).toHaveBeenCalledWith("c1");
+    expect(mockArchive).not.toHaveBeenCalled();
+  });
+
+  it("cannot archive before the conversation exists", () => {
+    mockConversations.mockReturnValue({ data: { data: [] }, isLoading: false });
+    renderPanel();
+    expect(screen.getByTestId("chat-info-archive")).toBeDisabled();
   });
 });

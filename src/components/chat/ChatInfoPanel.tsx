@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import {
+  Archive,
+  ArchiveRestore,
   Ban,
   Bell,
   BellOff,
@@ -24,6 +26,8 @@ import notify from "../../design/notify";
 import { findConversationWith, CONVERSATIONS_PAGE } from "./lib/conversationMatch";
 import WallpaperPicker from "./WallpaperPicker";
 import BookmarksDialog from "./components/BookmarksDialog";
+import MuteDurationDialog from "./components/MuteDurationDialog";
+import { muteArgs } from "./lib/muteDurations";
 import { DEFAULT_WALLPAPER } from "../../design/chatWallpapers";
 import {
   useGetConversationsQuery,
@@ -31,6 +35,8 @@ import {
   useMuteConversationMutation,
   useUnmuteConversationMutation,
   useDeleteConversationMutation,
+  useArchiveConversationMutation,
+  useUnarchiveConversationMutation,
 } from "../../store/slices/chatSlice";
 import {
   useGetBlockStatusQuery,
@@ -137,6 +143,7 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
   );
   const conversationId: string = conversation?._id || "";
   const isMuted = Boolean(conversation?.isMuted);
+  const isArchived = Boolean(conversation?.isArchived);
 
   // Blocking or reporting yourself is not a thing: the backend refuses the
   // block (400 "Cannot block yourself") and would happily FILE the report.
@@ -168,12 +175,14 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
   const [muteConversation, { isLoading: isMuting }] = useMuteConversationMutation();
   const [unmuteConversation, { isLoading: isUnmuting }] = useUnmuteConversationMutation();
   const [deleteConversation, { isLoading: isDeleting }] = useDeleteConversationMutation();
+  const [archiveConversation, { isLoading: isArchiving }] = useArchiveConversationMutation();
+  const [unarchiveConversation, { isLoading: isUnarchiving }] = useUnarchiveConversationMutation();
   const [blockUser, { isLoading: isBlocking }] = useBlockUserMutation();
   const [unblockUser, { isLoading: isUnblocking }] = useUnblockUserMutation();
   const [reportUser, { isLoading: isReporting }] = useReportUserMutation();
 
   const [dialog, setDialog] = useState<
-    "block" | "delete" | "report" | "wallpaper" | "bookmarks" | null
+    "block" | "delete" | "report" | "wallpaper" | "bookmarks" | "mute" | null
   >(null);
   const [dialogError, setDialogError] = useState("");
   const [reason, setReason] = useState("other");
@@ -197,21 +206,41 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
 
   const handleMute = async (): Promise<void> => {
     if (!conversationId) return;
+    if (!isMuted) {
+      setDialog("mute");
+      return;
+    }
     try {
-      if (isMuted) await unmuteConversation(conversationId).unwrap();
-      else await muteConversation({ conversationId }).unwrap();
+      await unmuteConversation(conversationId).unwrap();
+      notify.success(t("chatPage.info.unmuted") || "Notifications are back on");
+    } catch (error) {
+      notify.error(messageOf(error, t("chatPage.info.muteFailed") || "Couldn't update notifications"));
+    }
+  };
+
+  const handleMuteFor = async (ms: number | null): Promise<void> => {
+    if (!conversationId) return;
+    try {
+      await muteConversation(muteArgs(conversationId, ms)).unwrap();
+      if (mounted.current) closeDialog();
+      notify.success(t("chatPage.info.muted") || "Notifications muted");
+    } catch (error) {
+      notify.error(messageOf(error, t("chatPage.info.muteFailed") || "Couldn't update notifications"));
+    }
+  };
+
+  const handleArchive = async (): Promise<void> => {
+    if (!conversationId) return;
+    try {
+      if (isArchived) await unarchiveConversation(conversationId).unwrap();
+      else await archiveConversation(conversationId).unwrap();
       notify.success(
-        isMuted
-          ? t("chatPage.info.unmuted") || "Notifications are back on"
-          : t("chatPage.info.muted") || "Notifications muted"
+        isArchived
+          ? t("chatPage.archive.unarchived") || "Moved back to your chats"
+          : t("chatPage.archive.archived") || "Archived on the website. The app still shows it."
       );
     } catch (error) {
-      notify.error(
-        messageOf(
-          error,
-          t("chatPage.info.muteFailed") || "Couldn't update notifications"
-        )
-      );
+      notify.error(messageOf(error, t("chatPage.archive.failed") || "Couldn't update the archive"));
     }
   };
 
@@ -390,6 +419,26 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
             </span>
           </button>
 
+          <button
+            type="button"
+            data-testid="chat-info-archive"
+            onClick={handleArchive}
+            disabled={conversationUnavailable || isArchiving || isUnarchiving}
+            className={ROW}
+          >
+            {isArchived ? (
+              <ArchiveRestore className="h-4 w-4 shrink-0" aria-hidden />
+            ) : (
+              <Archive className="h-4 w-4 shrink-0" aria-hidden />
+            )}
+            <span className="flex-1">
+              {isArchived
+                ? t("chatPage.archive.unarchive") || "Unarchive chat"
+                : t("chatPage.archive.archive") || "Archive chat"}
+              {noConversationHint ? <span className={HINT}>{noConversationHint}</span> : null}
+            </span>
+          </button>
+
           {/* The wallpaper is a property of the CONVERSATION, so like mute and
               delete it needs the conversation document to exist first. */}
           <button
@@ -508,6 +557,10 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
       ) : null}
 
       {dialog === "bookmarks" ? <BookmarksDialog onClose={closeDialog} /> : null}
+
+      {dialog === "mute" ? (
+        <MuteDurationDialog name={userName} busy={isMuting} onChoose={handleMuteFor} onCancel={closeDialog} />
+      ) : null}
 
       {dialog === "report" ? (
         <DialogShell
