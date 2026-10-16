@@ -903,6 +903,17 @@
       "verifyFirst": "Por favor, verifique seu e-mail primeiro",
       "registrationSuccess": "Registro realizado com sucesso!",
       "registrationError": "Erro durante o registro"
+    },
+    "callback": {
+      "banned": "Esta conta foi suspensa.",
+      "codeExpired": "Este link de login expirou. Faça login novamente.",
+      "completing": "Concluindo o login...",
+      "emailExists": "Já existe uma conta com este e-mail. Entre com seu e-mail e senha.",
+      "failedTitle": "Falha no login",
+      "generic": "Falha no login. Tente novamente.",
+      "noCode": "O login não foi concluído. Tente novamente.",
+      "redirecting": "Voltando para o login...",
+      "wait": "Aguarde enquanto fazemos seu login."
     }
   },
   "communityMain": {
@@ -2494,7 +2505,17 @@
     "poll_error_max_options": "Uma enquete pode ter no máximo quatro opções",
     "question_error_prompt": "Adicione uma pergunta ao seu adesivo",
     "caption": "Legenda",
-    "caption_placeholder": "Adicione uma legenda…"
+    "caption_placeholder": "Adicione uma legenda…",
+    "linkPage": {
+      "browse": "Ver stories atuais",
+      "expired": "Este story expirou ou foi excluído. Os stories somem após 24 horas.",
+      "failed": "Não foi possível carregar este story.",
+      "retry": "Tentar novamente",
+      "sign_in": "Entrar",
+      "sign_in_body": "Entre para assistir ou abra no app BananaTalk.",
+      "sign_in_title": "Alguém compartilhou um story com você",
+      "unavailable": "Este story não está disponível para você."
+    }
   },
   "card": {
     "title": "Cartão de idiomas",

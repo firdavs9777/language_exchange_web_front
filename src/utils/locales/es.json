@@ -903,6 +903,17 @@
       "verifyFirst": "Por favor, verifica tu correo primero",
       "registrationSuccess": "¡Registro exitoso!",
       "registrationError": "Error durante el registro"
+    },
+    "callback": {
+      "banned": "Esta cuenta ha sido suspendida.",
+      "codeExpired": "Este enlace de inicio de sesión ha caducado. Vuelve a iniciar sesión.",
+      "completing": "Completando el inicio de sesión...",
+      "emailExists": "Ya existe una cuenta con este correo. Inicia sesión con tu correo y tu contraseña.",
+      "failedTitle": "No se pudo iniciar sesión",
+      "generic": "No se pudo iniciar sesión. Inténtalo de nuevo.",
+      "noCode": "El inicio de sesión no terminó. Inténtalo de nuevo.",
+      "redirecting": "Volviendo al inicio de sesión...",
+      "wait": "Espera mientras iniciamos tu sesión."
     }
   },
   "communityMain": {
@@ -2494,7 +2505,17 @@
     "poll_error_max_options": "Una encuesta puede tener como máximo cuatro opciones",
     "question_error_prompt": "Añade una pregunta a tu sticker de preguntas",
     "caption": "Descripción",
-    "caption_placeholder": "Añade una descripción…"
+    "caption_placeholder": "Añade una descripción…",
+    "linkPage": {
+      "browse": "Ver historias actuales",
+      "expired": "Esta historia ha caducado o se eliminó. Las historias desaparecen después de 24 horas.",
+      "failed": "No pudimos cargar esta historia.",
+      "retry": "Reintentar",
+      "sign_in": "Iniciar sesión",
+      "sign_in_body": "Inicia sesión para verla o ábrela en la app BananaTalk.",
+      "sign_in_title": "Alguien compartió una historia contigo",
+      "unavailable": "Esta historia no está disponible para ti."
+    }
   },
   "card": {
     "title": "Tarjeta de idiomas",

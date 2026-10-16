@@ -922,6 +922,17 @@
       "verifyFirst": "請先完成電子郵件驗證",
       "registrationSuccess": "註冊成功！",
       "registrationError": "註冊過程中發生錯誤"
+    },
+    "callback": {
+      "banned": "此帳號已被停權。",
+      "codeExpired": "此登入連結已過期，請重新登入。",
+      "completing": "正在完成登入...",
+      "emailExists": "已有帳號使用此電子郵件，請使用電子郵件和密碼登入。",
+      "failedTitle": "登入失敗",
+      "generic": "登入失敗，請再試一次。",
+      "noCode": "登入未完成，請再試一次。",
+      "redirecting": "正在返回登入頁面...",
+      "wait": "正在為你登入，請稍候。"
     }
   },
   "communityMain": {
@@ -2493,7 +2504,17 @@
     "poll_error_max_options": "投票最多只能有四個選項",
     "question_error_prompt": "請為提問貼紙加上問題",
     "caption": "說明文字",
-    "caption_placeholder": "新增說明文字…"
+    "caption_placeholder": "新增說明文字…",
+    "linkPage": {
+      "browse": "查看目前的限時動態",
+      "expired": "此限時動態已過期或已被刪除。限時動態會在 24 小時後消失。",
+      "failed": "無法載入此限時動態。",
+      "retry": "再試一次",
+      "sign_in": "登入",
+      "sign_in_body": "登入即可觀看，或在 BananaTalk App 中開啟。",
+      "sign_in_title": "有人與你分享了限時動態",
+      "unavailable": "你無法查看此限時動態。"
+    }
   },
   "card": {
     "title": "語言卡片",

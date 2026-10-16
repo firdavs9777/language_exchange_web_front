@@ -922,6 +922,17 @@
       "verifyFirst": "Silakan verifikasi email Anda terlebih dahulu",
       "registrationSuccess": "Pendaftaran berhasil!",
       "registrationError": "Terjadi kesalahan saat pendaftaran"
+    },
+    "callback": {
+      "banned": "Akun ini telah ditangguhkan.",
+      "codeExpired": "Tautan masuk ini sudah kedaluwarsa. Silakan masuk lagi.",
+      "completing": "Menyelesaikan proses masuk...",
+      "emailExists": "Akun dengan email ini sudah ada. Masuk dengan email dan kata sandi Anda.",
+      "failedTitle": "Gagal masuk",
+      "generic": "Gagal masuk. Silakan coba lagi.",
+      "noCode": "Proses masuk belum selesai. Silakan coba lagi.",
+      "redirecting": "Mengembalikan Anda ke halaman masuk...",
+      "wait": "Harap tunggu, kami sedang memasukkan Anda."
     }
   },
   "communityMain": {
@@ -2493,7 +2504,17 @@
     "poll_error_max_options": "Polling maksimal empat opsi",
     "question_error_prompt": "Tambahkan pertanyaan ke stiker pertanyaan",
     "caption": "Keterangan",
-    "caption_placeholder": "Tambahkan keterangan…"
+    "caption_placeholder": "Tambahkan keterangan…",
+    "linkPage": {
+      "browse": "Lihat story terbaru",
+      "expired": "Story ini sudah kedaluwarsa atau dihapus. Story hilang setelah 24 jam.",
+      "failed": "Kami tidak dapat memuat story ini.",
+      "retry": "Coba lagi",
+      "sign_in": "Masuk",
+      "sign_in_body": "Masuk untuk menontonnya, atau buka di aplikasi BananaTalk.",
+      "sign_in_title": "Seseorang membagikan story kepada Anda",
+      "unavailable": "Story ini tidak tersedia untuk Anda."
+    }
   },
   "card": {
     "title": "Kartu Bahasa",

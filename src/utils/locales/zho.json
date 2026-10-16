@@ -922,6 +922,17 @@
       "verifyFirst": "请先验证你的邮箱",
       "registrationSuccess": "注册成功！",
       "registrationError": "注册过程中出错了"
+    },
+    "callback": {
+      "banned": "此账号已被封禁。",
+      "codeExpired": "此登录链接已过期，请重新登录。",
+      "completing": "正在完成登录...",
+      "emailExists": "该邮箱已注册账号，请使用邮箱和密码登录。",
+      "failedTitle": "登录失败",
+      "generic": "登录失败，请重试。",
+      "noCode": "登录未完成，请重试。",
+      "redirecting": "正在返回登录页面...",
+      "wait": "正在为你登录，请稍候。"
     }
   },
   "communityMain": {
@@ -2493,7 +2504,17 @@
     "poll_error_max_options": "投票最多只能有四个选项",
     "question_error_prompt": "请为提问贴纸添加问题",
     "caption": "说明文字",
-    "caption_placeholder": "添加说明文字…"
+    "caption_placeholder": "添加说明文字…",
+    "linkPage": {
+      "browse": "查看当前快拍",
+      "expired": "这条快拍已过期或已被删除。快拍会在 24 小时后消失。",
+      "failed": "无法加载这条快拍。",
+      "retry": "重试",
+      "sign_in": "登录",
+      "sign_in_body": "登录即可观看，或在 BananaTalk App 中打开。",
+      "sign_in_title": "有人与你分享了一条快拍",
+      "unavailable": "你无法查看这条快拍。"
+    }
   },
   "card": {
     "title": "语言卡片",

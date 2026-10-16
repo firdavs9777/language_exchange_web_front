@@ -922,6 +922,17 @@
       "verifyFirst": "先にメールを認証してください",
       "registrationSuccess": "登録が完了しました！",
       "registrationError": "登録中にエラーが発生しました"
+    },
+    "callback": {
+      "banned": "このアカウントは停止されています。",
+      "codeExpired": "このログインリンクは有効期限が切れています。もう一度ログインしてください。",
+      "completing": "ログインを完了しています...",
+      "emailExists": "このメールアドレスのアカウントはすでに存在します。メールアドレスとパスワードでログインしてください。",
+      "failedTitle": "ログインできませんでした",
+      "generic": "ログインできませんでした。もう一度お試しください。",
+      "noCode": "ログインが完了しませんでした。もう一度お試しください。",
+      "redirecting": "ログイン画面に戻ります...",
+      "wait": "ログインが完了するまでお待ちください。"
     }
   },
   "communityMain": {
@@ -2493,7 +2504,17 @@
     "poll_error_max_options": "選択肢は最大4つまでです",
     "question_error_prompt": "質問スタンプに質問を入力してください",
     "caption": "キャプション",
-    "caption_placeholder": "キャプションを追加…"
+    "caption_placeholder": "キャプションを追加…",
+    "linkPage": {
+      "browse": "今のストーリーを見る",
+      "expired": "このストーリーは期限切れか削除されています。ストーリーは24時間で消えます。",
+      "failed": "ストーリーを読み込めませんでした。",
+      "retry": "もう一度試す",
+      "sign_in": "ログイン",
+      "sign_in_body": "ログインして見るか、BananaTalkアプリで開いてください。",
+      "sign_in_title": "ストーリーが共有されました",
+      "unavailable": "このストーリーは表示できません。"
+    }
   },
   "card": {
     "title": "ランゲージカード",

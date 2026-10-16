@@ -922,6 +922,17 @@
       "verifyFirst": "Bitte verifiziere zuerst deine E-Mail",
       "registrationSuccess": "Registrierung erfolgreich!",
       "registrationError": "Fehler bei der Registrierung"
+    },
+    "callback": {
+      "banned": "Dieses Konto wurde gesperrt.",
+      "codeExpired": "Dieser Anmeldelink ist abgelaufen. Bitte melde dich erneut an.",
+      "completing": "Anmeldung wird abgeschlossen...",
+      "emailExists": "Es gibt bereits ein Konto mit dieser E-Mail-Adresse. Melde dich mit deiner E-Mail-Adresse und deinem Passwort an.",
+      "failedTitle": "Anmeldung fehlgeschlagen",
+      "generic": "Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
+      "noCode": "Die Anmeldung wurde nicht abgeschlossen. Bitte versuche es erneut.",
+      "redirecting": "Du wirst zur Anmeldung zurückgeleitet...",
+      "wait": "Bitte warte, während wir dich anmelden."
     }
   },
   "communityMain": {
@@ -2493,7 +2504,17 @@
     "poll_error_max_options": "Eine Umfrage kann höchstens vier Optionen haben",
     "question_error_prompt": "Füge deinem Fragen-Sticker eine Frage hinzu",
     "caption": "Bildunterschrift",
-    "caption_placeholder": "Bildunterschrift hinzufügen…"
+    "caption_placeholder": "Bildunterschrift hinzufügen…",
+    "linkPage": {
+      "browse": "Aktuelle Storys ansehen",
+      "expired": "Diese Story ist abgelaufen oder wurde gelöscht. Storys verschwinden nach 24 Stunden.",
+      "failed": "Diese Story konnte nicht geladen werden.",
+      "retry": "Erneut versuchen",
+      "sign_in": "Anmelden",
+      "sign_in_body": "Melde dich an, um sie anzusehen, oder öffne sie in der BananaTalk-App.",
+      "sign_in_title": "Jemand hat eine Story mit dir geteilt",
+      "unavailable": "Diese Story ist für dich nicht verfügbar."
+    }
   },
   "card": {
     "title": "Sprachkarte",

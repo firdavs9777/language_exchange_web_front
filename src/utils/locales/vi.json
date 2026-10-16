@@ -922,6 +922,17 @@
       "verifyFirst": "Vui lòng xác minh email trước",
       "registrationSuccess": "Đăng ký thành công!",
       "registrationError": "Lỗi trong quá trình đăng ký"
+    },
+    "callback": {
+      "banned": "Tài khoản này đã bị tạm khóa.",
+      "codeExpired": "Liên kết đăng nhập này đã hết hạn. Vui lòng đăng nhập lại.",
+      "completing": "Đang hoàn tất đăng nhập...",
+      "emailExists": "Đã có tài khoản dùng email này. Hãy đăng nhập bằng email và mật khẩu của bạn.",
+      "failedTitle": "Đăng nhập không thành công",
+      "generic": "Đăng nhập không thành công. Vui lòng thử lại.",
+      "noCode": "Đăng nhập chưa hoàn tất. Vui lòng thử lại.",
+      "redirecting": "Đang đưa bạn trở lại trang đăng nhập...",
+      "wait": "Vui lòng chờ trong khi chúng tôi đăng nhập cho bạn."
     }
   },
   "communityMain": {
@@ -2493,7 +2504,17 @@
     "poll_error_max_options": "Bình chọn có tối đa bốn lựa chọn",
     "question_error_prompt": "Hãy thêm câu hỏi cho nhãn dán câu hỏi",
     "caption": "Chú thích",
-    "caption_placeholder": "Thêm chú thích…"
+    "caption_placeholder": "Thêm chú thích…",
+    "linkPage": {
+      "browse": "Xem các tin hiện có",
+      "expired": "Tin này đã hết hạn hoặc đã bị xóa. Tin sẽ biến mất sau 24 giờ.",
+      "failed": "Không thể tải tin này.",
+      "retry": "Thử lại",
+      "sign_in": "Đăng nhập",
+      "sign_in_body": "Đăng nhập để xem, hoặc mở trong ứng dụng BananaTalk.",
+      "sign_in_title": "Có người đã chia sẻ một tin với bạn",
+      "unavailable": "Bạn không thể xem tin này."
+    }
   },
   "card": {
     "title": "Thẻ ngôn ngữ",

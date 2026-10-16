@@ -922,6 +922,17 @@
       "verifyFirst": "Mangyaring i-verify muna ang iyong email",
       "registrationSuccess": "Matagumpay ang pagpaparehistro!",
       "registrationError": "Error sa pagpaparehistro"
+    },
+    "callback": {
+      "banned": "Na-suspend ang account na ito.",
+      "codeExpired": "Nag-expire na ang sign-in link na ito. Mag-sign in muli.",
+      "completing": "Tinatapos ang pag-sign in...",
+      "emailExists": "May account na gamit ang email na ito. Mag-sign in gamit ang iyong email at password.",
+      "failedTitle": "Hindi nakapag-sign in",
+      "generic": "Hindi nakapag-sign in. Pakisubukang muli.",
+      "noCode": "Hindi natapos ang pag-sign in. Pakisubukang muli.",
+      "redirecting": "Ibinabalik ka sa pag-sign in...",
+      "wait": "Pakihintay habang sina-sign in ka namin."
     }
   },
   "communityMain": {
@@ -2493,7 +2504,17 @@
     "poll_error_max_options": "Hanggang apat na opsyon lang ang poll",
     "question_error_prompt": "Magdagdag ng tanong sa iyong question sticker",
     "caption": "Caption",
-    "caption_placeholder": "Magdagdag ng caption…"
+    "caption_placeholder": "Magdagdag ng caption…",
+    "linkPage": {
+      "browse": "Tingnan ang mga kasalukuyang story",
+      "expired": "Nag-expire na o binura ang story na ito. Nawawala ang mga story pagkalipas ng 24 oras.",
+      "failed": "Hindi namin ma-load ang story na ito.",
+      "retry": "Subukang muli",
+      "sign_in": "Mag-sign in",
+      "sign_in_body": "Mag-sign in para mapanood ito, o buksan sa BananaTalk app.",
+      "sign_in_title": "May nagbahagi ng story sa iyo",
+      "unavailable": "Hindi available sa iyo ang story na ito."
+    }
   },
   "card": {
     "title": "Language Card",

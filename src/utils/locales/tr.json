@@ -922,6 +922,17 @@
       "verifyFirst": "Lütfen önce e-postanızı doğrulayın",
       "registrationSuccess": "Kayıt başarılı!",
       "registrationError": "Kayıt sırasında hata"
+    },
+    "callback": {
+      "banned": "Bu hesap askıya alındı.",
+      "codeExpired": "Bu giriş bağlantısının süresi doldu. Lütfen tekrar giriş yap.",
+      "completing": "Giriş tamamlanıyor...",
+      "emailExists": "Bu e-postayla kayıtlı bir hesap zaten var. E-posta adresin ve şifrenle giriş yap.",
+      "failedTitle": "Giriş başarısız",
+      "generic": "Giriş başarısız. Lütfen tekrar dene.",
+      "noCode": "Giriş tamamlanmadı. Lütfen tekrar dene.",
+      "redirecting": "Giriş sayfasına dönülüyor...",
+      "wait": "Giriş yapılırken lütfen bekle."
     }
   },
   "communityMain": {
@@ -2493,7 +2504,17 @@
     "poll_error_max_options": "Ankette en fazla dört seçenek olabilir",
     "question_error_prompt": "Soru çıkartmana bir soru ekle",
     "caption": "Açıklama",
-    "caption_placeholder": "Açıklama ekle…"
+    "caption_placeholder": "Açıklama ekle…",
+    "linkPage": {
+      "browse": "Güncel hikayelere göz at",
+      "expired": "Bu hikayenin süresi doldu veya silindi. Hikayeler 24 saat sonra kaybolur.",
+      "failed": "Bu hikaye yüklenemedi.",
+      "retry": "Tekrar dene",
+      "sign_in": "Giriş yap",
+      "sign_in_body": "İzlemek için giriş yap ya da BananaTalk uygulamasında aç.",
+      "sign_in_title": "Biri seninle bir hikaye paylaştı",
+      "unavailable": "Bu hikaye sana açık değil."
+    }
   },
   "card": {
     "title": "Dil Kartı",

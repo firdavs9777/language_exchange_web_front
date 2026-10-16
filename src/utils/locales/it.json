@@ -903,6 +903,17 @@
       "verifyFirst": "Verifica prima la tua email",
       "registrationSuccess": "Registrazione completata con successo!",
       "registrationError": "Errore durante la registrazione"
+    },
+    "callback": {
+      "banned": "Questo account è stato sospeso.",
+      "codeExpired": "Questo link di accesso è scaduto. Accedi di nuovo.",
+      "completing": "Completamento dell'accesso...",
+      "emailExists": "Esiste già un account con questa email. Accedi con la tua email e la tua password.",
+      "failedTitle": "Accesso non riuscito",
+      "generic": "Accesso non riuscito. Riprova.",
+      "noCode": "L'accesso non è stato completato. Riprova.",
+      "redirecting": "Ti riportiamo alla pagina di accesso...",
+      "wait": "Attendi mentre ti facciamo accedere."
     }
   },
   "communityMain": {
@@ -2494,7 +2505,17 @@
     "poll_error_max_options": "Un sondaggio può avere al massimo quattro opzioni",
     "question_error_prompt": "Aggiungi una domanda allo sticker",
     "caption": "Didascalia",
-    "caption_placeholder": "Aggiungi una didascalia…"
+    "caption_placeholder": "Aggiungi una didascalia…",
+    "linkPage": {
+      "browse": "Guarda le storie attuali",
+      "expired": "Questa storia è scaduta o è stata eliminata. Le storie scompaiono dopo 24 ore.",
+      "failed": "Impossibile caricare questa storia.",
+      "retry": "Riprova",
+      "sign_in": "Accedi",
+      "sign_in_body": "Accedi per guardarla, oppure aprila nell'app BananaTalk.",
+      "sign_in_title": "Qualcuno ha condiviso una storia con te",
+      "unavailable": "Questa storia non è disponibile per te."
+    }
   },
   "card": {
     "title": "Carta delle lingue",

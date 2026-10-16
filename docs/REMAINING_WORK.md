@@ -120,7 +120,7 @@ Phase 3 Links (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-pa
 - [x] P3-LINK-5 Google sign-in reads the one-time `code` (links#12)
 - [x] P3-LINK-6 Legal pages link to https://banatalk.com (links#19)
 - [x] P3-LINK-7 Chat story cards open `/story/:id` (chat#9 follow-up, links#1)
-- [ ] P3-LINK-I18N New links strings in all 18 locales
+- [x] P3-LINK-I18N New links strings in all 18 locales
 - [ ] P3-LINK-PUSH Push unit links (suite + build green, deployed, production smoke recorded)
 - [ ] Backend follow-up: an OG type for `story` (`/og/story/:id` returns the generic card today; the nginx rule already routes it). S
 - [ ] After this web release is live: backend removes the legacy `token=` from the Google callback redirect (backend REMAINING_WORK). S
