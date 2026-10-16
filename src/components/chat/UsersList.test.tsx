@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -10,7 +10,6 @@ import { CONVERSATIONS_PAGE } from "./lib/conversationMatch";
 // CRA resets mocks between tests: module-scoped, `mock`-prefixed factories,
 // implementations handed out in beforeEach.
 const mockUseSocket = jest.fn();
-const mockUserMessages = jest.fn();
 const mockConversations = jest.fn();
 const mockDelete = jest.fn();
 const mockPin = jest.fn();
@@ -27,7 +26,6 @@ jest.mock("./hooks/useSocket", () => ({
 }));
 
 jest.mock("../../store/slices/chatSlice", () => ({
-  useGetUserMessagesQuery: (arg: any, opts: any) => mockUserMessages(arg, opts),
   useGetConversationsQuery: (arg: any, opts: any) => mockConversations(arg, opts),
   useDeleteConversationMutation: () => [mockDelete, { isLoading: false }],
   usePinConversationMutation: () => [mockPin, { isLoading: false }],
@@ -73,15 +71,11 @@ function renderList() {
 
 beforeEach(() => {
   mockUseSocket.mockReturnValue({ socket: null, isConnected: false });
-  mockUserMessages.mockReturnValue({
-    data: undefined,
-    error: undefined,
-    isLoading: false,
-    isError: false,
-    refetch: jest.fn(),
-  });
   mockConversations.mockReturnValue({
     data: { data: [conversation()] },
+    isLoading: false,
+    isError: false,
+    error: undefined,
     refetch: jest.fn(),
   });
   mockMute.mockReturnValue(resolved());
@@ -217,4 +211,64 @@ it("refetches the conversations once the messages are marked read", async () => 
   renderListFor("u2");
 
   await waitFor(() => expect(refetchConversations).toHaveBeenCalled());
+});
+
+// --- The list is the conversations endpoint, and nothing else ---------------
+
+it("shows a conversation the server returns, with a typed preview", () => {
+  mockConversations.mockReturnValue({
+    data: {
+      data: [conversation({ lastMessage: { messageType: "voice", message: "", createdAt: "2026-09-20T10:00:00.000Z" } })],
+    },
+    isLoading: false,
+    isError: false,
+    refetch: jest.fn(),
+  });
+  renderList();
+  expect(screen.getByText("🎤 Voice message")).toBeInTheDocument();
+});
+
+it("does not invent rows from raw messages (deleted conversations stay deleted)", () => {
+  mockConversations.mockReturnValue({ data: { data: [] }, isLoading: false, isError: false, refetch: jest.fn() });
+  renderList();
+  expect(screen.queryByText("Ada")).not.toBeInTheDocument();
+});
+
+it("shows the server's unread count", () => {
+  mockConversations.mockReturnValue({
+    data: { data: [conversation({ unreadCount: 5 })] },
+    isLoading: false,
+    isError: false,
+    refetch: jest.fn(),
+  });
+  renderList();
+  expect(screen.getByTestId("users-list-unread-u2")).toHaveTextContent("5");
+});
+
+it("counts a live message up from the server count instead of trusting newMessage.unreadCount", () => {
+  const handlers: Record<string, Function[]> = {};
+  mockUseSocket.mockReturnValue({
+    socket: {
+      connected: false,
+      on: (e: string, fn: Function) => {
+        (handlers[e] = handlers[e] || []).push(fn);
+      },
+      off: jest.fn(),
+      emit: jest.fn(),
+    },
+    isConnected: false,
+  });
+  mockConversations.mockReturnValue({
+    data: { data: [conversation({ unreadCount: 4 })] },
+    isLoading: false,
+    isError: false,
+    refetch: jest.fn(),
+  });
+  renderList();
+  act(() => {
+    handlers["newMessage"].forEach((fn) =>
+      fn({ message: { _id: "m9", sender: { _id: "u2" }, receiver: "me" }, unreadCount: 1, senderId: "u2" })
+    );
+  });
+  expect(screen.getByTestId("users-list-unread-u2")).toHaveTextContent("5");
 });

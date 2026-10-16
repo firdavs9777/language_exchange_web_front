@@ -276,7 +276,7 @@ it("refreshes the conversation list after a message goes out over the socket", a
   fireEvent.submit(messageBox().closest("form")!);
 
   await waitFor(() => expect(mockInvalidateTags).toHaveBeenCalled());
-  expect(mockInvalidateTags).toHaveBeenCalledWith(["Conversations", "UserMessages"]);
+  expect(mockInvalidateTags).toHaveBeenCalledWith(["Conversations"]);
 });
 
 it("refreshes it after the REST fallback too", async () => {
@@ -287,7 +287,7 @@ it("refreshes it after the REST fallback too", async () => {
   fireEvent.submit(messageBox().closest("form")!);
 
   await waitFor(() =>
-    expect(mockInvalidateTags).toHaveBeenCalledWith(["Conversations", "UserMessages"])
+    expect(mockInvalidateTags).toHaveBeenCalledWith(["Conversations"])
   );
 });
 

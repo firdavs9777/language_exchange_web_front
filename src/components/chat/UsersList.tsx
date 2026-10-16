@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useCallback, useState, useMemo } from "react";
 import ConfirmDialog from "../../design/ConfirmDialog";
 import {
-  useGetUserMessagesQuery,
   useGetConversationsQuery,
   useDeleteConversationMutation,
   usePinConversationMutation,
@@ -16,6 +15,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/index";
 import { useSocket } from "./hooks/useSocket";
 import { findConversationWith, CONVERSATIONS_PAGE } from "./lib/conversationMatch";
+import { previewOf } from "./lib/conversationPreview";
+import { bumpUnread, displayUnread, pruneOverrides, Counts } from "./lib/unreadOverrides";
 import { useTranslation } from "react-i18next";
 import "./UsersList.css";
 
@@ -71,22 +72,6 @@ interface UsersListProps {
 
 // ---------- Helpers ----------
 
-const getMessageText = (msg: Message): string => {
-  // Show media type labels for non-text messages
-  if (msg.messageType === "voice" || msg.media?.type === "voice") return "\ud83c\udfa4 Voice message";
-  if (msg.media?.type) {
-    const mediaType = msg.media.type;
-    if (mediaType === "image" || mediaType.startsWith("image")) return "\ud83d\uddbc\ufe0f Photo";
-    if (mediaType === "video" || mediaType.startsWith("video")) return "\ud83c\udfa5 Video";
-    if (mediaType === "document" || mediaType === "audio") return "\ud83d\udcce " + (msg.media?.fileName || "File");
-    if (msg.message || msg.content) return msg.message || msg.content || "";
-    return "\ud83d\udcce Attachment";
-  }
-  const text = msg.message || msg.content || "";
-  if (text === "Conversation started") return "";
-  return text;
-};
-
 const formatTime = (date: Date): string => {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -123,15 +108,16 @@ const UsersList: React.FC<UsersListProps> = ({
   const currentUser = useSelector(
     (state: RootState) => state.auth.userInfo?.user
   );
-  const { data, error, isLoading, isError, refetch } = useGetUserMessagesQuery(
-    currentUser?._id,
-    { skip: !currentUser?._id }
-  );
-  // The shared argument: ChatInfoPanel asks with the same one, so the two
-  // screens share a single cache entry instead of issuing the same request
-  // twice, and the panel can find a conversation that page 1 of 50 missed.
-  const { data: conversationsData, refetch: refetchConversations } =
-    useGetConversationsQuery(CONVERSATIONS_PAGE, { skip: !currentUser?._id });
+  // The list is GET /conversations and nothing else, as in the app. It used
+  // to be merged with GET /messages/user/:id (500 raw messages), which knows
+  // nothing about deleted conversations or blocks -- every deleted chat came
+  // back. The shared argument: ChatInfoPanel asks with the same one.
+  const {
+    data: conversationsData,
+    isLoading,
+    isError,
+    refetch: refetchConversations,
+  } = useGetConversationsQuery(CONVERSATIONS_PAGE, { skip: !currentUser?._id });
 
   const [deleteConversation] = useDeleteConversationMutation();
   const [pinConversation] = usePinConversationMutation();
@@ -232,7 +218,6 @@ const UsersList: React.FC<UsersListProps> = ({
             : t("chatPage.actions.pinned") || "Conversation pinned",
           { autoClose: 1800, theme: "colored", transition: Bounce }
         );
-        refetch();
         refetchConversations();
       } catch (err: any) {
         console.error(`[UsersList:${action}] << FAIL`, {
@@ -251,7 +236,6 @@ const UsersList: React.FC<UsersListProps> = ({
     [
       pinConversation,
       unpinConversation,
-      refetch,
       refetchConversations,
       resolveConversationId,
       t,
@@ -277,6 +261,20 @@ const UsersList: React.FC<UsersListProps> = ({
   >({});
   const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
+  // The server's counts, by partner id, for the override helpers.
+  const serverUnread = useMemo(() => {
+    const counts: Counts = {};
+    ((conversationsData && conversationsData.data) || []).forEach((c: any) => {
+      const other = c.otherParticipant || (c.participants || []).find((p: any) => p && p._id !== currentUser?._id);
+      if (other && other._id) counts[other._id] = c.unreadCount || 0;
+    });
+    return counts;
+  }, [conversationsData, currentUser]);
+  const serverUnreadRef = useRef<Counts>({});
+  useEffect(() => {
+    serverUnreadRef.current = serverUnread;
+    setUnreadCounts((prev) => pruneOverrides(serverUnread, prev));
+  }, [serverUnread]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -329,43 +327,31 @@ const UsersList: React.FC<UsersListProps> = ({
       }));
     };
 
-    const handleNewMessage = (data: { message: Message; unreadCount: number; senderId: string }) => {
-      if (data.senderId !== activeUserIdRef.current) {
-        setUnreadCounts((prev) => ({
-          ...prev,
-          [data.senderId]: data.unreadCount,
-        }));
+    const handleNewMessage = (data: { message: Message; senderId?: string }) => {
+      const senderId = data.senderId || (data.message && (data.message as any).sender && (data.message as any).sender._id);
+      if (senderId && senderId !== activeUserIdRef.current) {
+        setUnreadCounts((prev) => bumpUnread(senderId, serverUnreadRef.current, prev));
       }
-      refetch();
       refetchConversations();
     };
 
     const handleNewVoiceMessage = (data: { message: Message; duration: number }) => {
       const senderId = data.message?.sender?._id;
       if (senderId && senderId !== activeUserIdRef.current) {
-        setUnreadCounts((prev) => ({
-          ...prev,
-          [senderId]: (prev[senderId] || 0) + 1,
-        }));
+        setUnreadCounts((prev) => bumpUnread(senderId, serverUnreadRef.current, prev));
       }
-      refetch();
       refetchConversations();
     };
 
     const handleNewVideoMessage = (data: { message: Message; duration: number; thumbnail: string }) => {
       const senderId = data.message?.sender?._id;
       if (senderId && senderId !== activeUserIdRef.current) {
-        setUnreadCounts((prev) => ({
-          ...prev,
-          [senderId]: (prev[senderId] || 0) + 1,
-        }));
+        setUnreadCounts((prev) => bumpUnread(senderId, serverUnreadRef.current, prev));
       }
-      refetch();
       refetchConversations();
     };
 
     const handleMessageSent = () => {
-      refetch();
       refetchConversations();
     };
 
@@ -374,7 +360,6 @@ const UsersList: React.FC<UsersListProps> = ({
         ...prev,
         [data.readBy]: 0,
       }));
-      refetch();
       refetchConversations();
     };
 
@@ -395,7 +380,6 @@ const UsersList: React.FC<UsersListProps> = ({
     };
 
     const handleMessageDeleted = () => {
-      refetch();
       refetchConversations();
     };
 
@@ -474,7 +458,7 @@ const UsersList: React.FC<UsersListProps> = ({
       socket.off("userStoppedTyping", handleUserStoppedTyping);
       socket.off("messageDeleted", handleMessageDeleted);
     };
-  }, [socket, refetch, refetchConversations]);
+  }, [socket, refetchConversations]);
 
   // Mark messages as read when selecting a user
   useEffect(() => {
@@ -487,7 +471,6 @@ const UsersList: React.FC<UsersListProps> = ({
           { senderId: activeUserId },
           (response: any) => {
             if (response?.status === "success") {
-              refetch();
               // And the conversations, which is where the unread counts the
               // rows and the navbar badge are drawn from actually live. The
               // server answers the reader through this ack and pushes
@@ -501,7 +484,7 @@ const UsersList: React.FC<UsersListProps> = ({
 
       return () => clearTimeout(timer);
     }
-  }, [activeUserId, socket, refetch, refetchConversations]);
+  }, [activeUserId, socket, refetchConversations]);
 
   // ---------- Derived data ----------
 
@@ -522,134 +505,44 @@ const UsersList: React.FC<UsersListProps> = ({
 
   const chatPartners = useMemo(() => {
     if (!currentUser) return [];
+    const rows: any[] = (conversationsData && conversationsData.data) || [];
+    const partners: Array<User & { lastMessage?: string; unreadCount: number; lastMessageTime?: Date }> = [];
+    const seen: { [id: string]: boolean } = {};
 
-    const partnersMap = new Map<
-      string,
-      User & { lastMessage?: string; unreadCount: number; lastMessageTime?: Date }
-    >();
+    rows.forEach((conversation: any) => {
+      const otherUser =
+        conversation.otherParticipant ||
+        (conversation.participants || []).find((p: any) => p && p._id !== currentUser._id);
+      if (!otherUser || !otherUser._id || seen[otherUser._id]) return;
+      seen[otherUser._id] = true;
 
-    // Process messages
-    if (data?.data && Array.isArray(data.data)) {
-      data.data.forEach((message: Message) => {
-        const otherUser =
-          message.sender?._id === currentUser._id
-            ? message.receiver
-            : message.sender;
-        if (!otherUser?._id) return;
-
-        const isIncoming = message.sender?._id !== currentUser._id;
-        const isUnread = isIncoming && !message.read;
-        const messageDate = new Date(message.createdAt);
-        const messageText = getMessageText(message);
-
-        const existing = partnersMap.get(otherUser._id);
-
-        if (!existing) {
-          partnersMap.set(otherUser._id, {
-            ...otherUser,
-            imageUrls: otherUser.imageUrls || [],
-            lastMessage: messageText,
-            unreadCount: isUnread ? 1 : 0,
-            lastMessageTime: messageDate,
-            status: getUserStatus(otherUser._id) as any,
-            lastSeen: userStatuses[otherUser._id]?.lastSeen,
-          });
-        } else {
-          if (
-            !existing.lastMessageTime ||
-            messageDate > existing.lastMessageTime
-          ) {
-            existing.lastMessage = messageText;
-            existing.lastMessageTime = messageDate;
-          }
-          if (isUnread) existing.unreadCount += 1;
-          existing.status = getUserStatus(otherUser._id) as any;
-          existing.lastSeen = userStatuses[otherUser._id]?.lastSeen;
-        }
+      const lastMsg = conversation.lastMessage;
+      const when = (lastMsg && lastMsg.createdAt) || conversation.lastMessageAt;
+      partners.push({
+        ...otherUser,
+        imageUrls: otherUser.imageUrls || otherUser.images || [],
+        lastMessage: previewOf(lastMsg, t as any),
+        unreadCount:
+          otherUser._id === activeUserId
+            ? 0
+            : displayUnread(otherUser._id, serverUnread, unreadCounts),
+        lastMessageTime: when ? new Date(when) : undefined,
+        status: getUserStatus(otherUser._id) as any,
+        lastSeen: userStatuses[otherUser._id]?.lastSeen,
+        conversationId: conversation._id,
+        isPinned: Boolean(conversation.isPinned),
+        isMuted: Boolean(conversation.isMuted),
       });
-    }
-
-    // Process conversations
-    if (conversationsData?.data && Array.isArray(conversationsData.data)) {
-      conversationsData.data.forEach((conversation: any) => {
-        const participants = conversation.participants || [];
-        const otherUser = participants.find(
-          (p: any) => p._id !== currentUser._id
-        );
-        if (!otherUser?._id) return;
-
-        const lastMsg = conversation.lastMessage;
-        const messageText = lastMsg
-          ? getMessageText(lastMsg as Message)
-          : "";
-        const messageDate = lastMsg?.createdAt
-          ? new Date(lastMsg.createdAt)
-          : null;
-        const convUnread = conversation.unreadCount || 0;
-
-        const existing = partnersMap.get(otherUser._id);
-
-        if (!existing) {
-          partnersMap.set(otherUser._id, {
-            ...otherUser,
-            imageUrls: otherUser.imageUrls || otherUser.images || [],
-            lastMessage: messageText,
-            unreadCount: convUnread,
-            lastMessageTime: messageDate || undefined,
-            status: getUserStatus(otherUser._id) as any,
-            lastSeen: userStatuses[otherUser._id]?.lastSeen,
-            conversationId: conversation._id,
-            isPinned: Boolean(conversation.isPinned),
-            isMuted: Boolean(conversation.isMuted),
-          });
-        } else {
-          // Keep the freshest conversation reference + pin state regardless
-          // of which lastMessage wins.
-          existing.conversationId = conversation._id;
-          existing.isPinned = existing.isPinned || Boolean(conversation.isPinned);
-          existing.isMuted = Boolean(conversation.isMuted);
-          if (
-            messageDate &&
-            (!existing.lastMessageTime || messageDate > existing.lastMessageTime)
-          ) {
-            existing.lastMessage = messageText;
-            existing.lastMessageTime = messageDate;
-            if (convUnread > existing.unreadCount) {
-              existing.unreadCount = convUnread;
-            }
-          }
-        }
-      });
-    }
-
-    // Apply real-time unread overrides
-    const partners = Array.from(partnersMap.values()).map((partner) => {
-      if (partner._id === activeUserId) {
-        partner.unreadCount = 0;
-      } else if (unreadCounts[partner._id] !== undefined) {
-        partner.unreadCount = unreadCounts[partner._id];
-      }
-      return partner;
     });
 
-    // Sort: pinned conversations first (newest-pinned wins ties), then by
-    // last message time desc.
     return partners.sort((a, b) => {
       if (a.isPinned && !b.isPinned) return -1;
       if (!a.isPinned && b.isPinned) return 1;
-      const aTime = a.lastMessageTime?.getTime() || 0;
-      const bTime = b.lastMessageTime?.getTime() || 0;
+      const aTime = a.lastMessageTime ? a.lastMessageTime.getTime() : 0;
+      const bTime = b.lastMessageTime ? b.lastMessageTime.getTime() : 0;
       return bTime - aTime;
     });
-  }, [
-    data,
-    conversationsData,
-    currentUser,
-    userStatuses,
-    getUserStatus,
-    unreadCounts,
-    activeUserId,
-  ]);
+  }, [conversationsData, currentUser, userStatuses, getUserStatus, unreadCounts, serverUnread, activeUserId, t]);
 
   const filteredChatPartners = useMemo(() => {
     if (!searchQuery.trim()) return chatPartners;
@@ -693,7 +586,6 @@ const UsersList: React.FC<UsersListProps> = ({
         );
       }
 
-      refetch();
       refetchConversations();
       setShowDeleteModal(false);
       setUserToDelete(null);
@@ -758,7 +650,7 @@ const UsersList: React.FC<UsersListProps> = ({
       <div className="users-list-wrapper">
         <div className="users-list-loading">
           <div className="users-list-spinner" />
-          <span className="users-list-loading-text">Loading chats...</span>
+          <span className="users-list-loading-text">{t("chatPage.list.loading") || "Loading chats..."}</span>
         </div>
       </div>
     );
@@ -769,18 +661,15 @@ const UsersList: React.FC<UsersListProps> = ({
       <div className="users-list-wrapper">
         <div className="users-list-error">
           <p className="users-list-error-text">
-            {error
-              ? (error as any)?.data?.message || "Error loading conversations"
-              : "An unexpected error occurred"}
+            {t("chatPage.list.loadError") || "Couldn't load your conversations"}
           </p>
           <button
             className="users-list-retry-btn"
             onClick={() => {
-              refetch();
               refetchConversations();
             }}
           >
-            Try Again
+            {t("chatPage.list.tryAgain") || "Try again"}
           </button>
         </div>
       </div>
@@ -907,7 +796,7 @@ const UsersList: React.FC<UsersListProps> = ({
                         )}
                       </span>
                       {hasUnread && (
-                        <span className="users-list-badge">
+                        <span className="users-list-badge" data-testid={`users-list-unread-${user._id}`}>
                           {(user.unreadCount || 0) > 99
                             ? "99+"
                             : user.unreadCount}

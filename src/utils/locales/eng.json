@@ -39,7 +39,10 @@
       "noMatchTitle": "No matching conversations",
       "noMatchSubtitle": "Try adjusting your search",
       "emptyTitle": "No conversations yet",
-      "emptySubtitle": "Start a conversation to see it here"
+      "emptySubtitle": "Start a conversation to see it here",
+      "loading": "Loading chats...",
+      "loadError": "Couldn't load your conversations",
+      "tryAgain": "Try again"
     },
     "actions": {
       "menuLabel": "Conversation actions",
@@ -235,6 +238,18 @@
       "goVip": "Go VIP",
       "ok": "OK",
       "reattach": "Attach the file again to send it."
+    },
+    "preview": {
+      "call": "📞 Call",
+      "location": "📍 Location",
+      "voice": "🎤 Voice message",
+      "gif": "GIF",
+      "story": "📖 Story",
+      "poll": "📊 Poll",
+      "photo": "🖼️ Photo",
+      "video": "🎥 Video",
+      "file": "📎 File",
+      "attachment": "📎 Attachment"
     }
   },
   "newChat": {

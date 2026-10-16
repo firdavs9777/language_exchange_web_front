@@ -1126,7 +1126,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     // socket; a send is confirmed by an ack instead, so it needs its own call.
     rememberInThread(msgData, selectedUser);
     dispatch(
-      (chatApiSlice.util as any).invalidateTags(["Conversations", "UserMessages"])
+      (chatApiSlice.util as any).invalidateTags(["Conversations"])
     );
   };
 
