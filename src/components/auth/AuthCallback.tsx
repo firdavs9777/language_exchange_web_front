@@ -6,31 +6,7 @@ import { Bounce, toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import Loader from "../Loader";
 import { BASE_URL, GOOGLE_EXCHANGE_URL, USER_PROFILE_URL } from "../../constants";
-
-// Helper function to check if user profile is complete
-const isProfileComplete = (userInfo: any): boolean => {
-  // If isRegistrationComplete is true, user is fully registered
-  if (userInfo?.isRegistrationComplete === true) {
-    return true;
-  }
-
-  // Check profileCompleted flag
-  if (userInfo?.profileCompleted === false || userInfo?.profileCompleted === undefined) {
-    return false;
-  }
-
-  // Verify required fields exist
-  const nativeLanguage = userInfo?.native_language;
-  const languageToLearn = userInfo?.language_to_learn;
-  const gender = userInfo?.gender;
-
-  const hasDefaultValues =
-    (!nativeLanguage || nativeLanguage === "" || nativeLanguage === "English") &&
-    (!languageToLearn || languageToLearn === "" || languageToLearn === "Korean") &&
-    (!gender || gender === "other" || gender === "");
-
-  return !hasDefaultValues;
-};
+import { isProfileComplete, oauthCompletionState } from "./socialSignIn";
 
 interface SignIn { user: any; token: string; refreshToken?: string }
 type Translate = (key: string) => string;
@@ -146,30 +122,9 @@ const AuthCallback = () => {
           ...TOAST,
           autoClose: 3000,
         });
-        const normalizedGender = userInfo?.gender?.toLowerCase() || "other";
-        // OAuth users already have email + name — send them into the SAME
-        // signup wizard in completion mode, starting at the languages step
-        // (languages → photo → finish). The wizard's finish handler will
-        // patch the profile via updatedetails + record terms, NOT re-register.
-        navigate("/register", {
-          state: {
-            oauth: true,
-            startStep: "languages",
-            userData: {
-              _id: userInfo?._id || "",
-              name: userInfo?.name || "",
-              email: userInfo?.email || "",
-              bio: userInfo?.bio || "Hello! I joined using Google.",
-              gender: normalizedGender,
-              nativeLanguage: userInfo?.native_language || "",
-              languageToLearn: userInfo?.language_to_learn || "",
-              birthDate:
-                userInfo?.birth_year && userInfo?.birth_month && userInfo?.birth_day
-                  ? `${userInfo.birth_year}-${String(userInfo.birth_month).padStart(2, "0")}-${String(userInfo.birth_day).padStart(2, "0")}`
-                  : "2000-01-01",
-            },
-          },
-        });
+        // OAuth users already have email + name — the SAME signup wizard in
+        // completion mode, starting at the languages step (socialSignIn.ts).
+        navigate("/register", { state: oauthCompletionState(userInfo, "google") });
         return;
       }
 

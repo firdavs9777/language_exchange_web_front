@@ -184,7 +184,7 @@ Phase 4 Calls (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-pa
 Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
 - [x] P4-APPLE-1 Apple JS loader, nonce and popup sign-in wrapper (script fetched only on click)
 - [x] P4-APPLE-2 `POST /auth/apple/web` endpoint and the error text for each refusal
-- [ ] P4-APPLE-3 One "finish social sign-in" path shared by Google and Apple (profile completion included)
+- [x] P4-APPLE-3 One "finish social sign-in" path shared by Google and Apple (profile completion included) — decided: new web Google sign-ups also go through the completion wizard (as in the app)
 - [ ] P4-APPLE-4 "Sign in with Apple" button: nonce → Apple popup → backend → signed in
 - [ ] P4-APPLE-5 Button on Login and Register; hidden while `webAppleSigninEnabled` is off or no Services ID is configured
 - [ ] P4-APPLE-I18N New Apple sign-in strings in all 18 locales
