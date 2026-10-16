@@ -17,6 +17,7 @@ backend `language_exchange_backend_application/docs/REMAINING_WORK.md` (server e
 1. Paste the **upload-key** and **Play app-signing** SHA-256 (Play Console → App integrity → App signing) into
    `public/.well-known/assetlinks.json`, deploy (app handoff `2.7.0-handoff.md` §5; device check is in the app file).
 2. Optional: apply `deploy/nginx.snippet.conf` on the droplet (serves the Apple association file as `application/json`, real 404s).
+3. Phase 5: apply the link-preview locations in `deploy/nginx.snippet.conf` (they must sit above the `nginx.routes.conf` include), `nginx -t`, reload, then run the two `curl` checks in README "Link previews". Previews in KakaoTalk / Telegram / WhatsApp are rows in the app's `docs/qa/regression-suite.csv` (Web area).
 
 ## 3. Production QA
 
@@ -112,7 +113,7 @@ Phase 3 Community (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-ap
 - [ ] P3-COM-PUSH Push unit community (suite + build green, deployed, production smoke recorded)
 
 Phase 3 Links (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase3.md`)
-- [ ] P3-LINK-1 Crawler rule sends link-preview bots to the backend OG cards (links#4, links#17, moments#13)
+- [x] P3-LINK-1 Crawler rule sends link-preview bots to the backend OG cards (links#4, links#17, moments#13)
 - [ ] P3-LINK-2 AASA stops claiming `/chat/*` and web-only pages (links#6, links#15)
 - [ ] P3-LINK-3 Smart banner and app banner open the page being viewed (links#16)
 - [ ] P3-LINK-4 `/story/:id` page — the target of story share links (links#1, moments#1)
@@ -121,6 +122,7 @@ Phase 3 Links (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-pa
 - [ ] P3-LINK-7 Chat story cards open `/story/:id` (chat#9 follow-up, links#1)
 - [ ] P3-LINK-I18N New links strings in all 18 locales
 - [ ] P3-LINK-PUSH Push unit links (suite + build green, deployed, production smoke recorded)
+- [ ] Backend follow-up: an OG type for `story` (`/og/story/:id` returns the generic card today; the nginx rule already routes it). S
 - [ ] Phase 4 Reels: feed, viewer, create (video <=180 s, `isReel`), like/comment/share. M
 - [ ] Phase 4 Gatherings/clubs: browse, detail, join/leave, host create/edit, host decisions. M
 - [ ] Phase 4 Voice rooms: list, listen, request/take speaker, host controls (`livekit-client`). L
