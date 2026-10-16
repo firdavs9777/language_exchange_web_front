@@ -2996,6 +2996,23 @@
       "more": "More",
       "report": "Report",
       "block": "Block user"
+    },
+    "create": {
+      "title": "New reel",
+      "hint": "A short language-learning video, up to 3 minutes. Vertical (9:16) looks best.",
+      "choose_video": "Choose a video",
+      "change_video": "Choose another video",
+      "caption": "Caption",
+      "caption_placeholder": "What are you practising?",
+      "bad_type": "This file type isn't supported. Use MP4, MOV or WebM.",
+      "too_big": "This video is too large to upload.",
+      "too_long": "Reels can be up to 3:00. This video is {{duration}}.",
+      "server_too_long": "Reels must be 3 minutes or shorter.",
+      "upload_failed": "The video didn't upload. Nothing was posted — try again.",
+      "failed": "Couldn't post your reel. Try again.",
+      "posting": "Posting…",
+      "post": "Post reel",
+      "posted": "Your reel is posted."
     }
   }
 }
