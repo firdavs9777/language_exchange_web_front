@@ -29,6 +29,11 @@ export interface CommunityFilters {
   languageLevel?: string;
   onlineOnly?: boolean;
   newUsersOnly?: boolean;
+  /**
+   * "Serious learners" segment: active in the last 7 days. Set by the Serious
+   * tab, never stored or written to the URL (the tab name says it).
+   */
+  activeWithin?: '7d';
   topicsAtLeast?: number;
   search?: string;
   sort?: 'recently_active';
@@ -102,6 +107,8 @@ export function buildCommunityQuery(
   // (controllers/users.js). Sending the old name made the New tab return the
   // All list. 7d is the app's New members segment and the card's New badge.
   if (filters.newUsersOnly) query.joinedWithin = '7d';
+  // The app's PartnerSegment.serious (controllers/users.js reads 7d/30d).
+  if (filters.activeWithin) query.activeWithin = filters.activeWithin;
 
   query.page = String(page);
   query.limit = String(limit);

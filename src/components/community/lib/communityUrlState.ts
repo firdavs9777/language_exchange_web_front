@@ -27,7 +27,7 @@ import { CommunityFilters } from './buildCommunityQuery';
 /**
  * The tab set the list ships (`CommunitySubNav`'s `CommunityNavTab`).
  *
- * `foryou`, `all`, `online` and `new` are rendered in place by the list;
+ * `foryou`, `all`, `serious`, `online` and `new` are rendered in place by the list;
  * `nearby` and `topics` are their own routes and only ever appear here when a
  * link or an old URL says so.
  */
@@ -35,6 +35,7 @@ export type CommunityUrlTab =
   | 'today'
   | 'foryou'
   | 'all'
+  | 'serious'
   | 'online'
   | 'new'
   | 'nearby'
@@ -83,6 +84,7 @@ const TABS: CommunityUrlTab[] = [
   'today',
   'foryou',
   'all',
+  'serious',
   'online',
   'new',
   'nearby',

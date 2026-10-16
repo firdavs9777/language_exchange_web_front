@@ -282,6 +282,16 @@ describe("the community tabs", () => {
     fireEvent.click(waveButtons[0]);
     expect(await screen.findByTestId("wave-sheet")).toBeInTheDocument();
   });
+
+  it("locks the Serious tab to members active in the last week", async () => {
+    renderList(["/communities?tab=serious"]);
+
+    await waitFor(() => expect(memberRequests().length).toBeGreaterThan(0));
+    const last = memberRequests()[memberRequests().length - 1];
+    expect(last).toContain("activeWithin=7d");
+    expect(tab("communityMain.tabs.serious")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByTestId("segment-hint")).toHaveTextContent("communityMain.tabs.seriousHint");
+  });
 });
 
 describe("the For you tab", () => {

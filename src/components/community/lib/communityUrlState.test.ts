@@ -258,6 +258,15 @@ describe('communityUrlState', () => {
       expect(merged.toString()).toBe('ref=a&online=1');
     });
   });
+
+  describe('the serious tab', () => {
+    it('round-trips ?tab=serious', () => {
+      expect(decodeCommunityState(params('tab=serious')).tab).toBe('serious');
+      expect(
+        encodeCommunityState({ filters: {}, search: '', tab: 'serious' }).toString()
+      ).toBe('tab=serious');
+    });
+  });
 });
 
 describe("today is the default tab", () => {

@@ -100,3 +100,9 @@ it('two explicit language filters must both hold: no matchLanguage, direct param
   expect(q.nativeLanguage).toBe('Korean');
   expect(q.learningLanguage).toBe('English');
 });
+
+it('Serious learners -> activeWithin=7d (the app PartnerSegment.serious)', () => {
+  const q = buildCommunityQuery({ activeWithin: '7d' }, me, 1, 20);
+  expect(q.activeWithin).toBe('7d');
+  expect(buildCommunityQuery({}, me, 1, 20).activeWithin).toBeUndefined();
+});

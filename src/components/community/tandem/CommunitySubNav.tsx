@@ -10,6 +10,7 @@ import {
   Sparkles,
   Star,
   X,
+  Flame,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -27,6 +28,7 @@ export type CommunityNavTab =
   | "today"
   | "foryou"
   | "all"
+  | "serious"
   | "online"
   | "new"
   | "nearby"
@@ -52,6 +54,14 @@ const IN_PAGE_TABS: {
     Icon: Sparkles,
   },
   { id: "all", copyKey: "communityMain.tabs.all", fallback: "All" },
+  {
+    // The app's "Serious learners" segment (partner_segment_chips.dart):
+    // the All list, active this week.
+    id: "serious",
+    copyKey: "communityMain.tabs.serious",
+    fallback: "Serious learners",
+    Icon: Flame,
+  },
   {
     id: "online",
     copyKey: "communityMain.tabs.online",

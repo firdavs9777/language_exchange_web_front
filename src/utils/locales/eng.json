@@ -977,7 +977,9 @@
       "forYou": "For you",
       "online": "Online",
       "label": "Community tabs",
-      "today": "Today"
+      "today": "Today",
+      "serious": "Serious learners",
+      "seriousHint": "Active this week"
     },
     "filters": {
       "language": "Language",

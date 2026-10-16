@@ -68,7 +68,7 @@ export interface CommunityFilterSheetProps {
    * count is measured with the lock applied so the number matches the list
    * they would get.
    */
-  lockedTab?: "online" | "new";
+  lockedTab?: "online" | "new" | "serious";
 }
 
 /** Small pill toggle switch (teal when on) — no new CSS, Tailwind only. */
@@ -165,6 +165,7 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
   const lockedDraft = useMemo<CommunityFilters>(() => {
     if (lockedTab === "online") return { ...debouncedValue, onlineOnly: true };
     if (lockedTab === "new") return { ...debouncedValue, newUsersOnly: true };
+    if (lockedTab === "serious") return { ...debouncedValue, activeWithin: "7d" };
     return debouncedValue;
   }, [debouncedValue, lockedTab]);
 

@@ -272,6 +272,7 @@ const ModernCommunity: React.FC = () => {
   const effectiveFilters = useMemo<CommunityFilters>(() => {
     if (activeTab === "online") return { ...filters, onlineOnly: true };
     if (activeTab === "new") return { ...filters, newUsersOnly: true };
+    if (activeTab === "serious") return { ...filters, activeWithin: "7d" };
     return filters;
   }, [filters, activeTab]);
 
@@ -874,7 +875,11 @@ const ModernCommunity: React.FC = () => {
         onClear={clearAllFilters}
         onCopyLink={handleCopyLink}
         canCopyLink={draftMatchesApplied}
-        lockedTab={activeTab === "online" || activeTab === "new" ? activeTab : undefined}
+        lockedTab={
+          activeTab === "online" || activeTab === "new" || activeTab === "serious"
+            ? activeTab
+            : undefined
+        }
         onClose={() => setIsFilterSheetOpen(false)}
       />
 
@@ -885,6 +890,12 @@ const ModernCommunity: React.FC = () => {
       />
 
       <div className="community-page__container">
+        {activeTab === "serious" && (
+          // The app's explainer line under the active segment.
+          <p data-testid="segment-hint" className="px-1 pb-2 text-xs text-ink-500 dark:text-ink-400">
+            {t("communityMain.tabs.seriousHint") || "Active this week"}
+          </p>
+        )}
         {/* No filter or sort control on "For you": the tab is the server's
             answer to who you should meet, and a control that cannot change the
             answer is worse than no control. */}

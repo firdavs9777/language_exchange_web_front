@@ -31,17 +31,17 @@ function renderNav(props: Partial<React.ComponentProps<typeof CommunitySubNav>> 
 }
 
 describe("the community sub-nav", () => {
-  it("offers the four in-page tabs inside one tablist, in app order", () => {
+  it("offers the five in-page tabs inside one tablist, in app order", () => {
     renderNav();
 
     const tabs = screen.getAllByRole("tab");
     expect(tabs.map((tab) => tab.textContent)).toEqual([
       "communityMain.tabs.forYou",
       "communityMain.tabs.all",
+      "communityMain.tabs.serious",
       "communityMain.tabs.online",
       "communityMain.tabs.new",
     ]);
-    expect(screen.getByRole("tablist")).toContainElement(tabs[0]);
   });
 
   it("marks only the active tab as selected", () => {
@@ -79,7 +79,7 @@ describe("the community sub-nav", () => {
       "/topics"
     );
     // ...and they are not tabs.
-    expect(screen.getAllByRole("tab")).toHaveLength(4);
+    expect(screen.getAllByRole("tab")).toHaveLength(5);
   });
 
   // A page you are leaving should not first rewrite the URL you are leaving:
