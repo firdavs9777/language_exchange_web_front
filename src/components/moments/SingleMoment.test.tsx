@@ -237,3 +237,45 @@ describe("SingleMoment prerendered date", () => {
     expect(html).toContain("Oct 7, 2026");
   });
 });
+
+describe("feed card chips (moments#22)", () => {
+  afterEach(() => _resetMomentViewsForTests());
+
+  const renderWith = (extra: any) =>
+    render(
+      <MemoryRouter>
+        <SingleMoment
+          _id="moment-2"
+          title=""
+          description="hi"
+          likeCount={0}
+          likedUsers={[]}
+          commentCount={0}
+          createdAt={new Date().toISOString()}
+          user={{ _id: "author-1", name: "Author" }}
+          {...extra}
+        />
+      </MemoryRouter>
+    );
+
+  it("shows mood, every tag and the place", () => {
+    renderWith({ mood: "happy", tags: ["kimchi", "seoul"], location: { formattedAddress: "Seoul, KR" } });
+    const chips = screen.getByTestId("moment-chips");
+    expect(chips).toHaveTextContent("moments_section.moods.happy");
+    expect(chips).toHaveTextContent("#kimchi");
+    expect(chips).toHaveTextContent("#seoul");
+    expect(chips).toHaveTextContent("Seoul, KR");
+  });
+
+  it("renders no chip row when there is nothing to show", () => {
+    renderWith({ mood: "", tags: [], location: null });
+    expect(screen.queryByTestId("moment-chips")).not.toBeInTheDocument();
+  });
+
+  it("ignores a location without an address and an unknown mood", () => {
+    renderWith({ mood: "not-a-mood", tags: undefined, location: { coordinates: [1, 2] } });
+    // An unknown mood still renders its raw value rather than crashing.
+    expect(screen.getByTestId("moment-chips")).toHaveTextContent("moments_section.moods.not-a-mood");
+    expect(screen.queryByTestId("moment-chip-location")).not.toBeInTheDocument();
+  });
+});

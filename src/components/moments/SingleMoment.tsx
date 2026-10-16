@@ -26,6 +26,7 @@ import { useMomentViews } from "./useMomentViews";
 import MomentOverflowMenu from "./actions/MomentOverflowMenu";
 import ScheduledBadge from "./ScheduledBadge";
 import { isScheduledLater } from "./lib/scheduling";
+import MomentChips from "./MomentChips";
 import TranslatableText from "./TranslatableText";
 import PromptAnswerTag from "./PromptAnswerTag";
 import { MomentPrompt } from "./types";
@@ -72,6 +73,9 @@ interface MomentProps {
   backgroundColor?: string;
   scheduledFor?: string | null;
   prompt?: MomentPrompt | null;
+  mood?: string;
+  tags?: string[];
+  location?: { formattedAddress?: string } | null;
 }
 
 interface AuthState {
@@ -106,6 +110,9 @@ const SingleMoment: React.FC<MomentProps> = ({
   backgroundColor,
   scheduledFor,
   prompt,
+  mood,
+  tags,
+  location,
 }) => {
   const userId = useSelector(
     (state: RootState) => state.auth.userInfo?.user?._id
@@ -471,6 +478,7 @@ const SingleMoment: React.FC<MomentProps> = ({
               )}
             </div>
           )}
+          <MomentChips mood={mood} tags={tags} location={location} />
         </div>
 
         {/* Media — precedence: video → audio → text/gradient → images */}

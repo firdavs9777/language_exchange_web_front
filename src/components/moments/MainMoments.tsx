@@ -529,6 +529,9 @@ const MainMoments: React.FC = () => {
                             video={moment.video}
                             audio={moment.audio}
                             prompt={moment.prompt}
+                            mood={moment.mood}
+                            tags={moment.tags}
+                            location={moment.location}
                             backgroundColor={moment.backgroundColor}
                             scheduledFor={moment.scheduledFor}
                           />

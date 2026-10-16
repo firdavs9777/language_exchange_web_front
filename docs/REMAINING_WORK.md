@@ -78,7 +78,7 @@ Phase 3 Moments (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-
 - [x] P3-MOM-4 The moment's owner can delete other people's comments (moments#9)
 - [x] P3-MOM-5 Report a comment, and block an author from a moment or a comment (moments#10, moment/comment part)
 - [x] P3-MOM-6 Saved moments load every page and draw every kind of moment (moments#11)
-- [ ] P3-MOM-7 Feed cards show mood, tags and location (moments#22)
+- [x] P3-MOM-7 Feed cards show mood, tags and location (moments#22)
 - [ ] P3-MOM-8 Comments with a GIF, a photo and no text, and mentions drawn (moments#21)
 - [ ] P3-MOM-9 Leftovers: `uploadMomentPhotos` typing, no `mediaType: "text"`, dead `reportMoment` (moments#23)
 - [ ] P3-MOM-10 Moment voice notes record `audio/mp4` where the browser can (moments#2)
