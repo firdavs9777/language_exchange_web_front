@@ -251,7 +251,8 @@
       "previous": "Foto precedente",
       "next": "Foto successiva",
       "counter": "{{index}} di {{total}}",
-      "openAvatar": "Apri la foto di {{name}}"
+      "openAvatar": "Apri la foto di {{name}}",
+      "openStory": "Guarda la storia di {{name}}"
     },
     "messages": {
       "image_update_success": "Immagine del profilo aggiornata con successo",
@@ -351,7 +352,8 @@
       "report": "Segnala",
       "this_person": "questa persona",
       "action_failed": "Non ha funzionato. Riprova.",
-      "unblock": "Sblocca"
+      "unblock": "Sblocca",
+      "followBlocked": "Non puoi seguire questa persona"
     },
     "buttons": {
       "edit": "Modifica",
@@ -496,6 +498,11 @@
     "unblock": {
       "title": "Sbloccare {{name}}?",
       "body": "Potrà scriverti di nuovo e vedere il tuo profilo."
+    },
+    "blocked": {
+      "body": "Uno di voi ha bloccato l'altro, quindi non potete scrivervi, seguirvi né vedere i post dell'altro.",
+      "manage": "Gestisci persone bloccate",
+      "title": "Questo profilo non è disponibile"
     }
   },
   "moments_section": {
@@ -958,7 +965,9 @@
       "forYou": "Per te",
       "online": "Online",
       "label": "Schede della community",
-      "today": "Oggi"
+      "today": "Oggi",
+      "serious": "Studenti costanti",
+      "seriousHint": "Attivi questa settimana"
     },
     "filters": {
       "language": "Lingua",
@@ -1033,7 +1042,9 @@
       "newUsersOnly": "Solo nuovi utenti",
       "clearAll": "Cancella tutto",
       "matchCount": "{{count}} corrispondenze",
-      "lockedByTab": "Impostato dalla scheda {{tab}}"
+      "lockedByTab": "Impostato dalla scheda {{tab}}",
+      "reciprocal": "Solo partner ideali",
+      "reciprocalHint": "Parlano la lingua che impari e imparano quella che parli"
     },
     "highlighted": {
       "title": "Profili in evidenza",
@@ -1096,7 +1107,8 @@
       "wave": "Fai ciao",
       "skip": "Salta",
       "error": "Impossibile caricare i match di oggi",
-      "retry": "Riprova"
+      "retry": "Riprova",
+      "waved": "Salutato"
     }
   },
   "communityDetail": {
@@ -1526,7 +1538,73 @@
     "accept": "Accetta",
     "decline": "Rifiuta",
     "noWaves": "Nessun saluto ancora",
-    "sendWave": "Invia un saluto per iniziare a connetterti!"
+    "sendWave": "Invia un saluto per iniziare a connetterti!",
+    "archive": "Saluti meno recenti",
+    "archiveEmpty": "Nessun saluto meno recente",
+    "archiveHint": "Saluti di 7-30 giorni fa",
+    "back": "Indietro",
+    "cap": {
+      "body": "Hai usato i saluti gratuiti di oggi. I membri VIP possono salutare senza limite giornaliero, oppure riprova domani.",
+      "notNow": "Non ora",
+      "seeVip": "Scopri VIP",
+      "title": "Limite giornaliero di saluti raggiunto"
+    },
+    "findPeople": "Trova persone",
+    "noReceived": "Nessun saluto ricevuto ancora",
+    "recent": "Ultimi 7 giorni",
+    "sheet": {
+      "already": "Già salutato",
+      "alreadyBody": "Puoi salutare ogni persona una sola volta: mandale invece un messaggio per continuare la conversazione.",
+      "alreadyTitle": "Hai già salutato {{name}}",
+      "cancel": "Annulla",
+      "chips": {
+        "chat": {
+          "label": "Chattiamo",
+          "message": "🎉 Facciamo due chiacchiere!"
+        },
+        "cool": {
+          "label": "Bello",
+          "message": "❤️ Bel profilo!"
+        },
+        "hello": {
+          "label": "Salve",
+          "message": "✋ Salve!"
+        },
+        "hey": {
+          "label": "Ehi",
+          "message": "😊 Ehi, ciao!"
+        },
+        "hi": {
+          "label": "Ciao",
+          "message": "👋 Ciao!"
+        },
+        "nice": {
+          "label": "Piacere",
+          "message": "🌟 Piacere di conoscerti!"
+        }
+      },
+      "close": "Chiudi",
+      "icebreakers": {
+        "0": "Ciao! Ti va di fare pratica con le lingue insieme?",
+        "1": "Ho notato che stiamo imparando lingue simili, ciao!",
+        "2": "Il tuo profilo mi ha colpito, come va?",
+        "3": "Ehi! Cosa ti ha spinto a imparare una nuova lingua?"
+      },
+      "icebreakersTitle": "Rompighiaccio",
+      "match": "🎉 È un match! Tu e {{name}} vi siete salutati a vicenda.",
+      "placeholder": "Scrivi un messaggio personalizzato (facoltativo)…",
+      "quickReplies": "Risposte rapide",
+      "send": "Invia saluto",
+      "sendError": "Impossibile inviare il saluto",
+      "sent": "Saluto inviato a {{name}}!",
+      "subtitle": "Saluta e rompi il ghiaccio 👋",
+      "title": "Invia un saluto a {{name}}",
+      "yourMessage": "Il tuo messaggio"
+    },
+    "someone": "Qualcuno",
+    "subtitle": "Persone che ti hanno salutato",
+    "unread": "Non letti",
+    "wavedAtYou": "Ti ha salutato 👋"
   },
   "topics": {
     "title": "Argomenti",
@@ -2539,5 +2617,25 @@
     "close": "Chiudi",
     "ended": "Questo annuncio è terminato.",
     "back": "Indietro"
+  },
+  "communityNearby": {
+    "back": "Indietro",
+    "geolocationNotSupported": "La geolocalizzazione non è supportata",
+    "gettingLocation": "Rilevamento della tua posizione...",
+    "learning": "Impara: {{language}}",
+    "locationRequired": "Posizione richiesta",
+    "noUsers": "Nessun utente trovato nelle vicinanze",
+    "permissionDenied": "Permesso di localizzazione negato",
+    "positionUnavailable": "Posizione non disponibile",
+    "refresh": "Aggiorna",
+    "searchRadius": "Raggio di ricerca",
+    "subtitle": "Trova persone intorno a te",
+    "timeout": "La richiesta di posizione è scaduta",
+    "title": "Utenti nelle vicinanze",
+    "tryAgain": "Riprova",
+    "tryIncreaseRadius": "Prova ad aumentare il raggio di ricerca",
+    "unknownError": "Si è verificato un errore",
+    "usersFound_one": "{{count}} persona trovata",
+    "usersFound_other": "{{count}} persone trovate"
   }
 }

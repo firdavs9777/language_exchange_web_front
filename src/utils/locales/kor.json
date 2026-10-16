@@ -270,7 +270,8 @@
       "previous": "이전 사진",
       "next": "다음 사진",
       "counter": "{{index}} / {{total}}",
-      "openAvatar": "{{name}}님의 사진 열기"
+      "openAvatar": "{{name}}님의 사진 열기",
+      "openStory": "{{name}}님의 스토리 보기"
     },
     "messages": {
       "image_update_success": "프로필 사진을 변경했어요",
@@ -370,7 +371,8 @@
       "report": "신고",
       "this_person": "이 사람",
       "action_failed": "처리하지 못했어요. 다시 시도해 주세요.",
-      "unblock": "차단 해제"
+      "unblock": "차단 해제",
+      "followBlocked": "이 사람을 팔로우할 수 없어요"
     },
     "buttons": {
       "edit": "수정",
@@ -515,6 +517,11 @@
     "unblock": {
       "title": "{{name}}님을 차단 해제할까요?",
       "body": "차단을 해제하면 상대방이 다시 메시지를 보내고 내 프로필을 볼 수 있어요."
+    },
+    "blocked": {
+      "body": "한 사람이 상대방을 차단해서 서로 메시지를 보내거나 팔로우하거나 게시물을 볼 수 없어요.",
+      "manage": "차단한 사람 관리",
+      "title": "이 프로필을 볼 수 없어요"
     }
   },
   "moments_section": {
@@ -977,7 +984,9 @@
       "forYou": "추천",
       "online": "온라인",
       "label": "커뮤니티 탭",
-      "today": "오늘"
+      "today": "오늘",
+      "serious": "열심히 배우는 학습자",
+      "seriousHint": "이번 주 활동"
     },
     "filters": {
       "language": "언어",
@@ -1052,7 +1061,9 @@
       "newUsersOnly": "신규 사용자만",
       "clearAll": "모두 지우기",
       "matchCount": "{{count}}명 일치",
-      "lockedByTab": "{{tab}} 탭에서 설정됨"
+      "lockedByTab": "{{tab}} 탭에서 설정됨",
+      "reciprocal": "완벽한 파트너만",
+      "reciprocalHint": "내가 배우는 언어를 쓰고, 내가 쓰는 언어를 배우는 사람"
     },
     "highlighted": {
       "title": "추천 프로필",
@@ -1114,7 +1125,8 @@
       "wave": "손 흔들기",
       "skip": "건너뛰기",
       "error": "오늘의 매칭을 불러오지 못했어요",
-      "retry": "다시 시도"
+      "retry": "다시 시도",
+      "waved": "손 흔듦"
     }
   },
   "communityDetail": {
@@ -1544,7 +1556,73 @@
     "accept": "수락",
     "decline": "거절",
     "noWaves": "아직 손 흔들기가 없어요",
-    "sendWave": "먼저 손 흔들기를 보내 대화를 시작해 보세요!"
+    "sendWave": "먼저 손 흔들기를 보내 대화를 시작해 보세요!",
+    "archive": "지난 손 흔들기",
+    "archiveEmpty": "지난 손 흔들기가 없어요",
+    "archiveHint": "7~30일 전에 받은 손 흔들기",
+    "back": "뒤로",
+    "cap": {
+      "body": "오늘의 무료 손 흔들기를 모두 사용했어요. VIP 멤버는 제한 없이 손 흔들기를 보낼 수 있어요. 아니면 내일 다시 시도해 주세요.",
+      "notNow": "나중에",
+      "seeVip": "VIP 보기",
+      "title": "오늘 손 흔들기 한도에 도달했어요"
+    },
+    "findPeople": "사람 찾기",
+    "noReceived": "아직 받은 손 흔들기가 없어요",
+    "recent": "최근 7일",
+    "sheet": {
+      "already": "이미 손 흔듦",
+      "alreadyBody": "손 흔들기는 한 사람에게 한 번만 보낼 수 있어요. 대화를 이어가려면 메시지를 보내 보세요.",
+      "alreadyTitle": "{{name}}님에게 이미 손을 흔들었어요",
+      "cancel": "취소",
+      "chips": {
+        "chat": {
+          "label": "대화해요",
+          "message": "🎉 우리 대화해요!"
+        },
+        "cool": {
+          "label": "멋져요",
+          "message": "❤️ 프로필 멋져요!"
+        },
+        "hello": {
+          "label": "안녕하세요",
+          "message": "✋ 안녕하세요!"
+        },
+        "hey": {
+          "label": "반가워요",
+          "message": "😊 안녕, 반가워요!"
+        },
+        "hi": {
+          "label": "안녕",
+          "message": "👋 안녕하세요!"
+        },
+        "nice": {
+          "label": "만나서 반가워요",
+          "message": "🌟 만나서 반가워요!"
+        }
+      },
+      "close": "닫기",
+      "icebreakers": {
+        "0": "안녕하세요! 같이 언어 연습할래요?",
+        "1": "비슷한 언어를 배우고 있네요. 안녕하세요!",
+        "2": "프로필이 눈에 띄었어요. 잘 지내세요?",
+        "3": "안녕하세요! 새로운 언어를 배우게 된 계기가 뭐예요?"
+      },
+      "icebreakersTitle": "대화 시작 문장",
+      "match": "🎉 매칭됐어요! 나와 {{name}}님이 서로 손을 흔들었어요.",
+      "placeholder": "메시지를 직접 써 보세요 (선택)…",
+      "quickReplies": "빠른 답장",
+      "send": "손 흔들기 보내기",
+      "sendError": "손 흔들기를 보내지 못했어요",
+      "sent": "{{name}}님에게 손 흔들기를 보냈어요!",
+      "subtitle": "인사를 건네고 어색함을 깨 보세요 👋",
+      "title": "{{name}}님에게 손 흔들기",
+      "yourMessage": "내 메시지"
+    },
+    "someone": "누군가",
+    "subtitle": "나에게 손을 흔든 사람들",
+    "unread": "읽지 않음",
+    "wavedAtYou": "나에게 손을 흔들었어요 👋"
   },
   "topics": {
     "title": "주제",
@@ -2538,5 +2616,25 @@
     "close": "닫기",
     "ended": "이 공지는 종료되었습니다.",
     "back": "뒤로"
+  },
+  "communityNearby": {
+    "back": "뒤로",
+    "geolocationNotSupported": "위치 정보를 지원하지 않아요",
+    "gettingLocation": "위치를 확인하는 중…",
+    "learning": "학습 중: {{language}}",
+    "locationRequired": "위치 정보가 필요해요",
+    "noUsers": "근처에 사용자가 없어요",
+    "permissionDenied": "위치 권한이 거부되었어요",
+    "positionUnavailable": "위치를 확인할 수 없어요",
+    "refresh": "새로고침",
+    "searchRadius": "검색 반경",
+    "subtitle": "내 주변 사람들을 찾아보세요",
+    "timeout": "위치 요청 시간이 초과되었어요",
+    "title": "근처 사용자",
+    "tryAgain": "다시 시도",
+    "tryIncreaseRadius": "검색 반경을 넓혀 보세요",
+    "unknownError": "문제가 생겼어요",
+    "usersFound_one": "{{count}}명을 찾았어요",
+    "usersFound_other": "{{count}}명을 찾았어요"
   }
 }

@@ -251,7 +251,8 @@
       "previous": "Foto anterior",
       "next": "Próxima foto",
       "counter": "{{index}} de {{total}}",
-      "openAvatar": "Abrir a foto de {{name}}"
+      "openAvatar": "Abrir a foto de {{name}}",
+      "openStory": "Ver o story de {{name}}"
     },
     "messages": {
       "image_update_success": "Imagem de perfil atualizada com sucesso",
@@ -351,7 +352,8 @@
       "report": "Denunciar",
       "this_person": "esta pessoa",
       "action_failed": "Não deu certo. Tente novamente.",
-      "unblock": "Desbloquear"
+      "unblock": "Desbloquear",
+      "followBlocked": "Você não pode seguir esta pessoa"
     },
     "buttons": {
       "edit": "Editar",
@@ -496,6 +498,11 @@
     "unblock": {
       "title": "Desbloquear {{name}}?",
       "body": "Essa pessoa vai poder te mandar mensagem e ver seu perfil de novo."
+    },
+    "blocked": {
+      "body": "Um de vocês bloqueou o outro, então vocês não podem trocar mensagens, se seguir nem ver as publicações um do outro.",
+      "manage": "Gerenciar pessoas bloqueadas",
+      "title": "Este perfil não está disponível"
     }
   },
   "moments_section": {
@@ -958,7 +965,9 @@
       "forYou": "Para você",
       "online": "Online",
       "label": "Abas da comunidade",
-      "today": "Hoje"
+      "today": "Hoje",
+      "serious": "Estudantes dedicados",
+      "seriousHint": "Ativos esta semana"
     },
     "filters": {
       "language": "Idioma",
@@ -1033,7 +1042,9 @@
       "newUsersOnly": "Apenas novos usuários",
       "clearAll": "Limpar tudo",
       "matchCount": "{{count}} correspondências",
-      "lockedByTab": "Definido pela aba {{tab}}"
+      "lockedByTab": "Definido pela aba {{tab}}",
+      "reciprocal": "Só parceiros ideais",
+      "reciprocalHint": "Falam o que você aprende e aprendem o que você fala"
     },
     "highlighted": {
       "title": "Perfis em destaque",
@@ -1096,7 +1107,8 @@
       "wave": "Acenar",
       "skip": "Pular",
       "error": "Não foi possível carregar os matches de hoje",
-      "retry": "Tentar novamente"
+      "retry": "Tentar novamente",
+      "waved": "Acenou"
     }
   },
   "communityDetail": {
@@ -1526,7 +1538,73 @@
     "accept": "Aceitar",
     "decline": "Recusar",
     "noWaves": "Nenhum aceno ainda",
-    "sendWave": "Envie um aceno para começar a se conectar!"
+    "sendWave": "Envie um aceno para começar a se conectar!",
+    "archive": "Acenos antigos",
+    "archiveEmpty": "Nenhum aceno antigo",
+    "archiveHint": "Acenos de 7 a 30 dias atrás",
+    "back": "Voltar",
+    "cap": {
+      "body": "Você já usou os acenos grátis de hoje. Membros VIP podem acenar sem limite diário — ou tente de novo amanhã.",
+      "notNow": "Agora não",
+      "seeVip": "Ver VIP",
+      "title": "Limite diário de acenos atingido"
+    },
+    "findPeople": "Encontrar pessoas",
+    "noReceived": "Nenhum aceno recebido ainda",
+    "recent": "Últimos 7 dias",
+    "sheet": {
+      "already": "Já acenou",
+      "alreadyBody": "Você só pode acenar uma vez para cada pessoa — mande uma mensagem para continuar a conversa.",
+      "alreadyTitle": "Você já acenou para {{name}}",
+      "cancel": "Cancelar",
+      "chips": {
+        "chat": {
+          "label": "Conversar",
+          "message": "🎉 Bora conversar!"
+        },
+        "cool": {
+          "label": "Legal",
+          "message": "❤️ Que perfil legal!"
+        },
+        "hello": {
+          "label": "Olá",
+          "message": "✋ Olá!"
+        },
+        "hey": {
+          "label": "E aí",
+          "message": "😊 E aí, tudo bem?"
+        },
+        "hi": {
+          "label": "Oi",
+          "message": "👋 Oi!"
+        },
+        "nice": {
+          "label": "Prazer",
+          "message": "🌟 Prazer em te conhecer!"
+        }
+      },
+      "close": "Fechar",
+      "icebreakers": {
+        "0": "Oi! Quer praticar idiomas juntos?",
+        "1": "Vi que estamos aprendendo idiomas parecidos — oi!",
+        "2": "Seu perfil chamou minha atenção, tudo bem?",
+        "3": "E aí! O que te fez começar a aprender um novo idioma?"
+      },
+      "icebreakersTitle": "Quebra-gelos",
+      "match": "🎉 Deu match! Você e {{name}} acenaram um para o outro.",
+      "placeholder": "Escreva uma mensagem personalizada (opcional)…",
+      "quickReplies": "Respostas rápidas",
+      "send": "Enviar aceno",
+      "sendError": "Não foi possível enviar o aceno",
+      "sent": "Aceno enviado para {{name}}!",
+      "subtitle": "Diga oi e quebre o gelo 👋",
+      "title": "Envie um aceno para {{name}}",
+      "yourMessage": "Sua mensagem"
+    },
+    "someone": "Alguém",
+    "subtitle": "Pessoas que acenaram para você",
+    "unread": "Não lidos",
+    "wavedAtYou": "Acenou para você 👋"
   },
   "topics": {
     "title": "Tópicos",
@@ -2539,5 +2617,25 @@
     "close": "Fechar",
     "ended": "Este anúncio terminou.",
     "back": "Voltar"
+  },
+  "communityNearby": {
+    "back": "Voltar",
+    "geolocationNotSupported": "A geolocalização não é compatível",
+    "gettingLocation": "Obtendo sua localização...",
+    "learning": "Aprendendo: {{language}}",
+    "locationRequired": "Localização necessária",
+    "noUsers": "Nenhum usuário encontrado por perto",
+    "permissionDenied": "Permissão de localização negada",
+    "positionUnavailable": "Localização indisponível",
+    "refresh": "Atualizar",
+    "searchRadius": "Raio de busca",
+    "subtitle": "Encontre pessoas perto de você",
+    "timeout": "A solicitação de localização expirou",
+    "title": "Usuários por perto",
+    "tryAgain": "Tentar novamente",
+    "tryIncreaseRadius": "Tente aumentar o raio de busca",
+    "unknownError": "Ocorreu um erro",
+    "usersFound_one": "{{count}} pessoa encontrada",
+    "usersFound_other": "{{count}} pessoas encontradas"
   }
 }

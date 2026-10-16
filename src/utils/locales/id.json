@@ -270,7 +270,8 @@
       "previous": "Foto sebelumnya",
       "next": "Foto berikutnya",
       "counter": "{{index}} dari {{total}}",
-      "openAvatar": "Buka foto {{name}}"
+      "openAvatar": "Buka foto {{name}}",
+      "openStory": "Lihat story {{name}}"
     },
     "messages": {
       "image_update_success": "Foto profil berhasil diperbarui",
@@ -370,7 +371,8 @@
       "report": "Laporkan",
       "this_person": "orang ini",
       "action_failed": "Gagal. Silakan coba lagi.",
-      "unblock": "Buka blokir"
+      "unblock": "Buka blokir",
+      "followBlocked": "Kamu tidak bisa mengikuti orang ini"
     },
     "buttons": {
       "edit": "Edit",
@@ -515,6 +517,11 @@
     "unblock": {
       "title": "Buka blokir {{name}}?",
       "body": "Dia akan bisa mengirim pesan dan melihat profil Anda lagi."
+    },
+    "blocked": {
+      "body": "Salah satu dari kalian telah memblokir yang lain, jadi kalian tidak bisa saling mengirim pesan, mengikuti, atau melihat postingan.",
+      "manage": "Kelola orang yang diblokir",
+      "title": "Profil ini tidak tersedia"
     }
   },
   "moments_section": {
@@ -977,7 +984,9 @@
       "forYou": "Untuk Anda",
       "online": "Online",
       "label": "Tab komunitas",
-      "today": "Hari ini"
+      "today": "Hari ini",
+      "serious": "Pelajar serius",
+      "seriousHint": "Aktif minggu ini"
     },
     "filters": {
       "language": "Bahasa",
@@ -1052,7 +1061,9 @@
       "newUsersOnly": "Hanya pengguna baru",
       "clearAll": "Hapus semua",
       "matchCount": "{{count}} kecocokan",
-      "lockedByTab": "Diatur oleh tab {{tab}}"
+      "lockedByTab": "Diatur oleh tab {{tab}}",
+      "reciprocal": "Hanya mitra yang pas",
+      "reciprocalHint": "Mereka menguasai bahasa yang kamu pelajari dan mempelajari bahasamu"
     },
     "highlighted": {
       "title": "Profil unggulan",
@@ -1114,7 +1125,8 @@
       "wave": "Lambaikan tangan",
       "skip": "Lewati",
       "error": "Gagal memuat kecocokan hari ini",
-      "retry": "Coba lagi"
+      "retry": "Coba lagi",
+      "waved": "Sudah disapa"
     }
   },
   "communityDetail": {
@@ -1544,7 +1556,73 @@
     "accept": "Terima",
     "decline": "Tolak",
     "noWaves": "Belum ada sapaan",
-    "sendWave": "Kirim sapaan untuk mulai terhubung!"
+    "sendWave": "Kirim sapaan untuk mulai terhubung!",
+    "archive": "Sapaan lama",
+    "archiveEmpty": "Tidak ada sapaan lama",
+    "archiveHint": "Sapaan dari 7 sampai 30 hari lalu",
+    "back": "Kembali",
+    "cap": {
+      "body": "Sapaan gratis hari ini sudah habis. Anggota VIP bisa menyapa tanpa batas harian, atau coba lagi besok.",
+      "notNow": "Nanti saja",
+      "seeVip": "Lihat VIP",
+      "title": "Batas sapaan harian tercapai"
+    },
+    "findPeople": "Cari Orang",
+    "noReceived": "Belum ada sapaan yang diterima",
+    "recent": "7 hari terakhir",
+    "sheet": {
+      "already": "Sudah disapa",
+      "alreadyBody": "Kamu hanya bisa menyapa satu kali per orang — kirim pesan saja untuk melanjutkan obrolan.",
+      "alreadyTitle": "Kamu sudah menyapa {{name}}",
+      "cancel": "Batal",
+      "chips": {
+        "chat": {
+          "label": "Ngobrol",
+          "message": "🎉 Yuk ngobrol!"
+        },
+        "cool": {
+          "label": "Keren",
+          "message": "❤️ Profilmu keren!"
+        },
+        "hello": {
+          "label": "Halo",
+          "message": "✋ Halo!"
+        },
+        "hey": {
+          "label": "Hai",
+          "message": "😊 Hai, apa kabar?"
+        },
+        "hi": {
+          "label": "Hi",
+          "message": "👋 Hi!"
+        },
+        "nice": {
+          "label": "Salam kenal",
+          "message": "🌟 Senang berkenalan denganmu!"
+        }
+      },
+      "close": "Tutup",
+      "icebreakers": {
+        "0": "Hai! Mau latihan bahasa bareng?",
+        "1": "Kayaknya kita belajar bahasa yang mirip — hai!",
+        "2": "Profilmu menarik perhatianku, apa kabar?",
+        "3": "Hai! Apa yang bikin kamu mulai belajar bahasa baru?"
+      },
+      "icebreakersTitle": "Pembuka obrolan",
+      "match": "🎉 Cocok! Kamu dan {{name}} saling menyapa.",
+      "placeholder": "Tulis pesan sendiri (opsional)…",
+      "quickReplies": "Balasan cepat",
+      "send": "Kirim sapaan",
+      "sendError": "Gagal mengirim sapaan",
+      "sent": "Sapaan terkirim ke {{name}}!",
+      "subtitle": "Sapa dan cairkan suasana 👋",
+      "title": "Kirim sapaan ke {{name}}",
+      "yourMessage": "Pesanmu"
+    },
+    "someone": "Seseorang",
+    "subtitle": "Orang yang menyapamu",
+    "unread": "Belum dibaca",
+    "wavedAtYou": "Menyapamu 👋"
   },
   "topics": {
     "title": "Topik",
@@ -2538,5 +2616,25 @@
     "close": "Tutup",
     "ended": "Pengumuman ini telah berakhir.",
     "back": "Kembali"
+  },
+  "communityNearby": {
+    "back": "Kembali",
+    "geolocationNotSupported": "Geolokasi tidak didukung",
+    "gettingLocation": "Mendapatkan lokasimu...",
+    "learning": "Belajar: {{language}}",
+    "locationRequired": "Lokasi Diperlukan",
+    "noUsers": "Tidak ada pengguna di sekitar",
+    "permissionDenied": "Izin lokasi ditolak",
+    "positionUnavailable": "Lokasi tidak tersedia",
+    "refresh": "Muat ulang",
+    "searchRadius": "Radius Pencarian",
+    "subtitle": "Temukan orang di sekitarmu",
+    "timeout": "Permintaan lokasi habis waktu",
+    "title": "Pengguna Terdekat",
+    "tryAgain": "Coba Lagi",
+    "tryIncreaseRadius": "Coba perbesar radius pencarian",
+    "unknownError": "Terjadi kesalahan",
+    "usersFound_one": "{{count}} orang ditemukan",
+    "usersFound_other": "{{count}} orang ditemukan"
   }
 }

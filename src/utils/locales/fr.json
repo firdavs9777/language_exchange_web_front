@@ -251,7 +251,8 @@
       "previous": "Photo précédente",
       "next": "Photo suivante",
       "counter": "{{index}} sur {{total}}",
-      "openAvatar": "Voir la photo de {{name}}"
+      "openAvatar": "Voir la photo de {{name}}",
+      "openStory": "Voir la story de {{name}}"
     },
     "messages": {
       "image_update_success": "Photo de profil mise à jour avec succès",
@@ -351,7 +352,8 @@
       "report": "Signaler",
       "this_person": "cette personne",
       "action_failed": "Ça n'a pas fonctionné. Réessayez.",
-      "unblock": "Débloquer"
+      "unblock": "Débloquer",
+      "followBlocked": "Vous ne pouvez pas suivre cette personne"
     },
     "buttons": {
       "edit": "Modifier",
@@ -496,6 +498,11 @@
     "unblock": {
       "title": "Débloquer {{name}} ?",
       "body": "Cette personne pourra à nouveau vous envoyer des messages et voir votre profil."
+    },
+    "blocked": {
+      "body": "L'un de vous a bloqué l'autre : vous ne pouvez donc pas vous envoyer de messages, vous suivre ni voir les publications de l'autre.",
+      "manage": "Gérer les personnes bloquées",
+      "title": "Ce profil n'est pas disponible"
     }
   },
   "moments_section": {
@@ -958,7 +965,9 @@
       "forYou": "Pour vous",
       "online": "En ligne",
       "label": "Onglets de la communauté",
-      "today": "Aujourd'hui"
+      "today": "Aujourd'hui",
+      "serious": "Apprenants assidus",
+      "seriousHint": "Actifs cette semaine"
     },
     "filters": {
       "language": "Langue",
@@ -1033,7 +1042,9 @@
       "newUsersOnly": "Nouveaux utilisateurs uniquement",
       "clearAll": "Tout effacer",
       "matchCount": "{{count}} correspondances",
-      "lockedByTab": "Défini par l’onglet {{tab}}"
+      "lockedByTab": "Défini par l’onglet {{tab}}",
+      "reciprocal": "Partenaires idéaux uniquement",
+      "reciprocalHint": "Ils parlent ce que vous apprenez et apprennent ce que vous parlez"
     },
     "highlighted": {
       "title": "Profils en vedette",
@@ -1096,7 +1107,8 @@
       "wave": "Faire coucou",
       "skip": "Passer",
       "error": "Impossible de charger les correspondances du jour",
-      "retry": "Réessayer"
+      "retry": "Réessayer",
+      "waved": "Salué"
     }
   },
   "communityDetail": {
@@ -1526,7 +1538,73 @@
     "accept": "Accepter",
     "decline": "Refuser",
     "noWaves": "Aucune salutation pour le moment",
-    "sendWave": "Envoyez une salutation pour commencer à vous connecter !"
+    "sendWave": "Envoyez une salutation pour commencer à vous connecter !",
+    "archive": "Salutations plus anciennes",
+    "archiveEmpty": "Aucune salutation plus ancienne",
+    "archiveHint": "Salutations datant de 7 à 30 jours",
+    "back": "Retour",
+    "cap": {
+      "body": "Vous avez utilisé vos salutations gratuites du jour. Les membres VIP peuvent saluer sans limite quotidienne, sinon réessayez demain.",
+      "notNow": "Pas maintenant",
+      "seeVip": "Voir VIP",
+      "title": "Limite quotidienne de salutations atteinte"
+    },
+    "findPeople": "Trouver des personnes",
+    "noReceived": "Aucune salutation reçue pour le moment",
+    "recent": "7 derniers jours",
+    "sheet": {
+      "already": "Déjà salué",
+      "alreadyBody": "Vous ne pouvez saluer chaque personne qu'une seule fois — envoyez-lui plutôt un message pour poursuivre la conversation.",
+      "alreadyTitle": "Vous avez déjà salué {{name}}",
+      "cancel": "Annuler",
+      "chips": {
+        "chat": {
+          "label": "Discuter",
+          "message": "🎉 On discute ?"
+        },
+        "cool": {
+          "label": "Sympa",
+          "message": "❤️ Super profil !"
+        },
+        "hello": {
+          "label": "Bonjour",
+          "message": "✋ Bonjour !"
+        },
+        "hey": {
+          "label": "Hey",
+          "message": "😊 Hey, salut !"
+        },
+        "hi": {
+          "label": "Salut",
+          "message": "👋 Salut !"
+        },
+        "nice": {
+          "label": "Enchanté",
+          "message": "🌟 Ravi de faire ta connaissance !"
+        }
+      },
+      "close": "Fermer",
+      "icebreakers": {
+        "0": "Salut ! Ça te dit de pratiquer les langues ensemble ?",
+        "1": "J'ai vu qu'on apprend des langues similaires — salut !",
+        "2": "Ton profil m'a tapé dans l'œil, comment ça va ?",
+        "3": "Hey ! Qu'est-ce qui t'a donné envie d'apprendre une nouvelle langue ?"
+      },
+      "icebreakersTitle": "Pour briser la glace",
+      "match": "🎉 C'est un match ! Vous et {{name}} vous êtes salués mutuellement.",
+      "placeholder": "Écrivez un message personnalisé (facultatif)…",
+      "quickReplies": "Réponses rapides",
+      "send": "Envoyer la salutation",
+      "sendError": "Impossible d'envoyer la salutation",
+      "sent": "Salutation envoyée à {{name}} !",
+      "subtitle": "Dites bonjour et brisez la glace 👋",
+      "title": "Envoyer une salutation à {{name}}",
+      "yourMessage": "Votre message"
+    },
+    "someone": "Quelqu'un",
+    "subtitle": "Les personnes qui vous ont salué",
+    "unread": "Non lues",
+    "wavedAtYou": "Vous a salué 👋"
   },
   "topics": {
     "title": "Sujets",
@@ -2539,5 +2617,25 @@
     "close": "Fermer",
     "ended": "Cette annonce est terminée.",
     "back": "Retour"
+  },
+  "communityNearby": {
+    "back": "Retour",
+    "geolocationNotSupported": "La géolocalisation n'est pas prise en charge",
+    "gettingLocation": "Récupération de votre position...",
+    "learning": "Apprend : {{language}}",
+    "locationRequired": "Localisation requise",
+    "noUsers": "Aucun utilisateur trouvé à proximité",
+    "permissionDenied": "Autorisation de localisation refusée",
+    "positionUnavailable": "Position indisponible",
+    "refresh": "Actualiser",
+    "searchRadius": "Rayon de recherche",
+    "subtitle": "Trouvez des personnes autour de vous",
+    "timeout": "La demande de localisation a expiré",
+    "title": "Utilisateurs à proximité",
+    "tryAgain": "Réessayer",
+    "tryIncreaseRadius": "Essayez d'élargir le rayon de recherche",
+    "unknownError": "Une erreur s'est produite",
+    "usersFound_one": "{{count}} personne trouvée",
+    "usersFound_other": "{{count}} personnes trouvées"
   }
 }

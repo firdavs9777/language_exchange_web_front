@@ -270,7 +270,8 @@
       "previous": "Nakaraang larawan",
       "next": "Susunod na larawan",
       "counter": "{{index}} ng {{total}}",
-      "openAvatar": "Buksan ang larawan ni {{name}}"
+      "openAvatar": "Buksan ang larawan ni {{name}}",
+      "openStory": "Tingnan ang story ni {{name}}"
     },
     "messages": {
       "image_update_success": "Matagumpay na na-update ang larawan ng profile",
@@ -370,7 +371,8 @@
       "report": "I-report",
       "this_person": "ang taong ito",
       "action_failed": "Hindi ito gumana. Subukan muli.",
-      "unblock": "I-unblock"
+      "unblock": "I-unblock",
+      "followBlocked": "Hindi mo masusundan ang taong ito"
     },
     "buttons": {
       "edit": "I-edit",
@@ -515,6 +517,11 @@
     "unblock": {
       "title": "I-unblock {{name}}?",
       "body": "Makakapag-message ulit siya sa iyo at makikita ulit ang profile mo."
+    },
+    "blocked": {
+      "body": "May isa sa inyo na nag-block sa isa, kaya hindi kayo makakapag-message, makakasunod, o makakakita ng posts ng isa't isa.",
+      "manage": "Pamahalaan ang mga na-block",
+      "title": "Hindi available ang profile na ito"
     }
   },
   "moments_section": {
@@ -977,7 +984,9 @@
       "forYou": "Para sa iyo",
       "online": "Online",
       "label": "Mga tab ng komunidad",
-      "today": "Ngayon"
+      "today": "Ngayon",
+      "serious": "Seryosong nag-aaral",
+      "seriousHint": "Aktibo ngayong linggo"
     },
     "filters": {
       "language": "Wika",
@@ -1052,7 +1061,9 @@
       "newUsersOnly": "Bagong user lang",
       "clearAll": "I-clear lahat",
       "matchCount": "{{count}} tugma",
-      "lockedByTab": "Itinakda ng tab na {{tab}}"
+      "lockedByTab": "Itinakda ng tab na {{tab}}",
+      "reciprocal": "Perpektong kapartner lang",
+      "reciprocalHint": "Marunong sila ng wikang inaaral mo at inaaral nila ang wikang alam mo"
     },
     "highlighted": {
       "title": "Mga itinatampok na profile",
@@ -1114,7 +1125,8 @@
       "wave": "Kumaway",
       "skip": "Laktawan",
       "error": "Hindi ma-load ang matches ngayon",
-      "retry": "Subukan ulit"
+      "retry": "Subukan ulit",
+      "waved": "Kinawayan na"
     }
   },
   "communityDetail": {
@@ -1544,7 +1556,73 @@
     "accept": "Tanggapin",
     "decline": "Tanggihan",
     "noWaves": "Wala pang mga kumaway",
-    "sendWave": "Magpadala ng kumaway para magsimulang kumonekta!"
+    "sendWave": "Magpadala ng kumaway para magsimulang kumonekta!",
+    "archive": "Mga lumang kaway",
+    "archiveEmpty": "Walang lumang kaway",
+    "archiveHint": "Mga kaway mula 7 hanggang 30 araw na ang nakalipas",
+    "back": "Bumalik",
+    "cap": {
+      "body": "Naubos mo na ang libreng kaway ngayong araw. Ang mga VIP member ay puwedeng kumaway nang walang daily limit, o subukan ulit bukas.",
+      "notNow": "Mamaya na",
+      "seeVip": "Tingnan ang VIP",
+      "title": "Naabot na ang daily limit ng kaway"
+    },
+    "findPeople": "Maghanap ng Tao",
+    "noReceived": "Wala pang kumaway sa iyo",
+    "recent": "Huling 7 araw",
+    "sheet": {
+      "already": "Kinawayan na",
+      "alreadyBody": "Isang beses ka lang puwedeng kumaway sa bawat tao — mag-message na lang para tuloy ang usapan.",
+      "alreadyTitle": "Kinawayan mo na si {{name}}",
+      "cancel": "Kanselahin",
+      "chips": {
+        "chat": {
+          "label": "Chat",
+          "message": "🎉 Tara, chat tayo!"
+        },
+        "cool": {
+          "label": "Astig",
+          "message": "❤️ Astig ng profile mo!"
+        },
+        "hello": {
+          "label": "Hello",
+          "message": "✋ Hello!"
+        },
+        "hey": {
+          "label": "Hey",
+          "message": "😊 Hey, kumusta?"
+        },
+        "hi": {
+          "label": "Hi",
+          "message": "👋 Hi!"
+        },
+        "nice": {
+          "label": "Nice",
+          "message": "🌟 Nice to meet you!"
+        }
+      },
+      "close": "Isara",
+      "icebreakers": {
+        "0": "Hi! Gusto mo bang mag-practice ng wika nang sabay?",
+        "1": "Napansin kong magkapareho tayo ng inaaral na wika — hi!",
+        "2": "Napansin ko ang profile mo, kumusta ka?",
+        "3": "Hey! Ano'ng nag-udyok sa iyong mag-aral ng bagong wika?"
+      },
+      "icebreakersTitle": "Pambasag ng yelo",
+      "match": "🎉 Match! Kumaway kayo ni {{name}} sa isa't isa.",
+      "placeholder": "Magsulat ng sariling mensahe (opsyonal)…",
+      "quickReplies": "Mabilisang sagot",
+      "send": "Ipadala ang kaway",
+      "sendError": "Hindi naipadala ang kaway",
+      "sent": "Naipadala ang kaway kay {{name}}!",
+      "subtitle": "Mag-hi at simulan ang usapan 👋",
+      "title": "Kumaway kay {{name}}",
+      "yourMessage": "Ang mensahe mo"
+    },
+    "someone": "Isang tao",
+    "subtitle": "Mga taong kumaway sa iyo",
+    "unread": "Hindi pa nababasa",
+    "wavedAtYou": "Kumaway sa iyo 👋"
   },
   "topics": {
     "title": "Mga Paksa",
@@ -2538,5 +2616,25 @@
     "close": "Isara",
     "ended": "Tapos na ang anunsyo na ito.",
     "back": "Bumalik"
+  },
+  "communityNearby": {
+    "back": "Bumalik",
+    "geolocationNotSupported": "Hindi suportado ang geolocation",
+    "gettingLocation": "Kinukuha ang lokasyon mo...",
+    "learning": "Nag-aaral: {{language}}",
+    "locationRequired": "Kailangan ang Lokasyon",
+    "noUsers": "Walang user na malapit sa iyo",
+    "permissionDenied": "Tinanggihan ang pahintulot sa lokasyon",
+    "positionUnavailable": "Hindi available ang lokasyon",
+    "refresh": "I-refresh",
+    "searchRadius": "Radius ng Paghahanap",
+    "subtitle": "Hanapin ang mga tao sa paligid mo",
+    "timeout": "Nag-time out ang paghiling ng lokasyon",
+    "title": "Mga User na Malapit",
+    "tryAgain": "Subukan Muli",
+    "tryIncreaseRadius": "Subukang palakihin ang radius ng paghahanap",
+    "unknownError": "May naganap na error",
+    "usersFound_one": "{{count}} tao ang nahanap",
+    "usersFound_other": "{{count}} tao ang nahanap"
   }
 }

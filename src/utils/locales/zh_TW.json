@@ -270,7 +270,8 @@
       "previous": "上一張",
       "next": "下一張",
       "counter": "{{index}} / {{total}}",
-      "openAvatar": "開啟 {{name}} 的照片"
+      "openAvatar": "開啟 {{name}} 的照片",
+      "openStory": "查看 {{name}} 的限時動態"
     },
     "messages": {
       "image_update_success": "大頭貼已更新",
@@ -370,7 +371,8 @@
       "report": "檢舉",
       "this_person": "這個人",
       "action_failed": "操作沒有成功，請再試一次。",
-      "unblock": "取消封鎖"
+      "unblock": "取消封鎖",
+      "followBlocked": "你無法追蹤這個人"
     },
     "buttons": {
       "edit": "編輯",
@@ -515,6 +517,11 @@
     "unblock": {
       "title": "確定要取消封鎖 {{name}}？",
       "body": "對方將可以再次傳訊息給你，也能看到你的個人檔案。"
+    },
+    "blocked": {
+      "body": "你們其中一方已封鎖對方，因此無法互傳訊息、追蹤或查看對方的貼文。",
+      "manage": "管理封鎖名單",
+      "title": "無法查看這個個人檔案"
     }
   },
   "moments_section": {
@@ -977,7 +984,9 @@
       "forYou": "推薦",
       "online": "線上",
       "label": "社群標籤",
-      "today": "今天"
+      "today": "今天",
+      "serious": "認真學習者",
+      "seriousHint": "本週活躍"
     },
     "filters": {
       "language": "語言",
@@ -1052,7 +1061,9 @@
       "newUsersOnly": "只看新使用者",
       "clearAll": "清除全部",
       "matchCount": "{{count}} 個匹配",
-      "lockedByTab": "由「{{tab}}」分頁設定"
+      "lockedByTab": "由「{{tab}}」分頁設定",
+      "reciprocal": "只看完美語伴",
+      "reciprocalHint": "對方會說你在學的語言，也在學你會說的語言"
     },
     "highlighted": {
       "title": "精選個人檔案",
@@ -1114,7 +1125,8 @@
       "wave": "揮手",
       "skip": "略過",
       "error": "無法載入今日配對",
-      "retry": "重試"
+      "retry": "重試",
+      "waved": "已打招呼"
     }
   },
   "communityDetail": {
@@ -1544,7 +1556,73 @@
     "accept": "接受",
     "decline": "婉拒",
     "noWaves": "還沒有人跟你打招呼",
-    "sendWave": "送個招呼，開始認識新朋友吧！"
+    "sendWave": "送個招呼，開始認識新朋友吧！",
+    "archive": "較早的招呼",
+    "archiveEmpty": "沒有較早的招呼",
+    "archiveHint": "7 到 30 天前的招呼",
+    "back": "返回",
+    "cap": {
+      "body": "今天的免費打招呼次數已用完。VIP 會員打招呼沒有每日限制，或明天再試試看。",
+      "notNow": "先不要",
+      "seeVip": "查看 VIP",
+      "title": "已達今日打招呼上限"
+    },
+    "findPeople": "找人",
+    "noReceived": "還沒有人跟你打招呼",
+    "recent": "最近 7 天",
+    "sheet": {
+      "already": "已打過招呼",
+      "alreadyBody": "每個人只能打一次招呼，傳個訊息繼續聊吧。",
+      "alreadyTitle": "你已經跟 {{name}} 打過招呼了",
+      "cancel": "取消",
+      "chips": {
+        "chat": {
+          "label": "聊聊",
+          "message": "🎉 一起聊聊吧！"
+        },
+        "cool": {
+          "label": "很酷",
+          "message": "❤️ 你的檔案好酷！"
+        },
+        "hello": {
+          "label": "你好",
+          "message": "✋ 你好！"
+        },
+        "hey": {
+          "label": "嘿",
+          "message": "😊 嘿，你好呀！"
+        },
+        "hi": {
+          "label": "嗨",
+          "message": "👋 嗨！"
+        },
+        "nice": {
+          "label": "幸會",
+          "message": "🌟 很高興認識你！"
+        }
+      },
+      "close": "關閉",
+      "icebreakers": {
+        "0": "嗨！想一起練語言嗎？",
+        "1": "我發現我們在學差不多的語言，你好呀！",
+        "2": "你的檔案吸引了我，最近好嗎？",
+        "3": "嘿！你為什麼開始學新的語言呢？"
+      },
+      "icebreakersTitle": "開場白",
+      "match": "🎉 配對成功！你和 {{name}} 互相打了招呼。",
+      "placeholder": "寫一段自訂訊息（選填）…",
+      "quickReplies": "快速回覆",
+      "send": "打招呼",
+      "sendError": "打招呼失敗",
+      "sent": "已向 {{name}} 打招呼！",
+      "subtitle": "打個招呼，開啟話題 👋",
+      "title": "向 {{name}} 打招呼",
+      "yourMessage": "你的訊息"
+    },
+    "someone": "某人",
+    "subtitle": "跟你打招呼的人",
+    "unread": "未讀",
+    "wavedAtYou": "跟你打了招呼 👋"
   },
   "topics": {
     "title": "話題",
@@ -2538,5 +2616,25 @@
     "close": "關閉",
     "ended": "此公告已結束。",
     "back": "返回"
+  },
+  "communityNearby": {
+    "back": "返回",
+    "geolocationNotSupported": "不支援定位功能",
+    "gettingLocation": "正在取得你的位置…",
+    "learning": "學習中：{{language}}",
+    "locationRequired": "需要位置權限",
+    "noUsers": "附近找不到使用者",
+    "permissionDenied": "位置權限遭拒",
+    "positionUnavailable": "無法取得位置",
+    "refresh": "重新整理",
+    "searchRadius": "搜尋範圍",
+    "subtitle": "認識你身邊的人",
+    "timeout": "取得位置逾時",
+    "title": "附近的人",
+    "tryAgain": "再試一次",
+    "tryIncreaseRadius": "試試擴大搜尋範圍",
+    "unknownError": "發生錯誤",
+    "usersFound_one": "找到 {{count}} 人",
+    "usersFound_other": "找到 {{count}} 人"
   }
 }

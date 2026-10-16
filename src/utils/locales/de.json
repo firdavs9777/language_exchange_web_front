@@ -270,7 +270,8 @@
       "previous": "Vorheriges Foto",
       "next": "Nächstes Foto",
       "counter": "{{index}} von {{total}}",
-      "openAvatar": "Foto von {{name}} öffnen"
+      "openAvatar": "Foto von {{name}} öffnen",
+      "openStory": "Story von {{name}} ansehen"
     },
     "messages": {
       "image_update_success": "Profilbild erfolgreich aktualisiert",
@@ -370,7 +371,8 @@
       "report": "Melden",
       "this_person": "diese Person",
       "action_failed": "Das hat nicht geklappt. Versuch es noch mal.",
-      "unblock": "Blockierung aufheben"
+      "unblock": "Blockierung aufheben",
+      "followBlocked": "Du kannst dieser Person nicht folgen"
     },
     "buttons": {
       "edit": "Bearbeiten",
@@ -515,6 +517,11 @@
     "unblock": {
       "title": "Blockierung von {{name}} aufheben?",
       "body": "Diese Person kann dir dann wieder schreiben und dein Profil wieder sehen."
+    },
+    "blocked": {
+      "body": "Einer von euch hat den anderen blockiert. Ihr könnt euch daher keine Nachrichten schreiben, euch nicht folgen und die Beiträge des anderen nicht sehen.",
+      "manage": "Blockierte Personen verwalten",
+      "title": "Dieses Profil ist nicht verfügbar"
     }
   },
   "moments_section": {
@@ -977,7 +984,9 @@
       "forYou": "Für dich",
       "online": "Online",
       "label": "Community-Tabs",
-      "today": "Heute"
+      "today": "Heute",
+      "serious": "Engagierte Lernende",
+      "seriousHint": "Diese Woche aktiv"
     },
     "filters": {
       "language": "Sprache",
@@ -1052,7 +1061,9 @@
       "newUsersOnly": "Nur neue Nutzer",
       "clearAll": "Alles löschen",
       "matchCount": "{{count}} Treffer",
-      "lockedByTab": "Vom Tab „{{tab}}“ gesetzt"
+      "lockedByTab": "Vom Tab „{{tab}}“ gesetzt",
+      "reciprocal": "Nur perfekte Partner",
+      "reciprocalHint": "Sie sprechen, was du lernst, und lernen, was du sprichst"
     },
     "highlighted": {
       "title": "Hervorgehobene Profile",
@@ -1114,7 +1125,8 @@
       "wave": "Winken",
       "skip": "Überspringen",
       "error": "Die heutigen Matches konnten nicht geladen werden",
-      "retry": "Erneut versuchen"
+      "retry": "Erneut versuchen",
+      "waved": "Gewinkt"
     }
   },
   "communityDetail": {
@@ -1544,7 +1556,73 @@
     "accept": "Annehmen",
     "decline": "Ablehnen",
     "noWaves": "Noch keine Wellen",
-    "sendWave": "Sende eine Welle, um dich zu verbinden!"
+    "sendWave": "Sende eine Welle, um dich zu verbinden!",
+    "archive": "Ältere Wellen",
+    "archiveEmpty": "Keine älteren Wellen",
+    "archiveHint": "Wellen von vor 7 bis 30 Tagen",
+    "back": "Zurück",
+    "cap": {
+      "body": "Du hast die kostenlosen Wellen für heute aufgebraucht. VIP-Mitglieder können ohne Tageslimit winken – oder versuch es morgen wieder.",
+      "notNow": "Nicht jetzt",
+      "seeVip": "VIP ansehen",
+      "title": "Tageslimit für Wellen erreicht"
+    },
+    "findPeople": "Leute finden",
+    "noReceived": "Noch keine Wellen erhalten",
+    "recent": "Letzte 7 Tage",
+    "sheet": {
+      "already": "Schon gewinkt",
+      "alreadyBody": "Du kannst jeder Person nur einmal winken – schreib ihr stattdessen eine Nachricht, damit das Gespräch weitergeht.",
+      "alreadyTitle": "Du hast {{name}} schon gewinkt",
+      "cancel": "Abbrechen",
+      "chips": {
+        "chat": {
+          "label": "Chatten",
+          "message": "🎉 Lass uns chatten!"
+        },
+        "cool": {
+          "label": "Cool",
+          "message": "❤️ Cooles Profil!"
+        },
+        "hello": {
+          "label": "Hallo",
+          "message": "✋ Hallo!"
+        },
+        "hey": {
+          "label": "Hey",
+          "message": "😊 Hey du!"
+        },
+        "hi": {
+          "label": "Hi",
+          "message": "👋 Hi!"
+        },
+        "nice": {
+          "label": "Freut mich",
+          "message": "🌟 Freut mich, dich kennenzulernen!"
+        }
+      },
+      "close": "Schließen",
+      "icebreakers": {
+        "0": "Hi! Hast du Lust, zusammen Sprachen zu üben?",
+        "1": "Ich hab gesehen, dass wir ähnliche Sprachen lernen – hi!",
+        "2": "Dein Profil ist mir aufgefallen, wie geht's dir?",
+        "3": "Hey! Warum hast du angefangen, eine neue Sprache zu lernen?"
+      },
+      "icebreakersTitle": "Eisbrecher",
+      "match": "🎉 Es ist ein Match! Du und {{name}} habt euch gegenseitig gewinkt.",
+      "placeholder": "Schreib eine eigene Nachricht (optional)…",
+      "quickReplies": "Schnellantworten",
+      "send": "Welle senden",
+      "sendError": "Welle konnte nicht gesendet werden",
+      "sent": "Welle an {{name}} gesendet!",
+      "subtitle": "Sag Hallo und brich das Eis 👋",
+      "title": "Sende {{name}} eine Welle",
+      "yourMessage": "Deine Nachricht"
+    },
+    "someone": "Jemand",
+    "subtitle": "Leute, die dir gewinkt haben",
+    "unread": "Ungelesen",
+    "wavedAtYou": "Hat dir gewinkt 👋"
   },
   "topics": {
     "title": "Themen",
@@ -2538,5 +2616,25 @@
     "close": "Schließen",
     "ended": "Diese Ankündigung ist beendet.",
     "back": "Zurück"
+  },
+  "communityNearby": {
+    "back": "Zurück",
+    "geolocationNotSupported": "Standortbestimmung wird nicht unterstützt",
+    "gettingLocation": "Dein Standort wird ermittelt...",
+    "learning": "Lernt: {{language}}",
+    "locationRequired": "Standort erforderlich",
+    "noUsers": "Keine Nutzer in der Nähe gefunden",
+    "permissionDenied": "Standortberechtigung verweigert",
+    "positionUnavailable": "Standort nicht verfügbar",
+    "refresh": "Aktualisieren",
+    "searchRadius": "Suchradius",
+    "subtitle": "Finde Leute in deiner Nähe",
+    "timeout": "Zeitüberschreitung bei der Standortabfrage",
+    "title": "Nutzer in der Nähe",
+    "tryAgain": "Erneut versuchen",
+    "tryIncreaseRadius": "Versuch, den Suchradius zu vergrößern",
+    "unknownError": "Ein Fehler ist aufgetreten",
+    "usersFound_one": "{{count}} Person gefunden",
+    "usersFound_other": "{{count}} Personen gefunden"
   }
 }

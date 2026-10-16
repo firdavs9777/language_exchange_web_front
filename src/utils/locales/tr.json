@@ -270,7 +270,8 @@
       "previous": "Önceki fotoğraf",
       "next": "Sonraki fotoğraf",
       "counter": "{{index}} / {{total}}",
-      "openAvatar": "{{name}} adlı kişinin fotoğrafını aç"
+      "openAvatar": "{{name}} adlı kişinin fotoğrafını aç",
+      "openStory": "{{name}} adlı kişinin hikâyesini görüntüle"
     },
     "messages": {
       "image_update_success": "Profil resmi başarıyla güncellendi",
@@ -370,7 +371,8 @@
       "report": "Şikayet Et",
       "this_person": "bu kişi",
       "action_failed": "Bu işe yaramadı. Tekrar dene.",
-      "unblock": "Engeli kaldır"
+      "unblock": "Engeli kaldır",
+      "followBlocked": "Bu kişiyi takip edemezsin"
     },
     "buttons": {
       "edit": "Düzenle",
@@ -515,6 +517,11 @@
     "unblock": {
       "title": "{{name}} adlı kullanıcının engeli kaldırılsın mı?",
       "body": "Sana tekrar mesaj gönderebilir ve profilini görebilir."
+    },
+    "blocked": {
+      "body": "Biriniz diğerini engellediği için birbirinize mesaj gönderemez, birbirinizi takip edemez ve gönderilerinizi göremezsiniz.",
+      "manage": "Engellenen kişileri yönet",
+      "title": "Bu profil kullanılamıyor"
     }
   },
   "moments_section": {
@@ -977,7 +984,9 @@
       "forYou": "Senin İçin",
       "online": "Çevrimiçi",
       "label": "Topluluk sekmeleri",
-      "today": "Bugün"
+      "today": "Bugün",
+      "serious": "Azimli öğrenenler",
+      "seriousHint": "Bu hafta aktif"
     },
     "filters": {
       "language": "Dil",
@@ -1052,7 +1061,9 @@
       "newUsersOnly": "Sadece yeni kullanıcılar",
       "clearAll": "Tümünü temizle",
       "matchCount": "{{count}} eşleşme",
-      "lockedByTab": "{{tab}} sekmesi tarafından ayarlandı"
+      "lockedByTab": "{{tab}} sekmesi tarafından ayarlandı",
+      "reciprocal": "Yalnızca mükemmel partnerler",
+      "reciprocalHint": "Öğrendiğin dili konuşuyor, konuştuğun dili öğreniyorlar"
     },
     "highlighted": {
       "title": "Öne çıkan profiller",
@@ -1114,7 +1125,8 @@
       "wave": "El salla",
       "skip": "Geç",
       "error": "Bugünkü eşleşmeler yüklenemedi",
-      "retry": "Tekrar dene"
+      "retry": "Tekrar dene",
+      "waved": "El sallandı"
     }
   },
   "communityDetail": {
@@ -1544,7 +1556,73 @@
     "accept": "Kabul Et",
     "decline": "Reddet",
     "noWaves": "Henüz el sallama yok",
-    "sendWave": "Bağlantı kurmaya başlamak için bir el sallama gönderin!"
+    "sendWave": "Bağlantı kurmaya başlamak için bir el sallama gönderin!",
+    "archive": "Eski el sallamalar",
+    "archiveEmpty": "Eski el sallama yok",
+    "archiveHint": "7 ila 30 gün önceki el sallamalar",
+    "back": "Geri",
+    "cap": {
+      "body": "Bugünkü ücretsiz el sallama hakkını kullandın. VIP üyeler günlük sınır olmadan el sallayabilir; ya da yarın tekrar dene.",
+      "notNow": "Şimdi değil",
+      "seeVip": "VIP'e göz at",
+      "title": "Günlük el sallama sınırına ulaşıldı"
+    },
+    "findPeople": "İnsanları Bul",
+    "noReceived": "Henüz el sallama almadın",
+    "recent": "Son 7 gün",
+    "sheet": {
+      "already": "Zaten el salladın",
+      "alreadyBody": "Her kişiye yalnızca bir kez el sallayabilirsin — sohbeti sürdürmek için ona mesaj gönder.",
+      "alreadyTitle": "{{name}} adlı kişiye zaten el salladın",
+      "cancel": "İptal",
+      "chips": {
+        "chat": {
+          "label": "Sohbet",
+          "message": "🎉 Hadi sohbet edelim!"
+        },
+        "cool": {
+          "label": "Harika",
+          "message": "❤️ Harika profil!"
+        },
+        "hello": {
+          "label": "Merhaba",
+          "message": "✋ Merhaba!"
+        },
+        "hey": {
+          "label": "Hey",
+          "message": "😊 Hey, selam!"
+        },
+        "hi": {
+          "label": "Selam",
+          "message": "👋 Selam!"
+        },
+        "nice": {
+          "label": "Memnun oldum",
+          "message": "🌟 Tanıştığımıza memnun oldum!"
+        }
+      },
+      "close": "Kapat",
+      "icebreakers": {
+        "0": "Selam! Birlikte dil pratiği yapmak ister misin?",
+        "1": "Benzer diller öğreniyoruz galiba — selam!",
+        "2": "Profilin dikkatimi çekti, nasıl gidiyor?",
+        "3": "Hey! Yeni bir dil öğrenmeye nasıl başladın?"
+      },
+      "icebreakersTitle": "Sohbet başlatıcılar",
+      "match": "🎉 Eşleştiniz! Sen ve {{name}} birbirinize el salladınız.",
+      "placeholder": "Kendi mesajını yaz (isteğe bağlı)…",
+      "quickReplies": "Hızlı yanıtlar",
+      "send": "El salla",
+      "sendError": "El sallama gönderilemedi",
+      "sent": "{{name}} adlı kişiye el sallandı!",
+      "subtitle": "Merhaba de ve buzları erit 👋",
+      "title": "{{name}} adlı kişiye el salla",
+      "yourMessage": "Mesajın"
+    },
+    "someone": "Biri",
+    "subtitle": "Sana el sallayan kişiler",
+    "unread": "Okunmamış",
+    "wavedAtYou": "Sana el salladı 👋"
   },
   "topics": {
     "title": "Konular",
@@ -2538,5 +2616,25 @@
     "close": "Kapat",
     "ended": "Bu duyuru sona erdi.",
     "back": "Geri"
+  },
+  "communityNearby": {
+    "back": "Geri",
+    "geolocationNotSupported": "Konum özelliği desteklenmiyor",
+    "gettingLocation": "Konumun alınıyor…",
+    "learning": "Öğreniyor: {{language}}",
+    "locationRequired": "Konum Gerekli",
+    "noUsers": "Yakında kullanıcı bulunamadı",
+    "permissionDenied": "Konum izni reddedildi",
+    "positionUnavailable": "Konum alınamıyor",
+    "refresh": "Yenile",
+    "searchRadius": "Arama Yarıçapı",
+    "subtitle": "Çevrendeki insanları bul",
+    "timeout": "Konum isteği zaman aşımına uğradı",
+    "title": "Yakındaki Kullanıcılar",
+    "tryAgain": "Tekrar Dene",
+    "tryIncreaseRadius": "Arama yarıçapını artırmayı dene",
+    "unknownError": "Bir hata oluştu",
+    "usersFound_one": "{{count}} kişi bulundu",
+    "usersFound_other": "{{count}} kişi bulundu"
   }
 }

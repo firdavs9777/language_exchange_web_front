@@ -270,7 +270,8 @@
       "previous": "前の写真",
       "next": "次の写真",
       "counter": "{{index}} / {{total}}",
-      "openAvatar": "{{name}}の写真を開く"
+      "openAvatar": "{{name}}の写真を開く",
+      "openStory": "{{name}}さんのストーリーを見る"
     },
     "messages": {
       "image_update_success": "プロフィール写真を更新しました",
@@ -370,7 +371,8 @@
       "report": "報告",
       "this_person": "この人",
       "action_failed": "うまくいきませんでした。もう一度お試しください。",
-      "unblock": "ブロック解除"
+      "unblock": "ブロック解除",
+      "followBlocked": "この人をフォローすることはできません"
     },
     "buttons": {
       "edit": "編集",
@@ -515,6 +517,11 @@
     "unblock": {
       "title": "{{name}}さんのブロックを解除しますか？",
       "body": "ブロックを解除すると、相手は再びメッセージを送ったり、プロフィールを見たりできるようになります。"
+    },
+    "blocked": {
+      "body": "どちらかがブロックしているため、メッセージやフォロー、投稿の閲覧はできません。",
+      "manage": "ブロック中のユーザーを管理",
+      "title": "このプロフィールは表示できません"
     }
   },
   "moments_section": {
@@ -977,7 +984,9 @@
       "forYou": "おすすめ",
       "online": "オンライン",
       "label": "コミュニティタブ",
-      "today": "今日"
+      "today": "今日",
+      "serious": "熱心な学習者",
+      "seriousHint": "今週アクティブ"
     },
     "filters": {
       "language": "言語",
@@ -1052,7 +1061,9 @@
       "newUsersOnly": "新規ユーザーのみ",
       "clearAll": "すべてクリア",
       "matchCount": "{{count}}件のマッチ",
-      "lockedByTab": "{{tab}}タブで設定済み"
+      "lockedByTab": "{{tab}}タブで設定済み",
+      "reciprocal": "ぴったりのパートナーのみ",
+      "reciprocalHint": "あなたが学ぶ言語を話し、あなたが話す言語を学んでいる人"
     },
     "highlighted": {
       "title": "注目のプロフィール",
@@ -1114,7 +1125,8 @@
       "wave": "手を振る",
       "skip": "スキップ",
       "error": "今日のマッチを読み込めませんでした",
-      "retry": "再試行"
+      "retry": "再試行",
+      "waved": "ウェーブ済み"
     }
   },
   "communityDetail": {
@@ -1544,7 +1556,73 @@
     "accept": "承認",
     "decline": "辞退",
     "noWaves": "まだウェーブがありません",
-    "sendWave": "ウェーブを送って、話しかけてみましょう！"
+    "sendWave": "ウェーブを送って、話しかけてみましょう！",
+    "archive": "過去のウェーブ",
+    "archiveEmpty": "過去のウェーブはありません",
+    "archiveHint": "7〜30日前のウェーブ",
+    "back": "戻る",
+    "cap": {
+      "body": "今日の無料ウェーブを使い切りました。VIPメンバーは回数無制限でウェーブできます。または明日もう一度お試しください。",
+      "notNow": "今はしない",
+      "seeVip": "VIPを見る",
+      "title": "今日のウェーブ上限に達しました"
+    },
+    "findPeople": "人を探す",
+    "noReceived": "まだウェーブを受け取っていません",
+    "recent": "過去7日間",
+    "sheet": {
+      "already": "ウェーブ済み",
+      "alreadyBody": "ウェーブは1人につき1回までです。会話を続けるにはメッセージを送ってみましょう。",
+      "alreadyTitle": "{{name}}さんにはすでにウェーブしました",
+      "cancel": "キャンセル",
+      "chips": {
+        "chat": {
+          "label": "話そう",
+          "message": "🎉 話しましょう！"
+        },
+        "cool": {
+          "label": "素敵",
+          "message": "❤️ 素敵なプロフィールですね！"
+        },
+        "hello": {
+          "label": "こんにちは",
+          "message": "✋ こんにちは！"
+        },
+        "hey": {
+          "label": "やあ",
+          "message": "😊 やあ、こんにちは！"
+        },
+        "hi": {
+          "label": "ハイ",
+          "message": "👋 ハイ！"
+        },
+        "nice": {
+          "label": "よろしく",
+          "message": "🌟 はじめまして！"
+        }
+      },
+      "close": "閉じる",
+      "icebreakers": {
+        "0": "こんにちは！一緒に言語を練習しませんか？",
+        "1": "似た言語を勉強しているみたいですね。こんにちは！",
+        "2": "プロフィールが気になりました。元気ですか？",
+        "3": "こんにちは！新しい言語を始めたきっかけは何ですか？"
+      },
+      "icebreakersTitle": "話しかけのヒント",
+      "match": "🎉 マッチしました！あなたと{{name}}さんがお互いにウェーブしました。",
+      "placeholder": "メッセージを入力（任意）…",
+      "quickReplies": "クイック返信",
+      "send": "ウェーブを送る",
+      "sendError": "ウェーブを送れませんでした",
+      "sent": "{{name}}さんにウェーブを送りました！",
+      "subtitle": "あいさつして話すきっかけを作りましょう 👋",
+      "title": "{{name}}さんにウェーブを送る",
+      "yourMessage": "メッセージ"
+    },
+    "someone": "誰か",
+    "subtitle": "あなたにウェーブした人",
+    "unread": "未読",
+    "wavedAtYou": "あなたにウェーブしました 👋"
   },
   "topics": {
     "title": "トピック",
@@ -2538,5 +2616,25 @@
     "close": "閉じる",
     "ended": "このお知らせは終了しました。",
     "back": "戻る"
+  },
+  "communityNearby": {
+    "back": "戻る",
+    "geolocationNotSupported": "位置情報に対応していません",
+    "gettingLocation": "現在地を取得しています…",
+    "learning": "学習中：{{language}}",
+    "locationRequired": "位置情報が必要です",
+    "noUsers": "近くにユーザーが見つかりません",
+    "permissionDenied": "位置情報の利用が許可されていません",
+    "positionUnavailable": "位置情報を取得できません",
+    "refresh": "更新",
+    "searchRadius": "検索範囲",
+    "subtitle": "近くにいる人を見つけましょう",
+    "timeout": "位置情報の取得がタイムアウトしました",
+    "title": "近くの人",
+    "tryAgain": "再試行",
+    "tryIncreaseRadius": "検索範囲を広げてみてください",
+    "unknownError": "エラーが発生しました",
+    "usersFound_one": "{{count}}人が見つかりました",
+    "usersFound_other": "{{count}}人が見つかりました"
   }
 }

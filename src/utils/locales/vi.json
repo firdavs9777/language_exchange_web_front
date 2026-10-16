@@ -270,7 +270,8 @@
       "previous": "Ảnh trước",
       "next": "Ảnh sau",
       "counter": "{{index}}/{{total}}",
-      "openAvatar": "Mở ảnh của {{name}}"
+      "openAvatar": "Mở ảnh của {{name}}",
+      "openStory": "Xem story của {{name}}"
     },
     "messages": {
       "image_update_success": "Đã cập nhật ảnh hồ sơ thành công",
@@ -370,7 +371,8 @@
       "report": "Báo cáo",
       "this_person": "người này",
       "action_failed": "Chưa thực hiện được. Vui lòng thử lại.",
-      "unblock": "Bỏ chặn"
+      "unblock": "Bỏ chặn",
+      "followBlocked": "Bạn không thể theo dõi người này"
     },
     "buttons": {
       "edit": "Chỉnh Sửa",
@@ -515,6 +517,11 @@
     "unblock": {
       "title": "Bỏ chặn {{name}}?",
       "body": "Người này sẽ có thể nhắn tin cho bạn và xem hồ sơ của bạn trở lại."
+    },
+    "blocked": {
+      "body": "Một trong hai người đã chặn người kia, nên hai bạn không thể nhắn tin, theo dõi hoặc xem bài đăng của nhau.",
+      "manage": "Quản lý người bị chặn",
+      "title": "Hồ sơ này không khả dụng"
     }
   },
   "moments_section": {
@@ -977,7 +984,9 @@
       "forYou": "Dành Cho Bạn",
       "online": "Trực Tuyến",
       "label": "Các tab cộng đồng",
-      "today": "Hôm nay"
+      "today": "Hôm nay",
+      "serious": "Người học nghiêm túc",
+      "seriousHint": "Hoạt động trong tuần này"
     },
     "filters": {
       "language": "Ngôn Ngữ",
@@ -1052,7 +1061,9 @@
       "newUsersOnly": "Chỉ người dùng mới",
       "clearAll": "Xóa tất cả",
       "matchCount": "{{count}} kết quả phù hợp",
-      "lockedByTab": "Được đặt bởi thẻ {{tab}}"
+      "lockedByTab": "Được đặt bởi thẻ {{tab}}",
+      "reciprocal": "Chỉ đối tác phù hợp",
+      "reciprocalHint": "Họ nói ngôn ngữ bạn học và học ngôn ngữ bạn nói"
     },
     "highlighted": {
       "title": "Hồ sơ nổi bật",
@@ -1114,7 +1125,8 @@
       "wave": "Vẫy tay",
       "skip": "Bỏ qua",
       "error": "Không tải được người phù hợp hôm nay",
-      "retry": "Thử lại"
+      "retry": "Thử lại",
+      "waved": "Đã vẫy tay"
     }
   },
   "communityDetail": {
@@ -1544,7 +1556,73 @@
     "accept": "Chấp Nhận",
     "decline": "Từ Chối",
     "noWaves": "Chưa có lời chào nào",
-    "sendWave": "Gửi lời chào để bắt đầu kết nối!"
+    "sendWave": "Gửi lời chào để bắt đầu kết nối!",
+    "archive": "Lời chào cũ hơn",
+    "archiveEmpty": "Không có lời chào cũ nào",
+    "archiveHint": "Lời chào từ 7 đến 30 ngày trước",
+    "back": "Quay lại",
+    "cap": {
+      "body": "Bạn đã dùng hết lượt vẫy tay miễn phí hôm nay. Thành viên VIP có thể vẫy tay không giới hạn mỗi ngày, hoặc hãy thử lại vào ngày mai.",
+      "notNow": "Để sau",
+      "seeVip": "Xem VIP",
+      "title": "Đã đạt giới hạn vẫy tay hôm nay"
+    },
+    "findPeople": "Tìm Mọi Người",
+    "noReceived": "Chưa nhận được lời chào nào",
+    "recent": "7 ngày qua",
+    "sheet": {
+      "already": "Đã vẫy tay",
+      "alreadyBody": "Bạn chỉ có thể vẫy tay mỗi người một lần — hãy gửi tin nhắn để tiếp tục trò chuyện nhé.",
+      "alreadyTitle": "Bạn đã vẫy tay với {{name}} rồi",
+      "cancel": "Hủy",
+      "chips": {
+        "chat": {
+          "label": "Trò chuyện",
+          "message": "🎉 Mình trò chuyện nhé!"
+        },
+        "cool": {
+          "label": "Tuyệt",
+          "message": "❤️ Hồ sơ của bạn hay quá!"
+        },
+        "hello": {
+          "label": "Xin chào",
+          "message": "✋ Xin chào!"
+        },
+        "hey": {
+          "label": "Này",
+          "message": "😊 Chào bạn nha!"
+        },
+        "hi": {
+          "label": "Chào",
+          "message": "👋 Chào bạn!"
+        },
+        "nice": {
+          "label": "Rất vui",
+          "message": "🌟 Rất vui được làm quen!"
+        }
+      },
+      "close": "Đóng",
+      "icebreakers": {
+        "0": "Chào bạn! Mình cùng luyện ngôn ngữ nhé?",
+        "1": "Mình thấy chúng ta học những ngôn ngữ giống nhau — chào bạn!",
+        "2": "Hồ sơ của bạn thu hút mình đấy, bạn dạo này thế nào?",
+        "3": "Chào bạn! Điều gì khiến bạn bắt đầu học một ngôn ngữ mới?"
+      },
+      "icebreakersTitle": "Câu mở đầu",
+      "match": "🎉 Tương hợp rồi! Bạn và {{name}} đã vẫy tay với nhau.",
+      "placeholder": "Viết lời nhắn riêng (không bắt buộc)…",
+      "quickReplies": "Trả lời nhanh",
+      "send": "Gửi lời chào",
+      "sendError": "Không thể gửi lời chào",
+      "sent": "Đã gửi lời chào đến {{name}}!",
+      "subtitle": "Chào hỏi và phá băng 👋",
+      "title": "Gửi lời chào đến {{name}}",
+      "yourMessage": "Lời nhắn của bạn"
+    },
+    "someone": "Ai đó",
+    "subtitle": "Những người đã vẫy tay với bạn",
+    "unread": "Chưa đọc",
+    "wavedAtYou": "Đã vẫy tay với bạn 👋"
   },
   "topics": {
     "title": "Chủ Đề",
@@ -2538,5 +2616,25 @@
     "close": "Đóng",
     "ended": "Thông báo này đã kết thúc.",
     "back": "Quay lại"
+  },
+  "communityNearby": {
+    "back": "Quay lại",
+    "geolocationNotSupported": "Không hỗ trợ định vị",
+    "gettingLocation": "Đang lấy vị trí của bạn...",
+    "learning": "Đang học: {{language}}",
+    "locationRequired": "Cần Vị Trí",
+    "noUsers": "Không tìm thấy người dùng gần đây",
+    "permissionDenied": "Quyền truy cập vị trí bị từ chối",
+    "positionUnavailable": "Không xác định được vị trí",
+    "refresh": "Làm mới",
+    "searchRadius": "Bán Kính Tìm Kiếm",
+    "subtitle": "Tìm người ở quanh bạn",
+    "timeout": "Yêu cầu vị trí đã hết thời gian",
+    "title": "Người Dùng Gần Đây",
+    "tryAgain": "Thử Lại",
+    "tryIncreaseRadius": "Hãy thử tăng bán kính tìm kiếm",
+    "unknownError": "Đã xảy ra lỗi",
+    "usersFound_one": "Tìm thấy {{count}} người",
+    "usersFound_other": "Tìm thấy {{count}} người"
   }
 }

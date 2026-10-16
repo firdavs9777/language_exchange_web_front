@@ -251,7 +251,8 @@
       "previous": "Foto anterior",
       "next": "Foto siguiente",
       "counter": "{{index}} de {{total}}",
-      "openAvatar": "Ver la foto de {{name}}"
+      "openAvatar": "Ver la foto de {{name}}",
+      "openStory": "Ver la historia de {{name}}"
     },
     "messages": {
       "image_update_success": "Imagen de perfil actualizada correctamente",
@@ -351,7 +352,8 @@
       "report": "Reportar",
       "this_person": "esta persona",
       "action_failed": "No funcionó. Inténtalo de nuevo.",
-      "unblock": "Desbloquear"
+      "unblock": "Desbloquear",
+      "followBlocked": "No puedes seguir a esta persona"
     },
     "buttons": {
       "edit": "Editar",
@@ -496,6 +498,11 @@
     "unblock": {
       "title": "¿Desbloquear a {{name}}?",
       "body": "Podrá volver a enviarte mensajes y ver tu perfil."
+    },
+    "blocked": {
+      "body": "Uno de ustedes bloqueó al otro, así que no pueden enviarse mensajes, seguirse ni ver las publicaciones del otro.",
+      "manage": "Gestionar personas bloqueadas",
+      "title": "Este perfil no está disponible"
     }
   },
   "moments_section": {
@@ -958,7 +965,9 @@
       "forYou": "Para ti",
       "online": "En línea",
       "label": "Pestañas de la comunidad",
-      "today": "Hoy"
+      "today": "Hoy",
+      "serious": "Estudiantes constantes",
+      "seriousHint": "Activos esta semana"
     },
     "filters": {
       "language": "Idioma",
@@ -1033,7 +1042,9 @@
       "newUsersOnly": "Solo usuarios nuevos",
       "clearAll": "Limpiar todo",
       "matchCount": "{{count}} coincidencias",
-      "lockedByTab": "Definido por la pestaña {{tab}}"
+      "lockedByTab": "Definido por la pestaña {{tab}}",
+      "reciprocal": "Solo compañeros ideales",
+      "reciprocalHint": "Hablan lo que aprendes y aprenden lo que hablas"
     },
     "highlighted": {
       "title": "Perfiles destacados",
@@ -1096,7 +1107,8 @@
       "wave": "Saludar con la mano",
       "skip": "Omitir",
       "error": "No pudimos cargar las coincidencias de hoy",
-      "retry": "Reintentar"
+      "retry": "Reintentar",
+      "waved": "Saludado"
     }
   },
   "communityDetail": {
@@ -1526,7 +1538,73 @@
     "accept": "Aceptar",
     "decline": "Rechazar",
     "noWaves": "Aún no hay saludos",
-    "sendWave": "¡Envía un saludo para empezar a conectar!"
+    "sendWave": "¡Envía un saludo para empezar a conectar!",
+    "archive": "Saludos anteriores",
+    "archiveEmpty": "No hay saludos anteriores",
+    "archiveHint": "Saludos de hace 7 a 30 días",
+    "back": "Volver",
+    "cap": {
+      "body": "Ya usaste los saludos gratis de hoy. Los miembros VIP pueden saludar sin límite diario, o vuelve a intentarlo mañana.",
+      "notNow": "Ahora no",
+      "seeVip": "Ver VIP",
+      "title": "Alcanzaste el límite diario de saludos"
+    },
+    "findPeople": "Buscar personas",
+    "noReceived": "Aún no has recibido saludos",
+    "recent": "Últimos 7 días",
+    "sheet": {
+      "already": "Ya saludaste",
+      "alreadyBody": "Solo puedes saludar una vez a cada persona: mejor envíale un mensaje para seguir la conversación.",
+      "alreadyTitle": "Ya saludaste a {{name}}",
+      "cancel": "Cancelar",
+      "chips": {
+        "chat": {
+          "label": "Charlar",
+          "message": "🎉 ¡Charlemos!"
+        },
+        "cool": {
+          "label": "Genial",
+          "message": "❤️ ¡Qué buen perfil!"
+        },
+        "hello": {
+          "label": "Hola",
+          "message": "✋ ¡Hola!"
+        },
+        "hey": {
+          "label": "Hey",
+          "message": "😊 ¡Hey, qué tal!"
+        },
+        "hi": {
+          "label": "Hola",
+          "message": "👋 ¡Hola!"
+        },
+        "nice": {
+          "label": "Encantado",
+          "message": "🌟 ¡Encantado de conocerte!"
+        }
+      },
+      "close": "Cerrar",
+      "icebreakers": {
+        "0": "¡Hola! ¿Quieres practicar idiomas juntos?",
+        "1": "Vi que estamos aprendiendo idiomas parecidos, ¡hola!",
+        "2": "Tu perfil me llamó la atención, ¿qué tal todo?",
+        "3": "¡Hey! ¿Qué te animó a aprender un nuevo idioma?"
+      },
+      "icebreakersTitle": "Para romper el hielo",
+      "match": "🎉 ¡Es un match! Tú y {{name}} se saludaron mutuamente.",
+      "placeholder": "Escribe un mensaje personalizado (opcional)…",
+      "quickReplies": "Respuestas rápidas",
+      "send": "Enviar saludo",
+      "sendError": "No se pudo enviar el saludo",
+      "sent": "¡Saludo enviado a {{name}}!",
+      "subtitle": "Saluda y rompe el hielo 👋",
+      "title": "Envía un saludo a {{name}}",
+      "yourMessage": "Tu mensaje"
+    },
+    "someone": "Alguien",
+    "subtitle": "Personas que te saludaron",
+    "unread": "No leídos",
+    "wavedAtYou": "Te saludó 👋"
   },
   "topics": {
     "title": "Temas",
@@ -2539,5 +2617,25 @@
     "close": "Cerrar",
     "ended": "Este anuncio ha finalizado.",
     "back": "Atrás"
+  },
+  "communityNearby": {
+    "back": "Volver",
+    "geolocationNotSupported": "La geolocalización no es compatible",
+    "gettingLocation": "Obteniendo tu ubicación...",
+    "learning": "Aprende: {{language}}",
+    "locationRequired": "Se requiere ubicación",
+    "noUsers": "No se encontraron usuarios cerca",
+    "permissionDenied": "Permiso de ubicación denegado",
+    "positionUnavailable": "Ubicación no disponible",
+    "refresh": "Actualizar",
+    "searchRadius": "Radio de búsqueda",
+    "subtitle": "Encuentra gente cerca de ti",
+    "timeout": "Se agotó el tiempo de la solicitud de ubicación",
+    "title": "Usuarios cercanos",
+    "tryAgain": "Intentar de nuevo",
+    "tryIncreaseRadius": "Prueba a ampliar el radio de búsqueda",
+    "unknownError": "Ocurrió un error",
+    "usersFound_one": "{{count}} persona encontrada",
+    "usersFound_other": "{{count}} personas encontradas"
   }
 }

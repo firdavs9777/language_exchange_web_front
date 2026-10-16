@@ -109,7 +109,7 @@ Phase 3 Community (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-ap
 - [x] P3-COM-11 Profile counts from `followersCount` for signed-out visitors; story ring from `hasActiveStory` (community#6, links#11)
 - [x] P3-COM-12 Blocked viewers see a neutral card; follow refused by a block says so (community#5)
 - [x] P3-COM-13 Community copy through `t()`, and a test that every key exists (community#13)
-- [ ] P3-COM-I18N New community strings in all 18 locales
+- [x] P3-COM-I18N New community strings in all 18 locales
 - [ ] P3-COM-PUSH Push unit community (suite + build green, deployed, production smoke recorded)
 
 Phase 3 Links (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase3.md`)
