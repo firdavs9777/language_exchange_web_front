@@ -66,7 +66,25 @@
     <meta property="al:android:package" content="com.bananatalk.app" />
     <meta property="al:android:app_name" content="BananaTalk" />
     <meta name="apple-itunes-app" content="app-id=6755862146, app-argument=https://banatalk.com/" />
-    <meta name="google-play-app" content="app-id=com.bananatalk.app" />
+    <!-- Point Safari's banner at this page (src/components/linking/smartBanner.ts holds the same rule; its test compares them). -->
+    <script id="smart-banner-argument">
+      (function () {
+        try {
+          var r = "https://banatalk.com/";
+          var m = /^\/(moment|profile|community|story|card|i)\/([^\/]+)\/?$/.exec(location.pathname || "");
+          var arg = r;
+          if (m) {
+            if (m[1] === "i") {
+              if (/^[A-Za-z0-9]{4,32}$/.test(m[2])) arg = r + "i/" + m[2];
+            } else if (/^[0-9a-fA-F]{24}$/.test(m[2])) {
+              arg = r + (m[1] === "card" ? "profile" : m[1]) + "/" + m[2];
+            }
+          }
+          var tag = document.querySelector("meta[name=apple-itunes-app]");
+          if (tag) tag.setAttribute("content", "app-id=6755862146, app-argument=" + arg);
+        } catch (e) {}
+      })();
+    </script>
 
     <!-- Structured Data / JSON-LD - App -->
     <script type="application/ld+json">

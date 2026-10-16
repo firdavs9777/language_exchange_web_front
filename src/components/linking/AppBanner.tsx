@@ -4,12 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { X } from 'lucide-react';
 import { detectPlatform, MobilePlatform } from '../../utils/platform';
 import OpenInApp from './OpenInApp';
-import { ShareType } from '../../utils/shareUrl';
+import { AppLinkType } from './openInAppAction';
+import { setSmartBannerArgument } from './smartBanner';
 
-const PATTERNS: { pattern: string; type: ShareType }[] = [
+const PATTERNS: { pattern: string; type: AppLinkType }[] = [
   { pattern: '/moment/:id', type: 'moment' },
   { pattern: '/profile/:userId', type: 'profile' },
   { pattern: '/community/:id', type: 'community' },
+  { pattern: '/story/:id', type: 'story' },
+  { pattern: '/card/:userId', type: 'card' },
+  { pattern: '/i/:code', type: 'i' },
 ];
 
 // Some real, static sub-routes share their first path segment with one of the
@@ -17,8 +21,7 @@ const PATTERNS: { pattern: string; type: ShareType }[] = [
 // `/profile/edit` -> EditProfile). `matchPath` can't tell those apart from an
 // actual `:id`/`:userId`, so we exclude the known static segments per type to
 // avoid producing a bogus `bananatalk://community/nearby` deep link.
-const EXCLUDED_IDS: Record<ShareType, string[]> = {
-  moment: [],
+const EXCLUDED_IDS: { [type: string]: string[] } = {
   profile: ['edit'],
   community: ['nearby'],
 };
@@ -31,6 +34,13 @@ const AppBanner: React.FC = () => {
   const [platform, setPlatform] = useState<MobilePlatform | null>(null);
   const { t } = useTranslation();
 
+  // Safari's smart banner reads <meta name="apple-itunes-app">; the inline
+  // script in index.html sets it for the first page, this keeps it right
+  // after client-side navigation. Runs on every platform: it is one attribute.
+  useEffect(() => {
+    setSmartBannerArgument(location.pathname);
+  }, [location.pathname]);
+
   useEffect(() => {
     setPlatform(detectPlatform(navigator.userAgent));
   }, []);
@@ -41,8 +51,9 @@ const AppBanner: React.FC = () => {
   for (const { pattern, type } of PATTERNS) {
     const m = matchPath(pattern, location.pathname);
     if (m) {
-      const id = (m.params as any).id ?? (m.params as any).userId;
-      if (!id || EXCLUDED_IDS[type].includes(id)) continue;
+      const params = m.params as any;
+      const id = params.id ?? params.userId ?? params.code;
+      if (!id || (EXCLUDED_IDS[type] || []).includes(id)) continue;
       return (
         // `brand-deep` (#00806A), not `brand` (#00BFA5): this strip carries
         // small white text, and white on the lighter brand is 2.33:1 -- well

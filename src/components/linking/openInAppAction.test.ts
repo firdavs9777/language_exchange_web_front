@@ -5,6 +5,15 @@ describe('appSchemeUrl', () => {
   it('builds a custom scheme url', () => {
     expect(appSchemeUrl('moment', '123')).toBe('bananatalk://moment/123');
   });
+
+  it('opens a card as the person\'s profile (the app has no card route)', () => {
+    expect(appSchemeUrl('card', 'u1')).toBe('bananatalk://profile/u1');
+  });
+
+  it('builds invite and story links', () => {
+    expect(appSchemeUrl('i', 'ABCD2345')).toBe('bananatalk://i/ABCD2345');
+    expect(appSchemeUrl('story', 's1')).toBe('bananatalk://story/s1');
+  });
 });
 
 describe('openInApp', () => {
