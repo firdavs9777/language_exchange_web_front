@@ -17,6 +17,9 @@ export const ACCEPT_TERMS_URL = "/api/v1/auth/accept-terms";
 // Web Google login: the callback carries a single-use code (60 s) that this
 // exchanges for { token, refreshToken, user }. Replaces ?token= in the URL.
 export const GOOGLE_EXCHANGE_URL = "/api/v1/auth/google/exchange";
+// Web Sign in with Apple (Apple JS identity token + the nonce the page made).
+// 404 {code:'feature_disabled'} while WEB_APPLE_SIGNIN_ENABLED is off.
+export const APPLE_WEB_LOGIN_URL = "/api/v1/auth/apple/web";
 
 // router.post('/forgot-password', forgotPassword);
 // router.post('/verify-reset-code', verifyResetCode);
