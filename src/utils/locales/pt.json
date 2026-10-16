@@ -431,6 +431,14 @@
     },
     "wave": {
       "hi": "Oi!"
+    },
+    "callInApp": {
+      "voice": "Chamada de voz",
+      "video": "Chamada de vídeo",
+      "title": "As chamadas acontecem no app BananaTalk",
+      "body": "Abra o app para ligar para {{name}}. As chamadas recebidas tocam no seu celular.",
+      "openApp": "Abrir o app",
+      "notNow": "Agora não"
     }
   },
   "notifications": "Notificações",

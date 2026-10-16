@@ -431,6 +431,14 @@
       "emptyFiles": "No files shared yet",
       "unknownFile": "Unknown file",
       "unknownSize": "Unknown size"
+    },
+    "callInApp": {
+      "voice": "Voice call",
+      "video": "Video call",
+      "title": "Calls happen in the BananaTalk app",
+      "body": "Open the app to call {{name}}. Incoming calls ring on your phone.",
+      "openApp": "Open the app",
+      "notNow": "Not now"
     }
   },
   "newChat": {

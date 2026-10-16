@@ -166,20 +166,7 @@ Phase 4 Rooms — voice rooms, language rooms, City/Genders (plan `bananatalk_ap
 - [x] P4-ROOM-PUSH Push unit rooms (suite + build + livekit checks green, deployed dark, production smoke recorded) — deployed dark 2026-10-16 (suite 4318 pass; livekit in its own chunk). Open: bundle budget over (313.6 vs 307 KB app code); backend: voice-room speaker role/kick, raise-hand event names differ app vs backend, city search ignores location.city; German "Sprachräume" wording clash
 
 Phase 4 Calls (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
-- [ ] P4-CALL-0 CALLS worktree off `web/p4-rooms` after the LiveKit wrapper (P4-ROOM-1), real node_modules
-- [ ] P4-CALL-1 `callsSlice`: initiate / accept / decline / end / upgrade / current / history / missed count / missed seen
-- [ ] P4-CALL-2 Call error classifier, per-tab device id, mic/camera preflight
-- [ ] P4-CALL-3 Pure call state machine (incoming, outgoing, accepted elsewhere, terminal outcomes, resync after reconnect)
-- [ ] P4-CALL-4 Eager `IncomingCallHost` + call bridge in App.tsx; the call engine is a lazy chunk, inert while `webCallsEnabled` is off
-- [ ] P4-CALL-5 Call engine: socket events, other tabs (BroadcastChannel), resync on reconnect and after a reload
-- [ ] P4-CALL-6 Incoming call banner: ringtone with an autoplay fallback, title flash, accept, decline, decline with a message
-- [ ] P4-CALL-7 Placing a call: mic/camera preflight before anything rings, busy / unavailable / blocked / conversation-cap refusals in a dialog
-- [ ] P4-CALL-8 Call screen: ringback + cancel, LiveKit media, mute, camera on/off (voice → video upgrade), remote video, "tap to enable sound", reconnecting, hang up, declined / no answer / busy / dropped outcome line
-- [ ] P4-CALL-9 Entry points: voice/video buttons in the chat header and on profiles, "Call back" on the chat call card
-- [ ] P4-CALL-10 Call history page `/calls` and the missed-call badge
-- [ ] P4-CALL-11 Flag off: no call button, no `/calls`, no socket listener, no engine chunk
-- [ ] P4-CALL-I18N New calls strings in all 18 locales
-- [ ] P4-CALL-PUSH Push unit calls (suite + build green, deployed dark, production smoke recorded)
+- [x] Calls: website chats offer 'call in the app' (owner decision 2026-10-16: no browser calls)
 
 Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
 - [x] P4-APPLE-1 Apple JS loader, nonce and popup sign-in wrapper (script fetched only on click)

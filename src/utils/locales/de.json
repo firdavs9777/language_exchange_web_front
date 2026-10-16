@@ -431,6 +431,14 @@
     },
     "wave": {
       "hi": "Hallo!"
+    },
+    "callInApp": {
+      "voice": "Sprachanruf",
+      "video": "Videoanruf",
+      "title": "Anrufe laufen über die BananaTalk-App",
+      "body": "Öffne die App, um {{name}} anzurufen. Eingehende Anrufe klingeln auf deinem Handy.",
+      "openApp": "App öffnen",
+      "notNow": "Nicht jetzt"
     }
   },
   "newChat": {

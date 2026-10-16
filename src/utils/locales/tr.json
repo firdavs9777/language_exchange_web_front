@@ -431,6 +431,14 @@
     },
     "wave": {
       "hi": "Merhaba!"
+    },
+    "callInApp": {
+      "voice": "Sesli arama",
+      "video": "Görüntülü arama",
+      "title": "Aramalar BananaTalk uygulamasında yapılır",
+      "body": "{{name}} kişisini aramak için uygulamayı aç. Gelen aramalar telefonunda çalar.",
+      "openApp": "Uygulamayı aç",
+      "notNow": "Şimdi değil"
     }
   },
   "newChat": {

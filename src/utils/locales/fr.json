@@ -431,6 +431,14 @@
     },
     "wave": {
       "hi": "Salut !"
+    },
+    "callInApp": {
+      "voice": "Appel vocal",
+      "video": "Appel vidéo",
+      "title": "Les appels se passent dans l'application BananaTalk",
+      "body": "Ouvre l'application pour appeler {{name}}. Les appels entrants sonnent sur ton téléphone.",
+      "openApp": "Ouvrir l'application",
+      "notNow": "Pas maintenant"
     }
   },
   "notifications": "Notifications",

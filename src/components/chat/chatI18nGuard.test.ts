@@ -16,6 +16,7 @@ const GUARDED: { [file: string]: string[] } = {
   "components/CorrectionCard.tsx": ["Accept correction", "Accepting…", "Failed to accept correction"],
   "components/TranslationCard.tsx": ["Translating…", "Save phrase", "Saved to study queue", "Failed to translate message", "Failed to save phrase", "Close translation"],
   "components/CorrectionModal.tsx": ["Language Correction", "Original Message", "Your Correction", "Send Correction", "Please provide a correction"],
+  "components/CallInAppButtons.tsx": ["Voice call", "Video call", "Calls happen in the BananaTalk app", "Open the app", "Not now"],
   "MediaGallery.tsx": ["Shared Media", "Loading media...", "Error loading media", "Unknown file", "Unknown size"],
 };
 

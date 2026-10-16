@@ -431,6 +431,14 @@
     },
     "wave": {
       "hi": "Xin chào!"
+    },
+    "callInApp": {
+      "voice": "Gọi thoại",
+      "video": "Gọi video",
+      "title": "Cuộc gọi diễn ra trong ứng dụng BananaTalk",
+      "body": "Mở ứng dụng để gọi cho {{name}}. Cuộc gọi đến sẽ đổ chuông trên điện thoại của bạn.",
+      "openApp": "Mở ứng dụng",
+      "notNow": "Để sau"
     }
   },
   "newChat": {

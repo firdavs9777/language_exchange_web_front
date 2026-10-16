@@ -431,6 +431,14 @@
     },
     "wave": {
       "hi": "안녕하세요!"
+    },
+    "callInApp": {
+      "voice": "음성 통화",
+      "video": "영상 통화",
+      "title": "통화는 BananaTalk 앱에서 할 수 있어요",
+      "body": "앱을 열어 {{name}}님에게 전화하세요. 걸려 오는 전화는 휴대폰으로 울려요.",
+      "openApp": "앱 열기",
+      "notNow": "나중에"
     }
   },
   "newChat": {

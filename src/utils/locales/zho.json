@@ -431,6 +431,14 @@
     },
     "wave": {
       "hi": "你好！"
+    },
+    "callInApp": {
+      "voice": "语音通话",
+      "video": "视频通话",
+      "title": "通话需在 BananaTalk 应用中进行",
+      "body": "打开应用即可呼叫{{name}}。来电会在你的手机上响铃。",
+      "openApp": "打开应用",
+      "notNow": "以后再说"
     }
   },
   "newChat": {

@@ -431,6 +431,14 @@
     },
     "wave": {
       "hi": "Hi!"
+    },
+    "callInApp": {
+      "voice": "Voice call",
+      "video": "Video call",
+      "title": "Sa BananaTalk app ginagawa ang mga tawag",
+      "body": "Buksan ang app para tawagan si {{name}}. Sa phone mo tumutunog ang mga papasok na tawag.",
+      "openApp": "Buksan ang app",
+      "notNow": "Hindi muna"
     }
   },
   "newChat": {

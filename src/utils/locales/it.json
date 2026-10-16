@@ -431,6 +431,14 @@
     },
     "wave": {
       "hi": "Ciao!"
+    },
+    "callInApp": {
+      "voice": "Chiamata vocale",
+      "video": "Videochiamata",
+      "title": "Le chiamate si fanno nell'app BananaTalk",
+      "body": "Apri l'app per chiamare {{name}}. Le chiamate in arrivo squillano sul tuo telefono.",
+      "openApp": "Apri l'app",
+      "notNow": "Non ora"
     }
   },
   "notifications": "Notifiche",

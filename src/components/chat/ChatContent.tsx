@@ -75,6 +75,7 @@ import ChatInfoPanel from "./ChatInfoPanel";
 import LocationShareButton from "./components/LocationShareButton";
 import MessageSearchDialog from "./components/MessageSearchDialog";
 import BlockedChatBanner from "./components/BlockedChatBanner";
+import CallInAppButtons from "./components/CallInAppButtons";
 import { useChatBlockState } from "./lib/useChatBlockState";
 import { normalizeMessage, senderIdOf } from "./lib/normalizeMessage";
 import { useOpenStoryFromChat } from "./lib/useOpenStoryFromChat";
@@ -2168,8 +2169,13 @@ const ChatContent: React.FC<ChatContentProps> = ({
           </div>
 
           <div className="header-actions">
-            {/* Voice/Video call buttons removed — calling is mobile-only per
-                the documented web scope (Community/Chats/Moments/Profile). */}
+            {/* The website does not place calls (owner decision 2026-10-16):
+                these buttons point to the app. Web chats are 1:1 only. */}
+            <CallInAppButtons
+              partnerId={selectedUser || ""}
+              partnerName={userName}
+              blocked={blockState.blocked}
+            />
             <button
               className="action-btn"
               type="button"

@@ -431,6 +431,14 @@
     },
     "wave": {
       "hi": "Hai!"
+    },
+    "callInApp": {
+      "voice": "Panggilan suara",
+      "video": "Panggilan video",
+      "title": "Panggilan dilakukan di aplikasi BananaTalk",
+      "body": "Buka aplikasi untuk menelepon {{name}}. Panggilan masuk berdering di ponselmu.",
+      "openApp": "Buka aplikasi",
+      "notNow": "Nanti saja"
     }
   },
   "newChat": {
