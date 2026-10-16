@@ -73,6 +73,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import ChatInfoPanel from "./ChatInfoPanel";
 import LocationShareButton from "./components/LocationShareButton";
 import { normalizeMessage, senderIdOf } from "./lib/normalizeMessage";
+import { useOpenStoryFromChat } from "./lib/useOpenStoryFromChat";
 
 interface RootState {
   auth: {
@@ -319,6 +320,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
   // Shared socket
   const { socket, emit, connectionEpoch } = useSocket() as any;
+  const openStory = useOpenStoryFromChat();
 
   // Keep selectedUserRef in sync
   useEffect(() => {
@@ -2224,6 +2226,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
                   onCorrect={setCorrectingMessage}
                   onCorrectionAccepted={handleLocalCorrectionAccepted}
                   onRetry={handleRetry}
+                  onOpenStory={openStory}
                 />
               );
             })}

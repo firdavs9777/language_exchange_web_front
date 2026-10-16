@@ -294,6 +294,13 @@
     },
     "wave": {
       "hi": "Hi!"
+    },
+    "story": {
+      "shared": "Shared a story",
+      "youShared": "You shared a story",
+      "replied": "Replied to your story",
+      "youReplied": "You replied to their story",
+      "unavailable": "This story is no longer available"
     }
   },
   "newChat": {

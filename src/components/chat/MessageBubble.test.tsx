@@ -411,3 +411,58 @@ describe("waves and stickers are sized by what they say (chat#8)", () => {
     expect(document.querySelector(".sticker-message")).toBeNull();
   });
 });
+
+describe("story shares, replies and reactions (chat#9)", () => {
+  it("draws a story card for a story_share and hides the server's English text", () => {
+    const onOpenStory = jest.fn();
+    renderBubble({
+      message: message({
+        messageType: "story_share",
+        message: "Shared a story",
+        storyReference: { storyId: "s1", thumbnail: "https://cdn.example/s1.jpg" },
+        sender: { _id: "u2", name: "Ada" },
+      } as any),
+      isSent: false,
+      onOpenStory,
+    });
+    const card = screen.getByTestId("story-ref");
+    expect(card).toHaveTextContent("Shared a story");
+    expect(document.querySelectorAll(".message-text")).toHaveLength(0);
+    expect((card.querySelector("img") as HTMLImageElement).src).toBe("https://cdn.example/s1.jpg");
+    fireEvent.click(card);
+    expect(onOpenStory).toHaveBeenCalledWith("s1");
+  });
+
+  it("puts the story above a reply's text", () => {
+    renderBubble({
+      message: message({
+        message: "Love this!",
+        storyReference: { storyId: "s1", thumbnail: null },
+        sender: { _id: "u2", name: "Ada" },
+      } as any),
+      isSent: false,
+    });
+    expect(screen.getByTestId("story-ref")).toHaveTextContent("Replied to your story");
+    expect(document.querySelector(".message-text")).toHaveTextContent("Love this!");
+  });
+
+  it("keeps the story above an emoji reaction drawn as a sticker", () => {
+    renderBubble({
+      message: message({ message: "\u{1F525}", storyReference: { storyId: "s1", thumbnail: null } } as any),
+    });
+    expect(screen.getByTestId("story-ref")).toHaveTextContent("You replied to their story");
+    expect(document.querySelector(".sticker-message")).not.toBeNull();
+  });
+
+  it("draws a placeholder when a text story has no thumbnail", () => {
+    renderBubble({
+      message: message({ message: "hi", storyReference: { storyId: "s1", thumbnail: null } } as any),
+    });
+    expect(screen.getByTestId("story-ref").querySelector("img")).toBeNull();
+  });
+
+  it("does not offer to open a story_share that lost its reference", () => {
+    renderBubble({ message: message({ messageType: "story_share", message: "Shared a story" } as any), onOpenStory: jest.fn() });
+    expect(screen.getByTestId("story-ref")).toBeDisabled();
+  });
+});

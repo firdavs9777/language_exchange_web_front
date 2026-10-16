@@ -18,6 +18,7 @@ import TranslationCard from "./components/TranslationCard";
 import { firstLink } from "./utils/linkDetector";
 import CallMessageCard from "./components/CallMessageCard";
 import LocationMessageCard, { MessageLocation } from "./components/LocationMessageCard";
+import StoryReferenceCard from "./components/StoryReferenceCard";
 import { CallData } from "./lib/callLabel";
 import { isEmojiOnly, isWaveText } from "./lib/messageKinds";
 
@@ -88,6 +89,8 @@ export interface Message {
   isEdited?: boolean;
   editedAt?: string;
   pinned?: boolean;
+  /** Set on story replies, reactions and shares (backend controllers/stories.js). */
+  storyReference?: { storyId?: string | null; thumbnail?: string | null } | null;
   /** Deleted for everyone (the server rewrites `message` to "This message was deleted"). */
   isDeleted?: boolean;
   deletedForEveryone?: boolean;
@@ -174,6 +177,8 @@ export interface MessageBubbleProps {
   onCorrect: (message: Message) => void;
   onCorrectionAccepted: (messageId: string, correctionId: string) => void;
   onRetry: (message: Message) => void;
+  /** Opens the story a share/reply/reaction points at. */
+  onOpenStory?: (storyId: string) => void;
 }
 
 const MessageBubbleView: React.FC<MessageBubbleProps> = ({
@@ -199,6 +204,7 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
   onCorrect,
   onCorrectionAccepted,
   onRetry,
+  onOpenStory,
 }) => {
   const { t } = useTranslation();
 
@@ -249,7 +255,17 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
   const isCall = msg.messageType === "call" || msg.media?.type === "call";
   const isLocation = msg.media?.type === "location";
   const hasMedia = !!msg.media?.type && !isVoice && !isCall && !isLocation;
-  const isPlainText = !isWave && !isSticker && !isGif && !isVoice && !hasMedia && !isCall && !isLocation;
+  const isStoryShare = msg.messageType === "story_share";
+  const isPlainText = !isWave && !isSticker && !isGif && !isVoice && !hasMedia && !isCall && !isLocation && !isStoryShare;
+  const storyId = (msg.storyReference && msg.storyReference.storyId) || "";
+  const showStoryRef = isStoryShare || !!storyId;
+  const storyLabel = isStoryShare
+    ? isSent
+      ? t("chatPage.story.youShared") || "You shared a story"
+      : t("chatPage.story.shared") || "Shared a story"
+    : isSent
+    ? t("chatPage.story.youReplied") || "You replied to their story"
+    : t("chatPage.story.replied") || "Replied to your story";
   const link = isPlainText && msg.message ? firstLink(msg.message) : null;
 
   const renderVoiceMessage = () => {
@@ -428,6 +444,14 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
         <div
           className={`message-bubble${isVoice ? " voice-bubble" : ""}${hasMedia ? " media-bubble" : ""}${isSticker ? " sticker-bubble" : ""}${isWave ? " sticker-bubble wave-bubble" : ""}${isCall ? " call-bubble" : ""}${bubblePositionClass(position)}`}
         >
+          {showStoryRef && (
+            <StoryReferenceCard
+              storyId={String(storyId)}
+              thumbnail={msg.storyReference && msg.storyReference.thumbnail}
+              label={storyLabel}
+              onOpen={onOpenStory}
+            />
+          )}
           {isCall ? (
             <CallMessageCard
               callData={msg.media && msg.media.callData}
@@ -461,7 +485,7 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
                 </div>
               )}
 
-              {msg.message && !isVoice && (
+              {msg.message && !isVoice && !isStoryShare && (
                 <p className="message-text">{msg.message}</p>
               )}
 

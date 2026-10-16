@@ -47,6 +47,7 @@ const STRICT_FILES = [
   "components/CorrectionCard.tsx",
   "components/LocationMessageCard.tsx",
   "components/LocationShareButton.tsx",
+  "components/StoryReferenceCard.tsx",
   "components/CorrectionModal.tsx",
   "components/TranslationCard.tsx",
 ];

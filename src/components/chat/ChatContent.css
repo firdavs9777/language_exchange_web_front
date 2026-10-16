@@ -1668,3 +1668,52 @@
   font-weight: 700;
   color: var(--chat-accent);
 }
+
+/* Story reference (chat#9) — above a share, reply or reaction. */
+.story-ref {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-block-end: 6px;
+  padding: 6px;
+  background: var(--chat-card-in);
+  border: 1px solid var(--chat-line);
+  border-radius: 10px;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.modern-message.sent .story-ref {
+  background: var(--chat-card-out);
+  border-color: var(--chat-card-out);
+}
+
+.story-ref:disabled {
+  cursor: default;
+}
+
+.story-ref-thumb {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--chat-surface);
+  color: var(--chat-muted);
+}
+
+.story-ref-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.story-ref-label {
+  font-size: 12px;
+  color: var(--chat-muted);
+}
