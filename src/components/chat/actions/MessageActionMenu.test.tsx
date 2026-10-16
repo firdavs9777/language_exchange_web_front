@@ -2,6 +2,10 @@ import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import MessageActionMenu, { MessageActionMenuProps } from './MessageActionMenu';
 
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
+}));
+
 const noop = () => {};
 
 const baseProps: Omit<MessageActionMenuProps, 'message' | 'meId'> = {

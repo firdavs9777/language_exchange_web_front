@@ -91,16 +91,17 @@ const formatTime = (date: Date): string => {
   return date.toLocaleDateString([], { month: "short", day: "numeric" });
 };
 
-const formatLastSeen = (date: Date): string => {
+const formatLastSeen = (date: Date, t: (key: string, options?: any) => string): string => {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffMin = Math.floor(diffMs / 60000);
-  if (diffMin < 1) return "just now";
-  if (diffMin < 60) return `${diffMin}m ago`;
+  if (diffMin < 1) return t("chatPage.justNow") || "just now";
+  if (diffMin < 60) return t("chatPage.minutesAgo", { count: diffMin }) || `${diffMin}m ago`;
   const diffHours = Math.floor(diffMin / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffHours < 24) return t("chatPage.hoursAgo", { count: diffHours }) || `${diffHours}h ago`;
   return date.toLocaleDateString([], { month: "short", day: "numeric" });
 };
+
 
 // ---------- Component ----------
 
@@ -862,15 +863,15 @@ const UsersList: React.FC<UsersListProps> = ({
                     <div className="users-list-bottom-row">
                       <span className="users-list-preview">
                         {typing ? (
-                          <em className="users-list-typing-text">typing...</em>
+                          <em className="users-list-typing-text">{t("chatPage.list.typing") || "typing..."}</em>
                         ) : (
                           user.lastMessage || (
                             <span className="users-list-no-msg">
                               {!online && lastSeenDate
-                                ? `Last seen ${formatLastSeen(lastSeenDate)}`
+                                ? `${t("chatPage.lastSeen") || "Last seen"} ${formatLastSeen(lastSeenDate, t as any)}`
                                 : status === "online"
-                                ? "Online"
-                                : "No messages yet"}
+                                ? t("chatPage.online") || "Online"
+                                : t("chatPage.list.noMessages") || "No messages yet"}
                             </span>
                           )
                         )}

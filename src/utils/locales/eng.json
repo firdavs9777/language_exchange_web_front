@@ -42,7 +42,9 @@
       "emptySubtitle": "Start a conversation to see it here",
       "loading": "Loading chats...",
       "loadError": "Couldn't load your conversations",
-      "tryAgain": "Try again"
+      "tryAgain": "Try again",
+      "typing": "typing...",
+      "noMessages": "No messages yet"
     },
     "actions": {
       "menuLabel": "Conversation actions",
@@ -352,6 +354,83 @@
       "byMe": "You blocked this person. Unblock them to send messages.",
       "generic": "You can't send messages in this chat.",
       "manage": "Manage"
+    },
+    "menu": {
+      "close": "Close",
+      "reply": "Reply",
+      "copy": "Copy",
+      "forward": "Forward",
+      "pin": "Pin",
+      "bookmark": "Bookmark",
+      "listen": "Listen",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "pinnedBar": {
+      "count": "{{count}} pinned",
+      "unpin": "Unpin message"
+    },
+    "replyBar": {
+      "replyingTo": "Replying to {{name}}",
+      "cancel": "Cancel reply"
+    },
+    "forward": {
+      "title": "Forward to",
+      "close": "Close",
+      "search": "Search",
+      "loading": "Loading conversations…",
+      "error": "Couldn't load conversations.",
+      "empty": "No conversations found.",
+      "unknownUser": "Unknown",
+      "submit": "Forward",
+      "submitCount": "Forward ({{count}})"
+    },
+    "correction": {
+      "you": "You",
+      "corrected": "{{name}} corrected",
+      "accepting": "Accepting…",
+      "accept": "Accept correction",
+      "accepted": "Correction accepted — added to your learning record",
+      "acceptFailed": "Failed to accept correction"
+    },
+    "translation": {
+      "label": "Translation · {{lang}}",
+      "close": "Close translation",
+      "translating": "Translating…",
+      "failed": "Failed to translate message",
+      "saved": "Saved to study queue",
+      "saving": "Saving…",
+      "save": "Save phrase",
+      "saveFailed": "Failed to save phrase"
+    },
+    "correctionModal": {
+      "title": "Language Correction",
+      "close": "Close",
+      "original": "Original Message",
+      "yours": "Your Correction",
+      "yoursPlaceholder": "Type the corrected version...",
+      "explanation": "Explanation",
+      "optional": "(optional)",
+      "explanationPlaceholder": "Explain why this correction is helpful...",
+      "hint": "e.g., \"Use 'went' instead of 'goed' - irregular past tense\"",
+      "empty": "Please provide a correction",
+      "unchanged": "The correction should be different from the original",
+      "cancel": "Cancel",
+      "submit": "Send Correction"
+    },
+    "mediaGallery": {
+      "title": "Shared Media",
+      "back": "Back",
+      "loading": "Loading media...",
+      "error": "Error loading media",
+      "photos": "Photos",
+      "videos": "Videos",
+      "files": "Files",
+      "emptyPhotos": "No photos shared yet",
+      "emptyVideos": "No videos shared yet",
+      "emptyFiles": "No files shared yet",
+      "unknownFile": "Unknown file",
+      "unknownSize": "Unknown size"
     }
   },
   "newChat": {
