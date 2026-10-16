@@ -766,6 +766,12 @@
     },
     "block": {
       "done": "{{name}} is blocked."
+    },
+    "saved": {
+      "loadMore": "Load more",
+      "gridView": "Grid view",
+      "listView": "List view",
+      "momentCount": "moments saved"
     }
   },
   "createMoment": {
