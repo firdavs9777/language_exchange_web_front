@@ -21,6 +21,7 @@ import { languageFlag, stripVariant } from "../../utils/languages";
 import { publicIntents } from "../profile/intents";
 import { shareContent } from "../linking/shareContent";
 import { openInApp } from "../linking/openInAppAction";
+import brandLogo from "../../assets/logo.png";
 
 /** Enough topics to say something about a person, few enough to stay a card. */
 export const CARD_TOPICS = 5;
@@ -257,7 +258,7 @@ const LanguageCard: React.FC = () => {
           )}
 
           <p className="mt-6 border-t border-line pt-3 text-center text-[11px] font-semibold uppercase tracking-wide text-ink-400 dark:border-line-dark">
-            🍌 {t("card.tagline") || "Language exchange on BananaTalk"}
+            <img src={brandLogo} alt="" aria-hidden style={{ width: 18, height: 18, borderRadius: 4, verticalAlign: "-3px", marginInlineEnd: 6 }} />{t("card.tagline") || "Language exchange on BananaTalk"}
           </p>
         </div>
       </article>

@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { isSuppressed, recordDismissal } from "./growthGate";
 import { openSurface, closeSurface, isSurfaceOpen } from "./surfaceRegistry";
 import StoreLink from "./StoreLink";
+import brandLogo from "../../assets/logo.png";
 
 const DWELL_MS = 20000;
 const SCROLL_TRIGGER_PX = 600;
@@ -82,7 +83,7 @@ const AppDownloadPopup: React.FC = () => {
           <X className="h-4 w-4" />
         </button>
 
-        <p className="text-3xl" aria-hidden>🍌</p>
+        <img src={brandLogo} alt="" aria-hidden className="mx-auto h-14 w-14 rounded-2xl" />
         <h2
           id="download-popup-title"
           className="mt-2 text-lg font-extrabold text-gray-900 dark:text-gray-50"

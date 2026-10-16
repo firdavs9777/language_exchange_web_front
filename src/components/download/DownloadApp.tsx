@@ -7,6 +7,7 @@ import { trackEvent } from "../../analytics/track";
 import { gaEvent } from "../../analytics/ga";
 import SurfaceCard from "../../design/SurfaceCard";
 import { SITE_ORIGIN } from "../../seo/pages";
+import brandLogo from "../../assets/logo.png";
 
 // What the QR carries. `src=qr` separates a camera scan from a click in the
 // analytics; `go=1` is what makes the phone hop straight to its store, since
@@ -105,9 +106,7 @@ const DownloadApp: React.FC = () => {
   return (
     <div className="bg-surface px-[1rem] py-12 dark:bg-cardbg-dark sm:py-16">
       <div className="mx-auto max-w-3xl text-center">
-        <span aria-hidden className="text-5xl">
-          🍌
-        </span>
+        <img src={brandLogo} alt="" aria-hidden className="mx-auto h-16 w-16 rounded-2xl" />
         <h1 className="mt-[1rem] text-3xl font-extrabold text-gray-900 dark:text-gray-50 sm:text-4xl">
           {t("download.title") || "Download BananaTalk"}
         </h1>

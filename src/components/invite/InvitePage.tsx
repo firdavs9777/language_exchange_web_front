@@ -5,6 +5,7 @@ import PageMeta from "../../seo/PageMeta";
 import StoreLink, { StoreId } from "../growth/StoreLink";
 import SurfaceCard from "../../design/SurfaceCard";
 import { detectPlatform } from "../../utils/platform";
+import brandLogo from "../../assets/logo.png";
 
 // /i/:code -- where an invite link lands for someone who does NOT have the app.
 // (With the app installed, iOS/Android hand the URL to the app itself, which
@@ -79,9 +80,7 @@ const InvitePage: React.FC = () => {
     <div className="bg-surface px-[1rem] py-12 dark:bg-cardbg-dark sm:py-16">
       <PageMeta noindex title={`${title} | BananaTalk`} />
       <div className="mx-auto max-w-xl text-center">
-        <span aria-hidden className="text-5xl">
-          🍌
-        </span>
+        <img src={brandLogo} alt="" aria-hidden className="mx-auto h-16 w-16 rounded-2xl" />
         <h1 className="mt-[1rem] text-3xl font-extrabold text-gray-900 dark:text-gray-50 sm:text-4xl">
           {title}
         </h1>

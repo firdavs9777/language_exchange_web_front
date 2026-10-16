@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { BASE_URL } from "../../constants";
 import "./Login.scss";
 import AppleSignInButton from "./apple/AppleSignInButton";
+import brandLogo from "../../assets/logo.png";
 
 const Login = () => {
   const { t } = useTranslation();
@@ -71,7 +72,7 @@ const Login = () => {
         {/* Left Side - Branding */}
         <div className="auth-branding">
           <div className="branding-content">
-            <div className="brand-logo">🍌</div>
+            <img className="brand-logo" src={brandLogo} alt="BananaTalk" />
             <h1>Welcome Back!</h1>
             <p>Continue your language learning journey with BananaTalk</p>
             <div className="branding-features">

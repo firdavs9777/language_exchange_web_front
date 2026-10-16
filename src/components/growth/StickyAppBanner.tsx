@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import { isSuppressed, recordDismissal } from "./growthGate";
 import StoreLink, { StoreId } from "./StoreLink";
 import { useSurfaceOpen } from "./surfaceRegistry";
+import brandLogo from "../../assets/logo.png";
 
 const StickyAppBanner: React.FC = () => {
   // Hidden until mounted, for the same reason as PromoCarousel.
@@ -50,7 +51,7 @@ const StickyAppBanner: React.FC = () => {
       data-testid="sticky-app-banner"
       className="sticky bottom-0 z-40 flex items-center gap-3 border-t border-line bg-surface px-4 py-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] shadow-float dark:border-line-dark dark:bg-cardbg-dark"
     >
-      <span aria-hidden className="text-2xl">🍌</span>
+      <img src={brandLogo} alt="" aria-hidden className="h-9 w-9 rounded-lg" />
       {/* Wrapping, not truncating: at 360px `truncate` turned the title into
           "BanaTalk is bet...". The Install and dismiss controls stay shrink-0
           so the copy is the only thing that reflows. */}

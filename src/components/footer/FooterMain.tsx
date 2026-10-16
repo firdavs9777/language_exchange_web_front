@@ -17,6 +17,7 @@ import StoreLink from "../growth/StoreLink";
 import { openConsentManager } from "../../analytics/consent";
 import { GA_MEASUREMENT_ID } from "../../analytics/ga";
 import "./FooterMain.scss";
+import brandLogo from "../../assets/logo.png";
 
 // lucide 0.511 has no X glyph -- its `Twitter` export is still the pre-2023
 // bird, and the markup this footer replaced used `bi-twitter-x`. Rather than
@@ -47,7 +48,7 @@ const FooterMain: React.FC = () => {
           {/* Brand */}
           <div className="footer-brand">
             <Link to="/" className="footer-logo">
-              <span className="footer-logo-icon">B</span>
+              <img className="footer-logo-icon" src={brandLogo} alt="" aria-hidden />
               <span className="footer-logo-text">BananaTalk</span>
             </Link>
             <p className="footer-tagline">
