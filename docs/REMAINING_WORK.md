@@ -140,7 +140,7 @@ Phase 4 Gatherings/clubs (plan `bananatalk_app/docs/superpowers/plans/2026-10-16
 - [x] P4-GATH-2 Shared helpers: local start time, quorum line, host-decision window, error text
 - [x] P4-GATH-3 Browse page: Gatherings and Clubs tabs, the app's filters, load more
 - [x] P4-GATH-4 Gathering page: details, RSVP / request / leave, report or block the host
-- [ ] P4-GATH-5 Host a gathering: create and edit form with the backend's limits
+- [x] P4-GATH-5 Host a gathering: create and edit form with the backend's limits
 - [ ] P4-GATH-6 Host decisions: join requests, run it or call it off, cancel, end
 - [ ] P4-GATH-7 Club page: members and roles, join/leave, upcoming gatherings, manage members
 - [ ] P4-GATH-8 Create, edit and delete a club

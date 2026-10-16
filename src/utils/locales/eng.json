@@ -3125,6 +3125,41 @@
       "reportFailed": "Couldn't send the report. Try again.",
       "reportGathering": "Report gathering",
       "reported": "Thanks — our moderators will review it."
+    },
+    "form": {
+      "anyLevel": "Any level",
+      "cancel": "Cancel",
+      "capacity": "Seats",
+      "create": "Post gathering",
+      "createTitle": "Host a gathering",
+      "description": "What will you do? (optional)",
+      "duration_one": "Lasts {{count}} minute · in your time zone",
+      "duration_other": "Lasts {{count}} minutes · in your time zone",
+      "editTitle": "Edit gathering",
+      "errors": {
+        "capacityRange": "Seats must be between 2 and 20.",
+        "descriptionTooLong": "Keep the description under 2000 characters.",
+        "languageRequired": "Pick the language you'll practise.",
+        "quorumRange": "The gathering confirms at 2 or more, and not more than the seats.",
+        "startInPast": "Pick a start time in the future.",
+        "startRequired": "Pick a day and time.",
+        "startTooFar": "Pick a time within the next 90 days.",
+        "titleRequired": "Give your gathering a title.",
+        "titleTooLong": "Keep the title under 120 characters."
+      },
+      "joinApproval": "I approve each person",
+      "joinMode": "Who can join",
+      "joinOpen": "Anyone",
+      "language": "Language",
+      "level": "Level",
+      "noTopic": "No topic",
+      "notHost": "Only the host can edit this gathering.",
+      "pickLanguage": "Pick a language",
+      "quorum": "Confirms at",
+      "save": "Save",
+      "startsAt": "Starts",
+      "title": "Title",
+      "topic": "Topic"
     }
   },
   "clubs": {
