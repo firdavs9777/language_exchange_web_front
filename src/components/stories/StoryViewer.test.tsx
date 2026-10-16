@@ -359,6 +359,19 @@ describe("keyboard", () => {
 });
 
 describe("structured stickers", () => {
+  it("puts a white plate behind dark text on a solid overlay (black on black was unreadable)", () => {
+    renderViewer([
+      story({
+        overlays: [
+          { type: "text", content: "ink", x: 0.5, y: 0.5, scale: 1, color: "#000000", fontStyle: "sans-serif", bgMode: "solid" },
+        ],
+      }),
+    ]);
+    const classes = screen.getByTestId("story-overlay-0").className.split(" ");
+    expect(classes).toContain("bg-white");
+    expect(classes).not.toContain("bg-black");
+  });
+
   it("paints overlays at their normalized positions with their own styling", () => {
     renderViewer([
       story({

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  OVERLAY_BG_CLASS,
+  overlayPlateClass,
   OVERLAY_FONT_CLASS,
   mentionPositionStyle,
   overlayPositionStyle,
@@ -178,7 +178,7 @@ const StoryCanvas: React.FC<StoryCanvasProps> = ({
               "max-w-[80%] whitespace-pre-wrap text-center leading-tight",
               overlayScaleClass(overlay.scale),
               (OVERLAY_FONT_CLASS as any)[overlay.fontStyle] || OVERLAY_FONT_CLASS["sans-serif"],
-              (OVERLAY_BG_CLASS as any)[overlay.bgMode] || "",
+              overlayPlateClass(overlay.bgMode, overlay.color),
             ].join(" ")}
           >
             {overlay.content}

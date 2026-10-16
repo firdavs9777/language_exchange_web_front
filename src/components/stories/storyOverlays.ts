@@ -89,12 +89,46 @@ export function storyBodyFontClass(fontStyle?: string): string {
 }
 
 /** `bgMode` is the plate BEHIND the glyphs; the glyph colour is the overlay's
- * own `color` in every mode. */
+ * own `color` in every mode. `solid` has two plates because the app picks one
+ * by the glyph's brightness -- see `overlayPlateClass`. */
 export const OVERLAY_BG_CLASS: Record<OverlayBgMode, string> = {
   none: "drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]",
-  semi: "rounded-lg bg-black/40 px-2 py-0.5",
+  semi: "rounded-lg bg-black/50 px-2 py-0.5",
   solid: "rounded-lg bg-black px-2 py-0.5",
 };
+const SOLID_LIGHT_PLATE = "rounded-lg bg-white px-2 py-0.5";
+
+/** sRGB channel (0-255) to linear light, as WCAG 2 and Flutter define it. */
+const linearChannel = (value: number): number => {
+  const c = value / 255;
+  return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+};
+
+/**
+ * Relative luminance of `#RRGGBB`, 0 (black) to 1 (white): the formula
+ * behind Flutter's `Color.computeLuminance()`, which the app viewer uses to
+ * pick a solid plate. An unreadable colour counts as white, the server's
+ * default overlay colour.
+ */
+export function overlayLuminance(hex: string): number {
+  const match = /^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/.exec(String(hex || ""));
+  if (!match) return 1;
+  const [r, g, b] = [match[1], match[2], match[3]].map((h) => linearChannel(parseInt(h, 16)));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/**
+ * The plate class for one overlay, mirroring `viewer_overlay_layer.dart`:
+ * semi is black at 0.5; solid is black behind light glyphs and white behind
+ * dark ones (`computeLuminance() > 0.5 ? black : white`), so black text on a
+ * solid plate is readable instead of black on black.
+ */
+export function overlayPlateClass(bgMode: string, color: string): string {
+  if (bgMode === "solid") {
+    return overlayLuminance(color) > 0.5 ? OVERLAY_BG_CLASS.solid : SOLID_LIGHT_PLATE;
+  }
+  return (OVERLAY_BG_CLASS as any)[bgMode] || OVERLAY_BG_CLASS.none;
+}
 
 /**
  * Scale is continuous on the wire (0.5–3.0, the backend clamps it) but the

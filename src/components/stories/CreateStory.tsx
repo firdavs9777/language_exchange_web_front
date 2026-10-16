@@ -35,7 +35,7 @@ import {
   OverlayBgMode,
   OverlayDraft,
   OverlayFontStyle,
-  OVERLAY_BG_CLASS,
+  overlayPlateClass,
   OVERLAY_BG_MODES,
   OVERLAY_COLORS,
   OVERLAY_FONT_CLASS,
@@ -758,7 +758,7 @@ const CreateStory: React.FC = () => {
                     "absolute -translate-x-1/2 -translate-y-1/2 cursor-move select-none whitespace-pre-wrap text-center leading-tight",
                     overlayScaleClass(overlay.scale),
                     OVERLAY_FONT_CLASS[overlay.fontStyle],
-                    OVERLAY_BG_CLASS[overlay.bgMode],
+                    overlayPlateClass(overlay.bgMode, overlay.color),
                   ].join(" ")}
                 >
                   {overlay.content || (t("stories.tap_to_type") || "Tap to type")}
