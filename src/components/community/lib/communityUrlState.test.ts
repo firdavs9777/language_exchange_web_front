@@ -22,6 +22,7 @@ describe('communityUrlState', () => {
         'mutual',
         'online',
         'new',
+        'pair',
         'sort',
         'q',
         'tab',
@@ -259,6 +260,16 @@ describe('communityUrlState', () => {
     });
   });
 
+
+  describe('the reciprocal filter', () => {
+    it('round-trips as pair=1', () => {
+      const encoded = encodeCommunityState({ filters: { reciprocal: true }, search: '', tab: 'all' });
+      expect(encoded.get('pair')).toBe('1');
+      expect(decodeCommunityState(params('pair=1')).filters).toEqual(
+        expect.objectContaining({ reciprocal: true })
+      );
+    });
+  });
   describe('the serious tab', () => {
     it('round-trips ?tab=serious', () => {
       expect(decodeCommunityState(params('tab=serious')).tab).toBe('serious');

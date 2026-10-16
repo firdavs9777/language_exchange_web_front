@@ -519,6 +519,16 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
               hint={lockedTab === "new" ? lockHint : undefined}
               hintTestId="filter-sheet-new-locked"
             />
+            <ToggleSwitch
+              checked={!!value.reciprocal}
+              onChange={(checked) => set("reciprocal", checked || undefined)}
+              label={t("communityMain.filterSheet.reciprocal") || "Perfect partners only"}
+              hint={
+                t("communityMain.filterSheet.reciprocalHint") ||
+                "They speak what you learn and learn what you speak"
+              }
+              hintTestId="filter-sheet-reciprocal-hint"
+            />
           </section>
         </div>
 

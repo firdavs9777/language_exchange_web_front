@@ -11,6 +11,7 @@ import {
   useGetTopicsQuery,
 } from "../../store/slices/communitySlice";
 import { useGetProfileVisitorsQuery, useGetUserProfileQuery } from "../../store/slices/usersSlice";
+import { useGetAppConfigQuery } from "../../store/slices/appConfigSlice";
 import { RootState } from "../../store";
 import { useDebounce } from "./utils";
 
@@ -111,6 +112,7 @@ const countActiveFilters = (f: CommunityFilters): number => {
   if (f.topicsAtLeast) n += 1;
   if (f.onlineOnly) n += 1;
   if (f.newUsersOnly) n += 1;
+  if (f.reciprocal) n += 1;
   return n;
 };
 
@@ -441,15 +443,23 @@ const ModernCommunity: React.FC = () => {
 
   // Single source of truth for the server query — ALL filters map to real
   // params here (inverted-language semantics handled inside the mapper).
+  // Smart ranking is the DEFAULT only, and only while the server offers it
+  // (the app's _sortFor): a sort the member chose always wins. The list waits
+  // for the config so the first request is already the right one -- not a
+  // VIP-first list that reshuffles a moment later.
+  const { data: appConfig, isLoading: appConfigLoading } = useGetAppConfigQuery();
+  const smartSort = Boolean(appConfig && (appConfig as any).smartSortEnabled);
+  const listSort: CommunityFilters["sort"] = sort || (smartSort ? "smart" : undefined);
+
   const queryArg = useMemo(
     () =>
       buildCommunityQuery(
-        { ...effectiveFilters, search: debouncedSearch || undefined, sort },
+        { ...effectiveFilters, search: debouncedSearch || undefined, sort: listSort },
         me,
         page,
         PAGE_LIMIT
       ),
-    [effectiveFilters, debouncedSearch, sort, me, page]
+    [effectiveFilters, debouncedSearch, listSort, me, page]
   );
 
   const {
@@ -458,7 +468,7 @@ const ModernCommunity: React.FC = () => {
     isFetching,
     error: errorInfo,
     refetch,
-  } = useGetCommunityMembersQuery(queryArg, { skip: isForYou || isToday });
+  } = useGetCommunityMembersQuery(queryArg, { skip: isForYou || isToday || appConfigLoading });
 
   // "For you" asks a different server a different question: no filters, no
   // paging, one scored set. It is skipped entirely off the tab so the tab
@@ -938,7 +948,7 @@ const ModernCommunity: React.FC = () => {
             onWave={handleWaveMember}
             t={t}
           />
-        ) : isLoading ? (
+        ) : isLoading || appConfigLoading ? (
           // Cell-shaped placeholders rather than a centred spinner: the page
           // reaches its final height before the first member arrives, so
           // nothing under the grid jumps when it does.

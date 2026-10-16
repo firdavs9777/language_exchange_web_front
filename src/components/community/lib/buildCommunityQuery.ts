@@ -36,7 +36,13 @@ export interface CommunityFilters {
   activeWithin?: '7d';
   topicsAtLeast?: number;
   search?: string;
-  sort?: 'recently_active';
+  /** `smart` is only ever the page's default while appConfig.smartSortEnabled is on. */
+  sort?: 'recently_active' | 'smart';
+  /**
+   * Strict pairs: they speak what I learn AND learn what I speak
+   * (controllers/users.js `reciprocal=true`).
+   */
+  reciprocal?: boolean;
 }
 
 export interface Me {
@@ -109,6 +115,7 @@ export function buildCommunityQuery(
   if (filters.newUsersOnly) query.joinedWithin = '7d';
   // The app's PartnerSegment.serious (controllers/users.js reads 7d/30d).
   if (filters.activeWithin) query.activeWithin = filters.activeWithin;
+  if (filters.reciprocal) query.reciprocal = 'true';
 
   query.page = String(page);
   query.limit = String(limit);

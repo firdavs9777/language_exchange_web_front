@@ -55,11 +55,13 @@ const member = (n: number) => ({
 
 /** What the recommendation feed answers with, reset per test. */
 let recommendations: any[] = [];
+let appConfig: any = {};
 const requestedUrls: string[] = [];
 const originalFetch = global.fetch;
 
 beforeEach(() => {
   requestedUrls.length = 0;
+  appConfig = {};
   recommendations = [
     {
       ...member(1),
@@ -73,7 +75,9 @@ beforeEach(() => {
     const url = typeof input === "string" ? input : input?.url || "";
     requestedUrls.push(url);
     let body: any = { success: true, data: [] };
-    if (url.indexOf("/matching/recommendations") >= 0) {
+    if (url.indexOf("/app-config") >= 0) {
+      body = { success: true, data: appConfig };
+    } else if (url.indexOf("/matching/recommendations") >= 0) {
       body = { success: true, count: recommendations.length, data: recommendations, cached: false };
     } else if (url.indexOf("/count") >= 0) {
       body = { success: true, data: { count: 7 } };
@@ -379,5 +383,34 @@ describe("For You reason chips", () => {
     recommendations = [{ ...member(1), matchReasons: ["Native Korean speaker"] }];
     renderList(["/communities?tab=foryou"]);
     expect(await screen.findByText("Native Korean speaker")).toBeInTheDocument();
+  });
+});
+
+describe("smart sort (community#9)", () => {
+  it("asks for sort=smart by default when the server offers it, from the first request", async () => {
+    appConfig = { smartSortEnabled: true };
+    renderList();
+    await waitFor(() => expect(memberRequests().length).toBeGreaterThan(0));
+    expect(memberRequests().every((u) => u.indexOf("sort=smart") >= 0)).toBe(true);
+  });
+
+  it("never overrides the member's own sort", async () => {
+    appConfig = { smartSortEnabled: true };
+    renderList(["/communities?tab=all&sort=recently_active"]);
+    await waitFor(() => expect(memberRequests().length).toBeGreaterThan(0));
+    expect(memberRequests().some((u) => u.indexOf("sort=smart") >= 0)).toBe(false);
+    expect(memberRequests()[memberRequests().length - 1]).toContain("sort=recently_active");
+  });
+
+  it("sends no sort while the flag is off", async () => {
+    renderList();
+    await waitFor(() => expect(memberRequests().length).toBeGreaterThan(0));
+    expect(memberRequests().some((u) => u.indexOf("sort=") >= 0)).toBe(false);
+  });
+
+  it("sends reciprocal=true from a pair=1 link", async () => {
+    renderList(["/communities?tab=all&pair=1"]);
+    await waitFor(() => expect(memberRequests().length).toBeGreaterThan(0));
+    expect(memberRequests()[memberRequests().length - 1]).toContain("reciprocal=true");
   });
 });

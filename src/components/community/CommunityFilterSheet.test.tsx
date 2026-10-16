@@ -113,6 +113,12 @@ describe("the filter sheet's controls", () => {
     expect(requestedUrls).toEqual([]);
   });
 
+
+  it("turns on perfect partners (reciprocal)", () => {
+    const { onChange } = renderSheet();
+    fireEvent.click(screen.getByText("Perfect partners only"));
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ reciprocal: true }));
+  });
   it("moves the minimum age", () => {
     const { onChange } = renderSheet();
     fireEvent.change(screen.getByLabelText("Minimum age"), { target: { value: "25" } });

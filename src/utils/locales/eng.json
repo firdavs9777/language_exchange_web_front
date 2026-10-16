@@ -1054,7 +1054,9 @@
       "newUsersOnly": "New users only",
       "clearAll": "Clear all",
       "matchCount": "{{count}} matches",
-      "lockedByTab": "Set by the {{tab}} tab"
+      "lockedByTab": "Set by the {{tab}} tab",
+      "reciprocal": "Perfect partners only",
+      "reciprocalHint": "They speak what you learn and learn what you speak"
     },
     "highlighted": {
       "title": "Highlighted Profiles",

@@ -189,12 +189,15 @@ describe("what a mount costs", () => {
   // (asserted below). Plus /matching/daily: whether the Today tab exists at
   // all is the server's answer (404 = the feature is off), so a signed-in
   // mount asks once even on All. Anything else on this page is a regression.
-  it("asks for the list, the topics, the visitors, the account and today's batch -- and nothing else", async () => {
+  it("asks for the list, the topics, the visitors, the account, today's batch and the app config -- and nothing else", async () => {
     renderList();
 
     await waitFor(() => expect(cards().length).toBe(PAGE_LIMIT));
 
-    expect(requestedUrls).toHaveLength(5);
+    // app-config decides the default sort (smart only while the server
+    // offers it), so the list waits for it rather than asking twice.
+    expect(requestedUrls).toHaveLength(6);
+    expect(requestedUrls.filter((u) => u.indexOf("/app-config") >= 0)).toHaveLength(1);
     expect(requestedUrls.filter((u) => u.indexOf("/matching/daily") >= 0)).toHaveLength(1);
     expect(requestedUrls.filter((u) => /\/auth\/me(\?|$)/.test(u))).toHaveLength(1);
     expect(requestedUrls.filter((u) => /\/auth\/users\?/.test(u))).toHaveLength(1);

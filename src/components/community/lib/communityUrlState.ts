@@ -72,6 +72,7 @@ export const URL_KEYS: string[] = [
   'mutual',
   'online',
   'new',
+  'pair',
   'sort',
   'q',
   'tab',
@@ -171,6 +172,7 @@ export function encodeCommunityState(
 
   if (filters.onlineOnly) params.set('online', '1');
   if (filters.newUsersOnly) params.set('new', '1');
+  if (filters.reciprocal) params.set('pair', '1');
 
   const sort = text(state.sort);
   if (SORTS.indexOf(sort) >= 0) params.set('sort', sort);
@@ -268,6 +270,10 @@ export function decodeCommunityState(
   }
   if (read('new') === '1') {
     filters.newUsersOnly = true;
+    hasFilter = true;
+  }
+  if (read('pair') === '1') {
+    filters.reciprocal = true;
     hasFilter = true;
   }
 

@@ -106,3 +106,10 @@ it('Serious learners -> activeWithin=7d (the app PartnerSegment.serious)', () =>
   expect(q.activeWithin).toBe('7d');
   expect(buildCommunityQuery({}, me, 1, 20).activeWithin).toBeUndefined();
 });
+
+it('reciprocal -> reciprocal=true; smart sort passes through', () => {
+  const q = buildCommunityQuery({ reciprocal: true, sort: 'smart' }, me, 1, 20);
+  expect(q.reciprocal).toBe('true');
+  expect(q.sort).toBe('smart');
+  expect(buildCommunityQuery({}, me, 1, 20).reciprocal).toBeUndefined();
+});
