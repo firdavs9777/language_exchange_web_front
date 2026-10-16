@@ -3003,5 +3003,240 @@
       "tap_to_play": "Oynatmak için dokun",
       "unmute": "Sesi aç"
     }
+  },
+  "clubs": {
+    "card": {
+      "joined": "Üyesin",
+      "members_one": "{{count}} üye",
+      "members_other": "{{count}} üye"
+    },
+    "detail": {
+      "back": "Diğer kulüpler",
+      "edit": "Kulübü düzenle",
+      "host": "Bu kulüp için buluşma düzenle",
+      "join": "Kulübe katıl",
+      "leave": "Kulüpten ayrıl",
+      "leaveTitle": "Bu kulüpten ayrılsın mı?",
+      "metTimes_one": "Bir kez buluştu",
+      "metTimes_other": "{{count}} kez buluştu",
+      "neverMet": "Henüz buluşmadı",
+      "noGatherings": "Henüz planlanmış bir şey yok.",
+      "upcoming": "Yaklaşanlar",
+      "youOwn": "Bu kulübün sahibi sensin"
+    },
+    "form": {
+      "city": "Şehir (isteğe bağlı)",
+      "create": "Kulüp kur",
+      "createTitle": "Kulüp kur",
+      "description": "Kulüp hakkında (isteğe bağlı)",
+      "editTitle": "Kulübü düzenle",
+      "errors": {
+        "descriptionTooLong": "Açıklama 2000 karakterden kısa olmalı.",
+        "interestTooLong": "İlgi alanı 60 karakterden kısa olmalı.",
+        "languageRequired": "Kulübün dilini seç.",
+        "nameRequired": "Kulübüne bir ad ver.",
+        "nameTooLong": "Ad 80 karakterden kısa olmalı."
+      },
+      "interest": "Sizi bir araya getiren şey (ör. kitaplar, K-drama)",
+      "language": "Dil",
+      "name": "Ad",
+      "notAllowed": "Kulübü yalnızca sahibi veya bir düzenleyen düzenleyebilir.",
+      "placeAddress": "Adres (isteğe bağlı)",
+      "placeName": "Buluştuğunuz yer (isteğe bağlı)"
+    },
+    "home": {
+      "empty": "Burada henüz kulüp yok.",
+      "scopeAll": "Tümü",
+      "scopeMember": "Üye olduklarım",
+      "scopeMine": "Dillerim",
+      "start": "Kulüp kur"
+    },
+    "owner": {
+      "delete": "Kulübü sil",
+      "deleteBody": "Üyeler kulübü kaybeder. Planlanmış buluşmalar yine de yapılır.",
+      "deleteTitle": "{{name}} silinsin mi?"
+    },
+    "people": {
+      "makeMember": "Düzenleyenlikten al",
+      "makeOrganizer": "Düzenleyen yap",
+      "organizer": "Düzenleyen",
+      "owner": "Sahip",
+      "remove": "Kulüpten çıkar",
+      "removeTitle": "{{name}} çıkarılsın mı?",
+      "title": "Üyeler · {{count}}"
+    }
+  },
+  "gatherings": {
+    "card": {
+      "approval": "Ev sahibi onaylar",
+      "full": "Dolu",
+      "going": "Katılıyorsun",
+      "hostedBy": "Düzenleyen: {{name}}",
+      "hosting": "Ev sahibi sensin",
+      "requested": "İstek gönderildi",
+      "seatsLeft_one": "{{count}} yer kaldı",
+      "seatsLeft_other": "{{count}} yer kaldı"
+    },
+    "confirm": {
+      "cancel": "Şimdi değil",
+      "leaveBody": "Diğerleri, katılacağını söyleyenlere güveniyor.",
+      "leaveOk": "Yerimi bırak",
+      "leaveTitle": "Yerini bırakmak istiyor musun?"
+    },
+    "cover": {
+      "add": "Kapak fotoğrafı ekle",
+      "badType": "JPEG, PNG, GIF veya WebP görsel kullan.",
+      "change": "Kapak fotoğrafını değiştir",
+      "remove": "Kapağı kaldır",
+      "tooBig": "Bu görsel 10 MB'tan büyük."
+    },
+    "detail": {
+      "askToJoin": "Katılmak için istek gönder",
+      "back": "Diğer buluşmalar",
+      "cancelRequest": "İsteğimi iptal et",
+      "capacity": "En fazla {{count}} kişi · {{quorum}} kişide onaylanır",
+      "duration": "{{count}} dk",
+      "edit": "Buluşmayı düzenle",
+      "host": "Ev sahibi",
+      "join": "Katılıyorum",
+      "leave": "Artık gelemiyorum",
+      "online": "Çevrimiçi",
+      "requestSent": "İstek gönderildi. Kararı ev sahibi verecek.",
+      "someone": "Bir BananaTalk üyesi",
+      "youreGoing": "Katılıyorsun."
+    },
+    "errors": {
+      "alreadyGoing": "Zaten katılıyorsun.",
+      "cancelled": "Bu buluşma iptal edildi.",
+      "capacityBelowGoing": "Kontenjan, katılan {{count}} kişiden az olamaz.",
+      "clubArchived": "Bu kulüp arşivlendi.",
+      "clubGone": "Bu kulüp kullanılamıyor.",
+      "endBeforeStart": "Buluşmayı ancak başladıktan sonra bitirebilirsin.",
+      "ended": "Bu buluşma sona erdi.",
+      "full": "Bu buluşma dolu.",
+      "gatheringGone": "Bu buluşma kullanılamıyor.",
+      "generic": "Bir şeyler ters gitti. Tekrar dene.",
+      "hostBlocked": "Şu anda buluşma düzenleyemezsin: buluşmalarının çoğu iptal edildi veya kaçırıldı.",
+      "hostCannotLeave": "Ev sahibi olarak ayrılmak yerine buluşmayı iptal et.",
+      "joinClubFirst": "Bu kulüp için buluşma düzenlemeden önce kulübe katıl.",
+      "offline": "Çevrimdışısın. Bağlantını kontrol et.",
+      "ownerCannotLeave": "Sahibi olarak kulübü silebilirsin ama ayrılamazsın.",
+      "pastStart": "Gelecekte bir başlangıç saati seç.",
+      "pending": "İsteğin ev sahibinin onayını bekliyor.",
+      "started": "Bu buluşma zaten başladı."
+    },
+    "form": {
+      "anyLevel": "Her seviye",
+      "cancel": "İptal",
+      "capacity": "Kontenjan",
+      "create": "Buluşmayı yayınla",
+      "createTitle": "Buluşma düzenle",
+      "description": "Neler yapacaksınız? (isteğe bağlı)",
+      "duration_one": "{{count}} dakika sürer · senin saat diliminde",
+      "duration_other": "{{count}} dakika sürer · senin saat diliminde",
+      "editTitle": "Buluşmayı düzenle",
+      "errors": {
+        "capacityRange": "Kontenjan 2 ile 20 arasında olmalı.",
+        "descriptionTooLong": "Açıklama 2000 karakterden kısa olmalı.",
+        "languageRequired": "Pratik yapacağın dili seç.",
+        "quorumRange": "Buluşma en az 2 kişide onaylanır ve bu sayı kontenjanı aşamaz.",
+        "startInPast": "Gelecekte bir başlangıç saati seç.",
+        "startRequired": "Bir gün ve saat seç.",
+        "startTooFar": "Önümüzdeki 90 gün içinde bir saat seç.",
+        "titleRequired": "Buluşmana bir başlık ver.",
+        "titleTooLong": "Başlık 120 karakterden kısa olmalı."
+      },
+      "joinApproval": "Herkesi ben onaylarım",
+      "joinMode": "Kimler katılabilir",
+      "joinOpen": "Herkes",
+      "language": "Dil",
+      "level": "Seviye",
+      "noTopic": "Konu yok",
+      "notHost": "Bu buluşmayı yalnızca ev sahibi düzenleyebilir.",
+      "pickLanguage": "Bir dil seç",
+      "quorum": "Onay sayısı",
+      "save": "Kaydet",
+      "startsAt": "Başlangıç",
+      "title": "Başlık",
+      "topic": "Konu"
+    },
+    "home": {
+      "anyLanguage": "Dillerim",
+      "anyTime": "Her zaman",
+      "anyTopic": "Her konu",
+      "empty": "Burada henüz planlanmış bir şey yok.",
+      "emptyCta": "İlkini sen düzenle",
+      "error": "Bu liste yüklenemedi.",
+      "hasSeat": "Boş yeri olanlar",
+      "host": "Buluşma düzenle",
+      "language": "Dil",
+      "loadMore": "Daha fazla yükle",
+      "retry": "Tekrar dene",
+      "scopeAll": "Tümü",
+      "scopeMe": "Buluşmalarım",
+      "scopeMine": "Dillerim",
+      "tabClubs": "Kulüpler",
+      "tabGatherings": "Buluşmalar",
+      "title": "Buluşmalar",
+      "today": "Bugün",
+      "topic": "Konu",
+      "week": "Bu hafta",
+      "when": "Ne zaman"
+    },
+    "host": {
+      "approve": "Kabul et",
+      "callOff": "İptal et",
+      "callOffTitle": "İptal edilsin mi?",
+      "cancel": "Buluşmayı iptal et",
+      "cancelConfirm_one": "{{count}} kişi bunu bekliyor. İptal edildiği kendisine bildirilecek.",
+      "cancelConfirm_other": "{{count}} kişi bunu bekliyor. İptal edildiği kendilerine bildirilecek.",
+      "cancelOk": "Buluşmayı iptal et",
+      "cancelTitle": "Bu buluşma iptal edilsin mi?",
+      "decisionAlone": "Şimdilik yalnızca sen varsın. Yine de yapalım mı, iptal mi edelim?",
+      "decision_one": "Şimdilik yalnızca {{count}} kişi var. Yine de yapalım mı, iptal mi edelim?",
+      "decision_other": "Şimdilik yalnızca {{count}} kişi var. Yine de yapalım mı, iptal mi edelim?",
+      "decline": "Reddet",
+      "end": "Buluşmayı bitir",
+      "ended": "Bitti — tanıştığın kişilere mesaj atmak ücretsiz",
+      "nobodyExpecting": "Henüz başka kimse katılacağını söylemedi.",
+      "requests_one": "{{count}} kişi katılmayı bekliyor",
+      "requests_other": "{{count}} kişi katılmayı bekliyor",
+      "runAnyway": "Yine de yap"
+    },
+    "nav": "Buluşmalar",
+    "quorum": {
+      "confirmed": "Onaylandı · {{count}} kişi katılıyor",
+      "needed": "Onay için {{count}} kişi daha gerekli · {{going}} kişi katılıyor"
+    },
+    "safety": {
+      "blockHost": "Ev sahibini engelle",
+      "blockOwner": "Sahibini engelle",
+      "more": "Daha fazla",
+      "reportClub": "Kulübü şikayet et",
+      "reportFailed": "Şikayet gönderilemedi. Tekrar dene.",
+      "reportGathering": "Buluşmayı şikayet et",
+      "reported": "Teşekkürler — moderatörlerimiz inceleyecek."
+    },
+    "status": {
+      "cancelled": "İptal edildi",
+      "confirmed": "Onaylandı",
+      "ended": "Sona erdi",
+      "live": "Şu anda devam ediyor",
+      "scheduled": "Planlandı"
+    },
+    "time": {
+      "hostLocal": "Ev sahibi için {{time}}"
+    },
+    "topics": {
+      "business": "İş",
+      "conversation": "Sohbet",
+      "culture": "Kültür",
+      "exam_prep": "Sınav hazırlığı",
+      "games": "Oyunlar",
+      "grammar": "Dil bilgisi",
+      "media": "Müzik, film ve dizi",
+      "pronunciation": "Telaffuz",
+      "travel": "Seyahat"
+    }
   }
 }

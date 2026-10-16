@@ -3003,5 +3003,240 @@
       "tap_to_play": "I-tap para i-play",
       "unmute": "I-unmute"
     }
+  },
+  "clubs": {
+    "card": {
+      "joined": "Kasali na",
+      "members_one": "{{count}} miyembro",
+      "members_other": "{{count}} miyembro"
+    },
+    "detail": {
+      "back": "Tingnan ang ibang club",
+      "edit": "I-edit ang club",
+      "host": "Mag-host ng tagpo para sa club na ito",
+      "join": "Sumali sa club",
+      "leave": "Umalis sa club",
+      "leaveTitle": "Umalis sa club na ito?",
+      "metTimes_one": "Nagkita nang isang beses",
+      "metTimes_other": "Nagkita nang {{count}} beses",
+      "neverMet": "Hindi pa nagkikita",
+      "noGatherings": "Wala pang nakatakda.",
+      "upcoming": "Paparating",
+      "youOwn": "Ikaw ang may-ari ng club na ito"
+    },
+    "form": {
+      "city": "Lungsod (opsyonal)",
+      "create": "Gumawa ng club",
+      "createTitle": "Magsimula ng club",
+      "description": "Tungkol sa club (opsyonal)",
+      "editTitle": "I-edit ang club",
+      "errors": {
+        "descriptionTooLong": "Hanggang 2000 character lang ang description.",
+        "interestTooLong": "Hanggang 60 character lang ang interes.",
+        "languageRequired": "Piliin ang wika ng club.",
+        "nameRequired": "Bigyan ng pangalan ang club mo.",
+        "nameTooLong": "Hanggang 80 character lang ang pangalan."
+      },
+      "interest": "Ano ang nagbubuklod sa inyo (hal. libro, K-drama)",
+      "language": "Wika",
+      "name": "Pangalan",
+      "notAllowed": "Ang may-ari o organizer lang ng club ang puwedeng mag-edit nito.",
+      "placeAddress": "Address (opsyonal)",
+      "placeName": "Saan kayo nagkikita (opsyonal)"
+    },
+    "home": {
+      "empty": "Wala pang club dito.",
+      "scopeAll": "Lahat",
+      "scopeMember": "Sinalihan",
+      "scopeMine": "Mga wika ko",
+      "start": "Magsimula ng club"
+    },
+    "owner": {
+      "delete": "Tanggalin ang club",
+      "deleteBody": "Mawawala ang club sa mga miyembro. Matutuloy pa rin ang mga tagpong nakatakda na.",
+      "deleteTitle": "Tanggalin ang {{name}}?"
+    },
+    "people": {
+      "makeMember": "Alisin bilang organizer",
+      "makeOrganizer": "Gawing organizer",
+      "organizer": "Organizer",
+      "owner": "May-ari",
+      "remove": "Alisin sa club",
+      "removeTitle": "Alisin si {{name}}?",
+      "title": "Mga miyembro · {{count}}"
+    }
+  },
+  "gatherings": {
+    "card": {
+      "approval": "Aaprubahan ng host",
+      "full": "Puno na",
+      "going": "Sasama",
+      "hostedBy": "Hino-host ni {{name}}",
+      "hosting": "Ikaw ang host",
+      "requested": "Hiniling na",
+      "seatsLeft_one": "{{count}} upuan na lang",
+      "seatsLeft_other": "{{count}} upuan na lang"
+    },
+    "confirm": {
+      "cancel": "Mamaya na",
+      "leaveBody": "Umaasa ang iba sa mga nagsabing sasama.",
+      "leaveOk": "Ibigay ang upuan ko",
+      "leaveTitle": "Ibibigay mo ang upuan mo?"
+    },
+    "cover": {
+      "add": "Magdagdag ng cover photo",
+      "badType": "Gumamit ng JPEG, PNG, GIF o WebP na larawan.",
+      "change": "Palitan ang cover photo",
+      "remove": "Alisin ang cover",
+      "tooBig": "Lampas 10 MB ang larawang iyan."
+    },
+    "detail": {
+      "askToJoin": "Humiling na sumali",
+      "back": "Tingnan ang ibang tagpo",
+      "cancelRequest": "Kanselahin ang hiling ko",
+      "capacity": "Hanggang {{count}} tao · makukumpirma sa {{quorum}}",
+      "duration": "{{count}} min",
+      "edit": "I-edit ang tagpo",
+      "host": "Host",
+      "join": "Sasama ako",
+      "leave": "Hindi na ako makakasama",
+      "online": "Online",
+      "requestSent": "Naipadala ang hiling. Ang host ang magpapasya.",
+      "someone": "Isang miyembro ng BananaTalk",
+      "youreGoing": "Sasama ka."
+    },
+    "errors": {
+      "alreadyGoing": "Sasama ka na.",
+      "cancelled": "Kinansela ang tagpong ito.",
+      "capacityBelowGoing": "Hindi puwedeng mas mababa ang upuan sa {{count}} taong sasama na.",
+      "clubArchived": "Naka-archive ang club na ito.",
+      "clubGone": "Hindi available ang club na ito.",
+      "endBeforeStart": "Puwede mong tapusin ang tagpo kapag nagsimula na ito.",
+      "ended": "Tapos na ang tagpong ito.",
+      "full": "Puno na ang tagpong ito.",
+      "gatheringGone": "Hindi available ang tagpong ito.",
+      "generic": "May nangyaring mali. Subukan ulit.",
+      "hostBlocked": "Hindi ka muna puwedeng mag-host: masyadong marami sa mga tagpo mo ang nakansela o hindi natuloy.",
+      "hostCannotLeave": "Bilang host, kanselahin na lang ang tagpo sa halip na umalis.",
+      "joinClubFirst": "Sumali muna sa club bago mag-host para dito.",
+      "offline": "Offline ka. I-check ang koneksyon mo.",
+      "ownerCannotLeave": "Bilang may-ari, puwede mong tanggalin ang club pero hindi ka puwedeng umalis dito.",
+      "pastStart": "Pumili ng oras ng simula sa hinaharap.",
+      "pending": "Naghihintay pa sa host ang hiling mo.",
+      "started": "Nagsimula na ang tagpong ito."
+    },
+    "form": {
+      "anyLevel": "Kahit anong level",
+      "cancel": "Kanselahin",
+      "capacity": "Upuan",
+      "create": "I-post ang tagpo",
+      "createTitle": "Mag-host ng tagpo",
+      "description": "Ano ang gagawin ninyo? (opsyonal)",
+      "duration_one": "Tatagal nang {{count}} minuto · sa time zone mo",
+      "duration_other": "Tatagal nang {{count}} minuto · sa time zone mo",
+      "editTitle": "I-edit ang tagpo",
+      "errors": {
+        "capacityRange": "Dapat 2 hanggang 20 ang upuan.",
+        "descriptionTooLong": "Hanggang 2000 character lang ang description.",
+        "languageRequired": "Piliin ang wikang ipa-practice mo.",
+        "quorumRange": "Makukumpirma ang tagpo sa 2 o higit pa, at hindi lalampas sa bilang ng upuan.",
+        "startInPast": "Pumili ng oras ng simula sa hinaharap.",
+        "startRequired": "Pumili ng araw at oras.",
+        "startTooFar": "Pumili ng oras sa loob ng susunod na 90 araw.",
+        "titleRequired": "Bigyan ng pamagat ang tagpo mo.",
+        "titleTooLong": "Hanggang 120 character lang ang pamagat."
+      },
+      "joinApproval": "Ako ang mag-aapruba sa bawat isa",
+      "joinMode": "Sino ang puwedeng sumali",
+      "joinOpen": "Kahit sino",
+      "language": "Wika",
+      "level": "Level",
+      "noTopic": "Walang paksa",
+      "notHost": "Ang host lang ang puwedeng mag-edit ng tagpong ito.",
+      "pickLanguage": "Pumili ng wika",
+      "quorum": "Kumpirmahin sa",
+      "save": "I-save",
+      "startsAt": "Magsisimula",
+      "title": "Pamagat",
+      "topic": "Paksa"
+    },
+    "home": {
+      "anyLanguage": "Mga wika ko",
+      "anyTime": "Kahit kailan",
+      "anyTopic": "Kahit anong paksa",
+      "empty": "Wala pang nakatakda dito.",
+      "emptyCta": "Ikaw ang mag-host ng una",
+      "error": "Hindi ma-load ang listahang ito.",
+      "hasSeat": "May bakanteng upuan",
+      "host": "Mag-host ng tagpo",
+      "language": "Wika",
+      "loadMore": "Mag-load pa",
+      "retry": "Subukan ulit",
+      "scopeAll": "Lahat",
+      "scopeMe": "Mga tagpo ko",
+      "scopeMine": "Mga wika ko",
+      "tabClubs": "Mga club",
+      "tabGatherings": "Mga tagpo",
+      "title": "Mga tagpo",
+      "today": "Ngayon",
+      "topic": "Paksa",
+      "week": "Ngayong linggo",
+      "when": "Kailan"
+    },
+    "host": {
+      "approve": "Tanggapin",
+      "callOff": "Kanselahin",
+      "callOffTitle": "Kanselahin na?",
+      "cancel": "Kanselahin ang tagpo",
+      "cancelConfirm_one": "May {{count}} taong naghihintay nito. Sasabihan silang kansela na.",
+      "cancelConfirm_other": "May {{count}} taong naghihintay nito. Sasabihan silang kansela na.",
+      "cancelOk": "Kanselahin ang tagpo",
+      "cancelTitle": "Kanselahin ang tagpong ito?",
+      "decisionAlone": "Ikaw pa lang sa ngayon. Ituloy pa rin o kanselahin?",
+      "decision_one": "{{count}} pa lang ang sasama sa ngayon. Ituloy pa rin o kanselahin?",
+      "decision_other": "{{count}} pa lang ang sasama sa ngayon. Ituloy pa rin o kanselahin?",
+      "decline": "Tanggihan",
+      "end": "Tapusin ang tagpo",
+      "ended": "Tapos na — libre ang mag-message sa mga nakilala mo",
+      "nobodyExpecting": "Wala pang ibang nagsabing sasama.",
+      "requests_one": "{{count}} naghihintay sumali",
+      "requests_other": "{{count}} naghihintay sumali",
+      "runAnyway": "Ituloy pa rin"
+    },
+    "nav": "Mga tagpo",
+    "quorum": {
+      "confirmed": "Kumpirmado · {{count}} ang sasama",
+      "needed": "Kulang pa ng {{count}} para makumpirma · {{going}} ang sasama"
+    },
+    "safety": {
+      "blockHost": "I-block ang host",
+      "blockOwner": "I-block ang may-ari",
+      "more": "Iba pa",
+      "reportClub": "I-report ang club",
+      "reportFailed": "Hindi naipadala ang report. Subukan ulit.",
+      "reportGathering": "I-report ang tagpo",
+      "reported": "Salamat — susuriin ito ng aming mga moderator."
+    },
+    "status": {
+      "cancelled": "Kanselado",
+      "confirmed": "Kumpirmado",
+      "ended": "Tapos na",
+      "live": "Nagaganap ngayon",
+      "scheduled": "Nakatakda"
+    },
+    "time": {
+      "hostLocal": "{{time}} sa oras ng host"
+    },
+    "topics": {
+      "business": "Negosyo",
+      "conversation": "Usapan",
+      "culture": "Kultura",
+      "exam_prep": "Paghahanda sa exam",
+      "games": "Mga laro",
+      "grammar": "Gramatika",
+      "media": "Musika, pelikula at TV",
+      "pronunciation": "Bigkas",
+      "travel": "Paglalakbay"
+    }
   }
 }

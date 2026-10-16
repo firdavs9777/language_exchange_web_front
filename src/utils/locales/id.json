@@ -3003,5 +3003,240 @@
       "tap_to_play": "Ketuk untuk memutar",
       "unmute": "Bunyikan"
     }
+  },
+  "clubs": {
+    "card": {
+      "joined": "Sudah bergabung",
+      "members_one": "{{count}} anggota",
+      "members_other": "{{count}} anggota"
+    },
+    "detail": {
+      "back": "Lihat klub lain",
+      "edit": "Edit klub",
+      "host": "Adakan pertemuan untuk klub ini",
+      "join": "Gabung klub",
+      "leave": "Keluar dari klub",
+      "leaveTitle": "Keluar dari klub ini?",
+      "metTimes_one": "Sudah bertemu sekali",
+      "metTimes_other": "Sudah bertemu {{count}} kali",
+      "neverMet": "Belum pernah bertemu",
+      "noGatherings": "Belum ada yang dijadwalkan.",
+      "upcoming": "Akan datang",
+      "youOwn": "Kamu pemilik klub ini"
+    },
+    "form": {
+      "city": "Kota (opsional)",
+      "create": "Buat klub",
+      "createTitle": "Mulai klub",
+      "description": "Tentang klub (opsional)",
+      "editTitle": "Edit klub",
+      "errors": {
+        "descriptionTooLong": "Deskripsi maksimal 2000 karakter.",
+        "interestTooLong": "Minat maksimal 60 karakter.",
+        "languageRequired": "Pilih bahasa klub.",
+        "nameRequired": "Beri nama klubmu.",
+        "nameTooLong": "Nama maksimal 80 karakter."
+      },
+      "interest": "Apa yang menyatukan kalian (mis. buku, drama Korea)",
+      "language": "Bahasa",
+      "name": "Nama",
+      "notAllowed": "Hanya pemilik atau pengurus klub yang bisa mengeditnya.",
+      "placeAddress": "Alamat (opsional)",
+      "placeName": "Tempat berkumpul (opsional)"
+    },
+    "home": {
+      "empty": "Belum ada klub di sini.",
+      "scopeAll": "Semua",
+      "scopeMember": "Sudah bergabung",
+      "scopeMine": "Bahasa saya",
+      "start": "Mulai klub"
+    },
+    "owner": {
+      "delete": "Hapus klub",
+      "deleteBody": "Anggota akan kehilangan klub ini. Pertemuan yang sudah dijadwalkan tetap berjalan.",
+      "deleteTitle": "Hapus {{name}}?"
+    },
+    "people": {
+      "makeMember": "Hapus peran pengurus",
+      "makeOrganizer": "Jadikan pengurus",
+      "organizer": "Pengurus",
+      "owner": "Pemilik",
+      "remove": "Keluarkan dari klub",
+      "removeTitle": "Keluarkan {{name}}?",
+      "title": "Anggota · {{count}}"
+    }
+  },
+  "gatherings": {
+    "card": {
+      "approval": "Perlu persetujuan tuan rumah",
+      "full": "Penuh",
+      "going": "Ikut",
+      "hostedBy": "Diadakan oleh {{name}}",
+      "hosting": "Kamu tuan rumahnya",
+      "requested": "Diminta",
+      "seatsLeft_one": "Sisa {{count}} kursi",
+      "seatsLeft_other": "Sisa {{count}} kursi"
+    },
+    "confirm": {
+      "cancel": "Nanti saja",
+      "leaveBody": "Yang lain mengandalkan orang-orang yang sudah bilang ikut.",
+      "leaveOk": "Lepaskan kursiku",
+      "leaveTitle": "Lepaskan kursimu?"
+    },
+    "cover": {
+      "add": "Tambah foto sampul",
+      "badType": "Gunakan gambar JPEG, PNG, GIF, atau WebP.",
+      "change": "Ganti foto sampul",
+      "remove": "Hapus sampul",
+      "tooBig": "Gambar itu lebih dari 10 MB."
+    },
+    "detail": {
+      "askToJoin": "Minta ikut",
+      "back": "Lihat pertemuan lain",
+      "cancelRequest": "Batalkan permintaanku",
+      "capacity": "Maks. {{count}} orang · terkonfirmasi di {{quorum}}",
+      "duration": "{{count}} menit",
+      "edit": "Edit pertemuan",
+      "host": "Tuan rumah",
+      "join": "Aku ikut",
+      "leave": "Aku tidak bisa ikut lagi",
+      "online": "Online",
+      "requestSent": "Permintaan dikirim. Tuan rumah yang memutuskan.",
+      "someone": "Anggota BananaTalk",
+      "youreGoing": "Kamu ikut."
+    },
+    "errors": {
+      "alreadyGoing": "Kamu sudah ikut.",
+      "cancelled": "Pertemuan ini dibatalkan.",
+      "capacityBelowGoing": "Kapasitas tidak boleh kurang dari {{count}} orang yang sudah ikut.",
+      "clubArchived": "Klub ini sudah diarsipkan.",
+      "clubGone": "Klub ini tidak tersedia.",
+      "endBeforeStart": "Kamu bisa mengakhiri pertemuan setelah dimulai.",
+      "ended": "Pertemuan ini sudah berakhir.",
+      "full": "Pertemuan ini sudah penuh.",
+      "gatheringGone": "Pertemuan ini tidak tersedia.",
+      "generic": "Terjadi kesalahan. Coba lagi.",
+      "hostBlocked": "Kamu belum bisa jadi tuan rumah: terlalu banyak pertemuanmu yang dibatalkan atau terlewat.",
+      "hostCannotLeave": "Sebagai tuan rumah, batalkan pertemuannya alih-alih keluar.",
+      "joinClubFirst": "Gabung klub dulu sebelum mengadakan pertemuan untuknya.",
+      "offline": "Kamu sedang offline. Periksa koneksimu.",
+      "ownerCannotLeave": "Sebagai pemilik, kamu bisa menghapus klub tapi tidak bisa keluar.",
+      "pastStart": "Pilih waktu mulai di masa depan.",
+      "pending": "Permintaanmu sedang menunggu tuan rumah.",
+      "started": "Pertemuan ini sudah dimulai."
+    },
+    "form": {
+      "anyLevel": "Semua level",
+      "cancel": "Batal",
+      "capacity": "Kursi",
+      "create": "Posting pertemuan",
+      "createTitle": "Adakan pertemuan",
+      "description": "Mau ngapain? (opsional)",
+      "duration_one": "Durasi {{count}} menit · di zona waktumu",
+      "duration_other": "Durasi {{count}} menit · di zona waktumu",
+      "editTitle": "Edit pertemuan",
+      "errors": {
+        "capacityRange": "Jumlah kursi harus antara 2 dan 20.",
+        "descriptionTooLong": "Deskripsi maksimal 2000 karakter.",
+        "languageRequired": "Pilih bahasa yang akan kamu latih.",
+        "quorumRange": "Pertemuan terkonfirmasi di 2 orang atau lebih, dan tidak lebih dari jumlah kursi.",
+        "startInPast": "Pilih waktu mulai di masa depan.",
+        "startRequired": "Pilih hari dan jam.",
+        "startTooFar": "Pilih waktu dalam 90 hari ke depan.",
+        "titleRequired": "Beri judul pertemuanmu.",
+        "titleTooLong": "Judul maksimal 120 karakter."
+      },
+      "joinApproval": "Aku menyetujui tiap orang",
+      "joinMode": "Siapa yang bisa ikut",
+      "joinOpen": "Siapa saja",
+      "language": "Bahasa",
+      "level": "Level",
+      "noTopic": "Tanpa topik",
+      "notHost": "Hanya tuan rumah yang bisa mengedit pertemuan ini.",
+      "pickLanguage": "Pilih bahasa",
+      "quorum": "Konfirmasi pada",
+      "save": "Simpan",
+      "startsAt": "Mulai",
+      "title": "Judul",
+      "topic": "Topik"
+    },
+    "home": {
+      "anyLanguage": "Bahasa saya",
+      "anyTime": "Kapan saja",
+      "anyTopic": "Semua topik",
+      "empty": "Belum ada yang dijadwalkan di sini.",
+      "emptyCta": "Adakan yang pertama",
+      "error": "Tidak dapat memuat daftar ini.",
+      "hasSeat": "Ada kursi kosong",
+      "host": "Adakan pertemuan",
+      "language": "Bahasa",
+      "loadMore": "Muat lebih banyak",
+      "retry": "Coba lagi",
+      "scopeAll": "Semua",
+      "scopeMe": "Pertemuan saya",
+      "scopeMine": "Bahasa saya",
+      "tabClubs": "Klub",
+      "tabGatherings": "Pertemuan",
+      "title": "Pertemuan",
+      "today": "Hari ini",
+      "topic": "Topik",
+      "week": "Minggu ini",
+      "when": "Kapan"
+    },
+    "host": {
+      "approve": "Terima",
+      "callOff": "Batalkan",
+      "callOffTitle": "Batalkan saja?",
+      "cancel": "Batalkan pertemuan",
+      "cancelConfirm_one": "{{count}} orang menunggu ini. Mereka akan diberi tahu pembatalannya.",
+      "cancelConfirm_other": "{{count}} orang menunggu ini. Mereka akan diberi tahu pembatalannya.",
+      "cancelOk": "Batalkan pertemuan",
+      "cancelTitle": "Batalkan pertemuan ini?",
+      "decisionAlone": "Sejauh ini hanya kamu. Tetap jalan atau batalkan?",
+      "decision_one": "Sejauh ini hanya {{count}} orang. Tetap jalan atau batalkan?",
+      "decision_other": "Sejauh ini hanya {{count}} orang. Tetap jalan atau batalkan?",
+      "decline": "Tolak",
+      "end": "Akhiri pertemuan",
+      "ended": "Selesai — mengirim pesan ke orang yang kamu temui itu gratis",
+      "nobodyExpecting": "Belum ada orang lain yang bilang ikut.",
+      "requests_one": "{{count}} menunggu untuk bergabung",
+      "requests_other": "{{count}} menunggu untuk bergabung",
+      "runAnyway": "Tetap jalan"
+    },
+    "nav": "Pertemuan",
+    "quorum": {
+      "confirmed": "Terkonfirmasi · {{count}} ikut",
+      "needed": "Butuh {{count}} orang lagi untuk konfirmasi · {{going}} ikut"
+    },
+    "safety": {
+      "blockHost": "Blokir tuan rumah",
+      "blockOwner": "Blokir pemilik",
+      "more": "Lainnya",
+      "reportClub": "Laporkan klub",
+      "reportFailed": "Gagal mengirim laporan. Coba lagi.",
+      "reportGathering": "Laporkan pertemuan",
+      "reported": "Terima kasih — moderator kami akan meninjaunya."
+    },
+    "status": {
+      "cancelled": "Dibatalkan",
+      "confirmed": "Terkonfirmasi",
+      "ended": "Berakhir",
+      "live": "Sedang berlangsung",
+      "scheduled": "Terjadwal"
+    },
+    "time": {
+      "hostLocal": "{{time}} waktu tuan rumah"
+    },
+    "topics": {
+      "business": "Bisnis",
+      "conversation": "Percakapan",
+      "culture": "Budaya",
+      "exam_prep": "Persiapan ujian",
+      "games": "Permainan",
+      "grammar": "Tata bahasa",
+      "media": "Musik, film & TV",
+      "pronunciation": "Pelafalan",
+      "travel": "Perjalanan"
+    }
   }
 }

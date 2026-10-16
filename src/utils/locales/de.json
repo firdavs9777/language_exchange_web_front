@@ -3003,5 +3003,240 @@
       "tap_to_play": "Zum Abspielen tippen",
       "unmute": "Ton einschalten"
     }
+  },
+  "clubs": {
+    "card": {
+      "joined": "Beigetreten",
+      "members_one": "{{count}} Mitglied",
+      "members_other": "{{count}} Mitglieder"
+    },
+    "detail": {
+      "back": "Andere Clubs ansehen",
+      "edit": "Club bearbeiten",
+      "host": "Treffen für diesen Club veranstalten",
+      "join": "Club beitreten",
+      "leave": "Club verlassen",
+      "leaveTitle": "Diesen Club verlassen?",
+      "metTimes_one": "Einmal getroffen",
+      "metTimes_other": "{{count}}-mal getroffen",
+      "neverMet": "Noch keine Treffen",
+      "noGatherings": "Noch ist nichts geplant.",
+      "upcoming": "Demnächst",
+      "youOwn": "Dir gehört dieser Club"
+    },
+    "form": {
+      "city": "Stadt (optional)",
+      "create": "Club erstellen",
+      "createTitle": "Club gründen",
+      "description": "Über den Club (optional)",
+      "editTitle": "Club bearbeiten",
+      "errors": {
+        "descriptionTooLong": "Die Beschreibung darf höchstens 2000 Zeichen lang sein.",
+        "interestTooLong": "Das Interesse darf höchstens 60 Zeichen lang sein.",
+        "languageRequired": "Wähle die Sprache des Clubs.",
+        "nameRequired": "Gib deinem Club einen Namen.",
+        "nameTooLong": "Der Name darf höchstens 80 Zeichen lang sein."
+      },
+      "interest": "Was euch verbindet (z. B. Bücher, K-Dramas)",
+      "language": "Sprache",
+      "name": "Name",
+      "notAllowed": "Nur der Inhaber oder ein Organisator kann den Club bearbeiten.",
+      "placeAddress": "Adresse (optional)",
+      "placeName": "Wo ihr euch trefft (optional)"
+    },
+    "home": {
+      "empty": "Hier gibt es noch keine Clubs.",
+      "scopeAll": "Alle",
+      "scopeMember": "Beigetreten",
+      "scopeMine": "Meine Sprachen",
+      "start": "Club gründen"
+    },
+    "owner": {
+      "delete": "Club löschen",
+      "deleteBody": "Die Mitglieder verlieren den Club. Bereits geplante Treffen finden trotzdem statt.",
+      "deleteTitle": "{{name}} löschen?"
+    },
+    "people": {
+      "makeMember": "Organisator entfernen",
+      "makeOrganizer": "Zum Organisator machen",
+      "organizer": "Organisator",
+      "owner": "Inhaber",
+      "remove": "Aus dem Club entfernen",
+      "removeTitle": "{{name}} entfernen?",
+      "title": "Mitglieder · {{count}}"
+    }
+  },
+  "gatherings": {
+    "card": {
+      "approval": "Gastgeber bestätigt",
+      "full": "Voll",
+      "going": "Dabei",
+      "hostedBy": "Veranstaltet von {{name}}",
+      "hosting": "Du bist Gastgeber",
+      "requested": "Angefragt",
+      "seatsLeft_one": "Noch {{count}} Platz frei",
+      "seatsLeft_other": "Noch {{count}} Plätze frei"
+    },
+    "confirm": {
+      "cancel": "Jetzt nicht",
+      "leaveBody": "Die anderen zählen auf alle, die zugesagt haben.",
+      "leaveOk": "Platz freigeben",
+      "leaveTitle": "Deinen Platz freigeben?"
+    },
+    "cover": {
+      "add": "Titelbild hinzufügen",
+      "badType": "Verwende ein JPEG-, PNG-, GIF- oder WebP-Bild.",
+      "change": "Titelbild ändern",
+      "remove": "Titelbild entfernen",
+      "tooBig": "Das Bild ist größer als 10 MB."
+    },
+    "detail": {
+      "askToJoin": "Teilnahme anfragen",
+      "back": "Andere Treffen ansehen",
+      "cancelRequest": "Anfrage zurückziehen",
+      "capacity": "Bis zu {{count}} Personen · bestätigt ab {{quorum}}",
+      "duration": "{{count}} Min.",
+      "edit": "Treffen bearbeiten",
+      "host": "Gastgeber",
+      "join": "Ich bin dabei",
+      "leave": "Ich kann doch nicht",
+      "online": "Online",
+      "requestSent": "Anfrage gesendet. Der Gastgeber entscheidet.",
+      "someone": "Ein BananaTalk-Mitglied",
+      "youreGoing": "Du bist dabei."
+    },
+    "errors": {
+      "alreadyGoing": "Du bist schon dabei.",
+      "cancelled": "Dieses Treffen wurde abgesagt.",
+      "capacityBelowGoing": "Die Platzzahl darf nicht unter den {{count}} Personen liegen, die schon zugesagt haben.",
+      "clubArchived": "Dieser Club ist archiviert.",
+      "clubGone": "Dieser Club ist nicht verfügbar.",
+      "endBeforeStart": "Du kannst das Treffen erst beenden, wenn es begonnen hat.",
+      "ended": "Dieses Treffen ist beendet.",
+      "full": "Dieses Treffen ist voll.",
+      "gatheringGone": "Dieses Treffen ist nicht verfügbar.",
+      "generic": "Etwas ist schiefgelaufen. Versuch es noch einmal.",
+      "hostBlocked": "Du kannst gerade keine Treffen veranstalten: Zu viele deiner Treffen wurden abgesagt oder verpasst.",
+      "hostCannotLeave": "Als Gastgeber sagst du das Treffen ab, statt es zu verlassen.",
+      "joinClubFirst": "Tritt dem Club bei, bevor du für ihn ein Treffen veranstaltest.",
+      "offline": "Du bist offline. Prüfe deine Verbindung.",
+      "ownerCannotLeave": "Als Inhaber kannst du den Club löschen, aber nicht verlassen.",
+      "pastStart": "Wähle eine Startzeit in der Zukunft.",
+      "pending": "Deine Anfrage wartet auf den Gastgeber.",
+      "started": "Dieses Treffen hat schon begonnen."
+    },
+    "form": {
+      "anyLevel": "Jedes Niveau",
+      "cancel": "Abbrechen",
+      "capacity": "Plätze",
+      "create": "Treffen veröffentlichen",
+      "createTitle": "Treffen veranstalten",
+      "description": "Was habt ihr vor? (optional)",
+      "duration_one": "Dauert {{count}} Minute · in deiner Zeitzone",
+      "duration_other": "Dauert {{count}} Minuten · in deiner Zeitzone",
+      "editTitle": "Treffen bearbeiten",
+      "errors": {
+        "capacityRange": "Es müssen zwischen 2 und 20 Plätze sein.",
+        "descriptionTooLong": "Die Beschreibung darf höchstens 2000 Zeichen lang sein.",
+        "languageRequired": "Wähle die Sprache, die ihr übt.",
+        "quorumRange": "Das Treffen wird ab 2 Personen bestätigt, aber höchstens ab der Platzzahl.",
+        "startInPast": "Wähle eine Startzeit in der Zukunft.",
+        "startRequired": "Wähle Tag und Uhrzeit.",
+        "startTooFar": "Wähle eine Zeit innerhalb der nächsten 90 Tage.",
+        "titleRequired": "Gib deinem Treffen einen Titel.",
+        "titleTooLong": "Der Titel darf höchstens 120 Zeichen lang sein."
+      },
+      "joinApproval": "Ich bestätige jede Person",
+      "joinMode": "Wer mitmachen kann",
+      "joinOpen": "Alle",
+      "language": "Sprache",
+      "level": "Niveau",
+      "noTopic": "Kein Thema",
+      "notHost": "Nur der Gastgeber kann dieses Treffen bearbeiten.",
+      "pickLanguage": "Sprache wählen",
+      "quorum": "Bestätigen ab",
+      "save": "Speichern",
+      "startsAt": "Beginn",
+      "title": "Titel",
+      "topic": "Thema"
+    },
+    "home": {
+      "anyLanguage": "Meine Sprachen",
+      "anyTime": "Jederzeit",
+      "anyTopic": "Alle Themen",
+      "empty": "Hier ist noch nichts geplant.",
+      "emptyCta": "Veranstalte das erste",
+      "error": "Diese Liste konnte nicht geladen werden.",
+      "hasSeat": "Mit freiem Platz",
+      "host": "Treffen veranstalten",
+      "language": "Sprache",
+      "loadMore": "Mehr laden",
+      "retry": "Erneut versuchen",
+      "scopeAll": "Alle",
+      "scopeMe": "Meine Treffen",
+      "scopeMine": "Meine Sprachen",
+      "tabClubs": "Clubs",
+      "tabGatherings": "Treffen",
+      "title": "Treffen",
+      "today": "Heute",
+      "topic": "Thema",
+      "week": "Diese Woche",
+      "when": "Wann"
+    },
+    "host": {
+      "approve": "Zulassen",
+      "callOff": "Absagen",
+      "callOffTitle": "Absagen?",
+      "cancel": "Treffen absagen",
+      "cancelConfirm_one": "{{count}} Person wartet darauf und wird über die Absage informiert.",
+      "cancelConfirm_other": "{{count}} Personen warten darauf und werden über die Absage informiert.",
+      "cancelOk": "Treffen absagen",
+      "cancelTitle": "Dieses Treffen absagen?",
+      "decisionAlone": "Bisher kommst nur du. Trotzdem durchziehen oder absagen?",
+      "decision_one": "Bisher kommt nur {{count}} Person. Trotzdem durchziehen oder absagen?",
+      "decision_other": "Bisher kommen nur {{count}} Personen. Trotzdem durchziehen oder absagen?",
+      "decline": "Ablehnen",
+      "end": "Treffen beenden",
+      "ended": "Beendet – wer dabei war, darf dir kostenlos schreiben",
+      "nobodyExpecting": "Bisher hat sonst noch niemand zugesagt.",
+      "requests_one": "{{count}} wartet auf Zutritt",
+      "requests_other": "{{count}} warten auf Zutritt",
+      "runAnyway": "Trotzdem durchziehen"
+    },
+    "nav": "Treffen",
+    "quorum": {
+      "confirmed": "Bestätigt · {{count}} dabei",
+      "needed": "Noch {{count}} zur Bestätigung · {{going}} dabei"
+    },
+    "safety": {
+      "blockHost": "Gastgeber blockieren",
+      "blockOwner": "Inhaber blockieren",
+      "more": "Mehr",
+      "reportClub": "Club melden",
+      "reportFailed": "Die Meldung konnte nicht gesendet werden. Versuch es noch einmal.",
+      "reportGathering": "Treffen melden",
+      "reported": "Danke – unser Moderationsteam sieht es sich an."
+    },
+    "status": {
+      "cancelled": "Abgesagt",
+      "confirmed": "Bestätigt",
+      "ended": "Beendet",
+      "live": "Läuft gerade",
+      "scheduled": "Geplant"
+    },
+    "time": {
+      "hostLocal": "{{time}} beim Gastgeber"
+    },
+    "topics": {
+      "business": "Beruf",
+      "conversation": "Konversation",
+      "culture": "Kultur",
+      "exam_prep": "Prüfungsvorbereitung",
+      "games": "Spiele",
+      "grammar": "Grammatik",
+      "media": "Musik, Filme & Serien",
+      "pronunciation": "Aussprache",
+      "travel": "Reisen"
+    }
   }
 }

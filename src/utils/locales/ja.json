@@ -3003,5 +3003,240 @@
       "tap_to_play": "タップして再生",
       "unmute": "ミュート解除"
     }
+  },
+  "clubs": {
+    "card": {
+      "joined": "参加中",
+      "members_one": "メンバー{{count}}人",
+      "members_other": "メンバー{{count}}人"
+    },
+    "detail": {
+      "back": "ほかのクラブを見る",
+      "edit": "クラブを編集",
+      "host": "このクラブの集まりを開く",
+      "join": "クラブに参加",
+      "leave": "クラブを退会",
+      "leaveTitle": "このクラブを退会しますか？",
+      "metTimes_one": "開催1回",
+      "metTimes_other": "開催{{count}}回",
+      "neverMet": "まだ開催されていません",
+      "noGatherings": "まだ予定がありません。",
+      "upcoming": "今後の予定",
+      "youOwn": "あなたがオーナーのクラブです"
+    },
+    "form": {
+      "city": "都市（任意）",
+      "create": "クラブを作成",
+      "createTitle": "クラブを作る",
+      "description": "クラブの紹介（任意）",
+      "editTitle": "クラブを編集",
+      "errors": {
+        "descriptionTooLong": "紹介は2000文字以内にしてください。",
+        "interestTooLong": "興味・関心は60文字以内にしてください。",
+        "languageRequired": "クラブの言語を選んでください。",
+        "nameRequired": "クラブ名を入力してください。",
+        "nameTooLong": "クラブ名は80文字以内にしてください。"
+      },
+      "interest": "共通の興味（例：本、韓国ドラマ）",
+      "language": "言語",
+      "name": "クラブ名",
+      "notAllowed": "このクラブを編集できるのはオーナーとオーガナイザーだけです。",
+      "placeAddress": "住所（任意）",
+      "placeName": "集まる場所（任意）"
+    },
+    "home": {
+      "empty": "まだクラブがありません。",
+      "scopeAll": "すべて",
+      "scopeMember": "参加中",
+      "scopeMine": "自分の言語",
+      "start": "クラブを作る"
+    },
+    "owner": {
+      "delete": "クラブを削除",
+      "deleteBody": "メンバーはクラブを失います。すでに予定されている集まりはそのまま開催されます。",
+      "deleteTitle": "{{name}}を削除しますか？"
+    },
+    "people": {
+      "makeMember": "オーガナイザーを解除",
+      "makeOrganizer": "オーガナイザーにする",
+      "organizer": "オーガナイザー",
+      "owner": "オーナー",
+      "remove": "クラブから外す",
+      "removeTitle": "{{name}}さんを外しますか？",
+      "title": "メンバー · {{count}}"
+    }
+  },
+  "gatherings": {
+    "card": {
+      "approval": "ホストの承認制",
+      "full": "満席",
+      "going": "参加予定",
+      "hostedBy": "ホスト: {{name}}",
+      "hosting": "あなたがホスト",
+      "requested": "申請中",
+      "seatsLeft_one": "残り{{count}}席",
+      "seatsLeft_other": "残り{{count}}席"
+    },
+    "confirm": {
+      "cancel": "今はやめる",
+      "leaveBody": "参加すると答えた人を、みんなが頼りにしています。",
+      "leaveOk": "席を譲る",
+      "leaveTitle": "席を譲りますか？"
+    },
+    "cover": {
+      "add": "カバー写真を追加",
+      "badType": "JPEG、PNG、GIF、WebPの画像を使ってください。",
+      "change": "カバー写真を変更",
+      "remove": "カバーを削除",
+      "tooBig": "画像が10MBを超えています。"
+    },
+    "detail": {
+      "askToJoin": "参加を申請",
+      "back": "ほかの集まりを見る",
+      "cancelRequest": "申請を取り消す",
+      "capacity": "最大{{count}}人 · {{quorum}}人で確定",
+      "duration": "{{count}}分",
+      "edit": "集まりを編集",
+      "host": "ホスト",
+      "join": "参加する",
+      "leave": "参加できなくなった",
+      "online": "オンライン",
+      "requestSent": "申請しました。ホストが判断します。",
+      "someone": "BananaTalkメンバー",
+      "youreGoing": "参加予定です。"
+    },
+    "errors": {
+      "alreadyGoing": "すでに参加予定です。",
+      "cancelled": "この集まりは中止されました。",
+      "capacityBelowGoing": "定員を参加予定の{{count}}人より少なくすることはできません。",
+      "clubArchived": "このクラブはアーカイブされています。",
+      "clubGone": "このクラブは表示できません。",
+      "endBeforeStart": "集まりを終了できるのは開始後です。",
+      "ended": "この集まりは終了しました。",
+      "full": "この集まりは満席です。",
+      "gatheringGone": "この集まりは表示できません。",
+      "generic": "問題が発生しました。もう一度お試しください。",
+      "hostBlocked": "中止や不参加になった集まりが多いため、現在はホストになれません。",
+      "hostCannotLeave": "ホストは退出ではなく、集まりを中止してください。",
+      "joinClubFirst": "集まりを開く前にクラブに参加してください。",
+      "offline": "オフラインです。接続を確認してください。",
+      "ownerCannotLeave": "オーナーはクラブを削除できますが、退会はできません。",
+      "pastStart": "未来の開始時間を選んでください。",
+      "pending": "申請はホストの判断待ちです。",
+      "started": "この集まりはすでに始まっています。"
+    },
+    "form": {
+      "anyLevel": "レベル不問",
+      "cancel": "キャンセル",
+      "capacity": "定員",
+      "create": "投稿する",
+      "createTitle": "集まりを開く",
+      "description": "何をしますか？（任意）",
+      "duration_one": "所要{{count}}分 · あなたのタイムゾーン",
+      "duration_other": "所要{{count}}分 · あなたのタイムゾーン",
+      "editTitle": "集まりを編集",
+      "errors": {
+        "capacityRange": "定員は2〜20人にしてください。",
+        "descriptionTooLong": "説明は2000文字以内にしてください。",
+        "languageRequired": "練習する言語を選んでください。",
+        "quorumRange": "確定人数は2人以上、定員以下にしてください。",
+        "startInPast": "未来の開始時間を選んでください。",
+        "startRequired": "日時を選んでください。",
+        "startTooFar": "90日以内の日時を選んでください。",
+        "titleRequired": "集まりのタイトルを入力してください。",
+        "titleTooLong": "タイトルは120文字以内にしてください。"
+      },
+      "joinApproval": "一人ずつ承認する",
+      "joinMode": "参加できる人",
+      "joinOpen": "誰でも",
+      "language": "言語",
+      "level": "レベル",
+      "noTopic": "トピックなし",
+      "notHost": "この集まりを編集できるのはホストだけです。",
+      "pickLanguage": "言語を選択",
+      "quorum": "確定人数",
+      "save": "保存",
+      "startsAt": "開始",
+      "title": "タイトル",
+      "topic": "トピック"
+    },
+    "home": {
+      "anyLanguage": "自分の言語",
+      "anyTime": "いつでも",
+      "anyTopic": "すべてのトピック",
+      "empty": "まだ予定がありません。",
+      "emptyCta": "最初の集まりを開く",
+      "error": "一覧を読み込めませんでした。",
+      "hasSeat": "空席あり",
+      "host": "集まりを開く",
+      "language": "言語",
+      "loadMore": "もっと見る",
+      "retry": "再試行",
+      "scopeAll": "すべて",
+      "scopeMe": "マイ集まり",
+      "scopeMine": "自分の言語",
+      "tabClubs": "クラブ",
+      "tabGatherings": "集まり",
+      "title": "集まり",
+      "today": "今日",
+      "topic": "トピック",
+      "week": "今週",
+      "when": "日時"
+    },
+    "host": {
+      "approve": "承認",
+      "callOff": "中止する",
+      "callOffTitle": "中止しますか？",
+      "cancel": "集まりを中止",
+      "cancelConfirm_one": "{{count}}人がこの集まりを待っています。中止を知らせます。",
+      "cancelConfirm_other": "{{count}}人がこの集まりを待っています。中止を知らせます。",
+      "cancelOk": "集まりを中止",
+      "cancelTitle": "この集まりを中止しますか？",
+      "decisionAlone": "今のところ参加はあなただけです。開催しますか、中止しますか？",
+      "decision_one": "今のところ参加は{{count}}人です。開催しますか、中止しますか？",
+      "decision_other": "今のところ参加は{{count}}人です。開催しますか、中止しますか？",
+      "decline": "拒否",
+      "end": "集まりを終了",
+      "ended": "終了しました — 会った人へのメッセージは無料です",
+      "nobodyExpecting": "まだ誰も参加すると答えていません。",
+      "requests_one": "参加待ち {{count}}人",
+      "requests_other": "参加待ち {{count}}人",
+      "runAnyway": "それでも開催"
+    },
+    "nav": "集まり",
+    "quorum": {
+      "confirmed": "確定 · {{count}}人が参加",
+      "needed": "確定まであと{{count}}人 · {{going}}人が参加"
+    },
+    "safety": {
+      "blockHost": "ホストをブロック",
+      "blockOwner": "オーナーをブロック",
+      "more": "その他",
+      "reportClub": "クラブを報告",
+      "reportFailed": "報告を送信できませんでした。もう一度お試しください。",
+      "reportGathering": "集まりを報告",
+      "reported": "ありがとうございます — モデレーターが確認します。"
+    },
+    "status": {
+      "cancelled": "中止",
+      "confirmed": "確定",
+      "ended": "終了",
+      "live": "開催中",
+      "scheduled": "予定"
+    },
+    "time": {
+      "hostLocal": "ホストの時間で{{time}}"
+    },
+    "topics": {
+      "business": "ビジネス",
+      "conversation": "会話",
+      "culture": "文化",
+      "exam_prep": "試験対策",
+      "games": "ゲーム",
+      "grammar": "文法",
+      "media": "音楽・映画・ドラマ",
+      "pronunciation": "発音",
+      "travel": "旅行"
+    }
   }
 }

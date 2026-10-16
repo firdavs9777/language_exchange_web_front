@@ -3004,5 +3004,240 @@
       "tap_to_play": "Touchez pour lire",
       "unmute": "Activer le son"
     }
+  },
+  "clubs": {
+    "card": {
+      "joined": "Membre",
+      "members_one": "{{count}} membre",
+      "members_other": "{{count}} membres"
+    },
+    "detail": {
+      "back": "Voir d'autres clubs",
+      "edit": "Modifier le club",
+      "host": "Organiser une rencontre pour ce club",
+      "join": "Rejoindre le club",
+      "leave": "Quitter le club",
+      "leaveTitle": "Quitter ce club ?",
+      "metTimes_one": "S'est réuni une fois",
+      "metTimes_other": "S'est réuni {{count}} fois",
+      "neverMet": "Ne s'est pas encore réuni",
+      "noGatherings": "Rien de prévu pour l'instant.",
+      "upcoming": "À venir",
+      "youOwn": "Vous êtes propriétaire de ce club"
+    },
+    "form": {
+      "city": "Ville (facultatif)",
+      "create": "Créer le club",
+      "createTitle": "Créer un club",
+      "description": "À propos du club (facultatif)",
+      "editTitle": "Modifier le club",
+      "errors": {
+        "descriptionTooLong": "La description doit faire moins de 2000 caractères.",
+        "interestTooLong": "Le centre d'intérêt doit faire moins de 60 caractères.",
+        "languageRequired": "Choisissez la langue du club.",
+        "nameRequired": "Donnez un nom à votre club.",
+        "nameTooLong": "Le nom doit faire moins de 80 caractères."
+      },
+      "interest": "Ce qui vous rassemble (ex. livres, K-dramas)",
+      "language": "Langue",
+      "name": "Nom",
+      "notAllowed": "Seuls le propriétaire du club ou un organisateur peuvent le modifier.",
+      "placeAddress": "Adresse (facultatif)",
+      "placeName": "Lieu de rendez-vous (facultatif)"
+    },
+    "home": {
+      "empty": "Aucun club ici pour l'instant.",
+      "scopeAll": "Tous",
+      "scopeMember": "Rejoints",
+      "scopeMine": "Mes langues",
+      "start": "Créer un club"
+    },
+    "owner": {
+      "delete": "Supprimer le club",
+      "deleteBody": "Les membres perdent le club. Les rencontres déjà prévues auront quand même lieu.",
+      "deleteTitle": "Supprimer {{name}} ?"
+    },
+    "people": {
+      "makeMember": "Retirer le rôle d'organisateur",
+      "makeOrganizer": "Nommer organisateur",
+      "organizer": "Organisateur",
+      "owner": "Propriétaire",
+      "remove": "Retirer du club",
+      "removeTitle": "Retirer {{name}} ?",
+      "title": "Membres · {{count}}"
+    }
+  },
+  "gatherings": {
+    "card": {
+      "approval": "Sur validation de l'hôte",
+      "full": "Complet",
+      "going": "Inscrit",
+      "hostedBy": "Organisée par {{name}}",
+      "hosting": "Vous êtes l'hôte",
+      "requested": "Demande envoyée",
+      "seatsLeft_one": "{{count}} place restante",
+      "seatsLeft_other": "{{count}} places restantes"
+    },
+    "confirm": {
+      "cancel": "Pas maintenant",
+      "leaveBody": "Les autres comptent sur les personnes qui ont dit oui.",
+      "leaveOk": "Libérer ma place",
+      "leaveTitle": "Libérer votre place ?"
+    },
+    "cover": {
+      "add": "Ajouter une photo de couverture",
+      "badType": "Utilisez une image JPEG, PNG, GIF ou WebP.",
+      "change": "Changer la photo de couverture",
+      "remove": "Retirer la couverture",
+      "tooBig": "Cette image dépasse 10 Mo."
+    },
+    "detail": {
+      "askToJoin": "Demander à participer",
+      "back": "Voir d'autres rencontres",
+      "cancelRequest": "Annuler ma demande",
+      "capacity": "Jusqu'à {{count}} personnes · confirmée à {{quorum}}",
+      "duration": "{{count}} min",
+      "edit": "Modifier la rencontre",
+      "host": "Hôte",
+      "join": "Je participe",
+      "leave": "Je ne peux plus venir",
+      "online": "En ligne",
+      "requestSent": "Demande envoyée. L'hôte décidera.",
+      "someone": "Un membre de BananaTalk",
+      "youreGoing": "Vous participez."
+    },
+    "errors": {
+      "alreadyGoing": "Vous participez déjà.",
+      "cancelled": "Cette rencontre a été annulée.",
+      "capacityBelowGoing": "Le nombre de places ne peut pas être inférieur aux {{count}} personnes déjà inscrites.",
+      "clubArchived": "Ce club est archivé.",
+      "clubGone": "Ce club n'est pas disponible.",
+      "endBeforeStart": "Vous pourrez terminer la rencontre une fois qu'elle aura commencé.",
+      "ended": "Cette rencontre est terminée.",
+      "full": "Cette rencontre est complète.",
+      "gatheringGone": "Cette rencontre n'est pas disponible.",
+      "generic": "Une erreur s'est produite. Réessayez.",
+      "hostBlocked": "Vous ne pouvez pas organiser de rencontre pour le moment : trop de vos rencontres ont été annulées ou manquées.",
+      "hostCannotLeave": "En tant qu'hôte, annulez la rencontre au lieu de la quitter.",
+      "joinClubFirst": "Rejoignez le club avant d'organiser une rencontre pour lui.",
+      "offline": "Vous êtes hors ligne. Vérifiez votre connexion.",
+      "ownerCannotLeave": "En tant que propriétaire, vous pouvez supprimer le club, mais pas le quitter.",
+      "pastStart": "Choisissez une heure de début à venir.",
+      "pending": "Votre demande attend la réponse de l'hôte.",
+      "started": "Cette rencontre a déjà commencé."
+    },
+    "form": {
+      "anyLevel": "Tous niveaux",
+      "cancel": "Annuler",
+      "capacity": "Places",
+      "create": "Publier la rencontre",
+      "createTitle": "Organiser une rencontre",
+      "description": "Qu'allez-vous faire ? (facultatif)",
+      "duration_one": "Dure {{count}} minute · dans votre fuseau horaire",
+      "duration_other": "Dure {{count}} minutes · dans votre fuseau horaire",
+      "editTitle": "Modifier la rencontre",
+      "errors": {
+        "capacityRange": "Le nombre de places doit être compris entre 2 et 20.",
+        "descriptionTooLong": "La description doit faire moins de 2000 caractères.",
+        "languageRequired": "Choisissez la langue que vous allez pratiquer.",
+        "quorumRange": "La rencontre est confirmée à partir de 2 personnes, sans dépasser le nombre de places.",
+        "startInPast": "Choisissez une heure de début à venir.",
+        "startRequired": "Choisissez un jour et une heure.",
+        "startTooFar": "Choisissez une date dans les 90 prochains jours.",
+        "titleRequired": "Donnez un titre à votre rencontre.",
+        "titleTooLong": "Le titre doit faire moins de 120 caractères."
+      },
+      "joinApproval": "J'accepte chaque personne",
+      "joinMode": "Qui peut participer",
+      "joinOpen": "Tout le monde",
+      "language": "Langue",
+      "level": "Niveau",
+      "noTopic": "Aucun thème",
+      "notHost": "Seul l'hôte peut modifier cette rencontre.",
+      "pickLanguage": "Choisir une langue",
+      "quorum": "Confirmer à",
+      "save": "Enregistrer",
+      "startsAt": "Début",
+      "title": "Titre",
+      "topic": "Thème"
+    },
+    "home": {
+      "anyLanguage": "Mes langues",
+      "anyTime": "N'importe quand",
+      "anyTopic": "Tous les thèmes",
+      "empty": "Rien de prévu ici pour l'instant.",
+      "emptyCta": "Organisez la première",
+      "error": "Impossible de charger cette liste.",
+      "hasSeat": "Places disponibles",
+      "host": "Organiser une rencontre",
+      "language": "Langue",
+      "loadMore": "Voir plus",
+      "retry": "Réessayer",
+      "scopeAll": "Toutes",
+      "scopeMe": "Mes rencontres",
+      "scopeMine": "Mes langues",
+      "tabClubs": "Clubs",
+      "tabGatherings": "Rencontres",
+      "title": "Rencontres",
+      "today": "Aujourd'hui",
+      "topic": "Thème",
+      "week": "Cette semaine",
+      "when": "Quand"
+    },
+    "host": {
+      "approve": "Accepter",
+      "callOff": "Annuler",
+      "callOffTitle": "Annuler la rencontre ?",
+      "cancel": "Annuler la rencontre",
+      "cancelConfirm_one": "{{count}} personne l'attend. Elle sera prévenue de l'annulation.",
+      "cancelConfirm_other": "{{count}} personnes l'attendent. Elles seront prévenues de l'annulation.",
+      "cancelOk": "Annuler la rencontre",
+      "cancelTitle": "Annuler cette rencontre ?",
+      "decisionAlone": "Pour l'instant, il n'y a que vous. On maintient ou on annule ?",
+      "decision_one": "Pour l'instant, seule {{count}} personne vient. On maintient ou on annule ?",
+      "decision_other": "Pour l'instant, seules {{count}} personnes viennent. On maintient ou on annule ?",
+      "decline": "Refuser",
+      "end": "Terminer la rencontre",
+      "ended": "Terminée : écrire aux personnes rencontrées est gratuit",
+      "nobodyExpecting": "Personne d'autre n'a encore dit oui.",
+      "requests_one": "{{count}} en attente",
+      "requests_other": "{{count}} en attente",
+      "runAnyway": "Maintenir"
+    },
+    "nav": "Rencontres",
+    "quorum": {
+      "confirmed": "Confirmée · {{count}} participants",
+      "needed": "Encore {{count}} pour confirmer · {{going}} inscrits"
+    },
+    "safety": {
+      "blockHost": "Bloquer l'hôte",
+      "blockOwner": "Bloquer le propriétaire",
+      "more": "Plus",
+      "reportClub": "Signaler le club",
+      "reportFailed": "Impossible d'envoyer le signalement. Réessayez.",
+      "reportGathering": "Signaler la rencontre",
+      "reported": "Merci, nos modérateurs vont l'examiner."
+    },
+    "status": {
+      "cancelled": "Annulée",
+      "confirmed": "Confirmée",
+      "ended": "Terminée",
+      "live": "En cours",
+      "scheduled": "Prévue"
+    },
+    "time": {
+      "hostLocal": "{{time}} pour l'hôte"
+    },
+    "topics": {
+      "business": "Affaires",
+      "conversation": "Conversation",
+      "culture": "Culture",
+      "exam_prep": "Préparation aux examens",
+      "games": "Jeux",
+      "grammar": "Grammaire",
+      "media": "Musique, films et séries",
+      "pronunciation": "Prononciation",
+      "travel": "Voyages"
+    }
   }
 }

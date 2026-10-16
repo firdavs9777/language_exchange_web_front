@@ -3003,5 +3003,240 @@
       "tap_to_play": "点按播放",
       "unmute": "取消静音"
     }
+  },
+  "clubs": {
+    "card": {
+      "joined": "已加入",
+      "members_one": "{{count}}名成员",
+      "members_other": "{{count}}名成员"
+    },
+    "detail": {
+      "back": "看看其他俱乐部",
+      "edit": "编辑俱乐部",
+      "host": "为这个俱乐部发起聚会",
+      "join": "加入俱乐部",
+      "leave": "退出俱乐部",
+      "leaveTitle": "要退出这个俱乐部吗？",
+      "metTimes_one": "已聚会 1 次",
+      "metTimes_other": "已聚会 {{count}} 次",
+      "neverMet": "还没有聚过",
+      "noGatherings": "目前还没有安排。",
+      "upcoming": "即将举行",
+      "youOwn": "这是你创建的俱乐部"
+    },
+    "form": {
+      "city": "城市（可选）",
+      "create": "创建俱乐部",
+      "createTitle": "创建俱乐部",
+      "description": "俱乐部简介（可选）",
+      "editTitle": "编辑俱乐部",
+      "errors": {
+        "descriptionTooLong": "简介请控制在 2000 字以内。",
+        "interestTooLong": "兴趣请控制在 60 字以内。",
+        "languageRequired": "请选择俱乐部的语言。",
+        "nameRequired": "请给俱乐部起个名字。",
+        "nameTooLong": "名称请控制在 80 字以内。"
+      },
+      "interest": "共同兴趣（例如：读书、韩剧）",
+      "language": "语言",
+      "name": "名称",
+      "notAllowed": "只有俱乐部创建者或组织者可以编辑。",
+      "placeAddress": "地址（可选）",
+      "placeName": "聚会地点（可选）"
+    },
+    "home": {
+      "empty": "这里还没有俱乐部。",
+      "scopeAll": "全部",
+      "scopeMember": "已加入",
+      "scopeMine": "我的语言",
+      "start": "创建俱乐部"
+    },
+    "owner": {
+      "delete": "删除俱乐部",
+      "deleteBody": "成员将失去这个俱乐部。已安排的聚会仍会照常举行。",
+      "deleteTitle": "要删除{{name}}吗？"
+    },
+    "people": {
+      "makeMember": "取消组织者",
+      "makeOrganizer": "设为组织者",
+      "organizer": "组织者",
+      "owner": "创建者",
+      "remove": "移出俱乐部",
+      "removeTitle": "要移除{{name}}吗？",
+      "title": "成员 · {{count}}"
+    }
+  },
+  "gatherings": {
+    "card": {
+      "approval": "需主持人审核",
+      "full": "已满",
+      "going": "已报名",
+      "hostedBy": "主持人：{{name}}",
+      "hosting": "你是主持人",
+      "requested": "已申请",
+      "seatsLeft_one": "剩 {{count}} 个名额",
+      "seatsLeft_other": "剩 {{count}} 个名额"
+    },
+    "confirm": {
+      "cancel": "先不了",
+      "leaveBody": "大家都指望着报了名的人。",
+      "leaveOk": "让出名额",
+      "leaveTitle": "要让出你的名额吗？"
+    },
+    "cover": {
+      "add": "添加封面",
+      "badType": "请使用 JPEG、PNG、GIF 或 WebP 图片。",
+      "change": "更换封面",
+      "remove": "移除封面",
+      "tooBig": "图片超过 10 MB。"
+    },
+    "detail": {
+      "askToJoin": "申请参加",
+      "back": "看看其他聚会",
+      "cancelRequest": "撤回申请",
+      "capacity": "最多 {{count}} 人 · {{quorum}} 人即可确认",
+      "duration": "{{count}}分钟",
+      "edit": "编辑聚会",
+      "host": "主持人",
+      "join": "我要参加",
+      "leave": "我去不了了",
+      "online": "线上",
+      "requestSent": "已提交申请，等待主持人确认。",
+      "someone": "一位 BananaTalk 成员",
+      "youreGoing": "你已报名。"
+    },
+    "errors": {
+      "alreadyGoing": "你已经报名了。",
+      "cancelled": "该聚会已取消。",
+      "capacityBelowGoing": "名额不能少于已报名的 {{count}} 人。",
+      "clubArchived": "该俱乐部已归档。",
+      "clubGone": "该俱乐部已不可用。",
+      "endBeforeStart": "聚会开始后才能结束。",
+      "ended": "该聚会已结束。",
+      "full": "该聚会已满。",
+      "gatheringGone": "该聚会已不可用。",
+      "generic": "出了点问题，请重试。",
+      "hostBlocked": "你暂时无法主持聚会：你的聚会被取消或缺席的次数过多。",
+      "hostCannotLeave": "你是主持人，请取消聚会，而不是退出。",
+      "joinClubFirst": "请先加入俱乐部，再为它发起聚会。",
+      "offline": "你已离线，请检查网络连接。",
+      "ownerCannotLeave": "作为创建者，你可以删除俱乐部，但不能退出。",
+      "pastStart": "请选择将来的开始时间。",
+      "pending": "你的申请正在等待主持人确认。",
+      "started": "该聚会已经开始了。"
+    },
+    "form": {
+      "anyLevel": "不限水平",
+      "cancel": "取消",
+      "capacity": "名额",
+      "create": "发布聚会",
+      "createTitle": "发起聚会",
+      "description": "你们要做什么？（可选）",
+      "duration_one": "时长 {{count}} 分钟 · 按你的时区",
+      "duration_other": "时长 {{count}} 分钟 · 按你的时区",
+      "editTitle": "编辑聚会",
+      "errors": {
+        "capacityRange": "名额须在 2 到 20 之间。",
+        "descriptionTooLong": "简介请控制在 2000 字以内。",
+        "languageRequired": "请选择要练习的语言。",
+        "quorumRange": "确认人数须不少于 2 人，且不超过名额。",
+        "startInPast": "请选择将来的开始时间。",
+        "startRequired": "请选择日期和时间。",
+        "startTooFar": "请选择 90 天内的时间。",
+        "titleRequired": "请给聚会起个标题。",
+        "titleTooLong": "标题请控制在 120 字以内。"
+      },
+      "joinApproval": "由我逐一审核",
+      "joinMode": "谁可以参加",
+      "joinOpen": "所有人",
+      "language": "语言",
+      "level": "水平",
+      "noTopic": "无话题",
+      "notHost": "只有主持人可以编辑这个聚会。",
+      "pickLanguage": "选择语言",
+      "quorum": "确认人数",
+      "save": "保存",
+      "startsAt": "开始时间",
+      "title": "标题",
+      "topic": "话题"
+    },
+    "home": {
+      "anyLanguage": "我的语言",
+      "anyTime": "任意时间",
+      "anyTopic": "全部话题",
+      "empty": "这里还没有安排。",
+      "emptyCta": "发起第一场",
+      "error": "无法加载列表。",
+      "hasSeat": "有空名额",
+      "host": "发起聚会",
+      "language": "语言",
+      "loadMore": "加载更多",
+      "retry": "重试",
+      "scopeAll": "全部",
+      "scopeMe": "我的聚会",
+      "scopeMine": "我的语言",
+      "tabClubs": "俱乐部",
+      "tabGatherings": "聚会",
+      "title": "聚会",
+      "today": "今天",
+      "topic": "话题",
+      "week": "本周",
+      "when": "时间"
+    },
+    "host": {
+      "approve": "通过",
+      "callOff": "取消聚会",
+      "callOffTitle": "要取消聚会吗？",
+      "cancel": "取消聚会",
+      "cancelConfirm_one": "有 {{count}} 人正在等这场聚会，我们会通知他们已取消。",
+      "cancelConfirm_other": "有 {{count}} 人正在等这场聚会，我们会通知他们已取消。",
+      "cancelOk": "取消聚会",
+      "cancelTitle": "要取消这场聚会吗？",
+      "decisionAlone": "目前只有你一个人参加。还是照常举行，还是取消？",
+      "decision_one": "目前只有 {{count}} 人参加。还是照常举行，还是取消？",
+      "decision_other": "目前只有 {{count}} 人参加。还是照常举行，还是取消？",
+      "decline": "拒绝",
+      "end": "结束聚会",
+      "ended": "已结束——给刚认识的人发消息是免费的",
+      "nobodyExpecting": "还没有其他人报名。",
+      "requests_one": "{{count}} 人等待加入",
+      "requests_other": "{{count}} 人等待加入",
+      "runAnyway": "照常举行"
+    },
+    "nav": "聚会",
+    "quorum": {
+      "confirmed": "已确认 · {{count}}人参加",
+      "needed": "还差 {{count}} 人即可确认 · {{going}} 人参加"
+    },
+    "safety": {
+      "blockHost": "拉黑主持人",
+      "blockOwner": "拉黑创建者",
+      "more": "更多",
+      "reportClub": "举报俱乐部",
+      "reportFailed": "举报发送失败，请重试。",
+      "reportGathering": "举报聚会",
+      "reported": "谢谢，我们的审核团队会尽快处理。"
+    },
+    "status": {
+      "cancelled": "已取消",
+      "confirmed": "已确认",
+      "ended": "已结束",
+      "live": "正在进行",
+      "scheduled": "已安排"
+    },
+    "time": {
+      "hostLocal": "主持人当地时间 {{time}}"
+    },
+    "topics": {
+      "business": "商务",
+      "conversation": "会话",
+      "culture": "文化",
+      "exam_prep": "备考",
+      "games": "游戏",
+      "grammar": "语法",
+      "media": "音乐、影视",
+      "pronunciation": "发音",
+      "travel": "旅行"
+    }
   }
 }

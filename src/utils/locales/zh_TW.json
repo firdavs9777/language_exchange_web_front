@@ -3003,5 +3003,240 @@
       "tap_to_play": "點一下即可播放",
       "unmute": "取消靜音"
     }
+  },
+  "clubs": {
+    "card": {
+      "joined": "已加入",
+      "members_one": "{{count}}位成員",
+      "members_other": "{{count}}位成員"
+    },
+    "detail": {
+      "back": "看看其他社團",
+      "edit": "編輯社團",
+      "host": "為這個社團發起聚會",
+      "join": "加入社團",
+      "leave": "退出社團",
+      "leaveTitle": "要退出這個社團嗎？",
+      "metTimes_one": "已聚會 1 次",
+      "metTimes_other": "已聚會 {{count}} 次",
+      "neverMet": "還沒有聚過",
+      "noGatherings": "目前還沒有安排。",
+      "upcoming": "即將舉行",
+      "youOwn": "這是你建立的社團"
+    },
+    "form": {
+      "city": "城市（選填）",
+      "create": "建立社團",
+      "createTitle": "建立社團",
+      "description": "社團簡介（選填）",
+      "editTitle": "編輯社團",
+      "errors": {
+        "descriptionTooLong": "簡介請控制在 2000 字以內。",
+        "interestTooLong": "興趣請控制在 60 字以內。",
+        "languageRequired": "請選擇社團的語言。",
+        "nameRequired": "請幫社團取個名字。",
+        "nameTooLong": "名稱請控制在 80 字以內。"
+      },
+      "interest": "共同興趣（例如：讀書、韓劇）",
+      "language": "語言",
+      "name": "名稱",
+      "notAllowed": "只有社團建立者或組織者可以編輯。",
+      "placeAddress": "地址（選填）",
+      "placeName": "聚會地點（選填）"
+    },
+    "home": {
+      "empty": "這裡還沒有社團。",
+      "scopeAll": "全部",
+      "scopeMember": "已加入",
+      "scopeMine": "我的語言",
+      "start": "建立社團"
+    },
+    "owner": {
+      "delete": "刪除社團",
+      "deleteBody": "成員將失去這個社團。已安排的聚會仍會照常舉行。",
+      "deleteTitle": "要刪除{{name}}嗎？"
+    },
+    "people": {
+      "makeMember": "取消組織者",
+      "makeOrganizer": "設為組織者",
+      "organizer": "組織者",
+      "owner": "建立者",
+      "remove": "移出社團",
+      "removeTitle": "要移除{{name}}嗎？",
+      "title": "成員 · {{count}}"
+    }
+  },
+  "gatherings": {
+    "card": {
+      "approval": "需主辦人審核",
+      "full": "已額滿",
+      "going": "已報名",
+      "hostedBy": "主辦人：{{name}}",
+      "hosting": "你是主辦人",
+      "requested": "已申請",
+      "seatsLeft_one": "剩 {{count}} 個名額",
+      "seatsLeft_other": "剩 {{count}} 個名額"
+    },
+    "confirm": {
+      "cancel": "先不要",
+      "leaveBody": "大家都靠著已報名的人。",
+      "leaveOk": "讓出名額",
+      "leaveTitle": "要讓出你的名額嗎？"
+    },
+    "cover": {
+      "add": "新增封面",
+      "badType": "請使用 JPEG、PNG、GIF 或 WebP 圖片。",
+      "change": "更換封面",
+      "remove": "移除封面",
+      "tooBig": "圖片超過 10 MB。"
+    },
+    "detail": {
+      "askToJoin": "申請參加",
+      "back": "看看其他聚會",
+      "cancelRequest": "撤回申請",
+      "capacity": "最多 {{count}} 人 · {{quorum}} 人即可確認",
+      "duration": "{{count}}分鐘",
+      "edit": "編輯聚會",
+      "host": "主辦人",
+      "join": "我要參加",
+      "leave": "我沒辦法去了",
+      "online": "線上",
+      "requestSent": "已送出申請，等待主辦人確認。",
+      "someone": "一位 BananaTalk 成員",
+      "youreGoing": "你已報名。"
+    },
+    "errors": {
+      "alreadyGoing": "你已經報名了。",
+      "cancelled": "此聚會已取消。",
+      "capacityBelowGoing": "名額不能少於已報名的 {{count}} 人。",
+      "clubArchived": "此社團已封存。",
+      "clubGone": "此社團已無法查看。",
+      "endBeforeStart": "聚會開始後才能結束。",
+      "ended": "此聚會已結束。",
+      "full": "此聚會已額滿。",
+      "gatheringGone": "此聚會已無法查看。",
+      "generic": "發生錯誤，請再試一次。",
+      "hostBlocked": "你暫時無法主辦聚會：你的聚會被取消或缺席的次數太多。",
+      "hostCannotLeave": "你是主辦人，請取消聚會，而不是退出。",
+      "joinClubFirst": "請先加入社團，再為它發起聚會。",
+      "offline": "你已離線，請檢查網路連線。",
+      "ownerCannotLeave": "身為建立者，你可以刪除社團，但不能退出。",
+      "pastStart": "請選擇未來的開始時間。",
+      "pending": "你的申請正在等待主辦人確認。",
+      "started": "此聚會已經開始了。"
+    },
+    "form": {
+      "anyLevel": "不限程度",
+      "cancel": "取消",
+      "capacity": "名額",
+      "create": "發布聚會",
+      "createTitle": "發起聚會",
+      "description": "你們要做什麼？（選填）",
+      "duration_one": "長度 {{count}} 分鐘 · 依你的時區",
+      "duration_other": "長度 {{count}} 分鐘 · 依你的時區",
+      "editTitle": "編輯聚會",
+      "errors": {
+        "capacityRange": "名額須介於 2 到 20 之間。",
+        "descriptionTooLong": "簡介請控制在 2000 字以內。",
+        "languageRequired": "請選擇要練習的語言。",
+        "quorumRange": "確認人數須至少 2 人，且不超過名額。",
+        "startInPast": "請選擇未來的開始時間。",
+        "startRequired": "請選擇日期和時間。",
+        "startTooFar": "請選擇 90 天內的時間。",
+        "titleRequired": "請幫聚會取個標題。",
+        "titleTooLong": "標題請控制在 120 字以內。"
+      },
+      "joinApproval": "由我逐一審核",
+      "joinMode": "誰可以參加",
+      "joinOpen": "所有人",
+      "language": "語言",
+      "level": "程度",
+      "noTopic": "無話題",
+      "notHost": "只有主辦人可以編輯這個聚會。",
+      "pickLanguage": "選擇語言",
+      "quorum": "確認人數",
+      "save": "儲存",
+      "startsAt": "開始時間",
+      "title": "標題",
+      "topic": "話題"
+    },
+    "home": {
+      "anyLanguage": "我的語言",
+      "anyTime": "任何時間",
+      "anyTopic": "所有話題",
+      "empty": "這裡還沒有安排。",
+      "emptyCta": "發起第一場",
+      "error": "無法載入列表。",
+      "hasSeat": "還有名額",
+      "host": "發起聚會",
+      "language": "語言",
+      "loadMore": "載入更多",
+      "retry": "再試一次",
+      "scopeAll": "全部",
+      "scopeMe": "我的聚會",
+      "scopeMine": "我的語言",
+      "tabClubs": "社團",
+      "tabGatherings": "聚會",
+      "title": "聚會",
+      "today": "今天",
+      "topic": "話題",
+      "week": "本週",
+      "when": "時間"
+    },
+    "host": {
+      "approve": "通過",
+      "callOff": "取消聚會",
+      "callOffTitle": "要取消聚會嗎？",
+      "cancel": "取消聚會",
+      "cancelConfirm_one": "有 {{count}} 人正在等這場聚會，我們會通知他們已取消。",
+      "cancelConfirm_other": "有 {{count}} 人正在等這場聚會，我們會通知他們已取消。",
+      "cancelOk": "取消聚會",
+      "cancelTitle": "要取消這場聚會嗎？",
+      "decisionAlone": "目前只有你一個人參加。還是照常舉行，還是取消？",
+      "decision_one": "目前只有 {{count}} 人參加。還是照常舉行，還是取消？",
+      "decision_other": "目前只有 {{count}} 人參加。還是照常舉行，還是取消？",
+      "decline": "拒絕",
+      "end": "結束聚會",
+      "ended": "已結束——傳訊息給剛認識的人是免費的",
+      "nobodyExpecting": "還沒有其他人報名。",
+      "requests_one": "{{count}} 人等待加入",
+      "requests_other": "{{count}} 人等待加入",
+      "runAnyway": "照常舉行"
+    },
+    "nav": "聚會",
+    "quorum": {
+      "confirmed": "已確認 · {{count}}人參加",
+      "needed": "還差 {{count}} 人即可確認 · {{going}} 人參加"
+    },
+    "safety": {
+      "blockHost": "封鎖主辦人",
+      "blockOwner": "封鎖建立者",
+      "more": "更多",
+      "reportClub": "檢舉社團",
+      "reportFailed": "檢舉沒有送出，請再試一次。",
+      "reportGathering": "檢舉聚會",
+      "reported": "謝謝，我們的審核團隊會盡快處理。"
+    },
+    "status": {
+      "cancelled": "已取消",
+      "confirmed": "已確認",
+      "ended": "已結束",
+      "live": "正在進行",
+      "scheduled": "已排定"
+    },
+    "time": {
+      "hostLocal": "主辦人當地時間 {{time}}"
+    },
+    "topics": {
+      "business": "商務",
+      "conversation": "會話",
+      "culture": "文化",
+      "exam_prep": "備考",
+      "games": "遊戲",
+      "grammar": "文法",
+      "media": "音樂、影視",
+      "pronunciation": "發音",
+      "travel": "旅遊"
+    }
   }
 }

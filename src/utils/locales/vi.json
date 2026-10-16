@@ -3003,5 +3003,240 @@
       "tap_to_play": "Chạm để phát",
       "unmute": "Bật tiếng"
     }
+  },
+  "clubs": {
+    "card": {
+      "joined": "Đã tham gia",
+      "members_one": "{{count}} thành viên",
+      "members_other": "{{count}} thành viên"
+    },
+    "detail": {
+      "back": "Xem các câu lạc bộ khác",
+      "edit": "Sửa câu lạc bộ",
+      "host": "Tổ chức buổi gặp cho câu lạc bộ này",
+      "join": "Tham gia CLB",
+      "leave": "Rời CLB",
+      "leaveTitle": "Rời câu lạc bộ này?",
+      "metTimes_one": "Đã gặp một lần",
+      "metTimes_other": "Đã gặp {{count}} lần",
+      "neverMet": "Chưa gặp lần nào",
+      "noGatherings": "Chưa có gì được lên lịch.",
+      "upcoming": "Sắp tới",
+      "youOwn": "Bạn là chủ câu lạc bộ này"
+    },
+    "form": {
+      "city": "Thành phố (tùy chọn)",
+      "create": "Tạo câu lạc bộ",
+      "createTitle": "Lập câu lạc bộ",
+      "description": "Giới thiệu câu lạc bộ (tùy chọn)",
+      "editTitle": "Sửa câu lạc bộ",
+      "errors": {
+        "descriptionTooLong": "Mô tả không được quá 2000 ký tự.",
+        "interestTooLong": "Sở thích không được quá 60 ký tự.",
+        "languageRequired": "Chọn ngôn ngữ của câu lạc bộ.",
+        "nameRequired": "Hãy đặt tên cho câu lạc bộ.",
+        "nameTooLong": "Tên không được quá 80 ký tự."
+      },
+      "interest": "Điều gắn kết các bạn (vd: sách, phim Hàn)",
+      "language": "Ngôn ngữ",
+      "name": "Tên",
+      "notAllowed": "Chỉ chủ câu lạc bộ hoặc ban tổ chức mới sửa được.",
+      "placeAddress": "Địa chỉ (tùy chọn)",
+      "placeName": "Nơi gặp nhau (tùy chọn)"
+    },
+    "home": {
+      "empty": "Chưa có câu lạc bộ nào ở đây.",
+      "scopeAll": "Tất cả",
+      "scopeMember": "Đã tham gia",
+      "scopeMine": "Ngôn ngữ của tôi",
+      "start": "Lập câu lạc bộ"
+    },
+    "owner": {
+      "delete": "Xóa câu lạc bộ",
+      "deleteBody": "Thành viên sẽ mất câu lạc bộ. Các buổi gặp đã lên lịch vẫn diễn ra.",
+      "deleteTitle": "Xóa {{name}}?"
+    },
+    "people": {
+      "makeMember": "Bỏ ban tổ chức",
+      "makeOrganizer": "Đặt làm ban tổ chức",
+      "organizer": "Ban tổ chức",
+      "owner": "Chủ CLB",
+      "remove": "Xóa khỏi câu lạc bộ",
+      "removeTitle": "Xóa {{name}}?",
+      "title": "Thành viên · {{count}}"
+    }
+  },
+  "gatherings": {
+    "card": {
+      "approval": "Cần người tổ chức duyệt",
+      "full": "Đã đầy",
+      "going": "Sẽ tham gia",
+      "hostedBy": "Tổ chức bởi {{name}}",
+      "hosting": "Bạn là người tổ chức",
+      "requested": "Đã gửi yêu cầu",
+      "seatsLeft_one": "Còn {{count}} chỗ",
+      "seatsLeft_other": "Còn {{count}} chỗ"
+    },
+    "confirm": {
+      "cancel": "Để sau",
+      "leaveBody": "Mọi người đang trông chờ những ai đã nhận lời.",
+      "leaveOk": "Nhường chỗ của tôi",
+      "leaveTitle": "Nhường chỗ của bạn?"
+    },
+    "cover": {
+      "add": "Thêm ảnh bìa",
+      "badType": "Dùng ảnh JPEG, PNG, GIF hoặc WebP.",
+      "change": "Đổi ảnh bìa",
+      "remove": "Gỡ ảnh bìa",
+      "tooBig": "Ảnh này lớn hơn 10 MB."
+    },
+    "detail": {
+      "askToJoin": "Xin tham gia",
+      "back": "Xem các buổi gặp khác",
+      "cancelRequest": "Hủy yêu cầu của tôi",
+      "capacity": "Tối đa {{count}} người · xác nhận khi đủ {{quorum}}",
+      "duration": "{{count}} phút",
+      "edit": "Sửa buổi gặp",
+      "host": "Người tổ chức",
+      "join": "Tôi sẽ tham gia",
+      "leave": "Tôi không đi được nữa",
+      "online": "Trực tuyến",
+      "requestSent": "Đã gửi yêu cầu. Người tổ chức sẽ quyết định.",
+      "someone": "Một thành viên BananaTalk",
+      "youreGoing": "Bạn sẽ tham gia."
+    },
+    "errors": {
+      "alreadyGoing": "Bạn đã tham gia rồi.",
+      "cancelled": "Buổi gặp này đã bị hủy.",
+      "capacityBelowGoing": "Số chỗ không được ít hơn {{count}} người đã tham gia.",
+      "clubArchived": "Câu lạc bộ này đã được lưu trữ.",
+      "clubGone": "Câu lạc bộ này không còn khả dụng.",
+      "endBeforeStart": "Bạn chỉ có thể kết thúc buổi gặp sau khi nó đã bắt đầu.",
+      "ended": "Buổi gặp này đã kết thúc.",
+      "full": "Buổi gặp này đã đầy.",
+      "gatheringGone": "Buổi gặp này không còn khả dụng.",
+      "generic": "Đã xảy ra lỗi. Hãy thử lại.",
+      "hostBlocked": "Hiện bạn chưa thể tổ chức: quá nhiều buổi gặp của bạn đã bị hủy hoặc bỏ lỡ.",
+      "hostCannotLeave": "Là người tổ chức, hãy hủy buổi gặp thay vì rời đi.",
+      "joinClubFirst": "Hãy tham gia câu lạc bộ trước khi tổ chức cho nó.",
+      "offline": "Bạn đang ngoại tuyến. Hãy kiểm tra kết nối.",
+      "ownerCannotLeave": "Là chủ câu lạc bộ, bạn có thể xóa nhưng không thể rời câu lạc bộ.",
+      "pastStart": "Hãy chọn giờ bắt đầu trong tương lai.",
+      "pending": "Yêu cầu của bạn đang chờ người tổ chức.",
+      "started": "Buổi gặp này đã bắt đầu."
+    },
+    "form": {
+      "anyLevel": "Mọi trình độ",
+      "cancel": "Hủy",
+      "capacity": "Số chỗ",
+      "create": "Đăng buổi gặp",
+      "createTitle": "Tổ chức buổi gặp",
+      "description": "Mọi người sẽ làm gì? (tùy chọn)",
+      "duration_one": "Kéo dài {{count}} phút · theo múi giờ của bạn",
+      "duration_other": "Kéo dài {{count}} phút · theo múi giờ của bạn",
+      "editTitle": "Sửa buổi gặp",
+      "errors": {
+        "capacityRange": "Số chỗ phải từ 2 đến 20.",
+        "descriptionTooLong": "Mô tả không được quá 2000 ký tự.",
+        "languageRequired": "Chọn ngôn ngữ bạn sẽ luyện tập.",
+        "quorumRange": "Buổi gặp xác nhận khi có từ 2 người trở lên và không quá số chỗ.",
+        "startInPast": "Hãy chọn giờ bắt đầu trong tương lai.",
+        "startRequired": "Chọn ngày và giờ.",
+        "startTooFar": "Chọn thời điểm trong vòng 90 ngày tới.",
+        "titleRequired": "Hãy đặt tiêu đề cho buổi gặp.",
+        "titleTooLong": "Tiêu đề không được quá 120 ký tự."
+      },
+      "joinApproval": "Tôi duyệt từng người",
+      "joinMode": "Ai có thể tham gia",
+      "joinOpen": "Bất kỳ ai",
+      "language": "Ngôn ngữ",
+      "level": "Trình độ",
+      "noTopic": "Không có chủ đề",
+      "notHost": "Chỉ người tổ chức mới sửa được buổi gặp này.",
+      "pickLanguage": "Chọn ngôn ngữ",
+      "quorum": "Xác nhận khi đủ",
+      "save": "Lưu",
+      "startsAt": "Bắt đầu",
+      "title": "Tiêu đề",
+      "topic": "Chủ đề"
+    },
+    "home": {
+      "anyLanguage": "Ngôn ngữ của tôi",
+      "anyTime": "Mọi lúc",
+      "anyTopic": "Mọi chủ đề",
+      "empty": "Chưa có gì được lên lịch ở đây.",
+      "emptyCta": "Tổ chức buổi đầu tiên",
+      "error": "Không tải được danh sách này.",
+      "hasSeat": "Còn chỗ trống",
+      "host": "Tổ chức buổi gặp",
+      "language": "Ngôn ngữ",
+      "loadMore": "Tải thêm",
+      "retry": "Thử lại",
+      "scopeAll": "Tất cả",
+      "scopeMe": "Buổi gặp của tôi",
+      "scopeMine": "Ngôn ngữ của tôi",
+      "tabClubs": "Câu lạc bộ",
+      "tabGatherings": "Buổi gặp",
+      "title": "Buổi gặp",
+      "today": "Hôm nay",
+      "topic": "Chủ đề",
+      "week": "Tuần này",
+      "when": "Khi nào"
+    },
+    "host": {
+      "approve": "Chấp nhận",
+      "callOff": "Hủy buổi gặp",
+      "callOffTitle": "Hủy buổi gặp?",
+      "cancel": "Hủy buổi gặp",
+      "cancelConfirm_one": "{{count}} người đang chờ buổi này. Họ sẽ được báo là đã hủy.",
+      "cancelConfirm_other": "{{count}} người đang chờ buổi này. Họ sẽ được báo là đã hủy.",
+      "cancelOk": "Hủy buổi gặp",
+      "cancelTitle": "Hủy buổi gặp này?",
+      "decisionAlone": "Hiện mới chỉ có mình bạn. Vẫn tổ chức hay hủy?",
+      "decision_one": "Hiện mới chỉ có {{count}} người. Vẫn tổ chức hay hủy?",
+      "decision_other": "Hiện mới chỉ có {{count}} người. Vẫn tổ chức hay hủy?",
+      "decline": "Từ chối",
+      "end": "Kết thúc buổi gặp",
+      "ended": "Đã kết thúc — nhắn tin cho người bạn vừa gặp là miễn phí",
+      "nobodyExpecting": "Chưa có ai khác nhận lời.",
+      "requests_one": "{{count}} đang chờ tham gia",
+      "requests_other": "{{count}} đang chờ tham gia",
+      "runAnyway": "Vẫn tổ chức"
+    },
+    "nav": "Buổi gặp",
+    "quorum": {
+      "confirmed": "Đã xác nhận · {{count}} người tham gia",
+      "needed": "Cần thêm {{count}} người để xác nhận · {{going}} người tham gia"
+    },
+    "safety": {
+      "blockHost": "Chặn người tổ chức",
+      "blockOwner": "Chặn chủ CLB",
+      "more": "Thêm",
+      "reportClub": "Báo cáo câu lạc bộ",
+      "reportFailed": "Không gửi được báo cáo. Hãy thử lại.",
+      "reportGathering": "Báo cáo buổi gặp",
+      "reported": "Cảm ơn — đội kiểm duyệt sẽ xem xét."
+    },
+    "status": {
+      "cancelled": "Đã hủy",
+      "confirmed": "Đã xác nhận",
+      "ended": "Đã kết thúc",
+      "live": "Đang diễn ra",
+      "scheduled": "Đã lên lịch"
+    },
+    "time": {
+      "hostLocal": "{{time}} theo giờ người tổ chức"
+    },
+    "topics": {
+      "business": "Kinh doanh",
+      "conversation": "Hội thoại",
+      "culture": "Văn hóa",
+      "exam_prep": "Luyện thi",
+      "games": "Trò chơi",
+      "grammar": "Ngữ pháp",
+      "media": "Nhạc, phim & truyền hình",
+      "pronunciation": "Phát âm",
+      "travel": "Du lịch"
+    }
   }
 }
