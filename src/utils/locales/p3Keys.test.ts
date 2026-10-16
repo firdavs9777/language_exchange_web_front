@@ -1,4 +1,4 @@
-// Every key a Phase 3 unit added (scripts/i18n/keys/2026-10-16-p3-*.json,
+// Every key a Phase 3 or Phase 4 unit added (scripts/i18n/keys/2026-10-16-p3-*.json / …p4-*.json,
 // written by scripts/i18n/new-keys.js) exists in all 18 locale files, is not
 // empty, and keeps the English placeholders ({{name}}, {{count}}).
 import fs from "fs";
@@ -6,7 +6,7 @@ import path from "path";
 
 const keysDir = path.join(__dirname, "../../../scripts/i18n/keys");
 const keyFiles = fs.existsSync(keysDir)
-  ? fs.readdirSync(keysDir).filter((f) => /^2026-10-16-p3-[a-z]+\.json$/.test(f))
+  ? fs.readdirSync(keysDir).filter((f) => /^2026-10-16-p[34]-[a-z]+\.json$/.test(f))
   : [];
 const localeFiles = fs.readdirSync(__dirname).filter((f) => f.endsWith(".json"));
 

@@ -124,12 +124,71 @@ Phase 3 Links (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-pa
 - [x] P3-LINK-PUSH Push unit links — suite 3282 pass, build green, deployed 2026-10-16 (story page 200, AASA has no /chat/)
 - [ ] Backend follow-up: an OG type for `story` (`/og/story/:id` returns the generic card today; the nginx rule already routes it). S
 - [ ] After this web release is live: backend removes the legacy `token=` from the Google callback redirect (backend REMAINING_WORK). S
-- [ ] Phase 4 Reels: feed, viewer, create (video <=180 s, `isReel`), like/comment/share. M
-- [ ] Phase 4 Gatherings/clubs: browse, detail, join/leave, host create/edit, host decisions. M
-- [ ] Phase 4 Voice rooms: list, listen, request/take speaker, host controls (`livekit-client`). L
-- [ ] Phase 4 Calls: 1:1 voice/video via LiveKit + `/calls/*` signalling, incoming ring while a tab is open, controls, history + missed calls. L
-- [ ] Phase 4 Language rooms (`routes/rooms.js`) + community City and Genders tabs. M
-- [ ] Phase 4 Sign in with Apple (Apple JS; backend verify, Phase 1 item 7). S
+Phase 4 Reels (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
+- [ ] P4-REEL-1 Reels feed endpoint, video-config endpoint and a reel normaliser that survives 2.6.1 data
+- [ ] P4-REEL-2 One-time reels content-policy gate (Apple 1.2), shared with the app via `reelsPolicyAccepted`
+- [ ] P4-REEL-3 `/reels` grid: cursor paging, empty/unavailable states, "Create reel" entry
+- [ ] P4-REEL-4 Full-screen reel viewer: one playing video, muted autoplay with unmute, swipe/wheel/keys, views recorded
+- [ ] P4-REEL-5 Viewer actions: like, comments drawer, share, report, block
+- [ ] P4-REEL-6 Create a reel: video ≤ 180 s checked before upload, `isReel: true`, rollback on a failed upload
+- [ ] P4-REEL-7 Routes, navbar and Moments entry behind `webReelsEnabled` + `reelsEnabled`; flag-off test
+- [ ] P4-REEL-I18N New reels strings in all 18 locales
+- [ ] P4-REEL-PUSH Push unit reels (suite + build green, deployed dark, production smoke recorded)
+
+Phase 4 Gatherings/clubs (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
+- [ ] P4-GATH-1 Gatherings + clubs endpoints in one slice, same requests the app sends
+- [ ] P4-GATH-2 Shared helpers: local start time, quorum line, host-decision window, error text
+- [ ] P4-GATH-3 Browse page: Gatherings and Clubs tabs, the app's filters, load more
+- [ ] P4-GATH-4 Gathering page: details, RSVP / request / leave, report or block the host
+- [ ] P4-GATH-5 Host a gathering: create and edit form with the backend's limits
+- [ ] P4-GATH-6 Host decisions: join requests, run it or call it off, cancel, end
+- [ ] P4-GATH-7 Club page: members and roles, join/leave, upcoming gatherings, manage members
+- [ ] P4-GATH-8 Create, edit and delete a club
+- [ ] P4-GATH-9 Optional cover photo for a gathering or a club
+- [ ] P4-GATH-10 Routes and nav entry behind `webGatheringsEnabled`; nothing visible while it is off
+- [ ] P4-GATH-I18N New gatherings/clubs strings in all 18 locales
+- [ ] P4-GATH-PUSH Push unit gatherings (suite + build green, deployed dark, production smoke recorded)
+
+Phase 4 Rooms — voice rooms, language rooms, City/Genders (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
+- [ ] P4-ROOM-1 `livekit-client@2.22.4` behind a JS loader + `.d.ts`, excluded from tsconfig, kept out of the eager graph
+- [ ] P4-ROOM-2 `lkSession` facade (connect, mic/camera, audio unlock, peers, disconnect reasons) + the shared LiveKit test fake
+- [ ] P4-ROOM-3 Voice rooms REST slice (list, detail, create, join, token, leave, end, promote, RSVP)
+- [ ] P4-ROOM-4 Voice rooms list page with create dialog and scheduled-room RSVP
+- [ ] P4-ROOM-5 `useVoiceRoom`: join → token → socket → LiveKit, heartbeat, live events, rejoin after reconnect, leave
+- [ ] P4-ROOM-6 Voice room page: listen, take the mic, raise a hand, tap-to-enable-sound, mic-denied help, room chat
+- [ ] P4-ROOM-7 Host controls: raised hands, mute all, make co-host, end room
+- [ ] P4-ROOM-8 Language rooms REST slice + list page grouped by language + create topic room
+- [ ] P4-ROOM-9 Language room page: history, live messages, send with ack, presence, join/leave/request to join
+- [ ] P4-ROOM-10 Language room owner tools: join requests approve/deny, remove member
+- [ ] P4-ROOM-11 Community City and Genders tabs (community#7), same queries as the app
+- [ ] P4-ROOM-12 Routes and nav entries behind `webVoiceRoomsEnabled` / `webLanguageRoomsEnabled`; flag-off test
+- [ ] P4-ROOM-I18N New rooms strings in all 18 locales
+- [ ] P4-ROOM-PUSH Push unit rooms (suite + build + livekit checks green, deployed dark, production smoke recorded)
+
+Phase 4 Calls (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
+- [ ] P4-CALL-0 CALLS worktree off `web/p4-rooms` after the LiveKit wrapper (P4-ROOM-1), real node_modules
+- [ ] P4-CALL-1 `callsSlice`: initiate / accept / decline / end / upgrade / current / history / missed count / missed seen
+- [ ] P4-CALL-2 Call error classifier, per-tab device id, mic/camera preflight
+- [ ] P4-CALL-3 Pure call state machine (incoming, outgoing, accepted elsewhere, terminal outcomes, resync after reconnect)
+- [ ] P4-CALL-4 Eager `IncomingCallHost` + call bridge in App.tsx; the call engine is a lazy chunk, inert while `webCallsEnabled` is off
+- [ ] P4-CALL-5 Call engine: socket events, other tabs (BroadcastChannel), resync on reconnect and after a reload
+- [ ] P4-CALL-6 Incoming call banner: ringtone with an autoplay fallback, title flash, accept, decline, decline with a message
+- [ ] P4-CALL-7 Placing a call: mic/camera preflight before anything rings, busy / unavailable / blocked / conversation-cap refusals in a dialog
+- [ ] P4-CALL-8 Call screen: ringback + cancel, LiveKit media, mute, camera on/off (voice → video upgrade), remote video, "tap to enable sound", reconnecting, hang up, declined / no answer / busy / dropped outcome line
+- [ ] P4-CALL-9 Entry points: voice/video buttons in the chat header and on profiles, "Call back" on the chat call card
+- [ ] P4-CALL-10 Call history page `/calls` and the missed-call badge
+- [ ] P4-CALL-11 Flag off: no call button, no `/calls`, no socket listener, no engine chunk
+- [ ] P4-CALL-I18N New calls strings in all 18 locales
+- [ ] P4-CALL-PUSH Push unit calls (suite + build green, deployed dark, production smoke recorded)
+
+Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
+- [ ] P4-APPLE-1 Apple JS loader, nonce and popup sign-in wrapper (script fetched only on click)
+- [ ] P4-APPLE-2 `POST /auth/apple/web` endpoint and the error text for each refusal
+- [ ] P4-APPLE-3 One "finish social sign-in" path shared by Google and Apple (profile completion included)
+- [ ] P4-APPLE-4 "Sign in with Apple" button: nonce → Apple popup → backend → signed in
+- [ ] P4-APPLE-5 Button on Login and Register; hidden while `webAppleSigninEnabled` is off or no Services ID is configured
+- [ ] P4-APPLE-I18N New Apple sign-in strings in all 18 locales
+- [ ] P4-APPLE-PUSH Push unit apple (suite + build green, deployed dark, production smoke recorded)
 - [ ] Bundle budget: `npm run test:budget` fails -- first-paint 331.0 KB vs 326 KB budget (origin/main a944011 was already 329.2 KB). Not run by the deploy workflow. S
 
 ## 5. Decided / won't fix
