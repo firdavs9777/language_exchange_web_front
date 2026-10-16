@@ -29,6 +29,9 @@ import MessageActionMenu from "./actions/MessageActionMenu";
 import ForwardDialog from "./actions/ForwardDialog";
 import EditMessageDialog, { editErrorText } from "./actions/EditMessageDialog";
 import DeleteMessageDialog, { deleteErrorText } from "./actions/DeleteMessageDialog";
+import SendErrorDialog from "./actions/SendErrorDialog";
+import { classifySendError } from "./lib/sendErrors";
+import notify from "../../design/notify";
 import PinnedBar from "./actions/PinnedBar";
 import ReplyComposerBar from "./actions/ReplyComposerBar";
 import { canDeleteForEveryone } from "./lib/messageActions";
@@ -209,6 +212,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const [deletingMsg, setDeletingMsg] = useState<Message | null>(null);
   const [deleteBusy, setDeleteBusy] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  const [sendError, setSendError] = useState<{ kind: any; detail: string } | null>(null);
 
   // The "⋯" panel: profile, media, mute, wallpaper, block, report, delete.
   const [isInfoOpen, setIsInfoOpen] = useState(false);
@@ -265,6 +269,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const typingClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const selectedUserRef = useRef<string>(selectedUser);
+  // The socket listeners are bound once per socket; they reach the current
+  // reportSendError through this ref instead of re-binding on every render.
+  const reportSendErrorRef = useRef<(err: any) => void>(() => {});
   // Which conversation the local list was last seeded from — a page of a
   // DIFFERENT conversation must not inherit this one's live messages.
   const seededUserRef = useRef<string>("");
@@ -581,8 +588,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
       }
     };
 
-    const handleMessageError = (errorData: { message: string; error: string }) => {
-      console.error("[Socket] Message error:", errorData);
+    // A refusal for an emit that carried no callback (ours always do, so this
+    // is defensive) -- explain it all the same.
+    const handleMessageError = (errorData: { message?: string; error?: string }) => {
+      reportSendErrorRef.current(errorData);
     };
 
     const handleMessageCorrection = (data: {
@@ -665,8 +674,21 @@ const ChatContent: React.FC<ChatContentProps> = ({
       );
     };
 
+    // The burst limiter refuses with this push and NO ack, so the newest
+    // in-flight bubble would otherwise spin until the ack timeout.
     const handleMessageSendError = (errorData: { error?: string }) => {
-      console.error("[Socket] messageSendError:", errorData);
+      setMessages((prev) => {
+        for (let i = prev.length - 1; i >= 0; i -= 1) {
+          const m = prev[i];
+          if (m.isOptimistic && m.status === "sending") {
+            const next = [...prev];
+            next[i] = { ...m, status: "error", isOptimistic: false };
+            return next;
+          }
+        }
+        return prev;
+      });
+      reportSendErrorRef.current(errorData);
     };
 
     const handleQueuedMessages = (
@@ -1107,6 +1129,32 @@ const ChatContent: React.FC<ChatContentProps> = ({
     );
   };
 
+  // One place a refused send is explained. Limits / cap / block get a
+  // dialog; the burst limiter and anything unexpected get a toast. The bubble
+  // itself is marked failed by the caller (Retry stays available).
+  const reportSendError = useCallback(
+    (err: any) => {
+      const classified = classifySendError(err);
+      if (classified.kind === "rateLimited") {
+        notify.error(t("chatPage.sendErrors.tooFast") || "You're sending messages too fast. Wait a moment.", {
+          toastId: "chat-send-too-fast",
+        });
+        return;
+      }
+      if (classified.kind === "generic") {
+        notify.error(t("chatPage.sendErrors.generic") || "Message not sent. Tap Retry to try again.", {
+          toastId: "chat-send-failed",
+        });
+        return;
+      }
+      setSendError(classified);
+    },
+    [t]
+  );
+  useEffect(() => {
+    reportSendErrorRef.current = reportSendError;
+  });
+
   // ========== Send Text Message ==========
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1145,6 +1193,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       } catch (err) {
         console.error("Reply send failed:", err);
         markOptimisticError(tempId);
+        reportSendError(err);
       } finally {
         setIsSending(false);
       }
@@ -1222,6 +1271,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           msg._id === tempId ? { ...msg, status: "error", isOptimistic: false } : msg
         )
       );
+      reportSendError(err);
     }
   };
 
@@ -1293,9 +1343,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
     } catch (err) {
       setMessages((prev) =>
         prev.map((msg) =>
-          msg._id === tempId ? { ...msg, status: "error" } : msg
+          msg._id === tempId ? { ...msg, status: "error", isOptimistic: false } : msg
         )
       );
+      reportSendError(err);
     }
   };
 
@@ -1366,6 +1417,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           msg._id === tempId ? { ...msg, status: "error", isOptimistic: false } : msg
         )
       );
+      reportSendError(err);
     }
   };
 
@@ -1449,6 +1501,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           msg._id === tempId ? { ...msg, status: "error", isOptimistic: false } : msg
         )
       );
+      reportSendError(err);
     } finally {
       setIsSending(false);
       handleCancelMedia();
@@ -1578,6 +1631,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           msg._id === tempId ? { ...msg, status: "error", isOptimistic: false } : msg
         )
       );
+      reportSendError(err);
     } finally {
       setIsSending(false);
       URL.revokeObjectURL(tempUrl);
@@ -2359,6 +2413,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
           }}
         />
       )}
+      {sendError && <SendErrorDialog error={sendError} onClose={() => setSendError(null)} />}
       {/* Forward dialog */}
       <ForwardDialog
         open={!!forwardMsg}

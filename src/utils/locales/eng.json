@@ -220,6 +220,20 @@
       "placeholder": "This message was deleted",
       "tooLate": "You can only delete a message for everyone within 1 hour of sending it.",
       "failed": "Couldn't delete the message. Try again."
+    },
+    "sendErrors": {
+      "firstChatTitle": "Wait for a reply",
+      "firstChatBody": "You can send 5 messages until they reply. You can write again once they answer.",
+      "dailyTitle": "Daily message limit reached",
+      "dailyBody": "You've sent all your messages for today. Go VIP for unlimited messages, or come back tomorrow.",
+      "capTitle": "New conversation limit reached",
+      "capBody": "You've started as many new conversations as you can today. Go VIP to start as many as you want.",
+      "blockedTitle": "Message not sent",
+      "blockedBody": "You can't send messages to this person.",
+      "tooFast": "You're sending messages too fast. Wait a moment.",
+      "generic": "Message not sent. Tap Retry to try again.",
+      "goVip": "Go VIP",
+      "ok": "OK"
     }
   },
   "newChat": {

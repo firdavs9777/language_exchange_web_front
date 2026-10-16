@@ -571,3 +571,37 @@ it("turns a message the other person deleted for everyone into the placeholder",
   await waitFor(() => expect(screen.getByTestId("message-deleted-placeholder")).toBeInTheDocument());
   expect(document.querySelector('[data-msg-id="m-theirs"]')).not.toBe(null);
 });
+
+// --- Refusals the user can act on ------------------------------------------
+
+it("shows the first-chat limit as a dialog when REST answers 429", async () => {
+  mockUseSocket.mockReturnValue(offlineSocket());
+  mockCreateMessage.mockReturnValue({
+    unwrap: () =>
+      Promise.reject({
+        status: 429,
+        data: { success: false, error: "You can only send 5 messages until they reply. Please wait for a response." },
+      }),
+  });
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hi" } });
+  fireEvent.submit(messageBox().closest("form")!);
+
+  await waitFor(() => expect(screen.getByTestId("send-error-dialog")).toHaveTextContent("until they reply"));
+  expect(screen.getByTestId("msg-status-error")).toBeInTheDocument();
+});
+
+it("shows the burst limiter's refusal (no ack arrives for it)", async () => {
+  const s = silentSocket();
+  mockUseSocket.mockReturnValue(s.value);
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hi" } });
+  fireEvent.submit(messageBox().closest("form")!);
+  act(() => {
+    s.handlers["messageSendError"].forEach((fn) => fn({ error: "Too many messages — slow down." }));
+  });
+
+  await waitFor(() => expect(screen.getByTestId("msg-status-error")).toBeInTheDocument());
+});
