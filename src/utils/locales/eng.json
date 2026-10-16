@@ -254,6 +254,11 @@
     "connection": {
       "kicked": "Chat is open somewhere else, so this tab stopped receiving messages.",
       "reconnect": "Use here"
+    },
+    "video": {
+      "tooBig": "This video is too large. The limit is {{mb}} MB.",
+      "tooLong": "This video is too long. The limit is {{minutes}} minutes.",
+      "badType": "This video format can't be sent. Try an MP4."
     }
   },
   "newChat": {

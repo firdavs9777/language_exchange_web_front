@@ -225,4 +225,12 @@ describe("dead 404 message routes are removed", () => {
     );
     expect(JSON.parse(calls[0].body as string)).toEqual({ deleteForEveryone: false });
   });
+
+  it("getVideoMessageConfig -> GET /api/v1/messages/video-config", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch((chatApiSlice.endpoints as any).getVideoMessageConfig.initiate(undefined));
+    expect(new URL(calls[0].url).pathname).toBe(`${MESSAGES_URL}/video-config`);
+    expect(calls[0].method).toBe("GET");
+  });
 });

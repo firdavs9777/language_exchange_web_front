@@ -14,6 +14,8 @@ import {
   useGetConversationQuery,
   useSendVoiceMessageMutation,
   useSendMediaMessageMutation,
+  useSendVideoMessageMutation,
+  useGetVideoMessageConfigQuery,
   useEditMessageMutation,
   useDeleteMessageMutation,
   useAddReactionMutation,
@@ -33,6 +35,7 @@ import SendErrorDialog from "./actions/SendErrorDialog";
 import ConnectionBanner from "./ConnectionBanner";
 import { classifySendError } from "./lib/sendErrors";
 import { emitWithAck, SOCKET_ACK_TIMEOUT_MS } from "./lib/socketAck";
+import { checkVideo, limitsFromConfig, readVideoDuration } from "./lib/videoLimits";
 import notify from "../../design/notify";
 import PinnedBar from "./actions/PinnedBar";
 import ReplyComposerBar from "./actions/ReplyComposerBar";
@@ -192,6 +195,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const [createMessage] = useCreateMessageMutation();
   const [sendVoiceMessage] = useSendVoiceMessageMutation();
   const [sendMediaMessage] = useSendMediaMessageMutation();
+  const [sendVideoMessage] = useSendVideoMessageMutation();
+  const { data: videoConfig } = useGetVideoMessageConfigQuery(undefined);
 
   // ===== Message actions (Task 6 wiring) =====
   const [editMessage] = useEditMessageMutation();
@@ -1446,6 +1451,64 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
   const handleSendMedia = async () => {
     if (!mediaPreview || isSending) return;
+    if (mediaPreview.type === "video") {
+      const preview = mediaPreview;
+      const caption = newMessage.trim();
+      const limits = limitsFromConfig(videoConfig);
+      const duration = await readVideoDuration(preview.file);
+      const verdict = checkVideo(preview.file, limits, duration);
+      if (verdict !== "ok") {
+        notify.error(
+          verdict === "tooBig"
+            ? t("chatPage.video.tooBig", { mb: Math.round(limits.maxSize / (1024 * 1024)) }) ||
+                `This video is too large. The limit is ${Math.round(limits.maxSize / (1024 * 1024))} MB.`
+            : verdict === "tooLong"
+            ? t("chatPage.video.tooLong", { minutes: Math.round(limits.maxDuration / 60) }) ||
+                `This video is too long. The limit is ${Math.round(limits.maxDuration / 60)} minutes.`
+            : t("chatPage.video.badType") || "This video format can't be sent. Try an MP4."
+        );
+        handleCancelMedia();
+        return;
+      }
+
+      setIsSending(true);
+      isAtBottomRef.current = true;
+      const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      setMessages((prev) => [
+        ...prev,
+        {
+          _id: tempId,
+          message: "",
+          sender: { _id: userId, name: currentUserName || "" },
+          receiver: selectedUser,
+          messageType: "media",
+          media: { url: preview.url, type: "video" },
+          createdAt: new Date().toISOString(),
+          isOptimistic: true,
+          status: "sending",
+        },
+      ]);
+      setNewMessage("");
+      try {
+        const formData = new FormData();
+        formData.append("video", preview.file);
+        formData.append("receiver", selectedUser);
+        const result: any = await sendVideoMessage(formData).unwrap();
+        finalizeOptimistic(tempId, result.data || result);
+        // /messages/video has no caption field; the caption follows as text.
+        if (caption) {
+          setIsSending(false);
+          await sendInlineMessage(caption, "text");
+        }
+      } catch (err) {
+        markOptimisticError(tempId);
+        reportSendError(err);
+      } finally {
+        setIsSending(false);
+        handleCancelMedia();
+      }
+      return;
+    }
     setIsSending(true);
     isAtBottomRef.current = true;
 

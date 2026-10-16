@@ -23,6 +23,8 @@ const mockCreateMessage = jest.fn();
 const mockEditMessage = jest.fn();
 const mockDeleteMessage = jest.fn();
 const mockInitiate = jest.fn();
+const mockSendVideo = jest.fn();
+const mockSendMedia = jest.fn();
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -47,7 +49,9 @@ jest.mock("../../store/slices/chatSlice", () => ({
   useGetConversationsQuery: () => ({ data: undefined, isLoading: false, isError: false }),
   useCreateMessageMutation: () => [mockCreateMessage, { isLoading: false }],
   useSendVoiceMessageMutation: () => mutation(),
-  useSendMediaMessageMutation: () => mutation(),
+  useSendMediaMessageMutation: () => [mockSendMedia, { isLoading: false }],
+  useSendVideoMessageMutation: () => [mockSendVideo, { isLoading: false }],
+  useGetVideoMessageConfigQuery: () => ({ data: { data: { video: { maxDuration: 600, maxSize: 1000 } } } }),
   useEditMessageMutation: () => [mockEditMessage, { isLoading: false }],
   useDeleteMessageMutation: () => [mockDeleteMessage, { isLoading: false }],
   useAddReactionMutation: () => mutation(),
@@ -131,6 +135,8 @@ beforeEach(() => {
   mockEditMessage.mockReturnValue({ unwrap: () => Promise.resolve({ success: true, data: {} }) });
   mockDeleteMessage.mockReturnValue({ unwrap: () => Promise.resolve({ success: true, data: {} }) });
   mockInitiate.mockImplementation(() => ({ type: "chatApi/initiate" }));
+  mockSendVideo.mockReturnValue({ unwrap: () => Promise.resolve({ data: { _id: "m-vid", messageType: "media", media: { type: "video", url: "v.mp4" }, sender: { _id: "me" }, receiver: "u2", createdAt: new Date().toISOString() } }) });
+  mockSendMedia.mockReturnValue({ unwrap: () => Promise.resolve({ data: { _id: "m-img", sender: { _id: "me" } } }) });
 });
 
 afterEach(() => {
@@ -740,4 +746,44 @@ it("re-reads the newest page of the open thread after a reconnect", () => {
     { senderId: "me", receiverId: "u2", page: 1, limit: 50 },
     { forceRefetch: true, subscribe: false }
   );
+});
+
+// --- Videos -----------------------------------------------------------------
+
+function pickFile(file: File) {
+  const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+  fireEvent.change(input, { target: { files: [file] } });
+}
+
+beforeAll(() => {
+  if (!(URL as any).createObjectURL) (URL as any).createObjectURL = () => "blob:x";
+  if (!(URL as any).revokeObjectURL) (URL as any).revokeObjectURL = () => undefined;
+});
+
+it("sends a video through /messages/video (field `video`), not as an attachment", async () => {
+  mockUseSocket.mockReturnValue(offlineSocket());
+  renderChat("/chat/u2");
+  pickFile(new File(["x"], "clip.mp4", { type: "video/mp4" }));
+  // With a file picked the composer asks for a caption instead.
+  fireEvent.submit(screen.getByPlaceholderText("Add a caption...").closest("form")!);
+
+  // jsdom never loads media metadata, so the duration read waits out its 2 s cap.
+  await waitFor(() => expect(mockSendVideo).toHaveBeenCalledTimes(1), { timeout: 3500 });
+  const form: FormData = mockSendVideo.mock.calls[0][0];
+  expect(form.get("video")).toBeTruthy();
+  expect(form.get("receiver")).toBe("u2");
+  expect(mockSendMedia).not.toHaveBeenCalled();
+});
+
+it("refuses a video over the server's size cap before uploading", async () => {
+  mockUseSocket.mockReturnValue(offlineSocket());
+  renderChat("/chat/u2");
+  pickFile(new File(["x".repeat(2000)], "big.mp4", { type: "video/mp4" }));
+  // With a file picked the composer asks for a caption instead.
+  fireEvent.submit(screen.getByPlaceholderText("Add a caption...").closest("form")!);
+
+  // Refused: the picked file is dropped (composer back to "Message...").
+  await waitFor(() => expect(messageBox()).toBeInTheDocument(), { timeout: 3500 });
+  expect(screen.queryByTestId("msg-status-sending")).not.toBeInTheDocument();
+  expect(mockSendVideo).not.toHaveBeenCalled();
 });

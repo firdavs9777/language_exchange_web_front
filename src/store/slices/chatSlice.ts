@@ -307,6 +307,13 @@ export const chatApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: refetchFirstPageOnSuccess,
     }),
 
+    // GET /api/v1/messages/video-config (public): the server's video caps,
+    // read before a 1 GB upload rather than after it.
+    getVideoMessageConfig: builder.query({
+      query: () => ({ url: `${MESSAGES_URL}/video-config` }),
+      keepUnusedDataFor: 3600,
+    }),
+
     // Pin (toggle) — POST /api/v1/messages/:id/pin, no body. Server does NOT
     // emit this over socket, so invalidate the conversation/list tags so the
     // UI refetches the pinned state.
@@ -466,6 +473,7 @@ export const {
   useSendMediaMessageMutation,
   // Video
   useSendVideoMessageMutation,
+  useGetVideoMessageConfigQuery,
   // Pin
   usePinMessageMutation,
   // Bookmarks
