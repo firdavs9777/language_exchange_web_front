@@ -69,7 +69,7 @@ Phase 3 Chat (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-par
 - [x] P3-CHAT-19 "You can't message this person" banner when either side blocked (chat#17)
 - [x] P3-CHAT-20 The chat's remaining hard-coded English goes through `t()` (chat#19)
 - [x] P3-CHAT-I18N New chat strings in all 18 locales
-- [ ] P3-CHAT-PUSH Push unit chat (suite + build green, deployed, production smoke recorded)
+- [x] P3-CHAT-PUSH Push unit chat — suite 3820 pass, build green, deployed 2026-10-16 (backend message search fixed first, 2026-10-16)
 
 Phase 3 Moments (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase3.md`)
 - [x] P3-MOM-1 Post and save photo-, video- or voice-only moments (moments#4)
