@@ -808,6 +808,17 @@
     }
   },
   "authentication": {
+    "callback": {
+      "completing": "Completing sign in...",
+      "wait": "Please wait while we sign you in.",
+      "failedTitle": "Sign in failed",
+      "redirecting": "Taking you back to sign in...",
+      "noCode": "Sign in didn't finish. Please try again.",
+      "codeExpired": "This sign-in link has expired. Please sign in again.",
+      "banned": "This account has been suspended.",
+      "emailExists": "An account with this email already exists. Sign in with your email and password.",
+      "generic": "Sign in failed. Please try again."
+    },
     "enterEmail": {
       "title": "Enter your email",
       "subtitle": "We'll send a verification code to your email",
