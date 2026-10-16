@@ -10,7 +10,7 @@ backend `language_exchange_backend_application/docs/REMAINING_WORK.md` (server e
 - **`main` 2ce0c93 is DEPLOYED (2026-10-13)**: admin announcements console with the 2026-10-13 audit fixes,
   delivery status incl. "Stopped at end time" / "Ended by admin", and the `/moments/:id` → `/moment/:id` redirect.
 - Backend a9a0b6e (deployed) has everything the console needs. App 2.7.0 is not released yet.
-- `public/.well-known/assetlinks.json` still holds `TODO_SHA256_*`, so Android App Links verify nothing.
+- `public/.well-known/assetlinks.json` has the Play App Signing fingerprint (2026-10-16); the upload-key fingerprint is still to add (internal/sideloaded builds).
 
 ## 2. Owner — manual steps (in order)
 
@@ -21,7 +21,8 @@ backend `language_exchange_backend_application/docs/REMAINING_WORK.md` (server e
 
 ## 3. Production QA
 
-- [ ] `curl https://banatalk.com/.well-known/assetlinks.json` returns the real fingerprints after step 1.
+- [x] `curl https://banatalk.com/.well-known/assetlinks.json` returns the real Play fingerprint (2026-10-16).
+- [ ] Add the upload-key SHA-256 (`keytool -list -v -keystore <upload.jks>` on the keystore MacBook) and enable the skipped test in `src/seo/appLinks.test.ts`. S
 - [ ] First real announcement end-to-end: publish → push → notifications list → in-app pop-up (rows in the app's `docs/qa/onboarding-matrix.md`); the delivery panel shows state, attempts and counts.
 - [ ] An old `https://banatalk.com/moments/<id>` share link lands on `/moment/<id>`.
 

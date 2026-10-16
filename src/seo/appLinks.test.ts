@@ -98,6 +98,19 @@ describe("assetlinks.json", () => {
   // change this to `it(`.
   //   upload key -> keytool -list -v -keystore <upload.jks> -alias <alias>
   //   Play key   -> Play Console > Test and release > App integrity > App signing
+  it("carries the Play signing fingerprint, with no placeholder left", () => {
+    const prints: string[] = assetLinks[0].target.sha256_cert_fingerprints;
+    expect(prints.length).toBeGreaterThanOrEqual(1);
+    prints.forEach((print) => {
+      expect(print).not.toContain("TODO");
+      expect(print).toMatch(/^([0-9A-F]{2}:){31}[0-9A-F]{2}$/i);
+    });
+    // Play App Signing key (from Play Console > Deep links, 2026-10-16).
+    expect(prints).toContain("8D:B2:D2:7A:CD:16:8C:BD:91:2C:32:01:A6:67:07:83:28:A9:43:6D:48:55:E6:1C:AC:20:2C:05:EE:06:3B:FE");
+  });
+
+  // PENDING: add the upload-key fingerprint (keytool on the keystore machine)
+  // so internal/sideloaded builds verify too, then enable.
   it.skip("carries both signing fingerprints, with no placeholder left", () => {
     const prints: string[] = assetLinks[0].target.sha256_cert_fingerprints;
     // Two: Google re-signs for the Play Store, so an installed app carries the
