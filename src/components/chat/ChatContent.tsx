@@ -68,10 +68,12 @@ import {
   X,
   Image as ImageIcon,
   FileImage,
+  Search,
 } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import ChatInfoPanel from "./ChatInfoPanel";
 import LocationShareButton from "./components/LocationShareButton";
+import MessageSearchDialog from "./components/MessageSearchDialog";
 import { normalizeMessage, senderIdOf } from "./lib/normalizeMessage";
 import { useOpenStoryFromChat } from "./lib/useOpenStoryFromChat";
 
@@ -228,6 +230,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
   // The "⋯" panel: profile, media, mute, wallpaper, block, report, delete.
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -925,6 +928,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
   // Clear state when switching conversations
   useEffect(() => {
     setIsTyping(false);
+    setIsSearchOpen(false);
     setNewMessage("");
     setMediaPreview(null);
     setMissedCount(0);
@@ -1924,6 +1928,25 @@ const ChatContent: React.FC<ChatContentProps> = ({
     el?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, []);
 
+  // A search result. The search covers the whole history; the thread holds
+  // only the pages loaded so far, so a result further back is explained
+  // rather than silently doing nothing.
+  const handleJumpFromSearch = useCallback(
+    (messageId: string) => {
+      setIsSearchOpen(false);
+      const container = chatContainerRef.current;
+      const el = container ? (container.querySelector(`[data-msg-id="${messageId}"]`) as HTMLElement | null) : null;
+      if (!el) {
+        notify.info(t("chatPage.search.notLoaded") || "That message is further back. Scroll up to load it.");
+        return;
+      }
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.classList.add("modern-message--highlight");
+      window.setTimeout(() => el.classList.remove("modern-message--highlight"), 2000);
+    },
+    [t]
+  );
+
   // Stable identities for the memoized bubble. `toggleAudioPlayback` and
   // `handleRetryMessage` are re-created every render (they close over half the
   // component); handing them straight to a memoized child would defeat the
@@ -2147,6 +2170,17 @@ const ChatContent: React.FC<ChatContentProps> = ({
             <button
               className="action-btn"
               type="button"
+              data-testid="chat-header-search"
+              onClick={() => setIsSearchOpen(true)}
+              aria-haspopup="dialog"
+              title={t("chatPage.search.open") || "Search messages"}
+              aria-label={t("chatPage.search.open") || "Search messages"}
+            >
+              <Search size={20} />
+            </button>
+            <button
+              className="action-btn"
+              type="button"
               data-testid="chat-header-more"
               onClick={() => setIsInfoOpen(true)}
               aria-haspopup="dialog"
@@ -2166,6 +2200,15 @@ const ChatContent: React.FC<ChatContentProps> = ({
           userName={userName}
           profilePicture={profilePicture}
           onClose={() => setIsInfoOpen(false)}
+        />
+      )}
+
+      {isSearchOpen && (
+        <MessageSearchDialog
+          partnerId={selectedUser}
+          partnerName={userName}
+          onClose={() => setIsSearchOpen(false)}
+          onJump={handleJumpFromSearch}
         />
       )}
 

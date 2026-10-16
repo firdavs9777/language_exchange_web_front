@@ -71,6 +71,18 @@ jest.mock("../../store/slices/learningSlice", () => ({
 // The panel has its own suite (ChatInfoPanel.test.tsx) and its own store
 // hooks; here only the header's job matters -- that "⋯" opens it.
 // Owns its own store hooks; its suite is components/LocationShareButton.test.tsx.
+// Owns its own query; its suite is components/MessageSearchDialog.test.tsx.
+jest.mock("./components/MessageSearchDialog", () => ({
+  __esModule: true,
+  default: (props: any) =>
+    require("react").createElement(
+      "div",
+      { "data-testid": "chat-search-dialog" },
+      require("react").createElement("button", { "data-testid": "search-jump-loaded", onClick: () => props.onJump("newer-b") }),
+      require("react").createElement("button", { "data-testid": "search-jump-missing", onClick: () => props.onJump("not-loaded") })
+    ),
+}));
+
 jest.mock("./components/LocationShareButton", () => ({
   __esModule: true,
   default: () => require("react").createElement("span", { "data-testid": "share-location" }),
@@ -834,4 +846,11 @@ it("records AAC where the browser can, and uploads it as .m4a with a matching ty
 it("offers Share location in the composer", () => {
   renderChat("/chat/u2");
   expect(screen.getByTestId("share-location")).toBeInTheDocument();
+});
+
+it("opens message search from the header", () => {
+  renderChat("/chat/u2");
+  expect(screen.queryByTestId("chat-search-dialog")).toBeNull();
+  fireEvent.click(screen.getByTestId("chat-header-search"));
+  expect(screen.getByTestId("chat-search-dialog")).toBeInTheDocument();
 });

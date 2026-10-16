@@ -304,7 +304,19 @@
       "unavailable": "This story is no longer available"
     },
     "forwarded": "Forwarded",
-    "editedLabel": "edited"
+    "editedLabel": "edited",
+    "search": {
+      "open": "Search messages",
+      "title": "Search messages with {{name}}",
+      "close": "Close",
+      "placeholder": "Search this chat",
+      "hint": "Type at least 2 characters",
+      "searching": "Searching…",
+      "empty": "No messages found",
+      "unavailable": "Search isn't available right now",
+      "you": "You",
+      "notLoaded": "That message is further back. Scroll up to load it."
+    }
   },
   "newChat": {
     "title": "New Chat",

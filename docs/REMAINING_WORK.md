@@ -63,7 +63,7 @@ Phase 3 Chat (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-par
 - [x] P3-CHAT-13 Story shares, replies and reactions keep their story (chat#9)
 - [x] P3-CHAT-14 Live pins, the "edited" label, the "Forwarded" chip and every correction (chat#14)
 - [x] P3-CHAT-15 The app's six premium wallpapers render on web (chat#18)
-- [ ] P3-CHAT-16 Search the messages of a conversation (chat#17)
+- [x] P3-CHAT-16 Search the messages of a conversation (chat#17)
 - [ ] P3-CHAT-17 Saved (bookmarked) messages: list, open, unbookmark (chat#17)
 - [ ] P3-CHAT-18 Archive / unarchive conversations, and mute for 1 hour, 8 hours, 1 week or always (chat#17)
 - [ ] P3-CHAT-19 "You can't message this person" banner when either side blocked (chat#17)

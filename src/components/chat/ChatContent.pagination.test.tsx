@@ -65,6 +65,24 @@ jest.mock("../../store/slices/learningSlice", () => ({
 }));
 
 // Owns its own store hooks; its suite is components/LocationShareButton.test.tsx.
+// Owns its own query; its suite is components/MessageSearchDialog.test.tsx.
+const mockNotifyInfo = jest.fn();
+jest.mock("../../design/notify", () => ({
+  __esModule: true,
+  default: { info: (m: string) => mockNotifyInfo(m), error: jest.fn(), success: jest.fn(), warning: jest.fn() },
+}));
+
+jest.mock("./components/MessageSearchDialog", () => ({
+  __esModule: true,
+  default: (props: any) =>
+    require("react").createElement(
+      "div",
+      { "data-testid": "chat-search-dialog" },
+      require("react").createElement("button", { "data-testid": "search-jump-loaded", onClick: () => props.onJump("newer-b") }),
+      require("react").createElement("button", { "data-testid": "search-jump-missing", onClick: () => props.onJump("not-loaded") })
+    ),
+}));
+
 jest.mock("./components/LocationShareButton", () => ({
   __esModule: true,
   default: () => require("react").createElement("span", { "data-testid": "share-location" }),
@@ -961,4 +979,25 @@ it("clears the bar when the pin is removed", async () => {
   socket.fire("messagePinned", { messageId: "newer-a", pinned: false, pinnedBy: "u2" });
 
   await waitFor(() => expect(screen.queryByTestId("pinned-bar")).toBeNull());
+});
+
+// --- Message search (chat#17) ------------------------------------------------
+
+it("jumps to a search result that is on screen and flashes it", async () => {
+  renderChat();
+  await waitFor(() => expect(renderedIds()).toContain("newer-b"));
+  fireEvent.click(screen.getByTestId("chat-header-search"));
+  fireEvent.click(screen.getByTestId("search-jump-loaded"));
+
+  const bubble = document.querySelector('[data-msg-id="newer-b"]') as HTMLElement;
+  expect((Element.prototype as any).scrollIntoView).toHaveBeenCalled();
+  expect(bubble).toHaveClass("modern-message--highlight");
+  expect(screen.queryByTestId("chat-search-dialog")).toBeNull();
+});
+
+it("explains a result that is further back than what is loaded", async () => {
+  renderChat();
+  fireEvent.click(screen.getByTestId("chat-header-search"));
+  fireEvent.click(screen.getByTestId("search-jump-missing"));
+  expect(mockNotifyInfo).toHaveBeenCalledWith("That message is further back. Scroll up to load it.");
 });
