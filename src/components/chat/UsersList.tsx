@@ -521,7 +521,7 @@ const UsersList: React.FC<UsersListProps> = ({
       partners.push({
         ...otherUser,
         imageUrls: otherUser.imageUrls || otherUser.images || [],
-        lastMessage: previewOf(lastMsg, t as any),
+        lastMessage: previewOf(lastMsg, t as any, { viewerId: currentUser._id, partnerName: otherUser.name || "" }),
         unreadCount:
           otherUser._id === activeUserId
             ? 0

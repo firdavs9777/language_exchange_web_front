@@ -262,6 +262,23 @@
     },
     "voice": {
       "unavailable": "Voice recording isn't available. Check the microphone permission for this site."
+    },
+    "call": {
+      "outgoingVoice": "Outgoing voice call",
+      "outgoingVideo": "Outgoing video call",
+      "incomingVoice": "Incoming voice call",
+      "incomingVideo": "Incoming video call",
+      "noAnswerVoice": "Voice call · No answer",
+      "noAnswerVideo": "Video call · No answer",
+      "missedVoice": "Missed voice call",
+      "missedVideo": "Missed video call",
+      "cancelledVoice": "Cancelled voice call",
+      "cancelledVideo": "Cancelled video call",
+      "declinedOutgoingVoice": "Voice call declined",
+      "declinedOutgoingVideo": "Video call declined",
+      "declinedIncomingVoice": "Declined voice call",
+      "declinedIncomingVideo": "Declined video call",
+      "busy": "{{name}} was on another call"
     }
   },
   "newChat": {

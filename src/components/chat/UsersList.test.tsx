@@ -272,3 +272,26 @@ it("counts a live message up from the server count instead of trusting newMessag
   });
   expect(screen.getByTestId("users-list-unread-u2")).toHaveTextContent("5");
 });
+
+it("words a call preview from the reader's side", () => {
+  mockConversations.mockReturnValue({
+    data: {
+      data: [
+        conversation({
+          lastMessage: {
+            messageType: "call",
+            message: "",
+            sender: "u2",
+            media: { type: "call", callData: { outcome: "no_answer", initiator: "u2" } },
+            createdAt: "2026-09-20T10:00:00.000Z",
+          },
+        }),
+      ],
+    },
+    isLoading: false,
+    isError: false,
+    refetch: jest.fn(),
+  });
+  renderList();
+  expect(screen.getByText("Missed voice call")).toBeInTheDocument();
+});

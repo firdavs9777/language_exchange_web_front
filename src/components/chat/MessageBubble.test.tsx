@@ -296,3 +296,65 @@ it("draws a placeholder for a message deleted for everyone, with no actions", ()
   fireEvent.contextMenu(document.querySelector('[data-msg-id="m1"]') as HTMLElement);
   expect(props.onOpenActions).not.toHaveBeenCalled();
 });
+
+describe("call history messages (chat#6)", () => {
+  const callMessage = (callData: any, extra: Partial<Message> = {}): Message =>
+    message({
+      messageType: "call",
+      message: "📞 Missed voice call",
+      media: { type: "call", url: "", callData } as any,
+      ...extra,
+    });
+
+  it("draws a call card, not a File attachment", () => {
+    renderBubble({
+      message: callMessage({ type: "audio", outcome: "completed", duration: 75, initiator: "me" }),
+    });
+
+    expect(screen.getByTestId("call-card")).toBeInTheDocument();
+    expect(screen.queryByText("File")).toBeNull();
+    expect(screen.getByText("Outgoing voice call")).toBeInTheDocument();
+    expect(screen.getByText("1:15")).toBeInTheDocument();
+  });
+
+  it("words a missed call from the side of the person who missed it", () => {
+    renderBubble({
+      message: callMessage(
+        { type: "audio", outcome: "no_answer", initiator: "u2" },
+        { sender: { _id: "u2", name: "Ada" } }
+      ),
+      isSent: false,
+    });
+
+    expect(screen.getByText("Missed voice call")).toBeInTheDocument();
+    expect(screen.getByTestId("call-card")).toHaveClass("call-card--negative");
+  });
+
+  it("reads the legacy status of rows written before outcome existed", () => {
+    renderBubble({ message: callMessage({ type: "audio", status: "rejected", initiator: "me" }) });
+    expect(screen.getByText("Voice call declined")).toBeInTheDocument();
+  });
+
+  it("does not print the server's fallback text under the card", () => {
+    renderBubble({ message: callMessage({ type: "audio", outcome: "no_answer", initiator: "me" }) });
+    expect(screen.queryByText("📞 Missed voice call")).toBeNull();
+  });
+
+  it("offers no Correct or Translate chip on a call", () => {
+    renderBubble({
+      message: callMessage(
+        { type: "video", outcome: "completed", initiator: "u2", duration: 5 },
+        { sender: { _id: "u2", name: "Ada" } }
+      ),
+      isSent: false,
+    });
+    expect(screen.queryByText("Correct")).toBeNull();
+    expect(screen.queryByText("Translate")).toBeNull();
+  });
+
+  it("survives a call message whose callData is missing", () => {
+    renderBubble({ message: callMessage(undefined) });
+    expect(screen.getByTestId("call-card")).toBeInTheDocument();
+    expect(screen.queryByText("File")).toBeNull();
+  });
+});

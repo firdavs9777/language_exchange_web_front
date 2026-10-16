@@ -1538,3 +1538,53 @@
   font-style: italic;
   opacity: 0.7;
 }
+
+/* Call history card (chat#6) — the bubble is only the card's frame. */
+.message-bubble.call-bubble {
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.call-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 200px;
+  padding: 10px 12px;
+  background: var(--chat-card-in);
+  border: 1px solid var(--chat-line);
+  border-radius: 12px;
+  color: var(--chat-text);
+}
+
+.modern-message.sent .call-card {
+  background: var(--chat-card-out);
+  border-color: var(--chat-card-out);
+  color: var(--chat-bubble-out-text);
+}
+
+.call-card--negative,
+.modern-message.sent .call-card--negative {
+  background: var(--chat-danger-soft);
+  border-color: var(--chat-danger-line);
+  color: var(--chat-danger);
+}
+
+.call-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.call-card-label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.call-card-duration {
+  font-size: 12px;
+  color: var(--chat-muted);
+  font-variant-numeric: tabular-nums;
+}
