@@ -3062,6 +3062,53 @@
       "media": "Music, film & TV",
       "pronunciation": "Pronunciation",
       "travel": "Travel"
+    },
+    "card": {
+      "approval": "Host approves",
+      "full": "Full",
+      "going": "Going",
+      "hostedBy": "Hosted by {{name}}",
+      "hosting": "You're hosting",
+      "requested": "Requested",
+      "seatsLeft_one": "{{count}} seat left",
+      "seatsLeft_other": "{{count}} seats left"
+    },
+    "home": {
+      "anyLanguage": "My languages",
+      "anyTime": "Any time",
+      "anyTopic": "Any topic",
+      "empty": "Nothing scheduled here yet.",
+      "emptyCta": "Host the first one",
+      "error": "Couldn't load this list.",
+      "hasSeat": "Has a free seat",
+      "host": "Host a gathering",
+      "language": "Language",
+      "loadMore": "Load more",
+      "retry": "Try again",
+      "scopeAll": "All",
+      "scopeMe": "My gatherings",
+      "scopeMine": "My languages",
+      "tabClubs": "Clubs",
+      "tabGatherings": "Gatherings",
+      "title": "Gatherings",
+      "today": "Today",
+      "topic": "Topic",
+      "week": "This week",
+      "when": "When"
+    }
+  },
+  "clubs": {
+    "card": {
+      "joined": "Joined",
+      "members_one": "{{count}} member",
+      "members_other": "{{count}} members"
+    },
+    "home": {
+      "empty": "No clubs here yet.",
+      "scopeAll": "All",
+      "scopeMember": "Joined",
+      "scopeMine": "My languages",
+      "start": "Start a club"
     }
   }
 }

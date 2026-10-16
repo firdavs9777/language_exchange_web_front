@@ -138,7 +138,7 @@ Phase 4 Reels (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-pa
 Phase 4 Gatherings/clubs (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
 - [x] P4-GATH-1 Gatherings + clubs endpoints in one slice, same requests the app sends
 - [x] P4-GATH-2 Shared helpers: local start time, quorum line, host-decision window, error text
-- [ ] P4-GATH-3 Browse page: Gatherings and Clubs tabs, the app's filters, load more
+- [x] P4-GATH-3 Browse page: Gatherings and Clubs tabs, the app's filters, load more
 - [ ] P4-GATH-4 Gathering page: details, RSVP / request / leave, report or block the host
 - [ ] P4-GATH-5 Host a gathering: create and edit form with the backend's limits
 - [ ] P4-GATH-6 Host decisions: join requests, run it or call it off, cancel, end
