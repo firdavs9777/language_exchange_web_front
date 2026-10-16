@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { BACKEND_VALID_GRADIENTS, gradientFor } from "../media/momentGradients";
+import { MOMENT_GRADIENT_KEYS, gradientFor } from "../media/momentGradients";
 
 /** The text-moment backgrounds; "" is plain text. */
 const BackgroundField: React.FC<{ value: string; onChange: (v: string) => void }> = ({ value, onChange }) => {
@@ -20,7 +20,7 @@ const BackgroundField: React.FC<{ value: string; onChange: (v: string) => void }
       >
         {t("moments_section.fields.backgroundNone") || "None"}
       </button>
-      {BACKEND_VALID_GRADIENTS.map((key: string) => (
+      {MOMENT_GRADIENT_KEYS.map((key: string) => (
         <button
           key={key}
           type="button"
