@@ -32,7 +32,6 @@ import logo from "../../assets/logo.png";
 import { useGetConversationsQuery } from "../../store/slices/chatSlice";
 import { useSocket } from "../chat/hooks/useSocket";
 import { CONVERSATIONS_PAGE } from "../chat/lib/conversationMatch";
-import { useWebFlag } from "../../utils/webFlags";
 import "./MainNavbar.scss";
 
 const LANGUAGES = [

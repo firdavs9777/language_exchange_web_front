@@ -8,10 +8,6 @@ import MainNavbar from "./MainNavbar";
 import { CONVERSATIONS_PAGE } from "../chat/lib/conversationMatch";
 import { mockAppConfig, ALL_WEB_FLAGS_OFF, ALL_WEB_FLAGS_ON } from "../../utils/testing/mockWebFlags";
 
-// Phase 4: the navbar reads the web flags; answer /app-config from the shared
-// mock (flags off) so the real store's fetch log stays the navbar's own.
-jest.mock("../../store/slices/appConfigSlice", () => require("../../utils/testing/mockWebFlags").appConfigSliceMock());
-
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (k: string) => k, i18n: { language: "en", changeLanguage: jest.fn() } }),
 }));

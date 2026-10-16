@@ -163,7 +163,7 @@ Phase 4 Rooms — voice rooms, language rooms, City/Genders (plan `bananatalk_ap
 - [x] P4-ROOM-11 Community City and Genders tabs (community#7), same queries as the app
 - [x] P4-ROOM-12 Routes and nav entries behind `webVoiceRoomsEnabled` / `webLanguageRoomsEnabled`; flag-off test (+ iOS AASA excludes /community/city and /community/genders)
 - [x] P4-ROOM-I18N New rooms strings in all 18 locales
-- [ ] P4-ROOM-PUSH Push unit rooms (suite + build + livekit checks green, deployed dark, production smoke recorded)
+- [x] P4-ROOM-PUSH Push unit rooms (suite + build + livekit checks green, deployed dark, production smoke recorded) — deployed dark 2026-10-16 (suite 4318 pass; livekit in its own chunk). Open: bundle budget over (313.6 vs 307 KB app code); backend: voice-room speaker role/kick, raise-hand event names differ app vs backend, city search ignores location.city; German "Sprachräume" wording clash
 
 Phase 4 Calls (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
 - [ ] P4-CALL-0 CALLS worktree off `web/p4-rooms` after the LiveKit wrapper (P4-ROOM-1), real node_modules
