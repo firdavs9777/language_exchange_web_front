@@ -281,6 +281,13 @@ const ModernCommunity: React.FC = () => {
   const [draftFilters, setDraftFilters] = useState<CommunityFilters>(filters);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [waveTarget, setWaveTarget] = useState<CommunityMemberCard | null>(null);
+  // People the viewer has waved at during this visit. Today's batch is cached
+  // server-side for the whole day and does not drop them, so the card itself
+  // has to stop offering a second wave (which would only hit ALREADY_WAVED).
+  const [wavedIds, setWavedIds] = useState<string[]>([]);
+  const handleWaved = useCallback((targetUserId: string) => {
+    setWavedIds((prev) => (prev.indexOf(targetUserId) > -1 ? prev : prev.concat([targetUserId])));
+  }, []);
   /**
    * Where the list has got to, tagged with the question it is an answer to.
    *
@@ -897,6 +904,7 @@ const ModernCommunity: React.FC = () => {
         open={!!waveTarget}
         targetUser={waveTarget}
         onClose={() => setWaveTarget(null)}
+        onWaved={handleWaved}
       />
 
       <div className="community-page__container">
@@ -938,6 +946,7 @@ const ModernCommunity: React.FC = () => {
             onRetry={refetchDaily}
             onWave={handleWaveDaily}
             onBrowse={() => applyState({ tab: "all" })}
+            wavedIds={wavedIds}
           />
         ) : isForYou ? (
           <ForYouTab

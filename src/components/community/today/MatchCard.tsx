@@ -17,7 +17,9 @@ const MatchCard: React.FC<{
   match: DailyMatch;
   onWave: (match: DailyMatch) => void;
   onSkip: (match: DailyMatch) => void;
-}> = ({ match, onWave, onSkip }) => {
+  /** A wave to this person exists: the Wave action becomes a done state. */
+  waved?: boolean;
+}> = ({ match, onWave, onSkip, waved = false }) => {
   const { t } = useTranslation();
   const user = match.user;
   const photo = photoUrl(user.images);
@@ -88,10 +90,17 @@ const MatchCard: React.FC<{
           <MessageCircle className="h-4 w-4" aria-hidden />
           {t("communityMain.today.sayHi") || "Say hi"}
         </Link>
-        <button type="button" data-testid="match-wave" onClick={() => onWave(match)} className={`${ACTION} border border-line text-ink-800 hover:bg-ink-50 dark:border-line-dark dark:text-ink-100 dark:hover:bg-white/5`}>
-          <span aria-hidden>👋</span>
-          {t("communityMain.today.wave") || "Wave"}
-        </button>
+        {waved ? (
+          <button type="button" data-testid="match-waved" disabled className={`${ACTION} border border-line text-ink-500 opacity-70 dark:border-line-dark dark:text-ink-400`}>
+            <span aria-hidden>✓</span>
+            {t("communityMain.today.waved") || "Waved"}
+          </button>
+        ) : (
+          <button type="button" data-testid="match-wave" onClick={() => onWave(match)} className={`${ACTION} border border-line text-ink-800 hover:bg-ink-50 dark:border-line-dark dark:text-ink-100 dark:hover:bg-white/5`}>
+            <span aria-hidden>👋</span>
+            {t("communityMain.today.wave") || "Wave"}
+          </button>
+        )}
         <button type="button" data-testid="match-skip" onClick={() => onSkip(match)} className={`${ACTION} text-ink-500 hover:bg-ink-50 dark:text-ink-400 dark:hover:bg-white/5`}>
           <X className="h-4 w-4" aria-hidden />
           {t("communityMain.today.skip") || "Skip"}

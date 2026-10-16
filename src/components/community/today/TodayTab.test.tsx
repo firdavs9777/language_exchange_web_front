@@ -132,5 +132,12 @@ describe("TodayTab", () => {
     get.mockRestore();
     set.mockRestore();
   });
+
+  it("marks the cards in wavedIds as waved, and keeps them in the batch", () => {
+    renderTab({ wavedIds: ["b"] });
+    expect(screen.getAllByTestId("match-card")).toHaveLength(3);
+    expect(screen.getAllByTestId("match-waved")).toHaveLength(1);
+    expect(screen.getAllByTestId("match-wave")).toHaveLength(2);
+  });
 });
 

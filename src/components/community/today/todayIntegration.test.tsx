@@ -39,6 +39,9 @@ beforeEach(() => {
     if (url.indexOf("/matching/daily") >= 0) {
       status = dailyStatus;
       body = dailyStatus === 200 ? daily : { success: false, error: "Not found" };
+    } else if (url.indexOf("/community/wave") >= 0 && (input as any).method === "POST") {
+      status = 201;
+      body = { success: true, data: { waveId: "w1", isMutual: false, message: "Wave sent!" } };
     } else if (/\/auth\/users\?/.test(url)) {
       body = { success: true, total: 1, pages: 1, data: [{ _id: "m1", name: "Listed Member", native_language: "Korean", language_to_learn: "English", imageUrls: [] }] };
     }
@@ -106,5 +109,14 @@ describe("Today on /communities", () => {
     await screen.findByText("Daily One");
     fireEvent.click(screen.getByTestId("match-wave"));
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
+  });
+
+  it("a sent wave turns the card's Wave into Waved (community#14)", async () => {
+    renderAt("/communities");
+    await screen.findByText("Daily One");
+    fireEvent.click(screen.getByTestId("match-wave"));
+    fireEvent.click(await screen.findByTestId("wave-sheet-send"));
+    expect(await screen.findByTestId("match-waved")).toBeInTheDocument();
+    expect(screen.queryByTestId("match-wave")).not.toBeInTheDocument();
   });
 });

@@ -63,4 +63,18 @@ describe("MatchCard", () => {
     expect(onWave).toHaveBeenCalledWith(expect.objectContaining({ user: expect.objectContaining({ _id: "u7" }) }));
     expect(onSkip).toHaveBeenCalledWith(expect.objectContaining({ user: expect.objectContaining({ _id: "u7" }) }));
   });
+
+  it("shows a disabled Waved state instead of Wave once waved", () => {
+    const onWave = jest.fn();
+    render(
+      <MemoryRouter>
+        <MatchCard match={match as any} onWave={onWave} onSkip={jest.fn()} waved />
+      </MemoryRouter>
+    );
+    expect(screen.queryByTestId("match-wave")).not.toBeInTheDocument();
+    const done = screen.getByTestId("match-waved");
+    expect(done).toBeDisabled();
+    fireEvent.click(done);
+    expect(onWave).not.toHaveBeenCalled();
+  });
 });

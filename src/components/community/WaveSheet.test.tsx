@@ -152,4 +152,20 @@ describe("WaveSheet", () => {
       expect(screen.queryByText("Daily wave limit reached")).not.toBeInTheDocument();
     });
   });
+
+  it("tells the caller about a sent wave and about ALREADY_WAVED", async () => {
+    const onWaved = jest.fn();
+    mockSendWave.mockReturnValue({
+      unwrap: () => Promise.resolve({ success: true, data: { waveId: "w1", isMutual: true } }),
+    });
+    renderSheet({ onWaved });
+    fireEvent.click(screen.getByTestId("wave-sheet-send"));
+    await waitFor(() => expect(onWaved).toHaveBeenCalledWith("user-2", true));
+
+    onWaved.mockReset();
+    rejectWith(400, { success: false, error: "already", code: "ALREADY_WAVED" });
+    renderSheet({ onWaved });
+    fireEvent.click(screen.getAllByTestId("wave-sheet-send")[1]);
+    await waitFor(() => expect(onWaved).toHaveBeenCalledWith("user-2", false));
+  });
 });

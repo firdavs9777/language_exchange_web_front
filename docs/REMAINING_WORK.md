@@ -104,7 +104,7 @@ Phase 3 Community (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-ap
 - [x] P3-COM-6 "Serious learners" segment tab (`activeWithin=7d`) (community#9)
 - [x] P3-COM-7 Smart sort by default when the server offers it; reciprocal ("perfect partners") filter (community#9)
 - [x] P3-COM-8 "More members like X" asks for people who speak X's language (community#11)
-- [ ] P3-COM-9 Today marks a card "Waved" after a wave (community#14)
+- [x] P3-COM-9 Today marks a card "Waved" after a wave (community#14)
 - [ ] P3-COM-10 Delete the dead community endpoints and wave shims (community#12)
 - [ ] P3-COM-11 Profile counts from `followersCount` for signed-out visitors; story ring from `hasActiveStory` (community#6, links#11)
 - [ ] P3-COM-12 Blocked viewers see a neutral card; follow refused by a block says so (community#5)

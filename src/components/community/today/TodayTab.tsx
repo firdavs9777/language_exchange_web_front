@@ -19,7 +19,8 @@ const TodayTab: React.FC<{
   onRetry: () => void;
   onWave: (match: DailyMatch) => void;
   onBrowse: () => void;
-}> = ({ response, isLoading, isError, onRetry, onWave, onBrowse }) => {
+  wavedIds?: string[];
+}> = ({ response, isLoading, isError, onRetry, onWave, onBrowse, wavedIds = [] }) => {
   const { t, i18n } = useTranslation();
   const [skipUser] = useSkipUserMutation();
   const date = (response && response.date) || "";
@@ -116,7 +117,13 @@ const TodayTab: React.FC<{
       </div>
       <div className="grid gap-3 md:grid-cols-2">
         {visible.map((match) => (
-          <MatchCard key={match.user._id} match={match} onWave={onWave} onSkip={handleSkip} />
+          <MatchCard
+            key={match.user._id}
+            match={match}
+            onWave={onWave}
+            onSkip={handleSkip}
+            waved={wavedIds.indexOf(match.user._id) > -1}
+          />
         ))}
       </div>
     </div>

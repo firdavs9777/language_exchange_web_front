@@ -23,6 +23,12 @@ export interface WaveSheetProps {
   open: boolean;
   targetUser: WaveTargetUser | null;
   onClose: () => void;
+  /**
+   * The server now holds a wave from the viewer to this person: fired after a
+   * sent wave, and after ALREADY_WAVED (an earlier one). Today's cards use it
+   * to stop offering a second wave.
+   */
+  onWaved?: (targetUserId: string, isMutual: boolean) => void;
 }
 
 const MESSAGE_MAX_LENGTH = 100;
@@ -43,7 +49,7 @@ const ICEBREAKER_PROMPTS: string[] = [
   "Hey! What made you start learning a new language?",
 ];
 
-const WaveSheet: React.FC<WaveSheetProps> = ({ open, targetUser, onClose }) => {
+const WaveSheet: React.FC<WaveSheetProps> = ({ open, targetUser, onClose, onWaved }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
@@ -97,6 +103,7 @@ const WaveSheet: React.FC<WaveSheetProps> = ({ open, targetUser, onClose }) => {
       }).unwrap();
 
       const isMutual = !!result?.data?.isMutual;
+      if (onWaved) onWaved(targetUser._id, isMutual);
       if (isMutual) {
         toast.success(
           `🎉 It's a match! You and ${targetUser.name} both waved at each other.`,
@@ -114,6 +121,7 @@ const WaveSheet: React.FC<WaveSheetProps> = ({ open, targetUser, onClose }) => {
       const code = err?.data?.code;
       if (code === "ALREADY_WAVED") {
         setAlreadyWaved(true);
+        if (onWaved) onWaved(targetUser._id, false);
         return;
       }
       // The daily cap. The server answers 429 with this code only while
