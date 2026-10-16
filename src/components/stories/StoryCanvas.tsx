@@ -170,7 +170,7 @@ const StoryCanvas: React.FC<StoryCanvasProps> = ({
             key={index}
             data-testid={testIdPrefix + "-overlay-" + index}
             style={{
-              ...overlayPositionStyle(overlay.x, overlay.y),
+              ...overlayPositionStyle(overlay.x, overlay.y, overlay.rotation),
               color: overlay.color,
             }}
             className={[
@@ -193,6 +193,8 @@ const StoryCanvas: React.FC<StoryCanvasProps> = ({
         const mentionId =
           typeof mentionUser === "string" ? mentionUser : mentionUser && mentionUser._id;
         if (!mentionId) return null;
+        // The app's pill (story_viewer_screen.dart _buildMentionPills):
+        // black at 0.55, white bold 13px, fully rounded.
         return (
           <Link
             key={index}
@@ -203,7 +205,7 @@ const StoryCanvas: React.FC<StoryCanvasProps> = ({
               if (onNavigate) onNavigate();
             }}
             style={mentionPositionStyle(mention.position)}
-            className="absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-chip bg-white/85 px-2 py-0.5 text-xs font-semibold text-ink-900 no-underline"
+            className="absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/55 px-2.5 py-1 text-[13px] font-bold text-white no-underline"
           >
             @{mention.username || (mentionUser && mentionUser.name) || ""}
           </Link>

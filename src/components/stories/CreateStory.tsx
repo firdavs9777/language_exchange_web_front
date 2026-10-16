@@ -777,7 +777,7 @@ const CreateStory: React.FC = () => {
                   onPointerUp={endDrag}
                   onPointerCancel={endDrag}
                   style={overlayPositionStyle(mention.x, mention.y)}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 cursor-move select-none rounded-chip bg-white/85 px-2 py-0.5 text-xs font-semibold text-ink-900"
+                  className="absolute -translate-x-1/2 -translate-y-1/2 cursor-move select-none rounded-full bg-black/55 px-2.5 py-1 text-[13px] font-bold text-white"
                 >
                   @{mention.name}
                 </span>

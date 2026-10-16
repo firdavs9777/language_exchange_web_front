@@ -375,12 +375,27 @@ export function formatSeconds(seconds?: number): string {
 }
 
 /**
- * The ONLY inline style these stickers need: two numbers out of the JSON that
- * no utility class can express. Everything else — font, weight, plate, size —
- * is a class from the maps above.
+ * The ONLY inline style these stickers need: numbers out of the JSON that no
+ * utility class can express. `x`/`y` are the sticker's CENTRE (the classes
+ * add `-translate-x-1/2 -translate-y-1/2`); `left`/`top` stay physical so a
+ * right-to-left page never mirrors a picture's coordinates.
+ *
+ * `rotation` (degrees, app stickers only -- the app draws it with
+ * `Transform.rotate`) becomes Tailwind's own `--tw-rotate` variable, which
+ * the translate classes already compose into `transform`, so no raw
+ * `transform` is ever written inline. Everything else -- font, weight,
+ * plate, size -- is a class.
  */
-export function overlayPositionStyle(x: number, y: number): { left: string; top: string } {
-  return { left: clamp01(x) * 100 + "%", top: clamp01(y) * 100 + "%" };
+export function overlayPositionStyle(
+  x: number,
+  y: number,
+  rotation?: number
+): { left: string; top: string } {
+  const style: any = { left: clamp01(x) * 100 + "%", top: clamp01(y) * 100 + "%" };
+  if (typeof rotation === "number" && Number.isFinite(rotation) && rotation !== 0) {
+    style["--tw-rotate"] = rotation + "deg";
+  }
+  return style;
 }
 
 /** Mentions come back from the server on the 0–100 scale, nested under

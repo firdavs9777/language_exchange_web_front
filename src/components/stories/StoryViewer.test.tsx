@@ -359,6 +359,48 @@ describe("keyboard", () => {
 });
 
 describe("structured stickers", () => {
+  it("tilts an app overlay by its rotation and still centres it on x/y", () => {
+    renderViewer([
+      story({
+        overlays: [
+          { type: "text", content: "tilt", x: 0.3, y: 0.6, scale: 1, rotation: 20, color: "#FFFFFF", fontStyle: "sans-serif", bgMode: "none" },
+        ],
+      }),
+    ]);
+    const node = screen.getByTestId("story-overlay-0");
+    expect(node).toHaveStyle({ left: "30%", top: "60%" });
+    expect(node.style.getPropertyValue("--tw-rotate")).toBe("20deg");
+    expect(node.className).toContain("-translate-x-1/2");
+    expect(node.className).toContain("-translate-y-1/2");
+  });
+
+  it("does not mirror story coordinates in a right-to-left page", () => {
+    document.documentElement.setAttribute("dir", "rtl");
+    try {
+      renderViewer([
+        story({
+          overlays: [
+            { type: "text", content: "x", x: 0.25, y: 0.5, scale: 1, color: "#FFFFFF", fontStyle: "sans-serif", bgMode: "none" },
+          ],
+          mentions: [{ user: "u-1", username: "ann", position: { x: 20, y: 30 } }],
+        }),
+      ]);
+      expect(screen.getByTestId("story-overlay-0")).toHaveStyle({ left: "25%" });
+      expect(screen.getByTestId("story-mention-0")).toHaveStyle({ left: "20%", top: "30%" });
+    } finally {
+      document.documentElement.removeAttribute("dir");
+    }
+  });
+
+  it("draws mentions as the app's dark pill", () => {
+    renderViewer([story({ mentions: [{ user: "u-1", username: "ann", position: { x: 50, y: 50 } }] })]);
+    const classes = screen.getByTestId("story-mention-0").className.split(" ");
+    expect(classes).toContain("bg-black/55");
+    expect(classes).toContain("text-white");
+    expect(classes).toContain("font-bold");
+    expect(classes).not.toContain("bg-white/85");
+  });
+
   it("puts a white plate behind dark text on a solid overlay (black on black was unreadable)", () => {
     renderViewer([
       story({

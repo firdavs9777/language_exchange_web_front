@@ -50,6 +50,8 @@ export interface StoryOverlay {
   x: number;
   y: number;
   scale: number;
+  /** Degrees. The app's studio writes it; the web composer never rotates. */
+  rotation?: number;
   color: string;
   fontStyle: 'sans-serif' | 'serif' | 'bold' | 'handwritten';
   bgMode: 'none' | 'semi' | 'solid';
