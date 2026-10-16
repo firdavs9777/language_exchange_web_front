@@ -10,6 +10,7 @@ import {
   Check,
   CheckCheck,
   Clock,
+  CornerUpRight,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import ReactionRow from "./actions/ReactionRow";
@@ -88,6 +89,8 @@ export interface Message {
   reactions?: Array<{ user: string; emoji: string; createdAt?: string }>;
   isEdited?: boolean;
   editedAt?: string;
+  isForwarded?: boolean;
+  forwardedFrom?: { sender?: string; messageId?: string; originalMessage?: string };
   pinned?: boolean;
   /** Set on story replies, reactions and shares (backend controllers/stories.js). */
   storyReference?: { storyId?: string | null; thumbnail?: string | null } | null;
@@ -476,6 +479,13 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
             />
           ) : (
             <>
+              {msg.isForwarded && (
+                <span className="message-forwarded" data-testid="message-forwarded">
+                  <CornerUpRight size={12} aria-hidden="true" />
+                  {t("chatPage.forwarded") || "Forwarded"}
+                </span>
+              )}
+
               {renderMediaContent()}
 
               {msg.replyTo && (
@@ -519,6 +529,11 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
           )}
 
           <div className="message-meta">
+            {msg.isEdited && (
+              <span className="message-edited" data-testid="message-edited">
+                {t("chatPage.editedLabel") || "edited"}
+              </span>
+            )}
             <span className="message-time">{timeLabel}</span>
             {isSent && <div className="message-status">{renderStatusIcon()}</div>}
           </div>
@@ -546,16 +561,18 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
         {/* Correction card lives OUTSIDE the bubble so it always
             renders on a white background — readable for both
             sent (teal) and received (grey) bubbles. */}
-        {msg.corrections && msg.corrections.length > 0 && (
-          <CorrectionCard
-            messageId={msg._id}
-            correction={msg.corrections[0]}
-            isMe={isSent}
-            currentUserId={currentUserId || ""}
-            otherUserName={otherUserName}
-            onAccepted={(correctionId) => onCorrectionAccepted(msg._id, correctionId)}
-          />
-        )}
+        {msg.corrections &&
+          msg.corrections.map((correction) => (
+            <CorrectionCard
+              key={correction._id}
+              messageId={msg._id}
+              correction={correction}
+              isMe={isSent}
+              currentUserId={currentUserId || ""}
+              otherUserName={otherUserName}
+              onAccepted={(correctionId) => onCorrectionAccepted(msg._id, correctionId)}
+            />
+          ))}
 
         {!isSent && !isWave && !isSticker && !isVoice && !hasMedia && !isCall && !isLocation && msg.message && (
           <div className="message-chip-row">

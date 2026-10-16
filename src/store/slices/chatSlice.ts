@@ -340,9 +340,9 @@ export const chatApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 3600,
     }),
 
-    // Pin (toggle) — POST /api/v1/messages/:id/pin, no body. Server does NOT
-    // emit this over socket, so invalidate the conversation/list tags so the
-    // UI refetches the pinned state.
+    // Pin (toggle) — POST /api/v1/messages/:id/pin, no body. The server emits
+    // `messagePinned` to the OTHER participant only (ChatContent listens), so
+    // our own pin still refetches the thread to pick up the new state.
     pinMessage: builder.mutation({
       query: (messageId: string) => ({
         url: `${MESSAGES_URL}/${messageId}/pin`,

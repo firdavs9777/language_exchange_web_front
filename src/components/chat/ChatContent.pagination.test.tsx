@@ -897,3 +897,68 @@ it("puts their wave, with a bare-id sender, on their side", async () => {
   await waitFor(() => expect(renderedIds()).toContain("wave-2"));
   expect(document.querySelector('[data-msg-id="wave-2"]')).toHaveClass("received");
 });
+
+// --- messagePinned (chat#14) -------------------------------------------------
+//
+// The backend emits messagePinned to the other participant; the web never
+// listened (a comment even said the server does not emit it), so a pin made
+// in the app only appeared on web after a reload.
+
+it("shows a pin the other person made, live", async () => {
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+  await waitFor(() => expect(renderedIds()).toContain("newer-b"));
+  expect(screen.queryByTestId("pinned-bar")).toBeNull();
+
+  socket.fire("messagePinned", { messageId: "newer-b", pinned: true, pinnedBy: "u2" });
+
+  expect(await screen.findByTestId("pinned-bar")).toHaveTextContent("newer-b");
+  expect(mockUpdateQueryData).toHaveBeenCalledWith(
+    "getConversation",
+    expect.objectContaining({ senderId: "me", receiverId: "u2" }),
+    expect.any(Function)
+  );
+});
+
+it("unpins the old message when a new one is pinned, as the server does", async () => {
+  answerWith({
+    page1: [
+      { ...PAGE_1[0], pinned: true },
+      PAGE_1[1],
+    ],
+  });
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+  expect(await screen.findByTestId("pinned-bar")).toHaveTextContent("newer-a");
+
+  socket.fire("messagePinned", { messageId: "newer-b", pinned: true, pinnedBy: "u2" });
+
+  await waitFor(() => expect(screen.getByTestId("pinned-bar")).toHaveTextContent("newer-b"));
+  expect(screen.getByTestId("pinned-bar")).not.toHaveTextContent("newer-a");
+});
+
+it("ignores a pin from a conversation that is not open", async () => {
+  answerWith({ page1: [{ ...PAGE_1[0], pinned: true }, PAGE_1[1]] });
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+  expect(await screen.findByTestId("pinned-bar")).toHaveTextContent("newer-a");
+
+  socket.fire("messagePinned", { messageId: "elsewhere", pinned: true, pinnedBy: "u7" });
+
+  expect(screen.getByTestId("pinned-bar")).toHaveTextContent("newer-a");
+});
+
+it("clears the bar when the pin is removed", async () => {
+  answerWith({ page1: [{ ...PAGE_1[0], pinned: true }, PAGE_1[1]] });
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+  expect(await screen.findByTestId("pinned-bar")).toBeInTheDocument();
+
+  socket.fire("messagePinned", { messageId: "newer-a", pinned: false, pinnedBy: "u2" });
+
+  await waitFor(() => expect(screen.queryByTestId("pinned-bar")).toBeNull());
+});

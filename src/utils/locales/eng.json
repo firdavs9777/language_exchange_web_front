@@ -301,7 +301,9 @@
       "replied": "Replied to your story",
       "youReplied": "You replied to their story",
       "unavailable": "This story is no longer available"
-    }
+    },
+    "forwarded": "Forwarded",
+    "editedLabel": "edited"
   },
   "newChat": {
     "title": "New Chat",

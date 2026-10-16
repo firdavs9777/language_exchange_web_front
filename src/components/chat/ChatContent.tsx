@@ -692,6 +692,40 @@ const ChatContent: React.FC<ChatContentProps> = ({
       );
     };
 
+    // The other participant pinned or unpinned a message (messageManagement.js
+    // pinMessage). The server keeps ONE pinned message per pair, so a new pin
+    // unpins the rest — but only for the conversation this pin belongs to: the
+    // event reaches us whatever thread is open.
+    const handleMessagePinned = (data: { messageId: string; pinned: boolean }) => {
+      if (!data || !data.messageId) return;
+      const id = String(data.messageId);
+      const pinned = Boolean(data.pinned);
+      const repin = (list: any[]): any[] =>
+        list.map((m: any) => {
+          if (!m) return m;
+          if (m._id === id) return m.pinned === pinned ? m : { ...m, pinned: pinned };
+          if (pinned && m.pinned) return { ...m, pinned: false };
+          return m;
+        });
+      setMessages((prev) => (prev.some((m) => m._id === id) ? (repin(prev) as Message[]) : prev));
+      // The same change in the thread cache, so a conversation switch does not
+      // bring the old pin back. One updater for the target AND the unpinned
+      // rest; a thread that does not hold the id is left alone.
+      if (userId && selectedUserRef.current) {
+        dispatch(
+          (chatApiSlice.util as any).updateQueryData(
+            "getConversation",
+            { senderId: userId, receiverId: selectedUserRef.current, page: 1, limit: MESSAGE_PAGE_SIZE },
+            (draft: any) => {
+              if (!draft || !Array.isArray(draft.data)) return;
+              if (!draft.data.some((m: any) => m && m._id === id)) return;
+              draft.data = repin(draft.data);
+            }
+          )
+        );
+      }
+    };
+
     // The burst limiter refuses with this push and NO ack, so the newest
     // in-flight bubble would otherwise spin until the ack timeout.
     const handleMessageSendError = (errorData: { error?: string }) => {
@@ -746,6 +780,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     socket.on("correctionAccepted", handleCorrectionAccepted);
     socket.on("messageEdited", handleMessageEdited);
     socket.on("messageReaction", handleMessageReaction);
+    socket.on("messagePinned", handleMessagePinned);
     socket.on("messageSendError", handleMessageSendError);
     socket.on("queuedMessages", handleQueuedMessages);
 
@@ -765,10 +800,11 @@ const ChatContent: React.FC<ChatContentProps> = ({
       socket.off("correctionAccepted", handleCorrectionAccepted);
       socket.off("messageEdited", handleMessageEdited);
       socket.off("messageReaction", handleMessageReaction);
+      socket.off("messagePinned", handleMessagePinned);
       socket.off("messageSendError", handleMessageSendError);
       socket.off("queuedMessages", handleQueuedMessages);
     };
-  }, [socket, userId, rememberInThread, forgetFromThread, patchInThread]);
+  }, [socket, userId, dispatch, rememberInThread, forgetFromThread, patchInThread]);
 
   // Request user status when selectedUser changes or socket connects
   useEffect(() => {

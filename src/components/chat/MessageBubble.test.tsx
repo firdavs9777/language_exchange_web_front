@@ -466,3 +466,35 @@ describe("story shares, replies and reactions (chat#9)", () => {
     expect(screen.getByTestId("story-ref")).toBeDisabled();
   });
 });
+
+describe("edited, forwarded and corrections (chat#14)", () => {
+  it("labels an edited message", () => {
+    renderBubble({ message: message({ isEdited: true }) });
+    expect(screen.getByTestId("message-edited")).toHaveTextContent("edited");
+  });
+
+  it("says nothing on a message that was never edited", () => {
+    renderBubble();
+    expect(screen.queryByTestId("message-edited")).toBeNull();
+  });
+
+  it("marks a forwarded message", () => {
+    renderBubble({ message: message({ isForwarded: true } as any) });
+    expect(screen.getByTestId("message-forwarded")).toHaveTextContent("Forwarded");
+  });
+
+  it("shows every correction, not only the first", () => {
+    renderBubble({
+      message: message({
+        sender: { _id: "u2", name: "Ada" },
+        corrections: [
+          { _id: "c1", originalText: "I goed", correctedText: "I went", corrector: { _id: "me", name: "Me" } },
+          { _id: "c2", originalText: "I goed", correctedText: "I have gone", corrector: { _id: "u3", name: "Bo" } },
+        ],
+      } as any),
+      isSent: false,
+    });
+    expect(screen.getByText("I went")).toBeInTheDocument();
+    expect(screen.getByText("I have gone")).toBeInTheDocument();
+  });
+});
