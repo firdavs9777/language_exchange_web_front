@@ -182,3 +182,29 @@ describe("recordProfileVisit hits POST /auth/users/:userId/profile-visit", () =>
     });
   });
 });
+
+describe("username lookups hit the /auth/users router (community#3)", () => {
+  // /api/v1/users is the userBlocks router; the username routes are mounted
+  // under /api/v1/auth/users (routes/users.js:66,69). NewChat's "@handle"
+  // search 404'd and showed nothing.
+  it("searchUsersByUsername -> GET /api/v1/auth/users/search/username?q=", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch(
+      (usersApiSlice.endpoints as any).searchUsersByUsername.initiate({ query: "@ada lo" })
+    );
+    expect(calls).toHaveLength(1);
+    const url = new URL(calls[0].url);
+    expect(url.pathname).toBe(`${COMMUNITY_URL}/search/username`);
+    expect(url.searchParams.get("q")).toBe("ada lo");
+    expect(url.searchParams.get("limit")).toBe("20");
+  });
+
+  it("getUserByUsername -> GET /api/v1/auth/users/username/:u, @ stripped and encoded", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch((usersApiSlice.endpoints as any).getUserByUsername.initiate("@ada/x"));
+    const url = new URL(calls[0].url);
+    expect(url.pathname).toBe(`${COMMUNITY_URL}/username/ada%2Fx`);
+  });
+});

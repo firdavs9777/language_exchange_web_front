@@ -54,7 +54,8 @@ const NewChat: React.FC = () => {
   // Username search (when query starts with @)
   const { data: usernameSearchData, isLoading: isUsernameSearching } = useSearchUsersByUsernameQuery(
     { query: trimmedQuery },
-    { skip: !searchByUsername || trimmedQuery.replace("@", "").length < 1 }
+    // The server 400s under 2 characters (searchUsersByUsername).
+    { skip: !searchByUsername || trimmedQuery.replace("@", "").length < 2 }
   );
 
   // ID search (when query is a valid ObjectId)

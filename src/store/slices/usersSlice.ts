@@ -372,18 +372,22 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    // Get user by username (exact match)
+    // Get user by username (exact match). The username routes live on the
+    // /api/v1/auth/users router (routes/users.js:69); /api/v1/users is the
+    // block router and answered 404.
     getUserByUsername: builder.query({
       query: (username: string) => ({
-        url: `/api/v1/users/username/${username.replace('@', '')}`,
+        url: `${COMMUNITY_URL}/username/${encodeURIComponent(username.replace(/^@/, ""))}`,
       }),
       keepUnusedDataFor: 5,
     }),
 
-    // Search users by username (partial match)
+    // Search users by username (partial match, routes/users.js:66). The
+    // server refuses q under 2 characters with a 400.
     searchUsersByUsername: builder.query({
       query: ({ query, limit = 20 }: { query: string; limit?: number }) => ({
-        url: `/api/v1/users/search/username?q=${query.replace('@', '')}&limit=${limit}`,
+        url: `${COMMUNITY_URL}/search/username`,
+        params: { q: query.replace(/^@/, ""), limit: String(limit) },
       }),
     }),
 
