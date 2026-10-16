@@ -2133,6 +2133,94 @@
       "badge": "Lanzado en diciembre de 2025",
       "title": "Sé de los primeros",
       "body": "BananaTalk es nuevo. La gente que conoces aquí es la que está construyendo en lo que se convertirá esta comunidad — una razón para entrar pronto mucho mejor que cualquier reseña."
+    },
+    "v2": {
+      "hero": {
+        "eyebrow": "Aprende · Chatea · Conoce",
+        "title": "Habla un nuevo idioma con personas reales",
+        "titleAccent": "— gratis.",
+        "subtitle": "Chatea con hablantes nativos, recibe traducciones y correcciones al instante y practica cada día con un tutor de IA.",
+        "web": "O usa BananaTalk en la web",
+        "proofLearners": "estudiantes",
+        "proofLanguages": "idiomas",
+        "proofFree": "Gratis para empezar"
+      },
+      "chips": {
+        "hi": "¡Hola!",
+        "translated": "Traducido",
+        "streak": "Racha de 7 días"
+      },
+      "alt": {
+        "chat": "Un chat de BananaTalk con un hablante nativo",
+        "study": "Study Hub de BananaTalk con la lección del día, XP y racha",
+        "community": "Comunidad de BananaTalk con una lista de compañeros de idiomas"
+      },
+      "steps": {
+        "eyebrow": "Cómo funciona",
+        "title": "Empieza a hablar en tres pasos",
+        "s1": {
+          "title": "Elige tus idiomas",
+          "body": "Cuéntanos qué hablas y qué quieres aprender."
+        },
+        "s2": {
+          "title": "Conecta con nativos",
+          "body": "Conoce a personas que hablan el idioma que estudias y quieren aprender el tuyo."
+        },
+        "s3": {
+          "title": "Chatea, llama y aprende",
+          "body": "Mensajes, notas de voz y llamadas, con traducción y correcciones integradas."
+        },
+        "cta": "Empieza gratis"
+      },
+      "features": {
+        "eyebrow": "Por qué BananaTalk",
+        "title": "Todo lo que necesitas para hablar de verdad",
+        "cta": "Crea tu cuenta gratis",
+        "chat": {
+          "eyebrow": "Chatea con hablantes nativos",
+          "title": "Haz amigos que hablan el idioma que quieres",
+          "body": "Mensajes, notas de voz y llamadas con nativos, y ayuda en cuanto te atascas.",
+          "b1": "Traducción al instante",
+          "b2": "Correcciones amables",
+          "b3": "Notas de voz y llamadas",
+          "alt": "Un chat de BananaTalk con herramientas de traducción"
+        },
+        "study": {
+          "eyebrow": "Estudio con IA",
+          "title": "Practica un poco cada día, sin aburrirte",
+          "body": "Un paquete diario nuevo y un tutor de IA que se adapta a tu nivel.",
+          "b1": "Lecciones diarias en minutos",
+          "b2": "Tutor de IA 24/7",
+          "b3": "Rachas y XP",
+          "alt": "Study Hub de BananaTalk con la lección del día, XP y racha"
+        },
+        "moments": {
+          "eyebrow": "Momentos y Reels",
+          "title": "Aprende cómo habla la gente de verdad",
+          "body": "Comparte publicaciones y vídeos cortos, y descubre el idioma cotidiano de los nativos.",
+          "b1": "Publicaciones e historias",
+          "b2": "Reels cortos de idiomas",
+          "b3": "Traducción con un toque",
+          "alt": "El feed de Momentos de BananaTalk"
+        },
+        "community": {
+          "eyebrow": "Comunidad",
+          "title": "Encuentra a tu gente, en cualquier parte del mundo",
+          "body": "Explora coincidencias, entra en salas de voz y únete a encuentros cerca de ti.",
+          "b1": "Coincidencias inteligentes",
+          "b2": "Salas de voz en directo",
+          "b3": "Encuentros locales",
+          "alt": "Comunidad de BananaTalk con una lista de compañeros de idiomas"
+        }
+      },
+      "languages": {
+        "cta": "Encuentra un compañero de idiomas"
+      },
+      "cta": {
+        "title": "Tu primera conversación está a un toque",
+        "subtitle": "Gratis para descargar y para empezar. Alguien está aprendiendo tu idioma ahora mismo.",
+        "web": "O usa BananaTalk en la web"
+      }
     }
   },
   "vip": {

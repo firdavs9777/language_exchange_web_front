@@ -2171,6 +2171,94 @@
       "badge": "Launched December 2025",
       "title": "Be one of the first",
       "body": "BananaTalk is new. The people you meet here are the ones building what this community becomes — which is a better reason to join early than any review."
+    },
+    "v2": {
+      "hero": {
+        "eyebrow": "Learn · Chat · Meet",
+        "title": "Speak a new language with real people",
+        "titleAccent": "— free.",
+        "subtitle": "Chat with native speakers, get instant translations and corrections, and practise every day with an AI tutor.",
+        "web": "Or use BananaTalk on the web",
+        "proofLearners": "learners",
+        "proofLanguages": "languages",
+        "proofFree": "Free to start"
+      },
+      "chips": {
+        "hi": "Hi!",
+        "translated": "Translated",
+        "streak": "7-day streak"
+      },
+      "alt": {
+        "chat": "A BananaTalk chat with a native speaker",
+        "study": "BananaTalk Study Hub with a daily lesson, XP and streak",
+        "community": "BananaTalk community list of language partners"
+      },
+      "steps": {
+        "eyebrow": "How it works",
+        "title": "Start talking in three steps",
+        "s1": {
+          "title": "Pick your languages",
+          "body": "Tell us what you speak and what you want to learn."
+        },
+        "s2": {
+          "title": "Match with natives",
+          "body": "Meet people who speak your target language and want to learn yours."
+        },
+        "s3": {
+          "title": "Chat, call & learn",
+          "body": "Text, voice notes and calls, with translation and corrections built in."
+        },
+        "cta": "Get started free"
+      },
+      "features": {
+        "eyebrow": "Why BananaTalk",
+        "title": "Everything you need to actually speak",
+        "cta": "Create your free account",
+        "chat": {
+          "eyebrow": "Chat with native speakers",
+          "title": "Make friends who speak the language you want",
+          "body": "Text, voice notes and calls with natives, with help the moment you get stuck.",
+          "b1": "Instant translation",
+          "b2": "Gentle corrections",
+          "b3": "Voice notes & calls",
+          "alt": "A BananaTalk chat with translation tools"
+        },
+        "study": {
+          "eyebrow": "AI Study",
+          "title": "Practise a little every day, without the boredom",
+          "body": "A fresh daily pack and an AI tutor that adapts to your level.",
+          "b1": "Daily lessons in minutes",
+          "b2": "AI tutor, 24/7",
+          "b3": "Streaks and XP",
+          "alt": "BananaTalk Study Hub with a daily lesson, XP and streak"
+        },
+        "moments": {
+          "eyebrow": "Moments & Reels",
+          "title": "Learn how people really talk",
+          "body": "Share posts and short videos, and see everyday language from natives.",
+          "b1": "Posts & stories",
+          "b2": "Short language reels",
+          "b3": "One-tap translate",
+          "alt": "The BananaTalk Moments feed"
+        },
+        "community": {
+          "eyebrow": "Community",
+          "title": "Find your people, anywhere in the world",
+          "body": "Browse matches, drop into voice rooms and join gatherings near you.",
+          "b1": "Smart partner matches",
+          "b2": "Live voice rooms",
+          "b3": "Local gatherings",
+          "alt": "BananaTalk community list of language partners"
+        }
+      },
+      "languages": {
+        "cta": "Find a language partner"
+      },
+      "cta": {
+        "title": "Your first conversation is one tap away",
+        "subtitle": "Free to download, free to start. Someone is learning your language right now.",
+        "web": "Or use BananaTalk on the web"
+      }
     }
   },
   "vip": {

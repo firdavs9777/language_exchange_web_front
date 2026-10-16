@@ -2133,6 +2133,94 @@
       "badge": "Lançado em dezembro de 2025",
       "title": "Seja um dos primeiros",
       "body": "O BananaTalk é novo. As pessoas que você encontra aqui são as que estão construindo o que essa comunidade vai ser — um motivo para chegar cedo melhor do que qualquer avaliação."
+    },
+    "v2": {
+      "hero": {
+        "eyebrow": "Aprenda · Converse · Conheça",
+        "title": "Fale um novo idioma com pessoas reais",
+        "titleAccent": "— grátis.",
+        "subtitle": "Converse com falantes nativos, receba traduções e correções na hora e pratique todos os dias com um tutor de IA.",
+        "web": "Ou use o BananaTalk na web",
+        "proofLearners": "alunos",
+        "proofLanguages": "idiomas",
+        "proofFree": "Grátis para começar"
+      },
+      "chips": {
+        "hi": "Oi!",
+        "translated": "Traduzido",
+        "streak": "Sequência de 7 dias"
+      },
+      "alt": {
+        "chat": "Um chat do BananaTalk com um falante nativo",
+        "study": "Study Hub do BananaTalk com a lição do dia, XP e sequência",
+        "community": "Comunidade do BananaTalk com uma lista de parceiros de idioma"
+      },
+      "steps": {
+        "eyebrow": "Como funciona",
+        "title": "Comece a conversar em três passos",
+        "s1": {
+          "title": "Escolha seus idiomas",
+          "body": "Conte o que você fala e o que quer aprender."
+        },
+        "s2": {
+          "title": "Conecte-se com nativos",
+          "body": "Conheça pessoas que falam o idioma que você estuda e querem aprender o seu."
+        },
+        "s3": {
+          "title": "Converse, ligue e aprenda",
+          "body": "Mensagens, áudios e chamadas, com tradução e correções integradas."
+        },
+        "cta": "Comece grátis"
+      },
+      "features": {
+        "eyebrow": "Por que o BananaTalk",
+        "title": "Tudo o que você precisa para falar de verdade",
+        "cta": "Crie sua conta grátis",
+        "chat": {
+          "eyebrow": "Converse com falantes nativos",
+          "title": "Faça amigos que falam o idioma que você quer",
+          "body": "Mensagens, áudios e chamadas com nativos, e ajuda assim que você travar.",
+          "b1": "Tradução instantânea",
+          "b2": "Correções gentis",
+          "b3": "Áudios e chamadas",
+          "alt": "Um chat do BananaTalk com ferramentas de tradução"
+        },
+        "study": {
+          "eyebrow": "Estudo com IA",
+          "title": "Pratique um pouco todo dia, sem tédio",
+          "body": "Um pacote diário novo e um tutor de IA que se adapta ao seu nível.",
+          "b1": "Lições diárias em minutos",
+          "b2": "Tutor de IA 24/7",
+          "b3": "Sequências e XP",
+          "alt": "Study Hub do BananaTalk com a lição do dia, XP e sequência"
+        },
+        "moments": {
+          "eyebrow": "Momentos e Reels",
+          "title": "Aprenda como as pessoas falam de verdade",
+          "body": "Compartilhe posts e vídeos curtos e veja a linguagem do dia a dia dos nativos.",
+          "b1": "Posts e stories",
+          "b2": "Reels curtos de idiomas",
+          "b3": "Tradução com um toque",
+          "alt": "O feed de Momentos do BananaTalk"
+        },
+        "community": {
+          "eyebrow": "Comunidade",
+          "title": "Encontre sua turma, em qualquer lugar do mundo",
+          "body": "Veja combinações, entre em salas de voz e participe de encontros perto de você.",
+          "b1": "Combinações inteligentes",
+          "b2": "Salas de voz ao vivo",
+          "b3": "Encontros locais",
+          "alt": "Comunidade do BananaTalk com uma lista de parceiros de idioma"
+        }
+      },
+      "languages": {
+        "cta": "Encontre um parceiro de idioma"
+      },
+      "cta": {
+        "title": "Sua primeira conversa está a um toque",
+        "subtitle": "Grátis para baixar, grátis para começar. Alguém está aprendendo seu idioma agora mesmo.",
+        "web": "Ou use o BananaTalk na web"
+      }
     }
   },
   "vip": {

@@ -2151,6 +2151,94 @@
       "badge": "Diluncurkan Desember 2025",
       "title": "Jadilah salah satu yang pertama",
       "body": "BananaTalk masih baru. Orang-orang yang kamu temui di sini adalah yang sedang membentuk komunitas ini — dan itu alasan untuk gabung lebih awal yang jauh lebih bagus daripada ulasan mana pun."
+    },
+    "v2": {
+      "hero": {
+        "eyebrow": "Belajar · Ngobrol · Bertemu",
+        "title": "Bicara bahasa baru dengan orang sungguhan",
+        "titleAccent": "— gratis.",
+        "subtitle": "Ngobrol dengan penutur asli, dapatkan terjemahan dan koreksi instan, dan berlatih setiap hari dengan tutor AI.",
+        "web": "Atau gunakan BananaTalk di web",
+        "proofLearners": "pelajar",
+        "proofLanguages": "bahasa",
+        "proofFree": "Gratis untuk mulai"
+      },
+      "chips": {
+        "hi": "Hai!",
+        "translated": "Diterjemahkan",
+        "streak": "7 hari beruntun"
+      },
+      "alt": {
+        "chat": "Obrolan BananaTalk dengan penutur asli",
+        "study": "Study Hub BananaTalk dengan pelajaran hari ini, XP, dan streak",
+        "community": "Komunitas BananaTalk dengan daftar partner bahasa"
+      },
+      "steps": {
+        "eyebrow": "Cara kerjanya",
+        "title": "Mulai ngobrol dalam tiga langkah",
+        "s1": {
+          "title": "Pilih bahasamu",
+          "body": "Beri tahu kami bahasa yang kamu kuasai dan yang ingin kamu pelajari."
+        },
+        "s2": {
+          "title": "Temukan penutur asli",
+          "body": "Kenali orang yang berbicara bahasa targetmu dan ingin belajar bahasamu."
+        },
+        "s3": {
+          "title": "Ngobrol, telepon, belajar",
+          "body": "Pesan, pesan suara, dan panggilan, dengan terjemahan dan koreksi bawaan."
+        },
+        "cta": "Mulai gratis"
+      },
+      "features": {
+        "eyebrow": "Kenapa BananaTalk",
+        "title": "Semua yang kamu perlukan untuk benar-benar bicara",
+        "cta": "Buat akun gratis",
+        "chat": {
+          "eyebrow": "Ngobrol dengan penutur asli",
+          "title": "Berteman dengan orang yang berbicara bahasa yang kamu inginkan",
+          "body": "Pesan, pesan suara, dan panggilan dengan penutur asli, plus bantuan saat kamu buntu.",
+          "b1": "Terjemahan instan",
+          "b2": "Koreksi yang ramah",
+          "b3": "Pesan suara & panggilan",
+          "alt": "Obrolan BananaTalk dengan alat terjemahan"
+        },
+        "study": {
+          "eyebrow": "Belajar dengan AI",
+          "title": "Latihan sedikit setiap hari, tanpa bosan",
+          "body": "Paket harian baru dan tutor AI yang menyesuaikan dengan levelmu.",
+          "b1": "Pelajaran harian dalam hitungan menit",
+          "b2": "Tutor AI 24/7",
+          "b3": "Streak dan XP",
+          "alt": "Study Hub BananaTalk dengan pelajaran hari ini, XP, dan streak"
+        },
+        "moments": {
+          "eyebrow": "Momen & Reels",
+          "title": "Pelajari cara orang benar-benar bicara",
+          "body": "Bagikan postingan dan video pendek, dan lihat bahasa sehari-hari dari penutur asli.",
+          "b1": "Postingan & story",
+          "b2": "Reels bahasa singkat",
+          "b3": "Terjemah sekali ketuk",
+          "alt": "Feed Momen BananaTalk"
+        },
+        "community": {
+          "eyebrow": "Komunitas",
+          "title": "Temukan teman sefrekuensi di seluruh dunia",
+          "body": "Jelajahi kecocokan, masuk ke ruang suara, dan ikuti pertemuan di dekatmu.",
+          "b1": "Pencocokan partner cerdas",
+          "b2": "Ruang suara langsung",
+          "b3": "Pertemuan lokal",
+          "alt": "Komunitas BananaTalk dengan daftar partner bahasa"
+        }
+      },
+      "languages": {
+        "cta": "Cari partner bahasa"
+      },
+      "cta": {
+        "title": "Obrolan pertamamu tinggal satu ketukan",
+        "subtitle": "Gratis diunduh, gratis untuk mulai. Seseorang sedang belajar bahasamu sekarang.",
+        "web": "Atau gunakan BananaTalk di web"
+      }
     }
   },
   "vip": {

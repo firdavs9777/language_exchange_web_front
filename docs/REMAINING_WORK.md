@@ -180,6 +180,8 @@ Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-
 - [x] P4-APPLE-I18N New Apple sign-in strings in all 18 locales
 - [x] P4-APPLE-PUSH Push unit apple (suite + build green, deployed dark, production smoke recorded) — deployed dark 2026-10-16 (suite 3911 pass)
 - [ ] Bundle budget: `npm run test:budget` fails -- first-paint 331.0 KB vs 326 KB budget (origin/main a944011 was already 329.2 KB). Not run by the deploy workflow. S
+  2026-10-16: origin/main 661c06e measures 349.3 KB (app code 315.9 vs 307); the homepage redesign adds +4.0 KB (353.3 KB: +1.5 JS, +2.4 CSS from the new palette's utilities).
+- [ ] `PromoCarousel` (src/components/growth, + `src/data/promoSlides`) is no longer mounted anywhere after the homepage redesign put the hero first; delete it or find it a new home. S
 
 ## 5. Decided / won't fix
 
@@ -194,3 +196,5 @@ Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-
 - [x] Sign in with Apple web: Services ID `com.bananatalk.com` (grouped with com.bananatalk.bananatalkApp) set in `.env.production` (2026-10-16); backend needs APPLE_WEB_SERVICES_ID + WEB_APPLE_SIGNIN_ENABLED.
 
 - [x] Real logo everywhere on the website (2026-10-16): login, footer, app banner, download pop-up, invite and download pages, language card (was 🍌 / "B").
+
+- [x] Homepage redesign (2026-10-16): marketing-first hero (benefit headline, store buttons + "use on the web", live learner count, 3 real app screenshots in CSS phone frames with floating chips, colour blobs), 3-step how-it-works, 4 benefit-led feature rows, languages strip, colourful stat tiles, pricing kept at `#pricing`, teal CTA band; 58 `home.v2.*` strings in 18 locales; EarlyAdopterBand removed.

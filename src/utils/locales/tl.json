@@ -2151,6 +2151,94 @@
       "badge": "Inilunsad noong Disyembre 2025",
       "title": "Maging isa sa mga nauna",
       "body": "Bago pa lang ang BananaTalk. Ang mga taong makikilala mo dito ang mismong bumubuo kung ano ang magiging komunidad na ito — mas magandang dahilan iyon para sumali nang maaga kaysa sa kahit anong review."
+    },
+    "v2": {
+      "hero": {
+        "eyebrow": "Matuto · Makipag-chat · Makakilala",
+        "title": "Magsalita ng bagong wika kasama ang totoong tao",
+        "titleAccent": "— libre.",
+        "subtitle": "Makipag-chat sa mga native speaker, makakuha agad ng salin at pagwawasto, at magsanay araw-araw kasama ang AI tutor.",
+        "web": "O gamitin ang BananaTalk sa web",
+        "proofLearners": "nag-aaral",
+        "proofLanguages": "wika",
+        "proofFree": "Libreng magsimula"
+      },
+      "chips": {
+        "hi": "Hi!",
+        "translated": "Naisalin",
+        "streak": "7 araw na sunod-sunod"
+      },
+      "alt": {
+        "chat": "Isang BananaTalk chat kasama ang native speaker",
+        "study": "BananaTalk Study Hub na may aralin ngayong araw, XP at streak",
+        "community": "BananaTalk community na may listahan ng language partner"
+      },
+      "steps": {
+        "eyebrow": "Paano ito gumagana",
+        "title": "Magsimulang makipag-usap sa tatlong hakbang",
+        "s1": {
+          "title": "Piliin ang iyong mga wika",
+          "body": "Sabihin sa amin kung ano ang sinasalita mo at ano ang gusto mong matutunan."
+        },
+        "s2": {
+          "title": "Makipag-match sa mga native",
+          "body": "Kilalanin ang mga nagsasalita ng wikang pinag-aaralan mo at gustong matuto ng wika mo."
+        },
+        "s3": {
+          "title": "Mag-chat, tumawag at matuto",
+          "body": "Text, voice note at tawag, may kasamang salin at pagwawasto."
+        },
+        "cta": "Magsimula nang libre"
+      },
+      "features": {
+        "eyebrow": "Bakit BananaTalk",
+        "title": "Lahat ng kailangan mo para talagang makapagsalita",
+        "cta": "Gumawa ng libreng account",
+        "chat": {
+          "eyebrow": "Makipag-chat sa mga native speaker",
+          "title": "Makipagkaibigan sa mga nagsasalita ng wikang gusto mo",
+          "body": "Text, voice note at tawag kasama ang mga native, at tulong agad kapag naipit ka.",
+          "b1": "Agarang salin",
+          "b2": "Mahinahong pagwawasto",
+          "b3": "Voice note at tawag",
+          "alt": "Isang BananaTalk chat na may mga tool sa pagsasalin"
+        },
+        "study": {
+          "eyebrow": "AI Study",
+          "title": "Magsanay nang kaunti araw-araw, nang hindi naiinip",
+          "body": "Bagong daily pack at AI tutor na umaangkop sa level mo.",
+          "b1": "Pang-araw-araw na aralin sa ilang minuto",
+          "b2": "AI tutor, 24/7",
+          "b3": "Streak at XP",
+          "alt": "BananaTalk Study Hub na may aralin ngayong araw, XP at streak"
+        },
+        "moments": {
+          "eyebrow": "Moments at Reels",
+          "title": "Alamin kung paano talaga nagsasalita ang mga tao",
+          "body": "Magbahagi ng post at maiikling video, at makita ang pang-araw-araw na wika ng mga native.",
+          "b1": "Mga post at story",
+          "b2": "Maiikling language reel",
+          "b3": "Isang tap na salin",
+          "alt": "Ang Moments feed ng BananaTalk"
+        },
+        "community": {
+          "eyebrow": "Komunidad",
+          "title": "Hanapin ang iyong mga kapareho, saanman sa mundo",
+          "body": "Mag-browse ng match, sumali sa voice room at sa mga pagtitipon malapit sa iyo.",
+          "b1": "Matalinong partner match",
+          "b2": "Live na voice room",
+          "b3": "Lokal na pagtitipon",
+          "alt": "BananaTalk community na may listahan ng language partner"
+        }
+      },
+      "languages": {
+        "cta": "Maghanap ng language partner"
+      },
+      "cta": {
+        "title": "Isang tap na lang ang unang usapan mo",
+        "subtitle": "Libreng i-download, libreng magsimula. May nag-aaral ng wika mo ngayon mismo.",
+        "web": "O gamitin ang BananaTalk sa web"
+      }
     }
   },
   "vip": {

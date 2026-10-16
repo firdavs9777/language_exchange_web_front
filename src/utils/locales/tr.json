@@ -2151,6 +2151,94 @@
       "badge": "Aralık 2025'te yayında",
       "title": "İlklerden biri ol",
       "body": "BananaTalk yeni. Burada tanıştığın insanlar, bu topluluğun ne olacağını şekillendiren insanlar — erken katılmak için bu, her yorumdan daha iyi bir sebep."
+    },
+    "v2": {
+      "hero": {
+        "eyebrow": "Öğren · Sohbet et · Tanış",
+        "title": "Yeni bir dili gerçek insanlarla konuş",
+        "titleAccent": "— ücretsiz.",
+        "subtitle": "Ana dili konuşanlarla sohbet et, anında çeviri ve düzeltme al, her gün bir yapay zekâ öğretmeniyle pratik yap.",
+        "web": "Ya da BananaTalk'u web'de kullan",
+        "proofLearners": "öğrenen",
+        "proofLanguages": "dil",
+        "proofFree": "Başlamak ücretsiz"
+      },
+      "chips": {
+        "hi": "Merhaba!",
+        "translated": "Çevrildi",
+        "streak": "7 günlük seri"
+      },
+      "alt": {
+        "chat": "Ana dili konuşan biriyle BananaTalk sohbeti",
+        "study": "Günün dersi, XP ve seriyle BananaTalk Study Hub",
+        "community": "Dil partnerleri listesiyle BananaTalk topluluğu"
+      },
+      "steps": {
+        "eyebrow": "Nasıl çalışır",
+        "title": "Üç adımda konuşmaya başla",
+        "s1": {
+          "title": "Dillerini seç",
+          "body": "Hangi dili konuştuğunu ve neyi öğrenmek istediğini söyle."
+        },
+        "s2": {
+          "title": "Ana dili konuşanlarla eşleş",
+          "body": "Öğrendiğin dili konuşan ve senin dilini öğrenmek isteyenlerle tanış."
+        },
+        "s3": {
+          "title": "Sohbet et, ara, öğren",
+          "body": "Mesajlar, sesli notlar ve aramalar; çeviri ve düzeltme dahil."
+        },
+        "cta": "Ücretsiz başla"
+      },
+      "features": {
+        "eyebrow": "Neden BananaTalk",
+        "title": "Gerçekten konuşmak için ihtiyacın olan her şey",
+        "cta": "Ücretsiz hesabını oluştur",
+        "chat": {
+          "eyebrow": "Ana dili konuşanlarla sohbet",
+          "title": "İstediğin dili konuşan arkadaşlar edin",
+          "body": "Ana dili konuşanlarla mesaj, sesli not ve arama; takıldığın anda yardım.",
+          "b1": "Anında çeviri",
+          "b2": "Nazik düzeltmeler",
+          "b3": "Sesli notlar ve aramalar",
+          "alt": "Çeviri araçlarıyla BananaTalk sohbeti"
+        },
+        "study": {
+          "eyebrow": "Yapay Zekâ ile Çalışma",
+          "title": "Her gün biraz pratik, sıkılmadan",
+          "body": "Her gün yeni bir paket ve seviyene uyum sağlayan bir yapay zekâ öğretmeni.",
+          "b1": "Dakikalar içinde günlük dersler",
+          "b2": "7/24 yapay zekâ öğretmeni",
+          "b3": "Seriler ve XP",
+          "alt": "Günün dersi, XP ve seriyle BananaTalk Study Hub"
+        },
+        "moments": {
+          "eyebrow": "Anlar ve Reels",
+          "title": "İnsanların gerçekte nasıl konuştuğunu öğren",
+          "body": "Gönderi ve kısa videolar paylaş, ana dili konuşanların gündelik dilini keşfet.",
+          "b1": "Gönderiler ve hikâyeler",
+          "b2": "Kısa dil videoları",
+          "b3": "Tek dokunuşla çeviri",
+          "alt": "BananaTalk Anlar akışı"
+        },
+        "community": {
+          "eyebrow": "Topluluk",
+          "title": "Dünyanın her yerinde kendi insanlarını bul",
+          "body": "Eşleşmelere göz at, sesli odalara katıl ve yakınındaki buluşmalara git.",
+          "b1": "Akıllı partner eşleşmeleri",
+          "b2": "Canlı sesli odalar",
+          "b3": "Yerel buluşmalar",
+          "alt": "Dil partnerleri listesiyle BananaTalk topluluğu"
+        }
+      },
+      "languages": {
+        "cta": "Dil partneri bul"
+      },
+      "cta": {
+        "title": "İlk sohbetin bir dokunuş uzağında",
+        "subtitle": "İndirmesi ücretsiz, başlaması ücretsiz. Şu anda biri senin dilini öğreniyor.",
+        "web": "Ya da BananaTalk'u web'de kullan"
+      }
     }
   },
   "vip": {

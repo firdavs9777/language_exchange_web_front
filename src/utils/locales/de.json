@@ -2151,6 +2151,94 @@
       "badge": "Gestartet im Dezember 2025",
       "title": "Sei von Anfang an dabei",
       "body": "BananaTalk ist neu. Die Leute, die du hier triffst, sind die, die diese Community erst zu dem machen, was sie wird — ein besserer Grund, früh dabei zu sein, als jede Bewertung."
+    },
+    "v2": {
+      "hero": {
+        "eyebrow": "Lernen · Chatten · Treffen",
+        "title": "Sprich eine neue Sprache mit echten Menschen",
+        "titleAccent": "– kostenlos.",
+        "subtitle": "Chatte mit Muttersprachlern, erhalte sofort Übersetzungen und Korrekturen und übe jeden Tag mit einem KI-Tutor.",
+        "web": "Oder nutze BananaTalk im Web",
+        "proofLearners": "Lernende",
+        "proofLanguages": "Sprachen",
+        "proofFree": "Kostenlos starten"
+      },
+      "chips": {
+        "hi": "Hallo!",
+        "translated": "Übersetzt",
+        "streak": "7 Tage in Folge"
+      },
+      "alt": {
+        "chat": "Ein BananaTalk-Chat mit einem Muttersprachler",
+        "study": "BananaTalk Study Hub mit Tageslektion, XP und Serie",
+        "community": "BananaTalk-Community mit einer Liste von Sprachpartnern"
+      },
+      "steps": {
+        "eyebrow": "So funktioniert's",
+        "title": "In drei Schritten ins Gespräch",
+        "s1": {
+          "title": "Sprachen wählen",
+          "body": "Sag uns, was du sprichst und was du lernen willst."
+        },
+        "s2": {
+          "title": "Muttersprachler finden",
+          "body": "Triff Menschen, die deine Zielsprache sprechen und deine lernen wollen."
+        },
+        "s3": {
+          "title": "Chatten, anrufen, lernen",
+          "body": "Nachrichten, Sprachnachrichten und Anrufe – mit Übersetzung und Korrekturen."
+        },
+        "cta": "Kostenlos loslegen"
+      },
+      "features": {
+        "eyebrow": "Warum BananaTalk",
+        "title": "Alles, was du brauchst, um wirklich zu sprechen",
+        "cta": "Kostenloses Konto erstellen",
+        "chat": {
+          "eyebrow": "Chatte mit Muttersprachlern",
+          "title": "Finde Freunde, die deine Wunschsprache sprechen",
+          "body": "Nachrichten, Sprachnachrichten und Anrufe mit Muttersprachlern – und Hilfe, sobald du hängst.",
+          "b1": "Sofortige Übersetzung",
+          "b2": "Behutsame Korrekturen",
+          "b3": "Sprachnachrichten & Anrufe",
+          "alt": "Ein BananaTalk-Chat mit Übersetzungswerkzeugen"
+        },
+        "study": {
+          "eyebrow": "KI-Lernen",
+          "title": "Jeden Tag ein bisschen üben – ohne Langeweile",
+          "body": "Jeden Tag ein neues Lernpaket und ein KI-Tutor, der sich deinem Niveau anpasst.",
+          "b1": "Tägliche Lektionen in Minuten",
+          "b2": "KI-Tutor rund um die Uhr",
+          "b3": "Serien und XP",
+          "alt": "BananaTalk Study Hub mit Tageslektion, XP und Serie"
+        },
+        "moments": {
+          "eyebrow": "Momente & Reels",
+          "title": "Lerne, wie Menschen wirklich sprechen",
+          "body": "Teile Beiträge und kurze Videos und entdecke die Alltagssprache von Muttersprachlern.",
+          "b1": "Beiträge & Storys",
+          "b2": "Kurze Sprach-Reels",
+          "b3": "Übersetzen mit einem Tipp",
+          "alt": "Der Momente-Feed von BananaTalk"
+        },
+        "community": {
+          "eyebrow": "Community",
+          "title": "Finde deine Leute – überall auf der Welt",
+          "body": "Stöbere in Matches, komm in Sprachräume und triff dich bei Treffen in deiner Nähe.",
+          "b1": "Clevere Partner-Matches",
+          "b2": "Live-Sprachräume",
+          "b3": "Lokale Treffen",
+          "alt": "BananaTalk-Community mit einer Liste von Sprachpartnern"
+        }
+      },
+      "languages": {
+        "cta": "Sprachpartner finden"
+      },
+      "cta": {
+        "title": "Dein erstes Gespräch ist nur einen Tipp entfernt",
+        "subtitle": "Kostenlos herunterladen, kostenlos starten. Gerade lernt jemand deine Sprache.",
+        "web": "Oder nutze BananaTalk im Web"
+      }
     }
   },
   "vip": {

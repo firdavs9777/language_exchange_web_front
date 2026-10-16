@@ -2151,6 +2151,94 @@
       "badge": "Ra mắt tháng 12 năm 2025",
       "title": "Hãy là một trong những người đầu tiên",
       "body": "BananaTalk vẫn còn mới. Những người bạn gặp ở đây chính là những người đang định hình cộng đồng này — đó là lý do vào sớm đáng giá hơn bất kỳ bài đánh giá nào."
+    },
+    "v2": {
+      "hero": {
+        "eyebrow": "Học · Trò chuyện · Gặp gỡ",
+        "title": "Nói một ngôn ngữ mới với người thật",
+        "titleAccent": "— miễn phí.",
+        "subtitle": "Trò chuyện với người bản xứ, nhận bản dịch và sửa lỗi tức thì, và luyện tập mỗi ngày với gia sư AI.",
+        "web": "Hoặc dùng BananaTalk trên web",
+        "proofLearners": "người học",
+        "proofLanguages": "ngôn ngữ",
+        "proofFree": "Bắt đầu miễn phí"
+      },
+      "chips": {
+        "hi": "Chào!",
+        "translated": "Đã dịch",
+        "streak": "Chuỗi 7 ngày"
+      },
+      "alt": {
+        "chat": "Cuộc trò chuyện BananaTalk với người bản xứ",
+        "study": "Study Hub của BananaTalk với bài học hôm nay, XP và chuỗi ngày",
+        "community": "Cộng đồng BananaTalk với danh sách bạn học ngôn ngữ"
+      },
+      "steps": {
+        "eyebrow": "Cách hoạt động",
+        "title": "Bắt đầu trò chuyện chỉ với ba bước",
+        "s1": {
+          "title": "Chọn ngôn ngữ",
+          "body": "Cho chúng tôi biết bạn nói gì và muốn học gì."
+        },
+        "s2": {
+          "title": "Kết nối với người bản xứ",
+          "body": "Gặp những người nói ngôn ngữ bạn học và muốn học ngôn ngữ của bạn."
+        },
+        "s3": {
+          "title": "Nhắn tin, gọi và học",
+          "body": "Tin nhắn, tin nhắn thoại và cuộc gọi, tích hợp sẵn dịch và sửa lỗi."
+        },
+        "cta": "Bắt đầu miễn phí"
+      },
+      "features": {
+        "eyebrow": "Vì sao chọn BananaTalk",
+        "title": "Mọi thứ bạn cần để thật sự nói được",
+        "cta": "Tạo tài khoản miễn phí",
+        "chat": {
+          "eyebrow": "Trò chuyện với người bản xứ",
+          "title": "Kết bạn với những người nói ngôn ngữ bạn muốn",
+          "body": "Nhắn tin, tin nhắn thoại và gọi với người bản xứ, có trợ giúp ngay khi bạn bí.",
+          "b1": "Dịch tức thì",
+          "b2": "Sửa lỗi nhẹ nhàng",
+          "b3": "Tin nhắn thoại & cuộc gọi",
+          "alt": "Cuộc trò chuyện BananaTalk với công cụ dịch"
+        },
+        "study": {
+          "eyebrow": "Học cùng AI",
+          "title": "Luyện một chút mỗi ngày, không nhàm chán",
+          "body": "Gói học mới mỗi ngày và gia sư AI thích ứng với trình độ của bạn.",
+          "b1": "Bài học mỗi ngày chỉ vài phút",
+          "b2": "Gia sư AI 24/7",
+          "b3": "Chuỗi ngày và XP",
+          "alt": "Study Hub của BananaTalk với bài học hôm nay, XP và chuỗi ngày"
+        },
+        "moments": {
+          "eyebrow": "Khoảnh khắc & Reels",
+          "title": "Học cách mọi người thật sự nói chuyện",
+          "body": "Chia sẻ bài đăng và video ngắn, khám phá ngôn ngữ đời thường của người bản xứ.",
+          "b1": "Bài đăng & tin",
+          "b2": "Reels ngôn ngữ ngắn",
+          "b3": "Dịch chỉ một chạm",
+          "alt": "Bảng tin Khoảnh khắc của BananaTalk"
+        },
+        "community": {
+          "eyebrow": "Cộng đồng",
+          "title": "Tìm người hợp với bạn, ở bất cứ đâu trên thế giới",
+          "body": "Xem các kết nối, tham gia phòng thoại và các buổi gặp mặt gần bạn.",
+          "b1": "Ghép bạn thông minh",
+          "b2": "Phòng thoại trực tiếp",
+          "b3": "Gặp mặt tại địa phương",
+          "alt": "Cộng đồng BananaTalk với danh sách bạn học ngôn ngữ"
+        }
+      },
+      "languages": {
+        "cta": "Tìm bạn học ngôn ngữ"
+      },
+      "cta": {
+        "title": "Cuộc trò chuyện đầu tiên chỉ cách một chạm",
+        "subtitle": "Tải miễn phí, bắt đầu miễn phí. Ngay lúc này có người đang học ngôn ngữ của bạn.",
+        "web": "Hoặc dùng BananaTalk trên web"
+      }
     }
   },
   "vip": {

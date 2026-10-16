@@ -26,12 +26,20 @@ const CURATED: Stat[] = [
   { value: "Free", label: "forever tier" },
 ];
 
+// One soft tile per stat, in the homepage palette: teal, violet, coral, yellow.
+const TILES = [
+  "bg-[#E3F7F1] dark:bg-[#4DBFA8]/15",
+  "bg-[#ECEBFF] dark:bg-[#6C63FF]/20",
+  "bg-[#FFEDEA] dark:bg-[#FF8A80]/15",
+  "bg-[#FFF6CC] dark:bg-[#FFD93D]/15",
+];
+
 /** Numeric stats tick up when the strip scrolls into view; the rest are literal. */
 const StatValue: React.FC<{ stat: Stat; start: boolean }> = ({ stat, start }) => {
   const numeric = /^\d+$/.test(stat.value) ? Number(stat.value) : null;
   const counted = useCountUp(numeric ?? 0, { start: start && numeric !== null });
   return (
-    <p className="text-2xl font-extrabold text-brand-dark dark:text-brand-light">
+    <p className="font-display text-3xl font-extrabold text-[#1B1B2F] dark:text-white">
       {numeric === null ? stat.value : `${formatCount(counted)}${stat.suffix || ""}`}
     </p>
   );
@@ -53,14 +61,14 @@ const StatStrip: React.FC = () => {
     <section
       ref={ref}
       data-testid="stat-strip"
-      className="border-y border-gray-100 bg-surface py-8 dark:border-gray-700 dark:bg-cardbg-dark"
+      className="bg-[#fff] px-[1rem] py-12 dark:bg-canvas-dark"
     >
-      <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 px-4 sm:grid-cols-4">
+      <div className="mx-auto grid max-w-5xl grid-cols-2 gap-[0.75rem] sm:grid-cols-4 sm:gap-[1rem]">
         {stats.map((s, i) => (
           <Reveal key={s.label} delayMs={i * 90}>
-            <div data-testid="stat-item" className="text-center">
+            <div data-testid="stat-item" className={`rounded-[20px] px-[1rem] py-[1.25rem] [text-align:center] ${TILES[i % TILES.length]}`}>
               <StatValue stat={s} start={inView} />
-              <p className="mt-0.5 text-[11px] font-medium uppercase tracking-wide text-gray-400">
+              <p className="mt-[0.25rem] text-[11px] font-bold uppercase tracking-wide text-ink-600 dark:text-gray-300">
                 {t(`home.stats.${s.label}`) || s.label}
               </p>
             </div>

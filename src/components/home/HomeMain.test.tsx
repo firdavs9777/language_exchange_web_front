@@ -29,15 +29,50 @@ jest.mock("../../store/slices/publicStatsSlice", () => ({
 beforeEach(() => window.localStorage.clear());
 
 it("assembles every section in order", () => {
-  renderHome();
-  ["hero-demo", "stat-strip", "how-it-works", "feature-showcase",
-   "language-marquee", "pricing-section", "early-adopter-band", "final-cta"]
-    .forEach((id) => expect(screen.getByTestId(id)).toBeInTheDocument());
+  const { container } = renderHome();
+  const ids = ["home-hero", "home-steps", "home-features", "language-marquee",
+    "stat-strip", "pricing-section", "home-cta"];
+  const nodes = ids.map((id) => screen.getByTestId(id));
+  nodes.slice(1).forEach((node, i) =>
+    // DOCUMENT_POSITION_FOLLOWING: each section comes after the one before it.
+    expect(nodes[i].compareDocumentPosition(node) & 4).toBeTruthy()
+  );
+  expect(container.querySelector("#pricing")).not.toBeNull();
 });
 
-it("mounts the promo carousel", () => {
+it("has exactly one h1", () => {
+  const { container } = renderHome();
+  expect(container.querySelectorAll("h1")).toHaveLength(1);
+});
+
+it("offers both stores in the hero and in the closing band", () => {
   renderHome();
-  expect(screen.getByTestId("promo-carousel")).toBeInTheDocument();
+  ["home-hero", "home-cta"].forEach((id) => {
+    const section = screen.getByTestId(id);
+    expect(section.querySelector('[data-testid="store-link-ios"]')).not.toBeNull();
+    expect(section.querySelector('[data-testid="store-link-android"]')).not.toBeNull();
+  });
+});
+
+it("gives every screenshot alt text and lazy-loads all but the hero's front phone", () => {
+  const { container } = renderHome();
+  const shots = Array.from(container.querySelectorAll('img[src^="/images/app/"]'));
+  expect(shots.length).toBeGreaterThanOrEqual(4);
+  shots.forEach((img) => {
+    expect((img.getAttribute("alt") || "").length).toBeGreaterThan(0);
+    expect(img.getAttribute("width")).toBe("590");
+    expect(img.getAttribute("height")).toBe("1278");
+  });
+  const eager = shots.filter((img) => img.getAttribute("loading") !== "lazy");
+  expect(eager).toHaveLength(1);
+  expect(eager[0].getAttribute("src")).toBe("/images/app/app-chat.png");
+});
+
+it("ends the steps, features and languages sections with a call to action", () => {
+  renderHome();
+  ["steps-cta", "features-cta", "languages-cta", "hero-web-cta"].forEach((id) =>
+    expect(screen.getByTestId(id)).toHaveAttribute("href", "/register")
+  );
 });
 
 // The whole page must be free of the prices that were never true.

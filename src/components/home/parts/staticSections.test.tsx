@@ -2,7 +2,6 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import StatStrip from "./StatStrip";
 import HowItWorks from "./HowItWorks";
-import EarlyAdopterBand from "./EarlyAdopterBand";
 import FinalCta from "./FinalCta";
 import { APP_STORE_URL, PLAY_STORE_URL } from "../../growth/StoreLink";
 
@@ -97,32 +96,6 @@ it("falls back to the English step copy when a translation is missing", () => {
   expect(steps[0]).toContain("Pick your native language and the one you're learning. That pair is how we match you.");
   expect(steps[1]).toContain("Find someone worth talking to");
   expect(steps[2]).toContain("Talk badly, improve fast");
-});
-
-it("frames the launch honestly rather than borrowing credibility", () => {
-  render(<EarlyAdopterBand />);
-  const text = screen.getByTestId("early-adopter-band").textContent || "";
-  expect(text).toContain("2025");
-  expect(text.toLowerCase()).not.toContain("trusted by");
-});
-
-it("routes every early-adopter string through home.earlyAdopter.*", () => {
-  mockTMode = "echo";
-  render(<EarlyAdopterBand />);
-  const band = screen.getByTestId("early-adopter-band");
-  expect(band).toHaveTextContent("home.earlyAdopter.badge");
-  expect(band).toHaveTextContent("home.earlyAdopter.title");
-  expect(band).toHaveTextContent("home.earlyAdopter.body");
-});
-
-it("falls back to the English early-adopter copy when a translation is missing", () => {
-  render(<EarlyAdopterBand />);
-  const text = screen.getByTestId("early-adopter-band").textContent || "";
-  expect(text).toContain("Launched December 2025");
-  expect(text).toContain("Be one of the first");
-  expect(text).toContain(
-    "BananaTalk is new. The people you meet here are the ones building what this community becomes — which is a better reason to join early than any review."
-  );
 });
 
 it("closes with both store links, tagged as the closing CTA", () => {
