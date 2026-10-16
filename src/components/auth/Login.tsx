@@ -9,6 +9,7 @@ import { FaGoogle } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { BASE_URL } from "../../constants";
 import "./Login.scss";
+import AppleSignInButton from "./apple/AppleSignInButton";
 
 const Login = () => {
   const { t } = useTranslation();
@@ -107,6 +108,10 @@ const Login = () => {
               <FaGoogle size={20} />
               <span>{t("authentication.login.signInWithGoogle") || "Continue with Google"}</span>
             </button>
+
+            {/* Apple — renders nothing unless webAppleSigninEnabled is on and the
+                build has a Services ID (P4-APPLE-4). */}
+            <AppleSignInButton redirect={redirect} />
 
             {/* Divider */}
             <div className="divider">

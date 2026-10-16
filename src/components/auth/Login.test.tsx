@@ -10,6 +10,11 @@ jest.mock('react-redux', () => ({
 jest.mock('../../store/slices/usersSlice', () => ({
   useLoginUserMutation: () => [jest.fn(), { isLoading: false }],
 }));
+// Login mounts the Apple button (P4-APPLE-5), which reads app-config.
+jest.mock('../../store/slices/appConfigSlice', () => require('../../utils/testing/mockWebFlags').appConfigSliceMock());
+jest.mock('../../store/slices/appleAuthSlice', () => ({
+  useAppleWebLoginMutation: () => [jest.fn(), { isLoading: false }],
+}));
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (k: string) => k }),
 }));
