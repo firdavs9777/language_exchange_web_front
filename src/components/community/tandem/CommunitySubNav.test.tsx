@@ -3,6 +3,7 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import CommunitySubNav, { CommunityNavTab } from "./CommunitySubNav";
+jest.mock("../../../utils/webFlags", () => ({ useWebFlag: () => false, useWebFlagState: () => ({ on: false, ready: true }) }));
 
 // `t` returns the key, so every assertion below is about behaviour and
 // structure rather than about copy (the copy lives in the locale files).

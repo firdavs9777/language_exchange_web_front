@@ -11,8 +11,11 @@ import {
   Star,
   X,
   Flame,
+  Building2,
+  Users,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useWebFlag } from "../../../utils/webFlags";
 
 /**
  * Six destinations, two kinds.
@@ -120,6 +123,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
 }) => {
   const { t } = useTranslation();
   const activeRef = useRef<HTMLButtonElement | null>(null);
+  const cityGendersOn = useWebFlag("webLanguageRoomsEnabled");
 
   // On a phone the six destinations do not fit, so the row scrolls. Whatever
   // the URL says is selected is pulled back into view after the fact (never
@@ -188,6 +192,30 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
             </span>
             <span>{t("communityMain.subnav.topics") || "Topics"}</span>
           </Link>
+          {cityGendersOn && (
+            <>
+              <Link
+                to="/community/city"
+                data-testid="subnav-city"
+                className="community-subnav__btn community-subnav__btn--icon shrink-0 no-underline"
+              >
+                <span className="community-subnav__icon">
+                  <Building2 size={14} />
+                </span>
+                <span>{t("communityMain.subnav.city") || "City"}</span>
+              </Link>
+              <Link
+                to="/community/genders"
+                data-testid="subnav-genders"
+                className="community-subnav__btn community-subnav__btn--icon shrink-0 no-underline"
+              >
+                <span className="community-subnav__icon">
+                  <Users size={14} />
+                </span>
+                <span>{t("communityMain.subnav.genders") || "Genders"}</span>
+              </Link>
+            </>
+          )}
         </div>
 
         <div className="community-subnav__actions">

@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import { makeStore } from "../../store";
 import MainCommunity from "./MainCommunity";
+jest.mock("../../utils/webFlags", () => ({ useWebFlag: () => false, useWebFlagState: () => ({ on: false, ready: true }) }));
 
 /**
  * What the member list costs.

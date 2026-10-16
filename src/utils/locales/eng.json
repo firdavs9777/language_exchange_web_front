@@ -1312,7 +1312,9 @@
       "topics": "Topics",
       "searchPlaceholder": "Find members or topics",
       "filtersLabel": "Filters",
-      "filtersWithCount": "Filters ({{count}} active)"
+      "filtersWithCount": "Filters ({{count}} active)",
+      "city": "City",
+      "genders": "Genders"
     },
     "filterSheet": {
       "title": "Filters",
@@ -3390,5 +3392,25 @@
       "removeYes": "Remove",
       "removeNote": "Removed members can ask to come back; you decide."
     }
+  },
+  "communityCity": {
+    "back": "Community",
+    "title": "People by place",
+    "searchPlaceholder": "Search a city",
+    "search": "Search",
+    "countries": "Countries",
+    "searchTitle": "People in “{{query}}”",
+    "error": "Couldn't load people. Try again.",
+    "empty": "No one here matches yet. Try another place.",
+    "more": "Show more"
+  },
+  "communityGenders": {
+    "back": "Community",
+    "title": "Browse by gender",
+    "female": "Women",
+    "male": "Men",
+    "error": "Couldn't load people. Try again.",
+    "empty": "No one matches yet.",
+    "more": "Show more"
   }
 }
