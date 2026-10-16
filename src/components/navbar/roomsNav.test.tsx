@@ -58,8 +58,8 @@ it("shows each entry with its own flag", () => {
   mockAppConfig(ALL_WEB_FLAGS_ON);
   renderNavbar();
   expect(screen.getByTestId("nav-language-rooms")).toHaveAttribute("href", "/rooms");
-  // The mobile links live in the hamburger menu, which renders only when open.
-  fireEvent.click(screen.getByLabelText("Menu"));
+  // The phone reaches them from the account menu's "More" section.
+  fireEvent.click(screen.getByTestId("nav-account-trigger"));
   expect(screen.getByTestId("nav-voice-rooms-mobile")).toBeInTheDocument();
   expect(screen.getByTestId("nav-language-rooms-mobile")).toBeInTheDocument();
 });

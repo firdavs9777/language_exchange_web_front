@@ -3332,7 +3332,19 @@
   },
   "nav": {
     "languageRooms": "Stanze linguistiche",
-    "voiceRooms": "Stanze vocali"
+    "voiceRooms": "Stanze vocali",
+    "accountMenu": "Menu account",
+    "chats": "Chat",
+    "downloadApp": "Scarica l'app",
+    "features": "Funzionalità",
+    "feed": "Feed",
+    "findPartners": "Trova partner",
+    "followersFollowing": "Follower e seguiti",
+    "main": "Navigazione principale",
+    "more": "Altro",
+    "profile": "Profilo",
+    "signUp": "Registrati",
+    "tabs": "Sezioni"
   },
   "voiceRooms": {
     "category": {

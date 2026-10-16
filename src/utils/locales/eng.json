@@ -3423,6 +3423,18 @@
   },
   "nav": {
     "voiceRooms": "Voice rooms",
-    "languageRooms": "Language rooms"
+    "languageRooms": "Language rooms",
+    "accountMenu": "Account menu",
+    "chats": "Chats",
+    "downloadApp": "Download app",
+    "features": "Features",
+    "feed": "Feed",
+    "findPartners": "Find partners",
+    "followersFollowing": "Followers & following",
+    "main": "Main navigation",
+    "more": "More",
+    "profile": "Profile",
+    "signUp": "Sign up",
+    "tabs": "Sections"
   }
 }

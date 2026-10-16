@@ -3331,7 +3331,19 @@
   },
   "nav": {
     "languageRooms": "언어 룸",
-    "voiceRooms": "보이스 룸"
+    "voiceRooms": "보이스 룸",
+    "accountMenu": "계정 메뉴",
+    "chats": "채팅",
+    "downloadApp": "앱 다운로드",
+    "features": "기능",
+    "feed": "피드",
+    "findPartners": "파트너 찾기",
+    "followersFollowing": "팔로워 및 팔로잉",
+    "main": "주 메뉴",
+    "more": "더보기",
+    "profile": "프로필",
+    "signUp": "회원가입",
+    "tabs": "섹션"
   },
   "voiceRooms": {
     "category": {

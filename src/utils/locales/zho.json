@@ -3331,7 +3331,19 @@
   },
   "nav": {
     "languageRooms": "语言房",
-    "voiceRooms": "语音房"
+    "voiceRooms": "语音房",
+    "accountMenu": "账户菜单",
+    "chats": "聊天",
+    "downloadApp": "下载应用",
+    "features": "功能",
+    "feed": "动态",
+    "findPartners": "寻找语伴",
+    "followersFollowing": "粉丝和关注",
+    "main": "主导航",
+    "more": "更多",
+    "profile": "个人资料",
+    "signUp": "注册",
+    "tabs": "版块"
   },
   "voiceRooms": {
     "category": {

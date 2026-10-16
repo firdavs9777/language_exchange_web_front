@@ -3331,7 +3331,19 @@
   },
   "nav": {
     "languageRooms": "言語ルーム",
-    "voiceRooms": "ボイスルーム"
+    "voiceRooms": "ボイスルーム",
+    "accountMenu": "アカウントメニュー",
+    "chats": "チャット",
+    "downloadApp": "アプリをダウンロード",
+    "features": "機能",
+    "feed": "フィード",
+    "findPartners": "パートナーを探す",
+    "followersFollowing": "フォロワーとフォロー中",
+    "main": "メインナビゲーション",
+    "more": "その他",
+    "profile": "プロフィール",
+    "signUp": "新規登録",
+    "tabs": "セクション"
   },
   "voiceRooms": {
     "category": {

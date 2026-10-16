@@ -181,6 +181,12 @@ Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-
 - [x] P4-APPLE-PUSH Push unit apple (suite + build green, deployed dark, production smoke recorded) — deployed dark 2026-10-16 (suite 3911 pass)
 - [ ] Bundle budget: `npm run test:budget` fails -- first-paint 331.0 KB vs 326 KB budget (origin/main a944011 was already 329.2 KB). Not run by the deploy workflow. S
 
+Navbar reorganization (owner: "too dense", 2026-10-16)
+- [x] NAV-1 Desktop: Community ▾ (Find partners, Gatherings*, Voice rooms*, Language rooms*) · Chats (unread badge) · Moments ▾ (Feed, Reels*, My moments) · language · avatar ▾ (Profile, Followers & following, Settings, Admin for admins, More on phones, Log out); a one-entry menu is a plain link; parent highlighted on child routes; accessible dropdowns (aria-expanded, ArrowDown/Up, Escape, click-outside); visitors get Features · Download app · Log in · Sign up. Phone (<1024px): compact top bar + fixed bottom tabs Community · Chats · Moments · Profile (hidden inside a conversation, body/chat list padded); 12 `nav.*` strings in 18 locales. Learn omitted: the web has no learning surface yet (`/courses` is a stub).
+- [ ] NAV-2 Add `id="features"` to the homepage feature section in the home redesign (the navbar's Features link falls back to the showcase's test id). S
+- [ ] NAV-3 Add a Learn tab/entry once the web has a learning page; add a notifications bell if a web notifications list ships. S
+- [ ] NAV-4 Device QA: phone tab bar safe-area on iOS Safari, RTL (ar) menus, chat list ends at the tab bar. S
+
 ## 5. Decided / won't fix
 
 - Audit M2: the client keeps the start < end rule on publish (the backend rejects `endsAt <= startsAt` and publish saves first); the message says to fix start or end.

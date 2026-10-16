@@ -3331,7 +3331,19 @@
   },
   "nav": {
     "languageRooms": "Sprachräume",
-    "voiceRooms": "Voice-Räume"
+    "voiceRooms": "Voice-Räume",
+    "accountMenu": "Kontomenü",
+    "chats": "Chats",
+    "downloadApp": "App herunterladen",
+    "features": "Funktionen",
+    "feed": "Feed",
+    "findPartners": "Partner finden",
+    "followersFollowing": "Follower & Gefolgt",
+    "main": "Hauptnavigation",
+    "more": "Mehr",
+    "profile": "Profil",
+    "signUp": "Registrieren",
+    "tabs": "Bereiche"
   },
   "voiceRooms": {
     "category": {

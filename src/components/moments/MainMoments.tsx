@@ -191,7 +191,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-  <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 lg:hidden">
+  <div className="bt-lift-above-tabs fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 lg:hidden">
     <button
       onClick={onClick}
       className="group flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-2xl transition-all duration-300 hover:shadow-3xl hover:scale-110 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-400/50 active:scale-95"

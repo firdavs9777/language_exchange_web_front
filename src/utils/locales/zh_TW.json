@@ -3331,7 +3331,19 @@
   },
   "nav": {
     "languageRooms": "語言聊天室",
-    "voiceRooms": "語音聊天室"
+    "voiceRooms": "語音聊天室",
+    "accountMenu": "帳戶選單",
+    "chats": "聊天",
+    "downloadApp": "下載 App",
+    "features": "功能",
+    "feed": "動態",
+    "findPartners": "尋找語伴",
+    "followersFollowing": "粉絲與追蹤中",
+    "main": "主導覽",
+    "more": "更多",
+    "profile": "個人檔案",
+    "signUp": "註冊",
+    "tabs": "版塊"
   },
   "voiceRooms": {
     "category": {

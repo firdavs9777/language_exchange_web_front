@@ -3331,7 +3331,19 @@
   },
   "nav": {
     "languageRooms": "Ruang bahasa",
-    "voiceRooms": "Ruang suara"
+    "voiceRooms": "Ruang suara",
+    "accountMenu": "Menu akun",
+    "chats": "Obrolan",
+    "downloadApp": "Unduh aplikasi",
+    "features": "Fitur",
+    "feed": "Beranda",
+    "findPartners": "Cari partner",
+    "followersFollowing": "Pengikut & mengikuti",
+    "main": "Navigasi utama",
+    "more": "Lainnya",
+    "profile": "Profil",
+    "signUp": "Daftar",
+    "tabs": "Bagian"
   },
   "voiceRooms": {
     "category": {

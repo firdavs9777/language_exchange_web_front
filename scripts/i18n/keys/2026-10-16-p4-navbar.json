@@ -1,0 +1,290 @@
+{
+  "ar": {
+    "nav": {
+      "accountMenu": "قائمة الحساب",
+      "chats": "المحادثات",
+      "downloadApp": "تنزيل التطبيق",
+      "features": "الميزات",
+      "feed": "الموجز",
+      "findPartners": "ابحث عن شركاء",
+      "followersFollowing": "المتابِعون والمتابَعون",
+      "main": "التنقل الرئيسي",
+      "more": "المزيد",
+      "profile": "الملف الشخصي",
+      "signUp": "إنشاء حساب",
+      "tabs": "الأقسام"
+    }
+  },
+  "de": {
+    "nav": {
+      "accountMenu": "Kontomenü",
+      "chats": "Chats",
+      "downloadApp": "App herunterladen",
+      "features": "Funktionen",
+      "feed": "Feed",
+      "findPartners": "Partner finden",
+      "followersFollowing": "Follower & Gefolgt",
+      "main": "Hauptnavigation",
+      "more": "Mehr",
+      "profile": "Profil",
+      "signUp": "Registrieren",
+      "tabs": "Bereiche"
+    }
+  },
+  "eng": {
+    "nav": {
+      "accountMenu": "Account menu",
+      "chats": "Chats",
+      "downloadApp": "Download app",
+      "features": "Features",
+      "feed": "Feed",
+      "findPartners": "Find partners",
+      "followersFollowing": "Followers & following",
+      "main": "Main navigation",
+      "more": "More",
+      "profile": "Profile",
+      "signUp": "Sign up",
+      "tabs": "Sections"
+    }
+  },
+  "es": {
+    "nav": {
+      "accountMenu": "Menú de la cuenta",
+      "chats": "Chats",
+      "downloadApp": "Descargar la app",
+      "features": "Funciones",
+      "feed": "Novedades",
+      "findPartners": "Buscar compañeros",
+      "followersFollowing": "Seguidores y seguidos",
+      "main": "Navegación principal",
+      "more": "Más",
+      "profile": "Perfil",
+      "signUp": "Registrarse",
+      "tabs": "Secciones"
+    }
+  },
+  "fr": {
+    "nav": {
+      "accountMenu": "Menu du compte",
+      "chats": "Discussions",
+      "downloadApp": "Télécharger l'app",
+      "features": "Fonctionnalités",
+      "feed": "Fil",
+      "findPartners": "Trouver des partenaires",
+      "followersFollowing": "Abonnés et abonnements",
+      "main": "Navigation principale",
+      "more": "Plus",
+      "profile": "Profil",
+      "signUp": "S'inscrire",
+      "tabs": "Rubriques"
+    }
+  },
+  "hi": {
+    "nav": {
+      "accountMenu": "खाता मेनू",
+      "chats": "चैट",
+      "downloadApp": "ऐप डाउनलोड करें",
+      "features": "सुविधाएँ",
+      "feed": "फ़ीड",
+      "findPartners": "साथी खोजें",
+      "followersFollowing": "फ़ॉलोअर्स और फ़ॉलोइंग",
+      "main": "मुख्य नेविगेशन",
+      "more": "और",
+      "profile": "प्रोफ़ाइल",
+      "signUp": "साइन अप करें",
+      "tabs": "अनुभाग"
+    }
+  },
+  "id": {
+    "nav": {
+      "accountMenu": "Menu akun",
+      "chats": "Obrolan",
+      "downloadApp": "Unduh aplikasi",
+      "features": "Fitur",
+      "feed": "Beranda",
+      "findPartners": "Cari partner",
+      "followersFollowing": "Pengikut & mengikuti",
+      "main": "Navigasi utama",
+      "more": "Lainnya",
+      "profile": "Profil",
+      "signUp": "Daftar",
+      "tabs": "Bagian"
+    }
+  },
+  "it": {
+    "nav": {
+      "accountMenu": "Menu account",
+      "chats": "Chat",
+      "downloadApp": "Scarica l'app",
+      "features": "Funzionalità",
+      "feed": "Feed",
+      "findPartners": "Trova partner",
+      "followersFollowing": "Follower e seguiti",
+      "main": "Navigazione principale",
+      "more": "Altro",
+      "profile": "Profilo",
+      "signUp": "Registrati",
+      "tabs": "Sezioni"
+    }
+  },
+  "ja": {
+    "nav": {
+      "accountMenu": "アカウントメニュー",
+      "chats": "チャット",
+      "downloadApp": "アプリをダウンロード",
+      "features": "機能",
+      "feed": "フィード",
+      "findPartners": "パートナーを探す",
+      "followersFollowing": "フォロワーとフォロー中",
+      "main": "メインナビゲーション",
+      "more": "その他",
+      "profile": "プロフィール",
+      "signUp": "新規登録",
+      "tabs": "セクション"
+    }
+  },
+  "kor": {
+    "nav": {
+      "accountMenu": "계정 메뉴",
+      "chats": "채팅",
+      "downloadApp": "앱 다운로드",
+      "features": "기능",
+      "feed": "피드",
+      "findPartners": "파트너 찾기",
+      "followersFollowing": "팔로워 및 팔로잉",
+      "main": "주 메뉴",
+      "more": "더보기",
+      "profile": "프로필",
+      "signUp": "회원가입",
+      "tabs": "섹션"
+    }
+  },
+  "pt": {
+    "nav": {
+      "accountMenu": "Menu da conta",
+      "chats": "Conversas",
+      "downloadApp": "Baixar o app",
+      "features": "Recursos",
+      "feed": "Feed",
+      "findPartners": "Encontrar parceiros",
+      "followersFollowing": "Seguidores e seguindo",
+      "main": "Navegação principal",
+      "more": "Mais",
+      "profile": "Perfil",
+      "signUp": "Cadastre-se",
+      "tabs": "Seções"
+    }
+  },
+  "ru": {
+    "nav": {
+      "accountMenu": "Меню аккаунта",
+      "chats": "Чаты",
+      "downloadApp": "Скачать приложение",
+      "features": "Возможности",
+      "feed": "Лента",
+      "findPartners": "Найти партнёров",
+      "followersFollowing": "Подписчики и подписки",
+      "main": "Основная навигация",
+      "more": "Ещё",
+      "profile": "Профиль",
+      "signUp": "Регистрация",
+      "tabs": "Разделы"
+    }
+  },
+  "th": {
+    "nav": {
+      "accountMenu": "เมนูบัญชี",
+      "chats": "แชท",
+      "downloadApp": "ดาวน์โหลดแอป",
+      "features": "ฟีเจอร์",
+      "feed": "ฟีด",
+      "findPartners": "ค้นหาคู่ฝึกภาษา",
+      "followersFollowing": "ผู้ติดตามและกำลังติดตาม",
+      "main": "การนำทางหลัก",
+      "more": "เพิ่มเติม",
+      "profile": "โปรไฟล์",
+      "signUp": "สมัครสมาชิก",
+      "tabs": "หมวด"
+    }
+  },
+  "tl": {
+    "nav": {
+      "accountMenu": "Menu ng account",
+      "chats": "Mga chat",
+      "downloadApp": "I-download ang app",
+      "features": "Mga feature",
+      "feed": "Feed",
+      "findPartners": "Maghanap ng kapartner",
+      "followersFollowing": "Mga tagasunod at sinusundan",
+      "main": "Pangunahing nabigasyon",
+      "more": "Higit pa",
+      "profile": "Profile",
+      "signUp": "Mag-sign up",
+      "tabs": "Mga seksyon"
+    }
+  },
+  "tr": {
+    "nav": {
+      "accountMenu": "Hesap menüsü",
+      "chats": "Sohbetler",
+      "downloadApp": "Uygulamayı indir",
+      "features": "Özellikler",
+      "feed": "Akış",
+      "findPartners": "Partner bul",
+      "followersFollowing": "Takipçiler ve takip edilenler",
+      "main": "Ana gezinme",
+      "more": "Daha fazla",
+      "profile": "Profil",
+      "signUp": "Kaydol",
+      "tabs": "Bölümler"
+    }
+  },
+  "vi": {
+    "nav": {
+      "accountMenu": "Menu tài khoản",
+      "chats": "Trò chuyện",
+      "downloadApp": "Tải ứng dụng",
+      "features": "Tính năng",
+      "feed": "Bảng tin",
+      "findPartners": "Tìm bạn học",
+      "followersFollowing": "Người theo dõi & đang theo dõi",
+      "main": "Điều hướng chính",
+      "more": "Thêm",
+      "profile": "Hồ sơ",
+      "signUp": "Đăng ký",
+      "tabs": "Mục"
+    }
+  },
+  "zh_TW": {
+    "nav": {
+      "accountMenu": "帳戶選單",
+      "chats": "聊天",
+      "downloadApp": "下載 App",
+      "features": "功能",
+      "feed": "動態",
+      "findPartners": "尋找語伴",
+      "followersFollowing": "粉絲與追蹤中",
+      "main": "主導覽",
+      "more": "更多",
+      "profile": "個人檔案",
+      "signUp": "註冊",
+      "tabs": "版塊"
+    }
+  },
+  "zho": {
+    "nav": {
+      "accountMenu": "账户菜单",
+      "chats": "聊天",
+      "downloadApp": "下载应用",
+      "features": "功能",
+      "feed": "动态",
+      "findPartners": "寻找语伴",
+      "followersFollowing": "粉丝和关注",
+      "main": "主导航",
+      "more": "更多",
+      "profile": "个人资料",
+      "signUp": "注册",
+      "tabs": "版块"
+    }
+  }
+}

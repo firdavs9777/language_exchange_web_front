@@ -3331,7 +3331,19 @@
   },
   "nav": {
     "languageRooms": "Dil odaları",
-    "voiceRooms": "Sesli odalar"
+    "voiceRooms": "Sesli odalar",
+    "accountMenu": "Hesap menüsü",
+    "chats": "Sohbetler",
+    "downloadApp": "Uygulamayı indir",
+    "features": "Özellikler",
+    "feed": "Akış",
+    "findPartners": "Partner bul",
+    "followersFollowing": "Takipçiler ve takip edilenler",
+    "main": "Ana gezinme",
+    "more": "Daha fazla",
+    "profile": "Profil",
+    "signUp": "Kaydol",
+    "tabs": "Bölümler"
   },
   "voiceRooms": {
     "category": {
