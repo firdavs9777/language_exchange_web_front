@@ -50,7 +50,7 @@ describe("apple-app-site-association", () => {
       .map((c: any) => c.path)
       .filter((p: any) => typeof p === "string" && /^(moment|profile|community|i)\//.test(p) && DETAIL.indexOf(p) < 0)
       .map((p: string) => "/" + p.replace(/:[A-Za-z]+/g, "*"));
-    expect(webOnly.sort()).toEqual(["/community/nearby", "/profile/*/followers", "/profile/*/following", "/profile/edit"]);
+    expect(webOnly.sort()).toEqual(["/community/city", "/community/genders", "/community/nearby", "/profile/*/followers", "/profile/*/following", "/profile/edit"]);
 
     const paths: string[] = detail.components.map((c: any) => c["/"]);
     for (const p of webOnly) {
@@ -78,6 +78,8 @@ describe("apple-app-site-association", () => {
     expect(opensApp(`/profile/${id}/followers`)).toBe(false);
     expect(opensApp(`/profile/${id}/following`)).toBe(false);
     expect(opensApp("/community/nearby")).toBe(false);
+    expect(opensApp("/community/city")).toBe(false);
+    expect(opensApp("/community/genders")).toBe(false);
     expect(opensApp(`/chat/${id}`)).toBe(false);
     expect(opensApp(`/story/${id}`)).toBe(false);
   });
