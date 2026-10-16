@@ -82,7 +82,7 @@ Phase 3 Moments (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-
 - [x] P3-MOM-8 Comments with a GIF, a photo and no text, and mentions drawn (moments#21)
 - [x] P3-MOM-9 Leftovers: `uploadMomentPhotos` typing, no `mediaType: "text"`, dead `reportMoment` (moments#23)
 - [x] P3-MOM-10 Moment voice notes record `audio/mp4` where the browser can (moments#2)
-- [ ] P3-MOM-11 Moments text in every language: Saved Moments keys and hard-coded English (moments#24)
+- [x] P3-MOM-11 Moments text in every language: Saved Moments keys and hard-coded English (moments#24)
 - [ ] P3-MOM-12 a story carries one picture (moments#16)
 - [ ] P3-MOM-13 the story viewer shows the story's location (moments#17)
 - [ ] P3-MOM-14 report a story and block its author from the viewer (moments#10, story part)

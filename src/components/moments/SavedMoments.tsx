@@ -87,7 +87,7 @@ const SavedMoments: React.FC = () => {
     try {
       await unsaveMoment(momentId).unwrap();
       setRemoved((prev) => ({ ...prev, [momentId]: true }));
-      toast.success(t("moments.saved.removeSuccess") || "Removed from saved", {
+      toast.success(t("moments_section.saved.removeSuccess") || "Removed from saved", {
         position: "top-right",
         autoClose: 2000,
         theme: "dark",
@@ -96,7 +96,7 @@ const SavedMoments: React.FC = () => {
       setMenuOpen(null);
       refetch();
     } catch (error) {
-      toast.error(t("moments.saved.removeError") || "Failed to remove moment", {
+      toast.error(t("moments_section.saved.removeError") || "Failed to remove moment", {
         position: "top-right",
         autoClose: 3000,
         theme: "dark",
@@ -195,7 +195,7 @@ const SavedMoments: React.FC = () => {
                     className="flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-red-50 w-full text-start"
                   >
                     <BookmarkMinus className="w-4 h-4" />
-                    {t("moments.saved.remove") || "Remove"}
+                    {t("moments_section.saved.remove") || "Remove"}
                   </button>
                 </div>
               )}
@@ -256,7 +256,7 @@ const SavedMoments: React.FC = () => {
             <div>
               <h1 className="text-xl font-bold flex items-center gap-2">
                 <Bookmark className="w-6 h-6" />
-                {t("moments.saved.title") || "Saved Moments"}
+                {t("moments_section.saved.title") || "Saved Moments"}
               </h1>
               <p className="text-teal-100 text-sm">
                 {(currentData && (currentData as any).pagination && (currentData as any).pagination.totalMoments) || savedMoments.length}{" "}
@@ -305,13 +305,13 @@ const SavedMoments: React.FC = () => {
               <Bookmark className="w-8 h-8 text-teal-500" />
             </div>
             <p className="text-gray-500 mb-4">
-              {t("moments.saved.noMoments") || "No saved moments yet"}
+              {t("moments_section.saved.noMoments") || "No saved moments yet"}
             </p>
             <button
               onClick={() => navigate("/moments")}
               className="px-6 py-3 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-xl font-semibold hover:shadow-lg transition-all"
             >
-              {t("moments.saved.browseMoments") || "Browse Moments"}
+              {t("moments_section.saved.browseMoments") || "Browse Moments"}
             </button>
           </div>
         ) : viewMode === "grid" ? (

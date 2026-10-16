@@ -165,7 +165,7 @@ const ErrorState: React.FC<ErrorStateProps> = ({ t, refetch }) => (
       </div>
       <div className="flex-1 min-w-0">
         <h3 className="text-sm sm:text-base font-semibold text-gray-800">
-          Something went wrong
+          {t("moments_section.error_loading") || "Something went wrong"}
         </h3>
         <p className="mt-1 text-xs sm:text-sm text-gray-600 truncate">
           {t("moments_section.error_info")}
@@ -187,17 +187,20 @@ const ErrorState: React.FC<ErrorStateProps> = ({ t, refetch }) => (
 // Enhanced mobile floating action button
 const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   onClick,
-}) => (
+}) => {
+  const { t } = useTranslation();
+  return (
   <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 lg:hidden">
     <button
       onClick={onClick}
       className="group flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-2xl transition-all duration-300 hover:shadow-3xl hover:scale-110 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-400/50 active:scale-95"
-      aria-label="Add new moment"
+      aria-label={t("moments_section.create.header") || "Create moment"}
     >
       <FaPlus className="h-4 w-4 sm:h-5 sm:w-5 text-white transition-transform group-hover:rotate-90" />
     </button>
   </div>
-);
+  );
+};
 
 const MainMoments: React.FC = () => {
   const [limit] = useState(10);
@@ -448,7 +451,7 @@ const MainMoments: React.FC = () => {
                   <div className="relative p-4 sm:p-5">
                     <button
                       onClick={() => setPromptDismissed(true)}
-                      aria-label="Dismiss prompt of the day"
+                      aria-label={t("moments_section.prompt.dismissCard") || "Dismiss prompt of the day"}
                       className="absolute top-2 right-2 p-1.5 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-white/60 dark:hover:bg-gray-700/50 transition-colors"
                     >
                       <X className="h-4 w-4" />
@@ -459,20 +462,20 @@ const MainMoments: React.FC = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-[11px] font-semibold uppercase tracking-wide text-teal-600 dark:text-teal-400">
-                          Prompt of the day
+                          {t("moments_section.prompt.cardTitle") || "Prompt of the day"}
                         </p>
                         <p className="mt-0.5 text-sm sm:text-base font-medium text-gray-800 dark:text-gray-100">
                           {promptOfDay.text}
                         </p>
                         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                          Practice writing
+                          {t("moments_section.prompt.cardSubtitle") || "Practice writing"}
                         </p>
                         <button
                           onClick={handleAnswerPrompt}
                           className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-teal-500 to-indigo-500 px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:from-teal-600 hover:to-indigo-600 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-teal-400/50"
                         >
                           <PenLine className="h-4 w-4" />
-                          <span>Answer</span>
+                          <span>{t("moments_section.prompt.answer") || "Answer"}</span>
                         </button>
                       </div>
                     </div>

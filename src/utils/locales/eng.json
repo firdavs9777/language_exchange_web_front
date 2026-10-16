@@ -548,7 +548,20 @@
       "addTags": "Add tags",
       "tagPlaceholder": "Add a tag...",
       "mediaFailedNothingPosted": "The upload failed, so nothing was posted. Try again.",
-      "mediaFailedPosted": "Posted, but media upload failed — try editing the moment to add it."
+      "mediaFailedPosted": "Posted, but media upload failed — try editing the moment to add it.",
+      "sharing": "Sharing...",
+      "share": "Share",
+      "modePhoto": "Photo",
+      "modeVideo": "Video",
+      "modeVoice": "Voice",
+      "modeText": "Text",
+      "placeholder": "What's on your mind, {{name}}?",
+      "attachVideo": "Attach a video",
+      "voiceNoteLength": "Voice note · {{seconds}}s",
+      "remove": "Remove",
+      "recordVoice": "Record a voice note",
+      "textPreview": "Your text moment",
+      "moodQuestion": "How are you feeling?"
     },
     "question": "What's on your mind,",
     "loading": "Loading",
@@ -763,7 +776,11 @@
     "prompt": {
       "answeringPromptOfDay": "Answering prompt of the day",
       "dismissChip": "Stop answering the prompt",
-      "answering": "Answering"
+      "answering": "Answering",
+      "cardTitle": "Prompt of the day",
+      "cardSubtitle": "Practice writing",
+      "answer": "Answer",
+      "dismissCard": "Dismiss prompt of the day"
     },
     "block": {
       "done": "{{name}} is blocked."
@@ -772,7 +789,30 @@
       "loadMore": "Load more",
       "gridView": "Grid view",
       "listView": "List view",
-      "momentCount": "moments saved"
+      "momentCount": "moments saved",
+      "title": "Saved Moments",
+      "removeSuccess": "Removed from saved",
+      "removeError": "Failed to remove moment",
+      "remove": "Remove",
+      "noMoments": "No saved moments yet",
+      "browseMoments": "Browse Moments"
+    },
+    "card": {
+      "loginToLike": "Please log in to like posts",
+      "likeFailed": "Something went wrong",
+      "seeMore": "See more",
+      "seeLess": "See less",
+      "bookmark": "Bookmark",
+      "removeBookmark": "Remove bookmark",
+      "unlike": "Unlike",
+      "save": "Save",
+      "saved": "Saved"
+    },
+    "voice": {
+      "unsupported": "Voice recording is not supported in this browser.",
+      "denied": "Microphone access was denied. Please allow microphone access to record a voice note.",
+      "cancel": "Cancel recording",
+      "stop": "Stop recording and send"
     }
   },
   "createMoment": {

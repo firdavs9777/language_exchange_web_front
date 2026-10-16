@@ -251,7 +251,7 @@ const SingleMoment: React.FC<MomentProps> = ({
       e.stopPropagation();
 
       if (!userId) {
-        toast.error("Please login to like posts", {
+        toast.error(t("moments_section.card.loginToLike") || "Please log in to like posts", {
           autoClose: 3000,
           hideProgressBar: false,
           theme: "colored",
@@ -280,7 +280,7 @@ const SingleMoment: React.FC<MomentProps> = ({
       } catch (error) {
         setLiked(previousLiked);
         setCurrentLikeCount(previousCount);
-        toast.error("Something went wrong", {
+        toast.error(t("moments_section.card.likeFailed") || "Something went wrong", {
           autoClose: 3000,
           theme: "colored",
           transition: Bounce,
@@ -473,7 +473,7 @@ const SingleMoment: React.FC<MomentProps> = ({
                   onClick={toggleDescription}
                   className="text-blue-600 hover:text-blue-700 font-medium text-xs xs:text-sm mt-1 focus:outline-none focus:underline"
                 >
-                  {showFullDescription ? "See less" : "See more"}
+                  {showFullDescription ? t("moments_section.card.seeLess") || "See less" : t("moments_section.card.seeMore") || "See more"}
                 </button>
               )}
             </div>
@@ -556,8 +556,7 @@ const SingleMoment: React.FC<MomentProps> = ({
               <div className="flex items-center gap-2 xs:gap-3">
                 {commentCountNumber > 0 && (
                   <span className="hover:text-blue-600 transition-colors font-medium">
-                    {commentCountNumber.toLocaleString()} comment
-                    {commentCountNumber !== 1 ? "s" : ""}
+                    {t("moments_section.commentsCount", { count: commentCountNumber }) || `${commentCountNumber.toLocaleString()} comments`}
                   </span>
                 )}
               </div>
@@ -577,7 +576,7 @@ const SingleMoment: React.FC<MomentProps> = ({
                 stopLink(e);
                 setShowReactions((v) => !v);
               }}
-              aria-label="React"
+              aria-label={t("moments_section.commentEngagement.react") || "React"}
               aria-expanded={showReactions}
               className="flex-shrink-0 rounded-full p-1 text-gray-500 hover:bg-gray-100 hover:text-blue-600 dark:hover:bg-gray-700 transition-colors"
             >
@@ -597,7 +596,7 @@ const SingleMoment: React.FC<MomentProps> = ({
             type="button"
             onClick={handleSaveToggle}
             aria-pressed={saved}
-            aria-label={saved ? "Remove bookmark" : "Bookmark"}
+            aria-label={saved ? t("moments_section.card.removeBookmark") || "Remove bookmark" : t("moments_section.card.bookmark") || "Bookmark"}
             className={`flex-shrink-0 rounded-full p-1 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 ${
               saved ? "text-blue-600" : "text-gray-500 hover:text-blue-600"
             }`}
@@ -617,7 +616,7 @@ const SingleMoment: React.FC<MomentProps> = ({
             className={`flex items-center justify-center py-2 xs:py-2.5 sm:py-3 transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed ${
               liked ? "text-blue-600" : "text-gray-600"
             }`}
-            aria-label={liked ? "Unlike" : "Like"}
+            aria-label={liked ? t("moments_section.card.unlike") || "Unlike" : t("moments_section.likeButton") || "Like"}
           >
             <div
               className={`flex items-center gap-1 xs:gap-2 ${
@@ -630,7 +629,7 @@ const SingleMoment: React.FC<MomentProps> = ({
                 <AiOutlineLike className="w-4 h-4 xs:w-5 xs:h-5 transition-transform hover:scale-110" />
               )}
               <span className="font-medium text-xs xs:text-sm hidden sm:inline">
-                {isLoadingLike ? (liked ? "Unliking..." : "Liking...") : "Like"}
+                {t("moments_section.likeButton") || "Like"}
               </span>
             </div>
           </button>
@@ -638,12 +637,12 @@ const SingleMoment: React.FC<MomentProps> = ({
           {/* Comment Button */}
           <div
             className="flex items-center justify-center py-2 xs:py-2.5 sm:py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:bg-gray-50 cursor-pointer"
-            aria-label="Comment"
+            aria-label={t("moments_section.commentButton") || "Comment"}
           >
             <div className="flex items-center gap-1 xs:gap-2">
               <AiOutlineComment className="w-4 h-4 xs:w-5 xs:h-5 transition-transform hover:scale-110" />
               <span className="font-medium text-xs xs:text-sm hidden sm:inline">
-                Comment
+                {t("moments_section.commentButton") || "Comment"}
               </span>
             </div>
           </div>

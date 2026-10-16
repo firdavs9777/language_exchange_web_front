@@ -206,7 +206,7 @@ const CreateMoment: React.FC = () => {
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     if (files.length + selectedImages.length > 10) {
-      toast.error("Maximum 10 images allowed", {
+      toast.error(t("createMoment.toast.maxImagesError") || "Maximum 10 images allowed", {
         autoClose: 3000,
         hideProgressBar: false,
         theme: "dark",
@@ -405,7 +405,7 @@ const CreateMoment: React.FC = () => {
                   : 'bg-gray-200 text-gray-400 cursor-not-allowed'
               }`}
             >
-              {isSubmitting ? 'Sharing...' : 'Share'}
+              {isSubmitting ? t("moments_section.create.sharing") || "Sharing..." : t("moments_section.create.share") || "Share"}
             </button>
           </div>
         </div>
@@ -444,10 +444,10 @@ const CreateMoment: React.FC = () => {
             {/* Media mode selector — image XOR video XOR voice XOR text/gradient */}
             <div className="mb-4 grid grid-cols-4 gap-2">
               {[
-                { mode: "photo" as MediaMode, icon: <ImageIcon className="w-5 h-5" />, label: "Photo" },
-                { mode: "video" as MediaMode, icon: <VideoIcon className="w-5 h-5" />, label: "Video" },
-                { mode: "voice" as MediaMode, icon: <MicIcon className="w-5 h-5" />, label: "Voice" },
-                { mode: "text" as MediaMode, icon: <TypeIcon className="w-5 h-5" />, label: "Text" },
+                { mode: "photo" as MediaMode, icon: <ImageIcon className="w-5 h-5" />, label: t("moments_section.create.modePhoto") || "Photo" },
+                { mode: "video" as MediaMode, icon: <VideoIcon className="w-5 h-5" />, label: t("moments_section.create.modeVideo") || "Video" },
+                { mode: "voice" as MediaMode, icon: <MicIcon className="w-5 h-5" />, label: t("moments_section.create.modeVoice") || "Voice" },
+                { mode: "text" as MediaMode, icon: <TypeIcon className="w-5 h-5" />, label: t("moments_section.create.modeText") || "Text" },
               ].map((option) => (
                 <button
                   key={option.mode}
@@ -495,7 +495,7 @@ const CreateMoment: React.FC = () => {
               {/* Main textarea */}
               <textarea
                 ref={textareaRef}
-                placeholder={`What's on your mind, ${userInfo?.name?.split(' ')[0] || 'there'}?`}
+                placeholder={t("moments_section.create.placeholder", { name: userInfo?.name?.split(" ")[0] || "" }) || `What's on your mind, ${userInfo?.name?.split(" ")[0] || "there"}?`}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full border-none outline-none resize-none text-lg placeholder-gray-500 min-h-[120px]"
@@ -559,7 +559,7 @@ const CreateMoment: React.FC = () => {
                     className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 py-8 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
                   >
                     <VideoIcon className="w-5 h-5" />
-                    Attach a video
+                    {t("moments_section.create.attachVideo") || "Attach a video"}
                   </button>
                 )}
               </div>
@@ -580,14 +580,14 @@ const CreateMoment: React.FC = () => {
                   <div className="flex items-center justify-between rounded-lg bg-gray-100 px-4 py-3 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-200">
                     <span className="flex items-center gap-2">
                       <MicIcon className="w-4 h-4" />
-                      Voice note · {Math.round(audioNote.dur)}s
+                      {t("moments_section.create.voiceNoteLength", { seconds: Math.round(audioNote.dur) }) || `Voice note · ${Math.round(audioNote.dur)}s`}
                     </span>
                     <button
                       type="button"
                       onClick={() => setAudioNote(null)}
                       className="text-red-500 hover:text-red-600"
                     >
-                      Remove
+                      {t("moments_section.create.remove") || "Remove"}
                     </button>
                   </div>
                 ) : (
@@ -597,7 +597,7 @@ const CreateMoment: React.FC = () => {
                     className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 py-8 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
                   >
                     <MicIcon className="w-5 h-5" />
-                    Record a voice note
+                    {t("moments_section.create.recordVoice") || "Record a voice note"}
                   </button>
                 )}
               </div>
@@ -610,7 +610,7 @@ const CreateMoment: React.FC = () => {
                 {backgroundColor && (
                   <div className="mt-3">
                     <GradientMomentCard
-                      text={description || "Your text moment"}
+                      text={description || t("moments_section.create.textPreview") || "Your text moment"}
                       backgroundColor={backgroundColor}
                     />
                   </div>
@@ -682,7 +682,7 @@ const CreateMoment: React.FC = () => {
                   {/* Mood Selector Dropdown */}
                   {showMoodSelector && (
                     <div className="absolute bottom-12 right-0 bg-white border rounded-lg shadow-lg p-3 z-50 min-w-48">
-                      <div className="text-sm font-medium mb-2">How are you feeling?</div>
+                      <div className="text-sm font-medium mb-2">{t("moments_section.create.moodQuestion") || "How are you feeling?"}</div>
                       <MoodField
                         value={mood}
                         onChange={(value) => {

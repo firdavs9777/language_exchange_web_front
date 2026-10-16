@@ -151,13 +151,14 @@ const MomentMetadata = React.memo<{ moment: MomentDetails }>(({ moment }) => {
 });
 
 const TagsList = React.memo<{ tags: string[] }>(({ tags }) => {
+  const { t } = useTranslation();
   if (!tags || tags.length === 0) return null;
 
   return (
     <div className="mt-3 pt-3 border-t border-gray-100">
       <div className="flex items-center gap-2 mb-2">
         <FaTag className="w-3.5 h-3.5 text-gray-500" />
-        <span className="text-sm font-medium text-gray-600">Tags:</span>
+        <span className="text-sm font-medium text-gray-600">{t("moments_section.fields.tags") || "Tags"}</span>
       </div>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag, index) => (
@@ -225,14 +226,14 @@ const ImageCarousel = React.memo<{ images: string[]; title?: string }>(
               <button
                 onClick={prevSlide}
                 className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
-                aria-label="Previous image"
+                aria-label={t("moments_section.lightbox.previous") || "Previous image"}
               >
                 <FaChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={nextSlide}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
-                aria-label="Next image"
+                aria-label={t("moments_section.lightbox.next") || "Next image"}
               >
                 <FaChevronRight className="w-4 h-4" />
               </button>
@@ -721,7 +722,7 @@ const MomentDetail: React.FC = () => {
             <button
               onClick={handleSaveToggle}
               aria-pressed={saved}
-              aria-label={saved ? "Remove bookmark" : "Bookmark"}
+              aria-label={saved ? t("moments_section.card.removeBookmark") || "Remove bookmark" : t("moments_section.card.bookmark") || "Bookmark"}
               className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 sm:py-4 transition-all duration-300 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 ${
                 saved ? "text-blue-600 bg-blue-50" : "text-gray-600"
               }`}
@@ -730,7 +731,7 @@ const MomentDetail: React.FC = () => {
                 className={`w-4 h-4 sm:w-5 sm:h-5 ${saved ? "fill-current" : ""}`}
               />
               <span className="font-medium text-xs sm:text-sm hidden sm:inline">
-                {saved ? "Saved" : "Save"}
+                {saved ? t("moments_section.card.saved") || "Saved" : t("moments_section.card.save") || "Save"}
               </span>
             </button>
 
