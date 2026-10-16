@@ -3455,7 +3455,19 @@
   },
   "nav": {
     "languageRooms": "غرف اللغات",
-    "voiceRooms": "الغرف الصوتية"
+    "voiceRooms": "الغرف الصوتية",
+    "accountMenu": "قائمة الحساب",
+    "chats": "المحادثات",
+    "downloadApp": "تنزيل التطبيق",
+    "features": "الميزات",
+    "feed": "الموجز",
+    "findPartners": "ابحث عن شركاء",
+    "followersFollowing": "المتابِعون والمتابَعون",
+    "main": "التنقل الرئيسي",
+    "more": "المزيد",
+    "profile": "الملف الشخصي",
+    "signUp": "إنشاء حساب",
+    "tabs": "الأقسام"
   },
   "voiceRooms": {
     "category": {

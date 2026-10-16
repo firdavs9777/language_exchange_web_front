@@ -31,7 +31,7 @@ function makeStore(user: any = { _id: "me", name: "Me" }) {
   return configureStore({
     reducer: {
       [apiSlice.reducerPath]: apiSlice.reducer,
-      auth: (state: any = { userInfo: { user } }) => state,
+      auth: (state: any = { userInfo: user ? { user } : null }) => state,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
   });
@@ -46,10 +46,10 @@ function mockConversationsFetch(conversations: any[]) {
   );
 }
 
-function renderNavbar(user?: any) {
+function renderNavbar(user?: any, path = "/") {
   return render(
-    <Provider store={user ? makeStore(user) : makeStore()}>
-      <MemoryRouter>
+    <Provider store={user === null ? makeStore(null) : user ? makeStore(user) : makeStore()}>
+      <MemoryRouter initialEntries={[path]}>
         <MainNavbar />
       </MemoryRouter>
     </Provider>
@@ -84,27 +84,24 @@ it("caps the displayed badge at 99+", async () => {
 });
 
 // The console is the only surface in the app gated on role, so the navbar
-// entry is the guard users actually see. `nav-item` (desktop) and
-// `mobile-nav-link` both point at the same path — count links, not classes.
+// entry is the guard users actually see. It lives in the account menu, which
+// desktop and phone share.
 const adminLinks = () =>
-  screen.queryAllByRole("link").filter((el) => el.getAttribute("href") === "/admin");
+  Array.from(document.querySelectorAll('a[href="/admin"]'));
 
-it("shows the Admin link to an admin, in the desktop and mobile menus", async () => {
+it("shows the Admin entry to an admin, in the account menu", async () => {
   mockConversationsFetch([]);
   renderNavbar({ _id: "me", name: "Me", role: "admin" });
-  expect(adminLinks().length).toBeGreaterThanOrEqual(1);
-
-  fireEvent.click(screen.getByLabelText("Menu"));
-  await waitFor(() => expect(adminLinks().length).toBeGreaterThanOrEqual(2));
+  expect(adminLinks()).toHaveLength(1);
+  fireEvent.click(screen.getByTestId("nav-account-trigger"));
+  expect(screen.getByRole("link", { name: /admin\.nav\.admin/ })).toHaveAttribute("href", "/admin");
 });
 
-it("hides the Admin link from a non-admin", async () => {
+it("hides the Admin entry from a non-admin", async () => {
   mockConversationsFetch([]);
   renderNavbar({ _id: "me", name: "Me", role: "user" });
-  expect(adminLinks()).toHaveLength(0);
-
-  fireEvent.click(screen.getByLabelText("Menu"));
-  await waitFor(() => expect(screen.getAllByText("community").length).toBeGreaterThan(1));
+  fireEvent.click(screen.getByTestId("nav-account-trigger"));
+  expect(screen.getByRole("link", { name: /nav\.followersFollowing/ })).toBeInTheDocument();
   expect(adminLinks()).toHaveLength(0);
 });
 
@@ -172,4 +169,115 @@ it("shows Gatherings in the navbar once the flag is on", () => {
   mockAppConfig(ALL_WEB_FLAGS_ON);
   const { container } = renderNavbar();
   expect(container.querySelectorAll('a[href="/gatherings"]').length).toBeGreaterThanOrEqual(1);
+});
+
+// --- Layout -----------------------------------------------------------------
+
+it("folds the flagged-off entries out of the Community menu", () => {
+  mockConversationsFetch([]);
+  mockAppConfig({ ...ALL_WEB_FLAGS_OFF, webGatheringsEnabled: true });
+  const { container } = renderNavbar();
+  fireEvent.click(screen.getByTestId("nav-community-trigger"));
+  const panel = document.getElementById("nav-community-panel")!;
+  const hrefs = Array.from(panel.querySelectorAll("a")).map((a) => a.getAttribute("href"));
+  expect(hrefs).toEqual(["/communities", "/gatherings"]);
+  expect(container.querySelector('a[href="/voice-rooms"]')).toBe(null);
+  expect(container.querySelector('a[href="/rooms"]')).toBe(null);
+});
+
+it("turns a menu with a single visible entry into a plain link", () => {
+  mockConversationsFetch([]);
+  mockAppConfig(ALL_WEB_FLAGS_OFF);
+  renderNavbar();
+  expect(screen.queryByTestId("nav-community-trigger")).not.toBeInTheDocument();
+  const link = screen.getByTestId("nav-community-link");
+  expect(link.tagName).toBe("A");
+  expect(link).toHaveAttribute("href", "/communities");
+  // Moments always has Feed + My moments, so it stays a menu.
+  expect(screen.getByTestId("nav-moments-trigger")).toHaveAttribute("aria-haspopup", "true");
+});
+
+it("lights the parent section when a child route is active", () => {
+  mockConversationsFetch([]);
+  mockAppConfig(ALL_WEB_FLAGS_ON);
+  renderNavbar(undefined, "/gatherings/g1");
+  expect(screen.getByTestId("nav-community-trigger")).toHaveClass("active");
+  expect(screen.getByTestId("nav-moments-trigger")).not.toHaveClass("active");
+  expect(screen.getByTestId("bottom-tab-community")).toHaveClass("active");
+});
+
+it("opens with Enter/Space/ArrowDown and closes with Escape, handing focus back", () => {
+  mockConversationsFetch([]);
+  mockAppConfig(ALL_WEB_FLAGS_ON);
+  renderNavbar();
+  const trigger = screen.getByTestId("nav-moments-trigger");
+  const panel = document.getElementById("nav-moments-panel")!;
+  expect(trigger).toHaveAttribute("aria-expanded", "false");
+  expect(panel).not.toBeVisible();
+
+  // A native <button> turns Enter and Space into a click.
+  fireEvent.click(trigger);
+  expect(trigger).toHaveAttribute("aria-expanded", "true");
+  expect(panel).toBeVisible();
+
+  fireEvent.keyDown(trigger, { key: "Escape" });
+  expect(trigger).toHaveAttribute("aria-expanded", "false");
+  expect(document.activeElement).toBe(trigger);
+
+  fireEvent.keyDown(trigger, { key: "ArrowDown" });
+  expect(trigger).toHaveAttribute("aria-expanded", "true");
+  expect(document.activeElement).toHaveAttribute("href", "/moments");
+  fireEvent.keyDown(document.activeElement!, { key: "ArrowDown" });
+  expect(document.activeElement).toHaveAttribute("href", "/reels");
+  fireEvent.keyDown(document.activeElement!, { key: "Escape" });
+  expect(trigger).toHaveAttribute("aria-expanded", "false");
+  expect(document.activeElement).toBe(trigger);
+});
+
+it("closes an open menu on a click outside it", () => {
+  mockConversationsFetch([]);
+  renderNavbar();
+  const trigger = screen.getByTestId("nav-account-trigger");
+  fireEvent.click(trigger);
+  expect(trigger).toHaveAttribute("aria-expanded", "true");
+  fireEvent.mouseDown(document.body);
+  expect(trigger).toHaveAttribute("aria-expanded", "false");
+});
+
+it("shows a visitor Features, Download app, Log in and Sign up — and no tabs", () => {
+  mockAppConfig(ALL_WEB_FLAGS_ON);
+  renderNavbar(null);
+  expect(screen.getByRole("link", { name: "sign_in" })).toHaveAttribute("href", "/login");
+  expect(screen.getByRole("link", { name: "nav.signUp" })).toHaveAttribute("href", "/register");
+  expect(screen.getByRole("link", { name: "nav.downloadApp" })).toHaveAttribute("href", "/download");
+  expect(screen.getByRole("link", { name: "nav.features" })).toBeInTheDocument();
+  expect(screen.queryByTestId("bottom-tabs")).not.toBeInTheDocument();
+  expect(screen.queryByTestId("nav-account-trigger")).not.toBeInTheDocument();
+  expect(document.querySelector('a[href="/chat"]')).toBe(null);
+  expect(document.body).not.toHaveClass("has-bottom-tabs");
+});
+
+it("renders the phone tab bar with the unread badge on Chats", async () => {
+  mockConversationsFetch([{ _id: "c1", unreadCount: 4 }]);
+  renderNavbar();
+  const bar = screen.getByTestId("bottom-tabs");
+  const tabs = Array.from(bar.querySelectorAll("a")).map((a) => a.getAttribute("href"));
+  // Learn is left out until the web has a learning surface (/courses is a stub).
+  expect(tabs).toEqual(["/communities", "/chat", "/moments", "/profile"]);
+  await waitFor(() => expect(screen.getByTestId("chat-unread-badge-mobile")).toHaveTextContent("4"));
+  expect(screen.getByTestId("bottom-tab-chats")).toContainElement(screen.getByTestId("chat-unread-badge-mobile"));
+  expect(document.body).toHaveClass("has-bottom-tabs");
+});
+
+it("hides the tab bar inside a conversation, which owns the bottom edge", () => {
+  mockConversationsFetch([]);
+  renderNavbar(undefined, "/chat/u2");
+  expect(screen.queryByTestId("bottom-tabs")).not.toBeInTheDocument();
+  expect(document.body).not.toHaveClass("has-bottom-tabs");
+});
+
+it("keeps the tab bar on the conversation list", () => {
+  mockConversationsFetch([]);
+  renderNavbar(undefined, "/chat");
+  expect(screen.getByTestId("bottom-tab-chats")).toHaveClass("active");
 });

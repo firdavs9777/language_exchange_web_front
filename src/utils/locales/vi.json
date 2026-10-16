@@ -3419,7 +3419,19 @@
   },
   "nav": {
     "languageRooms": "Phòng ngôn ngữ",
-    "voiceRooms": "Phòng thoại"
+    "voiceRooms": "Phòng thoại",
+    "accountMenu": "Menu tài khoản",
+    "chats": "Trò chuyện",
+    "downloadApp": "Tải ứng dụng",
+    "features": "Tính năng",
+    "feed": "Bảng tin",
+    "findPartners": "Tìm bạn học",
+    "followersFollowing": "Người theo dõi & đang theo dõi",
+    "main": "Điều hướng chính",
+    "more": "Thêm",
+    "profile": "Hồ sơ",
+    "signUp": "Đăng ký",
+    "tabs": "Mục"
   },
   "voiceRooms": {
     "category": {

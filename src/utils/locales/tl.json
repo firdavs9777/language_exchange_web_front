@@ -3419,7 +3419,19 @@
   },
   "nav": {
     "languageRooms": "Mga language room",
-    "voiceRooms": "Mga voice room"
+    "voiceRooms": "Mga voice room",
+    "accountMenu": "Menu ng account",
+    "chats": "Mga chat",
+    "downloadApp": "I-download ang app",
+    "features": "Mga feature",
+    "feed": "Feed",
+    "findPartners": "Maghanap ng kapartner",
+    "followersFollowing": "Mga tagasunod at sinusundan",
+    "main": "Pangunahing nabigasyon",
+    "more": "Higit pa",
+    "profile": "Profile",
+    "signUp": "Mag-sign up",
+    "tabs": "Mga seksyon"
   },
   "voiceRooms": {
     "category": {

@@ -3437,7 +3437,19 @@
   },
   "nav": {
     "languageRooms": "Языковые комнаты",
-    "voiceRooms": "Голосовые комнаты"
+    "voiceRooms": "Голосовые комнаты",
+    "accountMenu": "Меню аккаунта",
+    "chats": "Чаты",
+    "downloadApp": "Скачать приложение",
+    "features": "Возможности",
+    "feed": "Лента",
+    "findPartners": "Найти партнёров",
+    "followersFollowing": "Подписчики и подписки",
+    "main": "Основная навигация",
+    "more": "Ещё",
+    "profile": "Профиль",
+    "signUp": "Регистрация",
+    "tabs": "Разделы"
   },
   "voiceRooms": {
     "category": {

@@ -3419,7 +3419,19 @@
   },
   "nav": {
     "languageRooms": "ห้องภาษา",
-    "voiceRooms": "ห้องเสียง"
+    "voiceRooms": "ห้องเสียง",
+    "accountMenu": "เมนูบัญชี",
+    "chats": "แชท",
+    "downloadApp": "ดาวน์โหลดแอป",
+    "features": "ฟีเจอร์",
+    "feed": "ฟีด",
+    "findPartners": "ค้นหาคู่ฝึกภาษา",
+    "followersFollowing": "ผู้ติดตามและกำลังติดตาม",
+    "main": "การนำทางหลัก",
+    "more": "เพิ่มเติม",
+    "profile": "โปรไฟล์",
+    "signUp": "สมัครสมาชิก",
+    "tabs": "หมวด"
   },
   "voiceRooms": {
     "category": {

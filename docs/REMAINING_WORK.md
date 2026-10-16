@@ -183,6 +183,12 @@ Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-
   2026-10-16: origin/main 661c06e measures 349.3 KB (app code 315.9 vs 307); the homepage redesign adds +4.0 KB (353.3 KB: +1.5 JS, +2.4 CSS from the new palette's utilities).
 - [ ] `PromoCarousel` (src/components/growth, + `src/data/promoSlides`) is no longer mounted anywhere after the homepage redesign put the hero first; delete it or find it a new home. S
 
+Navbar reorganization (owner: "too dense", 2026-10-16)
+- [x] NAV-1 Desktop: Community ▾ (Find partners, Gatherings*, Voice rooms*, Language rooms*) · Chats (unread badge) · Moments ▾ (Feed, Reels*, My moments) · language · avatar ▾ (Profile, Followers & following, Settings, Admin for admins, More on phones, Log out); a one-entry menu is a plain link; parent highlighted on child routes; accessible dropdowns (aria-expanded, ArrowDown/Up, Escape, click-outside); visitors get Features · Download app · Log in · Sign up. Phone (<1024px): compact top bar + fixed bottom tabs Community · Chats · Moments · Profile (hidden inside a conversation, body/chat list padded); 12 `nav.*` strings in 18 locales. Learn omitted: the web has no learning surface yet (`/courses` is a stub).
+- [ ] NAV-2 Add `id="features"` to the homepage feature section in the home redesign (the navbar's Features link falls back to the showcase's test id). S
+- [ ] NAV-3 Add a Learn tab/entry once the web has a learning page; add a notifications bell if a web notifications list ships. S
+- [ ] NAV-4 Device QA: phone tab bar safe-area on iOS Safari, RTL (ar) menus, chat list ends at the tab bar. S
+
 ## 5. Decided / won't fix
 
 - Audit M2: the client keeps the start < end rule on publish (the backend rejects `endsAt <= startsAt` and publish saves first); the message says to fix start or end.

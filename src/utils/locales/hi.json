@@ -3419,7 +3419,19 @@
   },
   "nav": {
     "languageRooms": "भाषा रूम",
-    "voiceRooms": "वॉइस रूम"
+    "voiceRooms": "वॉइस रूम",
+    "accountMenu": "खाता मेनू",
+    "chats": "चैट",
+    "downloadApp": "ऐप डाउनलोड करें",
+    "features": "सुविधाएँ",
+    "feed": "फ़ीड",
+    "findPartners": "साथी खोजें",
+    "followersFollowing": "फ़ॉलोअर्स और फ़ॉलोइंग",
+    "main": "मुख्य नेविगेशन",
+    "more": "और",
+    "profile": "प्रोफ़ाइल",
+    "signUp": "साइन अप करें",
+    "tabs": "अनुभाग"
   },
   "voiceRooms": {
     "category": {

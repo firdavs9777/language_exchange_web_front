@@ -3420,7 +3420,19 @@
   },
   "nav": {
     "languageRooms": "Salas de idiomas",
-    "voiceRooms": "Salas de voz"
+    "voiceRooms": "Salas de voz",
+    "accountMenu": "Menu da conta",
+    "chats": "Conversas",
+    "downloadApp": "Baixar o app",
+    "features": "Recursos",
+    "feed": "Feed",
+    "findPartners": "Encontrar parceiros",
+    "followersFollowing": "Seguidores e seguindo",
+    "main": "Navegação principal",
+    "more": "Mais",
+    "profile": "Perfil",
+    "signUp": "Cadastre-se",
+    "tabs": "Seções"
   },
   "voiceRooms": {
     "category": {

@@ -3,13 +3,9 @@ import {
   FaUsers,
   FaComment,
   FaGlobe,
-  FaCaretDown,
   FaRegUser,
-  FaBars,
-  FaTimes,
   FaCog,
   FaSignOutAlt,
-  FaHeart,
   FaUserFriends,
   FaChevronDown,
   FaUserShield,
@@ -17,11 +13,14 @@ import {
   FaCalendarAlt,
   FaMicrophone,
   FaDoorOpen,
+  FaSearch,
+  FaStream,
+  FaRegImages,
 } from "react-icons/fa";
 import { useWebFlag } from "../../utils/webFlags";
 import { useTranslation } from "react-i18next";
 import { switchLanguage } from "../../utils/switchLanguage";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectIsAdmin } from "../../store/slices/authSlice";
 import { Bounce, toast } from "react-toastify";
@@ -32,6 +31,7 @@ import logo from "../../assets/logo.png";
 import { useGetConversationsQuery } from "../../store/slices/chatSlice";
 import { useSocket } from "../chat/hooks/useSocket";
 import { CONVERSATIONS_PAGE } from "../chat/lib/conversationMatch";
+import NavDropdown from "./NavDropdown";
 import "./MainNavbar.scss";
 
 const LANGUAGES = [
@@ -55,15 +55,86 @@ const LANGUAGES = [
   { code: "tl", flag: "🇵🇭", name: "Filipino" },
 ];
 
+// Which top-level section a path belongs to, so the parent (desktop) and the
+// tab (mobile) light up for every page underneath them, not only the exact
+// path the link points at.
+const COMMUNITY_PATHS = ["/communities", "/community", "/gatherings", "/clubs", "/voice-rooms", "/rooms", "/waves", "/topics"];
+const MOMENTS_PATHS = ["/moments", "/moment", "/reels", "/my-moments", "/add-moment", "/edit-moment"];
+const CHAT_PATHS = ["/chat"];
+const PROFILE_PATHS = ["/profile", "/followersList", "/followingsList", "/visitors", "/visited", "/settings"];
+
+export const under = (pathname: string, prefixes: string[]) =>
+  prefixes.some((p) => pathname === p || pathname.indexOf(p + "/") === 0);
+
+// A conversation (and anything below /chat/…) is laid out to the bottom edge
+// of the viewport, with its own composer there; the tab bar would sit on top
+// of it. The conversation list at /chat keeps the bar.
+export const hidesBottomTabs = (pathname: string) => /^\/chat\/.+/.test(pathname);
+
+export interface NavEntry {
+  to: string;
+  label: string;
+  icon: React.ReactNode;
+  testId?: string;
+}
+
+interface SectionMenuProps {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  entries: NavEntry[];
+  active: boolean;
+}
+
+/**
+ * A top-level desktop section. Two or more visible entries make a dropdown;
+ * a single one is just a link — a menu that opens onto one item is a click
+ * for nothing.
+ */
+const SectionMenu = ({ id, label, icon, entries, active }: SectionMenuProps) => {
+  if (entries.length === 0) return null;
+  if (entries.length === 1) {
+    const only = entries[0];
+    return (
+      <NavLink
+        to={only.to}
+        data-testid={only.testId || `${id}-link`}
+        className={`nav-item ${active ? "active" : ""}`}
+        aria-current={active ? "page" : undefined}
+      >
+        {icon}
+        <span>{label}</span>
+      </NavLink>
+    );
+  }
+  return (
+    <NavDropdown
+      id={id}
+      testId={`${id}-trigger`}
+      triggerClassName={`nav-item nav-item--menu ${active ? "active" : ""}`}
+      panelClassName="section-dropdown"
+      trigger={
+        <>
+          {icon}
+          <span>{label}</span>
+          <FaChevronDown className="chevron" aria-hidden="true" />
+        </>
+      }
+    >
+      {(close) =>
+        entries.map((e) => (
+          <NavLink key={e.to} to={e.to} data-testid={e.testId} className="dropdown-item" onClick={close}>
+            {e.icon} <span>{e.label}</span>
+          </NavLink>
+        ))
+      }
+    </NavDropdown>
+  );
+};
+
 const MainNavbar = () => {
   const requestedLanguage = useRef<string | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
-  const langDropdownRef = useRef<HTMLDivElement>(null);
-  const userDropdownRef = useRef<HTMLDivElement>(null);
 
   const userInfo = useSelector((state: any) => state.auth.userInfo);
   // The console's only entry point. Role comes from the backend; the route
@@ -73,6 +144,7 @@ const MainNavbar = () => {
   const voiceRoomsOn = useWebFlag("webVoiceRoomsEnabled");
   const languageRoomsOn = useWebFlag("webLanguageRoomsEnabled");
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const reelsOn = useWebFlag("webReelsEnabled");
@@ -134,25 +206,14 @@ const MainNavbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close dropdowns on outside click
+  // The bottom tab bar is fixed, so the page needs room underneath it. The
+  // class only does anything below the desktop breakpoint (MainNavbar.scss),
+  // which keeps the padding off desktop without a JS media query.
+  const showBottomTabs = !!userInfo && !hidesBottomTabs(location.pathname);
   useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (langDropdownRef.current && !langDropdownRef.current.contains(e.target as Node)) {
-        setIsLanguageDropdownOpen(false);
-      }
-      if (userDropdownRef.current && !userDropdownRef.current.contains(e.target as Node)) {
-        setIsUserDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
-
-  // Lock body scroll when mobile menu is open
-  useEffect(() => {
-    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [isMobileMenuOpen]);
+    document.body.classList.toggle("has-bottom-tabs", showBottomTabs);
+    return () => document.body.classList.remove("has-bottom-tabs");
+  }, [showBottomTabs]);
 
   const changeLanguage = (lng: string) => {
     const lang = LANGUAGES.find((l) => l.code === lng);
@@ -167,7 +228,6 @@ const MainNavbar = () => {
       if (wanted && wanted !== i18n.language) void switchLanguage(i18n, wanted);
     });
     localStorage.setItem("preferredLanguage", lng);
-    setIsLanguageDropdownOpen(false);
     toast.info(`${lang?.flag} ${lang?.name}`, {
       autoClose: 2000,
       hideProgressBar: true,
@@ -180,8 +240,6 @@ const MainNavbar = () => {
     try {
       dispatch(logout());
       navigate("/login");
-      setIsUserDropdownOpen(false);
-      setIsMobileMenuOpen(false);
       toast.success(t("logout") + " ✓", {
         autoClose: 2000,
         hideProgressBar: true,
@@ -193,7 +251,24 @@ const MainNavbar = () => {
     }
   };
 
-  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+  // "Features" for a visitor: the homepage's feature section if it is on the
+  // page (id="features", or the showcase's test id), otherwise the homepage.
+  const goToFeatures = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const scroll = () => {
+      const target =
+        document.getElementById("features") || document.querySelector('[data-testid="feature-showcase"]');
+      if (target && typeof (target as HTMLElement).scrollIntoView === "function") {
+        (target as HTMLElement).scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    };
+    if (location.pathname !== "/") {
+      navigate("/");
+      window.setTimeout(scroll, 300);
+    } else {
+      scroll();
+    }
+  };
 
   const getUserImage = () => {
     if (Array.isArray(userInfo?.user?.imageUrls) && userInfo.user.imageUrls[0]?.startsWith("http")) {
@@ -207,159 +282,163 @@ const MainNavbar = () => {
     return "/default-avatar.png";
   };
 
+  const path = location.pathname;
+  const communityLabel = t("community") || "Community";
+  const momentsLabel = t("moments") || "Moments";
+  const chatsLabel = t("nav.chats") || "Chats";
+  const profileLabel = t("nav.profile") || "Profile";
+  const gatheringsLabel = t("gatherings.nav") || "Gatherings";
+  const voiceRoomsLabel = t("nav.voiceRooms") || "Voice rooms";
+  const languageRoomsLabel = t("nav.languageRooms") || "Language rooms";
+  const reelsLabel = t("reels.nav") || "Reels";
+  const myMomentsLabel = t("my_moments") || "My moments";
+
+  // Entries whose flag is off are never built, so they can't leak into either
+  // the desktop menu or the mobile "more" list.
+  const communityEntries: NavEntry[] = [
+    { to: "/communities", label: t("nav.findPartners") || "Find partners", icon: <FaSearch /> },
+  ];
+  if (gatheringsOn) communityEntries.push({ to: "/gatherings", label: gatheringsLabel, icon: <FaCalendarAlt />, testId: "nav-gatherings" });
+  if (voiceRoomsOn) communityEntries.push({ to: "/voice-rooms", label: voiceRoomsLabel, icon: <FaMicrophone />, testId: "nav-voice-rooms" });
+  if (languageRoomsOn) communityEntries.push({ to: "/rooms", label: languageRoomsLabel, icon: <FaDoorOpen />, testId: "nav-language-rooms" });
+
+  const momentsEntries: NavEntry[] = [{ to: "/moments", label: t("nav.feed") || "Feed", icon: <FaStream /> }];
+  if (reelsOn) momentsEntries.push({ to: "/reels", label: reelsLabel, icon: <FaFilm />, testId: "nav-reels" });
+  momentsEntries.push({ to: "/my-moments", label: myMomentsLabel, icon: <FaRegImages /> });
+
+  // What the phone can't reach from its four tabs. Shown only inside the
+  // account menu below the desktop breakpoint.
+  const moreEntries: NavEntry[] = [];
+  if (gatheringsOn) moreEntries.push({ to: "/gatherings", label: gatheringsLabel, icon: <FaCalendarAlt />, testId: "nav-gatherings-mobile" });
+  if (voiceRoomsOn) moreEntries.push({ to: "/voice-rooms", label: voiceRoomsLabel, icon: <FaMicrophone />, testId: "nav-voice-rooms-mobile" });
+  if (languageRoomsOn) moreEntries.push({ to: "/rooms", label: languageRoomsLabel, icon: <FaDoorOpen />, testId: "nav-language-rooms-mobile" });
+  if (reelsOn) moreEntries.push({ to: "/reels", label: reelsLabel, icon: <FaFilm />, testId: "nav-reels-mobile" });
+  moreEntries.push({ to: "/my-moments", label: myMomentsLabel, icon: <FaRegImages /> });
+
+  const chatBadge = (testId: string) =>
+    unreadChatCount > 0 ? (
+      <span className="navbar-unread-badge" data-testid={testId}>
+        {unreadChatCount > 99 ? "99+" : unreadChatCount}
+      </span>
+    ) : null;
+
+  const chatActive = under(path, CHAT_PATHS);
+
+  const tabs = [
+    { key: "community", to: "/communities", label: communityLabel, icon: <FaUsers />, active: under(path, COMMUNITY_PATHS), badge: false },
+    { key: "chats", to: "/chat", label: chatsLabel, icon: <FaComment />, active: chatActive, badge: true },
+    { key: "moments", to: "/moments", label: momentsLabel, icon: <FaGlobe />, active: under(path, MOMENTS_PATHS), badge: false },
+    { key: "profile", to: "/profile", label: profileLabel, icon: <FaRegUser />, active: under(path, PROFILE_PATHS), badge: false },
+  ];
+
   return (
     <>
       <header className={`main-navbar ${isScrolled ? "scrolled" : ""}`}>
-        <nav className="navbar-inner">
+        <nav className="navbar-inner" aria-label={t("nav.main") || "Main navigation"}>
           {/* Logo */}
-          <NavLink to="/" className="navbar-logo" onClick={closeMobileMenu}>
-            <img src={logo} alt="BananaTalk" />
-            <div className="navbar-logo-text">
-              <span className="logo-name">BananaTalk</span>
-              <span className="logo-tagline">{t("home.hero.subtitle") ? "Language Exchange" : "Language Exchange"}</span>
-            </div>
+          <NavLink to="/" className="navbar-logo">
+            <img src={logo} alt="" />
+            <span className="logo-name">BananaTalk</span>
           </NavLink>
 
-          {/* Desktop Navigation */}
+          {/* Desktop sections */}
           <div className="navbar-links">
-            <NavLink
-              to="/communities"
-              className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-            >
-              <FaUsers />
-              <span>{t("community")}</span>
-            </NavLink>
-
-            {userInfo && (
+            {userInfo ? (
               <>
+                <SectionMenu
+                  id="nav-community"
+                  label={communityLabel}
+                  icon={<FaUsers />}
+                  entries={communityEntries}
+                  active={under(path, COMMUNITY_PATHS)}
+                />
                 <NavLink
                   to="/chat"
-                  className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+                  className={`nav-item ${chatActive ? "active" : ""}`}
+                  aria-current={chatActive ? "page" : undefined}
                 >
                   <span className="navbar-icon-wrap">
                     <FaComment />
-                    {unreadChatCount > 0 && (
-                      <span className="navbar-unread-badge" data-testid="chat-unread-badge">
-                        {unreadChatCount > 99 ? "99+" : unreadChatCount}
-                      </span>
-                    )}
+                    {chatBadge("chat-unread-badge")}
                   </span>
-                  <span>{t("chat")}</span>
+                  <span>{chatsLabel}</span>
                 </NavLink>
-
-                <NavLink
-                  to="/moments"
-                  className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-                >
-                  <FaGlobe />
-                  <span>{t("moments")}</span>
+                <SectionMenu
+                  id="nav-moments"
+                  label={momentsLabel}
+                  icon={<FaGlobe />}
+                  entries={momentsEntries}
+                  active={under(path, MOMENTS_PATHS)}
+                />
+              </>
+            ) : (
+              <>
+                <a href="/" className="nav-item" onClick={goToFeatures}>
+                  <span>{t("nav.features") || "Features"}</span>
+                </a>
+                <NavLink to="/download" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
+                  <span>{t("nav.downloadApp") || "Download app"}</span>
                 </NavLink>
-                {voiceRoomsOn && (
-                  <NavLink
-                    to="/voice-rooms"
-                    data-testid="nav-voice-rooms"
-                    className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-                  >
-                    <FaMicrophone />
-                    <span>{t("nav.voiceRooms") || "Voice rooms"}</span>
-                  </NavLink>
-                )}
-                {languageRoomsOn && (
-                  <NavLink
-                    to="/rooms"
-                    data-testid="nav-language-rooms"
-                    className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-                  >
-                    <FaDoorOpen />
-                    <span>{t("nav.languageRooms") || "Language rooms"}</span>
-                  </NavLink>
-                )}
-
-                {reelsOn && (
-                  <NavLink
-                    to="/reels"
-                    className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-                  >
-                    <FaFilm />
-                    <span>{t("reels.nav") || "Reels"}</span>
-                  </NavLink>
-                )}
-                {gatheringsOn && (
-                  <NavLink
-                    to="/gatherings"
-                    data-testid="nav-gatherings"
-                    className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-                  >
-                    <FaCalendarAlt />
-                    <span>{t("gatherings.nav") || "Gatherings"}</span>
-                  </NavLink>
-                )}
-
-                {isAdmin && (
-                  <NavLink
-                    to="/admin"
-                    className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-                  >
-                    <FaUserShield />
-                    <span>{t("admin.nav.admin") || "Admin"}</span>
-                  </NavLink>
-                )}
               </>
             )}
           </div>
 
           {/* Right side actions */}
           <div className="navbar-actions">
-            {/* Language Dropdown */}
-            <div className="dropdown-wrapper" ref={langDropdownRef}>
-              <button
-                className="lang-btn"
-                onClick={() => {
-                  setIsLanguageDropdownOpen(!isLanguageDropdownOpen);
-                  setIsUserDropdownOpen(false);
-                }}
-              >
-                <span className="lang-flag">{currentLang.flag}</span>
-                <span className="lang-label">{currentLang.name}</span>
-                <FaChevronDown className={`chevron ${isLanguageDropdownOpen ? "open" : ""}`} />
-              </button>
-
-              {isLanguageDropdownOpen && (
-                <div className="dropdown-panel lang-dropdown">
+            <NavDropdown
+              id="nav-language"
+              triggerClassName="lang-btn"
+              triggerLabel={t("language") || "Language"}
+              panelClassName="lang-dropdown"
+              trigger={
+                <>
+                  <span className="lang-flag" aria-hidden="true">{currentLang.flag}</span>
+                  <span className="lang-label">{currentLang.name}</span>
+                  <FaChevronDown className="chevron" aria-hidden="true" />
+                </>
+              }
+            >
+              {(close) => (
+                <>
                   <div className="dropdown-header">{t("language") || "Language"}</div>
                   <div className="lang-grid">
                     {LANGUAGES.map((lang) => (
                       <button
+                        type="button"
                         key={lang.code}
-                        onClick={() => changeLanguage(lang.code)}
+                        lang={lang.code.replace("_", "-")}
+                        onClick={() => {
+                          changeLanguage(lang.code);
+                          close();
+                        }}
                         className={`lang-option ${activeLang === lang.code ? "active" : ""}`}
+                        aria-pressed={activeLang === lang.code}
                       >
-                        <span className="lang-option-flag">{lang.flag}</span>
+                        <span className="lang-option-flag" aria-hidden="true">{lang.flag}</span>
                         <span className="lang-option-name">{lang.name}</span>
                       </button>
                     ))}
                   </div>
-                </div>
+                </>
               )}
-            </div>
+            </NavDropdown>
 
-            {/* User Menu */}
             {userInfo ? (
-              <div className="dropdown-wrapper" ref={userDropdownRef}>
-                <button
-                  className="user-btn"
-                  onClick={() => {
-                    setIsUserDropdownOpen(!isUserDropdownOpen);
-                    setIsLanguageDropdownOpen(false);
-                  }}
-                >
-                  <img src={getUserImage()} alt="" className="user-avatar" />
-                  <span className="user-name">{userInfo.user?.name}</span>
-                  <FaChevronDown className={`chevron ${isUserDropdownOpen ? "open" : ""}`} />
-                </button>
-
-                {isUserDropdownOpen && (
-                  <div className="dropdown-panel user-dropdown">
+              <NavDropdown
+                id="nav-account"
+                testId="nav-account-trigger"
+                triggerClassName="user-btn"
+                triggerLabel={t("nav.accountMenu") || "Account menu"}
+                panelClassName="user-dropdown"
+                trigger={
+                  <>
+                    <img src={getUserImage()} alt="" className="user-avatar" />
+                    <FaChevronDown className="chevron" aria-hidden="true" />
+                  </>
+                }
+              >
+                {(close) => (
+                  <>
                     <div className="dropdown-user-header">
                       <img src={getUserImage()} alt="" />
                       <div>
@@ -368,179 +447,69 @@ const MainNavbar = () => {
                       </div>
                     </div>
                     <div className="dropdown-divider" />
-                    <NavLink to="/profile" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>
-                      <FaRegUser /> {t("profile.title")}
+                    <NavLink to="/profile" className="dropdown-item" onClick={close}>
+                      <FaRegUser /> <span>{t("profile.title") || "Profile"}</span>
                     </NavLink>
-                    <NavLink to="/followersList" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>
-                      <FaHeart /> {t("followers")}
+                    <NavLink to="/followersList" className="dropdown-item" onClick={close}>
+                      <FaUserFriends /> <span>{t("nav.followersFollowing") || "Followers & following"}</span>
                     </NavLink>
-                    <NavLink to="/followingsList" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>
-                      <FaUserFriends /> {t("followings")}
+                    <NavLink to="/settings" className="dropdown-item" onClick={close}>
+                      <FaCog /> <span>{t("settings.title") || "Settings"}</span>
                     </NavLink>
-                    <NavLink to="/my-moments" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>
-                      <FaGlobe /> {t("my_moments")}
-                    </NavLink>
-                    <NavLink to="/settings" className="dropdown-item" onClick={() => setIsUserDropdownOpen(false)}>
-                      <FaCog /> {t("settings.title") || "Settings"}
-                    </NavLink>
+                    {isAdmin && (
+                      <NavLink to="/admin" className="dropdown-item" onClick={close}>
+                        <FaUserShield /> <span>{t("admin.nav.admin") || "Admin"}</span>
+                      </NavLink>
+                    )}
+                    <div className="only-mobile" data-testid="nav-more">
+                      <div className="dropdown-divider" />
+                      <div className="dropdown-header">{t("nav.more") || "More"}</div>
+                      {moreEntries.map((e) => (
+                        <NavLink key={e.to} to={e.to} data-testid={e.testId} className="dropdown-item" onClick={close}>
+                          {e.icon} <span>{e.label}</span>
+                        </NavLink>
+                      ))}
+                    </div>
                     <div className="dropdown-divider" />
-                    <button onClick={logoutHandler} className="dropdown-item logout-item">
-                      <FaSignOutAlt /> {t("logout")}
+                    <button type="button" onClick={logoutHandler} className="dropdown-item logout-item">
+                      <FaSignOutAlt /> <span>{t("logout") || "Log out"}</span>
                     </button>
-                  </div>
+                  </>
                 )}
-              </div>
+              </NavDropdown>
             ) : (
-              <NavLink to="/login" className="login-btn">
-                <FaRegUser />
-                <span>{t("sign_in")}</span>
-              </NavLink>
+              <>
+                <NavLink to="/login" className="login-link">
+                  {t("sign_in") || "Log in"}
+                </NavLink>
+                <NavLink to="/register" className="signup-btn">
+                  {t("nav.signUp") || "Sign up"}
+                </NavLink>
+              </>
             )}
-
-            {/* Mobile hamburger */}
-            <button
-              className="mobile-toggle"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Menu"
-            >
-              {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-            </button>
           </div>
         </nav>
       </header>
 
-      {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div className="mobile-overlay" onClick={closeMobileMenu}>
-          <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
-            {/* Mobile Header */}
-            <div className="mobile-menu-header">
-              <NavLink to="/" className="navbar-logo" onClick={closeMobileMenu}>
-                <img src={logo} alt="BananaTalk" />
-                <span className="logo-name">BananaTalk</span>
-              </NavLink>
-              <button className="mobile-close" onClick={closeMobileMenu}>
-                <FaTimes />
-              </button>
-            </div>
-
-            {/* Mobile User Info */}
-            {userInfo && (
-              <div className="mobile-user-card">
-                <img src={getUserImage()} alt="" />
-                <div>
-                  <div className="mobile-user-name">{userInfo.user?.name}</div>
-                  <div className="mobile-user-email">{userInfo.user?.email}</div>
-                </div>
-              </div>
-            )}
-
-            {/* Mobile Nav Links */}
-            <div className="mobile-nav-section">
-              <NavLink to="/communities" className="mobile-nav-link" onClick={closeMobileMenu}>
-                <FaUsers /> {t("community")}
-              </NavLink>
-              {userInfo && (
-                <>
-                  <NavLink to="/chat" className="mobile-nav-link" onClick={closeMobileMenu}>
-                    <span className="navbar-icon-wrap">
-                      <FaComment />
-                      {unreadChatCount > 0 && (
-                        <span className="navbar-unread-badge" data-testid="chat-unread-badge-mobile">
-                          {unreadChatCount > 99 ? "99+" : unreadChatCount}
-                        </span>
-                      )}
-                    </span>{" "}
-                    {t("chat")}
-                  </NavLink>
-                  <NavLink to="/moments" className="mobile-nav-link" onClick={closeMobileMenu}>
-                    <FaGlobe /> {t("moments")}
-                  </NavLink>
-                  {reelsOn && (
-                    <NavLink to="/reels" className="mobile-nav-link" onClick={closeMobileMenu}>
-                      <FaFilm /> {t("reels.nav") || "Reels"}
-                    </NavLink>
-                  )}
-                  {gatheringsOn && (
-                    <NavLink to="/gatherings" data-testid="nav-gatherings-mobile" className="mobile-nav-link" onClick={closeMobileMenu}>
-                      <FaCalendarAlt /> {t("gatherings.nav") || "Gatherings"}
-                    </NavLink>
-                  )}
-                  {voiceRoomsOn && (
-                    <NavLink to="/voice-rooms" className="mobile-nav-link" data-testid="nav-voice-rooms-mobile" onClick={closeMobileMenu}>
-                      <FaMicrophone /> {t("nav.voiceRooms") || "Voice rooms"}
-                    </NavLink>
-                  )}
-                  {languageRoomsOn && (
-                    <NavLink to="/rooms" className="mobile-nav-link" data-testid="nav-language-rooms-mobile" onClick={closeMobileMenu}>
-                      <FaDoorOpen /> {t("nav.languageRooms") || "Language rooms"}
-                    </NavLink>
-                  )}
-                  {isAdmin && (
-                    <NavLink to="/admin" className="mobile-nav-link" onClick={closeMobileMenu}>
-                      <FaUserShield /> {t("admin.nav.admin") || "Admin"}
-                    </NavLink>
-                  )}
-                </>
-              )}
-            </div>
-
-            {/* Mobile User Links */}
-            {userInfo && (
-              <div className="mobile-nav-section">
-                <div className="mobile-section-title">{t("profile.title")}</div>
-                <NavLink to="/profile" className="mobile-nav-link" onClick={closeMobileMenu}>
-                  <FaRegUser /> {t("profile.title")}
-                </NavLink>
-                <NavLink to="/followersList" className="mobile-nav-link" onClick={closeMobileMenu}>
-                  <FaHeart /> {t("followers")}
-                </NavLink>
-                <NavLink to="/followingsList" className="mobile-nav-link" onClick={closeMobileMenu}>
-                  <FaUserFriends /> {t("followings")}
-                </NavLink>
-                <NavLink to="/my-moments" className="mobile-nav-link" onClick={closeMobileMenu}>
-                  <FaGlobe /> {t("my_moments")}
-                </NavLink>
-                <NavLink to="/settings" className="mobile-nav-link" onClick={closeMobileMenu}>
-                  <FaCog /> {t("settings.title") || "Settings"}
-                </NavLink>
-              </div>
-            )}
-
-            {/* Mobile Language Selection */}
-            <div className="mobile-nav-section">
-              <div className="mobile-section-title">{t("language") || "Language"}</div>
-              <div className="mobile-lang-grid">
-                {LANGUAGES.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => {
-                      changeLanguage(lang.code);
-                      closeMobileMenu();
-                    }}
-                    className={`mobile-lang-btn ${activeLang === lang.code ? "active" : ""}`}
-                  >
-                    <span>{lang.flag}</span>
-                    <span>{lang.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile Footer Actions */}
-            <div className="mobile-footer-actions">
-              {userInfo ? (
-                <button onClick={logoutHandler} className="mobile-logout-btn">
-                  <FaSignOutAlt /> {t("logout")}
-                </button>
-              ) : (
-                <NavLink to="/login" className="mobile-login-btn" onClick={closeMobileMenu}>
-                  <FaRegUser /> {t("sign_in")}
-                </NavLink>
-              )}
-            </div>
-          </div>
-        </div>
+      {/* Mobile bottom tab bar, the app's own tab layout. */}
+      {showBottomTabs && (
+        <nav className="bottom-tabs" data-dark="" data-testid="bottom-tabs" aria-label={t("nav.tabs") || "Sections"}>
+          {tabs.map((tab) => (
+            <NavLink
+              key={tab.key}
+              to={tab.to}
+              data-testid={`bottom-tab-${tab.key}`}
+              className={`bottom-tab ${tab.active ? "active" : ""}`}
+              aria-current={tab.active ? "page" : undefined}
+            >
+              <span className="navbar-icon-wrap">
+                {tab.icon}
+                {tab.badge && chatBadge("chat-unread-badge-mobile")}
+              </span>
+              <span className="bottom-tab-label">{tab.label}</span>
+            </NavLink>
+          ))}
+        </nav>
       )}
     </>
   );
