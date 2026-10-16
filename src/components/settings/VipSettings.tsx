@@ -163,10 +163,10 @@ const VipSettings: React.FC = () => {
               <h3 className="text-lg font-bold text-white">{t("vip.plans.vip") || "VIP"}</h3>
             </div>
             <p className="text-3xl font-bold text-white mb-1">
-              $9.99
+              $3.99
               <span className="text-sm font-normal text-white/60">/{t("vip.perMonth") || "month"}</span>
             </p>
-            <p className="text-yellow-400 text-sm mb-4">{t("vip.saveAnnually") || "Save 20% with annual plan"}</p>
+            <p className="text-yellow-400 text-sm mb-4">{t("vip.saveAnnually") || "Save 48% with the yearly plan"}</p>
             <div className="border-t border-white/10 pt-4">
               {vipFeatures.map((feature, index) => (
                 <FeatureItem key={index} {...feature} />

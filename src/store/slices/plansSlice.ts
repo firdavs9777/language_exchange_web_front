@@ -47,7 +47,7 @@ export const FALLBACK_PLANS: VipPlan[] = [
   {
     id: "monthly", name: "Monthly VIP", description: "Full VIP access for 1 month",
     duration: 1, durationUnit: "month", savings: null, recommended: false,
-    productId: "", price: 9.99, currency: "USD", localizedPrice: "$9.99",
+    productId: "", price: 3.99, currency: "USD", localizedPrice: "$3.99",
     features: [
       "Unlimited daily messages", "See who visited your profile",
       "Unlimited profile views", "Priority in nearby users", "Ad-free experience",
@@ -55,8 +55,8 @@ export const FALLBACK_PLANS: VipPlan[] = [
   },
   {
     id: "quarterly", name: "Quarterly VIP", description: "Full VIP access for 3 months",
-    duration: 3, durationUnit: "month", savings: "20%", recommended: false,
-    productId: "", price: 23.99, currency: "USD", localizedPrice: "$23.99",
+    duration: 3, durationUnit: "month", savings: "17%", recommended: false,
+    productId: "", price: 9.99, currency: "USD", localizedPrice: "$9.99",
     features: [
       "Unlimited daily messages", "See who visited your profile",
       "Unlimited profile views", "Priority in nearby users", "Ad-free experience",
@@ -64,8 +64,8 @@ export const FALLBACK_PLANS: VipPlan[] = [
   },
   {
     id: "yearly", name: "Yearly VIP", description: "Full VIP access for 12 months",
-    duration: 12, durationUnit: "month", savings: "40%", recommended: true,
-    productId: "", price: 71.99, currency: "USD", localizedPrice: "$71.99",
+    duration: 12, durationUnit: "month", savings: "48%", recommended: true,
+    productId: "", price: 24.99, currency: "USD", localizedPrice: "$24.99",
     features: [
       "Unlimited daily messages", "See who visited your profile",
       "Unlimited profile views", "Priority in nearby users", "Ad-free experience",

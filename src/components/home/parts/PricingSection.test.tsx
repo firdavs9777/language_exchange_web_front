@@ -21,7 +21,7 @@ it("renders the store's own price string, unmodified", () => {
   mockQuery.mockReturnValue({ data: FALLBACK_PLANS, isError: false, isLoading: false });
   render(<PricingSection />);
   const prices = screen.getAllByTestId("plan-price").map((n) => n.textContent);
-  expect(prices).toEqual(expect.arrayContaining(["$9.99", "$23.99", "$71.99"]));
+  expect(prices).toEqual(expect.arrayContaining(["$3.99", "$9.99", "$24.99"]));
 });
 
 it("never shows the prices the old site invented", () => {

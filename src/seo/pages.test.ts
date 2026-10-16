@@ -54,7 +54,7 @@ describe("SEO map", () => {
     expect(ld.operatingSystem).toContain("iOS");
     expect(ld.operatingSystem).toContain("Android");
     expect(ld.offers.price).toBe("0");
-    expect(ld.offers.description).toBe("Free, VIP from $9.99");
+    expect(ld.offers.description).toBe("Free, VIP from $3.99");
     expect(() => JSON.stringify(ld)).not.toThrow();
   });
 

@@ -58,7 +58,7 @@ it("prerenders /download with the QR box reserved and the app's JSON-LD", async 
   expect(out.html).toContain("Download BananaTalk");
   expect(out.html).toContain("utm_campaign=download-page");
   expect(out.head).toContain("SoftwareApplication");
-  expect(out.head).toContain("Free, VIP from $9.99");
+  expect(out.head).toContain("Free, VIP from $3.99");
 });
 
 // The two landing pages are compositions of homepage parts, so what is worth

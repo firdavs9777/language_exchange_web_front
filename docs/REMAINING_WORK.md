@@ -198,3 +198,5 @@ Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-
 - [x] Real logo everywhere on the website (2026-10-16): login, footer, app banner, download pop-up, invite and download pages, language card (was 🍌 / "B").
 
 - [x] Homepage redesign (2026-10-16): marketing-first hero (benefit headline, store buttons + "use on the web", live learner count, 3 real app screenshots in CSS phone frames with floating chips, colour blobs), 3-step how-it-works, 4 benefit-led feature rows, languages strip, colourful stat tiles, pricing kept at `#pricing`, teal CTA band; 58 `home.v2.*` strings in 18 locales; EarlyAdopterBand removed.
+
+- [x] VIP prices on the website match the stores (2026-10-16): $3.99 / $9.99 / $24.99 in the pricing fallback, Terms of Use, VIP settings card and the /download SEO description (were $9.99/$23.99/$71.99 and $79.99 in the Terms).

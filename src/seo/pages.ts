@@ -56,7 +56,7 @@ export const SEO_PAGES: SeoPage[] = [
         "@type": "Offer",
         price: "0",
         priceCurrency: "USD",
-        description: "Free, VIP from $9.99",
+        description: "Free, VIP from $3.99",
       },
     }),
   },

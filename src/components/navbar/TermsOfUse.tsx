@@ -58,9 +58,9 @@ const TermsOfUse = () => {
             following pricing:
           </p>
           <ul>
-            <li>Monthly: $9.99 USD per month</li>
-            <li>Quarterly: $24.99 USD per 3 months</li>
-            <li>Yearly: $79.99 USD per year</li>
+            <li>Monthly: $3.99 USD per month</li>
+            <li>Quarterly: $9.99 USD per 3 months</li>
+            <li>Yearly: $24.99 USD per year</li>
           </ul>
           <p>
             Subscriptions automatically renew unless canceled at least 24 hours
