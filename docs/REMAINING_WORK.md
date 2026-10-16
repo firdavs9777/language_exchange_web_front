@@ -125,7 +125,7 @@ Phase 3 Links (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-pa
 - [ ] Backend follow-up: an OG type for `story` (`/og/story/:id` returns the generic card today; the nginx rule already routes it). S
 - [ ] After this web release is live: backend removes the legacy `token=` from the Google callback redirect (backend REMAINING_WORK). S
 Phase 4 Reels (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
-- [ ] P4-REEL-1 Reels feed endpoint, video-config endpoint and a reel normaliser that survives 2.6.1 data
+- [x] P4-REEL-1 Reels feed endpoint, video-config endpoint and a reel normaliser that survives 2.6.1 data
 - [ ] P4-REEL-2 One-time reels content-policy gate (Apple 1.2), shared with the app via `reelsPolicyAccepted`
 - [ ] P4-REEL-3 `/reels` grid: cursor paging, empty/unavailable states, "Create reel" entry
 - [ ] P4-REEL-4 Full-screen reel viewer: one playing video, muted autoplay with unmute, swipe/wheel/keys, views recorded
