@@ -182,7 +182,7 @@ Phase 4 Calls (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-pa
 - [ ] P4-CALL-PUSH Push unit calls (suite + build green, deployed dark, production smoke recorded)
 
 Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
-- [ ] P4-APPLE-1 Apple JS loader, nonce and popup sign-in wrapper (script fetched only on click)
+- [x] P4-APPLE-1 Apple JS loader, nonce and popup sign-in wrapper (script fetched only on click)
 - [ ] P4-APPLE-2 `POST /auth/apple/web` endpoint and the error text for each refusal
 - [ ] P4-APPLE-3 One "finish social sign-in" path shared by Google and Apple (profile completion included)
 - [ ] P4-APPLE-4 "Sign in with Apple" button: nonce → Apple popup → backend → signed in
