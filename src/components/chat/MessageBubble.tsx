@@ -81,6 +81,9 @@ export interface Message {
   isEdited?: boolean;
   editedAt?: string;
   pinned?: boolean;
+  /** Deleted for everyone (the server rewrites `message` to "This message was deleted"). */
+  isDeleted?: boolean;
+  deletedForEveryone?: boolean;
 }
 
 export type BubblePosition = "single" | "first" | "middle" | "last";
@@ -198,6 +201,28 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
     return (
       <div className="system-notice">
         <span>{t("chatPage.conversationStarted") || "Conversation started"}</span>
+      </div>
+    );
+  }
+
+  // Deleted for everyone: the app draws "This message was deleted" in place
+  // (text_message_view.dart). No actions, no reactions, no media -- the
+  // server already removed the file.
+  if (msg.isDeleted || msg.deletedForEveryone) {
+    return (
+      <div
+        data-msg-id={msg._id}
+        className={`modern-message ${isSent ? "sent" : "received"}${messageGapClass(position, isFirstInGroup)}`}
+      >
+        {!isSent && <div className="message-avatar message-avatar--hidden" />}
+        <div className="message-wrapper">
+          <div
+            className={`message-bubble message-bubble--deleted${bubblePositionClass(position)}`}
+            data-testid="message-deleted-placeholder"
+          >
+            {t("chatPage.deleteMessage.placeholder") || "This message was deleted"}
+          </div>
+        </div>
       </div>
     );
   }

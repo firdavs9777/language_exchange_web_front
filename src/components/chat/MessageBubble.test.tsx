@@ -287,3 +287,12 @@ describe("what the bubble hands back", () => {
     expect(document.querySelector(".message-chip-row")).toBeNull();
   });
 });
+
+it("draws a placeholder for a message deleted for everyone, with no actions", () => {
+  const { props } = renderBubble({
+    message: message({ isDeleted: true, deletedForEveryone: true, message: "This message was deleted" } as any),
+  });
+  expect(screen.getByTestId("message-deleted-placeholder")).toHaveTextContent("This message was deleted");
+  fireEvent.contextMenu(document.querySelector('[data-msg-id="m1"]') as HTMLElement);
+  expect(props.onOpenActions).not.toHaveBeenCalled();
+});

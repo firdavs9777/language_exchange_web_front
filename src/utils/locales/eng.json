@@ -211,6 +211,15 @@
       "cancel": "Cancel",
       "tooLate": "You can only edit a message within 15 minutes of sending it.",
       "failed": "Couldn't edit the message. Try again."
+    },
+    "deleteMessage": {
+      "title": "Delete message?",
+      "forEveryone": "Delete for everyone",
+      "forMe": "Delete for me",
+      "cancel": "Cancel",
+      "placeholder": "This message was deleted",
+      "tooLate": "You can only delete a message for everyone within 1 hour of sending it.",
+      "failed": "Couldn't delete the message. Try again."
     }
   },
   "newChat": {

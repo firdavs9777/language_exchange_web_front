@@ -28,6 +28,7 @@ import "./ChatContent.css";
 import MessageActionMenu from "./actions/MessageActionMenu";
 import ForwardDialog from "./actions/ForwardDialog";
 import EditMessageDialog, { editErrorText } from "./actions/EditMessageDialog";
+import DeleteMessageDialog, { deleteErrorText } from "./actions/DeleteMessageDialog";
 import PinnedBar from "./actions/PinnedBar";
 import ReplyComposerBar from "./actions/ReplyComposerBar";
 import { canDeleteForEveryone } from "./lib/messageActions";
@@ -98,6 +99,16 @@ const statusRank = (status?: string): number =>
 // Matches the backend's own default for
 // GET /messages/conversation/:senderId/:receiverId.
 const MESSAGE_PAGE_SIZE = 50;
+
+// "Deleted for everyone" stays on screen as the app's placeholder; only
+// "deleted for me" removes the bubble.
+const DELETED_PATCH: Partial<Message> = {
+  isDeleted: true,
+  deletedForEveryone: true,
+  message: "This message was deleted",
+  media: undefined,
+  reactions: [],
+};
 
 const getReceiverId = (receiver: MessageReceiver | string): string => {
   if (typeof receiver === "object" && receiver !== null) {
@@ -195,6 +206,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const [editingMsg, setEditingMsg] = useState<Message | null>(null);
   const [editBusy, setEditBusy] = useState(false);
   const [editError, setEditError] = useState("");
+  const [deletingMsg, setDeletingMsg] = useState<Message | null>(null);
+  const [deleteBusy, setDeleteBusy] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   // The "⋯" panel: profile, media, mute, wallpaper, block, report, delete.
   const [isInfoOpen, setIsInfoOpen] = useState(false);
@@ -526,9 +540,20 @@ const ChatContent: React.FC<ChatContentProps> = ({
       }
     };
 
-    const handleMessageDeleted = (data: { messageId: string }) => {
-      setMessages((prev) => prev.filter((msg) => msg._id !== data.messageId));
-      forgetFromThread(data.messageId, selectedUserRef.current);
+    const handleMessageDeleted = (data: {
+      messageId: string;
+      deletedForEveryone?: boolean;
+    }) => {
+      if (!data || !data.messageId) return;
+      const id = String(data.messageId);
+      if (data.deletedForEveryone) {
+        setMessages((prev) => prev.map((m) => (m._id === id ? { ...m, ...DELETED_PATCH } : m)));
+        patchInThread(id, DELETED_PATCH, selectedUserRef.current);
+        return;
+      }
+      // Deleted for me on another of my devices.
+      setMessages((prev) => prev.filter((msg) => msg._id !== id));
+      forgetFromThread(id, selectedUserRef.current);
     };
 
     const handleUserTyping = (data: { userId: string }) => {
@@ -1684,22 +1709,35 @@ const ChatContent: React.FC<ChatContentProps> = ({
     [editingMsg, editMessage, patchInThread, t]
   );
 
-  const handleDeleteMessageAction = useCallback(
-    (msg: Message) => {
-      const forEveryone = canDeleteForEveryone(msg, userId || "");
-      const confirmed = window.confirm(
-        forEveryone ? "Delete this message for everyone?" : "Delete this message?"
-      );
-      if (!confirmed) return;
-      deleteMessageApi({ messageId: msg._id, forEveryone })
+  const handleDeleteMessageAction = useCallback((msg: Message) => {
+    setDeleteError("");
+    setDeletingMsg(msg);
+  }, []);
+
+  const handleDeleteConfirm = useCallback(
+    (forEveryone: boolean) => {
+      const target = deletingMsg;
+      if (!target) return;
+      setDeleteBusy(true);
+      setDeleteError("");
+      deleteMessageApi({ messageId: target._id, forEveryone })
         .unwrap()
         .then(() => {
-          setMessages((prev) => prev.filter((m) => m._id !== msg._id));
-          forgetFromThread(msg._id, selectedUserRef.current);
+          if (forEveryone) {
+            setMessages((prev) =>
+              prev.map((m) => (m._id === target._id ? { ...m, ...DELETED_PATCH } : m))
+            );
+            patchInThread(target._id, DELETED_PATCH, selectedUserRef.current);
+          } else {
+            setMessages((prev) => prev.filter((m) => m._id !== target._id));
+            forgetFromThread(target._id, selectedUserRef.current);
+          }
+          setDeletingMsg(null);
         })
-        .catch((err) => console.error("Delete failed:", err));
+        .catch((err: any) => setDeleteError(deleteErrorText(err, t as any)))
+        .then(() => setDeleteBusy(false));
     },
-    [deleteMessageApi, userId, forgetFromThread]
+    [deletingMsg, deleteMessageApi, forgetFromThread, patchInThread, t]
   );
 
   const handleTtsMessage = useCallback(
@@ -2307,6 +2345,17 @@ const ChatContent: React.FC<ChatContentProps> = ({
           onSave={handleEditSave}
           onCancel={() => {
             if (!editBusy) setEditingMsg(null);
+          }}
+        />
+      )}
+      {deletingMsg && (
+        <DeleteMessageDialog
+          canDeleteForEveryone={canDeleteForEveryone(deletingMsg, userId || "")}
+          busy={deleteBusy}
+          error={deleteError}
+          onDelete={handleDeleteConfirm}
+          onCancel={() => {
+            if (!deleteBusy) setDeletingMsg(null);
           }}
         />
       )}

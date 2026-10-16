@@ -1533,3 +1533,8 @@
     right: 12px;
   }
 }
+
+.message-bubble--deleted {
+  font-style: italic;
+  opacity: 0.7;
+}

@@ -253,10 +253,14 @@ export const chatApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Conversation"],
     }),
+    // DELETE /api/v1/messages/:id {deleteForEveryone}. The backend reads the
+    // JSON body (the app's shape); the old ?forEveryone= query was ignored
+    // before backend P1-CHAT-2, so "for everyone" deleted for the web user only.
     deleteMessage: builder.mutation({
       query: ({ messageId, forEveryone = false }: { messageId: string; forEveryone?: boolean }) => ({
-        url: `${MESSAGES_URL}/${messageId}?forEveryone=${forEveryone}`,
+        url: `${MESSAGES_URL}/${messageId}`,
         method: "DELETE",
+        body: { deleteForEveryone: forEveryone === true },
       }),
       invalidatesTags: ["Conversation"],
     }),

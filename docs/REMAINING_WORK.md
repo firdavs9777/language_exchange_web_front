@@ -49,7 +49,7 @@ Web/app parity (spec: app `docs/superpowers/specs/2026-10-16-web-app-parity-desi
 - [x] Baseline: 23 local commits squashed, tests restored (moments/stories/privacy audit fixes on top of origin/main; 4 suites' expectations updated for intended changes).
 Phase 3 Chat (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase3.md`)
 - [x] P3-CHAT-1 Edit sends `{message}`, in an in-app dialog, with the failure shown (chat#1, chat#19)
-- [ ] P3-CHAT-2 Delete sends body `{deleteForEveryone}`, asks in a dialog, and "deleted for everyone" leaves a placeholder (chat#2, chat#15, chat#19)
+- [x] P3-CHAT-2 Delete sends body `{deleteForEveryone}`, asks in a dialog, and "deleted for everyone" leaves a placeholder (chat#2, chat#15, chat#19)
 - [ ] P3-CHAT-3 Opening a chat never posts "Conversation started" (chat#3)
 - [ ] P3-CHAT-4 Limit, paywall and block refusals open a dialog instead of a bare "Failed" (chat#4)
 - [ ] P3-CHAT-5 A slow socket ack marks the bubble failed with Retry; no REST fallback, no duplicates (chat#5)

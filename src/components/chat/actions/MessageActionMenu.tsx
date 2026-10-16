@@ -11,7 +11,7 @@ import {
   X,
 } from 'lucide-react';
 import ReactionRow from './ReactionRow';
-import { canEdit, canDeleteForEveryone } from '../lib/messageActions';
+import { canEdit } from '../lib/messageActions';
 
 export interface MessageActionMenuProps {
   message: any;
@@ -75,7 +75,10 @@ const MessageActionMenu: React.FC<MessageActionMenuProps> = ({
   onClose,
 }) => {
   const showEdit = canEdit(message, meId);
-  const canDeleteEveryone = canDeleteForEveryone(message, meId);
+  // The backend lets only the sender delete (403 for anyone else), so the
+  // item is offered on my own messages only; the dialog picks me/everyone.
+  const sender: any = message && message.sender;
+  const isMine = (typeof sender === "string" ? sender : sender && sender._id) === meId;
 
   const withClose = (fn: () => void) => () => {
     fn();
@@ -164,14 +167,16 @@ const MessageActionMenu: React.FC<MessageActionMenuProps> = ({
           />
         )}
 
-        <ActionItem
-          testId="action-delete"
-          icon={<Trash2 size={16} className="text-red-600 dark:text-red-400" />}
-          tint="bg-red-100 dark:bg-red-900/40"
-          label={canDeleteEveryone ? 'Delete for everyone' : 'Delete'}
-          danger
-          onClick={withClose(onDelete)}
-        />
+        {isMine && (
+          <ActionItem
+            testId="action-delete"
+            icon={<Trash2 size={16} className="text-red-600 dark:text-red-400" />}
+            tint="bg-red-100 dark:bg-red-900/40"
+            label="Delete"
+            danger
+            onClick={withClose(onDelete)}
+          />
+        )}
       </div>
     </div>
   );

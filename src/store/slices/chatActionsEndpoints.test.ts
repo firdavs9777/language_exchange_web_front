@@ -203,4 +203,26 @@ describe("dead 404 message routes are removed", () => {
     expect(calls[0].method).toBe("PUT");
     expect(JSON.parse(calls[0].body as string)).toEqual({ message: "fixed" });
   });
+
+  it("deleteMessage -> DELETE /api/v1/messages/:id with a JSON body, no query flag", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch(
+      (chatApiSlice.endpoints as any).deleteMessage.initiate({ messageId: "msg-1", forEveryone: true })
+    );
+    const url = new URL(calls[0].url);
+    expect(url.pathname).toBe(`${MESSAGES_URL}/msg-1`);
+    expect(url.search).toBe("");
+    expect(calls[0].method).toBe("DELETE");
+    expect(JSON.parse(calls[0].body as string)).toEqual({ deleteForEveryone: true });
+  });
+
+  it("deleteMessage for me sends deleteForEveryone:false (a real boolean)", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch(
+      (chatApiSlice.endpoints as any).deleteMessage.initiate({ messageId: "msg-2" })
+    );
+    expect(JSON.parse(calls[0].body as string)).toEqual({ deleteForEveryone: false });
+  });
 });

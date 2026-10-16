@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { MemoryRouter, useLocation, useNavigate } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -21,6 +21,7 @@ const mockInvalidateTags = jest.fn();
 const mockUpdateQueryData = jest.fn();
 const mockCreateMessage = jest.fn();
 const mockEditMessage = jest.fn();
+const mockDeleteMessage = jest.fn();
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -46,7 +47,7 @@ jest.mock("../../store/slices/chatSlice", () => ({
   useSendVoiceMessageMutation: () => mutation(),
   useSendMediaMessageMutation: () => mutation(),
   useEditMessageMutation: () => [mockEditMessage, { isLoading: false }],
-  useDeleteMessageMutation: () => mutation(),
+  useDeleteMessageMutation: () => [mockDeleteMessage, { isLoading: false }],
   useAddReactionMutation: () => mutation(),
   useRemoveReactionMutation: () => mutation(),
   usePinMessageMutation: () => mutation(),
@@ -126,6 +127,7 @@ beforeEach(() => {
     unwrap: () => Promise.resolve({ data: { _id: "m-rest", message: "hi", sender: { _id: "me" } } }),
   });
   mockEditMessage.mockReturnValue({ unwrap: () => Promise.resolve({ success: true, data: {} }) });
+  mockDeleteMessage.mockReturnValue({ unwrap: () => Promise.resolve({ success: true, data: {} }) });
 });
 
 afterEach(() => {
@@ -509,4 +511,63 @@ it("keeps the dialog open and says why when the 15 minutes are up", async () => 
     expect(screen.getByTestId("edit-message-error")).toHaveTextContent("within 15 minutes")
   );
   expect(document.querySelector('[data-msg-id="m-mine"]')).toHaveTextContent("helo");
+});
+
+// --- Deleting a message ----------------------------------------------------
+
+it("deletes for everyone with the body flag and leaves the app's placeholder", async () => {
+  const confirmSpy = jest.spyOn(window, "confirm").mockImplementation(() => true);
+  threadWithMyMessage();
+  renderChat("/chat/u2");
+  await waitFor(() => expect(document.querySelector('[data-msg-id="m-mine"]')).not.toBe(null));
+
+  openActionsOn("m-mine");
+  fireEvent.click(screen.getByTestId("action-delete"));
+  expect(confirmSpy).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByTestId("delete-for-everyone"));
+
+  await waitFor(() =>
+    expect(mockDeleteMessage).toHaveBeenCalledWith({ messageId: "m-mine", forEveryone: true })
+  );
+  await waitFor(() => expect(screen.getByTestId("message-deleted-placeholder")).toBeInTheDocument());
+  confirmSpy.mockRestore();
+});
+
+it("delete for me removes the bubble", async () => {
+  threadWithMyMessage();
+  renderChat("/chat/u2");
+  await waitFor(() => expect(document.querySelector('[data-msg-id="m-mine"]')).not.toBe(null));
+
+  openActionsOn("m-mine");
+  fireEvent.click(screen.getByTestId("action-delete"));
+  fireEvent.click(screen.getByTestId("delete-for-me"));
+
+  await waitFor(() =>
+    expect(mockDeleteMessage).toHaveBeenCalledWith({ messageId: "m-mine", forEveryone: false })
+  );
+  await waitFor(() => expect(document.querySelector('[data-msg-id="m-mine"]')).toBe(null));
+});
+
+it("turns a message the other person deleted for everyone into the placeholder", async () => {
+  const s = silentSocket();
+  mockUseSocket.mockReturnValue(s.value);
+  mockGetConversation.mockReturnValue({
+    data: {
+      data: [{ _id: "m-theirs", message: "oops", sender: { _id: "u2", name: "Ada" }, receiver: "me", createdAt: new Date().toISOString() }],
+      total: 1,
+    },
+    error: undefined,
+    isLoading: false,
+  });
+  renderChat("/chat/u2");
+  await waitFor(() => expect(document.querySelector('[data-msg-id="m-theirs"]')).not.toBe(null));
+
+  act(() => {
+    s.handlers["messageDeleted"].forEach((fn) =>
+      fn({ messageId: "m-theirs", deletedForEveryone: true, message: { _id: "m-theirs", message: "This message was deleted", isDeleted: true } })
+    );
+  });
+
+  await waitFor(() => expect(screen.getByTestId("message-deleted-placeholder")).toBeInTheDocument());
+  expect(document.querySelector('[data-msg-id="m-theirs"]')).not.toBe(null);
 });
