@@ -11,6 +11,12 @@ jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
 }));
 
+jest.mock("../../chat/GifPickerPanel", () => (props: any) => (
+  <button type="button" onClick={() => props.onSelectGif("https://media1.giphy.com/media/x/giphy.gif")}>
+    pick-gif
+  </button>
+));
+
 jest.mock("../../../store/slices/momentsSlice", () => ({
   useAddMomentCommentMutation: () => [mockAddComment, mockAddState],
   useUploadCommentImageMutation: () => [mockUploadImage, { isLoading: false }],
@@ -106,11 +112,13 @@ describe("CommentComposer", () => {
     );
   });
 
-  it("uploads an attached image onto the comment it just created", async () => {
-    renderComposer();
+  // Only a correction still uploads its photo in a second request (its
+  // nested `correction` can't travel as multipart, moments#21).
+  it("uploads a correction's attached image onto the comment it just created", async () => {
+    renderComposer({ mode: "correction" });
     const file = new File(["x"], "photo.png", { type: "image/png" });
 
-    fireEvent.change(screen.getByTestId("comment-composer-text"), {
+    fireEvent.change(screen.getByTestId("comment-composer-corrected"), {
       target: { value: "Look" },
     });
     fireEvent.change(screen.getByTestId("comment-composer-image"), {
@@ -193,14 +201,14 @@ describe("CommentComposer", () => {
     );
     expect(screen.getByTestId("comment-composer-text")).toHaveValue("Hi");
   });
-  it("keeps a posted comment when only the photo upload fails", async () => {
+  it("keeps a posted correction when only the photo upload fails", async () => {
     mockUploadImage.mockReturnValue({
       unwrap: () => Promise.reject({ data: { error: "Upload failed" } }),
     });
-    const { onDone } = renderComposer();
+    const { onDone } = renderComposer({ mode: "correction" });
     const file = new File(["x"], "photo.png", { type: "image/png" });
 
-    fireEvent.change(screen.getByTestId("comment-composer-text"), {
+    fireEvent.change(screen.getByTestId("comment-composer-corrected"), {
       target: { value: "Look" },
     });
     fireEvent.change(screen.getByTestId("comment-composer-image"), {
@@ -215,7 +223,7 @@ describe("CommentComposer", () => {
     );
     // The comment itself exists: no error, the box clears, the list refreshes.
     expect(screen.queryByTestId("comment-composer-error")).not.toBeInTheDocument();
-    expect(screen.getByTestId("comment-composer-text")).toHaveValue("");
+    expect(screen.getByTestId("comment-composer-corrected")).toHaveValue("");
     expect(onDone).toHaveBeenCalled();
   });
 
@@ -239,5 +247,58 @@ describe("CommentComposer", () => {
     expect(screen.getByTestId("comment-composer-original")).toHaveAttribute("maxlength", "2000");
     expect(screen.getByTestId("comment-composer-corrected")).toHaveAttribute("maxlength", "2000");
     expect(screen.getByTestId("comment-composer-explanation")).toHaveAttribute("maxlength", "500");
+  });
+});
+
+describe("photo, GIF and empty text (moments#21)", () => {
+  const pickFile = () =>
+    fireEvent.change(screen.getByTestId("comment-composer-image"), {
+      target: { files: [new File(["x"], "p.jpg", { type: "image/jpeg" })] },
+    });
+
+  it("posts a photo with no text in one request", async () => {
+    renderComposer();
+    expect(screen.getByTestId("comment-composer-submit")).toBeDisabled();
+    pickFile();
+    expect(screen.getByTestId("comment-composer-submit")).not.toBeDisabled();
+    fireEvent.click(screen.getByTestId("comment-composer-submit"));
+    await waitFor(() => expect(mockAddComment).toHaveBeenCalledTimes(1));
+    const arg = mockAddComment.mock.calls[0][0];
+    expect(arg.image).toBeInstanceOf(File);
+    expect(arg.text).toBe("");
+    expect(mockUploadImage).not.toHaveBeenCalled();
+  });
+
+  it("posts a GIF as imageUrl", async () => {
+    renderComposer();
+    fireEvent.click(screen.getByTestId("comment-composer-gif"));
+    fireEvent.click(screen.getByText("pick-gif"));
+    expect(screen.getByTestId("comment-composer-gif-preview")).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId("comment-composer-submit"));
+    await waitFor(() => expect(mockAddComment).toHaveBeenCalled());
+    expect(mockAddComment.mock.calls[0][0].imageUrl).toBe("https://media1.giphy.com/media/x/giphy.gif");
+    expect(mockAddComment.mock.calls[0][0].image).toBeUndefined();
+  });
+
+  it("a photo replaces a picked GIF and vice versa", () => {
+    renderComposer();
+    fireEvent.click(screen.getByTestId("comment-composer-gif"));
+    fireEvent.click(screen.getByText("pick-gif"));
+    pickFile();
+    expect(screen.queryByTestId("comment-composer-gif-preview")).not.toBeInTheDocument();
+  });
+
+  it("a correction with a photo keeps the two-step upload", async () => {
+    renderComposer({ mode: "correction" });
+    fireEvent.change(screen.getByTestId("comment-composer-corrected"), { target: { value: "Fixed" } });
+    pickFile();
+    fireEvent.click(screen.getByTestId("comment-composer-submit"));
+    await waitFor(() => expect(mockUploadImage).toHaveBeenCalled());
+    expect(mockAddComment.mock.calls[0][0].image).toBeUndefined();
+  });
+
+  it("no GIF button on a correction", () => {
+    renderComposer({ mode: "correction" });
+    expect(screen.queryByTestId("comment-composer-gif")).not.toBeInTheDocument();
   });
 });

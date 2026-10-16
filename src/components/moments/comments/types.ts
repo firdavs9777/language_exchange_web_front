@@ -25,6 +25,14 @@ export interface CommentReaction {
   users?: Array<string | { _id: string }>;
 }
 
+export interface CommentMention {
+  user?: string | { _id: string };
+  username?: string;
+  /** UTF-16 offset into `text` (the app computes it with Dart String indices, the same unit as JS). */
+  offset?: number;
+  length?: number;
+}
+
 export interface CommentType {
   _id: string;
   text: string;
@@ -38,4 +46,5 @@ export interface CommentType {
   reactions?: CommentReaction[];
   reactionCount?: number;
   correction?: CommentCorrection;
+  mentions?: CommentMention[];
 }

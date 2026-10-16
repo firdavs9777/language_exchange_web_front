@@ -186,15 +186,32 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
         text,
         parentComment,
         correction,
+        image,
+        imageUrl,
       }: {
         momentId: string;
         text?: string;
         parentComment?: string;
         correction?: { originalText?: string; correctedText: string; explanation?: string };
+        /** A photo: sent in the SAME request as multipart (createComment's
+         *  uploadSingleCompressed('image')), so a photo-only comment works. */
+        image?: File;
+        /** A Giphy GIF URL; the server keeps only giphy.com hosts. */
+        imageUrl?: string;
       }) => {
+        if (image) {
+          // multipart can't carry the nested `correction`; callers keep the
+          // two-step upload for corrections (CommentComposer).
+          const form = new FormData();
+          form.append("text", text || "");
+          if (parentComment) form.append("parentComment", parentComment);
+          form.append("image", image);
+          return { url: `${MOMENTS_URL}/${momentId}/comments`, method: "POST", body: form };
+        }
         const body: any = { text: text || "" };
         if (parentComment) body.parentComment = parentComment;
         if (correction) body.correction = correction;
+        if (imageUrl) body.imageUrl = imageUrl;
         return {
           url: `${MOMENTS_URL}/${momentId}/comments`,
           method: "POST",

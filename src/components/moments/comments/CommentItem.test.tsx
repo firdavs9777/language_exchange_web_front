@@ -344,3 +344,13 @@ describe("report and block (moments#10)", () => {
     expect(screen.queryByTestId("comment-more")).not.toBeInTheDocument();
   });
 });
+
+it("draws app mentions highlighted (moments#21)", () => {
+  renderItem({
+    comment: baseComment({
+      text: "thanks @mina",
+      mentions: [{ user: "u9", username: "mina", offset: 7, length: 5 }],
+    }),
+  });
+  expect(screen.getByTestId("comment-mention")).toHaveTextContent("@mina");
+});

@@ -661,7 +661,8 @@
       "replyPlaceholder": "Write a reply…",
       "viewReplies": "View {{count}} replies",
       "deleteOthersTitle": "Delete this comment?",
-      "deleteOthersBody": "It's on your moment, so you can remove it. This can't be undone."
+      "deleteOthersBody": "It's on your moment, so you can remove it. This can't be undone.",
+      "removeGif": "Remove GIF"
     },
     "filters": {
       "button": "Filters",

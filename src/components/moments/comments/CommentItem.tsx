@@ -12,6 +12,7 @@ import ReportMomentDialog from "../actions/ReportMomentDialog";
 import BlockAuthorDialog from "../actions/BlockAuthorDialog";
 import CommentComposer from "./CommentComposer";
 import RepliesThread from "./RepliesThread";
+import { renderWithMentions } from "./mentionText";
 import { CommentType } from "./types";
 import {
   useDeleteMomentCommentMutation,
@@ -284,6 +285,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
           {showBody && (
             <TranslatableText
               text={comment.text}
+              content={
+                comment.mentions && comment.mentions.length > 0
+                  ? renderWithMentions(comment.text, comment.mentions)
+                  : undefined
+              }
               onTranslate={handleTranslate}
               isLoggedIn={isLoggedIn}
               onRequireLogin={onRequireLogin}

@@ -47,6 +47,9 @@ interface TranslatableTextProps {
   onRequireLogin: () => void;
   className?: string;
   as?: "p" | "span";
+  /** Rich rendering of `text` (e.g. highlighted mentions). Translation and
+   *  the same-language check still use the plain `text`. */
+  content?: React.ReactNode;
 }
 
 const TranslatableText: React.FC<TranslatableTextProps> = ({
@@ -57,6 +60,7 @@ const TranslatableText: React.FC<TranslatableTextProps> = ({
   onRequireLogin,
   className,
   as = "p",
+  content,
 }) => {
   const { t } = useTranslation();
   const [state, setState] = useState<TranslationState>({ kind: "idle" });
@@ -202,7 +206,7 @@ const TranslatableText: React.FC<TranslatableTextProps> = ({
         onKeyDown={handleKeyDown}
         className="block cursor-pointer whitespace-pre-wrap break-words no-underline"
       >
-        {text}
+        {content !== undefined ? content : text}
       </Text>
       {line}
     </Wrapper>

@@ -323,3 +323,51 @@ describe("momentsSlice Task 0 endpoints hit the REAL backend routes", () => {
     });
   });
 });
+
+describe("addMomentComment media (moments#21)", () => {
+  const capture = () => {
+    const calls: any[] = [];
+    (global as any).fetch = jest.fn(async (req: any) => {
+      // CRA's jsdom uses whatwg-fetch, which keeps a FormData body on
+      // _bodyFormData and a JSON string on _bodyText.
+      calls.push({ url: req.url, method: req.method, form: req._bodyFormData, text: req._bodyText });
+      return new Response(JSON.stringify({ success: true, data: { _id: "c1" } }), {
+        status: 200, headers: { "content-type": "application/json" },
+      });
+    });
+    return calls;
+  };
+
+  it("a photo comment goes up in ONE multipart request with its text", async () => {
+    const calls = capture();
+    const store = makeStore();
+    const file = new File(["x"], "p.jpg", { type: "image/jpeg" });
+    await store.dispatch(
+      (momentsApiSlice.endpoints as any).addMomentComment.initiate({ momentId: "m1", text: "", image: file, parentComment: "p1" })
+    );
+    expect(calls).toHaveLength(1);
+    expect(new URL(calls[0].url).pathname).toBe("/api/v1/moments/m1/comments");
+    expect(calls[0].form).toBeInstanceOf(FormData);
+    expect(calls[0].form.get("image")).toBeInstanceOf(File);
+    expect(calls[0].form.get("text")).toBe("");
+    expect(calls[0].form.get("parentComment")).toBe("p1");
+  });
+
+  it("a GIF comment is JSON with imageUrl", async () => {
+    const calls = capture();
+    const store = makeStore();
+    await store.dispatch(
+      (momentsApiSlice.endpoints as any).addMomentComment.initiate({
+        momentId: "m1", text: "", imageUrl: "https://media1.giphy.com/media/x/giphy.gif",
+      })
+    );
+    expect(JSON.parse(calls[0].text)).toEqual({ text: "", imageUrl: "https://media1.giphy.com/media/x/giphy.gif" });
+  });
+
+  it("a plain comment is unchanged JSON", async () => {
+    const calls = capture();
+    const store = makeStore();
+    await store.dispatch((momentsApiSlice.endpoints as any).addMomentComment.initiate({ momentId: "m1", text: "hi" }));
+    expect(JSON.parse(calls[0].text)).toEqual({ text: "hi" });
+  });
+});
