@@ -1593,6 +1593,55 @@
       "body": "You've used today's free waves. VIP members can wave without a daily limit, or try again tomorrow.",
       "seeVip": "See VIP",
       "notNow": "Not now"
+    },
+    "sheet": {
+      "title": "Send a wave to {{name}}",
+      "subtitle": "Say hi and break the ice 👋",
+      "close": "Close",
+      "cancel": "Cancel",
+      "send": "Send wave",
+      "already": "Already waved",
+      "alreadyTitle": "You already waved at {{name}}",
+      "alreadyBody": "You can only wave once per person — send them a message instead to keep the conversation going.",
+      "quickReplies": "Quick replies",
+      "icebreakersTitle": "Icebreakers",
+      "yourMessage": "Your message",
+      "placeholder": "Write a custom message (optional)…",
+      "sent": "Wave sent to {{name}}!",
+      "match": "🎉 It's a match! You and {{name}} both waved at each other.",
+      "sendError": "Failed to send wave",
+      "chips": {
+        "hi": {
+          "label": "Hi",
+          "message": "👋 Hi!"
+        },
+        "cool": {
+          "label": "Cool",
+          "message": "❤️ Cool profile!"
+        },
+        "hey": {
+          "label": "Hey",
+          "message": "😊 Hey there!"
+        },
+        "chat": {
+          "label": "Chat",
+          "message": "🎉 Let's chat!"
+        },
+        "hello": {
+          "label": "Hello",
+          "message": "✋ Hello!"
+        },
+        "nice": {
+          "label": "Nice",
+          "message": "🌟 Nice to meet you!"
+        }
+      },
+      "icebreakers": {
+        "0": "Hi! Want to practice languages together?",
+        "1": "I noticed we're learning similar languages — hi!",
+        "2": "Your profile caught my eye, how's it going?",
+        "3": "Hey! What made you start learning a new language?"
+      }
     }
   },
   "topics": {
