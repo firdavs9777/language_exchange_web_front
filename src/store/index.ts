@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
 import { apiSlice } from "./slices/apiSlice";
 import momentSliceReducer from "./slices/momentsSlice";
 import authSliceReducer from "./slices/authSlice";
@@ -51,6 +52,11 @@ export function readPreloadedState(): Record<string, unknown> | undefined {
 }
 
 const store = makeStore(readPreloadedState());
+
+// RTK Query's online/offline (and focus) listeners. Without this call the
+// apiSlice's `refetchOnReconnect: true` did nothing. Browser only: the
+// prerender builds stores in node.
+if (typeof window !== "undefined") setupListeners(store.dispatch);
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type RootState = ReturnType<AppStore["getState"]>;

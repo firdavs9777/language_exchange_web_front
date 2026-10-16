@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import { RootState } from '../../../store';
 import { logout } from '../../../store/slices/authSlice';
 import { chatApiSlice } from '../../../store/slices/chatSlice';
 import { BASE_URL } from '../../../constants';
+import { refreshSession } from '../../../store/refreshSession';
 
 // ---- Types ----
 
@@ -20,6 +21,11 @@ interface SocketContextValue {
   socket: Socket | null;
   isConnected: boolean;
   emit: (event: string, data?: any, callback?: (response: any) => void) => void;
+  /** Increments on every reconnect (not the first connect). Consumers re-read on change. */
+  connectionEpoch: number;
+  /** The server dropped this tab (`forceDisconnect`, >5 sockets); it will not reconnect by itself. */
+  kicked: boolean;
+  reconnect: () => void;
 }
 
 // ---- Lazy client ----
@@ -123,6 +129,9 @@ const SocketContext = createContext<SocketContextValue>({
   socket: null,
   isConnected: false,
   emit: () => {},
+  connectionEpoch: 0,
+  kicked: false,
+  reconnect: () => {},
 });
 
 // ---- Provider ----
@@ -132,6 +141,12 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isConnected, setIsConnected] = useState(false);
   const token = useSelector((state: RootState) => state.auth.userInfo?.token);
   const dispatch = useDispatch();
+  const [connectionEpoch, setConnectionEpoch] = useState(0);
+  const [kicked, setKicked] = useState(false);
+  const store = useStore();
+  // Survives a token-rotation socket swap, so the new socket's first connect
+  // still counts as a REconnect (the thread missed whatever came meanwhile).
+  const seenConnectRef = useRef(false);
 
   useEffect(() => {
     // Logged out: nothing to connect to, and nothing to download. Anything the
@@ -139,6 +154,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (!token) {
       setSocket(null);
       setIsConnected(false);
+      seenConnectRef.current = false;
+      setKicked(false);
       destroySocket('Signed out');
       return;
     }
@@ -164,16 +181,27 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
 
     // Sync React state with socket connection state
-    const onConnect = () => setIsConnected(true);
+    const onConnect = () => {
+      setIsConnected(true);
+      setKicked(false);
+      if (seenConnectRef.current) {
+        // REST, media, voice, call and wave messages sent while this tab was
+        // away are not in the server's offline queue; the list re-reads now
+        // and every open thread re-reads its newest page off the epoch.
+        setConnectionEpoch((n) => n + 1);
+        (dispatch as any)((chatApiSlice.util as any).invalidateTags(['Conversations']));
+      }
+      seenConnectRef.current = true;
+    };
+    const onForceDisconnect = () => setKicked(true);
     const onDisconnect = () => setIsConnected(false);
 
-    // Backend pushes these when the access token is on its way out / already
-    // invalid. We treat expired/authError as a definitive logout signal —
-    // the REST baseQueryWithReauth handles the silent-refresh case on its
-    // own, this branch covers the case where the server has already given up.
+    // The server has given up on this token and closed the socket. Refresh
+    // it the way a REST 401 would; the new token re-creates the socket. Only
+    // a failed refresh ends the session (refreshSession logs out).
     const onTokenExpired = (data?: { reason?: string }) => {
-      logError('tokenExpired — forcing logout', data);
-      dispatch(logout());
+      logError('tokenExpired — refreshing', data);
+      refreshSession(dispatch as any, store.getState);
     };
 
     const onAuthError = (data?: { error?: string }) => {
@@ -226,9 +254,11 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         s.on('tokenExpiring', onTokenExpiring);
         s.on('authError', onAuthError);
         s.on('themeChanged', onThemeChanged);
+        s.on('forceDisconnect', onForceDisconnect);
 
         // If already connected (reusing existing socket), sync state
         if (s.connected) {
+          seenConnectRef.current = true;
           setIsConnected(true);
         }
       },
@@ -249,8 +279,24 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       attached.off('tokenExpiring', onTokenExpiring);
       attached.off('authError', onAuthError);
       attached.off('themeChanged', onThemeChanged);
+      attached.off('forceDisconnect', onForceDisconnect);
     };
-  }, [token, dispatch]);
+  }, [token, dispatch, store]);
+
+  const reconnect = useCallback(() => {
+    if (globalSocket && !globalSocket.connected) globalSocket.connect();
+  }, []);
+
+  // A kicked tab comes back when the person returns to it -- never on its
+  // own timer, or two open tabs would keep kicking each other.
+  useEffect(() => {
+    if (!kicked) return undefined;
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') reconnect();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, [kicked, reconnect]);
 
   const emit = useCallback((event: string, data?: any, callback?: (response: any) => void) => {
     if (globalSocket?.connected) {
@@ -258,11 +304,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, []);
 
-  const value: SocketContextValue = {
-    socket,
-    isConnected,
-    emit,
-  };
+  const value: SocketContextValue = { socket, isConnected, emit, connectionEpoch, kicked, reconnect };
 
   return React.createElement(SocketContext.Provider, { value }, children);
 };

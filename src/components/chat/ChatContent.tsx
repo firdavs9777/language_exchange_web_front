@@ -30,6 +30,7 @@ import ForwardDialog from "./actions/ForwardDialog";
 import EditMessageDialog, { editErrorText } from "./actions/EditMessageDialog";
 import DeleteMessageDialog, { deleteErrorText } from "./actions/DeleteMessageDialog";
 import SendErrorDialog from "./actions/SendErrorDialog";
+import ConnectionBanner from "./ConnectionBanner";
 import { classifySendError } from "./lib/sendErrors";
 import { emitWithAck, SOCKET_ACK_TIMEOUT_MS } from "./lib/socketAck";
 import notify from "../../design/notify";
@@ -307,7 +308,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const draftSeededRef = useRef(false);
 
   // Shared socket
-  const { socket, emit } = useSocket();
+  const { socket, emit, connectionEpoch } = useSocket() as any;
 
   // Keep selectedUserRef in sync
   useEffect(() => {
@@ -781,6 +782,24 @@ const ChatContent: React.FC<ChatContentProps> = ({
       socket.off("connect", requestStatus);
     };
   }, [selectedUser, socket]);
+
+  // After a reconnect, re-read the newest page of this thread: anything that
+  // arrived while the socket was down (laptop sleep, network drop, a kicked
+  // tab) reached the server but never reached this screen. `merge` upserts by
+  // id, so nothing doubles.
+  useEffect(() => {
+    if (!connectionEpoch || !userId || !selectedUser) return;
+    const endpoint = (chatApiSlice as any).endpoints && (chatApiSlice as any).endpoints.getConversation;
+    if (!endpoint) return;
+    dispatch(
+      endpoint.initiate(
+        { senderId: userId, receiverId: selectedUser, page: 1, limit: MESSAGE_PAGE_SIZE },
+        { forceRefetch: true, subscribe: false }
+      )
+    );
+    // Only the epoch decides; a conversation switch has its own fetch.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connectionEpoch]);
 
   // Seed from the cache and mark as read.
   //
@@ -2030,6 +2049,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
         />
       )}
 
+      <ConnectionBanner />
       {/* Pinned messages bar (renders null when there are none) */}
       <PinnedBar
         pinned={pinnedMessages}

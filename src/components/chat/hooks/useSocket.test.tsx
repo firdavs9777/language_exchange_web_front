@@ -31,6 +31,7 @@ interface FakeSocket {
   emit: jest.Mock;
   disconnect: jest.Mock;
   removeAllListeners: jest.Mock;
+  connect: jest.Mock;
   fire: (event: string, ...args: any[]) => void;
   handlerCount: (event: string) => number;
 }
@@ -59,6 +60,10 @@ function makeFakeSocket(id: string): FakeSocket {
       Object.keys(handlers).forEach((k) => delete handlers[k]);
       return socket;
     }),
+    connect: jest.fn(() => {
+      socket.connected = true;
+      return socket;
+    }),
     fire: (event: string, ...args: any[]) => {
       (handlers[event] || []).slice().forEach((h) => h(...args));
     },
@@ -69,12 +74,14 @@ function makeFakeSocket(id: string): FakeSocket {
 
 /** Renders the context value so assertions read the same shape consumers do. */
 const Probe: React.FC = () => {
-  const { socket, isConnected, emit } = useSocket();
+  const { socket, isConnected, emit, connectionEpoch, kicked } = useSocket() as any;
   return (
     <div>
       <span data-testid="socket">{socket ? (socket as any).id : "none"}</span>
       <span data-testid="connected">{isConnected ? "yes" : "no"}</span>
       <span data-testid="emit">{typeof emit}</span>
+      <span data-testid="epoch">{String(connectionEpoch)}</span>
+      <span data-testid="kicked">{kicked ? "yes" : "no"}</span>
     </div>
   );
 };
@@ -253,4 +260,58 @@ it("reuses one socket for the same token and detaches its listeners on unmount",
   await renderProvider(makeTestStore("tok-reuse"));
   await waitFor(() => expect(screen.getByTestId("socket")).toHaveTextContent("sock-reuse"));
   expect(mockIo).toHaveBeenCalledTimes(1);
+});
+
+it("counts reconnects, not the first connect", async () => {
+  const sock = makeFakeSocket("sock-epoch");
+  mockIo.mockImplementation(() => sock);
+  await renderProvider(makeTestStore("tok-epoch"));
+  await waitFor(() => expect(sock.handlerCount("connect")).toBeGreaterThan(0));
+
+  act(() => sock.fire("connect"));
+  expect(screen.getByTestId("epoch")).toHaveTextContent("0");
+  act(() => sock.fire("disconnect"));
+  act(() => sock.fire("connect"));
+  expect(screen.getByTestId("epoch")).toHaveTextContent("1");
+});
+
+it("marks a tab the server kicked and reconnects it when it is shown again", async () => {
+  const sock = makeFakeSocket("sock-kicked");
+  mockIo.mockImplementation(() => sock);
+  await renderProvider(makeTestStore("tok-kicked"));
+  await waitFor(() => expect(sock.handlerCount("forceDisconnect")).toBe(1));
+
+  act(() => {
+    sock.connected = false;
+    sock.fire("forceDisconnect", { reason: "max_connections" });
+  });
+  expect(screen.getByTestId("kicked")).toHaveTextContent("yes");
+
+  Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "visible" });
+  act(() => {
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  expect(sock.connect).toHaveBeenCalled();
+});
+
+it("refreshes the session on tokenExpired when a refresh token is stored", async () => {
+  const sock = makeFakeSocket("sock-refresh");
+  mockIo.mockImplementation(() => sock);
+  (global as any).fetch = jest.fn(() =>
+    Promise.resolve(new Response(JSON.stringify({ token: "tok-fresh" }), { status: 200, headers: { "content-type": "application/json" } }))
+  );
+  const store = configureStore({
+    reducer: { auth: authReducer },
+    preloadedState: { auth: { userInfo: { user: { _id: "u1" }, token: "tok-old", refreshToken: "r1" } } } as any,
+  });
+  await renderProvider(store);
+  await waitFor(() => expect(sock.handlerCount("tokenExpired")).toBe(1));
+
+  await act(async () => {
+    sock.fire("tokenExpired", { reason: "token_expired" });
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+
+  await waitFor(() => expect((store.getState() as any).auth.userInfo.token).toBe("tok-fresh"));
 });

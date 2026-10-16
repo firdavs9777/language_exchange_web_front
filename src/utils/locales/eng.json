@@ -250,6 +250,10 @@
       "video": "🎥 Video",
       "file": "📎 File",
       "attachment": "📎 Attachment"
+    },
+    "connection": {
+      "kicked": "Chat is open somewhere else, so this tab stopped receiving messages.",
+      "reconnect": "Use here"
     }
   },
   "newChat": {

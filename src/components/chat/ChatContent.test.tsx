@@ -22,6 +22,7 @@ const mockUpdateQueryData = jest.fn();
 const mockCreateMessage = jest.fn();
 const mockEditMessage = jest.fn();
 const mockDeleteMessage = jest.fn();
+const mockInitiate = jest.fn();
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -39,6 +40,7 @@ jest.mock("../../store/slices/chatSlice", () => ({
       invalidateTags: (tags: any) => mockInvalidateTags(tags),
       updateQueryData: (...args: any[]) => mockUpdateQueryData(...args),
     },
+    endpoints: { getConversation: { initiate: (...args: any[]) => mockInitiate(...args) } },
   },
   useGetConversationQuery: (arg: any, opts: any) => mockGetConversation(arg, opts),
   // ForwardDialog, mounted (closed) by ChatContent.
@@ -128,6 +130,7 @@ beforeEach(() => {
   });
   mockEditMessage.mockReturnValue({ unwrap: () => Promise.resolve({ success: true, data: {} }) });
   mockDeleteMessage.mockReturnValue({ unwrap: () => Promise.resolve({ success: true, data: {} }) });
+  mockInitiate.mockImplementation(() => ({ type: "chatApi/initiate" }));
 });
 
 afterEach(() => {
@@ -711,4 +714,30 @@ it("Retry re-sends a failed sticker as a sticker", async () => {
   fireEvent.click(screen.getByText("Retry"));
   await waitFor(() => expect(sends).toHaveLength(2));
   expect(sends[1].messageType).toBe("sticker");
+});
+
+function ChatWithEpoch({ epoch }: { epoch: number }) {
+  mockUseSocket.mockReturnValue({ socket: null, isConnected: true, emit: jest.fn(), connectionEpoch: epoch });
+  return <ChatContent selectedUser="u2" userName="Ada" profilePicture="" />;
+}
+
+it("re-reads the newest page of the open thread after a reconnect", () => {
+  const store = configureStore({
+    reducer: { auth: (state: any = { userInfo: { user: { _id: "me", name: "Me" }, token: "t" } }) => state },
+  });
+  const tree = (epoch: number) => (
+    <Provider store={store}>
+      <MemoryRouter initialEntries={["/chat/u2"]}>
+        <ChatWithEpoch epoch={epoch} />
+      </MemoryRouter>
+    </Provider>
+  );
+  const view = render(tree(0));
+  expect(mockInitiate).not.toHaveBeenCalled();
+
+  view.rerender(tree(1));
+  expect(mockInitiate).toHaveBeenCalledWith(
+    { senderId: "me", receiverId: "u2", page: 1, limit: 50 },
+    { forceRefetch: true, subscribe: false }
+  );
 });
