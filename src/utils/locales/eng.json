@@ -3016,5 +3016,52 @@
     },
     "nav": "Reels",
     "moments_link": "Watch reels"
+  },
+  "gatherings": {
+    "errors": {
+      "alreadyGoing": "You're already going.",
+      "cancelled": "This gathering was cancelled.",
+      "capacityBelowGoing": "Capacity can't be lower than the {{count}} people already going.",
+      "clubArchived": "This club is archived.",
+      "clubGone": "This club isn't available.",
+      "endBeforeStart": "You can end the gathering once it has started.",
+      "ended": "This gathering has ended.",
+      "full": "This gathering is full.",
+      "gatheringGone": "This gathering isn't available.",
+      "generic": "Something went wrong. Try again.",
+      "hostBlocked": "You can't host right now: too many of your gatherings were cancelled or missed.",
+      "hostCannotLeave": "As the host, cancel the gathering instead of leaving it.",
+      "joinClubFirst": "Join the club before hosting for it.",
+      "offline": "You're offline. Check your connection.",
+      "ownerCannotLeave": "As the owner, you can delete the club but not leave it.",
+      "pastStart": "Pick a start time in the future.",
+      "pending": "Your request is waiting for the host.",
+      "started": "This gathering has already started."
+    },
+    "quorum": {
+      "confirmed": "Confirmed · {{count}} going",
+      "needed": "{{count}} more needed to confirm · {{going}} going"
+    },
+    "status": {
+      "cancelled": "Cancelled",
+      "confirmed": "Confirmed",
+      "ended": "Ended",
+      "live": "Happening now",
+      "scheduled": "Scheduled"
+    },
+    "time": {
+      "hostLocal": "{{time}} for the host"
+    },
+    "topics": {
+      "business": "Business",
+      "conversation": "Conversation",
+      "culture": "Culture",
+      "exam_prep": "Exam prep",
+      "games": "Games",
+      "grammar": "Grammar",
+      "media": "Music, film & TV",
+      "pronunciation": "Pronunciation",
+      "travel": "Travel"
+    }
   }
 }
