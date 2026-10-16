@@ -8,6 +8,7 @@ import { useVoiceRoom } from "./useVoiceRoom";
 import { photoUrl } from "../../utils/photoUrl";
 import Loader from "../Loader";
 import VoiceRoomChat from "./VoiceRoomChat";
+import VoiceRoomHostPanel from "./VoiceRoomHostPanel";
 import "./VoiceRooms.scss";
 
 const VoiceRoomPage: React.FC = () => {
@@ -18,6 +19,13 @@ const VoiceRoomPage: React.FC = () => {
   const { data: room } = useGetVoiceRoomQuery(id, { skip: !id });
   const vr = useVoiceRoom(id, myId);
   const live = vr.phase === "live" || vr.phase === "reconnecting";
+  const me = vr.members.find((m) => m.userId === myId);
+  const isHost = vr.role === "host" || (!!myId && vr.hostId === myId);
+  const canEnd = isHost || (!!me && me.role === "cohost");
+  const endRoom = async () => {
+    await vr.endRoom();
+    navigate("/voice-rooms");
+  };
 
   const leave = () => {
     vr.leave();
@@ -160,6 +168,16 @@ const VoiceRoomPage: React.FC = () => {
               <LogOut size={16} /> {t("voiceRooms.room.leave") || "Leave"}
             </button>
           </div>
+          <VoiceRoomHostPanel
+            members={vr.members}
+            myId={myId}
+            hostId={vr.hostId}
+            isHost={isHost}
+            canEnd={canEnd}
+            onMuteAll={vr.muteAll}
+            onPromote={(userId) => vr.promote(userId)}
+            onEnd={endRoom}
+          />
           <VoiceRoomChat lines={vr.chat} onSend={vr.sendChat} disabled={vr.phase !== "live"} />
         </>
       )}

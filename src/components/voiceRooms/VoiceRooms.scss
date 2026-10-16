@@ -46,3 +46,10 @@
 .vr-chat__compose { display: flex; gap: 8px; }
 .vr-chat__compose input { flex: 1; border: 1px solid var(--bs-border-color, #ddd); border-radius: 999px; padding-block: 6px; padding-inline: 12px; }
 .vr-chat__compose button { border: 0; background: #ffd600; border-radius: 50%; inline-size: 36px; block-size: 36px; }
+.vr-host { border: 1px dashed #ffd600; border-radius: 16px; padding: 12px; margin-block-end: 16px; text-align: start; }
+.vr-host__title { font-size: 1rem; font-weight: 800; margin: 0 0 8px; }
+.vr-host__sub { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px; margin: 0 0 6px; }
+.vr-host__hands { list-style: none; padding: 0; margin: 0 0 8px; display: flex; flex-direction: column; gap: 6px; }
+.vr-host__hands li { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.vr-host__empty, .vr-host__note { color: #666; font-size: 0.85rem; margin: 0 0 8px; }
+.vr-host__actions, .vr-host__confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }

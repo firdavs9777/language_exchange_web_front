@@ -133,3 +133,15 @@ it("chats", () => {
   expect(mockActions.sendChat).toHaveBeenCalledWith("hi");
   expect((screen.getByTestId("voice-room-chat-input") as HTMLInputElement).value).toBe("");
 });
+
+it("shows the host panel to the host and wires its mockActions", () => {
+  renderPage({ role: "host", hostId: "me", members: base.members.map((m: any) => (m.userId === "me" ? Object.assign({}, m, { role: "host" }) : m)) });
+  expect(screen.getByTestId("vr-host-panel")).toBeInTheDocument();
+  fireEvent.click(screen.getByTestId("vr-host-mute-all"));
+  expect(mockActions.muteAll).toHaveBeenCalled();
+});
+
+it("hides the host panel from a listener", () => {
+  renderPage();
+  expect(screen.queryByTestId("vr-host-panel")).not.toBeInTheDocument();
+});

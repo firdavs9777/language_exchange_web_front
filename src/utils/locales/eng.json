@@ -3318,6 +3318,17 @@
       "chat": "Room chat",
       "chatPlaceholder": "Say something…",
       "send": "Send"
+    },
+    "host": {
+      "title": "Host tools",
+      "hands": "Raised hands",
+      "noHands": "No one has raised a hand.",
+      "makeCohost": "Make co-host",
+      "speakNote": "Anyone in the room can take the mic. A raised hand asks you for a turn.",
+      "muteAll": "Mute everyone",
+      "end": "End room",
+      "endConfirm": "End the room for everyone?",
+      "endYes": "End room"
     }
   },
   "common": {
