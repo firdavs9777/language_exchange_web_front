@@ -6,6 +6,7 @@ import { Avatar, SurfaceCard, Badge } from "../../../design";
 import { aggregateReactions } from "../../chat/actions/ReactionRow";
 import MomentReactionRow from "../actions/MomentReactionRow";
 import TranslatableText from "../TranslatableText";
+import ConfirmDialog from "../../../design/ConfirmDialog";
 import CommentComposer from "./CommentComposer";
 import RepliesThread from "./RepliesThread";
 import { CommentType } from "./types";
@@ -58,6 +59,8 @@ interface CommentItemProps {
   /** Lets a thread drop this reply from its own list once it's gone. */
   onDeleted?: (commentId: string) => void;
   allowReplies?: boolean;
+  /** The moment's author: they may remove any comment on their own moment. */
+  momentOwnerId?: string;
 }
 
 const CommentItem: React.FC<CommentItemProps> = ({
@@ -68,6 +71,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
   onRequireLogin,
   onDeleted,
   allowReplies = true,
+  momentOwnerId,
 }) => {
   const { t } = useTranslation();
   const targetLanguage = useTargetLanguage();
@@ -93,6 +97,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
   // behind whatever was already loaded.
   const [repliesVersion, setRepliesVersion] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   // Re-sync whenever a fetch hands us a newer copy of this comment.
   useEffect(() => {
@@ -160,7 +165,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
     ]
   );
 
-  const handleDelete = useCallback(() => {
+  const isMine = !!myUserId && idOf(comment.user) === myUserId;
+  const isMomentOwner = !!myUserId && !!momentOwnerId && momentOwnerId === myUserId;
+  const canDelete = isMine || isMomentOwner;
+
+  const runDelete = useCallback(() => {
     if (!isLoggedIn) {
       onRequireLogin();
       return;
@@ -183,6 +192,16 @@ const CommentItem: React.FC<CommentItemProps> = ({
     onDeleted,
   ]);
 
+  const handleDelete = useCallback(() => {
+    if (!isLoggedIn) {
+      onRequireLogin();
+      return;
+    }
+    // Your own words go in one tap, as before; someone else's need a confirm.
+    if (isMine) runDelete();
+    else setConfirmingDelete(true);
+  }, [isLoggedIn, onRequireLogin, runDelete, isMine]);
+
   const handleTranslate = useCallback(async () => {
     const res: any = await translateComment({
       commentId: comment._id,
@@ -192,7 +211,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
   }, [translateComment, comment._id, targetLanguage]);
 
   const correction = comment.correction;
-  const isMine = !!myUserId && idOf(comment.user) === myUserId;
   const replyCount = comment.replyCount || 0;
   // A correction with no note of its own carries the server's placeholder
   // text; the card below already says everything it would.
@@ -327,7 +345,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             </button>
           )}
 
-          {isMine && (
+          {canDelete && (
             <button
               type="button"
               data-testid="comment-delete"
@@ -391,9 +409,27 @@ const CommentItem: React.FC<CommentItemProps> = ({
             myUserId={myUserId}
             isLoggedIn={isLoggedIn}
             onRequireLogin={onRequireLogin}
+            momentOwnerId={momentOwnerId}
           />
         )}
       </div>
+      <ConfirmDialog
+        open={confirmingDelete}
+        danger
+        title={t("moments_section.commentEngagement.deleteOthersTitle") || "Delete this comment?"}
+        body={
+          t("moments_section.commentEngagement.deleteOthersBody") ||
+          "It's on your moment, so you can remove it. This can't be undone."
+        }
+        confirmLabel={t("moments_section.commentEngagement.delete") || "Delete"}
+        cancelLabel={t("moments_section.commentEngagement.cancel") || "Cancel"}
+        busy={isDeleting}
+        onConfirm={() => {
+          setConfirmingDelete(false);
+          runDelete();
+        }}
+        onCancel={() => setConfirmingDelete(false)}
+      />
     </div>
   );
 };

@@ -32,6 +32,8 @@ interface RepliesThreadProps {
   myUserId?: string;
   isLoggedIn: boolean;
   onRequireLogin: () => void;
+  /** The moment's author, who may delete any reply on it (moments#9). */
+  momentOwnerId?: string;
 }
 
 const RepliesThread: React.FC<RepliesThreadProps> = ({
@@ -40,6 +42,7 @@ const RepliesThread: React.FC<RepliesThreadProps> = ({
   myUserId,
   isLoggedIn,
   onRequireLogin,
+  momentOwnerId,
 }) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
@@ -101,6 +104,7 @@ const RepliesThread: React.FC<RepliesThreadProps> = ({
           onRequireLogin={onRequireLogin}
           onDeleted={handleDeleted}
           allowReplies={false}
+          momentOwnerId={momentOwnerId}
         />
       ))}
 

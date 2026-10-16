@@ -781,6 +781,7 @@ const MomentDetail: React.FC = () => {
               isLoggedIn={!!userInfo}
               onRequireLogin={handleRequireLogin}
               onTotalChange={handleCommentTotalChange}
+              momentOwnerId={(momentDetails.user && (momentDetails.user._id || momentDetails.user)) || undefined}
             />
           </div>
         </div>

@@ -50,6 +50,7 @@ const renderList = (props: any = {}) => {
         isLoggedIn={props.isLoggedIn !== false}
         onRequireLogin={props.onRequireLogin || jest.fn()}
         onTotalChange={onTotalChange}
+        momentOwnerId={props.momentOwnerId}
       />
     </MemoryRouter>
   );
@@ -142,4 +143,15 @@ describe("CommentList", () => {
     expect(screen.queryByTestId("comment-composer")).not.toBeInTheDocument();
     expect(screen.getByTestId("comments-signin")).toBeInTheDocument();
   });
+});
+
+it("passes the moment's owner down so the owner sees Delete on others' comments", async () => {
+  // A comment by someone else ("u-c-1"), seen by the moment's owner.
+  mockGetComments.mockReturnValue({
+    data: { data: [comment("c-1", "Ann")], total: 1, page: 1, pages: 1 },
+    isLoading: false,
+    isFetching: false,
+  });
+  renderList({ myUserId: "owner-1", momentOwnerId: "owner-1" });
+  expect(await screen.findByTestId("comment-delete")).toBeInTheDocument();
 });

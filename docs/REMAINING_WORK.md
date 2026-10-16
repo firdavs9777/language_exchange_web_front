@@ -75,7 +75,7 @@ Phase 3 Moments (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-
 - [x] P3-MOM-1 Post and save photo-, video- or voice-only moments (moments#4)
 - [x] P3-MOM-2 The app's 20 moment gradients, same colours (moments#5)
 - [x] P3-MOM-3 Remove the Title field from the composer (moments#6)
-- [ ] P3-MOM-4 The moment's owner can delete other people's comments (moments#9)
+- [x] P3-MOM-4 The moment's owner can delete other people's comments (moments#9)
 - [ ] P3-MOM-5 Report a comment, and block an author from a moment or a comment (moments#10, moment/comment part)
 - [ ] P3-MOM-6 Saved moments load every page and draw every kind of moment (moments#11)
 - [ ] P3-MOM-7 Feed cards show mood, tags and location (moments#22)

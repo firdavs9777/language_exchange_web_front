@@ -41,6 +41,8 @@ interface CommentListProps {
   onRequireLogin: () => void;
   /** Reports the server's `total` so a header counter can follow it. */
   onTotalChange?: (total: number) => void;
+  /** The moment's author, who may delete any comment on it (moments#9). */
+  momentOwnerId?: string;
 }
 
 const CommentList: React.FC<CommentListProps> = ({
@@ -50,6 +52,7 @@ const CommentList: React.FC<CommentListProps> = ({
   isLoggedIn,
   onRequireLogin,
   onTotalChange,
+  momentOwnerId,
 }) => {
   const { t } = useTranslation();
   const [mode, setMode] = useState<"comment" | "correction">("comment");
@@ -194,6 +197,7 @@ const CommentList: React.FC<CommentListProps> = ({
                   isLoggedIn={isLoggedIn}
                   onRequireLogin={onRequireLogin}
                   onDeleted={handleDeleted}
+                  momentOwnerId={momentOwnerId}
                 />
                 {/* One ad after the fifth comment, as before. No-op until
                     AdSense is configured. */}

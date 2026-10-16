@@ -1,6 +1,6 @@
 import React from "react";
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
 import CommentItem from "./CommentItem";
 
 const mockLikeComment = jest.fn();
@@ -56,6 +56,7 @@ const renderItem = (props: any = {}) => {
       isLoggedIn={props.isLoggedIn !== false}
       onRequireLogin={onRequireLogin}
       allowReplies={props.allowReplies}
+      momentOwnerId={props.momentOwnerId}
     />
   );
   return { ...utils, onRequireLogin };
@@ -264,5 +265,37 @@ describe("CommentItem", () => {
 
     fireEvent.click(screen.getByTestId("comment-delete"));
     await waitFor(() => expect(onDeleted).toHaveBeenCalledWith("c-9"));
+  });
+});
+
+describe("delete rights (moments#9)", () => {
+  it("the moment's owner can delete someone else's comment, after confirming", async () => {
+    renderItem({ myUserId: "owner-1", momentOwnerId: "owner-1" });
+    fireEvent.click(screen.getByTestId("comment-delete"));
+    // Someone else's words: confirm first.
+    expect(mockDeleteComment).not.toHaveBeenCalled();
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Delete" }));
+    await waitFor(() =>
+      expect(mockDeleteComment).toHaveBeenCalledWith({ momentId: "moment-1", commentId: "c-1" })
+    );
+  });
+
+  it("a viewer who owns neither the comment nor the moment gets no Delete", () => {
+    renderItem({ myUserId: "me-1", momentOwnerId: "owner-1" });
+    expect(screen.queryByTestId("comment-delete")).not.toBeInTheDocument();
+  });
+
+  it("the author still deletes their own comment in one tap", async () => {
+    renderItem({
+      myUserId: "author-1",
+      momentOwnerId: "owner-1",
+    });
+    fireEvent.click(screen.getByTestId("comment-delete"));
+    await waitFor(() => expect(mockDeleteComment).toHaveBeenCalled());
+  });
+
+  it("signed out: no Delete even when ids would match", () => {
+    renderItem({ myUserId: "", momentOwnerId: "", isLoggedIn: false });
+    expect(screen.queryByTestId("comment-delete")).not.toBeInTheDocument();
   });
 });

@@ -659,7 +659,9 @@
       "react": "React",
       "reply": "Reply",
       "replyPlaceholder": "Write a reply…",
-      "viewReplies": "View {{count}} replies"
+      "viewReplies": "View {{count}} replies",
+      "deleteOthersTitle": "Delete this comment?",
+      "deleteOthersBody": "It's on your moment, so you can remove it. This can't be undone."
     },
     "filters": {
       "button": "Filters",
