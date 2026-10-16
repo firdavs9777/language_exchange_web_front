@@ -188,3 +188,5 @@ Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-
 
 - 2026-10-13 — Deployed 2ce0c93. Audit fixes: Publish-now/end rule (5e38c55, eacb9bc); scheduled-row Save re-confirms pushes with a fresh audience count, cancel reverts with one PUT; publish bar re-arms on `updatedAt`; Schedule confirm re-checks the start; image input cleared (688256b); "Stopped at end time" (5f9b4fe) and "Ended by admin" (0a75989) delivery display; `/moments/:id` redirect (83fe482). Backend `startsAt` guard landed in backend 72c2c9e.
 - 2026-10-12 — Merges 906efa1 + 1cd9f44: announcements console W1–W5 (list + nav, editor with per-language text and preview, publish/schedule/end with audience confirm), delivery state + attempts + error, client search, priority column, empty states, draft delete, 2.6.1 language hint.
+
+- [x] Sign in with Apple web: Services ID `com.bananatalk.com` (grouped with com.bananatalk.bananatalkApp) set in `.env.production` (2026-10-16); backend needs APPLE_WEB_SERVICES_ID + WEB_APPLE_SIGNIN_ENABLED.
