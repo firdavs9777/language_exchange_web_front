@@ -30,7 +30,6 @@ import RequireSignIn from "../components/gatherings/RequireSignIn";
 // Add a page to SEO_PAGES and its component belongs here.
 import HomeScreen from "../components/home/HomeMain";
 import NotFound from "../components/errors/NotFound";
-import FlagRoute from "./FlagRoute";
 import SignedInOnly from "../components/reels/SignedInOnly";
 import MainCommnity from "../components/community/MainCommunity";
 import MainMoments from "../components/moments/MainMoments";

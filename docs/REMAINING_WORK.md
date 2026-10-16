@@ -147,7 +147,7 @@ Phase 4 Gatherings/clubs (plan `bananatalk_app/docs/superpowers/plans/2026-10-16
 - [x] P4-GATH-9 Optional cover photo for a gathering or a club
 - [x] P4-GATH-10 Routes and nav entry behind `webGatheringsEnabled`; nothing visible while it is off
 - [x] P4-GATH-I18N New gatherings/clubs strings in all 18 locales
-- [ ] P4-GATH-PUSH Push unit gatherings (suite + build green, deployed dark, production smoke recorded)
+- [x] P4-GATH-PUSH Push unit gatherings (suite + build green, deployed dark, production smoke recorded) — deployed dark 2026-10-16 (suite 4153 pass)
 
 Phase 4 Rooms — voice rooms, language rooms, City/Genders (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
 - [ ] P4-ROOM-1 `livekit-client@2.22.4` behind a JS loader + `.d.ts`, excluded from tsconfig, kept out of the eager graph
