@@ -31,6 +31,7 @@ import EditMessageDialog, { editErrorText } from "./actions/EditMessageDialog";
 import DeleteMessageDialog, { deleteErrorText } from "./actions/DeleteMessageDialog";
 import SendErrorDialog from "./actions/SendErrorDialog";
 import { classifySendError } from "./lib/sendErrors";
+import { emitWithAck, SOCKET_ACK_TIMEOUT_MS } from "./lib/socketAck";
 import notify from "../../design/notify";
 import PinnedBar from "./actions/PinnedBar";
 import ReplyComposerBar from "./actions/ReplyComposerBar";
@@ -498,9 +499,12 @@ const ChatContent: React.FC<ChatContentProps> = ({
           // adopt it rather than land a second copy of the same message beside
           // it. Matched on the body: a temp id is ours alone and the server
           // never knew it.
+          // A bubble that timed out is still ours under its temp id: the
+          // server may well have the message (it creates before it acks).
           const pending = prev.findIndex(
             (msg) =>
-              msg.isOptimistic &&
+              (msg.isOptimistic ||
+                (msg.status === "error" && String(msg._id).indexOf("temp-") === 0)) &&
               (msg.message || "") === (data.message.message || "")
           );
           if (pending >= 0) {
@@ -1103,11 +1107,16 @@ const ChatContent: React.FC<ChatContentProps> = ({
   // previous last message, in the previous row order, until something else
   // happened to refetch. The REST fallback emitted nothing at all.
   const finalizeOptimistic = (tempId: string, msgData: any) => {
-    setMessages((prev) =>
-      prev.map((m) =>
+    setMessages((prev) => {
+      // Already here under its real id (messageSent beat a late ack): drop
+      // the temp copy instead of holding two.
+      if (msgData && msgData._id && prev.some((m) => m._id === msgData._id)) {
+        return prev.filter((m) => m._id !== tempId);
+      }
+      return prev.map((m) =>
         m._id === tempId ? { ...msgData, status: "sent", isOptimistic: false } : m
-      )
-    );
+      );
+    });
     // And into the THREAD, which is a different cache entry from the two lists
     // above. Local state is rebuilt from that entry wholesale on a conversation
     // switch, so without this our own message was the one kind that could not
@@ -1154,6 +1163,28 @@ const ChatContent: React.FC<ChatContentProps> = ({
   useEffect(() => {
     reportSendErrorRef.current = reportSendError;
   });
+
+  // Text, sticker and GIF over the socket. Socket only: see lib/socketAck.
+  const sendInlineOverSocket = (tempId: string, text: string, messageType?: string) => {
+    if (!socket) return;
+    const payload: any = { receiver: selectedUser, message: text };
+    if (messageType && messageType !== "text") payload.messageType = messageType;
+    emitWithAck(socket as any, "sendMessage", payload, SOCKET_ACK_TIMEOUT_MS, {
+      onAck: (response: any) => {
+        setIsSending(false);
+        if (response && response.status === "success" && response.message) {
+          finalizeOptimistic(tempId, response.message);
+          return;
+        }
+        markOptimisticError(tempId);
+        reportSendError(response);
+      },
+      onTimeout: () => {
+        setIsSending(false);
+        markOptimisticError(tempId);
+      },
+    });
+  };
 
   // ========== Send Text Message ==========
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -1221,32 +1252,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
       }
     }
 
-    let resolved = false;
-
     if (socket?.connected) {
-      socket.emit(
-        "sendMessage",
-        { receiver: selectedUser, message: messageToSend },
-        (response: any) => {
-          if (resolved) return;
-          resolved = true;
-          setIsSending(false);
-
-          if (response?.status === "success" && response?.message) {
-            finalizeOptimistic(tempId, response.message);
-          } else {
-            sendViaRestApi(tempId, messageToSend);
-          }
-        }
-      );
-
-      setTimeout(() => {
-        if (resolved) return;
-        resolved = true;
-        sendViaRestApi(tempId, messageToSend);
-      }, 5000);
+      sendInlineOverSocket(tempId, messageToSend);
     } else {
-      resolved = true;
+      // Not connected at all: one REST request, no race with a socket copy.
       await sendViaRestApi(tempId, messageToSend);
     }
   };
@@ -1300,28 +1309,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
     setMessages((prev) => [...prev, optimisticMessage]);
     isAtBottomRef.current = true;
 
-    let resolved = false;
     if (socket?.connected) {
-      socket.emit(
-        "sendMessage",
-        { receiver: selectedUser, message: text, messageType },
-        (response: any) => {
-          if (resolved) return;
-          resolved = true;
-          if (response?.status === "success" && response?.message) {
-            finalizeOptimistic(tempId, response.message);
-          } else {
-            sendInlineMessageViaRest(tempId, text, messageType);
-          }
-        }
-      );
-      setTimeout(() => {
-        if (resolved) return;
-        resolved = true;
-        sendInlineMessageViaRest(tempId, text, messageType);
-      }, 5000);
+      sendInlineOverSocket(tempId, text, messageType);
     } else {
-      resolved = true;
       await sendInlineMessageViaRest(tempId, text, messageType);
     }
   };
@@ -1369,32 +1359,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
     setIsStickerPanelOpen(false);
     isAtBottomRef.current = true;
 
-    let resolved = false;
-
     if (socket?.connected) {
-      socket.emit(
-        "sendMessage",
-        { receiver: selectedUser, message: sticker, messageType: "sticker" },
-        (response: any) => {
-          if (resolved) return;
-          resolved = true;
-
-          if (response?.status === "success" && response?.message) {
-            finalizeOptimistic(tempId, response.message);
-          } else {
-            // Fallback to REST API
-            sendStickerViaRest(tempId, sticker);
-          }
-        }
-      );
-
-      setTimeout(() => {
-        if (resolved) return;
-        resolved = true;
-        sendStickerViaRest(tempId, sticker);
-      }, 5000);
+      sendInlineOverSocket(tempId, sticker, "sticker");
     } else {
-      resolved = true;
       await sendStickerViaRest(tempId, sticker);
     }
   };
@@ -1676,6 +1643,14 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
   // ========== Other Handlers ==========
   const handleRetryMessage = (failedMsg: Message) => {
+    // A file is not kept after a failed upload; ask for it again rather than
+    // re-sending an empty bubble.
+    if (failedMsg.media && failedMsg.messageType !== "sticker" && failedMsg.messageType !== "gif") {
+      setMessages((prev) => prev.filter((msg) => msg._id !== failedMsg._id));
+      notify.info(t("chatPage.sendErrors.reattach") || "Attach the file again to send it.");
+      return;
+    }
+
     setMessages((prev) => prev.filter((msg) => msg._id !== failedMsg._id));
     const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const optimisticMessage: Message = {
@@ -1685,35 +1660,33 @@ const ChatContent: React.FC<ChatContentProps> = ({
       isOptimistic: true,
     };
     setMessages((prev) => [...prev, optimisticMessage]);
-    setIsSending(true);
     isAtBottomRef.current = true;
 
-    let resolved = false;
+    // A failed reply goes back through the reply route, keeping its link.
+    if (failedMsg.replyTo && failedMsg.replyTo._id) {
+      replyToMessage({
+        messageId: failedMsg.replyTo._id,
+        message: failedMsg.message,
+        receiver: selectedUser,
+      })
+        .unwrap()
+        .then((result: any) => finalizeOptimistic(tempId, result.data || result))
+        .catch((err: any) => {
+          markOptimisticError(tempId);
+          reportSendError(err);
+        });
+      return;
+    }
 
-    if (socket?.connected && !failedMsg.media) {
-      socket.emit(
-        "sendMessage",
-        { receiver: selectedUser, message: failedMsg.message },
-        (response: any) => {
-          if (resolved) return;
-          resolved = true;
-          setIsSending(false);
-
-          if (response?.status === "success" && response?.message) {
-            finalizeOptimistic(tempId, response.message);
-          } else {
-            sendViaRestApi(tempId, failedMsg.message);
-          }
-        }
-      );
-
-      setTimeout(() => {
-        if (resolved) return;
-        resolved = true;
-        sendViaRestApi(tempId, failedMsg.message);
-      }, 5000);
+    const type = failedMsg.messageType || "text";
+    if (socket?.connected) {
+      setIsSending(true);
+      sendInlineOverSocket(tempId, failedMsg.message, type);
+    } else if (type === "sticker") {
+      sendStickerViaRest(tempId, failedMsg.message);
+    } else if (type === "gif") {
+      sendInlineMessageViaRest(tempId, failedMsg.message, type);
     } else {
-      resolved = true;
       sendViaRestApi(tempId, failedMsg.message);
     }
   };

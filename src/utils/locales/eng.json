@@ -233,7 +233,8 @@
       "tooFast": "You're sending messages too fast. Wait a moment.",
       "generic": "Message not sent. Tap Retry to try again.",
       "goVip": "Go VIP",
-      "ok": "OK"
+      "ok": "OK",
+      "reattach": "Attach the file again to send it."
     }
   },
   "newChat": {

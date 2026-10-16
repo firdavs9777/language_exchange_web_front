@@ -52,7 +52,7 @@ Phase 3 Chat (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-par
 - [x] P3-CHAT-2 Delete sends body `{deleteForEveryone}`, asks in a dialog, and "deleted for everyone" leaves a placeholder (chat#2, chat#15, chat#19)
 - [x] P3-CHAT-3 Opening a chat never posts "Conversation started" (chat#3)
 - [x] P3-CHAT-4 Limit, paywall and block refusals open a dialog instead of a bare "Failed" (chat#4)
-- [ ] P3-CHAT-5 A slow socket ack marks the bubble failed with Retry; no REST fallback, no duplicates (chat#5)
+- [x] P3-CHAT-5 A slow socket ack marks the bubble failed with Retry; no REST fallback, no duplicates (chat#5)
 - [ ] P3-CHAT-6 Conversation list from `GET /conversations` only; typed previews; unread from the server (chat#10, chat#11, chat#19)
 - [ ] P3-CHAT-7 Catch up after a reconnect; recover a kicked tab; refresh instead of logging out on `tokenExpired` (chat#12, chat#20)
 - [ ] P3-CHAT-8 Videos go through `POST /messages/video` with the server's limits checked first (chat#16)

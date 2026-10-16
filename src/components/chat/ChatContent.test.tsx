@@ -605,3 +605,110 @@ it("shows the burst limiter's refusal (no ack arrives for it)", async () => {
 
   await waitFor(() => expect(screen.getByTestId("msg-status-error")).toBeInTheDocument());
 });
+
+// --- A slow ack is not a reason to send twice --------------------------------
+//
+// After 5 s without an ack the web re-sent the same text over REST. The
+// server had already created the first copy (it creates before it acks), so
+// the app user got the message twice.
+
+it("marks the bubble failed after the ack timeout and sends nothing over REST", async () => {
+  jest.useFakeTimers();
+  const s = silentSocket();
+  mockUseSocket.mockReturnValue(s.value);
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hello" } });
+  fireEvent.submit(messageBox().closest("form")!);
+  act(() => {
+    jest.advanceTimersByTime(10000);
+  });
+
+  expect(screen.getByTestId("msg-status-error")).toBeInTheDocument();
+  expect(mockCreateMessage).not.toHaveBeenCalled();
+  jest.useRealTimers();
+});
+
+it("a late ack turns the failed bubble into the real message, once", async () => {
+  jest.useFakeTimers();
+  const s = silentSocket();
+  let ack: (r: any) => void = () => undefined;
+  s.value.socket.emit = jest.fn((event: string, _d: any, cb?: (r: any) => void) => {
+    if (event === "sendMessage" && cb) ack = cb;
+  }) as any;
+  mockUseSocket.mockReturnValue(s.value);
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hello" } });
+  fireEvent.submit(messageBox().closest("form")!);
+  act(() => {
+    jest.advanceTimersByTime(10000);
+  });
+  act(() => {
+    ack({ status: "success", message: { _id: "m-real", message: "hello", sender: { _id: "me" } } });
+  });
+
+  expect(renderedIds()).toEqual(["m-real"]);
+  jest.useRealTimers();
+});
+
+it("a late messageSent adopts the failed bubble instead of adding a second", async () => {
+  jest.useFakeTimers();
+  const s = silentSocket();
+  mockUseSocket.mockReturnValue(s.value);
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hello" } });
+  fireEvent.submit(messageBox().closest("form")!);
+  act(() => {
+    jest.advanceTimersByTime(10000);
+  });
+  act(() => {
+    s.handlers["messageSent"].forEach((fn) =>
+      fn({ message: { _id: "m-real", message: "hello", sender: { _id: "me" }, receiver: "u2" }, receiverId: "u2" })
+    );
+  });
+
+  expect(renderedIds()).toEqual(["m-real"]);
+  jest.useRealTimers();
+});
+
+it("a refusal ack fails the bubble and explains it, without REST", async () => {
+  const s = silentSocket();
+  s.value.socket.emit = jest.fn((event: string, _d: any, cb?: (r: any) => void) => {
+    if (event === "sendMessage" && cb) cb({ status: "error", error: "Cannot send message to blocked user" });
+  }) as any;
+  mockUseSocket.mockReturnValue(s.value);
+  renderChat("/chat/u2");
+
+  fireEvent.change(messageBox(), { target: { value: "hello" } });
+  fireEvent.submit(messageBox().closest("form")!);
+
+  await waitFor(() => expect(screen.getByTestId("send-error-dialog")).toBeInTheDocument());
+  expect(screen.getByTestId("msg-status-error")).toBeInTheDocument();
+  expect(mockCreateMessage).not.toHaveBeenCalled();
+});
+
+it("Retry re-sends a failed sticker as a sticker", async () => {
+  const s = silentSocket();
+  const sends: any[] = [];
+  s.value.socket.emit = jest.fn((event: string, d: any, cb?: (r: any) => void) => {
+    if (event !== "sendMessage" || !cb) return;
+    sends.push(d);
+    if (sends.length === 1) cb({ status: "error", error: "boom" });
+    else cb({ status: "success", message: { _id: "m-ok", message: d.message, messageType: d.messageType, sender: { _id: "me" } } });
+  }) as any;
+  mockUseSocket.mockReturnValue(s.value);
+  renderChat("/chat/u2");
+
+  fireEvent.click(screen.getByLabelText("Stickers"));
+  // "Recent" is empty in a fresh browser; open the first real category.
+  const tabs = document.querySelectorAll(".sticker-tab");
+  fireEvent.click(tabs[tabs.length > 1 ? 1 : 0] as HTMLElement);
+  fireEvent.click(document.querySelector(".sticker-item") as HTMLElement);
+  await waitFor(() => expect(screen.getByTestId("msg-status-error")).toBeInTheDocument());
+
+  fireEvent.click(screen.getByText("Retry"));
+  await waitFor(() => expect(sends).toHaveLength(2));
+  expect(sends[1].messageType).toBe("sticker");
+});
