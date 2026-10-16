@@ -112,6 +112,8 @@ Phase 3 Community (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-ap
 - [x] P3-COM-13 Community copy through `t()`, and a test that every key exists (community#13)
 - [x] P3-COM-I18N New community strings in all 18 locales
 - [x] P3-COM-PUSH Push unit community — suite 3359 pass, build green, deployed 2026-10-16
+- [x] `/communities` is members-only (owner decision 2026-10-16): signed-out visitors go to `/login?redirect=/communities` and come back; the page left the SEO/prerender/sitemap set, `PublicCommunities` + its slice were deleted, and `nginx.routes.conf` pins `/communities` to the SPA shell so the stale prerendered `build/communities/index.html` on the droplet is never served.
+- [ ] After the deploy that ships the members-only `/communities`: optionally `rm -rf build/communities` on the droplet (harmless leftover; nginx no longer serves it), and check `https://banatalk.com/communities` signed out lands on login. The backend `GET /public/communities` route is now unused by the website. S
 
 Phase 3 Links (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase3.md`)
 - [x] P3-LINK-1 Crawler rule sends link-preview bots to the backend OG cards (links#4, links#17, moments#13)

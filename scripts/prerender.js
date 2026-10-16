@@ -8,7 +8,7 @@ require("./register");
 const fs = require("fs");
 const path = require("path");
 const { renderRoute } = require("../src/seo/prerender/renderRoute");
-const { PRERENDER_PATHS, SITEMAP_PATHS } = require("../src/seo/publicRoutes");
+const { PRERENDER_PATHS, SITEMAP_PATHS, WITHDRAWN_PRERENDER_PATHS } = require("../src/seo/publicRoutes");
 const { buildSitemap } = require("../src/seo/prerender/sitemap");
 const { buildNginxRoutesConf } = require("../src/seo/prerender/nginxRoutes");
 const { routes } = require("../src/router/routes");
@@ -47,7 +47,7 @@ const fileFor = (route) => {
 
   // The route allowlist nginx includes: anything outside it is a real 404
   // instead of a 200 with an empty SPA shell. See deploy/nginx.snippet.conf.
-  const nginxConf = buildNginxRoutesConf(routes);
+  const nginxConf = buildNginxRoutesConf(routes, WITHDRAWN_PRERENDER_PATHS);
   fs.writeFileSync(path.join(BUILD, "nginx.routes.conf"), nginxConf);
   const segments = (nginxConf.match(/\^\/\(([^)]*)\)/) || ["", ""])[1].split("|").filter(Boolean);
   console.log(`[prerender] nginx.routes.conf (${segments.length} route segments)`);

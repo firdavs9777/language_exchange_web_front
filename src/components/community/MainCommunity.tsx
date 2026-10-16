@@ -25,7 +25,7 @@ import CommunityFilterSheet from "./CommunityFilterSheet";
 import ActiveFilterChips from "./ActiveFilterChips";
 import QuickFilterChips from "./QuickFilterChips";
 import WaveSheet from "./WaveSheet";
-import PublicCommunities from "./PublicCommunities";
+import RequireSignIn from "../gatherings/RequireSignIn";
 import AdUnit from "../ads/AdUnit";
 import { AD_SLOTS } from "../ads/adsenseConfig";
 import { CommunityFilters, buildCommunityQuery } from "./lib/buildCommunityQuery";
@@ -1044,26 +1044,22 @@ const ModernCommunity: React.FC = () => {
 };
 
 /**
- * /communities has two audiences now.
+ * /communities is members-only. A signed-out visitor goes to
+ * /login?redirect=/communities (with any query string kept) and comes back
+ * after signing in; nothing of the page renders for them, and none of its
+ * authenticated queries or localStorage reads run.
  *
- * A signed-in member gets the discovery page below. A logged-out visitor --
- * and every crawler, and the prerender, which builds its store in Node with no
- * localStorage -- gets the public page instead of the redirect to /login this
- * route used to answer with: the page is indexed (src/seo/pages.ts), so the
- * logged-out branch IS the crawlable page.
- *
- * The split is a wrapper rather than an early return inside ModernCommunity so
- * that none of its authenticated queries (members, topics, visitors) and none
- * of its localStorage reads happen for someone who is not signed in.
+ * This is safe on first paint because the route is not prerendered any more
+ * (it left src/seo/pages.ts): nginx serves the empty SPA shell, so authSlice's
+ * getInitialUserInfo reads the stored session synchronously and a signed-in
+ * member is already in the store when the guard decides. On a prerendered page
+ * auth only arrives after hydration (hydrationAuth.ts) and this guard would
+ * bounce members to /login.
  */
-// A signed-in visitor arriving on the prerendered page sees PublicCommunities
-// for exactly one commit: auth is restored after hydration (hydrationAuth.ts)
-// so the first client render matches the server HTML, then this flips. The
-// one public-communities request that commit starts is cheap and cached.
-const MainCommunity: React.FC = () => {
-  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
-  if (!userInfo) return <PublicCommunities />;
-  return <ModernCommunity />;
-};
+const MainCommunity: React.FC = () => (
+  <RequireSignIn>
+    <ModernCommunity />
+  </RequireSignIn>
+);
 
 export default MainCommunity;

@@ -11,7 +11,6 @@ jest.mock("react-i18next", () => ({
   Trans: ({ children }: any) => children || null,
   initReactI18next: { type: "3rdParty", init: () => {} },
 }));
-jest.mock("./PublicCommunities", () => ({ __esModule: true, default: () => null }));
 jest.mock("../../design/notify", () => ({
   __esModule: true,
   default: { success: jest.fn(), error: jest.fn(), info: jest.fn(), warning: jest.fn(), show: jest.fn(), dismiss: jest.fn() },

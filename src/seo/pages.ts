@@ -22,9 +22,11 @@ export interface SeoPage {
   ogImage?: string;
 }
 
-// The keyword map. One entry per indexed route. Phase B adds /meet,
-// /learn-korean and /communities here and nowhere else: RouteMeta, the
-// prerender list and the sitemap all derive from this array.
+// The keyword map. One entry per indexed route: RouteMeta, the prerender list
+// and the sitemap all derive from this array. /communities was here until
+// 2026-10-16 and left on purpose: it is members-only, and a page in this list
+// is prerendered logged-out, which a sign-in guard cannot sit behind (auth is
+// only restored after hydration). Do not add a signed-in-only route here.
 export const SEO_PAGES: SeoPage[] = [
   {
     path: "/",
@@ -80,13 +82,6 @@ export const SEO_PAGES: SeoPage[] = [
       description: englishFallback("seo.learnKorean.description"),
       inLanguage: "en",
     }),
-  },
-  {
-    path: "/communities",
-    titleKey: "seo.communities.title",
-    descriptionKey: "seo.communities.description",
-    primary: "language exchange communities",
-    secondary: ["language exchange groups", "practice a language with a group", "find a language partner group"],
   },
   {
     path: "/moments",

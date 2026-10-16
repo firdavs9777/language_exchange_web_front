@@ -25,7 +25,7 @@ import RequireSignIn from "../components/gatherings/RequireSignIn";
 // Eager is also the right call for weight: these are exactly the modules a
 // first-time visitor needs at first paint.
 //
-// PRERENDER_PATHS today: / /download /meet /learn-korean /communities
+// PRERENDER_PATHS today: / /download /meet /learn-korean
 // /moments /privacy-policy /terms-of-use /support /data-deletion /404.
 // Add a page to SEO_PAGES and its component belongs here.
 import HomeScreen from "../components/home/HomeMain";
@@ -116,8 +116,9 @@ const CloseFriends = lazyWithRetry("../components/settings/CloseFriends", () => 
 const ChangePassword = lazyWithRetry("../components/settings/ChangePassword", () => import("../components/settings/ChangePassword"));
 const LanguageCard = lazyWithRetry("../components/card/LanguageCard", () => import("../components/card/LanguageCard"));
 
-// Community, authenticated. /communities itself (MainCommnity, which renders
-// PublicCommunities for logged-out visitors) is prerendered and stays eager.
+// Community, authenticated. /communities itself (MainCommnity) is members-only
+// and no longer prerendered; it guards itself with RequireSignIn and is still
+// imported eagerly above because every nav bar links to it.
 // There is no CommunityDetail any more: /community/:userId is the profile
 // page, declared with the profile group above.
 const NearbyUsers = lazyWithRetry("../components/community/NearbyUsers", () => import("../components/community/NearbyUsers"));

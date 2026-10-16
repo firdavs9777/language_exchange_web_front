@@ -35,11 +35,6 @@ jest.mock("react-i18next", () => ({
   initReactI18next: { type: "3rdParty", init: () => {} },
 }));
 
-jest.mock("./PublicCommunities", () => ({
-  __esModule: true,
-  default: () => <div data-testid="public-communities" />,
-}));
-
 jest.mock("../../design/notify", () => ({
   __esModule: true,
   default: {

@@ -1,6 +1,7 @@
 import { buildNginxRoutesConf } from "./nginxRoutes";
 import { routes } from "../../router/routes";
 import { SEO_PAGES } from "../pages";
+import { PRERENDER_PATHS, WITHDRAWN_PRERENDER_PATHS } from "../publicRoutes";
 
 function alternation(conf: string): string[] {
   const m = conf.match(/^location ~ \^\/\(([^)]*)\)\(\/\|\$\) \{$/m);
@@ -61,4 +62,24 @@ it("refuses a segment that would need escaping in the regex", () => {
 it("names its generator so nobody hand-edits the output", () => {
   expect(conf).toContain("scripts/prerender.js");
   expect(conf).toContain("Do not edit");
+});
+
+// The deploy never deletes old files, so a page that stops being prerendered
+// leaves its build/<path>/index.html on the server. Those paths are pinned to
+// the SPA shell with exact-match locations, which beat every regex location.
+it("pins withdrawn prerendered paths to the SPA shell", () => {
+  const built = buildNginxRoutesConf(routes as any, WITHDRAWN_PRERENDER_PATHS);
+  expect(built).toContain("location = /communities { try_files /app.html =404; }");
+  expect(built).toContain("location = /communities/ { try_files /app.html =404; }");
+  expect(alternation(built)).toContain("communities");
+  expect(built.indexOf("location = /communities")).toBeLessThan(built.indexOf("location ~"));
+});
+
+it("never withdraws a path that is still prerendered", () => {
+  for (const p of WITHDRAWN_PRERENDER_PATHS) expect(PRERENDER_PATHS).not.toContain(p);
+});
+
+it("refuses a withdrawn path that would need escaping", () => {
+  expect(() => buildNginxRoutesConf(routes as any, ["/a b"])).toThrow();
+  expect(() => buildNginxRoutesConf(routes as any, ["/a;b"])).toThrow();
 });

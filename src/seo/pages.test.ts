@@ -9,6 +9,7 @@ import {
   seoDescriptionEn,
 } from "./pages";
 import { APP_STORE_URL, PLAY_STORE_URL } from "../components/growth/storeUrls";
+import { PRERENDER_PATHS, SITEMAP_PATHS } from "./publicRoutes";
 
 describe("SEO map", () => {
   it("every entry is a real route", () => {
@@ -70,15 +71,14 @@ describe("SEO map", () => {
     expect(seoDescriptionEn(korean).toLowerCase()).toContain("learn korean by chatting");
   });
 
-  // Task B5's public communities page. Same pattern: the English strings live
-  // on the entry until the locale pass merges seo.communities.* into all 18.
-  it("carries the public communities page with the phrase it owns", () => {
-    const communities = findSeoPage("/communities")!;
-    expect(communities.primary).toBe("language exchange communities");
-    expect(communities.titleKey).toBe("seo.communities.title");
-    expect(communities.descriptionKey).toBe("seo.communities.description");
-    expect(seoTitleEn(communities).toLowerCase()).toContain("language exchange communities");
-    expect(seoDescriptionEn(communities).toLowerCase()).toContain("language exchange");
+  // /communities left the indexed set on 2026-10-16: it is members-only, and
+  // an indexed page is prerendered logged-out, which a sign-in guard cannot
+  // sit behind. Keeping it out of SEO_PAGES keeps it out of the prerender list
+  // and the sitemap too.
+  it("does not index, prerender or sitemap the members-only /communities", () => {
+    expect(findSeoPage("/communities")).toBeUndefined();
+    expect(PRERENDER_PATHS).not.toContain("/communities");
+    expect(SITEMAP_PATHS).not.toContain("/communities");
   });
 
   it("normalizes trailing slashes and builds canonical URLs", () => {

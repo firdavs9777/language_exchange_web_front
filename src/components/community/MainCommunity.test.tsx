@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { makeStore } from "../../store";
 import MainCommunity from "./MainCommunity";
 
@@ -12,13 +12,6 @@ jest.mock("react-i18next", () => ({
   // passthrough keeps this test about the auth split, not about copy.
   Trans: ({ children }: any) => children || null,
   initReactI18next: { type: "3rdParty", init: () => {} },
-}));
-
-// The public page is exercised by its own suite; here it only needs to be
-// identifiable, and stubbing it keeps its RTK Query hook out of this test.
-jest.mock("./PublicCommunities", () => ({
-  __esModule: true,
-  default: () => <div data-testid="public-communities" />,
 }));
 
 const originalFetch = global.fetch;
@@ -37,11 +30,20 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-function renderWith(preloadedState?: any) {
+// Stands in for the login page and prints where the guard sent us.
+const LoginProbe = () => {
+  const location = useLocation();
+  return <div data-testid="login-probe">{location.pathname + location.search}</div>;
+};
+
+function renderWith(preloadedState?: any, entry = "/communities") {
   return render(
     <Provider store={makeStore(preloadedState)}>
-      <MemoryRouter initialEntries={["/communities"]}>
-        <MainCommunity />
+      <MemoryRouter initialEntries={[entry]}>
+        <Routes>
+          <Route path="/communities" element={<MainCommunity />} />
+          <Route path="/login" element={<LoginProbe />} />
+        </Routes>
       </MemoryRouter>
     </Provider>
   );
@@ -51,22 +53,31 @@ const SIGNED_IN = {
   auth: { userInfo: { user: { _id: "u1", name: "Me" }, token: "t" } },
 };
 
-// /communities is an indexed, prerendered page now: a logged-out visitor (and
-// a crawler) must get the public page, not a redirect to /login.
-it("gives a logged-out visitor the public communities page", () => {
-  renderWith({ auth: { userInfo: null } });
-  expect(screen.getByTestId("public-communities")).toBeInTheDocument();
+// /communities is members-only (owner decision 2026-10-16). It is not
+// prerendered any more, so the stored session is in the store from the first
+// render (authSlice's getInitialUserInfo) and the guard can decide at once.
+it("renders the member-discovery page for a signed-in member on the first render", () => {
+  const { container } = renderWith(SIGNED_IN);
+  expect(screen.queryByTestId("login-probe")).not.toBeInTheDocument();
+  expect(container.querySelector(".community-page")).toBeInTheDocument();
 });
 
-it("keeps the member-discovery page for a signed-in member", () => {
-  const { container } = renderWith(SIGNED_IN);
-  expect(screen.queryByTestId("public-communities")).not.toBeInTheDocument();
-  expect(container.querySelector(".community-page")).toBeInTheDocument();
+it("sends a signed-out visitor to login with a redirect back to /communities", () => {
+  const { container } = renderWith({ auth: { userInfo: null } });
+  expect(screen.getByTestId("login-probe")).toHaveTextContent("/login?redirect=%2Fcommunities");
+  expect(container.querySelector(".community-page")).not.toBeInTheDocument();
+});
+
+it("keeps the query string in the redirect", () => {
+  renderWith({ auth: { userInfo: null } }, "/communities?tab=all&native=ko");
+  const sent = screen.getByTestId("login-probe").textContent || "";
+  const redirect = new URLSearchParams(sent.split("?")[1]).get("redirect");
+  expect(redirect).toBe("/communities?tab=all&native=ko");
 });
 
 // The discovery hooks (members, topics, visitors) must not fire for someone
 // who is not signed in -- every one of them is an authenticated route.
-it("issues no authenticated requests for a logged-out visitor", () => {
+it("issues no requests for a signed-out visitor", () => {
   renderWith({ auth: { userInfo: null } });
   expect(global.fetch).not.toHaveBeenCalled();
 });
