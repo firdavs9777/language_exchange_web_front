@@ -66,7 +66,7 @@ Phase 3 Chat (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-par
 - [x] P3-CHAT-16 Search the messages of a conversation (chat#17)
 - [x] P3-CHAT-17 Saved (bookmarked) messages: list, open, unbookmark (chat#17)
 - [x] P3-CHAT-18 Archive / unarchive conversations, and mute for 1 hour, 8 hours, 1 week or always (chat#17)
-- [ ] P3-CHAT-19 "You can't message this person" banner when either side blocked (chat#17)
+- [x] P3-CHAT-19 "You can't message this person" banner when either side blocked (chat#17)
 - [ ] P3-CHAT-20 The chat's remaining hard-coded English goes through `t()` (chat#19)
 - [ ] P3-CHAT-I18N New chat strings in all 18 locales
 - [ ] P3-CHAT-PUSH Push unit chat (suite + build green, deployed, production smoke recorded)

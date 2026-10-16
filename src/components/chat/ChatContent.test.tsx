@@ -31,6 +31,11 @@ jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
 }));
 
+const mockBlockState = jest.fn();
+jest.mock("./lib/useChatBlockState", () => ({
+  useChatBlockState: (...args: any[]) => mockBlockState(...args),
+}));
+
 jest.mock("./hooks/useSocket", () => ({
   useSocket: () => mockUseSocket(),
 }));
@@ -154,6 +159,7 @@ beforeEach(() => {
   mockEditMessage.mockReturnValue({ unwrap: () => Promise.resolve({ success: true, data: {} }) });
   mockDeleteMessage.mockReturnValue({ unwrap: () => Promise.resolve({ success: true, data: {} }) });
   mockInitiate.mockImplementation(() => ({ type: "chatApi/initiate" }));
+  mockBlockState.mockReturnValue({ blocked: false, iBlocked: false, blockedMe: false });
   mockSendVideo.mockReturnValue({ unwrap: () => Promise.resolve({ data: { _id: "m-vid", messageType: "media", media: { type: "video", url: "v.mp4" }, sender: { _id: "me" }, receiver: "u2", createdAt: new Date().toISOString() } }) });
   mockSendVoice.mockReturnValue({ unwrap: () => Promise.resolve({ data: { _id: "m-voice", messageType: "voice", sender: { _id: "me" }, media: { type: "voice", url: "v.m4a" } } }) });
   mockSendMedia.mockReturnValue({ unwrap: () => Promise.resolve({ data: { _id: "m-img", sender: { _id: "me" } } }) });
@@ -853,4 +859,33 @@ it("opens message search from the header", () => {
   expect(screen.queryByTestId("chat-search-dialog")).toBeNull();
   fireEvent.click(screen.getByTestId("chat-header-search"));
   expect(screen.getByTestId("chat-search-dialog")).toBeInTheDocument();
+});
+
+describe("blocked chats (chat#17)", () => {
+  it("replaces the composer with a banner when they blocked me, without saying who blocked whom", () => {
+    mockBlockState.mockReturnValue({ blocked: true, iBlocked: false, blockedMe: true });
+    renderChat("/chat/u2");
+    expect(screen.getByTestId("blocked-chat-banner")).toHaveTextContent("You can't send messages in this chat.");
+    expect(screen.queryByPlaceholderText("Message...")).toBeNull();
+    expect(screen.queryByTestId("blocked-chat-banner-manage")).toBeNull();
+  });
+
+  it("tells me I blocked them and opens chat info to undo it", () => {
+    mockBlockState.mockReturnValue({ blocked: true, iBlocked: true, blockedMe: false });
+    renderChat("/chat/u2");
+    expect(screen.getByTestId("blocked-chat-banner")).toHaveTextContent("You blocked this person");
+    fireEvent.click(screen.getByTestId("blocked-chat-banner-manage"));
+    expect(screen.getByTestId("chat-info-panel")).toBeInTheDocument();
+  });
+
+  it("keeps the composer when nobody blocked anybody", () => {
+    renderChat("/chat/u2");
+    expect(screen.queryByTestId("blocked-chat-banner")).toBeNull();
+    expect(messageBox()).toBeInTheDocument();
+  });
+
+  it("asks about this pair", () => {
+    renderChat("/chat/u2");
+    expect(mockBlockState).toHaveBeenCalledWith("me", "u2");
+  });
 });

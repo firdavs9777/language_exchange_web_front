@@ -1748,3 +1748,32 @@
   outline-offset: 2px;
   transition: outline-color 0.3s ease;
 }
+
+/* Blocked chat banner (chat#17) — where the composer would be. */
+.blocked-chat-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px;
+  background: var(--chat-surface);
+  border-block-start: 1px solid var(--chat-line);
+  color: var(--chat-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.blocked-chat-banner-action {
+  margin-inline-start: 8px;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--chat-line);
+  border-radius: 999px;
+  color: var(--chat-text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.blocked-chat-banner-action:hover {
+  background: var(--chat-hover);
+}

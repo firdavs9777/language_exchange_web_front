@@ -43,6 +43,7 @@ const STRICT_FILES = [
   "actions/EditMessageDialog.tsx",
   "actions/SendErrorDialog.tsx",
   "ConnectionBanner.tsx",
+  "components/BlockedChatBanner.tsx",
   "components/BookmarksDialog.tsx",
   "components/CallMessageCard.tsx",
   "components/CorrectionCard.tsx",

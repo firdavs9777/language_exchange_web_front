@@ -347,6 +347,11 @@
       "failed": "Couldn't update the archive",
       "toggle": "Archived ({{count}})",
       "back": "Back to chats"
+    },
+    "blocked": {
+      "byMe": "You blocked this person. Unblock them to send messages.",
+      "generic": "You can't send messages in this chat.",
+      "manage": "Manage"
     }
   },
   "newChat": {

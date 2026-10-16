@@ -83,6 +83,10 @@ jest.mock("./components/MessageSearchDialog", () => ({
     ),
 }));
 
+jest.mock("./lib/useChatBlockState", () => ({
+  useChatBlockState: () => ({ blocked: false, iBlocked: false, blockedMe: false }),
+}));
+
 jest.mock("./components/LocationShareButton", () => ({
   __esModule: true,
   default: () => require("react").createElement("span", { "data-testid": "share-location" }),

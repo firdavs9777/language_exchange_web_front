@@ -74,6 +74,8 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import ChatInfoPanel from "./ChatInfoPanel";
 import LocationShareButton from "./components/LocationShareButton";
 import MessageSearchDialog from "./components/MessageSearchDialog";
+import BlockedChatBanner from "./components/BlockedChatBanner";
+import { useChatBlockState } from "./lib/useChatBlockState";
 import { normalizeMessage, senderIdOf } from "./lib/normalizeMessage";
 import { useOpenStoryFromChat } from "./lib/useOpenStoryFromChat";
 
@@ -324,6 +326,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
   // Shared socket
   const { socket, emit, connectionEpoch } = useSocket() as any;
   const openStory = useOpenStoryFromChat();
+  const blockState = useChatBlockState(userId, selectedUser);
 
   // Keep selectedUserRef in sync
   useEffect(() => {
@@ -2390,7 +2393,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       )}
 
       {/* Voice Recording Bar */}
-      {isRecording && (
+      {isRecording && !blockState.blocked && (
         <div className="voice-recording-bar">
           <div className="recording-indicator">
             <div className="recording-dot" />
@@ -2407,8 +2410,10 @@ const ChatContent: React.FC<ChatContentProps> = ({
         </div>
       )}
 
-      {/* Message Input */}
-      {!isRecording && (
+      {/* Message Input — or, in a blocked chat, the banner that replaces it. */}
+      {blockState.blocked ? (
+        <BlockedChatBanner iBlocked={blockState.iBlocked} onManage={() => setIsInfoOpen(true)} />
+      ) : !isRecording && (
         <div className="modern-chat-input">
           {/* Sticker Panel */}
           {isStickerPanelOpen && (
