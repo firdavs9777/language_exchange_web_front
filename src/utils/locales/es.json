@@ -1293,7 +1293,9 @@
       "topics": "Temas",
       "searchPlaceholder": "Buscar miembros o temas",
       "filtersLabel": "Filtros",
-      "filtersWithCount": "Filtros ({{count}} activos)"
+      "filtersWithCount": "Filtros ({{count}} activos)",
+      "city": "Ciudad",
+      "genders": "Géneros"
     },
     "filterSheet": {
       "title": "Filtros",
@@ -3238,6 +3240,169 @@
       "media": "Música, cine y series",
       "pronunciation": "Pronunciación",
       "travel": "Viajes"
+    }
+  },
+  "common": {
+    "cancel": "Cancelar",
+    "retry": "Reintentar"
+  },
+  "communityCity": {
+    "back": "Comunidad",
+    "countries": "Países",
+    "empty": "Todavía no hay nadie aquí. Prueba otro lugar.",
+    "error": "No se pudieron cargar las personas. Inténtalo de nuevo.",
+    "more": "Ver más",
+    "search": "Buscar",
+    "searchPlaceholder": "Busca una ciudad",
+    "searchTitle": "Personas en «{{query}}»",
+    "title": "Personas por lugar"
+  },
+  "communityGenders": {
+    "back": "Comunidad",
+    "empty": "Todavía no hay coincidencias.",
+    "error": "No se pudieron cargar las personas. Inténtalo de nuevo.",
+    "female": "Mujeres",
+    "male": "Hombres",
+    "more": "Ver más",
+    "title": "Explorar por género"
+  },
+  "languageRooms": {
+    "create": {
+      "description": "Descripción (opcional)",
+      "language": "Idioma",
+      "name": "Tema",
+      "submit": "Crear sala",
+      "title": "Crea una sala temática"
+    },
+    "errors": {
+      "banned": "Te eliminaron de esta sala. Puedes pedirle al propietario que te deje volver.",
+      "busy": "Esta sala tiene demasiadas solicitudes ahora. Inténtalo más tarde.",
+      "generic": "Algo salió mal. Inténtalo de nuevo.",
+      "gone": "Esta sala ya no está disponible.",
+      "owner": "No se puede eliminar al propietario.",
+      "pending": "Tu solicitud está esperando al propietario.",
+      "titleLength": "El nombre puede tener hasta 60 caracteres.",
+      "tooMany": "Ya tienes 10 salas. Elimina una para crear otra."
+    },
+    "list": {
+      "create": "Nueva sala temática",
+      "empty": "Todavía no hay salas.",
+      "error": "No se pudieron cargar las salas de idiomas.",
+      "joined": "Te uniste",
+      "locked": "Bloqueada",
+      "title": "Salas de idiomas"
+    },
+    "owner": {
+      "admin": "admin",
+      "approve": "Dejar entrar",
+      "deny": "Rechazar",
+      "members": "Miembros",
+      "noRequests": "No hay nadie esperando.",
+      "owner": "propietario",
+      "remove": "Eliminar de la sala",
+      "removeNote": "Los miembros eliminados pueden pedir volver; tú decides.",
+      "removeYes": "Eliminar",
+      "requests": "Solicitudes para unirse"
+    },
+    "room": {
+      "back": "Todas las salas",
+      "join": "Unirse a la sala",
+      "leave": "Salir de la sala",
+      "media": "Foto o video: abre la app para verlo",
+      "notSent": "No enviado. Inténtalo de nuevo.",
+      "older": "Cargar mensajes anteriores",
+      "online": "en línea",
+      "pending": "Solicitud enviada. El propietario te dejará entrar.",
+      "placeholder": "Escribe en el idioma de la sala…",
+      "request": "Solicitar unirse",
+      "send": "Enviar",
+      "slowDown": "Estás enviando muy rápido. Ve un poco más despacio.",
+      "sticker": "Sticker",
+      "unsupported": "Abre la app para ver este mensaje",
+      "voice": "Mensaje de voz: abre la app para escucharlo"
+    }
+  },
+  "nav": {
+    "languageRooms": "Salas de idiomas",
+    "voiceRooms": "Salas de voz"
+  },
+  "voiceRooms": {
+    "category": {
+      "casual": "Charla informal",
+      "language_practice": "Práctica de idiomas",
+      "qa": "Preguntas y respuestas",
+      "topic": "Tema"
+    },
+    "create": {
+      "category": "Tipo de sala",
+      "description": "¿De qué van a hablar? (opcional)",
+      "language": "Idioma",
+      "max": "Máximo de personas",
+      "name": "Nombre de la sala",
+      "schedule": "Programar",
+      "start": "Iniciar sala",
+      "title": "Inicia una sala de voz",
+      "when": "Empezar más tarde (opcional)"
+    },
+    "errors": {
+      "blocked": "No puedes unirte a esta sala.",
+      "ended": "Esta sala ha terminado.",
+      "full": "Esta sala está llena.",
+      "generic": "Algo salió mal. Inténtalo de nuevo.",
+      "gone": "Esta sala ya no está disponible.",
+      "vipToCreate": "Para crear salas de voz necesitas un plan VIP."
+    },
+    "host": {
+      "end": "Terminar sala",
+      "endConfirm": "¿Terminar la sala para todos?",
+      "endYes": "Terminar sala",
+      "hands": "Manos levantadas",
+      "makeCohost": "Hacer coanfitrión",
+      "muteAll": "Silenciar a todos",
+      "noHands": "Nadie ha levantado la mano.",
+      "speakNote": "Cualquiera en la sala puede tomar el micrófono. Una mano levantada te pide un turno.",
+      "title": "Herramientas del anfitrión"
+    },
+    "list": {
+      "create": "Iniciar una sala",
+      "emptyLive": "Nadie está hablando ahora. Inicia una sala e invita a otros.",
+      "emptyScheduled": "Todavía no hay salas programadas.",
+      "error": "No se pudieron cargar las salas de voz.",
+      "full": "Llena",
+      "going": "Asistiré ✓",
+      "join": "Unirse",
+      "live": "En vivo",
+      "rsvp": "Recordármelo",
+      "scheduled": "Próximamente",
+      "title": "Salas de voz"
+    },
+    "room": {
+      "back": "Todas las salas",
+      "chat": "Chat de la sala",
+      "chatPlaceholder": "Di algo…",
+      "connectFailed": "No se pudo conectar al audio de la sala. Revisa tu conexión e inténtalo de nuevo.",
+      "elsewhere": "Te uniste a esta sala desde otra pestaña o dispositivo.",
+      "enableSound": "Toca para activar el sonido de la sala",
+      "ended": "Esta sala ha terminado.",
+      "findAnother": "Buscar otra sala",
+      "handUp": "Mano levantada",
+      "host": "Anfitrión",
+      "join": "Unirse a la sala",
+      "joinHint": "Entrarás como oyente. Toma el micrófono cuando quieras.",
+      "leave": "Salir",
+      "lost": "Se perdió la conexión con la sala.",
+      "lowerHand": "Bajar la mano",
+      "micDenied": "Tu navegador está bloqueando el micrófono. Permite el micrófono para banatalk.com en la barra de direcciones y vuelve a intentarlo. Puedes seguir escuchando.",
+      "micError": "No se pudo activar el micrófono. Inténtalo de nuevo.",
+      "micUnavailable": "No se encontró ningún micrófono (o otra app lo está usando). Puedes seguir escuchando.",
+      "mute": "Silenciar",
+      "raiseHand": "Levantar la mano",
+      "reconnecting": "Reconectando…",
+      "rejoin": "Volver a unirse",
+      "send": "Enviar",
+      "takeMic": "Tomar el micrófono",
+      "useHere": "Escuchar aquí",
+      "you": "tú"
     }
   }
 }

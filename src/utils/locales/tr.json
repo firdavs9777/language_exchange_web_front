@@ -1312,7 +1312,9 @@
       "topics": "Konular",
       "searchPlaceholder": "Üye veya konu bul",
       "filtersLabel": "Filtreler",
-      "filtersWithCount": "Filtreler ({{count}} aktif)"
+      "filtersWithCount": "Filtreler ({{count}} aktif)",
+      "city": "Şehir",
+      "genders": "Cinsiyet"
     },
     "filterSheet": {
       "title": "Filtreler",
@@ -3237,6 +3239,169 @@
       "media": "Müzik, film ve dizi",
       "pronunciation": "Telaffuz",
       "travel": "Seyahat"
+    }
+  },
+  "common": {
+    "cancel": "İptal",
+    "retry": "Tekrar dene"
+  },
+  "communityCity": {
+    "back": "Topluluk",
+    "countries": "Ülkeler",
+    "empty": "Burada henüz eşleşen kimse yok. Başka bir yer deneyin.",
+    "error": "Kişiler yüklenemedi. Tekrar deneyin.",
+    "more": "Daha fazla göster",
+    "search": "Ara",
+    "searchPlaceholder": "Şehir ara",
+    "searchTitle": "“{{query}}” konumundaki kişiler",
+    "title": "Konuma göre kişiler"
+  },
+  "communityGenders": {
+    "back": "Topluluk",
+    "empty": "Henüz eşleşen kimse yok.",
+    "error": "Kişiler yüklenemedi. Tekrar deneyin.",
+    "female": "Kadınlar",
+    "male": "Erkekler",
+    "more": "Daha fazla göster",
+    "title": "Cinsiyete göre göz at"
+  },
+  "languageRooms": {
+    "create": {
+      "description": "Açıklama (isteğe bağlı)",
+      "language": "Dil",
+      "name": "Konu",
+      "submit": "Oda oluştur",
+      "title": "Konu odası başlat"
+    },
+    "errors": {
+      "banned": "Bu odadan çıkarıldınız. Oda sahibinden sizi tekrar almasını isteyebilirsiniz.",
+      "busy": "Bu odada şu an çok fazla istek var. Daha sonra deneyin.",
+      "generic": "Bir şeyler ters gitti. Tekrar deneyin.",
+      "gone": "Bu oda artık mevcut değil.",
+      "owner": "Oda sahibi çıkarılamaz.",
+      "pending": "İsteğiniz oda sahibinin onayını bekliyor.",
+      "titleLength": "Ad en fazla 60 karakter olabilir.",
+      "tooMany": "Zaten 10 odanız var. Yeni bir oda başlatmak için birini silin."
+    },
+    "list": {
+      "create": "Yeni konu odası",
+      "empty": "Henüz oda yok.",
+      "error": "Dil odaları yüklenemedi.",
+      "joined": "Katıldın",
+      "locked": "Kilitli",
+      "title": "Dil odaları"
+    },
+    "owner": {
+      "admin": "yönetici",
+      "approve": "İçeri al",
+      "deny": "Reddet",
+      "members": "Üyeler",
+      "noRequests": "Bekleyen kimse yok.",
+      "owner": "oda sahibi",
+      "remove": "Odadan çıkar",
+      "removeNote": "Çıkarılan üyeler geri dönmeyi isteyebilir; kararı siz verirsiniz.",
+      "removeYes": "Çıkar",
+      "requests": "Katılma istekleri"
+    },
+    "room": {
+      "back": "Tüm odalar",
+      "join": "Odaya katıl",
+      "leave": "Odadan ayrıl",
+      "media": "Fotoğraf veya video — görmek için uygulamayı açın",
+      "notSent": "Gönderilemedi. Tekrar deneyin.",
+      "older": "Önceki mesajları yükle",
+      "online": "çevrimiçi",
+      "pending": "İstek gönderildi. Oda sahibi sizi içeri alacak.",
+      "placeholder": "Odanın dilinde yazın…",
+      "request": "Katılma isteği gönder",
+      "send": "Gönder",
+      "slowDown": "Çok hızlı gönderiyorsunuz. Biraz yavaşlayın.",
+      "sticker": "Çıkartma",
+      "unsupported": "Bu mesajı görmek için uygulamayı açın",
+      "voice": "Sesli mesaj — dinlemek için uygulamayı açın"
+    }
+  },
+  "nav": {
+    "languageRooms": "Dil odaları",
+    "voiceRooms": "Sesli odalar"
+  },
+  "voiceRooms": {
+    "category": {
+      "casual": "Serbest sohbet",
+      "language_practice": "Dil pratiği",
+      "qa": "Soru-Cevap",
+      "topic": "Konu"
+    },
+    "create": {
+      "category": "Oda türü",
+      "description": "Ne hakkında konuşacaksınız? (isteğe bağlı)",
+      "language": "Dil",
+      "max": "En fazla kaç kişi",
+      "name": "Oda adı",
+      "schedule": "Planla",
+      "start": "Odayı başlat",
+      "title": "Sesli oda başlat",
+      "when": "Daha sonra başlat (isteğe bağlı)"
+    },
+    "errors": {
+      "blocked": "Bu odaya katılamazsınız.",
+      "ended": "Bu oda sona erdi.",
+      "full": "Bu oda dolu.",
+      "generic": "Bir şeyler ters gitti. Tekrar deneyin.",
+      "gone": "Bu oda artık mevcut değil.",
+      "vipToCreate": "Sesli oda oluşturmak için VIP plan gerekir."
+    },
+    "host": {
+      "end": "Odayı bitir",
+      "endConfirm": "Oda herkes için bitirilsin mi?",
+      "endYes": "Odayı bitir",
+      "hands": "Kaldırılan eller",
+      "makeCohost": "Yardımcı Ev Sahibi Yap",
+      "muteAll": "Herkesi sessize al",
+      "noHands": "Kimse el kaldırmadı.",
+      "speakNote": "Odadaki herkes mikrofonu alabilir. El kaldıran kişi sizden söz ister.",
+      "title": "Ev sahibi araçları"
+    },
+    "list": {
+      "create": "Oda başlat",
+      "emptyLive": "Şu an kimse konuşmuyor. Bir oda başlatın ve insanları davet edin.",
+      "emptyScheduled": "Henüz planlanmış oda yok.",
+      "error": "Sesli odalar yüklenemedi.",
+      "full": "Dolu",
+      "going": "Katılıyorum ✓",
+      "join": "Katıl",
+      "live": "Şu an canlı",
+      "rsvp": "Bana hatırlat",
+      "scheduled": "Yakında",
+      "title": "Sesli odalar"
+    },
+    "room": {
+      "back": "Tüm odalar",
+      "chat": "Oda sohbeti",
+      "chatPlaceholder": "Bir şey yazın…",
+      "connectFailed": "Odanın sesine bağlanılamadı. Bağlantınızı kontrol edip tekrar deneyin.",
+      "elsewhere": "Bu odaya başka bir sekmeden veya cihazdan katıldınız.",
+      "enableSound": "Odanın sesini açmak için dokunun",
+      "ended": "Bu oda sona erdi.",
+      "findAnother": "Başka bir oda bul",
+      "handUp": "El kaldırıldı",
+      "host": "Ev sahibi",
+      "join": "Odaya katıl",
+      "joinHint": "Dinleyici olarak katılacaksınız. Hazır olduğunuzda mikrofonu alın.",
+      "leave": "Ayrıl",
+      "lost": "Odayla bağlantı koptu.",
+      "lowerHand": "Eli indir",
+      "micDenied": "Tarayıcınız mikrofonu engelliyor. Adres çubuğundan banatalk.com için mikrofona izin verin, ardından tekrar deneyin. Dinlemeye devam edebilirsiniz.",
+      "micError": "Mikrofon açılamadı. Tekrar deneyin.",
+      "micUnavailable": "Mikrofon bulunamadı (veya başka bir uygulama kullanıyor). Dinlemeye devam edebilirsiniz.",
+      "mute": "Sessize al",
+      "raiseHand": "El kaldır",
+      "reconnecting": "Yeniden bağlanılıyor…",
+      "rejoin": "Yeniden katıl",
+      "send": "Gönder",
+      "takeMic": "Mikrofonu al",
+      "useHere": "Burada dinle",
+      "you": "siz"
     }
   }
 }

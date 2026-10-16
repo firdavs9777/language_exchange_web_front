@@ -1312,7 +1312,9 @@
       "topics": "Themen",
       "searchPlaceholder": "Mitglieder oder Themen finden",
       "filtersLabel": "Filter",
-      "filtersWithCount": "Filter ({{count}} aktiv)"
+      "filtersWithCount": "Filter ({{count}} aktiv)",
+      "city": "Stadt",
+      "genders": "Geschlechter"
     },
     "filterSheet": {
       "title": "Filter",
@@ -3237,6 +3239,169 @@
       "media": "Musik, Filme & Serien",
       "pronunciation": "Aussprache",
       "travel": "Reisen"
+    }
+  },
+  "common": {
+    "cancel": "Abbrechen",
+    "retry": "Erneut versuchen"
+  },
+  "communityCity": {
+    "back": "Community",
+    "countries": "Länder",
+    "empty": "Hier passt noch niemand. Probier einen anderen Ort.",
+    "error": "Leute konnten nicht geladen werden. Versuch es noch mal.",
+    "more": "Mehr anzeigen",
+    "search": "Suchen",
+    "searchPlaceholder": "Stadt suchen",
+    "searchTitle": "Leute in „{{query}}“",
+    "title": "Leute nach Ort"
+  },
+  "communityGenders": {
+    "back": "Community",
+    "empty": "Noch passt niemand.",
+    "error": "Leute konnten nicht geladen werden. Versuch es noch mal.",
+    "female": "Frauen",
+    "male": "Männer",
+    "more": "Mehr anzeigen",
+    "title": "Nach Geschlecht stöbern"
+  },
+  "languageRooms": {
+    "create": {
+      "description": "Beschreibung (optional)",
+      "language": "Sprache",
+      "name": "Thema",
+      "submit": "Raum erstellen",
+      "title": "Themenraum starten"
+    },
+    "errors": {
+      "banned": "Du wurdest aus diesem Raum entfernt. Du kannst den Inhaber bitten, dich wieder reinzulassen.",
+      "busy": "Dieser Raum hat gerade zu viele Anfragen. Versuch es später.",
+      "generic": "Etwas ist schiefgelaufen. Versuch es noch mal.",
+      "gone": "Dieser Raum ist nicht mehr verfügbar.",
+      "owner": "Der Inhaber kann nicht entfernt werden.",
+      "pending": "Deine Anfrage wartet auf den Inhaber.",
+      "titleLength": "Der Name darf höchstens 60 Zeichen lang sein.",
+      "tooMany": "Du hast schon 10 Räume. Lösch einen, um einen neuen zu starten."
+    },
+    "list": {
+      "create": "Neuer Themenraum",
+      "empty": "Noch keine Räume.",
+      "error": "Sprachräume konnten nicht geladen werden.",
+      "joined": "Beigetreten",
+      "locked": "Gesperrt",
+      "title": "Sprachräume"
+    },
+    "owner": {
+      "admin": "Admin",
+      "approve": "Reinlassen",
+      "deny": "Ablehnen",
+      "members": "Mitglieder",
+      "noRequests": "Niemand wartet.",
+      "owner": "Inhaber",
+      "remove": "Aus dem Raum entfernen",
+      "removeNote": "Entfernte Mitglieder können um Rückkehr bitten – du entscheidest.",
+      "removeYes": "Entfernen",
+      "requests": "Beitrittsanfragen"
+    },
+    "room": {
+      "back": "Alle Räume",
+      "join": "Raum beitreten",
+      "leave": "Raum verlassen",
+      "media": "Foto oder Video – öffne die App, um es zu sehen",
+      "notSent": "Nicht gesendet. Versuch es noch mal.",
+      "older": "Ältere Nachrichten laden",
+      "online": "online",
+      "pending": "Anfrage gesendet. Der Inhaber lässt dich rein.",
+      "placeholder": "Schreib in der Sprache des Raums…",
+      "request": "Beitritt anfragen",
+      "send": "Senden",
+      "slowDown": "Du sendest zu schnell. Mach etwas langsamer.",
+      "sticker": "Sticker",
+      "unsupported": "Öffne die App, um diese Nachricht zu sehen",
+      "voice": "Sprachnachricht – öffne die App, um sie anzuhören"
+    }
+  },
+  "nav": {
+    "languageRooms": "Sprachräume",
+    "voiceRooms": "Voice-Räume"
+  },
+  "voiceRooms": {
+    "category": {
+      "casual": "Lockerer Plausch",
+      "language_practice": "Sprachpraxis",
+      "qa": "Fragen & Antworten",
+      "topic": "Thema"
+    },
+    "create": {
+      "category": "Art des Raums",
+      "description": "Worüber wollt ihr reden? (optional)",
+      "language": "Sprache",
+      "max": "Maximale Teilnehmerzahl",
+      "name": "Raumname",
+      "schedule": "Planen",
+      "start": "Raum starten",
+      "title": "Voice-Raum starten",
+      "when": "Später starten (optional)"
+    },
+    "errors": {
+      "blocked": "Du kannst diesem Raum nicht beitreten.",
+      "ended": "Dieser Raum ist beendet.",
+      "full": "Dieser Raum ist voll.",
+      "generic": "Etwas ist schiefgelaufen. Versuch es noch mal.",
+      "gone": "Dieser Raum ist nicht mehr verfügbar.",
+      "vipToCreate": "Zum Erstellen von Voice-Räumen brauchst du VIP."
+    },
+    "host": {
+      "end": "Raum beenden",
+      "endConfirm": "Raum für alle beenden?",
+      "endYes": "Raum beenden",
+      "hands": "Gehobene Hände",
+      "makeCohost": "Zum Co-Host machen",
+      "muteAll": "Alle stummschalten",
+      "noHands": "Niemand hat die Hand gehoben.",
+      "speakNote": "Alle im Raum können das Mikro nehmen. Mit einer gehobenen Hand bittet dich jemand ums Wort.",
+      "title": "Host-Tools"
+    },
+    "list": {
+      "create": "Raum starten",
+      "emptyLive": "Gerade redet niemand. Starte einen Raum und lade Leute ein.",
+      "emptyScheduled": "Noch keine Räume geplant.",
+      "error": "Voice-Räume konnten nicht geladen werden.",
+      "full": "Voll",
+      "going": "Dabei ✓",
+      "join": "Beitreten",
+      "live": "Jetzt live",
+      "rsvp": "Erinnere mich",
+      "scheduled": "Demnächst",
+      "title": "Voice-Räume"
+    },
+    "room": {
+      "back": "Alle Räume",
+      "chat": "Raum-Chat",
+      "chatPlaceholder": "Sag etwas…",
+      "connectFailed": "Verbindung zum Raum-Audio fehlgeschlagen. Prüf deine Verbindung und versuch es noch mal.",
+      "elsewhere": "Du bist diesem Raum in einem anderen Tab oder auf einem anderen Gerät beigetreten.",
+      "enableSound": "Tippen, um den Ton des Raums einzuschalten",
+      "ended": "Dieser Raum ist beendet.",
+      "findAnother": "Anderen Raum finden",
+      "handUp": "Hand gehoben",
+      "host": "Host",
+      "join": "Raum beitreten",
+      "joinHint": "Du trittst als Zuhörer bei. Nimm das Mikro, wann immer du bereit bist.",
+      "leave": "Verlassen",
+      "lost": "Die Verbindung zum Raum wurde getrennt.",
+      "lowerHand": "Hand senken",
+      "micDenied": "Dein Browser blockiert das Mikrofon. Erlaube das Mikrofon für banatalk.com in der Adressleiste und versuch es dann noch mal. Du kannst weiter zuhören.",
+      "micError": "Mikrofon konnte nicht eingeschaltet werden. Versuch es noch mal.",
+      "micUnavailable": "Kein Mikrofon gefunden (oder eine andere App nutzt es). Du kannst weiter zuhören.",
+      "mute": "Stummschalten",
+      "raiseHand": "Hand heben",
+      "reconnecting": "Verbindung wird wiederhergestellt…",
+      "rejoin": "Erneut beitreten",
+      "send": "Senden",
+      "takeMic": "Mikro nehmen",
+      "useHere": "Stattdessen hier zuhören",
+      "you": "du"
     }
   }
 }

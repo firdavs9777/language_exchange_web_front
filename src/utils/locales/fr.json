@@ -1293,7 +1293,9 @@
       "topics": "Sujets",
       "searchPlaceholder": "Rechercher des membres ou des sujets",
       "filtersLabel": "Filtres",
-      "filtersWithCount": "Filtres ({{count}} actifs)"
+      "filtersWithCount": "Filtres ({{count}} actifs)",
+      "city": "Ville",
+      "genders": "Genres"
     },
     "filterSheet": {
       "title": "Filtres",
@@ -3238,6 +3240,169 @@
       "media": "Musique, films et séries",
       "pronunciation": "Prononciation",
       "travel": "Voyages"
+    }
+  },
+  "common": {
+    "cancel": "Annuler",
+    "retry": "Réessayer"
+  },
+  "communityCity": {
+    "back": "Communauté",
+    "countries": "Pays",
+    "empty": "Personne ne correspond pour l'instant. Essayez un autre lieu.",
+    "error": "Impossible de charger les membres. Réessayez.",
+    "more": "Voir plus",
+    "search": "Rechercher",
+    "searchPlaceholder": "Rechercher une ville",
+    "searchTitle": "Membres à « {{query}} »",
+    "title": "Membres par lieu"
+  },
+  "communityGenders": {
+    "back": "Communauté",
+    "empty": "Personne ne correspond pour l'instant.",
+    "error": "Impossible de charger les membres. Réessayez.",
+    "female": "Femmes",
+    "male": "Hommes",
+    "more": "Voir plus",
+    "title": "Parcourir par genre"
+  },
+  "languageRooms": {
+    "create": {
+      "description": "Description (facultatif)",
+      "language": "Langue",
+      "name": "Sujet",
+      "submit": "Créer le salon",
+      "title": "Lancer un salon thématique"
+    },
+    "errors": {
+      "banned": "Vous avez été retiré de ce salon. Vous pouvez demander au propriétaire de vous réintégrer.",
+      "busy": "Ce salon reçoit trop de demandes en ce moment. Réessayez plus tard.",
+      "generic": "Un problème est survenu. Réessayez.",
+      "gone": "Ce salon n'est plus disponible.",
+      "owner": "Le propriétaire ne peut pas être retiré.",
+      "pending": "Votre demande attend la réponse du propriétaire.",
+      "titleLength": "Le nom peut contenir jusqu'à 60 caractères.",
+      "tooMany": "Vous avez déjà 10 salons. Supprimez-en un pour en créer un autre."
+    },
+    "list": {
+      "create": "Nouveau salon thématique",
+      "empty": "Aucun salon pour l'instant.",
+      "error": "Impossible de charger les salons de langue.",
+      "joined": "Rejoint",
+      "locked": "Verrouillé",
+      "title": "Salons de langue"
+    },
+    "owner": {
+      "admin": "admin",
+      "approve": "Accepter",
+      "deny": "Refuser",
+      "members": "Membres",
+      "noRequests": "Personne n'attend.",
+      "owner": "propriétaire",
+      "remove": "Retirer du salon",
+      "removeNote": "Les membres retirés peuvent demander à revenir ; c'est vous qui décidez.",
+      "removeYes": "Retirer",
+      "requests": "Demandes d'adhésion"
+    },
+    "room": {
+      "back": "Tous les salons",
+      "join": "Rejoindre le salon",
+      "leave": "Quitter le salon",
+      "media": "Photo ou vidéo — ouvrez l'application pour la voir",
+      "notSent": "Non envoyé. Réessayez.",
+      "older": "Charger les messages précédents",
+      "online": "en ligne",
+      "pending": "Demande envoyée. Le propriétaire va vous accepter.",
+      "placeholder": "Écrivez dans la langue du salon…",
+      "request": "Demander à rejoindre",
+      "send": "Envoyer",
+      "slowDown": "Vous envoyez trop vite. Ralentissez un peu.",
+      "sticker": "Sticker",
+      "unsupported": "Ouvrez l'application pour voir ce message",
+      "voice": "Message vocal — ouvrez l'application pour l'écouter"
+    }
+  },
+  "nav": {
+    "languageRooms": "Salons de langue",
+    "voiceRooms": "Salons vocaux"
+  },
+  "voiceRooms": {
+    "category": {
+      "casual": "Discussion libre",
+      "language_practice": "Pratique linguistique",
+      "qa": "Questions-réponses",
+      "topic": "Sujet"
+    },
+    "create": {
+      "category": "Type de salon",
+      "description": "De quoi allez-vous parler ? (facultatif)",
+      "language": "Langue",
+      "max": "Nombre maximal de personnes",
+      "name": "Nom du salon",
+      "schedule": "Programmer",
+      "start": "Lancer le salon",
+      "title": "Lancer un salon vocal",
+      "when": "Commencer plus tard (facultatif)"
+    },
+    "errors": {
+      "blocked": "Vous ne pouvez pas rejoindre ce salon.",
+      "ended": "Ce salon est terminé.",
+      "full": "Ce salon est complet.",
+      "generic": "Un problème est survenu. Réessayez.",
+      "gone": "Ce salon n'est plus disponible.",
+      "vipToCreate": "Créer des salons vocaux nécessite un abonnement VIP."
+    },
+    "host": {
+      "end": "Terminer le salon",
+      "endConfirm": "Terminer le salon pour tout le monde ?",
+      "endYes": "Terminer le salon",
+      "hands": "Mains levées",
+      "makeCohost": "Promouvoir co-hôte",
+      "muteAll": "Couper le micro de tous",
+      "noHands": "Personne n'a levé la main.",
+      "speakNote": "Tout le monde dans le salon peut prendre le micro. Une main levée vous demande la parole.",
+      "title": "Outils de l'hôte"
+    },
+    "list": {
+      "create": "Lancer un salon",
+      "emptyLive": "Personne ne parle en ce moment. Lancez un salon et invitez du monde.",
+      "emptyScheduled": "Aucun salon programmé pour l'instant.",
+      "error": "Impossible de charger les salons vocaux.",
+      "full": "Complet",
+      "going": "J'y serai ✓",
+      "join": "Rejoindre",
+      "live": "En direct",
+      "rsvp": "Me le rappeler",
+      "scheduled": "À venir",
+      "title": "Salons vocaux"
+    },
+    "room": {
+      "back": "Tous les salons",
+      "chat": "Chat du salon",
+      "chatPlaceholder": "Dites quelque chose…",
+      "connectFailed": "Impossible de se connecter à l'audio du salon. Vérifiez votre connexion et réessayez.",
+      "elsewhere": "Vous avez rejoint ce salon depuis un autre onglet ou appareil.",
+      "enableSound": "Touchez pour activer le son du salon",
+      "ended": "Ce salon est terminé.",
+      "findAnother": "Trouver un autre salon",
+      "handUp": "Main levée",
+      "host": "Hôte",
+      "join": "Rejoindre le salon",
+      "joinHint": "Vous rejoindrez en tant qu'auditeur. Prenez le micro quand vous voulez.",
+      "leave": "Quitter",
+      "lost": "La connexion au salon a été perdue.",
+      "lowerHand": "Baisser la main",
+      "micDenied": "Votre navigateur bloque le micro. Autorisez le micro pour banatalk.com dans la barre d'adresse, puis réessayez. Vous pouvez continuer à écouter.",
+      "micError": "Impossible d'activer le micro. Réessayez.",
+      "micUnavailable": "Aucun micro détecté (ou une autre application l'utilise). Vous pouvez continuer à écouter.",
+      "mute": "Couper le micro",
+      "raiseHand": "Lever la main",
+      "reconnecting": "Reconnexion…",
+      "rejoin": "Rejoindre à nouveau",
+      "send": "Envoyer",
+      "takeMic": "Prendre le micro",
+      "useHere": "Écouter ici",
+      "you": "vous"
     }
   }
 }

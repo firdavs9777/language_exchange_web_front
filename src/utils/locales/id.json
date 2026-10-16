@@ -1312,7 +1312,9 @@
       "topics": "Topik",
       "searchPlaceholder": "Cari anggota atau topik",
       "filtersLabel": "Filter",
-      "filtersWithCount": "Filter ({{count}} aktif)"
+      "filtersWithCount": "Filter ({{count}} aktif)",
+      "city": "Kota",
+      "genders": "Gender"
     },
     "filterSheet": {
       "title": "Filter",
@@ -3237,6 +3239,169 @@
       "media": "Musik, film & TV",
       "pronunciation": "Pelafalan",
       "travel": "Perjalanan"
+    }
+  },
+  "common": {
+    "cancel": "Batal",
+    "retry": "Coba lagi"
+  },
+  "communityCity": {
+    "back": "Komunitas",
+    "countries": "Negara",
+    "empty": "Belum ada yang cocok di sini. Coba tempat lain.",
+    "error": "Gagal memuat orang. Coba lagi.",
+    "more": "Tampilkan lebih banyak",
+    "search": "Cari",
+    "searchPlaceholder": "Cari kota",
+    "searchTitle": "Orang di “{{query}}”",
+    "title": "Orang berdasarkan tempat"
+  },
+  "communityGenders": {
+    "back": "Komunitas",
+    "empty": "Belum ada yang cocok.",
+    "error": "Gagal memuat orang. Coba lagi.",
+    "female": "Perempuan",
+    "male": "Laki-laki",
+    "more": "Tampilkan lebih banyak",
+    "title": "Jelajahi berdasarkan gender"
+  },
+  "languageRooms": {
+    "create": {
+      "description": "Deskripsi (opsional)",
+      "language": "Bahasa",
+      "name": "Topik",
+      "submit": "Buat ruang",
+      "title": "Mulai ruang topik"
+    },
+    "errors": {
+      "banned": "Kamu dikeluarkan dari ruang ini. Kamu bisa minta pemilik untuk mengizinkanmu kembali.",
+      "busy": "Ruang ini sedang menerima terlalu banyak permintaan. Coba lagi nanti.",
+      "generic": "Terjadi kesalahan. Coba lagi.",
+      "gone": "Ruang ini sudah tidak tersedia.",
+      "owner": "Pemilik tidak bisa dikeluarkan.",
+      "pending": "Permintaanmu sedang menunggu persetujuan pemilik.",
+      "titleLength": "Nama maksimal 60 karakter.",
+      "tooMany": "Kamu sudah punya 10 ruang. Hapus satu untuk membuat yang baru."
+    },
+    "list": {
+      "create": "Ruang topik baru",
+      "empty": "Belum ada ruang.",
+      "error": "Gagal memuat ruang bahasa.",
+      "joined": "Sudah bergabung",
+      "locked": "Terkunci",
+      "title": "Ruang bahasa"
+    },
+    "owner": {
+      "admin": "admin",
+      "approve": "Izinkan masuk",
+      "deny": "Tolak",
+      "members": "Anggota",
+      "noRequests": "Tidak ada yang menunggu.",
+      "owner": "pemilik",
+      "remove": "Keluarkan dari ruang",
+      "removeNote": "Anggota yang dikeluarkan bisa minta kembali; kamu yang memutuskan.",
+      "removeYes": "Keluarkan",
+      "requests": "Permintaan bergabung"
+    },
+    "room": {
+      "back": "Semua ruang",
+      "join": "Gabung ruang",
+      "leave": "Tinggalkan ruang",
+      "media": "Foto atau video — buka aplikasi untuk melihatnya",
+      "notSent": "Tidak terkirim. Coba lagi.",
+      "older": "Muat pesan sebelumnya",
+      "online": "online",
+      "pending": "Permintaan terkirim. Pemilik akan mengizinkanmu masuk.",
+      "placeholder": "Tulis dalam bahasa ruang ini…",
+      "request": "Minta bergabung",
+      "send": "Kirim",
+      "slowDown": "Kamu mengirim terlalu cepat. Pelan-pelan sedikit.",
+      "sticker": "Stiker",
+      "unsupported": "Buka aplikasi untuk melihat pesan ini",
+      "voice": "Pesan suara — buka aplikasi untuk mendengarkan"
+    }
+  },
+  "nav": {
+    "languageRooms": "Ruang bahasa",
+    "voiceRooms": "Ruang suara"
+  },
+  "voiceRooms": {
+    "category": {
+      "casual": "Ngobrol santai",
+      "language_practice": "Latihan bahasa",
+      "qa": "Tanya jawab",
+      "topic": "Topik"
+    },
+    "create": {
+      "category": "Jenis ruang",
+      "description": "Mau ngobrol tentang apa? (opsional)",
+      "language": "Bahasa",
+      "max": "Maksimal berapa orang",
+      "name": "Nama ruang",
+      "schedule": "Jadwalkan",
+      "start": "Mulai ruang",
+      "title": "Mulai ruang suara",
+      "when": "Mulai nanti (opsional)"
+    },
+    "errors": {
+      "blocked": "Kamu tidak bisa bergabung ke ruang ini.",
+      "ended": "Ruang ini sudah berakhir.",
+      "full": "Ruang ini sudah penuh.",
+      "generic": "Terjadi kesalahan. Coba lagi.",
+      "gone": "Ruang ini sudah tidak tersedia.",
+      "vipToCreate": "Membuat ruang suara memerlukan paket VIP."
+    },
+    "host": {
+      "end": "Akhiri ruang",
+      "endConfirm": "Akhiri ruang untuk semua orang?",
+      "endYes": "Akhiri ruang",
+      "hands": "Tangan terangkat",
+      "makeCohost": "Jadikan Co-Host",
+      "muteAll": "Bisukan semua",
+      "noHands": "Belum ada yang angkat tangan.",
+      "speakNote": "Siapa pun di ruang ini bisa mengambil mik. Angkat tangan berarti meminta giliran darimu.",
+      "title": "Alat host"
+    },
+    "list": {
+      "create": "Mulai ruang",
+      "emptyLive": "Belum ada yang ngobrol sekarang. Mulai ruang dan ajak orang masuk.",
+      "emptyScheduled": "Belum ada ruang yang dijadwalkan.",
+      "error": "Gagal memuat ruang suara.",
+      "full": "Penuh",
+      "going": "Ikut ✓",
+      "join": "Gabung",
+      "live": "Sedang live",
+      "rsvp": "Ingatkan saya",
+      "scheduled": "Akan datang",
+      "title": "Ruang suara"
+    },
+    "room": {
+      "back": "Semua ruang",
+      "chat": "Obrolan ruang",
+      "chatPlaceholder": "Katakan sesuatu…",
+      "connectFailed": "Gagal terhubung ke audio ruang. Periksa koneksimu dan coba lagi.",
+      "elsewhere": "Kamu bergabung ke ruang ini dari tab atau perangkat lain.",
+      "enableSound": "Ketuk untuk menyalakan suara ruang",
+      "ended": "Ruang ini sudah berakhir.",
+      "findAnother": "Cari ruang lain",
+      "handUp": "Tangan terangkat",
+      "host": "Host",
+      "join": "Gabung ruang",
+      "joinHint": "Kamu akan bergabung sebagai pendengar. Ambil mik kapan pun kamu siap.",
+      "leave": "Keluar",
+      "lost": "Koneksi ke ruang terputus.",
+      "lowerHand": "Turunkan tangan",
+      "micDenied": "Browser-mu memblokir mikrofon. Izinkan mikrofon untuk banatalk.com di bilah alamat, lalu coba lagi. Kamu tetap bisa mendengarkan.",
+      "micError": "Gagal menyalakan mikrofon. Coba lagi.",
+      "micUnavailable": "Mikrofon tidak ditemukan (atau sedang dipakai aplikasi lain). Kamu tetap bisa mendengarkan.",
+      "mute": "Bisukan",
+      "raiseHand": "Angkat tangan",
+      "reconnecting": "Menghubungkan ulang…",
+      "rejoin": "Gabung lagi",
+      "send": "Kirim",
+      "takeMic": "Ambil mik",
+      "useHere": "Dengarkan di sini saja",
+      "you": "kamu"
     }
   }
 }

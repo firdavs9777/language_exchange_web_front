@@ -1293,7 +1293,9 @@
       "topics": "Argomenti",
       "searchPlaceholder": "Cerca membri o argomenti",
       "filtersLabel": "Filtri",
-      "filtersWithCount": "Filtri ({{count}} attivi)"
+      "filtersWithCount": "Filtri ({{count}} attivi)",
+      "city": "Città",
+      "genders": "Generi"
     },
     "filterSheet": {
       "title": "Filtri",
@@ -3238,6 +3240,169 @@
       "media": "Musica, film e serie TV",
       "pronunciation": "Pronuncia",
       "travel": "Viaggi"
+    }
+  },
+  "common": {
+    "cancel": "Annulla",
+    "retry": "Riprova"
+  },
+  "communityCity": {
+    "back": "Comunità",
+    "countries": "Paesi",
+    "empty": "Ancora nessuno qui. Prova un altro luogo.",
+    "error": "Impossibile caricare le persone. Riprova.",
+    "more": "Mostra altri",
+    "search": "Cerca",
+    "searchPlaceholder": "Cerca una città",
+    "searchTitle": "Persone a “{{query}}”",
+    "title": "Persone per luogo"
+  },
+  "communityGenders": {
+    "back": "Comunità",
+    "empty": "Ancora nessuna corrispondenza.",
+    "error": "Impossibile caricare le persone. Riprova.",
+    "female": "Donne",
+    "male": "Uomini",
+    "more": "Mostra altri",
+    "title": "Sfoglia per genere"
+  },
+  "languageRooms": {
+    "create": {
+      "description": "Descrizione (facoltativa)",
+      "language": "Lingua",
+      "name": "Argomento",
+      "submit": "Crea stanza",
+      "title": "Apri una stanza a tema"
+    },
+    "errors": {
+      "banned": "Sei stato rimosso da questa stanza. Puoi chiedere al proprietario di farti rientrare.",
+      "busy": "Questa stanza ha troppe richieste in questo momento. Riprova più tardi.",
+      "generic": "Qualcosa è andato storto. Riprova.",
+      "gone": "Questa stanza non è più disponibile.",
+      "owner": "Il proprietario non può essere rimosso.",
+      "pending": "La tua richiesta è in attesa del proprietario.",
+      "titleLength": "Il nome può avere al massimo 60 caratteri.",
+      "tooMany": "Hai già 10 stanze. Eliminane una per crearne un'altra."
+    },
+    "list": {
+      "create": "Nuova stanza a tema",
+      "empty": "Ancora nessuna stanza.",
+      "error": "Impossibile caricare le stanze linguistiche.",
+      "joined": "Iscritto",
+      "locked": "Bloccata",
+      "title": "Stanze linguistiche"
+    },
+    "owner": {
+      "admin": "admin",
+      "approve": "Fai entrare",
+      "deny": "Rifiuta",
+      "members": "Membri",
+      "noRequests": "Nessuno è in attesa.",
+      "owner": "proprietario",
+      "remove": "Rimuovi dalla stanza",
+      "removeNote": "I membri rimossi possono chiedere di tornare; decidi tu.",
+      "removeYes": "Rimuovi",
+      "requests": "Richieste di accesso"
+    },
+    "room": {
+      "back": "Tutte le stanze",
+      "join": "Entra nella stanza",
+      "leave": "Esci dalla stanza",
+      "media": "Foto o video — apri l'app per vederlo",
+      "notSent": "Non inviato. Riprova.",
+      "older": "Carica messaggi precedenti",
+      "online": "online",
+      "pending": "Richiesta inviata. Il proprietario ti farà entrare.",
+      "placeholder": "Scrivi nella lingua della stanza…",
+      "request": "Chiedi di entrare",
+      "send": "Invia",
+      "slowDown": "Stai inviando troppo velocemente. Rallenta un po'.",
+      "sticker": "Sticker",
+      "unsupported": "Apri l'app per vedere questo messaggio",
+      "voice": "Messaggio vocale — apri l'app per ascoltarlo"
+    }
+  },
+  "nav": {
+    "languageRooms": "Stanze linguistiche",
+    "voiceRooms": "Stanze vocali"
+  },
+  "voiceRooms": {
+    "category": {
+      "casual": "Chiacchiere",
+      "language_practice": "Pratica linguistica",
+      "qa": "Domande e risposte",
+      "topic": "Argomento"
+    },
+    "create": {
+      "category": "Tipo di stanza",
+      "description": "Di cosa parlerete? (facoltativo)",
+      "language": "Lingua",
+      "max": "Numero massimo di persone",
+      "name": "Nome della stanza",
+      "schedule": "Programma",
+      "start": "Avvia stanza",
+      "title": "Apri una stanza vocale",
+      "when": "Inizia più tardi (facoltativo)"
+    },
+    "errors": {
+      "blocked": "Non puoi entrare in questa stanza.",
+      "ended": "Questa stanza è terminata.",
+      "full": "Questa stanza è piena.",
+      "generic": "Qualcosa è andato storto. Riprova.",
+      "gone": "Questa stanza non è più disponibile.",
+      "vipToCreate": "Per creare stanze vocali serve un piano VIP."
+    },
+    "host": {
+      "end": "Termina stanza",
+      "endConfirm": "Terminare la stanza per tutti?",
+      "endYes": "Termina stanza",
+      "hands": "Mani alzate",
+      "makeCohost": "Promuovi a co-host",
+      "muteAll": "Silenzia tutti",
+      "noHands": "Nessuno ha alzato la mano.",
+      "speakNote": "Chiunque nella stanza può prendere il microfono. Una mano alzata ti chiede il turno.",
+      "title": "Strumenti del conduttore"
+    },
+    "list": {
+      "create": "Avvia una stanza",
+      "emptyLive": "Nessuno sta parlando ora. Avvia una stanza e invita altre persone.",
+      "emptyScheduled": "Ancora nessuna stanza programmata.",
+      "error": "Impossibile caricare le stanze vocali.",
+      "full": "Piena",
+      "going": "Ci sarò ✓",
+      "join": "Entra",
+      "live": "In diretta",
+      "rsvp": "Ricordamelo",
+      "scheduled": "In arrivo",
+      "title": "Stanze vocali"
+    },
+    "room": {
+      "back": "Tutte le stanze",
+      "chat": "Chat della stanza",
+      "chatPlaceholder": "Scrivi qualcosa…",
+      "connectFailed": "Impossibile collegarsi all'audio della stanza. Controlla la connessione e riprova.",
+      "elsewhere": "Sei entrato in questa stanza da un'altra scheda o dispositivo.",
+      "enableSound": "Tocca per attivare l'audio della stanza",
+      "ended": "Questa stanza è terminata.",
+      "findAnother": "Trova un'altra stanza",
+      "handUp": "Mano alzata",
+      "host": "Conduttore",
+      "join": "Entra nella stanza",
+      "joinHint": "Entrerai come ascoltatore. Prendi il microfono quando vuoi.",
+      "leave": "Esci",
+      "lost": "Connessione alla stanza persa.",
+      "lowerHand": "Abbassa la mano",
+      "micDenied": "Il browser sta bloccando il microfono. Consenti il microfono per banatalk.com nella barra degli indirizzi, poi riprova. Puoi continuare ad ascoltare.",
+      "micError": "Impossibile attivare il microfono. Riprova.",
+      "micUnavailable": "Nessun microfono trovato (o un'altra app lo sta usando). Puoi continuare ad ascoltare.",
+      "mute": "Silenzia",
+      "raiseHand": "Alza la mano",
+      "reconnecting": "Riconnessione…",
+      "rejoin": "Rientra",
+      "send": "Invia",
+      "takeMic": "Prendi il microfono",
+      "useHere": "Ascolta qui",
+      "you": "tu"
     }
   }
 }

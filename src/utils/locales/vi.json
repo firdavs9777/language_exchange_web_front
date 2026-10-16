@@ -1312,7 +1312,9 @@
       "topics": "Chủ đề",
       "searchPlaceholder": "Tìm thành viên hoặc chủ đề",
       "filtersLabel": "Bộ lọc",
-      "filtersWithCount": "Bộ lọc ({{count}} đang dùng)"
+      "filtersWithCount": "Bộ lọc ({{count}} đang dùng)",
+      "city": "Thành phố",
+      "genders": "Giới tính"
     },
     "filterSheet": {
       "title": "Bộ lọc",
@@ -3237,6 +3239,169 @@
       "media": "Nhạc, phim & truyền hình",
       "pronunciation": "Phát âm",
       "travel": "Du lịch"
+    }
+  },
+  "common": {
+    "cancel": "Hủy",
+    "retry": "Thử lại"
+  },
+  "communityCity": {
+    "back": "Cộng đồng",
+    "countries": "Quốc gia",
+    "empty": "Chưa có ai phù hợp ở đây. Hãy thử nơi khác.",
+    "error": "Không tải được danh sách người dùng. Hãy thử lại.",
+    "more": "Xem thêm",
+    "search": "Tìm kiếm",
+    "searchPlaceholder": "Tìm một thành phố",
+    "searchTitle": "Mọi người ở “{{query}}”",
+    "title": "Mọi người theo địa điểm"
+  },
+  "communityGenders": {
+    "back": "Cộng đồng",
+    "empty": "Chưa có ai phù hợp.",
+    "error": "Không tải được danh sách người dùng. Hãy thử lại.",
+    "female": "Nữ",
+    "male": "Nam",
+    "more": "Xem thêm",
+    "title": "Xem theo giới tính"
+  },
+  "languageRooms": {
+    "create": {
+      "description": "Mô tả (không bắt buộc)",
+      "language": "Ngôn ngữ",
+      "name": "Chủ đề",
+      "submit": "Tạo phòng",
+      "title": "Tạo phòng chủ đề"
+    },
+    "errors": {
+      "banned": "Bạn đã bị xóa khỏi phòng này. Bạn có thể nhờ chủ phòng cho vào lại.",
+      "busy": "Phòng này đang có quá nhiều yêu cầu. Hãy thử lại sau.",
+      "generic": "Đã xảy ra lỗi. Hãy thử lại.",
+      "gone": "Phòng này không còn nữa.",
+      "owner": "Không thể xóa chủ phòng.",
+      "pending": "Yêu cầu của bạn đang chờ chủ phòng duyệt.",
+      "titleLength": "Tên tối đa 60 ký tự.",
+      "tooMany": "Bạn đã có 10 phòng. Hãy xóa một phòng để tạo phòng mới."
+    },
+    "list": {
+      "create": "Phòng chủ đề mới",
+      "empty": "Chưa có phòng nào.",
+      "error": "Không tải được phòng ngôn ngữ.",
+      "joined": "Đã tham gia",
+      "locked": "Đã khóa",
+      "title": "Phòng ngôn ngữ"
+    },
+    "owner": {
+      "admin": "quản trị viên",
+      "approve": "Cho vào",
+      "deny": "Từ chối",
+      "members": "Thành viên",
+      "noRequests": "Không có ai đang chờ.",
+      "owner": "chủ phòng",
+      "remove": "Xóa khỏi phòng",
+      "removeNote": "Thành viên bị xóa có thể xin quay lại; bạn là người quyết định.",
+      "removeYes": "Xóa",
+      "requests": "Yêu cầu tham gia"
+    },
+    "room": {
+      "back": "Tất cả phòng",
+      "join": "Tham gia phòng",
+      "leave": "Rời phòng",
+      "media": "Ảnh hoặc video — mở ứng dụng để xem",
+      "notSent": "Chưa gửi được. Hãy thử lại.",
+      "older": "Tải tin nhắn cũ hơn",
+      "online": "trực tuyến",
+      "pending": "Đã gửi yêu cầu. Chủ phòng sẽ cho bạn vào.",
+      "placeholder": "Viết bằng ngôn ngữ của phòng…",
+      "request": "Xin tham gia",
+      "send": "Gửi",
+      "slowDown": "Bạn đang gửi quá nhanh. Chậm lại một chút nhé.",
+      "sticker": "Nhãn dán",
+      "unsupported": "Mở ứng dụng để xem tin nhắn này",
+      "voice": "Tin nhắn thoại — mở ứng dụng để nghe"
+    }
+  },
+  "nav": {
+    "languageRooms": "Phòng ngôn ngữ",
+    "voiceRooms": "Phòng thoại"
+  },
+  "voiceRooms": {
+    "category": {
+      "casual": "Trò chuyện thoải mái",
+      "language_practice": "Luyện ngôn ngữ",
+      "qa": "Hỏi & đáp",
+      "topic": "Chủ đề"
+    },
+    "create": {
+      "category": "Loại phòng",
+      "description": "Bạn sẽ nói về điều gì? (không bắt buộc)",
+      "language": "Ngôn ngữ",
+      "max": "Tối đa bao nhiêu người",
+      "name": "Tên phòng",
+      "schedule": "Lên lịch",
+      "start": "Bắt đầu phòng",
+      "title": "Tạo phòng thoại",
+      "when": "Bắt đầu sau (không bắt buộc)"
+    },
+    "errors": {
+      "blocked": "Bạn không thể tham gia phòng này.",
+      "ended": "Phòng này đã kết thúc.",
+      "full": "Phòng này đã đầy.",
+      "generic": "Đã xảy ra lỗi. Hãy thử lại.",
+      "gone": "Phòng này không còn nữa.",
+      "vipToCreate": "Cần gói VIP để tạo phòng thoại."
+    },
+    "host": {
+      "end": "Kết thúc phòng",
+      "endConfirm": "Kết thúc phòng cho mọi người?",
+      "endYes": "Kết thúc phòng",
+      "hands": "Người giơ tay",
+      "makeCohost": "Nâng lên đồng chủ phòng",
+      "muteAll": "Tắt mic mọi người",
+      "noHands": "Chưa có ai giơ tay.",
+      "speakNote": "Bất kỳ ai trong phòng cũng có thể cầm mic. Giơ tay là xin bạn một lượt nói.",
+      "title": "Công cụ chủ phòng"
+    },
+    "list": {
+      "create": "Tạo phòng",
+      "emptyLive": "Hiện chưa có ai trò chuyện. Hãy tạo phòng và mời mọi người vào.",
+      "emptyScheduled": "Chưa có phòng nào được lên lịch.",
+      "error": "Không tải được phòng thoại.",
+      "full": "Đầy",
+      "going": "Sẽ tham gia ✓",
+      "join": "Tham gia",
+      "live": "Đang diễn ra",
+      "rsvp": "Nhắc tôi",
+      "scheduled": "Sắp diễn ra",
+      "title": "Phòng thoại"
+    },
+    "room": {
+      "back": "Tất cả phòng",
+      "chat": "Trò chuyện trong phòng",
+      "chatPlaceholder": "Nói gì đó…",
+      "connectFailed": "Không kết nối được âm thanh của phòng. Hãy kiểm tra kết nối và thử lại.",
+      "elsewhere": "Bạn đã tham gia phòng này từ một tab hoặc thiết bị khác.",
+      "enableSound": "Chạm để bật âm thanh của phòng",
+      "ended": "Phòng này đã kết thúc.",
+      "findAnother": "Tìm phòng khác",
+      "handUp": "Đã giơ tay",
+      "host": "Chủ phòng",
+      "join": "Tham gia phòng",
+      "joinHint": "Bạn sẽ tham gia với tư cách người nghe. Cầm mic bất cứ khi nào bạn sẵn sàng.",
+      "leave": "Rời đi",
+      "lost": "Mất kết nối với phòng.",
+      "lowerHand": "Hạ tay",
+      "micDenied": "Trình duyệt đang chặn micrô. Hãy cho phép micrô cho banatalk.com trên thanh địa chỉ rồi thử lại. Bạn vẫn có thể tiếp tục nghe.",
+      "micError": "Không bật được micrô. Hãy thử lại.",
+      "micUnavailable": "Không tìm thấy micrô (hoặc một ứng dụng khác đang dùng). Bạn vẫn có thể tiếp tục nghe.",
+      "mute": "Tắt mic",
+      "raiseHand": "Giơ tay",
+      "reconnecting": "Đang kết nối lại…",
+      "rejoin": "Tham gia lại",
+      "send": "Gửi",
+      "takeMic": "Cầm mic",
+      "useHere": "Nghe ở đây",
+      "you": "bạn"
     }
   }
 }

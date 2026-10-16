@@ -1312,7 +1312,9 @@
       "topics": "주제",
       "searchPlaceholder": "멤버나 주제 찾기",
       "filtersLabel": "필터",
-      "filtersWithCount": "필터 ({{count}}개)"
+      "filtersWithCount": "필터 ({{count}}개)",
+      "city": "도시",
+      "genders": "성별"
     },
     "filterSheet": {
       "title": "필터",
@@ -3237,6 +3239,169 @@
       "media": "음악·영화·드라마",
       "pronunciation": "발음",
       "travel": "여행"
+    }
+  },
+  "common": {
+    "cancel": "취소",
+    "retry": "다시 시도"
+  },
+  "communityCity": {
+    "back": "커뮤니티",
+    "countries": "국가",
+    "empty": "아직 조건에 맞는 사람이 없어요. 다른 지역을 찾아보세요.",
+    "error": "사람들을 불러오지 못했어요. 다시 시도해 주세요.",
+    "more": "더 보기",
+    "search": "검색",
+    "searchPlaceholder": "도시 검색",
+    "searchTitle": "“{{query}}”에 있는 사람들",
+    "title": "지역별 사람 찾기"
+  },
+  "communityGenders": {
+    "back": "커뮤니티",
+    "empty": "아직 조건에 맞는 사람이 없어요.",
+    "error": "사람들을 불러오지 못했어요. 다시 시도해 주세요.",
+    "female": "여성",
+    "male": "남성",
+    "more": "더 보기",
+    "title": "성별로 둘러보기"
+  },
+  "languageRooms": {
+    "create": {
+      "description": "설명 (선택)",
+      "language": "언어",
+      "name": "주제",
+      "submit": "룸 만들기",
+      "title": "주제 룸 시작하기"
+    },
+    "errors": {
+      "banned": "이 룸에서 내보내졌어요. 방장에게 다시 들어갈 수 있게 요청할 수 있어요.",
+      "busy": "지금 이 룸에 요청이 너무 많아요. 잠시 후 다시 시도해 주세요.",
+      "generic": "문제가 생겼어요. 다시 시도해 주세요.",
+      "gone": "더 이상 이용할 수 없는 룸이에요.",
+      "owner": "방장은 내보낼 수 없어요.",
+      "pending": "요청이 방장의 승인을 기다리고 있어요.",
+      "titleLength": "이름은 최대 60자까지 쓸 수 있어요.",
+      "tooMany": "이미 룸이 10개 있어요. 새로 만들려면 하나를 삭제해 주세요."
+    },
+    "list": {
+      "create": "새 주제 룸",
+      "empty": "아직 룸이 없어요.",
+      "error": "언어 룸을 불러오지 못했어요.",
+      "joined": "참여 중",
+      "locked": "잠김",
+      "title": "언어 룸"
+    },
+    "owner": {
+      "admin": "관리자",
+      "approve": "수락",
+      "deny": "거절",
+      "members": "멤버",
+      "noRequests": "기다리는 사람이 없어요.",
+      "owner": "방장",
+      "remove": "룸에서 내보내기",
+      "removeNote": "내보낸 멤버도 다시 요청할 수 있어요. 수락 여부는 회원님이 정해요.",
+      "removeYes": "내보내기",
+      "requests": "참여 요청"
+    },
+    "room": {
+      "back": "전체 룸",
+      "join": "룸 참여하기",
+      "leave": "룸 나가기",
+      "media": "사진 또는 동영상 — 앱에서 확인하세요",
+      "notSent": "전송되지 않았어요. 다시 시도해 주세요.",
+      "older": "이전 메시지 불러오기",
+      "online": "온라인",
+      "pending": "요청을 보냈어요. 방장이 수락하면 들어갈 수 있어요.",
+      "placeholder": "룸의 언어로 써 보세요…",
+      "request": "참여 요청하기",
+      "send": "보내기",
+      "slowDown": "너무 빨리 보내고 있어요. 조금 천천히 보내 주세요.",
+      "sticker": "스티커",
+      "unsupported": "앱에서 이 메시지를 확인하세요",
+      "voice": "음성 메시지 — 앱에서 들어 보세요"
+    }
+  },
+  "nav": {
+    "languageRooms": "언어 룸",
+    "voiceRooms": "보이스 룸"
+  },
+  "voiceRooms": {
+    "category": {
+      "casual": "자유 대화",
+      "language_practice": "언어 연습",
+      "qa": "Q&A",
+      "topic": "주제"
+    },
+    "create": {
+      "category": "룸 종류",
+      "description": "어떤 이야기를 나눌까요? (선택)",
+      "language": "언어",
+      "max": "최대 인원",
+      "name": "룸 이름",
+      "schedule": "예약",
+      "start": "룸 시작하기",
+      "title": "보이스 룸 시작하기",
+      "when": "나중에 시작 (선택)"
+    },
+    "errors": {
+      "blocked": "이 룸에 참여할 수 없어요.",
+      "ended": "종료된 룸이에요.",
+      "full": "룸이 꽉 찼어요.",
+      "generic": "문제가 생겼어요. 다시 시도해 주세요.",
+      "gone": "더 이상 이용할 수 없는 룸이에요.",
+      "vipToCreate": "보이스 룸을 만들려면 VIP 플랜이 필요해요."
+    },
+    "host": {
+      "end": "룸 종료",
+      "endConfirm": "모두에게 룸을 종료할까요?",
+      "endYes": "룸 종료",
+      "hands": "손 든 사람",
+      "makeCohost": "공동 호스트로 지정",
+      "muteAll": "전체 음소거",
+      "noHands": "손 든 사람이 없어요.",
+      "speakNote": "룸에 있는 누구나 마이크를 잡을 수 있어요. 손을 들면 호스트에게 발언 차례를 요청해요.",
+      "title": "호스트 도구"
+    },
+    "list": {
+      "create": "룸 시작하기",
+      "emptyLive": "지금 대화 중인 사람이 없어요. 룸을 열고 사람들을 초대해 보세요.",
+      "emptyScheduled": "아직 예약된 룸이 없어요.",
+      "error": "보이스 룸을 불러오지 못했어요.",
+      "full": "꽉 참",
+      "going": "참석 예정 ✓",
+      "join": "참여",
+      "live": "지금 라이브",
+      "rsvp": "알림 받기",
+      "scheduled": "예정",
+      "title": "보이스 룸"
+    },
+    "room": {
+      "back": "전체 룸",
+      "chat": "룸 채팅",
+      "chatPlaceholder": "한마디 해 보세요…",
+      "connectFailed": "룸 오디오에 연결하지 못했어요. 연결 상태를 확인하고 다시 시도해 주세요.",
+      "elsewhere": "다른 탭이나 기기에서 이 룸에 참여했어요.",
+      "enableSound": "탭해서 룸 소리 켜기",
+      "ended": "종료된 룸이에요.",
+      "findAnother": "다른 룸 찾기",
+      "handUp": "손 들었음",
+      "host": "호스트",
+      "join": "룸 참여하기",
+      "joinHint": "청취자로 참여해요. 준비되면 언제든 마이크를 잡으세요.",
+      "leave": "나가기",
+      "lost": "룸과의 연결이 끊어졌어요.",
+      "lowerHand": "손 내리기",
+      "micDenied": "브라우저가 마이크를 차단하고 있어요. 주소창에서 banatalk.com의 마이크를 허용한 뒤 다시 시도해 주세요. 듣기는 계속할 수 있어요.",
+      "micError": "마이크를 켜지 못했어요. 다시 시도해 주세요.",
+      "micUnavailable": "마이크를 찾지 못했어요 (또는 다른 앱이 사용 중이에요). 듣기는 계속할 수 있어요.",
+      "mute": "음소거",
+      "raiseHand": "손 들기",
+      "reconnecting": "다시 연결하는 중…",
+      "rejoin": "다시 참여",
+      "send": "보내기",
+      "takeMic": "마이크 잡기",
+      "useHere": "여기서 듣기",
+      "you": "나"
     }
   }
 }

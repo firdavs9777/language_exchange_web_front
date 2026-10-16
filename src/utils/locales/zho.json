@@ -1312,7 +1312,9 @@
       "topics": "话题",
       "searchPlaceholder": "查找成员或话题",
       "filtersLabel": "筛选",
-      "filtersWithCount": "筛选（已选 {{count}} 项）"
+      "filtersWithCount": "筛选（已选 {{count}} 项）",
+      "city": "城市",
+      "genders": "性别"
     },
     "filterSheet": {
       "title": "筛选",
@@ -3237,6 +3239,169 @@
       "media": "音乐、影视",
       "pronunciation": "发音",
       "travel": "旅行"
+    }
+  },
+  "common": {
+    "cancel": "取消",
+    "retry": "重试"
+  },
+  "communityCity": {
+    "back": "社区",
+    "countries": "国家",
+    "empty": "暂时没有符合条件的人，换个地方试试吧。",
+    "error": "无法加载用户，请重试。",
+    "more": "显示更多",
+    "search": "搜索",
+    "searchPlaceholder": "搜索城市",
+    "searchTitle": "“{{query}}”的人",
+    "title": "按地区找人"
+  },
+  "communityGenders": {
+    "back": "社区",
+    "empty": "暂时没有符合条件的人。",
+    "error": "无法加载用户，请重试。",
+    "female": "女",
+    "male": "男",
+    "more": "显示更多",
+    "title": "按性别浏览"
+  },
+  "languageRooms": {
+    "create": {
+      "description": "简介（选填）",
+      "language": "语言",
+      "name": "话题",
+      "submit": "创建房间",
+      "title": "创建话题房"
+    },
+    "errors": {
+      "banned": "你已被移出此房间，可以请房主让你重新加入。",
+      "busy": "此房间当前请求过多，请稍后再试。",
+      "generic": "出了点问题，请重试。",
+      "gone": "此房间已不可用。",
+      "owner": "不能移出房主。",
+      "pending": "你的申请正在等待房主处理。",
+      "titleLength": "名称最多 60 个字。",
+      "tooMany": "你已有 10 个房间，删除一个后才能再创建。"
+    },
+    "list": {
+      "create": "新建话题房",
+      "empty": "还没有房间。",
+      "error": "无法加载语言房。",
+      "joined": "已加入",
+      "locked": "已锁定",
+      "title": "语言房"
+    },
+    "owner": {
+      "admin": "管理员",
+      "approve": "同意",
+      "deny": "拒绝",
+      "members": "成员",
+      "noRequests": "没有人在等待。",
+      "owner": "房主",
+      "remove": "移出房间",
+      "removeNote": "被移出的成员可以申请回来，由你决定是否同意。",
+      "removeYes": "移出",
+      "requests": "加入申请"
+    },
+    "room": {
+      "back": "所有房间",
+      "join": "加入房间",
+      "leave": "离开房间",
+      "media": "图片或视频 — 打开 App 查看",
+      "notSent": "发送失败，请重试。",
+      "older": "加载更早的消息",
+      "online": "在线",
+      "pending": "申请已发送，房主同意后即可加入。",
+      "placeholder": "用房间的语言写点什么…",
+      "request": "申请加入",
+      "send": "发送",
+      "slowDown": "你发送得太快了，请稍微慢一点。",
+      "sticker": "贴纸",
+      "unsupported": "打开 App 查看此消息",
+      "voice": "语音消息 — 打开 App 收听"
+    }
+  },
+  "nav": {
+    "languageRooms": "语言房",
+    "voiceRooms": "语音房"
+  },
+  "voiceRooms": {
+    "category": {
+      "casual": "闲聊",
+      "language_practice": "语言练习",
+      "qa": "问答",
+      "topic": "话题"
+    },
+    "create": {
+      "category": "房间类型",
+      "description": "想聊些什么？（选填）",
+      "language": "语言",
+      "max": "人数上限",
+      "name": "房间名称",
+      "schedule": "预约",
+      "start": "开始",
+      "title": "创建语音房",
+      "when": "稍后开始（选填）"
+    },
+    "errors": {
+      "blocked": "你无法加入此房间。",
+      "ended": "此房间已结束。",
+      "full": "此房间已满。",
+      "generic": "出了点问题，请重试。",
+      "gone": "此房间已不可用。",
+      "vipToCreate": "创建语音房需要 VIP 会员。"
+    },
+    "host": {
+      "end": "结束房间",
+      "endConfirm": "要为所有人结束房间吗？",
+      "endYes": "结束房间",
+      "hands": "举手列表",
+      "makeCohost": "设为副房主",
+      "muteAll": "全员静音",
+      "noHands": "还没有人举手。",
+      "speakNote": "房间里的任何人都可以上麦。举手是向你申请发言机会。",
+      "title": "房主工具"
+    },
+    "list": {
+      "create": "创建房间",
+      "emptyLive": "现在没人在聊天。创建一个房间，邀请大家加入吧。",
+      "emptyScheduled": "暂无预约的房间。",
+      "error": "无法加载语音房。",
+      "full": "已满",
+      "going": "已预约 ✓",
+      "join": "加入",
+      "live": "正在直播",
+      "rsvp": "提醒我",
+      "scheduled": "即将开始",
+      "title": "语音房"
+    },
+    "room": {
+      "back": "所有房间",
+      "chat": "房间聊天",
+      "chatPlaceholder": "说点什么…",
+      "connectFailed": "无法连接房间音频，请检查网络后重试。",
+      "elsewhere": "你已在其他标签页或设备上加入此房间。",
+      "enableSound": "点击开启房间声音",
+      "ended": "此房间已结束。",
+      "findAnother": "寻找其他房间",
+      "handUp": "已举手",
+      "host": "房主",
+      "join": "加入房间",
+      "joinHint": "你将以听众身份加入，准备好后随时可以上麦。",
+      "leave": "离开",
+      "lost": "与房间的连接已断开。",
+      "lowerHand": "放下手",
+      "micDenied": "浏览器拦截了麦克风。请在地址栏中允许 banatalk.com 使用麦克风，然后重试。你可以继续收听。",
+      "micError": "无法开启麦克风，请重试。",
+      "micUnavailable": "未找到麦克风（或其他应用正在使用）。你可以继续收听。",
+      "mute": "静音",
+      "raiseHand": "举手",
+      "reconnecting": "正在重新连接…",
+      "rejoin": "重新加入",
+      "send": "发送",
+      "takeMic": "上麦",
+      "useHere": "在这里收听",
+      "you": "你"
     }
   }
 }

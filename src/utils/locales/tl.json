@@ -1312,7 +1312,9 @@
       "topics": "Mga paksa",
       "searchPlaceholder": "Maghanap ng miyembro o paksa",
       "filtersLabel": "Mga filter",
-      "filtersWithCount": "Mga filter ({{count}} aktibo)"
+      "filtersWithCount": "Mga filter ({{count}} aktibo)",
+      "city": "Lungsod",
+      "genders": "Kasarian"
     },
     "filterSheet": {
       "title": "Mga filter",
@@ -3237,6 +3239,169 @@
       "media": "Musika, pelikula at TV",
       "pronunciation": "Bigkas",
       "travel": "Paglalakbay"
+    }
+  },
+  "common": {
+    "cancel": "Kanselahin",
+    "retry": "Subukan ulit"
+  },
+  "communityCity": {
+    "back": "Komunidad",
+    "countries": "Mga bansa",
+    "empty": "Wala pang tumutugma rito. Subukan ang ibang lugar.",
+    "error": "Hindi ma-load ang mga tao. Subukan ulit.",
+    "more": "Magpakita pa",
+    "search": "Maghanap",
+    "searchPlaceholder": "Maghanap ng lungsod",
+    "searchTitle": "Mga tao sa “{{query}}”",
+    "title": "Mga tao ayon sa lugar"
+  },
+  "communityGenders": {
+    "back": "Komunidad",
+    "empty": "Wala pang tumutugma.",
+    "error": "Hindi ma-load ang mga tao. Subukan ulit.",
+    "female": "Babae",
+    "male": "Lalaki",
+    "more": "Magpakita pa",
+    "title": "I-browse ayon sa kasarian"
+  },
+  "languageRooms": {
+    "create": {
+      "description": "Paglalarawan (opsyonal)",
+      "language": "Wika",
+      "name": "Paksa",
+      "submit": "Gumawa ng room",
+      "title": "Magsimula ng topic room"
+    },
+    "errors": {
+      "banned": "Inalis ka sa room na ito. Puwede mong hilingin sa owner na papasukin ka ulit.",
+      "busy": "Masyadong maraming request sa room na ito ngayon. Subukan mamaya.",
+      "generic": "Nagkaproblema. Subukan ulit.",
+      "gone": "Hindi na available ang room na ito.",
+      "owner": "Hindi puwedeng alisin ang owner.",
+      "pending": "Naghihintay pa sa owner ang request mo.",
+      "titleLength": "Hanggang 60 character lang ang pangalan.",
+      "tooMany": "May 10 room ka na. Mag-delete ng isa para makagawa ng bago."
+    },
+    "list": {
+      "create": "Bagong topic room",
+      "empty": "Wala pang room.",
+      "error": "Hindi ma-load ang mga language room.",
+      "joined": "Kasali na",
+      "locked": "Naka-lock",
+      "title": "Mga language room"
+    },
+    "owner": {
+      "admin": "admin",
+      "approve": "Papasukin",
+      "deny": "Tanggihan",
+      "members": "Mga miyembro",
+      "noRequests": "Walang naghihintay.",
+      "owner": "owner",
+      "remove": "Alisin sa room",
+      "removeNote": "Puwedeng humiling na bumalik ang mga inalis na miyembro; ikaw ang magpapasya.",
+      "removeYes": "Alisin",
+      "requests": "Mga request na sumali"
+    },
+    "room": {
+      "back": "Lahat ng room",
+      "join": "Sumali sa room",
+      "leave": "Umalis sa room",
+      "media": "Larawan o video — buksan ang app para makita",
+      "notSent": "Hindi naipadala. Subukan ulit.",
+      "older": "I-load ang mga naunang mensahe",
+      "online": "online",
+      "pending": "Naipadala ang request. Papapasukin ka ng owner.",
+      "placeholder": "Sumulat sa wika ng room…",
+      "request": "Humiling na sumali",
+      "send": "Ipadala",
+      "slowDown": "Masyado kang mabilis magpadala. Dahan-dahan lang.",
+      "sticker": "Sticker",
+      "unsupported": "Buksan ang app para makita ang mensaheng ito",
+      "voice": "Voice message — buksan ang app para pakinggan"
+    }
+  },
+  "nav": {
+    "languageRooms": "Mga language room",
+    "voiceRooms": "Mga voice room"
+  },
+  "voiceRooms": {
+    "category": {
+      "casual": "Kuwentuhan",
+      "language_practice": "Pagsasanay sa wika",
+      "qa": "Tanong at sagot",
+      "topic": "Paksa"
+    },
+    "create": {
+      "category": "Uri ng room",
+      "description": "Ano ang pag-uusapan ninyo? (opsyonal)",
+      "language": "Wika",
+      "max": "Hanggang ilang tao",
+      "name": "Pangalan ng room",
+      "schedule": "I-schedule",
+      "start": "Simulan ang room",
+      "title": "Magsimula ng voice room",
+      "when": "Simulan mamaya (opsyonal)"
+    },
+    "errors": {
+      "blocked": "Hindi ka puwedeng sumali sa room na ito.",
+      "ended": "Natapos na ang room na ito.",
+      "full": "Puno na ang room na ito.",
+      "generic": "Nagkaproblema. Subukan ulit.",
+      "gone": "Hindi na available ang room na ito.",
+      "vipToCreate": "Kailangan ng VIP plan para gumawa ng voice room."
+    },
+    "host": {
+      "end": "Tapusin ang room",
+      "endConfirm": "Tapusin ang room para sa lahat?",
+      "endYes": "Tapusin ang room",
+      "hands": "Mga nakataas na kamay",
+      "makeCohost": "Gawing Co-Host",
+      "muteAll": "I-mute ang lahat",
+      "noHands": "Wala pang nagtaas ng kamay.",
+      "speakNote": "Puwedeng kunin ng sinuman sa room ang mic. Ang pagtaas ng kamay ay paghingi ng turn sa iyo.",
+      "title": "Mga host tool"
+    },
+    "list": {
+      "create": "Magsimula ng room",
+      "emptyLive": "Walang nag-uusap ngayon. Magsimula ng room at mag-imbita ng mga tao.",
+      "emptyScheduled": "Wala pang naka-schedule na room.",
+      "error": "Hindi ma-load ang mga voice room.",
+      "full": "Puno",
+      "going": "Pupunta ✓",
+      "join": "Sumali",
+      "live": "Live ngayon",
+      "rsvp": "Paalalahanan ako",
+      "scheduled": "Paparating",
+      "title": "Mga voice room"
+    },
+    "room": {
+      "back": "Lahat ng room",
+      "chat": "Chat ng room",
+      "chatPlaceholder": "Magsabi ng kahit ano…",
+      "connectFailed": "Hindi maka-connect sa audio ng room. Tingnan ang iyong koneksyon at subukan ulit.",
+      "elsewhere": "Sumali ka sa room na ito mula sa ibang tab o device.",
+      "enableSound": "I-tap para buksan ang tunog ng room",
+      "ended": "Natapos na ang room na ito.",
+      "findAnother": "Maghanap ng ibang room",
+      "handUp": "Nakataas ang kamay",
+      "host": "Host",
+      "join": "Sumali sa room",
+      "joinHint": "Sasali ka bilang tagapakinig. Kunin ang mic kapag handa ka na.",
+      "leave": "Umalis",
+      "lost": "Naputol ang koneksyon sa room.",
+      "lowerHand": "Ibaba ang kamay",
+      "micDenied": "Bina-block ng browser mo ang mikropono. Payagan ang mikropono para sa banatalk.com sa address bar, saka subukan ulit. Puwede ka pa ring makinig.",
+      "micError": "Hindi mabuksan ang mikropono. Subukan ulit.",
+      "micUnavailable": "Walang nakitang mikropono (o ginagamit ito ng ibang app). Puwede ka pa ring makinig.",
+      "mute": "I-mute",
+      "raiseHand": "Itaas ang kamay",
+      "reconnecting": "Kumokonekta ulit…",
+      "rejoin": "Sumali ulit",
+      "send": "Ipadala",
+      "takeMic": "Kunin ang mic",
+      "useHere": "Dito na lang makinig",
+      "you": "ikaw"
     }
   }
 }

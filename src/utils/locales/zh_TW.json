@@ -1312,7 +1312,9 @@
       "topics": "話題",
       "searchPlaceholder": "尋找成員或話題",
       "filtersLabel": "篩選",
-      "filtersWithCount": "篩選（已選 {{count}} 項）"
+      "filtersWithCount": "篩選（已選 {{count}} 項）",
+      "city": "城市",
+      "genders": "性別"
     },
     "filterSheet": {
       "title": "篩選",
@@ -3237,6 +3239,169 @@
       "media": "音樂、影視",
       "pronunciation": "發音",
       "travel": "旅遊"
+    }
+  },
+  "common": {
+    "cancel": "取消",
+    "retry": "再試一次"
+  },
+  "communityCity": {
+    "back": "社群",
+    "countries": "國家",
+    "empty": "目前還沒有符合條件的人，換個地方試試看。",
+    "error": "無法載入使用者，請再試一次。",
+    "more": "顯示更多",
+    "search": "搜尋",
+    "searchPlaceholder": "搜尋城市",
+    "searchTitle": "「{{query}}」的人",
+    "title": "依地區找人"
+  },
+  "communityGenders": {
+    "back": "社群",
+    "empty": "目前還沒有符合條件的人。",
+    "error": "無法載入使用者，請再試一次。",
+    "female": "女",
+    "male": "男",
+    "more": "顯示更多",
+    "title": "依性別瀏覽"
+  },
+  "languageRooms": {
+    "create": {
+      "description": "簡介（選填）",
+      "language": "語言",
+      "name": "話題",
+      "submit": "建立聊天室",
+      "title": "開一個話題聊天室"
+    },
+    "errors": {
+      "banned": "你已被移出這個聊天室，可以請房主讓你重新加入。",
+      "busy": "這個聊天室目前請求太多，請稍後再試。",
+      "generic": "發生錯誤，請再試一次。",
+      "gone": "這個聊天室已無法使用。",
+      "owner": "無法移出房主。",
+      "pending": "你的申請正在等待房主處理。",
+      "titleLength": "名稱最多 60 個字。",
+      "tooMany": "你已經有 10 個聊天室，刪除一個才能再建立。"
+    },
+    "list": {
+      "create": "新增話題聊天室",
+      "empty": "還沒有聊天室。",
+      "error": "無法載入語言聊天室。",
+      "joined": "已加入",
+      "locked": "已鎖定",
+      "title": "語言聊天室"
+    },
+    "owner": {
+      "admin": "管理員",
+      "approve": "同意",
+      "deny": "拒絕",
+      "members": "成員",
+      "noRequests": "沒有人在等待。",
+      "owner": "房主",
+      "remove": "移出聊天室",
+      "removeNote": "被移出的成員可以申請回來，由你決定是否同意。",
+      "removeYes": "移出",
+      "requests": "加入申請"
+    },
+    "room": {
+      "back": "所有聊天室",
+      "join": "加入聊天室",
+      "leave": "離開聊天室",
+      "media": "相片或影片 — 開啟 App 查看",
+      "notSent": "傳送失敗，請再試一次。",
+      "older": "載入較早的訊息",
+      "online": "線上",
+      "pending": "已送出申請，房主同意後就能加入。",
+      "placeholder": "用聊天室的語言寫點什麼…",
+      "request": "申請加入",
+      "send": "傳送",
+      "slowDown": "你傳得太快了，請稍微慢一點。",
+      "sticker": "貼圖",
+      "unsupported": "開啟 App 查看這則訊息",
+      "voice": "語音訊息 — 開啟 App 收聽"
+    }
+  },
+  "nav": {
+    "languageRooms": "語言聊天室",
+    "voiceRooms": "語音聊天室"
+  },
+  "voiceRooms": {
+    "category": {
+      "casual": "閒聊",
+      "language_practice": "語言練習",
+      "qa": "問答",
+      "topic": "話題"
+    },
+    "create": {
+      "category": "聊天室類型",
+      "description": "想聊些什麼？（選填）",
+      "language": "語言",
+      "max": "人數上限",
+      "name": "聊天室名稱",
+      "schedule": "預約",
+      "start": "開始",
+      "title": "開一個語音聊天室",
+      "when": "稍後開始（選填）"
+    },
+    "errors": {
+      "blocked": "你無法加入這個聊天室。",
+      "ended": "這個聊天室已結束。",
+      "full": "這個聊天室已滿。",
+      "generic": "發生錯誤，請再試一次。",
+      "gone": "這個聊天室已無法使用。",
+      "vipToCreate": "建立語音聊天室需要 VIP 方案。"
+    },
+    "host": {
+      "end": "結束聊天室",
+      "endConfirm": "要為所有人結束聊天室嗎？",
+      "endYes": "結束聊天室",
+      "hands": "舉手名單",
+      "makeCohost": "設為副房主",
+      "muteAll": "全部靜音",
+      "noHands": "還沒有人舉手。",
+      "speakNote": "聊天室裡的任何人都可以上麥。舉手是向你要求發言的機會。",
+      "title": "房主工具"
+    },
+    "list": {
+      "create": "開一個聊天室",
+      "emptyLive": "現在沒有人在聊天。開一個聊天室，邀請大家加入吧。",
+      "emptyScheduled": "目前沒有預約的聊天室。",
+      "error": "無法載入語音聊天室。",
+      "full": "已滿",
+      "going": "會參加 ✓",
+      "join": "加入",
+      "live": "直播中",
+      "rsvp": "提醒我",
+      "scheduled": "即將開始",
+      "title": "語音聊天室"
+    },
+    "room": {
+      "back": "所有聊天室",
+      "chat": "聊天室訊息",
+      "chatPlaceholder": "說點什麼…",
+      "connectFailed": "無法連線到聊天室音訊，請檢查網路後再試一次。",
+      "elsewhere": "你已經在其他分頁或裝置加入這個聊天室。",
+      "enableSound": "點一下開啟聊天室聲音",
+      "ended": "這個聊天室已結束。",
+      "findAnother": "尋找其他聊天室",
+      "handUp": "已舉手",
+      "host": "房主",
+      "join": "加入聊天室",
+      "joinHint": "你會以聽眾身分加入，準備好後隨時可以上麥。",
+      "leave": "離開",
+      "lost": "與聊天室的連線已中斷。",
+      "lowerHand": "放下手",
+      "micDenied": "瀏覽器封鎖了麥克風。請在網址列允許 banatalk.com 使用麥克風，然後再試一次。你可以繼續收聽。",
+      "micError": "無法開啟麥克風，請再試一次。",
+      "micUnavailable": "找不到麥克風（或有其他 App 正在使用）。你可以繼續收聽。",
+      "mute": "靜音",
+      "raiseHand": "舉手",
+      "reconnecting": "重新連線中…",
+      "rejoin": "重新加入",
+      "send": "傳送",
+      "takeMic": "上麥",
+      "useHere": "在這裡收聽",
+      "you": "你"
     }
   }
 }
