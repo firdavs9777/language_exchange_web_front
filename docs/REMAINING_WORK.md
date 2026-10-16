@@ -110,7 +110,7 @@ Phase 3 Community (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-ap
 - [x] P3-COM-12 Blocked viewers see a neutral card; follow refused by a block says so (community#5)
 - [x] P3-COM-13 Community copy through `t()`, and a test that every key exists (community#13)
 - [x] P3-COM-I18N New community strings in all 18 locales
-- [ ] P3-COM-PUSH Push unit community (suite + build green, deployed, production smoke recorded)
+- [x] P3-COM-PUSH Push unit community — suite 3359 pass, build green, deployed 2026-10-16
 
 Phase 3 Links (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase3.md`)
 - [x] P3-LINK-1 Crawler rule sends link-preview bots to the backend OG cards (links#4, links#17, moments#13)
@@ -121,7 +121,7 @@ Phase 3 Links (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-pa
 - [x] P3-LINK-6 Legal pages link to https://banatalk.com (links#19)
 - [x] P3-LINK-7 Chat story cards open `/story/:id` (chat#9 follow-up, links#1)
 - [x] P3-LINK-I18N New links strings in all 18 locales
-- [ ] P3-LINK-PUSH Push unit links (suite + build green, deployed, production smoke recorded)
+- [x] P3-LINK-PUSH Push unit links — suite 3282 pass, build green, deployed 2026-10-16 (story page 200, AASA has no /chat/)
 - [ ] Backend follow-up: an OG type for `story` (`/og/story/:id` returns the generic card today; the nginx rule already routes it). S
 - [ ] After this web release is live: backend removes the legacy `token=` from the Google callback redirect (backend REMAINING_WORK). S
 - [ ] Phase 4 Reels: feed, viewer, create (video <=180 s, `isReel`), like/comment/share. M
