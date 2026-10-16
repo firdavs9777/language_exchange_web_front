@@ -96,7 +96,7 @@ Phase 3 Moments (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-
 - [ ] P3-MOM-PUSH Push unit moments (suite + build green, deployed, production smoke recorded)
 
 Phase 3 Community (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase3.md`)
-- [ ] P3-COM-1 Nearby works — real params, real fields, real profile route, privacy toggles (community#2)
+- [x] P3-COM-1 Nearby works — real params, real fields, real profile route, privacy toggles (community#2)
 - [ ] P3-COM-2 @username search uses the `/auth/users` routes (community#3)
 - [ ] P3-COM-3 Language filter offers the whole catalog, labelled in the reader's language (community#4)
 - [ ] P3-COM-4 Waves inbox — archive, reveal, loadable avatars, a real "Find people" route (community#10)

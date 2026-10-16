@@ -271,3 +271,47 @@ describe("Today's matches endpoints hit the live backend routes", () => {
     expect(JSON.parse(calls[0].body as string)).toEqual({ targetUserId: "u-9" });
   });
 });
+
+describe("getNearbyUsers (community#2)", () => {
+  // controllers/community.js reads latitude/longitude/offset. The slice sent
+  // lat/lng/page, so every request answered 400 "Valid latitude and longitude
+  // are required" and the page always showed "No users found nearby".
+  it("-> GET /api/v1/community/nearby with latitude, longitude, radius, limit, offset", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch(
+      (communityApiSlice.endpoints as any).getNearbyUsers.initiate({
+        latitude: 37.5665,
+        longitude: 126.978,
+        radius: 10,
+      })
+    );
+    expect(calls).toHaveLength(1);
+    const url = new URL(calls[0].url);
+    expect(url.pathname).toBe("/api/v1/community/nearby");
+    expect(url.searchParams.get("latitude")).toBe("37.5665");
+    expect(url.searchParams.get("longitude")).toBe("126.978");
+    expect(url.searchParams.get("radius")).toBe("10");
+    expect(url.searchParams.get("limit")).toBe("50");
+    expect(url.searchParams.get("offset")).toBe("0");
+    expect(url.searchParams.get("lat")).toBeNull();
+    expect(url.searchParams.get("lng")).toBeNull();
+    expect(url.searchParams.get("page")).toBeNull();
+  });
+
+  it("turns page 3 into an offset the server understands", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch(
+      (communityApiSlice.endpoints as any).getNearbyUsers.initiate({
+        latitude: 1,
+        longitude: 2,
+        page: 3,
+        limit: 20,
+      })
+    );
+    const url = new URL(calls[0].url);
+    expect(url.searchParams.get("offset")).toBe("40");
+    expect(url.searchParams.get("limit")).toBe("20");
+  });
+});

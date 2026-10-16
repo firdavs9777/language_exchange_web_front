@@ -151,16 +151,27 @@ export const communityApiSlice = apiSlice.injectEndpoints({
       }),
     }),
 
-    // Nearby Users (Discovery)
+    // Nearby Users (Discovery). controllers/community.js getNearbyUsers reads
+    // `latitude`, `longitude`, `radius` (km), `limit` and `offset`. It never
+    // read `lat`/`lng`/`page`, so every request used to 400 and the page
+    // always said nobody was nearby. `page` stays the caller's unit and is
+    // turned into the offset here.
     getNearbyUsers: builder.query({
-      query: ({ latitude, longitude, radius = 50, page = 1, limit = 20 }: {
+      query: ({ latitude, longitude, radius = 50, page = 1, limit = 50 }: {
         latitude: number;
         longitude: number;
         radius?: number;
         page?: number;
         limit?: number;
       }) => ({
-        url: `${COMMUNITY_NEARBY}?lat=${latitude}&lng=${longitude}&radius=${radius}&page=${page}&limit=${limit}`,
+        url: COMMUNITY_NEARBY,
+        params: {
+          latitude: String(latitude),
+          longitude: String(longitude),
+          radius: String(radius),
+          limit: String(limit),
+          offset: String((Math.max(1, page) - 1) * limit),
+        },
       }),
       keepUnusedDataFor: 5,
       providesTags: ["Community"],

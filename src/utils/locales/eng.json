@@ -1117,6 +1117,26 @@
       "retry": "Try again"
     }
   },
+  "communityNearby": {
+    "title": "Nearby Users",
+    "subtitle": "Find people around you",
+    "back": "Back",
+    "geolocationNotSupported": "Geolocation is not supported",
+    "permissionDenied": "Location permission denied",
+    "positionUnavailable": "Location unavailable",
+    "timeout": "Location request timed out",
+    "unknownError": "An error occurred",
+    "gettingLocation": "Getting your location...",
+    "locationRequired": "Location Required",
+    "tryAgain": "Try Again",
+    "searchRadius": "Search Radius",
+    "usersFound_one": "{{count}} person found",
+    "usersFound_other": "{{count}} people found",
+    "refresh": "Refresh",
+    "noUsers": "No users found nearby",
+    "tryIncreaseRadius": "Try increasing the search radius",
+    "learning": "Learning: {{language}}"
+  },
   "communityDetail": {
     "errors": {
       "invalidProfileId": "Invalid profile ID",
