@@ -600,3 +600,31 @@ describe("hashtags (moments#25)", () => {
     expect(screen.queryByTestId("story-hashtags")).toBeNull();
   });
 });
+
+describe("allowReplies / allowSharing (moments#25)", () => {
+  it("hides the reply box but keeps reactions when replies are off", () => {
+    renderViewer([story({ allowReplies: false })]);
+    expect(screen.queryByPlaceholderText("Send a message...")).toBeNull();
+    expect(screen.queryByTestId("story-reply-open")).toBeNull();
+    expect(screen.getByTestId("story-replies-off")).toBeInTheDocument();
+    expect(screen.getByTestId("story-reaction-toggle")).toBeInTheDocument();
+  });
+
+  it("hides share for the reader and for the owner when sharing is off", () => {
+    renderViewer([story({ allowSharing: false })]);
+    expect(screen.queryByTestId("story-share-button")).toBeNull();
+  });
+
+  it("hides the owner's share pill too (the server refuses the owner as well)", () => {
+    mockCurrentUserId = "author-1";
+    renderViewer([story({ allowSharing: false })]);
+    expect(screen.queryByTestId("story-share-button")).toBeNull();
+    expect(screen.getByTestId("story-viewers-button")).toBeInTheDocument();
+  });
+
+  it("treats a missing flag as allowed (old stories)", () => {
+    renderViewer([story({ allowReplies: undefined, allowSharing: null })]);
+    expect(screen.getByTestId("story-share-button")).toBeInTheDocument();
+    expect(screen.getByTestId("story-reply-open")).toBeInTheDocument();
+  });
+});

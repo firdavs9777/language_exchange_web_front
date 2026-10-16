@@ -2679,7 +2679,8 @@
     "block_confirm_body": "They won't be able to see your profile, moments or stories, or message you, and you won't see theirs.",
     "block_confirm": "Block",
     "blocked": "{{name}} is blocked",
-    "block_failed": "Couldn't block this person. Try again."
+    "block_failed": "Couldn't block this person. Try again.",
+    "replies_off": "Replies are turned off for this story"
   },
   "_note": "English source for the homepage promo carousel (src/data/promoSlides.ts, src/components/growth/PromoCarousel.tsx). NOT yet merged into src/utils/locales/*.json: localeParity.test.ts requires all 18 locales to carry the same key set, so this namespace lands in one translation pass. Until then every call site is t(key) || the English below.",
   "invite": {

@@ -477,6 +477,11 @@ const StoryViewer: React.FC = () => {
   // A video runs to its own length and says when it is done (`onEnded`);
   // everything else gets the five-second clock the segment bar draws.
   const isTimed = !isVideo;
+  // Missing means allowed, as in the app's model (`json['allowReplies'] != false`).
+  // The server 403s a reply / share on a story that turned them off, so
+  // offering the button only produces a failure toast.
+  const canReply = currentStory.allowReplies !== false;
+  const canShare = currentStory.allowSharing !== false;
 
   return (
     <>
@@ -763,15 +768,17 @@ const StoryViewer: React.FC = () => {
                 </button>
               )}
 
-              <button
-                type="button"
-                data-testid="story-share-button"
-                onClick={() => setOpenSheet("share")}
-                className={PILL}
-              >
-                <Share2 size={16} aria-hidden />
-                {t("stories.share_story") || "Share"}
-              </button>
+              {canShare && (
+                <button
+                  type="button"
+                  data-testid="story-share-button"
+                  onClick={() => setOpenSheet("share")}
+                  className={PILL}
+                >
+                  <Share2 size={16} aria-hidden />
+                  {t("stories.share_story") || "Share"}
+                </button>
+              )}
             </div>
           ) : showReplyInput ? (
             <div className="flex items-center gap-2">
@@ -805,13 +812,22 @@ const StoryViewer: React.FC = () => {
             </div>
           ) : (
             <>
-              <input
-                type="text"
-                placeholder={t("stories.reply_placeholder") || "Send a message..."}
-                onFocus={() => setShowReplyInput(true)}
-                readOnly
-                className="mb-3 w-full rounded-full border border-white/30 bg-white/20 px-4 py-3 text-sm text-white outline-none backdrop-blur placeholder:text-white/70"
-              />
+              {canReply ? (
+                <input
+                  type="text"
+                  placeholder={t("stories.reply_placeholder") || "Send a message..."}
+                  onFocus={() => setShowReplyInput(true)}
+                  readOnly
+                  className="mb-3 w-full rounded-full border border-white/30 bg-white/20 px-4 py-3 text-sm text-white outline-none backdrop-blur placeholder:text-white/70"
+                />
+              ) : (
+                <p
+                  data-testid="story-replies-off"
+                  className="mb-3 text-center text-xs text-white/70"
+                >
+                  {t("stories.replies_off") || "Replies are turned off for this story"}
+                </p>
+              )}
               <div className="flex items-center justify-center gap-6">
                 <button
                   type="button"
@@ -825,23 +841,28 @@ const StoryViewer: React.FC = () => {
                     <span className="absolute -right-2 -top-2 text-base">{userReaction}</span>
                   )}
                 </button>
-                <button
-                  type="button"
-                  className={ICON_BUTTON}
-                  onClick={() => setShowReplyInput(true)}
-                  aria-label={t("stories.reply_placeholder") || "Send a message..."}
-                >
-                  <MessageCircle size={24} aria-hidden />
-                </button>
-                <button
-                  type="button"
-                  className={ICON_BUTTON}
-                  data-testid="story-share-button"
-                  onClick={() => setOpenSheet("share")}
-                  aria-label={t("stories.share_story") || "Share"}
-                >
-                  <Share2 size={24} aria-hidden />
-                </button>
+                {canReply && (
+                  <button
+                    type="button"
+                    className={ICON_BUTTON}
+                    data-testid="story-reply-open"
+                    onClick={() => setShowReplyInput(true)}
+                    aria-label={t("stories.reply_placeholder") || "Send a message..."}
+                  >
+                    <MessageCircle size={24} aria-hidden />
+                  </button>
+                )}
+                {canShare && (
+                  <button
+                    type="button"
+                    className={ICON_BUTTON}
+                    data-testid="story-share-button"
+                    onClick={() => setOpenSheet("share")}
+                    aria-label={t("stories.share_story") || "Share"}
+                  >
+                    <Share2 size={24} aria-hidden />
+                  </button>
+                )}
               </div>
             </>
           )}
@@ -928,7 +949,7 @@ const StoryViewer: React.FC = () => {
           onClose={() => setOpenSheet(null)}
         />
       )}
-      {openSheet === "share" && (
+      {openSheet === "share" && canShare && (
         <StoryShareSheet
           storyId={currentStory._id}
           currentUserId={currentUserId}

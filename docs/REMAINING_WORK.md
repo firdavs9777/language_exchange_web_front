@@ -90,7 +90,7 @@ Phase 3 Moments (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-
 - [x] P3-MOM-16 solid and semi plates match the app (moments#25)
 - [x] P3-MOM-17 overlays honour rotation; centring stays exact; mention pills look like the app's (moments#25)
 - [x] P3-MOM-18 the viewer shows a story's hashtags (moments#25)
-- [ ] P3-MOM-19 the viewer honours `allowReplies` and `allowSharing` (moments#25)
+- [x] P3-MOM-19 the viewer honours `allowReplies` and `allowSharing` (moments#25)
 - [ ] P3-MOM-20 the link sticker always shows the real host under its label (moments#25)
 - [ ] P3-MOM-I18N New moments strings in all 18 locales
 - [ ] P3-MOM-PUSH Push unit moments (suite + build green, deployed, production smoke recorded)
