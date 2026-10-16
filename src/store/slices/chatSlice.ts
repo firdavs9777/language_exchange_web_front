@@ -242,11 +242,14 @@ export const chatApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Messages", "Conversations"],
       onQueryStarted: refetchFirstPageOnSuccess,
     }),
+    // PUT /api/v1/messages/:id {message}. `message` is the field the backend
+    // validator and controller read (controllers/messageManagement.js
+    // editMessage); the old `{content}` body was a 400 on every edit.
     editMessage: builder.mutation({
-      query: ({ messageId, content }: { messageId: string; content: string }) => ({
+      query: ({ messageId, message }: { messageId: string; message: string }) => ({
         url: `${MESSAGES_URL}/${messageId}`,
         method: "PUT",
-        body: { content },
+        body: { message },
       }),
       invalidatesTags: ["Conversation"],
     }),

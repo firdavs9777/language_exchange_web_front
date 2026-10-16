@@ -20,6 +20,7 @@ const mockGetConversation = jest.fn();
 const mockInvalidateTags = jest.fn();
 const mockUpdateQueryData = jest.fn();
 const mockCreateMessage = jest.fn();
+const mockEditMessage = jest.fn();
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -44,7 +45,7 @@ jest.mock("../../store/slices/chatSlice", () => ({
   useCreateMessageMutation: () => [mockCreateMessage, { isLoading: false }],
   useSendVoiceMessageMutation: () => mutation(),
   useSendMediaMessageMutation: () => mutation(),
-  useEditMessageMutation: () => mutation(),
+  useEditMessageMutation: () => [mockEditMessage, { isLoading: false }],
   useDeleteMessageMutation: () => mutation(),
   useAddReactionMutation: () => mutation(),
   useRemoveReactionMutation: () => mutation(),
@@ -124,6 +125,7 @@ beforeEach(() => {
   mockCreateMessage.mockReturnValue({
     unwrap: () => Promise.resolve({ data: { _id: "m-rest", message: "hi", sender: { _id: "me" } } }),
   });
+  mockEditMessage.mockReturnValue({ unwrap: () => Promise.resolve({ success: true, data: {} }) });
 });
 
 afterEach(() => {
@@ -435,4 +437,76 @@ it("does not write a send that failed", async () => {
 
   await waitFor(() => expect(mockCreateMessage).toHaveBeenCalled());
   expect(mockUpdateQueryData).not.toHaveBeenCalled();
+});
+// --- Editing a message -----------------------------------------------------
+//
+// The web sent PUT /messages/:id {content}; the backend reads `message`, so
+// every edit was a 400 that only reached the console. And it asked through
+// window.prompt, which a browser can suppress and no locale can style.
+
+/** One message of mine, sent just now, already in the thread. */
+function threadWithMyMessage() {
+  mockGetConversation.mockReturnValue({
+    data: {
+      data: [
+        {
+          _id: "m-mine",
+          message: "helo",
+          messageType: "text",
+          sender: { _id: "me", name: "Me" },
+          receiver: "u2",
+          createdAt: new Date().toISOString(),
+        },
+      ],
+      total: 1,
+    },
+    error: undefined,
+    isLoading: false,
+  });
+}
+
+function openActionsOn(id: string) {
+  const bubble = document.querySelector(`[data-msg-id="${id}"]`) as HTMLElement;
+  fireEvent.contextMenu(bubble);
+}
+
+it("edits in an in-app dialog and sends the field the backend reads", async () => {
+  const promptSpy = jest.spyOn(window, "prompt").mockImplementation(() => null);
+  threadWithMyMessage();
+  renderChat("/chat/u2");
+  await waitFor(() => expect(document.querySelector('[data-msg-id="m-mine"]')).not.toBe(null));
+
+  openActionsOn("m-mine");
+  fireEvent.click(screen.getByTestId("action-edit"));
+
+  expect(promptSpy).not.toHaveBeenCalled();
+  fireEvent.change(screen.getByTestId("edit-message-input"), { target: { value: "hello" } });
+  fireEvent.click(screen.getByTestId("edit-message-save"));
+
+  await waitFor(() =>
+    expect(mockEditMessage).toHaveBeenCalledWith({ messageId: "m-mine", message: "hello" })
+  );
+  await waitFor(() => expect(screen.queryByTestId("edit-message-dialog")).not.toBeInTheDocument());
+  expect(document.querySelector('[data-msg-id="m-mine"]')).toHaveTextContent("hello");
+  promptSpy.mockRestore();
+});
+
+it("keeps the dialog open and says why when the 15 minutes are up", async () => {
+  mockEditMessage.mockReturnValue({
+    unwrap: () =>
+      Promise.reject({ status: 400, data: { success: false, error: "Message can only be edited within 15 minutes" } }),
+  });
+  threadWithMyMessage();
+  renderChat("/chat/u2");
+  await waitFor(() => expect(document.querySelector('[data-msg-id="m-mine"]')).not.toBe(null));
+
+  openActionsOn("m-mine");
+  fireEvent.click(screen.getByTestId("action-edit"));
+  fireEvent.change(screen.getByTestId("edit-message-input"), { target: { value: "hello" } });
+  fireEvent.click(screen.getByTestId("edit-message-save"));
+
+  await waitFor(() =>
+    expect(screen.getByTestId("edit-message-error")).toHaveTextContent("within 15 minutes")
+  );
+  expect(document.querySelector('[data-msg-id="m-mine"]')).toHaveTextContent("helo");
 });

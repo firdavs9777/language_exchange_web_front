@@ -203,7 +203,15 @@
       "gradient_lavender": "Lavender",
       "gradient_aurora": "Aurora"
     },
-    "jumpToLatest": "Jump to latest messages"
+    "jumpToLatest": "Jump to latest messages",
+    "editDialog": {
+      "title": "Edit message",
+      "label": "Message",
+      "save": "Save",
+      "cancel": "Cancel",
+      "tooLate": "You can only edit a message within 15 minutes of sending it.",
+      "failed": "Couldn't edit the message. Try again."
+    }
   },
   "newChat": {
     "title": "New Chat",

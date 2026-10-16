@@ -190,4 +190,17 @@ describe("dead 404 message routes are removed", () => {
     // unaffected and no dead-route constant was ever added.
     expect(MESSAGES_URL).toBe("/api/v1/messages");
   });
+
+  it("editMessage -> PUT /api/v1/messages/:id with {message} (the field the backend reads)", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch(
+      (chatApiSlice.endpoints as any).editMessage.initiate({ messageId: "msg-1", message: "fixed" })
+    );
+    expect(calls).toHaveLength(1);
+    const url = new URL(calls[0].url);
+    expect(url.pathname).toBe(`${MESSAGES_URL}/msg-1`);
+    expect(calls[0].method).toBe("PUT");
+    expect(JSON.parse(calls[0].body as string)).toEqual({ message: "fixed" });
+  });
 });

@@ -27,6 +27,7 @@ import {
 import "./ChatContent.css";
 import MessageActionMenu from "./actions/MessageActionMenu";
 import ForwardDialog from "./actions/ForwardDialog";
+import EditMessageDialog, { editErrorText } from "./actions/EditMessageDialog";
 import PinnedBar from "./actions/PinnedBar";
 import ReplyComposerBar from "./actions/ReplyComposerBar";
 import { canDeleteForEveryone } from "./lib/messageActions";
@@ -191,6 +192,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const [activeActionMsg, setActiveActionMsg] = useState<Message | null>(null);
   const [replyingTo, setReplyingTo] = useState<Message | null>(null);
   const [forwardMsg, setForwardMsg] = useState<Message | null>(null);
+  const [editingMsg, setEditingMsg] = useState<Message | null>(null);
+  const [editBusy, setEditBusy] = useState(false);
+  const [editError, setEditError] = useState("");
 
   // The "⋯" panel: profile, media, mute, wallpaper, block, report, delete.
   const [isInfoOpen, setIsInfoOpen] = useState(false);
@@ -1654,24 +1658,30 @@ const ChatContent: React.FC<ChatContentProps> = ({
     [userId, addReaction, removeReaction]
   );
 
-  const handleEditMessageAction = useCallback(
-    (msg: Message) => {
-      const next = window.prompt(t("chatPage.edit") || "Edit message", msg.message || "");
-      if (next == null) return;
-      const content = next.trim();
-      if (!content || content === msg.message) return;
-      editMessage({ messageId: msg._id, content })
+  // Opens the edit dialog; the save itself is handleEditSave.
+  const handleEditMessageAction = useCallback((msg: Message) => {
+    setEditError("");
+    setEditingMsg(msg);
+  }, []);
+
+  const handleEditSave = useCallback(
+    (text: string) => {
+      const target = editingMsg;
+      if (!target) return;
+      setEditBusy(true);
+      setEditError("");
+      editMessage({ messageId: target._id, message: text })
         .unwrap()
         .then(() => {
-          setMessages((prev) =>
-            prev.map((m) =>
-              m._id === msg._id ? { ...m, message: content, isEdited: true } : m
-            )
-          );
+          const patch = { message: text, isEdited: true, editedAt: new Date().toISOString() };
+          setMessages((prev) => prev.map((m) => (m._id === target._id ? { ...m, ...patch } : m)));
+          patchInThread(target._id, patch as Partial<Message>, selectedUserRef.current);
+          setEditingMsg(null);
         })
-        .catch((err) => console.error("Edit failed:", err));
+        .catch((err: any) => setEditError(editErrorText(err, t as any)))
+        .then(() => setEditBusy(false));
     },
-    [editMessage, t]
+    [editingMsg, editMessage, patchInThread, t]
   );
 
   const handleDeleteMessageAction = useCallback(
@@ -2289,6 +2299,17 @@ const ChatContent: React.FC<ChatContentProps> = ({
         </div>
       )}
 
+      {editingMsg && (
+        <EditMessageDialog
+          initialText={editingMsg.message || ""}
+          busy={editBusy}
+          error={editError}
+          onSave={handleEditSave}
+          onCancel={() => {
+            if (!editBusy) setEditingMsg(null);
+          }}
+        />
+      )}
       {/* Forward dialog */}
       <ForwardDialog
         open={!!forwardMsg}
