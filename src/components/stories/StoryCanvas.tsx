@@ -6,6 +6,7 @@ import {
   mentionPositionStyle,
   overlayPositionStyle,
   overlayScaleClass,
+  parseLinkUrl,
   storyBodyFontClass,
 } from "./storyOverlays";
 import { storyBackgroundStyle, storyTextColor } from "./storyBackground";
@@ -55,6 +56,19 @@ export function storyHashtags(story: any): string[] {
     if (out.indexOf(label) === -1) out.push(label);
   });
   return out;
+}
+
+/**
+ * Where a link sticker really goes: the host the server parsed (stored from
+ * Phase 1 on), else the same parse done here for stories saved before the
+ * backend kept it. Shown under the label because the label is the poster's
+ * words and the host is not -- the app does the same.
+ */
+export function storyLinkHost(link: any): string {
+  if (!link) return "";
+  if (typeof link.host === "string" && link.host.trim()) return link.host.trim().toLowerCase();
+  const parsed = parseLinkUrl(link.url);
+  return parsed ? parsed.host : "";
 }
 
 /**
@@ -262,7 +276,24 @@ const StoryCanvas: React.FC<StoryCanvasProps> = ({
           onClick={(e) => e.stopPropagation()}
           className="absolute bottom-24 left-1/2 z-10 -translate-x-1/2 rounded-chip bg-white/90 px-3 py-1.5 text-sm font-semibold text-ink-900 no-underline"
         >
-          {story.link.displayText || story.link.title || story.link.host || story.link.url}
+          {(() => {
+            const host = storyLinkHost(story.link);
+            const label = story.link.displayText || story.link.title || host || story.link.url;
+            return (
+              <span className="flex flex-col items-center leading-tight">
+                <span className="max-w-[16rem] truncate">{label}</span>
+                {host && host !== String(label).toLowerCase() && (
+                  <span
+                    data-testid={testIdPrefix + "-link-host"}
+                    dir="ltr"
+                    className="max-w-[16rem] truncate text-[11px] font-normal text-ink-500"
+                  >
+                    {host}
+                  </span>
+                )}
+              </span>
+            );
+          })()}
         </a>
       )}
     </>

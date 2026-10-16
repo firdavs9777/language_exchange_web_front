@@ -359,6 +359,29 @@ describe("keyboard", () => {
 });
 
 describe("structured stickers", () => {
+  it("shows the real host under the author's label", () => {
+    renderViewer([
+      story({ link: { url: "https://evil.example/x", title: "", displayText: "Shop Now", host: "evil.example" } }),
+    ]);
+    expect(screen.getByTestId("story-link-sticker")).toHaveTextContent("Shop Now");
+    expect(screen.getByTestId("story-link-host")).toHaveTextContent("evil.example");
+  });
+
+  it("derives the host from the url when an older backend dropped it", () => {
+    renderViewer([
+      story({ link: { url: "https://www.Example.com:8443/a?b=c", title: "", displayText: "Read" } }),
+    ]);
+    expect(screen.getByTestId("story-link-host")).toHaveTextContent("example.com");
+  });
+
+  it("does not print the host twice when it is already the label", () => {
+    renderViewer([
+      story({ link: { url: "https://example.com/sale", title: "", displayText: "", host: "example.com" } }),
+    ]);
+    expect(screen.getByTestId("story-link-sticker")).toHaveTextContent("example.com");
+    expect(screen.queryByTestId("story-link-host")).toBeNull();
+  });
+
   it("tilts an app overlay by its rotation and still centres it on x/y", () => {
     renderViewer([
       story({
