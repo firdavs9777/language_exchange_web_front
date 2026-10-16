@@ -417,3 +417,23 @@ describe("structured stickers", () => {
     expect(screen.getByTestId("story-link-sticker")).toHaveTextContent("example.com");
   });
 });
+
+describe("location (moments#17)", () => {
+  it("shows the place in the header, as the app does", () => {
+    renderViewer([story({ location: { name: "Seoul Forest", address: "Seongdong-gu" } })]);
+    expect(screen.getByTestId("story-location")).toHaveTextContent("Seoul Forest");
+  });
+
+  it("shows nothing for a story without a place, or with a blank one", () => {
+    renderViewer([
+      story(),
+      story({ _id: "story-2", location: { name: "   " } }),
+      story({ _id: "story-3", location: null }),
+    ]);
+    expect(screen.queryByTestId("story-location")).toBeNull();
+    fireEvent.click(screen.getByTestId("story-next"));
+    expect(screen.queryByTestId("story-location")).toBeNull();
+    fireEvent.click(screen.getByTestId("story-next"));
+    expect(screen.queryByTestId("story-location")).toBeNull();
+  });
+});

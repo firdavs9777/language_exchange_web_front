@@ -16,6 +16,7 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  MapPin,
   Eye,
   Heart,
   MessageCircle,
@@ -34,7 +35,7 @@ import StoryViewersSheet from "./StoryViewersSheet";
 import QuestionResponsesSheet from "./QuestionResponsesSheet";
 import StoryShareSheet from "./StoryShareSheet";
 import { Story, STORY_REACTIONS } from "./types";
-import StoryCanvas, { isVideoStory } from "./StoryCanvas";
+import StoryCanvas, { isVideoStory, storyLocationName } from "./StoryCanvas";
 import { userAvatarUrl } from "../../utils/photoUrl";
 
 interface RootState {
@@ -490,6 +491,18 @@ const StoryViewer: React.FC = () => {
             <span className="shrink-0 text-xs text-white/80">
               {timeAgo(currentStory.createdAt, t, { withAgo: true })}
             </span>
+            {storyLocationName(currentStory) && (
+              // The app's header: time · pin · place, the place truncating
+              // first so the name and the time stay readable.
+              <span
+                data-testid="story-location"
+                className="flex min-w-0 items-center gap-1 text-xs text-white/80"
+                aria-label={t("stories.location_label") || "Location"}
+              >
+                <MapPin size={12} aria-hidden className="shrink-0" />
+                <span className="truncate">{storyLocationName(currentStory)}</span>
+              </span>
+            )}
           </div>
           <div className="flex shrink-0 items-center gap-1">
             {isOwner && (

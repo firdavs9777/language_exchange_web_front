@@ -28,6 +28,18 @@ export function isVideoStory(story: any): boolean {
 }
 
 /**
+ * The place an author tagged, or "" when there is none. The backend stores a
+ * location only with a non-empty name (`parseLocation`), but older rows and
+ * the app's model allow a blank one; both mean "no place", as in the app's
+ * `story.location!.name.trim().isNotEmpty` check.
+ */
+export function storyLocationName(story: any): string {
+  const location = story && story.location;
+  if (!location || typeof location !== "object") return "";
+  return typeof location.name === "string" ? location.name.trim() : "";
+}
+
+/**
  * The cross-client rule for `text`.
  *
  * Text story: when it carries overlays, they ARE its words. The app sends a

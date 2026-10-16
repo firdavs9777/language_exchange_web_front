@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, X } from "lucide-react";
 import DialogShell from "../../design/DialogShell";
 import { Story } from "./types";
 import { storiesOf } from "./highlightStories";
-import StoryCanvas from "./StoryCanvas";
+import StoryCanvas, { storyLocationName } from "./StoryCanvas";
 
 export interface HighlightStoryViewerProps {
   /** The highlight as `GET /stories/highlights/user/:id` returns it. */
@@ -119,6 +119,15 @@ const HighlightStoryViewer: React.FC<HighlightStoryViewerProps> = ({
           <span className="pl-2 font-normal text-white/60">{authorName}</span>
         ) : null}
       </h2>
+      {storyLocationName(story) && (
+        <p
+          data-testid="highlight-story-location"
+          className="-mt-1 flex items-center gap-1 px-4 pb-2 text-xs text-white/70"
+        >
+          <MapPin size={12} aria-hidden className="shrink-0" />
+          <span className="truncate">{storyLocationName(story)}</span>
+        </p>
+      )}
 
       <div className="relative min-h-0 flex-1 overflow-hidden">
         {/* The same canvas as the full-screen viewer, so a highlight shows

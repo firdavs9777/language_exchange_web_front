@@ -30,3 +30,18 @@ it("closes when stepping past the last story", () => {
   act(() => { window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" })); });
   expect(onClose).toHaveBeenCalledTimes(1);
 });
+
+it("shows the current story's place under the title", () => {
+  render(
+    <HighlightStoryViewer
+      highlight={{
+        ...highlight,
+        stories: [{ ...highlight.stories[0], location: { name: "Busan" } }, highlight.stories[1]],
+      }}
+      onClose={jest.fn()}
+    />
+  );
+  expect(screen.getByTestId("highlight-story-location")).toHaveTextContent("Busan");
+  act(() => { window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" })); });
+  expect(screen.queryByTestId("highlight-story-location")).toBeNull();
+});
