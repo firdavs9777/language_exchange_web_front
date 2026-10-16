@@ -3412,5 +3412,9 @@
     "error": "Couldn't load people. Try again.",
     "empty": "No one matches yet.",
     "more": "Show more"
+  },
+  "nav": {
+    "voiceRooms": "Voice rooms",
+    "languageRooms": "Language rooms"
   }
 }

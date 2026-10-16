@@ -124,6 +124,16 @@ const NearbyUsers = lazyWithRetry("../components/community/NearbyUsers", () => i
 const Waves = lazyWithRetry("../components/community/Waves", () => import("../components/community/Waves"));
 const Topics = lazyWithRetry("../components/community/Topics", () => import("../components/community/Topics"));
 
+// Phase 4 — rooms (dark until webVoiceRoomsEnabled / webLanguageRoomsEnabled).
+// Every element is wrapped in FlagRoute, so with the flag off these paths are
+// the 404 page. Voice rooms pull in LiveKit only after Join (lib/livekit).
+const VoiceRoomsPage = lazyWithRetry("../components/voiceRooms/VoiceRoomsPage", () => import("../components/voiceRooms/VoiceRoomsPage"));
+const VoiceRoomPage = lazyWithRetry("../components/voiceRooms/VoiceRoomPage", () => import("../components/voiceRooms/VoiceRoomPage"));
+const LanguageRoomsPage = lazyWithRetry("../components/languageRooms/LanguageRoomsPage", () => import("../components/languageRooms/LanguageRoomsPage"));
+const LanguageRoomPage = lazyWithRetry("../components/languageRooms/LanguageRoomPage", () => import("../components/languageRooms/LanguageRoomPage"));
+const CityPage = lazyWithRetry("../components/community/cityGenders/CityPage", () => import("../components/community/cityGenders/CityPage"));
+const GendersPage = lazyWithRetry("../components/community/cityGenders/GendersPage", () => import("../components/community/cityGenders/GendersPage"));
+
 // Invite landing (/i/:code). Public, never prerendered (the code is dynamic):
 // it falls back to the SPA shell like /profile/:userId. Lazy for the same
 // reason as the profile page -- nothing in the eager graph shares its code.
@@ -311,6 +321,13 @@ export const routes = createRoutesFromElements(
     <Route path="community/nearby" element={lazyRoute(<NearbyUsers />)} />
     <Route path="waves" element={lazyRoute(<Waves />)} />
     <Route path="topics" element={lazyRoute(<Topics />)} />
+    {/* Phase 4 — rooms. Dark until their flags are on (FlagRoute → 404). */}
+    <Route path="voice-rooms" element={lazyRoute(<FlagRoute flag="webVoiceRoomsEnabled"><VoiceRoomsPage /></FlagRoute>)} />
+    <Route path="voice-rooms/:id" element={lazyRoute(<FlagRoute flag="webVoiceRoomsEnabled"><VoiceRoomPage /></FlagRoute>)} />
+    <Route path="rooms" element={lazyRoute(<FlagRoute flag="webLanguageRoomsEnabled"><LanguageRoomsPage /></FlagRoute>)} />
+    <Route path="rooms/:id" element={lazyRoute(<FlagRoute flag="webLanguageRoomsEnabled"><LanguageRoomPage /></FlagRoute>)} />
+    <Route path="community/city" element={lazyRoute(<FlagRoute flag="webLanguageRoomsEnabled"><CityPage /></FlagRoute>)} />
+    <Route path="community/genders" element={lazyRoute(<FlagRoute flag="webLanguageRoomsEnabled"><GendersPage /></FlagRoute>)} />
 
     {/* Moments */}
     <Route path="moments/saved" element={lazyRoute(<SavedMoments />)} />

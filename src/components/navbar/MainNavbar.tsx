@@ -15,6 +15,8 @@ import {
   FaUserShield,
   FaFilm,
   FaCalendarAlt,
+  FaMicrophone,
+  FaDoorOpen,
 } from "react-icons/fa";
 import { useWebFlag } from "../../utils/webFlags";
 import { useTranslation } from "react-i18next";
@@ -30,6 +32,7 @@ import logo from "../../assets/logo.png";
 import { useGetConversationsQuery } from "../../store/slices/chatSlice";
 import { useSocket } from "../chat/hooks/useSocket";
 import { CONVERSATIONS_PAGE } from "../chat/lib/conversationMatch";
+import { useWebFlag } from "../../utils/webFlags";
 import "./MainNavbar.scss";
 
 const LANGUAGES = [
@@ -67,6 +70,9 @@ const MainNavbar = () => {
   // The console's only entry point. Role comes from the backend; the route
   // itself is guarded again by RequireAdmin, and the API by authorize('admin').
   const isAdmin = useSelector(selectIsAdmin);
+  // Phase 4 rooms: dark until the owner turns the flags on.
+  const voiceRoomsOn = useWebFlag("webVoiceRoomsEnabled");
+  const languageRoomsOn = useWebFlag("webLanguageRoomsEnabled");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
@@ -249,6 +255,26 @@ const MainNavbar = () => {
                   <FaGlobe />
                   <span>{t("moments")}</span>
                 </NavLink>
+                {voiceRoomsOn && (
+                  <NavLink
+                    to="/voice-rooms"
+                    data-testid="nav-voice-rooms"
+                    className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+                  >
+                    <FaMicrophone />
+                    <span>{t("nav.voiceRooms") || "Voice rooms"}</span>
+                  </NavLink>
+                )}
+                {languageRoomsOn && (
+                  <NavLink
+                    to="/rooms"
+                    data-testid="nav-language-rooms"
+                    className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+                  >
+                    <FaDoorOpen />
+                    <span>{t("nav.languageRooms") || "Language rooms"}</span>
+                  </NavLink>
+                )}
 
                 {reelsOn && (
                   <NavLink
@@ -439,6 +465,16 @@ const MainNavbar = () => {
                   {gatheringsOn && (
                     <NavLink to="/gatherings" data-testid="nav-gatherings-mobile" className="mobile-nav-link" onClick={closeMobileMenu}>
                       <FaCalendarAlt /> {t("gatherings.nav") || "Gatherings"}
+                    </NavLink>
+                  )}
+                  {voiceRoomsOn && (
+                    <NavLink to="/voice-rooms" className="mobile-nav-link" data-testid="nav-voice-rooms-mobile" onClick={closeMobileMenu}>
+                      <FaMicrophone /> {t("nav.voiceRooms") || "Voice rooms"}
+                    </NavLink>
+                  )}
+                  {languageRoomsOn && (
+                    <NavLink to="/rooms" className="mobile-nav-link" data-testid="nav-language-rooms-mobile" onClick={closeMobileMenu}>
+                      <FaDoorOpen /> {t("nav.languageRooms") || "Language rooms"}
                     </NavLink>
                   )}
                   {isAdmin && (
