@@ -11,6 +11,16 @@ const mockDeleteComment = jest.fn();
 const mockAddComment = jest.fn();
 const mockUploadImage = jest.fn();
 let mockRepliesResult: any = { data: undefined, isFetching: false };
+const mockReport = jest.fn();
+const mockBlock = jest.fn();
+jest.mock("../../../store/slices/usersSlice", () => ({
+  useReportUserMutation: () => [mockReport, { isLoading: false }],
+  useBlockUserMutation: () => [mockBlock, { isLoading: false }],
+}));
+jest.mock("../../../design/notify", () => ({
+  __esModule: true,
+  default: { success: jest.fn(), error: jest.fn(), info: jest.fn() },
+}));
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -297,5 +307,40 @@ describe("delete rights (moments#9)", () => {
   it("signed out: no Delete even when ids would match", () => {
     renderItem({ myUserId: "", momentOwnerId: "", isLoggedIn: false });
     expect(screen.queryByTestId("comment-delete")).not.toBeInTheDocument();
+  });
+});
+
+describe("report and block (moments#10)", () => {
+  it("reports someone else's comment as type comment", async () => {
+    mockReport.mockReturnValue({ unwrap: () => Promise.resolve({}) });
+    renderItem();
+    fireEvent.click(screen.getByTestId("comment-more"));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Report" }));
+    fireEvent.click(screen.getByLabelText("Harassment"));
+    fireEvent.click(screen.getByRole("button", { name: "Send report" }));
+    await waitFor(() =>
+      expect(mockReport).toHaveBeenCalledWith(
+        expect.objectContaining({ type: "comment", reportId: "c-1", reportedUser: "author-1" })
+      )
+    );
+  });
+
+  it("blocks the comment's author", async () => {
+    mockBlock.mockReturnValue({ unwrap: () => Promise.resolve({}) });
+    renderItem();
+    fireEvent.click(screen.getByTestId("comment-more"));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Block" }));
+    fireEvent.click(screen.getByRole("button", { name: "Block" }));
+    await waitFor(() => expect(mockBlock).toHaveBeenCalledWith("author-1"));
+  });
+
+  it("no menu on your own comment, and none when signed out", () => {
+    renderItem({ myUserId: "author-1" });
+    expect(screen.queryByTestId("comment-more")).not.toBeInTheDocument();
+  });
+
+  it("no menu when signed out", () => {
+    renderItem({ isLoggedIn: false, myUserId: "" });
+    expect(screen.queryByTestId("comment-more")).not.toBeInTheDocument();
   });
 });

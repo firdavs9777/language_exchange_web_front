@@ -208,3 +208,22 @@ describe("username lookups hit the /auth/users router (community#3)", () => {
     expect(url.pathname).toBe(`${COMMUNITY_URL}/username/ada%2Fx`);
   });
 });
+
+it("blocking someone refetches feeds and comment lists (moments#10)", async () => {
+  // A moments query that provides "Moments" is refetched after blockUser.
+  const calls: string[] = [];
+  (global as any).fetch = jest.fn(async (req: any) => {
+    calls.push(`${req.method} ${new URL(req.url).pathname}`);
+    return new Response(JSON.stringify({ success: true, data: [] }), {
+      status: 200, headers: { "content-type": "application/json" },
+    });
+  });
+  const store = makeStore();
+  const { momentsApiSlice } = require("./momentsSlice");
+  const sub = store.dispatch(momentsApiSlice.endpoints.getSavedMoments.initiate({ page: 1, limit: 12 }));
+  await sub;
+  await store.dispatch((usersApiSlice.endpoints as any).blockUser.initiate("a1"));
+  await new Promise((r) => setTimeout(r, 0));
+  expect(calls.filter((c) => c.endsWith("/moments/saved")).length).toBe(2);
+  sub.unsubscribe();
+});

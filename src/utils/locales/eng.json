@@ -729,7 +729,11 @@
         "false_information": "False information",
         "copyright": "Copyright",
         "other": "Something else"
-      }
+      },
+      "titleComment": "Report this comment",
+      "titleStory": "Report this story",
+      "alreadyComment": "You've already reported this comment.",
+      "alreadyStory": "You've already reported this story."
     },
     "schedule": {
       "label": "Schedule",
@@ -759,6 +763,9 @@
       "answeringPromptOfDay": "Answering prompt of the day",
       "dismissChip": "Stop answering the prompt",
       "answering": "Answering"
+    },
+    "block": {
+      "done": "{{name}} is blocked."
     }
   },
   "createMoment": {

@@ -2,11 +2,14 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { FaRegSmile, FaRegTrashAlt, FaReply } from "react-icons/fa";
+import { HiDotsHorizontal } from "react-icons/hi";
 import { Avatar, SurfaceCard, Badge } from "../../../design";
 import { aggregateReactions } from "../../chat/actions/ReactionRow";
 import MomentReactionRow from "../actions/MomentReactionRow";
 import TranslatableText from "../TranslatableText";
 import ConfirmDialog from "../../../design/ConfirmDialog";
+import ReportMomentDialog from "../actions/ReportMomentDialog";
+import BlockAuthorDialog from "../actions/BlockAuthorDialog";
 import CommentComposer from "./CommentComposer";
 import RepliesThread from "./RepliesThread";
 import { CommentType } from "./types";
@@ -168,6 +171,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
   const isMine = !!myUserId && idOf(comment.user) === myUserId;
   const isMomentOwner = !!myUserId && !!momentOwnerId && momentOwnerId === myUserId;
   const canDelete = isMine || isMomentOwner;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [reporting, setReporting] = useState(false);
+  const [blocking, setBlocking] = useState(false);
+  const authorId = idOf(comment.user);
+  const canModerateAuthor = isLoggedIn && !!myUserId && !!authorId && !isMine;
 
   const runDelete = useCallback(() => {
     if (!isLoggedIn) {
@@ -357,6 +365,42 @@ const CommentItem: React.FC<CommentItemProps> = ({
               <span>{t("moments_section.commentEngagement.delete") || "Delete"}</span>
             </button>
           )}
+
+          {canModerateAuthor && (
+            <div className="relative">
+              <button
+                type="button"
+                data-testid="comment-more"
+                aria-label={t("moments_section.report.menu") || "More options"}
+                aria-haspopup="menu"
+                aria-expanded={menuOpen}
+                onClick={() => setMenuOpen((v) => !v)}
+                className={actionClass}
+              >
+                <HiDotsHorizontal className="h-3.5 w-3.5" />
+              </button>
+              {menuOpen && (
+                <div role="menu" className="absolute end-0 z-20 mt-1 min-w-[9rem] rounded-xl border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => { setMenuOpen(false); setReporting(true); }}
+                    className="block w-full px-4 py-2 text-start text-sm text-red-600 hover:bg-red-50"
+                  >
+                    {t("moments_section.report.report") || "Report"}
+                  </button>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => { setMenuOpen(false); setBlocking(true); }}
+                    className="block w-full px-4 py-2 text-start text-sm text-red-600 hover:bg-red-50"
+                  >
+                    {t("profile.actions.block") || "Block"}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="mt-1">
@@ -430,6 +474,12 @@ const CommentItem: React.FC<CommentItemProps> = ({
         }}
         onCancel={() => setConfirmingDelete(false)}
       />
+      {reporting && (
+        <ReportMomentDialog type="comment" targetId={comment._id} authorId={authorId} onClose={() => setReporting(false)} />
+      )}
+      {blocking && (
+        <BlockAuthorDialog authorId={authorId} authorName={comment.user.name} onClose={() => setBlocking(false)} />
+      )}
     </div>
   );
 };

@@ -277,14 +277,18 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         url: `${BLOCK_USER_URL}/${userId}/block`,
         method: "POST",
       }),
-      invalidatesTags: ["User", "Conversations"],
+      // Moments + Comments: the server drops a blocked author from feeds and
+      // comment lists, so open lists refetch and their content disappears.
+      invalidatesTags: ["User", "Conversations", "Moments", "Comments"],
     }),
     unblockUser: builder.mutation({
       query: (userId: string) => ({
         url: `${BLOCK_USER_URL}/${userId}/block`,
         method: "DELETE",
       }),
-      invalidatesTags: ["User", "Conversations"],
+      // Moments + Comments: the server drops a blocked author from feeds and
+      // comment lists, so open lists refetch and their content disappears.
+      invalidatesTags: ["User", "Conversations", "Moments", "Comments"],
     }),
     // `GET /api/v1/users/:userId/blocked` — the id in the path is the
     // VIEWER's own (controllers/userBlocks.js 403s when it is anyone else's).

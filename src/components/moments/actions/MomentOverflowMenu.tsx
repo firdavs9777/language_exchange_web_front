@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { HiDotsHorizontal } from "react-icons/hi";
 import ReportMomentDialog from "./ReportMomentDialog";
+import BlockAuthorDialog from "./BlockAuthorDialog";
 
 interface Props {
   momentId: string;
@@ -24,6 +25,7 @@ const MomentOverflowMenu: React.FC<Props> = ({ momentId, author, className }) =>
   const viewerId = useSelector((state: any) => state.auth.userInfo?.user?._id);
   const [open, setOpen] = useState(false);
   const [reporting, setReporting] = useState(false);
+  const [blocking, setBlocking] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const authorId = authorIdOf(author);
 
@@ -71,7 +73,7 @@ const MomentOverflowMenu: React.FC<Props> = ({ momentId, author, className }) =>
         <HiDotsHorizontal className="w-4 h-4 xs:w-5 xs:h-5 text-gray-500" />
       </button>
       {open && (
-        <div role="menu" className="absolute right-0 z-20 mt-1 min-w-[10rem] rounded-xl border border-gray-200 bg-white py-1 shadow-lg">
+        <div role="menu" className="absolute end-0 z-20 mt-1 min-w-[10rem] rounded-xl border border-gray-200 bg-white py-1 shadow-lg">
           <button
             type="button"
             role="menuitem"
@@ -80,9 +82,21 @@ const MomentOverflowMenu: React.FC<Props> = ({ momentId, author, className }) =>
               setOpen(false);
               setReporting(true);
             }}
-            className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+            className="block w-full px-4 py-2 text-start text-sm text-red-600 hover:bg-red-50"
           >
             {t("moments_section.report.report") || "Report"}
+          </button>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={(event) => {
+              stop(event);
+              setOpen(false);
+              setBlocking(true);
+            }}
+            className="block w-full px-4 py-2 text-start text-sm text-red-600 hover:bg-red-50"
+          >
+            {t("profile.actions.block") || "Block"}
           </button>
         </div>
       )}
@@ -91,7 +105,18 @@ const MomentOverflowMenu: React.FC<Props> = ({ momentId, author, className }) =>
       {reporting &&
         createPortal(
           <div onClick={(event) => event.stopPropagation()}>
-            <ReportMomentDialog momentId={momentId} authorId={authorId} onClose={() => setReporting(false)} />
+            <ReportMomentDialog type="moment" targetId={momentId} authorId={authorId} onClose={() => setReporting(false)} />
+          </div>,
+          document.body
+        )}
+      {blocking &&
+        createPortal(
+          <div onClick={(event) => event.stopPropagation()}>
+            <BlockAuthorDialog
+              authorId={authorId}
+              authorName={author && typeof author === "object" ? author.name : undefined}
+              onClose={() => setBlocking(false)}
+            />
           </div>,
           document.body
         )}

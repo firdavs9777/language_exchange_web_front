@@ -27,10 +27,30 @@ const ENGLISH: Record<string, string> = {
   other: "Something else",
 };
 
+const COPY: Record<ReportTargetType, { titleKey: string; title: string; alreadyKey: string; already: string }> = {
+  moment: {
+    titleKey: "moments_section.report.title", title: "Report this moment",
+    alreadyKey: "moments_section.report.already", already: "You've already reported this moment.",
+  },
+  comment: {
+    titleKey: "moments_section.report.titleComment", title: "Report this comment",
+    alreadyKey: "moments_section.report.alreadyComment", already: "You've already reported this comment.",
+  },
+  story: {
+    titleKey: "moments_section.report.titleStory", title: "Report this story",
+    alreadyKey: "moments_section.report.alreadyStory", already: "You've already reported this story.",
+  },
+};
+
 const MAX_DESCRIPTION = 500;
 
-interface Props {
-  momentId: string;
+export type ReportTargetType = "moment" | "comment" | "story";
+export interface ReportDialogProps {
+  /** What is reported; selects the title and "already reported" copy. */
+  type: ReportTargetType;
+  /** The reported thing's id (moment, comment or story). */
+  targetId: string;
+  /** Its author (Report.reportedUser). */
   authorId: string;
   onClose: () => void;
 }
@@ -41,10 +61,10 @@ const isAlreadyReported = (error: any) => {
 };
 
 /**
- * Reports a moment through the canonical POST /reports, so it reaches the
+ * Reports a moment, comment or story through the canonical POST /reports, so it reaches the
  * moderators' desk with the same handling as every other report.
  */
-const ReportMomentDialog: React.FC<Props> = ({ momentId, authorId, onClose }) => {
+const ReportMomentDialog: React.FC<ReportDialogProps> = ({ type, targetId, authorId, onClose }) => {
   const { t } = useTranslation();
   const tr = (key: string, fallback: string) => t(key) || fallback;
   const [reportUser, { isLoading }] = useReportUserMutation();
@@ -57,8 +77,8 @@ const ReportMomentDialog: React.FC<Props> = ({ momentId, authorId, onClose }) =>
     if (!reason || isLoading) return;
     try {
       await reportUser({
-        type: "moment",
-        reportId: momentId,
+        type,
+        reportId: targetId,
         reportedUser: authorId,
         reason,
         description: description.trim(),
@@ -78,11 +98,11 @@ const ReportMomentDialog: React.FC<Props> = ({ momentId, authorId, onClose }) =>
     <DialogShell labelledBy="report-moment-title" onClose={onClose} dismissible={!isLoading}>
       <form onSubmit={submit}>
         <h2 id="report-moment-title" className="text-lg font-semibold text-ink-900 dark:text-ink-50">
-          {tr("moments_section.report.title", "Report this moment")}
+          {tr(COPY[type].titleKey, COPY[type].title)}
         </h2>
         {already ? (
           <p role="status" className="mt-3 text-sm text-ink-600 dark:text-ink-300">
-            {tr("moments_section.report.already", "You've already reported this moment.")}
+            {tr(COPY[type].alreadyKey, COPY[type].already)}
           </p>
         ) : (
           <>

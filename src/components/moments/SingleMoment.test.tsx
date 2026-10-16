@@ -41,6 +41,7 @@ jest.mock("../../store/slices/momentsSlice", () => ({
 // store; this file mocks react-redux, so the mutation is stubbed instead.
 jest.mock("../../store/slices/usersSlice", () => ({
   useReportUserMutation: () => [jest.fn(), { isLoading: false }],
+  useBlockUserMutation: () => [jest.fn(), { isLoading: false }],
 }));
 
 const DESCRIPTION = "오늘 날씨가 정말 좋아요";
