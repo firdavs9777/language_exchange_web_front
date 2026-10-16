@@ -7,6 +7,11 @@ import ReelsGridPage from "./ReelsGridPage";
 let mockFeed: any;
 jest.mock("./useReelsFeed", () => ({ useReelsFeed: () => mockFeed }));
 jest.mock("./ReelPolicyGate", () => ({ __esModule: true, default: (p: any) => <>{p.children}</> }));
+jest.mock("react-redux", () => ({
+  ...jest.requireActual("react-redux"),
+  useSelector: (fn: any) => fn({ auth: { userInfo: { token: "t", user: { _id: "me" } } } }),
+}));
+jest.mock("./ReelActions", () => ({ __esModule: true, default: () => null }));
 jest.mock("./ReelViewer", () => ({
   __esModule: true,
   default: (p: any) => <div data-testid="viewer-stub">{p.reels[p.index].id}</div>,

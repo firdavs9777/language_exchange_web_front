@@ -1,7 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import ReelPolicyGate from "./ReelPolicyGate";
+import ReelActions from "./ReelActions";
 import ReelTile from "./ReelTile";
 import ReelViewer from "./ReelViewer";
 import { useReelsFeed } from "./useReelsFeed";
@@ -15,6 +17,9 @@ const ReelsGridPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const feed = useReelsFeed();
+  const myUserId = useSelector(
+    (state: any) => (state.auth.userInfo && state.auth.userInfo.user && state.auth.userInfo.user._id) || ""
+  );
   // The open reel lives in the URL (?reel=<id>) so Back closes the viewer
   // instead of leaving /reels. A link shared by id that is not in this
   // session's feed simply opens the grid.
@@ -101,6 +106,17 @@ const ReelsGridPage: React.FC = () => {
             onIndexChange={moveTo}
             onNeedMore={feed.loadMore}
             onClose={closeViewer}
+            renderActions={(reel) => (
+              <ReelActions
+                reel={reel}
+                myUserId={myUserId}
+                onPatch={(patch) => feed.patchReel(reel.id, patch)}
+                onAuthorBlocked={(authorId) => {
+                  closeViewer();
+                  feed.removeWhere((r) => r.author.id === authorId);
+                }}
+              />
+            )}
           />
         )}
       </section>

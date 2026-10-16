@@ -129,6 +129,8 @@ const ReelViewer: React.FC<ReelViewerProps> = ({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) return;
       if (e.key === "ArrowDown" || e.key === "j") go(1);
       else if (e.key === "ArrowUp" || e.key === "k") go(-1);
       else if (e.key === "Escape") onClose();

@@ -2987,6 +2987,15 @@
       "unmute": "Unmute",
       "previous": "Previous reel",
       "next": "Next reel"
+    },
+    "actions": {
+      "profile": "Profile",
+      "like": "Like",
+      "unlike": "Unlike",
+      "comments": "Comments",
+      "more": "More",
+      "report": "Report",
+      "block": "Block user"
     }
   }
 }
