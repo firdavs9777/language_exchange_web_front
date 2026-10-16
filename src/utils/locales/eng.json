@@ -3160,6 +3160,26 @@
       "startsAt": "Starts",
       "title": "Title",
       "topic": "Topic"
+    },
+    "host": {
+      "approve": "Approve",
+      "callOff": "Call it off",
+      "callOffTitle": "Call it off?",
+      "cancel": "Cancel gathering",
+      "cancelConfirm_one": "{{count}} person is expecting this. They'll be told it's off.",
+      "cancelConfirm_other": "{{count}} people are expecting this. They'll be told it's off.",
+      "cancelOk": "Cancel gathering",
+      "cancelTitle": "Cancel this gathering?",
+      "decision_one": "Only {{count}} person is coming so far. Run it anyway, or call it off?",
+      "decision_other": "Only {{count}} people are coming so far. Run it anyway, or call it off?",
+      "decisionAlone": "Only you are coming so far. Run it anyway, or call it off?",
+      "decline": "Decline",
+      "end": "End gathering",
+      "ended": "Ended — message anyone you met, it's free",
+      "nobodyExpecting": "Nobody else has said yes yet.",
+      "requests_one": "{{count}} waiting to join",
+      "requests_other": "{{count}} waiting to join",
+      "runAnyway": "Run it anyway"
     }
   },
   "clubs": {

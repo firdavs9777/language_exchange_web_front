@@ -23,6 +23,7 @@ jest.mock("../../store/slices/gatheringsSlice", () => ({
   useCancelRsvpMutation: () => [mockLeave, { isLoading: false }],
 }));
 jest.mock("./GatheringSafetyMenu", () => () => <div data-testid="safety-menu" />);
+jest.mock("./GatheringHostPanel", () => () => <div data-testid="host-panel" />);
 
 const gathering = (extra: any = {}) => ({
   _id: "g1",
@@ -157,4 +158,10 @@ it("tolerates a legacy payload with an unpopulated host and no topic/level", () 
   renderDetail();
   expect(screen.getByTestId("gathering-detail")).toBeInTheDocument();
   expect(screen.queryByTestId("gathering-host-time")).not.toBeInTheDocument();
+});
+
+it("shows the host panel to the host", () => {
+  mockQuery = ok(gathering({ viewerIsHost: true, viewerIsAttending: true }));
+  renderDetail();
+  expect(screen.getByTestId("host-panel")).toBeInTheDocument();
 });

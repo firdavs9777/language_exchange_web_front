@@ -17,6 +17,7 @@ import {
 } from "./lib/gatheringFormat";
 import GatheringSafetyMenu from "./GatheringSafetyMenu";
 import ConfirmDialog from "./ConfirmDialog";
+import GatheringHostPanel from "./GatheringHostPanel";
 import { photoUrl } from "../../utils/photoUrl";
 
 const GatheringDetail: React.FC = () => {
@@ -161,6 +162,7 @@ const GatheringDetail: React.FC = () => {
             {t("gatherings.detail.edit") || "Edit gathering"}
           </Link>
         )}
+        {state === "host" && <GatheringHostPanel gathering={g} />}
       </div>
 
       {confirmLeave && (
