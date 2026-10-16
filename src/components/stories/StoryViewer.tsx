@@ -25,11 +25,15 @@ import {
   Send,
   Share2,
   Trash2,
+  Ban,
+  Flag,
   X,
 } from "lucide-react";
 import Avatar from "../../design/Avatar";
 import ConfirmDialog from "../../design/ConfirmDialog";
 import notify from "../../design/notify";
+import ReportMomentDialog from "../moments/actions/ReportMomentDialog";
+import { useBlockUserMutation } from "../../store/slices/usersSlice";
 import timeAgo from "../../utils/timeAgo";
 import StoryViewersSheet from "./StoryViewersSheet";
 import QuestionResponsesSheet from "./QuestionResponsesSheet";
@@ -169,6 +173,11 @@ const StoryViewer: React.FC = () => {
   const [answerSent, setAnswerSent] = useState(false);
   const [openSheet, setOpenSheet] = useState<OpenSheet>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  // Viewer-side safety tools, as in the app's menu: report the story, block
+  // its author. Each pauses the story while it is open (the app's
+  // _reportStory/_blockStoryAuthor pause and resume the same way).
+  const [reportOpen, setReportOpen] = useState(false);
+  const [confirmBlock, setConfirmBlock] = useState(false);
 
   const storyRef = useRef<HTMLDivElement>(null);
 
@@ -186,6 +195,7 @@ const StoryViewer: React.FC = () => {
   const [voteOnPoll] = useVoteOnPollMutation();
   const [deleteStory] = useDeleteIndividualStoryMutation();
   const [answerQuestion] = useAnswerQuestionMutation();
+  const [blockUser, { isLoading: isBlocking }] = useBlockUserMutation();
 
   const stories = useMemo(() => {
     if (!storiesData) return [];
@@ -201,7 +211,13 @@ const StoryViewer: React.FC = () => {
   // that takes the reader's attention off the picture stops the clock, or the
   // story they come back to is not the one they left.
   const isPaused =
-    isHeld || isKeyPaused || showAnswerBox || openSheet !== null || confirmDelete;
+    isHeld ||
+    isKeyPaused ||
+    showAnswerBox ||
+    openSheet !== null ||
+    confirmDelete ||
+    reportOpen ||
+    confirmBlock;
 
   // Mark story as viewed
   useEffect(() => {
@@ -244,6 +260,8 @@ const StoryViewer: React.FC = () => {
     setOpenSheet(null);
     setShowReactions(false);
     setShowMenu(false);
+    setReportOpen(false);
+    setConfirmBlock(false);
     setIsKeyPaused(false);
   }, [currentStory?._id]);
 
@@ -358,6 +376,25 @@ const StoryViewer: React.FC = () => {
     setShowMenu(false);
   };
 
+  const handleBlockAuthor = async () => {
+    if (!currentStory || isOwner) return;
+    const authorId = currentStory.user && currentStory.user._id;
+    if (!authorId) return;
+    try {
+      await blockUser(authorId).unwrap();
+      setConfirmBlock(false);
+      notify.success(
+        t("stories.blocked", { name: currentStory.user.name }) ||
+          `${currentStory.user.name} is blocked`
+      );
+      // Their stories are gone for this reader now; staying on one would show
+      // content the block is meant to hide.
+      navigate("/stories");
+    } catch (err) {
+      notify.error(t("stories.block_failed") || "Couldn't block this person. Try again.");
+    }
+  };
+
   /**
    * The viewer's keyboard: ← / → step, Space pauses and resumes, Escape
    * leaves.
@@ -369,7 +406,16 @@ const StoryViewer: React.FC = () => {
    */
   const handleKeyPress = useCallback(
     (e: KeyboardEvent) => {
-      if (showAnswerBox || showReplyInput || openSheet !== null || confirmDelete) return;
+      if (
+        showAnswerBox ||
+        showReplyInput ||
+        openSheet !== null ||
+        confirmDelete ||
+        reportOpen ||
+        confirmBlock
+      ) {
+        return;
+      }
       const tag = String((e.target as any) && (e.target as any).tagName).toLowerCase();
       if (tag === "input" || tag === "textarea" || tag === "select") return;
 
@@ -387,6 +433,8 @@ const StoryViewer: React.FC = () => {
       showReplyInput,
       openSheet,
       confirmDelete,
+      reportOpen,
+      confirmBlock,
       handlePrevStory,
       handleNextStory,
       handleClose,
@@ -505,7 +553,7 @@ const StoryViewer: React.FC = () => {
             )}
           </div>
           <div className="flex shrink-0 items-center gap-1">
-            {isOwner && (
+            {(isOwner || currentUserId) && (
               <button
                 type="button"
                 className={ICON_BUTTON}
@@ -819,18 +867,49 @@ const StoryViewer: React.FC = () => {
           )}
         </div>
 
-        {/* Menu (Owner Only) */}
-        {showMenu && isOwner && (
-          <div className="absolute bottom-20 right-4 z-[15] rounded-chip bg-black/90 p-2 backdrop-blur motion-safe:animate-bt-rise">
-            <button
-              type="button"
-              data-testid="story-delete"
-              onClick={() => setConfirmDelete(true)}
-              className="flex w-full items-center gap-3 rounded-chip border-0 bg-transparent px-4 py-3 text-left text-white transition hover:bg-white/10"
-            >
-              <Trash2 size={16} aria-hidden />
-              {t("stories.delete_story") || "Delete Story"}
-            </button>
+        {/* Menu: delete for the owner; report and block for everyone else,
+            as in the app's popup menu. */}
+        {showMenu && (
+          <div className="absolute end-4 top-24 z-[15] rounded-chip bg-black/90 p-2 backdrop-blur motion-safe:animate-bt-rise">
+            {isOwner ? (
+              <button
+                type="button"
+                data-testid="story-delete"
+                onClick={() => setConfirmDelete(true)}
+                className="flex w-full items-center gap-3 rounded-chip border-0 bg-transparent px-4 py-3 text-start text-white transition hover:bg-white/10"
+              >
+                <Trash2 size={16} aria-hidden />
+                {t("stories.delete_story") || "Delete Story"}
+              </button>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  data-testid="story-report"
+                  onClick={() => {
+                    setShowMenu(false);
+                    setReportOpen(true);
+                  }}
+                  className="flex w-full items-center gap-3 rounded-chip border-0 bg-transparent px-4 py-3 text-start text-white transition hover:bg-white/10"
+                >
+                  <Flag size={16} aria-hidden />
+                  {t("stories.report_story") || "Report story"}
+                </button>
+                <button
+                  type="button"
+                  data-testid="story-block"
+                  onClick={() => {
+                    setShowMenu(false);
+                    setConfirmBlock(true);
+                  }}
+                  className="flex w-full items-center gap-3 rounded-chip border-0 bg-transparent px-4 py-3 text-start text-red-300 transition hover:bg-white/10"
+                >
+                  <Ban size={16} aria-hidden />
+                  {t("stories.block_author", { name: currentStory.user.name }) ||
+                    `Block ${currentStory.user.name}`}
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>
@@ -871,6 +950,31 @@ const StoryViewer: React.FC = () => {
         cancelLabel={t("stories.cancel") || "Cancel"}
         onConfirm={handleDeleteStory}
         onCancel={() => setConfirmDelete(false)}
+      />
+      {reportOpen && currentStory.user && (
+        <ReportMomentDialog
+          type="story"
+          targetId={currentStory._id}
+          authorId={currentStory.user._id}
+          onClose={() => setReportOpen(false)}
+        />
+      )}
+      <ConfirmDialog
+        open={confirmBlock}
+        danger
+        busy={isBlocking}
+        title={
+          t("stories.block_confirm_title", { name: currentStory.user.name }) ||
+          `Block ${currentStory.user.name}?`
+        }
+        body={
+          t("stories.block_confirm_body") ||
+          "They won't be able to see your profile, moments or stories, or message you, and you won't see theirs."
+        }
+        confirmLabel={t("stories.block_confirm") || "Block"}
+        cancelLabel={t("stories.cancel") || "Cancel"}
+        onConfirm={handleBlockAuthor}
+        onCancel={() => setConfirmBlock(false)}
       />
     </>
   );

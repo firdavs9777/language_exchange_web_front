@@ -46,6 +46,23 @@ jest.mock("./StoryShareSheet", () => ({
   ),
 }));
 
+jest.mock("../moments/actions/ReportMomentDialog", () => ({
+  __esModule: true,
+  default: ({ type, targetId, authorId, onClose }: any) => (
+    <div data-testid="report-dialog-stub">
+      {`${type}:${targetId}:${authorId}`}
+      <button type="button" data-testid="report-dialog-close" onClick={onClose}>
+        close
+      </button>
+    </div>
+  ),
+}));
+
+const mockBlockUser = jest.fn();
+jest.mock("../../store/slices/usersSlice", () => ({
+  useBlockUserMutation: () => [mockBlockUser, { isLoading: false }],
+}));
+
 const mockMarkViewed = jest.fn();
 const mockReact = jest.fn();
 const mockRemoveReaction = jest.fn();
@@ -100,6 +117,7 @@ beforeEach(() => {
     (fn) => fn.mockReturnValue(unwrappable())
   );
   mockAnswerQuestion.mockReturnValue(unwrappable({ success: true }));
+  mockBlockUser.mockReturnValue(unwrappable());
 });
 
 describe("question sticker answers", () => {
@@ -435,5 +453,67 @@ describe("location (moments#17)", () => {
     expect(screen.queryByTestId("story-location")).toBeNull();
     fireEvent.click(screen.getByTestId("story-next"));
     expect(screen.queryByTestId("story-location")).toBeNull();
+  });
+});
+
+describe("report and block (moments#10)", () => {
+  it("offers report and block to a viewer who is not the author, never to the author", () => {
+    renderViewer([story()]);
+    fireEvent.click(screen.getByTestId("story-menu-toggle"));
+    expect(screen.getByTestId("story-report")).toBeInTheDocument();
+    expect(screen.getByTestId("story-block")).toBeInTheDocument();
+    expect(screen.queryByTestId("story-delete")).toBeNull();
+  });
+
+  it("keeps the owner's menu to delete only", () => {
+    mockCurrentUserId = "author-1";
+    renderViewer([story()]);
+    fireEvent.click(screen.getByTestId("story-menu-toggle"));
+    expect(screen.getByTestId("story-delete")).toBeInTheDocument();
+    expect(screen.queryByTestId("story-report")).toBeNull();
+    expect(screen.queryByTestId("story-block")).toBeNull();
+  });
+
+  it("reports the story as type story, paused while the dialog is open", () => {
+    renderViewer([story()]);
+    fireEvent.click(screen.getByTestId("story-menu-toggle"));
+    fireEvent.click(screen.getByTestId("story-report"));
+    expect(screen.getByTestId("report-dialog-stub")).toHaveTextContent("story:story-1:author-1");
+    expect(screen.getByTestId("story-viewer")).toHaveAttribute("data-paused", "true");
+
+    fireEvent.click(screen.getByTestId("report-dialog-close"));
+    expect(screen.queryByTestId("report-dialog-stub")).toBeNull();
+    expect(screen.getByTestId("story-viewer")).toHaveAttribute("data-paused", "false");
+  });
+
+  it("blocks the author after a confirmation and leaves their stories", async () => {
+    renderViewer([story()]);
+    fireEvent.click(screen.getByTestId("story-menu-toggle"));
+    fireEvent.click(screen.getByTestId("story-block"));
+    expect(screen.getByTestId("story-viewer")).toHaveAttribute("data-paused", "true");
+    expect(mockBlockUser).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
+    await waitFor(() => expect(mockBlockUser).toHaveBeenCalledWith("author-1"));
+    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/stories"));
+  });
+
+  it("stays on the story and says so when the block fails", async () => {
+    const notify = require("../../design/notify").default;
+    mockBlockUser.mockReturnValue({ unwrap: () => Promise.reject({ status: 500 }) });
+    renderViewer([story()]);
+    fireEvent.click(screen.getByTestId("story-menu-toggle"));
+    fireEvent.click(screen.getByTestId("story-block"));
+    fireEvent.click(screen.getByTestId("confirm-dialog-confirm"));
+    await waitFor(() => expect(notify.error).toHaveBeenCalled());
+    expect(mockNavigate).not.toHaveBeenCalledWith("/stories");
+  });
+
+  it("ignores the arrow keys while the report dialog is open", () => {
+    renderViewer([story(), story({ _id: "story-2", text: "Second" })]);
+    fireEvent.click(screen.getByTestId("story-menu-toggle"));
+    fireEvent.click(screen.getByTestId("story-report"));
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    expect(screen.getByTestId("report-dialog-stub")).toHaveTextContent("story:story-1");
   });
 });

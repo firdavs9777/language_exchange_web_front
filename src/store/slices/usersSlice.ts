@@ -279,7 +279,10 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       // Moments + Comments: the server drops a blocked author from feeds and
       // comment lists, so open lists refetch and their content disappears.
-      invalidatesTags: ["User", "Conversations", "Moments", "Comments"],
+      // `Stories` too: the feed would otherwise keep the blocked author's
+      // ring until its 5-second cache expired, and the story viewer sends the
+      // reader back to it right after a block.
+      invalidatesTags: ["User", "Conversations", "Moments", "Comments", "Stories"],
     }),
     unblockUser: builder.mutation({
       query: (userId: string) => ({

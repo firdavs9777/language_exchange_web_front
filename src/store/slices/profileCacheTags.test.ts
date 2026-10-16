@@ -65,3 +65,18 @@ it("refetches the signed-in user's profile after a save", async () => {
 
   expect(gets(calls, "/auth/me").length).toBeGreaterThan(1);
 });
+
+it("refetches the stories feed after a block, so the blocked author's ring disappears", async () => {
+  const { storiesApiSlice } = require("./storiesSlice");
+  const calls = mockFetch();
+  const store = makeStore();
+
+  await store.dispatch(storiesApiSlice.endpoints.getStoryFeeds.initiate(undefined));
+  expect(gets(calls, "/stories/feed")).toHaveLength(1);
+
+  await store.dispatch(usersApiSlice.endpoints.blockUser.initiate("u2"));
+  await Promise.resolve();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
+  expect(gets(calls, "/stories/feed").length).toBeGreaterThan(1);
+});
