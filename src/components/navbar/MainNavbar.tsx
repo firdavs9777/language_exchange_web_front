@@ -14,6 +14,7 @@ import {
   FaChevronDown,
   FaUserShield,
   FaFilm,
+  FaCalendarAlt,
 } from "react-icons/fa";
 import { useWebFlag } from "../../utils/webFlags";
 import { useTranslation } from "react-i18next";
@@ -70,6 +71,7 @@ const MainNavbar = () => {
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
   const reelsOn = useWebFlag("webReelsEnabled");
+  const gatheringsOn = useWebFlag("webGatheringsEnabled");
 
   // `resolvedLanguage`, not `language`: since locales load on demand i18next is
   // no longer restricted to bare language codes, so `language` can be "ko-KR"
@@ -257,6 +259,16 @@ const MainNavbar = () => {
                     <span>{t("reels.nav") || "Reels"}</span>
                   </NavLink>
                 )}
+                {gatheringsOn && (
+                  <NavLink
+                    to="/gatherings"
+                    data-testid="nav-gatherings"
+                    className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+                  >
+                    <FaCalendarAlt />
+                    <span>{t("gatherings.nav") || "Gatherings"}</span>
+                  </NavLink>
+                )}
 
                 {isAdmin && (
                   <NavLink
@@ -422,6 +434,11 @@ const MainNavbar = () => {
                   {reelsOn && (
                     <NavLink to="/reels" className="mobile-nav-link" onClick={closeMobileMenu}>
                       <FaFilm /> {t("reels.nav") || "Reels"}
+                    </NavLink>
+                  )}
+                  {gatheringsOn && (
+                    <NavLink to="/gatherings" data-testid="nav-gatherings-mobile" className="mobile-nav-link" onClick={closeMobileMenu}>
+                      <FaCalendarAlt /> {t("gatherings.nav") || "Gatherings"}
                     </NavLink>
                   )}
                   {isAdmin && (

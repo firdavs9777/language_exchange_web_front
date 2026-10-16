@@ -159,3 +159,17 @@ it("shows Reels in the desktop and mobile menus once the flag is on", () => {
   const { container } = renderNavbar();
   expect(container.querySelectorAll('a[href="/reels"]').length).toBeGreaterThanOrEqual(1);
 });
+
+it("has no Gatherings entry while webGatheringsEnabled is off", () => {
+  mockConversationsFetch([]);
+  mockAppConfig(ALL_WEB_FLAGS_OFF);
+  const { container } = renderNavbar();
+  expect(container.querySelector('a[href="/gatherings"]')).toBe(null);
+});
+
+it("shows Gatherings in the navbar once the flag is on", () => {
+  mockConversationsFetch([]);
+  mockAppConfig(ALL_WEB_FLAGS_ON);
+  const { container } = renderNavbar();
+  expect(container.querySelectorAll('a[href="/gatherings"]').length).toBeGreaterThanOrEqual(1);
+});

@@ -3187,7 +3187,8 @@
       "change": "Change cover photo",
       "remove": "Remove cover",
       "tooBig": "That image is over 10 MB."
-    }
+    },
+    "nav": "Gatherings"
   },
   "clubs": {
     "card": {

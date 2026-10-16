@@ -9,6 +9,8 @@ import Loader from "../components/Loader";
 import RouteError from "../components/errors/RouteError";
 import { lazyWithRetry } from "./lazyWithRetry";
 import MomentLinkRedirect from "./MomentLinkRedirect";
+import FlagRoute from "./FlagRoute";
+import RequireSignIn from "../components/gatherings/RequireSignIn";
 
 // --- Eager: the prerendered public pages ------------------------------------
 //
@@ -131,6 +133,15 @@ const InvitePage = lazyWithRetry("../components/invite/InvitePage", () => import
 // Courses
 const CoursesMain = lazyWithRetry("../components/courses/CoursesMain", () => import("../components/courses/CoursesMain"));
 
+// Gatherings & clubs (Phase 4). Dark until webGatheringsEnabled (and the
+// global GATHERINGS_ENABLED) -- FlagRoute renders NotFound until then, so
+// none of these chunks is ever requested while the feature is off.
+const GatheringsHome = lazyWithRetry("../components/gatherings/GatheringsHome", () => import("../components/gatherings/GatheringsHome"));
+const GatheringDetail = lazyWithRetry("../components/gatherings/GatheringDetail", () => import("../components/gatherings/GatheringDetail"));
+const GatheringForm = lazyWithRetry("../components/gatherings/GatheringForm", () => import("../components/gatherings/GatheringForm"));
+const ClubDetail = lazyWithRetry("../components/gatherings/ClubDetail", () => import("../components/gatherings/ClubDetail"));
+const ClubForm = lazyWithRetry("../components/gatherings/ClubForm", () => import("../components/gatherings/ClubForm"));
+
 // Admin console. Lazy on purpose, and lazy is load-bearing twice over: this
 // module is required by scripts/prerender.js in plain Node, and the console
 // pulls in charts, tables and the whole admin slice that no visitor of a
@@ -173,6 +184,14 @@ const lazyRoute = (node: React.ReactNode) => (
 // than nothing at all.
 const lazyAdminRoute = (node: React.ReactNode) => (
   <React.Suspense fallback={null}>{node}</React.Suspense>
+);
+
+// A Phase 4 gatherings page: flag first (a 404 while off, for everyone),
+// then sign-in, then the lazy chunk.
+const gatheringsRoute = (node: React.ReactNode) => (
+  <FlagRoute flag="webGatheringsEnabled">
+    <RequireSignIn>{lazyRoute(node)}</RequireSignIn>
+  </FlagRoute>
 );
 
 const MainChatWrapper = () => {
@@ -298,6 +317,17 @@ export const routes = createRoutesFromElements(
     <Route path="moments/saved" element={lazyRoute(<SavedMoments />)} />
     {/* Old shared links: /moments/<id> -> /moment/<id>. "saved" above is static, so it outranks this. */}
     <Route path="moments/:id" element={<MomentLinkRedirect />} />
+
+    {/* Gatherings & clubs (Phase 4, dark behind webGatheringsEnabled).
+        Static "new" segments outrank ":id" in react-router v6. */}
+    <Route path="gatherings" element={gatheringsRoute(<GatheringsHome />)} />
+    <Route path="gatherings/new" element={gatheringsRoute(<GatheringForm mode="create" />)} />
+    <Route path="gatherings/:id" element={gatheringsRoute(<GatheringDetail />)} />
+    <Route path="gatherings/:id/edit" element={gatheringsRoute(<GatheringForm mode="edit" />)} />
+    <Route path="clubs" element={gatheringsRoute(<GatheringsHome initialTab="clubs" />)} />
+    <Route path="clubs/new" element={gatheringsRoute(<ClubForm mode="create" />)} />
+    <Route path="clubs/:id" element={gatheringsRoute(<ClubDetail />)} />
+    <Route path="clubs/:id/edit" element={gatheringsRoute(<ClubForm mode="edit" />)} />
 
     {/* Admin console. Guarded inside AdminLayout (RequireAdmin) and noindex
         by default — RouteMeta marks every path outside SEO_PAGES. */}
