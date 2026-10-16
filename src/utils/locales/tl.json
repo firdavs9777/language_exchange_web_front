@@ -589,7 +589,22 @@
       "addMood": "Magdagdag ng mood",
       "addLocation": "Magdagdag ng lokasyon",
       "addTags": "Magdagdag ng mga tag",
-      "tagPlaceholder": "Magdagdag ng tag..."
+      "tagPlaceholder": "Magdagdag ng tag...",
+      "attachVideo": "Mag-attach ng video",
+      "mediaFailedNothingPosted": "Nabigo ang upload, kaya walang na-post. Subukan ulit.",
+      "mediaFailedPosted": "Na-post, pero nabigo ang pag-upload ng media — i-edit ang moment para idagdag ito.",
+      "modePhoto": "Larawan",
+      "modeText": "Text",
+      "modeVideo": "Video",
+      "modeVoice": "Boses",
+      "moodQuestion": "Ano ang nararamdaman mo?",
+      "placeholder": "Ano ang nasa isip mo, {{name}}?",
+      "recordVoice": "Mag-record ng voice note",
+      "remove": "Alisin",
+      "share": "I-share",
+      "sharing": "Sine-share...",
+      "textPreview": "Ang text moment mo",
+      "voiceNoteLength": "Voice note · {{seconds}}s"
     },
     "promo": {
       "title": "Nasa app na ngayon ang Mga Sandali",
@@ -657,7 +672,10 @@
       "react": "Mag-react",
       "reply": "Sagot",
       "replyPlaceholder": "Sumulat ng sagot…",
-      "viewReplies": "Tingnan ang {{count}} sagot"
+      "viewReplies": "Tingnan ang {{count}} sagot",
+      "deleteOthersBody": "Nasa moment mo ito, kaya puwede mo itong alisin. Hindi na ito maibabalik.",
+      "deleteOthersTitle": "Burahin ang komentong ito?",
+      "removeGif": "Alisin ang GIF"
     },
     "filters": {
       "button": "Mga filter",
@@ -725,7 +743,11 @@
         "false_information": "Maling impormasyon",
         "copyright": "Copyright",
         "other": "Iba pa"
-      }
+      },
+      "alreadyComment": "Na-report mo na ang komentong ito.",
+      "alreadyStory": "Na-report mo na ang story na ito.",
+      "titleComment": "I-report ang komentong ito",
+      "titleStory": "I-report ang story na ito"
     },
     "schedule": {
       "label": "I-schedule",
@@ -754,7 +776,43 @@
     "prompt": {
       "answeringPromptOfDay": "Sinasagot ang tanong ng araw",
       "dismissChip": "Huwag nang sagutin ang tanong",
-      "answering": "Sumasagot"
+      "answering": "Sumasagot",
+      "answer": "Sagutin",
+      "cardSubtitle": "Magsanay magsulat",
+      "cardTitle": "Tanong ng araw",
+      "dismissCard": "Isara ang tanong ng araw"
+    },
+    "block": {
+      "done": "Na-block na si {{name}}."
+    },
+    "card": {
+      "bookmark": "I-bookmark",
+      "likeFailed": "May nangyaring mali",
+      "loginToLike": "Mag-log in para mag-like ng mga post",
+      "removeBookmark": "Alisin sa bookmark",
+      "save": "I-save",
+      "saved": "Naka-save",
+      "seeLess": "Ipakita nang kaunti",
+      "seeMore": "Ipakita pa",
+      "unlike": "I-unlike"
+    },
+    "saved": {
+      "browseMoments": "Mag-browse ng Moments",
+      "gridView": "Grid view",
+      "listView": "List view",
+      "loadMore": "Mag-load pa",
+      "momentCount": "na moment ang naka-save",
+      "noMoments": "Wala pang naka-save na moment",
+      "remove": "Alisin",
+      "removeError": "Hindi maalis ang moment",
+      "removeSuccess": "Inalis sa mga naka-save",
+      "title": "Mga Naka-save na Moment"
+    },
+    "voice": {
+      "cancel": "Kanselahin ang recording",
+      "denied": "Tinanggihan ang access sa mikropono. Payagan ang access sa mikropono para mag-record ng voice note.",
+      "stop": "Ihinto ang recording at ipadala",
+      "unsupported": "Hindi sinusuportahan ng browser na ito ang voice recording."
     }
   },
   "createMoment": {
@@ -2592,7 +2650,17 @@
       "sign_in_body": "Mag-sign in para mapanood ito, o buksan sa BananaTalk app.",
       "sign_in_title": "May nagbahagi ng story sa iyo",
       "unavailable": "Hindi available sa iyo ang story na ito."
-    }
+    },
+    "block_author": "I-block si {{name}}",
+    "block_confirm": "I-block",
+    "block_confirm_body": "Hindi na nila makikita ang profile, moments, o stories mo, o makakapag-message sa iyo, at hindi mo na rin makikita ang sa kanila.",
+    "block_confirm_title": "I-block si {{name}}?",
+    "block_failed": "Hindi ma-block ang taong ito. Subukan ulit.",
+    "blocked": "Na-block na si {{name}}",
+    "location_label": "Lokasyon",
+    "one_image_only": "Isang larawan lang ang ipinapakita ng story. Itinabi namin ang una.",
+    "replies_off": "Naka-off ang mga reply sa story na ito",
+    "report_story": "I-report ang story"
   },
   "card": {
     "title": "Language Card",

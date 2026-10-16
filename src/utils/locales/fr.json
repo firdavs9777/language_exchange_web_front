@@ -570,7 +570,22 @@
       "addMood": "Ajouter une humeur",
       "addLocation": "Ajouter un lieu",
       "addTags": "Ajouter des tags",
-      "tagPlaceholder": "Ajouter un tag..."
+      "tagPlaceholder": "Ajouter un tag...",
+      "attachVideo": "Joindre une vidéo",
+      "mediaFailedNothingPosted": "L'envoi a échoué, rien n'a été publié. Réessayez.",
+      "mediaFailedPosted": "Publié, mais l'envoi du média a échoué — modifiez le moment pour l'ajouter.",
+      "modePhoto": "Photo",
+      "modeText": "Texte",
+      "modeVideo": "Vidéo",
+      "modeVoice": "Voix",
+      "moodQuestion": "Comment vous sentez-vous ?",
+      "placeholder": "À quoi pensez-vous, {{name}} ?",
+      "recordVoice": "Enregistrer un message vocal",
+      "remove": "Retirer",
+      "share": "Partager",
+      "sharing": "Partage...",
+      "textPreview": "Votre moment texte",
+      "voiceNoteLength": "Message vocal · {{seconds}} s"
     },
     "promo": {
       "title": "Les Moments sont désormais dans l'app",
@@ -638,7 +653,10 @@
       "react": "Réagir",
       "reply": "Répondre",
       "replyPlaceholder": "Écrivez une réponse…",
-      "viewReplies": "Voir {{count}} réponses"
+      "viewReplies": "Voir {{count}} réponses",
+      "deleteOthersBody": "Il est sur votre moment, vous pouvez donc le supprimer. Cette action est irréversible.",
+      "deleteOthersTitle": "Supprimer ce commentaire ?",
+      "removeGif": "Retirer le GIF"
     },
     "filters": {
       "button": "Filtres",
@@ -706,7 +724,11 @@
         "false_information": "Fausse information",
         "copyright": "Droits d'auteur",
         "other": "Autre chose"
-      }
+      },
+      "alreadyComment": "Vous avez déjà signalé ce commentaire.",
+      "alreadyStory": "Vous avez déjà signalé cette story.",
+      "titleComment": "Signaler ce commentaire",
+      "titleStory": "Signaler cette story"
     },
     "schedule": {
       "label": "Programmer",
@@ -735,7 +757,43 @@
     "prompt": {
       "answeringPromptOfDay": "Réponse à la question du jour",
       "dismissChip": "Ne plus répondre à la question",
-      "answering": "Réponse à"
+      "answering": "Réponse à",
+      "answer": "Répondre",
+      "cardSubtitle": "Entraînez-vous à écrire",
+      "cardTitle": "Question du jour",
+      "dismissCard": "Masquer la question du jour"
+    },
+    "block": {
+      "done": "{{name}} est bloqué."
+    },
+    "card": {
+      "bookmark": "Ajouter aux favoris",
+      "likeFailed": "Une erreur s'est produite",
+      "loginToLike": "Connectez-vous pour aimer des publications",
+      "removeBookmark": "Retirer des favoris",
+      "save": "Enregistrer",
+      "saved": "Enregistré",
+      "seeLess": "Voir moins",
+      "seeMore": "Voir plus",
+      "unlike": "Je n'aime plus"
+    },
+    "saved": {
+      "browseMoments": "Parcourir les moments",
+      "gridView": "Vue en grille",
+      "listView": "Vue en liste",
+      "loadMore": "Charger plus",
+      "momentCount": "moments enregistrés",
+      "noMoments": "Aucun moment enregistré pour l'instant",
+      "remove": "Retirer",
+      "removeError": "Impossible de retirer le moment",
+      "removeSuccess": "Retiré des enregistrements",
+      "title": "Moments enregistrés"
+    },
+    "voice": {
+      "cancel": "Annuler l'enregistrement",
+      "denied": "L'accès au micro a été refusé. Autorisez l'accès au micro pour enregistrer un message vocal.",
+      "stop": "Arrêter l'enregistrement et envoyer",
+      "unsupported": "Ce navigateur ne prend pas en charge l'enregistrement vocal."
     }
   },
   "createMoment": {
@@ -2593,7 +2651,17 @@
       "sign_in_body": "Connectez-vous pour la voir, ou ouvrez-la dans l'application BananaTalk.",
       "sign_in_title": "Quelqu'un a partagé une story avec vous",
       "unavailable": "Cette story ne vous est pas accessible."
-    }
+    },
+    "block_author": "Bloquer {{name}}",
+    "block_confirm": "Bloquer",
+    "block_confirm_body": "Cette personne ne pourra plus voir votre profil, vos moments ni vos stories, ni vous écrire, et vous ne verrez plus les siens.",
+    "block_confirm_title": "Bloquer {{name}} ?",
+    "block_failed": "Impossible de bloquer cette personne. Réessayez.",
+    "blocked": "{{name}} est bloqué",
+    "location_label": "Lieu",
+    "one_image_only": "Une story n'affiche qu'une photo. Nous avons gardé la première.",
+    "replies_off": "Les réponses sont désactivées pour cette story",
+    "report_story": "Signaler la story"
   },
   "card": {
     "title": "Carte de langues",

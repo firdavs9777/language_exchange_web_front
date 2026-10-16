@@ -546,7 +546,22 @@
       "addMood": "기분 추가",
       "addLocation": "위치 추가",
       "addTags": "태그 추가",
-      "tagPlaceholder": "태그 추가…"
+      "tagPlaceholder": "태그 추가…",
+      "attachVideo": "동영상 첨부",
+      "mediaFailedNothingPosted": "업로드에 실패해서 아무것도 게시되지 않았어요. 다시 시도해 주세요.",
+      "mediaFailedPosted": "게시했지만 미디어 업로드에 실패했어요. 모먼트를 수정해서 추가해 보세요.",
+      "modePhoto": "사진",
+      "modeText": "텍스트",
+      "modeVideo": "동영상",
+      "modeVoice": "음성",
+      "moodQuestion": "지금 기분이 어때요?",
+      "placeholder": "{{name}}님, 무슨 생각을 하고 있나요?",
+      "recordVoice": "음성 메시지 녹음",
+      "remove": "삭제",
+      "share": "공유",
+      "sharing": "공유 중...",
+      "textPreview": "텍스트 모먼트",
+      "voiceNoteLength": "음성 메시지 · {{seconds}}초"
     },
     "question": "무슨 생각을 하고 계세요,",
     "loading": "불러오는 중",
@@ -657,7 +672,10 @@
       "react": "리액션",
       "reply": "답글",
       "replyPlaceholder": "답글을 입력하세요…",
-      "viewReplies": "답글 {{count}}개 보기"
+      "viewReplies": "답글 {{count}}개 보기",
+      "deleteOthersBody": "내 모먼트에 달린 댓글이라 삭제할 수 있어요. 삭제하면 되돌릴 수 없어요.",
+      "deleteOthersTitle": "이 댓글을 삭제할까요?",
+      "removeGif": "GIF 삭제"
     },
     "filters": {
       "button": "필터",
@@ -725,7 +743,11 @@
         "false_information": "허위 정보",
         "copyright": "저작권",
         "other": "기타"
-      }
+      },
+      "alreadyComment": "이미 이 댓글을 신고했어요.",
+      "alreadyStory": "이미 이 스토리를 신고했어요.",
+      "titleComment": "이 댓글 신고",
+      "titleStory": "이 스토리 신고"
     },
     "schedule": {
       "label": "예약",
@@ -754,7 +776,43 @@
     "prompt": {
       "answeringPromptOfDay": "오늘의 질문에 답하는 중",
       "dismissChip": "질문에 답하지 않기",
-      "answering": "질문"
+      "answering": "질문",
+      "answer": "답하기",
+      "cardSubtitle": "작문 연습",
+      "cardTitle": "오늘의 질문",
+      "dismissCard": "오늘의 질문 닫기"
+    },
+    "block": {
+      "done": "{{name}}님을 차단했어요."
+    },
+    "card": {
+      "bookmark": "북마크",
+      "likeFailed": "문제가 발생했어요",
+      "loginToLike": "좋아요를 누르려면 로그인하세요",
+      "removeBookmark": "북마크 해제",
+      "save": "저장",
+      "saved": "저장됨",
+      "seeLess": "간략히",
+      "seeMore": "더 보기",
+      "unlike": "좋아요 취소"
+    },
+    "saved": {
+      "browseMoments": "모먼트 둘러보기",
+      "gridView": "그리드 보기",
+      "listView": "목록 보기",
+      "loadMore": "더 불러오기",
+      "momentCount": "개의 모먼트 저장됨",
+      "noMoments": "저장한 모먼트가 아직 없어요",
+      "remove": "삭제",
+      "removeError": "모먼트를 삭제하지 못했어요",
+      "removeSuccess": "저장 목록에서 삭제했어요",
+      "title": "저장한 모먼트"
+    },
+    "voice": {
+      "cancel": "녹음 취소",
+      "denied": "마이크 접근이 거부되었어요. 음성 메시지를 녹음하려면 마이크 접근을 허용해 주세요.",
+      "stop": "녹음 중지 후 보내기",
+      "unsupported": "이 브라우저에서는 음성 녹음을 지원하지 않아요."
     }
   },
   "createMoment": {
@@ -2592,7 +2650,17 @@
       "sign_in_body": "로그인해서 보거나 BananaTalk 앱에서 열어 보세요.",
       "sign_in_title": "누군가 스토리를 공유했어요",
       "unavailable": "볼 수 없는 스토리예요."
-    }
+    },
+    "block_author": "{{name}}님 차단",
+    "block_confirm": "차단",
+    "block_confirm_body": "상대방은 내 프로필, 모먼트, 스토리를 보거나 나에게 메시지를 보낼 수 없고, 나도 상대방의 콘텐츠를 볼 수 없어요.",
+    "block_confirm_title": "{{name}}님을 차단할까요?",
+    "block_failed": "차단하지 못했어요. 다시 시도해 주세요.",
+    "blocked": "{{name}}님을 차단했어요",
+    "location_label": "위치",
+    "one_image_only": "스토리에는 사진을 한 장만 올릴 수 있어요. 첫 번째 사진을 남겼어요.",
+    "replies_off": "이 스토리는 답장이 꺼져 있어요",
+    "report_story": "스토리 신고"
   },
   "card": {
     "title": "언어 카드",

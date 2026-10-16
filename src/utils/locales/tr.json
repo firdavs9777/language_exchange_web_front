@@ -589,7 +589,22 @@
       "addMood": "Ruh hali ekle",
       "addLocation": "Konum ekle",
       "addTags": "Etiket ekle",
-      "tagPlaceholder": "Etiket ekle…"
+      "tagPlaceholder": "Etiket ekle…",
+      "attachVideo": "Video ekle",
+      "mediaFailedNothingPosted": "Yükleme başarısız oldu, bu yüzden hiçbir şey paylaşılmadı. Tekrar dene.",
+      "mediaFailedPosted": "Paylaşıldı ama medya yüklenemedi — eklemek için anı düzenlemeyi dene.",
+      "modePhoto": "Fotoğraf",
+      "modeText": "Metin",
+      "modeVideo": "Video",
+      "modeVoice": "Ses",
+      "moodQuestion": "Nasıl hissediyorsun?",
+      "placeholder": "Aklında ne var, {{name}}?",
+      "recordVoice": "Sesli not kaydet",
+      "remove": "Kaldır",
+      "share": "Paylaş",
+      "sharing": "Paylaşılıyor...",
+      "textPreview": "Metin anın",
+      "voiceNoteLength": "Sesli not · {{seconds}} sn"
     },
     "promo": {
       "title": "Anlar artık uygulamada",
@@ -657,7 +672,10 @@
       "react": "Tepki ver",
       "reply": "Yanıtla",
       "replyPlaceholder": "Bir yanıt yazın…",
-      "viewReplies": "{{count}} yanıtı görüntüle"
+      "viewReplies": "{{count}} yanıtı görüntüle",
+      "deleteOthersBody": "Senin anına yapılmış bir yorum, bu yüzden kaldırabilirsin. Bu işlem geri alınamaz.",
+      "deleteOthersTitle": "Bu yorum silinsin mi?",
+      "removeGif": "GIF'i kaldır"
     },
     "filters": {
       "button": "Filtreler",
@@ -725,7 +743,11 @@
         "false_information": "Yanlış bilgi",
         "copyright": "Telif hakkı",
         "other": "Başka bir şey"
-      }
+      },
+      "alreadyComment": "Bu yorumu zaten bildirdin.",
+      "alreadyStory": "Bu hikâyeyi zaten bildirdin.",
+      "titleComment": "Bu yorumu bildir",
+      "titleStory": "Bu hikâyeyi bildir"
     },
     "schedule": {
       "label": "Zamanla",
@@ -754,7 +776,43 @@
     "prompt": {
       "answeringPromptOfDay": "Günün sorusu yanıtlanıyor",
       "dismissChip": "Soruyu yanıtlamayı bırak",
-      "answering": "Yanıt"
+      "answering": "Yanıt",
+      "answer": "Yanıtla",
+      "cardSubtitle": "Yazma pratiği",
+      "cardTitle": "Günün sorusu",
+      "dismissCard": "Günün sorusunu kapat"
+    },
+    "block": {
+      "done": "{{name}} engellendi."
+    },
+    "card": {
+      "bookmark": "Yer imlerine ekle",
+      "likeFailed": "Bir sorun oluştu",
+      "loginToLike": "Gönderileri beğenmek için giriş yap",
+      "removeBookmark": "Yer imlerinden kaldır",
+      "save": "Kaydet",
+      "saved": "Kaydedildi",
+      "seeLess": "Daha az göster",
+      "seeMore": "Devamını göster",
+      "unlike": "Beğenmekten vazgeç"
+    },
+    "saved": {
+      "browseMoments": "Anlara göz at",
+      "gridView": "Izgara görünümü",
+      "listView": "Liste görünümü",
+      "loadMore": "Daha fazla yükle",
+      "momentCount": "an kaydedildi",
+      "noMoments": "Henüz kaydedilmiş an yok",
+      "remove": "Kaldır",
+      "removeError": "An kaldırılamadı",
+      "removeSuccess": "Kaydedilenlerden kaldırıldı",
+      "title": "Kaydedilen Anlar"
+    },
+    "voice": {
+      "cancel": "Kaydı iptal et",
+      "denied": "Mikrofon erişimi reddedildi. Sesli not kaydetmek için mikrofon erişimine izin ver.",
+      "stop": "Kaydı durdur ve gönder",
+      "unsupported": "Bu tarayıcı ses kaydını desteklemiyor."
     }
   },
   "createMoment": {
@@ -2592,7 +2650,17 @@
       "sign_in_body": "İzlemek için giriş yap ya da BananaTalk uygulamasında aç.",
       "sign_in_title": "Biri seninle bir hikaye paylaştı",
       "unavailable": "Bu hikaye sana açık değil."
-    }
+    },
+    "block_author": "{{name}} kişisini engelle",
+    "block_confirm": "Engelle",
+    "block_confirm_body": "Bu kişi profilini, anlarını veya hikâyelerini göremez, sana mesaj gönderemez; sen de onunkileri görmezsin.",
+    "block_confirm_title": "{{name}} engellensin mi?",
+    "block_failed": "Bu kişi engellenemedi. Tekrar dene.",
+    "blocked": "{{name}} engellendi",
+    "location_label": "Konum",
+    "one_image_only": "Bir hikâye tek bir fotoğraf gösterir. İlkini tuttuk.",
+    "replies_off": "Bu hikâyede yanıtlar kapalı",
+    "report_story": "Hikâyeyi bildir"
   },
   "card": {
     "title": "Dil Kartı",

@@ -546,7 +546,22 @@
       "addMood": "添加心情",
       "addLocation": "添加位置",
       "addTags": "添加标签",
-      "tagPlaceholder": "添加标签…"
+      "tagPlaceholder": "添加标签…",
+      "attachVideo": "添加视频",
+      "mediaFailedNothingPosted": "上传失败，所以没有发布任何内容。请重试。",
+      "mediaFailedPosted": "已发布，但媒体上传失败——请编辑动态重新添加。",
+      "modePhoto": "照片",
+      "modeText": "文字",
+      "modeVideo": "视频",
+      "modeVoice": "语音",
+      "moodQuestion": "你现在感觉如何？",
+      "placeholder": "{{name}}，在想什么？",
+      "recordVoice": "录制语音",
+      "remove": "移除",
+      "share": "分享",
+      "sharing": "正在分享...",
+      "textPreview": "你的文字动态",
+      "voiceNoteLength": "语音 · {{seconds}}秒"
     },
     "question": "在想什么呢，",
     "loading": "加载中",
@@ -657,7 +672,10 @@
       "react": "回应",
       "reply": "回复",
       "replyPlaceholder": "写下你的回复…",
-      "viewReplies": "查看 {{count}} 条回复"
+      "viewReplies": "查看 {{count}} 条回复",
+      "deleteOthersBody": "这是你动态下的评论，你可以删除它。删除后无法恢复。",
+      "deleteOthersTitle": "删除这条评论？",
+      "removeGif": "移除 GIF"
     },
     "filters": {
       "button": "筛选",
@@ -725,7 +743,11 @@
         "false_information": "虚假信息",
         "copyright": "版权",
         "other": "其他"
-      }
+      },
+      "alreadyComment": "你已经举报过这条评论。",
+      "alreadyStory": "你已经举报过这条快拍。",
+      "titleComment": "举报这条评论",
+      "titleStory": "举报这条快拍"
     },
     "schedule": {
       "label": "定时发布",
@@ -754,7 +776,43 @@
     "prompt": {
       "answeringPromptOfDay": "正在回答每日话题",
       "dismissChip": "不再回答此话题",
-      "answering": "回答"
+      "answering": "回答",
+      "answer": "回答",
+      "cardSubtitle": "练习写作",
+      "cardTitle": "每日话题",
+      "dismissCard": "关闭每日话题"
+    },
+    "block": {
+      "done": "已拉黑 {{name}}。"
+    },
+    "card": {
+      "bookmark": "收藏",
+      "likeFailed": "出了点问题",
+      "loginToLike": "请登录后点赞",
+      "removeBookmark": "取消收藏",
+      "save": "保存",
+      "saved": "已保存",
+      "seeLess": "收起",
+      "seeMore": "展开",
+      "unlike": "取消点赞"
+    },
+    "saved": {
+      "browseMoments": "浏览动态",
+      "gridView": "网格视图",
+      "listView": "列表视图",
+      "loadMore": "加载更多",
+      "momentCount": "条动态已收藏",
+      "noMoments": "还没有收藏的动态",
+      "remove": "移除",
+      "removeError": "移除动态失败",
+      "removeSuccess": "已从收藏中移除",
+      "title": "收藏的动态"
+    },
+    "voice": {
+      "cancel": "取消录音",
+      "denied": "麦克风权限被拒绝。请允许使用麦克风以录制语音。",
+      "stop": "停止录音并发送",
+      "unsupported": "此浏览器不支持录音。"
     }
   },
   "createMoment": {
@@ -2592,7 +2650,17 @@
       "sign_in_body": "登录即可观看，或在 BananaTalk App 中打开。",
       "sign_in_title": "有人与你分享了一条快拍",
       "unavailable": "你无法查看这条快拍。"
-    }
+    },
+    "block_author": "拉黑 {{name}}",
+    "block_confirm": "拉黑",
+    "block_confirm_body": "对方将无法查看你的个人资料、动态或快拍，也无法给你发消息，你也不会再看到对方的内容。",
+    "block_confirm_title": "确定拉黑 {{name}}？",
+    "block_failed": "拉黑失败，请重试。",
+    "blocked": "已拉黑 {{name}}",
+    "location_label": "位置",
+    "one_image_only": "一条快拍只能放一张图片，已保留第一张。",
+    "replies_off": "这条快拍已关闭回复",
+    "report_story": "举报快拍"
   },
   "card": {
     "title": "语言卡片",

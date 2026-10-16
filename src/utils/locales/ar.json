@@ -589,7 +589,22 @@
       "addMood": "أضف المزاج",
       "addLocation": "أضف الموقع",
       "addTags": "أضف الوسوم",
-      "tagPlaceholder": "أضف وسمًا..."
+      "tagPlaceholder": "أضف وسمًا...",
+      "attachVideo": "إرفاق فيديو",
+      "mediaFailedNothingPosted": "فشل الرفع، لذلك لم يُنشر أي شيء. حاول مرة أخرى.",
+      "mediaFailedPosted": "تم النشر، لكن فشل رفع الوسائط — عدّل اللحظة لإضافتها.",
+      "modePhoto": "صورة",
+      "modeText": "نص",
+      "modeVideo": "فيديو",
+      "modeVoice": "صوت",
+      "moodQuestion": "كيف تشعر؟",
+      "placeholder": "بماذا تفكر يا {{name}}؟",
+      "recordVoice": "تسجيل رسالة صوتية",
+      "remove": "إزالة",
+      "share": "مشاركة",
+      "sharing": "جارٍ المشاركة...",
+      "textPreview": "لحظتك النصية",
+      "voiceNoteLength": "رسالة صوتية · {{seconds}} ث"
     },
     "promo": {
       "title": "اللحظات أصبحت الآن في التطبيق",
@@ -657,7 +672,10 @@
       "react": "تفاعل",
       "reply": "رد",
       "replyPlaceholder": "اكتب ردًا…",
-      "viewReplies": "عرض {{count}} من الردود"
+      "viewReplies": "عرض {{count}} من الردود",
+      "deleteOthersBody": "هذا التعليق على لحظتك، لذا يمكنك إزالته. لا يمكن التراجع عن ذلك.",
+      "deleteOthersTitle": "حذف هذا التعليق؟",
+      "removeGif": "إزالة الصورة المتحركة"
     },
     "filters": {
       "button": "عوامل التصفية",
@@ -725,7 +743,11 @@
         "false_information": "معلومات كاذبة",
         "copyright": "حقوق النشر",
         "other": "سبب آخر"
-      }
+      },
+      "alreadyComment": "لقد أبلغت عن هذا التعليق من قبل.",
+      "alreadyStory": "لقد أبلغت عن هذه القصة من قبل.",
+      "titleComment": "الإبلاغ عن هذا التعليق",
+      "titleStory": "الإبلاغ عن هذه القصة"
     },
     "schedule": {
       "label": "جدولة",
@@ -754,7 +776,43 @@
     "prompt": {
       "answeringPromptOfDay": "الرد على سؤال اليوم",
       "dismissChip": "التوقف عن الرد على السؤال",
-      "answering": "رد على"
+      "answering": "رد على",
+      "answer": "أجب",
+      "cardSubtitle": "تدرّب على الكتابة",
+      "cardTitle": "سؤال اليوم",
+      "dismissCard": "إخفاء سؤال اليوم"
+    },
+    "block": {
+      "done": "تم حظر {{name}}."
+    },
+    "card": {
+      "bookmark": "إضافة إلى المحفوظات",
+      "likeFailed": "حدث خطأ ما",
+      "loginToLike": "سجّل الدخول للإعجاب بالمنشورات",
+      "removeBookmark": "إزالة من المحفوظات",
+      "save": "حفظ",
+      "saved": "محفوظ",
+      "seeLess": "عرض أقل",
+      "seeMore": "عرض المزيد",
+      "unlike": "إلغاء الإعجاب"
+    },
+    "saved": {
+      "browseMoments": "تصفّح اللحظات",
+      "gridView": "عرض شبكي",
+      "listView": "عرض القائمة",
+      "loadMore": "تحميل المزيد",
+      "momentCount": "لحظة محفوظة",
+      "noMoments": "لا توجد لحظات محفوظة بعد",
+      "remove": "إزالة",
+      "removeError": "تعذّرت إزالة اللحظة",
+      "removeSuccess": "أُزيلت من المحفوظات",
+      "title": "اللحظات المحفوظة"
+    },
+    "voice": {
+      "cancel": "إلغاء التسجيل",
+      "denied": "تم رفض الوصول إلى الميكروفون. اسمح بالوصول إلى الميكروفون لتسجيل رسالة صوتية.",
+      "stop": "إيقاف التسجيل والإرسال",
+      "unsupported": "هذا المتصفح لا يدعم التسجيل الصوتي."
     }
   },
   "createMoment": {
@@ -2596,7 +2654,17 @@
       "sign_in_body": "سجّل الدخول لمشاهدتها، أو افتحها في تطبيق BananaTalk.",
       "sign_in_title": "شاركك أحدهم قصة",
       "unavailable": "هذه القصة غير متاحة لك."
-    }
+    },
+    "block_author": "حظر {{name}}",
+    "block_confirm": "حظر",
+    "block_confirm_body": "لن يتمكن من رؤية ملفك الشخصي أو لحظاتك أو قصصك أو مراسلتك، ولن ترى محتواه.",
+    "block_confirm_title": "حظر {{name}}؟",
+    "block_failed": "تعذّر حظر هذا الشخص. حاول مرة أخرى.",
+    "blocked": "تم حظر {{name}}",
+    "location_label": "الموقع",
+    "one_image_only": "تعرض القصة صورة واحدة فقط. احتفظنا بالأولى.",
+    "replies_off": "الردود متوقفة على هذه القصة",
+    "report_story": "الإبلاغ عن القصة"
   },
   "card": {
     "title": "بطاقة اللغة",

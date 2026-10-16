@@ -589,7 +589,22 @@
       "addMood": "Stimmung hinzufügen",
       "addLocation": "Ort hinzufügen",
       "addTags": "Tags hinzufügen",
-      "tagPlaceholder": "Tag hinzufügen…"
+      "tagPlaceholder": "Tag hinzufügen…",
+      "attachVideo": "Video anhängen",
+      "mediaFailedNothingPosted": "Der Upload ist fehlgeschlagen, daher wurde nichts gepostet. Versuch es noch einmal.",
+      "mediaFailedPosted": "Gepostet, aber der Medien-Upload ist fehlgeschlagen – bearbeite den Moment, um ihn hinzuzufügen.",
+      "modePhoto": "Foto",
+      "modeText": "Text",
+      "modeVideo": "Video",
+      "modeVoice": "Sprache",
+      "moodQuestion": "Wie fühlst du dich?",
+      "placeholder": "Was denkst du gerade, {{name}}?",
+      "recordVoice": "Sprachnachricht aufnehmen",
+      "remove": "Entfernen",
+      "share": "Teilen",
+      "sharing": "Wird geteilt...",
+      "textPreview": "Dein Text-Moment",
+      "voiceNoteLength": "Sprachnachricht · {{seconds}} s"
     },
     "promo": {
       "title": "Momente gibt es jetzt in der App",
@@ -657,7 +672,10 @@
       "react": "Reagieren",
       "reply": "Antworten",
       "replyPlaceholder": "Schreib eine Antwort…",
-      "viewReplies": "{{count}} Antworten ansehen"
+      "viewReplies": "{{count}} Antworten ansehen",
+      "deleteOthersBody": "Er steht unter deinem Moment, deshalb kannst du ihn entfernen. Das lässt sich nicht rückgängig machen.",
+      "deleteOthersTitle": "Diesen Kommentar löschen?",
+      "removeGif": "GIF entfernen"
     },
     "filters": {
       "button": "Filter",
@@ -725,7 +743,11 @@
         "false_information": "Falschinformation",
         "copyright": "Urheberrecht",
         "other": "Etwas anderes"
-      }
+      },
+      "alreadyComment": "Du hast diesen Kommentar bereits gemeldet.",
+      "alreadyStory": "Du hast diese Story bereits gemeldet.",
+      "titleComment": "Diesen Kommentar melden",
+      "titleStory": "Diese Story melden"
     },
     "schedule": {
       "label": "Planen",
@@ -754,7 +776,43 @@
     "prompt": {
       "answeringPromptOfDay": "Antwort auf die Frage des Tages",
       "dismissChip": "Nicht mehr auf die Frage antworten",
-      "answering": "Antwort auf"
+      "answering": "Antwort auf",
+      "answer": "Antworten",
+      "cardSubtitle": "Schreiben üben",
+      "cardTitle": "Frage des Tages",
+      "dismissCard": "Frage des Tages ausblenden"
+    },
+    "block": {
+      "done": "{{name}} ist blockiert."
+    },
+    "card": {
+      "bookmark": "Merken",
+      "likeFailed": "Etwas ist schiefgelaufen",
+      "loginToLike": "Melde dich an, um Beiträge zu liken",
+      "removeBookmark": "Nicht mehr merken",
+      "save": "Speichern",
+      "saved": "Gespeichert",
+      "seeLess": "Weniger anzeigen",
+      "seeMore": "Mehr anzeigen",
+      "unlike": "Gefällt mir nicht mehr"
+    },
+    "saved": {
+      "browseMoments": "Momente entdecken",
+      "gridView": "Rasteransicht",
+      "listView": "Listenansicht",
+      "loadMore": "Mehr laden",
+      "momentCount": "Momente gespeichert",
+      "noMoments": "Noch keine gespeicherten Momente",
+      "remove": "Entfernen",
+      "removeError": "Moment konnte nicht entfernt werden",
+      "removeSuccess": "Aus Gespeichert entfernt",
+      "title": "Gespeicherte Momente"
+    },
+    "voice": {
+      "cancel": "Aufnahme abbrechen",
+      "denied": "Der Mikrofonzugriff wurde verweigert. Erlaube den Mikrofonzugriff, um eine Sprachnachricht aufzunehmen.",
+      "stop": "Aufnahme beenden und senden",
+      "unsupported": "Dieser Browser unterstützt keine Sprachaufnahme."
     }
   },
   "createMoment": {
@@ -2592,7 +2650,17 @@
       "sign_in_body": "Melde dich an, um sie anzusehen, oder öffne sie in der BananaTalk-App.",
       "sign_in_title": "Jemand hat eine Story mit dir geteilt",
       "unavailable": "Diese Story ist für dich nicht verfügbar."
-    }
+    },
+    "block_author": "{{name}} blockieren",
+    "block_confirm": "Blockieren",
+    "block_confirm_body": "Diese Person kann dein Profil, deine Momente und Storys nicht mehr sehen und dir nicht schreiben, und du siehst ihre Inhalte nicht mehr.",
+    "block_confirm_title": "{{name}} blockieren?",
+    "block_failed": "Blockieren fehlgeschlagen. Versuch es noch einmal.",
+    "blocked": "{{name}} ist blockiert",
+    "location_label": "Ort",
+    "one_image_only": "Eine Story zeigt ein Bild. Wir haben das erste behalten.",
+    "replies_off": "Antworten sind für diese Story deaktiviert",
+    "report_story": "Story melden"
   },
   "card": {
     "title": "Sprachkarte",

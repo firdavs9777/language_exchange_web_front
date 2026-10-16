@@ -92,7 +92,7 @@ Phase 3 Moments (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-
 - [x] P3-MOM-18 the viewer shows a story's hashtags (moments#25)
 - [x] P3-MOM-19 the viewer honours `allowReplies` and `allowSharing` (moments#25)
 - [x] P3-MOM-20 the link sticker always shows the real host under its label (moments#25)
-- [ ] P3-MOM-I18N New moments strings in all 18 locales
+- [x] P3-MOM-I18N New moments strings in all 18 locales
 - [ ] P3-MOM-PUSH Push unit moments (suite + build green, deployed, production smoke recorded)
 
 Phase 3 Community (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase3.md`)

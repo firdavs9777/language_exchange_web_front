@@ -589,7 +589,22 @@
       "addMood": "เพิ่มอารมณ์",
       "addLocation": "เพิ่มสถานที่",
       "addTags": "เพิ่มแท็ก",
-      "tagPlaceholder": "เพิ่มแท็ก..."
+      "tagPlaceholder": "เพิ่มแท็ก...",
+      "attachVideo": "แนบวิดีโอ",
+      "mediaFailedNothingPosted": "อัปโหลดไม่สำเร็จ จึงไม่มีอะไรถูกโพสต์ ลองอีกครั้ง",
+      "mediaFailedPosted": "โพสต์แล้ว แต่อัปโหลดสื่อไม่สำเร็จ ลองแก้ไขโมเมนต์เพื่อเพิ่มสื่อ",
+      "modePhoto": "รูปภาพ",
+      "modeText": "ข้อความ",
+      "modeVideo": "วิดีโอ",
+      "modeVoice": "เสียง",
+      "moodQuestion": "ตอนนี้คุณรู้สึกอย่างไร",
+      "placeholder": "{{name}} กำลังคิดอะไรอยู่",
+      "recordVoice": "อัดข้อความเสียง",
+      "remove": "นำออก",
+      "share": "แชร์",
+      "sharing": "กำลังแชร์...",
+      "textPreview": "โมเมนต์ข้อความของคุณ",
+      "voiceNoteLength": "ข้อความเสียง · {{seconds}} วิ"
     },
     "promo": {
       "title": "โมเมนต์ย้ายไปอยู่ในแอปแล้ว",
@@ -657,7 +672,10 @@
       "react": "รีแอกชัน",
       "reply": "ตอบกลับ",
       "replyPlaceholder": "เขียนการตอบกลับ…",
-      "viewReplies": "ดู {{count}} การตอบกลับ"
+      "viewReplies": "ดู {{count}} การตอบกลับ",
+      "deleteOthersBody": "ความคิดเห็นนี้อยู่ในโมเมนต์ของคุณ คุณจึงลบได้ และไม่สามารถเลิกทำได้",
+      "deleteOthersTitle": "ลบความคิดเห็นนี้ไหม",
+      "removeGif": "ลบ GIF"
     },
     "filters": {
       "button": "ตัวกรอง",
@@ -725,7 +743,11 @@
         "false_information": "ข้อมูลเท็จ",
         "copyright": "ลิขสิทธิ์",
         "other": "อื่น ๆ"
-      }
+      },
+      "alreadyComment": "คุณรายงานความคิดเห็นนี้ไปแล้ว",
+      "alreadyStory": "คุณรายงานสตอรี่นี้ไปแล้ว",
+      "titleComment": "รายงานความคิดเห็นนี้",
+      "titleStory": "รายงานสตอรี่นี้"
     },
     "schedule": {
       "label": "ตั้งเวลา",
@@ -754,7 +776,43 @@
     "prompt": {
       "answeringPromptOfDay": "กำลังตอบคำถามประจำวัน",
       "dismissChip": "หยุดตอบคำถาม",
-      "answering": "ตอบ"
+      "answering": "ตอบ",
+      "answer": "ตอบ",
+      "cardSubtitle": "ฝึกเขียน",
+      "cardTitle": "คำถามประจำวัน",
+      "dismissCard": "ปิดคำถามประจำวัน"
+    },
+    "block": {
+      "done": "บล็อก {{name}} แล้ว"
+    },
+    "card": {
+      "bookmark": "บุ๊กมาร์ก",
+      "likeFailed": "เกิดข้อผิดพลาด",
+      "loginToLike": "เข้าสู่ระบบเพื่อกดถูกใจโพสต์",
+      "removeBookmark": "เลิกบุ๊กมาร์ก",
+      "save": "บันทึก",
+      "saved": "บันทึกแล้ว",
+      "seeLess": "ดูน้อยลง",
+      "seeMore": "ดูเพิ่มเติม",
+      "unlike": "เลิกถูกใจ"
+    },
+    "saved": {
+      "browseMoments": "ดูโมเมนต์",
+      "gridView": "มุมมองตาราง",
+      "listView": "มุมมองรายการ",
+      "loadMore": "โหลดเพิ่ม",
+      "momentCount": "โมเมนต์ที่บันทึกไว้",
+      "noMoments": "ยังไม่มีโมเมนต์ที่บันทึกไว้",
+      "remove": "นำออก",
+      "removeError": "นำโมเมนต์ออกไม่สำเร็จ",
+      "removeSuccess": "นำออกจากรายการที่บันทึกแล้ว",
+      "title": "โมเมนต์ที่บันทึกไว้"
+    },
+    "voice": {
+      "cancel": "ยกเลิกการอัด",
+      "denied": "ไม่ได้รับอนุญาตให้ใช้ไมโครโฟน โปรดอนุญาตการเข้าถึงไมโครโฟนเพื่ออัดข้อความเสียง",
+      "stop": "หยุดอัดและส่ง",
+      "unsupported": "เบราว์เซอร์นี้ไม่รองรับการอัดเสียง"
     }
   },
   "createMoment": {
@@ -2592,7 +2650,17 @@
       "sign_in_body": "เข้าสู่ระบบเพื่อดู หรือเปิดในแอป BananaTalk",
       "sign_in_title": "มีคนแชร์สตอรี่กับคุณ",
       "unavailable": "สตอรี่นี้ไม่พร้อมให้คุณดู"
-    }
+    },
+    "block_author": "บล็อก {{name}}",
+    "block_confirm": "บล็อก",
+    "block_confirm_body": "เขาจะไม่เห็นโปรไฟล์ โมเมนต์ หรือสตอรี่ของคุณ และส่งข้อความหาคุณไม่ได้ ส่วนคุณก็จะไม่เห็นของเขา",
+    "block_confirm_title": "บล็อก {{name}} ไหม",
+    "block_failed": "บล็อกไม่สำเร็จ ลองอีกครั้ง",
+    "blocked": "บล็อก {{name}} แล้ว",
+    "location_label": "ตำแหน่ง",
+    "one_image_only": "สตอรี่แสดงได้เพียงรูปเดียว เราเก็บรูปแรกไว้",
+    "replies_off": "สตอรี่นี้ปิดการตอบกลับ",
+    "report_story": "รายงานสตอรี่"
   },
   "card": {
     "title": "การ์ดภาษา",

@@ -546,7 +546,22 @@
       "addMood": "新增心情",
       "addLocation": "新增地點",
       "addTags": "新增標籤",
-      "tagPlaceholder": "新增標籤…"
+      "tagPlaceholder": "新增標籤…",
+      "attachVideo": "附加影片",
+      "mediaFailedNothingPosted": "上傳失敗，因此沒有發佈任何內容。請再試一次。",
+      "mediaFailedPosted": "已發佈，但媒體上傳失敗——請編輯動態重新加入。",
+      "modePhoto": "照片",
+      "modeText": "文字",
+      "modeVideo": "影片",
+      "modeVoice": "語音",
+      "moodQuestion": "你現在感覺如何？",
+      "placeholder": "{{name}}，在想什麼？",
+      "recordVoice": "錄製語音",
+      "remove": "移除",
+      "share": "分享",
+      "sharing": "分享中...",
+      "textPreview": "你的文字動態",
+      "voiceNoteLength": "語音 · {{seconds}} 秒"
     },
     "question": "在想些什麼呢，",
     "loading": "載入中",
@@ -657,7 +672,10 @@
       "react": "回應",
       "reply": "回覆",
       "replyPlaceholder": "寫下你的回覆…",
-      "viewReplies": "查看 {{count}} 則回覆"
+      "viewReplies": "查看 {{count}} 則回覆",
+      "deleteOthersBody": "這是你動態下的留言，你可以刪除它。刪除後無法復原。",
+      "deleteOthersTitle": "要刪除這則留言嗎？",
+      "removeGif": "移除 GIF"
     },
     "filters": {
       "button": "篩選",
@@ -725,7 +743,11 @@
         "false_information": "不實資訊",
         "copyright": "著作權",
         "other": "其他"
-      }
+      },
+      "alreadyComment": "你已經檢舉過這則留言。",
+      "alreadyStory": "你已經檢舉過這則限時動態。",
+      "titleComment": "檢舉這則留言",
+      "titleStory": "檢舉這則限時動態"
     },
     "schedule": {
       "label": "排程發布",
@@ -754,7 +776,43 @@
     "prompt": {
       "answeringPromptOfDay": "正在回答每日話題",
       "dismissChip": "不再回答此話題",
-      "answering": "回答"
+      "answering": "回答",
+      "answer": "回答",
+      "cardSubtitle": "練習寫作",
+      "cardTitle": "每日話題",
+      "dismissCard": "關閉每日話題"
+    },
+    "block": {
+      "done": "已封鎖 {{name}}。"
+    },
+    "card": {
+      "bookmark": "收藏",
+      "likeFailed": "發生錯誤",
+      "loginToLike": "請登入後按讚",
+      "removeBookmark": "取消收藏",
+      "save": "儲存",
+      "saved": "已儲存",
+      "seeLess": "收起",
+      "seeMore": "展開",
+      "unlike": "收回讚"
+    },
+    "saved": {
+      "browseMoments": "瀏覽動態",
+      "gridView": "格狀檢視",
+      "listView": "清單檢視",
+      "loadMore": "載入更多",
+      "momentCount": "則動態已收藏",
+      "noMoments": "還沒有收藏的動態",
+      "remove": "移除",
+      "removeError": "無法移除動態",
+      "removeSuccess": "已從收藏中移除",
+      "title": "收藏的動態"
+    },
+    "voice": {
+      "cancel": "取消錄音",
+      "denied": "麥克風權限遭拒。請允許使用麥克風以錄製語音。",
+      "stop": "停止錄音並傳送",
+      "unsupported": "此瀏覽器不支援錄音。"
     }
   },
   "createMoment": {
@@ -2592,7 +2650,17 @@
       "sign_in_body": "登入即可觀看，或在 BananaTalk App 中開啟。",
       "sign_in_title": "有人與你分享了限時動態",
       "unavailable": "你無法查看此限時動態。"
-    }
+    },
+    "block_author": "封鎖 {{name}}",
+    "block_confirm": "封鎖",
+    "block_confirm_body": "對方將無法查看你的個人檔案、動態或限時動態，也無法傳訊息給你，你也不會再看到對方的內容。",
+    "block_confirm_title": "確定要封鎖 {{name}}？",
+    "block_failed": "無法封鎖，請再試一次。",
+    "blocked": "已封鎖 {{name}}",
+    "location_label": "位置",
+    "one_image_only": "一則限時動態只能放一張照片，已保留第一張。",
+    "replies_off": "這則限時動態已關閉回覆",
+    "report_story": "檢舉限時動態"
   },
   "card": {
     "title": "語言卡片",

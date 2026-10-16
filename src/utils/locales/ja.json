@@ -546,7 +546,22 @@
       "addMood": "気分を追加",
       "addLocation": "場所を追加",
       "addTags": "タグを追加",
-      "tagPlaceholder": "タグを追加…"
+      "tagPlaceholder": "タグを追加…",
+      "attachVideo": "動画を添付",
+      "mediaFailedNothingPosted": "アップロードに失敗したため、何も投稿されませんでした。もう一度お試しください。",
+      "mediaFailedPosted": "投稿しましたが、メディアのアップロードに失敗しました。モーメントを編集して追加してください。",
+      "modePhoto": "写真",
+      "modeText": "テキスト",
+      "modeVideo": "動画",
+      "modeVoice": "音声",
+      "moodQuestion": "今の気分は？",
+      "placeholder": "{{name}}さん、今どうしてる？",
+      "recordVoice": "ボイスメモを録音",
+      "remove": "削除",
+      "share": "シェア",
+      "sharing": "シェア中...",
+      "textPreview": "テキストモーメント",
+      "voiceNoteLength": "ボイスメモ · {{seconds}}秒"
     },
     "question": "いま何を考えていますか、",
     "loading": "読み込み中",
@@ -657,7 +672,10 @@
       "react": "リアクション",
       "reply": "返信",
       "replyPlaceholder": "返信を入力…",
-      "viewReplies": "返信を{{count}}件見る"
+      "viewReplies": "返信を{{count}}件見る",
+      "deleteOthersBody": "あなたのモーメントへのコメントなので削除できます。この操作は元に戻せません。",
+      "deleteOthersTitle": "このコメントを削除しますか？",
+      "removeGif": "GIFを削除"
     },
     "filters": {
       "button": "フィルター",
@@ -725,7 +743,11 @@
         "false_information": "誤った情報",
         "copyright": "著作権",
         "other": "その他"
-      }
+      },
+      "alreadyComment": "このコメントはすでに報告済みです。",
+      "alreadyStory": "このストーリーはすでに報告済みです。",
+      "titleComment": "このコメントを報告",
+      "titleStory": "このストーリーを報告"
     },
     "schedule": {
       "label": "予約投稿",
@@ -754,7 +776,43 @@
     "prompt": {
       "answeringPromptOfDay": "今日のお題に回答中",
       "dismissChip": "お題への回答をやめる",
-      "answering": "お題"
+      "answering": "お題",
+      "answer": "答える",
+      "cardSubtitle": "書く練習",
+      "cardTitle": "今日のお題",
+      "dismissCard": "今日のお題を閉じる"
+    },
+    "block": {
+      "done": "{{name}}さんをブロックしました。"
+    },
+    "card": {
+      "bookmark": "ブックマーク",
+      "likeFailed": "問題が発生しました",
+      "loginToLike": "いいねするにはログインしてください",
+      "removeBookmark": "ブックマークを解除",
+      "save": "保存",
+      "saved": "保存済み",
+      "seeLess": "折りたたむ",
+      "seeMore": "もっと見る",
+      "unlike": "いいねを取り消す"
+    },
+    "saved": {
+      "browseMoments": "モーメントを見る",
+      "gridView": "グリッド表示",
+      "listView": "リスト表示",
+      "loadMore": "さらに読み込む",
+      "momentCount": "件のモーメントを保存済み",
+      "noMoments": "保存したモーメントはまだありません",
+      "remove": "削除",
+      "removeError": "モーメントを削除できませんでした",
+      "removeSuccess": "保存済みから削除しました",
+      "title": "保存したモーメント"
+    },
+    "voice": {
+      "cancel": "録音をキャンセル",
+      "denied": "マイクへのアクセスが拒否されました。ボイスメモを録音するにはマイクへのアクセスを許可してください。",
+      "stop": "録音を停止して送信",
+      "unsupported": "このブラウザは音声録音に対応していません。"
     }
   },
   "createMoment": {
@@ -2592,7 +2650,17 @@
       "sign_in_body": "ログインして見るか、BananaTalkアプリで開いてください。",
       "sign_in_title": "ストーリーが共有されました",
       "unavailable": "このストーリーは表示できません。"
-    }
+    },
+    "block_author": "{{name}}さんをブロック",
+    "block_confirm": "ブロック",
+    "block_confirm_body": "相手はあなたのプロフィール、モーメント、ストーリーを見たり、メッセージを送ったりできなくなり、あなたにも相手の投稿は表示されなくなります。",
+    "block_confirm_title": "{{name}}さんをブロックしますか？",
+    "block_failed": "ブロックできませんでした。もう一度お試しください。",
+    "blocked": "{{name}}さんをブロックしました",
+    "location_label": "場所",
+    "one_image_only": "ストーリーに載せられる写真は1枚です。最初の1枚を残しました。",
+    "replies_off": "このストーリーは返信がオフになっています",
+    "report_story": "ストーリーを報告"
   },
   "card": {
     "title": "ランゲージカード",

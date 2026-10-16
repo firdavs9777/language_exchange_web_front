@@ -589,7 +589,22 @@
       "addMood": "Tambahkan suasana hati",
       "addLocation": "Tambahkan lokasi",
       "addTags": "Tambahkan tag",
-      "tagPlaceholder": "Tambahkan tag..."
+      "tagPlaceholder": "Tambahkan tag...",
+      "attachVideo": "Lampirkan video",
+      "mediaFailedNothingPosted": "Unggahan gagal, jadi tidak ada yang diposting. Coba lagi.",
+      "mediaFailedPosted": "Sudah diposting, tetapi unggahan media gagal — coba edit momen untuk menambahkannya.",
+      "modePhoto": "Foto",
+      "modeText": "Teks",
+      "modeVideo": "Video",
+      "modeVoice": "Suara",
+      "moodQuestion": "Bagaimana perasaan Anda?",
+      "placeholder": "Apa yang Anda pikirkan, {{name}}?",
+      "recordVoice": "Rekam pesan suara",
+      "remove": "Hapus",
+      "share": "Bagikan",
+      "sharing": "Membagikan...",
+      "textPreview": "Momen teks Anda",
+      "voiceNoteLength": "Pesan suara · {{seconds}} dtk"
     },
     "promo": {
       "title": "Momen kini ada di aplikasi",
@@ -657,7 +672,10 @@
       "react": "Beri reaksi",
       "reply": "Balas",
       "replyPlaceholder": "Tulis balasan…",
-      "viewReplies": "Lihat {{count}} balasan"
+      "viewReplies": "Lihat {{count}} balasan",
+      "deleteOthersBody": "Komentar ini ada di momen Anda, jadi Anda bisa menghapusnya. Tindakan ini tidak bisa dibatalkan.",
+      "deleteOthersTitle": "Hapus komentar ini?",
+      "removeGif": "Hapus GIF"
     },
     "filters": {
       "button": "Filter",
@@ -725,7 +743,11 @@
         "false_information": "Informasi palsu",
         "copyright": "Hak cipta",
         "other": "Lainnya"
-      }
+      },
+      "alreadyComment": "Anda sudah melaporkan komentar ini.",
+      "alreadyStory": "Anda sudah melaporkan cerita ini.",
+      "titleComment": "Laporkan komentar ini",
+      "titleStory": "Laporkan cerita ini"
     },
     "schedule": {
       "label": "Jadwalkan",
@@ -754,7 +776,43 @@
     "prompt": {
       "answeringPromptOfDay": "Menjawab pertanyaan hari ini",
       "dismissChip": "Berhenti menjawab pertanyaan",
-      "answering": "Menjawab"
+      "answering": "Menjawab",
+      "answer": "Jawab",
+      "cardSubtitle": "Latihan menulis",
+      "cardTitle": "Pertanyaan hari ini",
+      "dismissCard": "Tutup pertanyaan hari ini"
+    },
+    "block": {
+      "done": "{{name}} telah diblokir."
+    },
+    "card": {
+      "bookmark": "Tandai",
+      "likeFailed": "Terjadi kesalahan",
+      "loginToLike": "Masuk untuk menyukai postingan",
+      "removeBookmark": "Hapus tanda",
+      "save": "Simpan",
+      "saved": "Tersimpan",
+      "seeLess": "Lebih sedikit",
+      "seeMore": "Selengkapnya",
+      "unlike": "Batal suka"
+    },
+    "saved": {
+      "browseMoments": "Jelajahi Momen",
+      "gridView": "Tampilan kisi",
+      "listView": "Tampilan daftar",
+      "loadMore": "Muat lagi",
+      "momentCount": "momen tersimpan",
+      "noMoments": "Belum ada momen tersimpan",
+      "remove": "Hapus",
+      "removeError": "Gagal menghapus momen",
+      "removeSuccess": "Dihapus dari tersimpan",
+      "title": "Momen Tersimpan"
+    },
+    "voice": {
+      "cancel": "Batalkan rekaman",
+      "denied": "Akses mikrofon ditolak. Izinkan akses mikrofon untuk merekam pesan suara.",
+      "stop": "Hentikan rekaman dan kirim",
+      "unsupported": "Browser ini tidak mendukung rekaman suara."
     }
   },
   "createMoment": {
@@ -2592,7 +2650,17 @@
       "sign_in_body": "Masuk untuk menontonnya, atau buka di aplikasi BananaTalk.",
       "sign_in_title": "Seseorang membagikan story kepada Anda",
       "unavailable": "Story ini tidak tersedia untuk Anda."
-    }
+    },
+    "block_author": "Blokir {{name}}",
+    "block_confirm": "Blokir",
+    "block_confirm_body": "Mereka tidak akan bisa melihat profil, momen, atau cerita Anda, atau mengirimi Anda pesan, dan Anda tidak akan melihat milik mereka.",
+    "block_confirm_title": "Blokir {{name}}?",
+    "block_failed": "Tidak bisa memblokir orang ini. Coba lagi.",
+    "blocked": "{{name}} telah diblokir",
+    "location_label": "Lokasi",
+    "one_image_only": "Satu cerita hanya menampilkan satu foto. Kami menyimpan yang pertama.",
+    "replies_off": "Balasan dinonaktifkan untuk cerita ini",
+    "report_story": "Laporkan cerita"
   },
   "card": {
     "title": "Kartu Bahasa",

@@ -570,7 +570,22 @@
       "addMood": "Adicionar humor",
       "addLocation": "Adicionar localização",
       "addTags": "Adicionar tags",
-      "tagPlaceholder": "Adicionar uma tag..."
+      "tagPlaceholder": "Adicionar uma tag...",
+      "attachVideo": "Anexar um vídeo",
+      "mediaFailedNothingPosted": "O envio falhou, então nada foi publicado. Tente de novo.",
+      "mediaFailedPosted": "Publicado, mas o envio da mídia falhou — edite o momento para adicioná-la.",
+      "modePhoto": "Foto",
+      "modeText": "Texto",
+      "modeVideo": "Vídeo",
+      "modeVoice": "Voz",
+      "moodQuestion": "Como você está se sentindo?",
+      "placeholder": "No que você está pensando, {{name}}?",
+      "recordVoice": "Gravar uma mensagem de voz",
+      "remove": "Remover",
+      "share": "Compartilhar",
+      "sharing": "Compartilhando...",
+      "textPreview": "Seu momento de texto",
+      "voiceNoteLength": "Mensagem de voz · {{seconds}}s"
     },
     "promo": {
       "title": "Momentos agora vive no app",
@@ -638,7 +653,10 @@
       "react": "Reagir",
       "reply": "Responder",
       "replyPlaceholder": "Escreva uma resposta…",
-      "viewReplies": "Ver {{count}} respostas"
+      "viewReplies": "Ver {{count}} respostas",
+      "deleteOthersBody": "Está no seu momento, então você pode removê-lo. Isso não pode ser desfeito.",
+      "deleteOthersTitle": "Excluir este comentário?",
+      "removeGif": "Remover GIF"
     },
     "filters": {
       "button": "Filtros",
@@ -706,7 +724,11 @@
         "false_information": "Informação falsa",
         "copyright": "Direitos autorais",
         "other": "Outro motivo"
-      }
+      },
+      "alreadyComment": "Você já denunciou este comentário.",
+      "alreadyStory": "Você já denunciou este story.",
+      "titleComment": "Denunciar este comentário",
+      "titleStory": "Denunciar este story"
     },
     "schedule": {
       "label": "Agendar",
@@ -735,7 +757,43 @@
     "prompt": {
       "answeringPromptOfDay": "Respondendo à pergunta do dia",
       "dismissChip": "Parar de responder à pergunta",
-      "answering": "Respondendo"
+      "answering": "Respondendo",
+      "answer": "Responder",
+      "cardSubtitle": "Pratique a escrita",
+      "cardTitle": "Pergunta do dia",
+      "dismissCard": "Dispensar a pergunta do dia"
+    },
+    "block": {
+      "done": "{{name}} foi bloqueado."
+    },
+    "card": {
+      "bookmark": "Salvar nos favoritos",
+      "likeFailed": "Algo deu errado",
+      "loginToLike": "Entre para curtir publicações",
+      "removeBookmark": "Remover dos favoritos",
+      "save": "Salvar",
+      "saved": "Salvo",
+      "seeLess": "Ver menos",
+      "seeMore": "Ver mais",
+      "unlike": "Descurtir"
+    },
+    "saved": {
+      "browseMoments": "Explorar momentos",
+      "gridView": "Visualização em grade",
+      "listView": "Visualização em lista",
+      "loadMore": "Carregar mais",
+      "momentCount": "momentos salvos",
+      "noMoments": "Nenhum momento salvo ainda",
+      "remove": "Remover",
+      "removeError": "Não foi possível remover o momento",
+      "removeSuccess": "Removido dos salvos",
+      "title": "Momentos salvos"
+    },
+    "voice": {
+      "cancel": "Cancelar gravação",
+      "denied": "O acesso ao microfone foi negado. Permita o acesso ao microfone para gravar uma mensagem de voz.",
+      "stop": "Parar gravação e enviar",
+      "unsupported": "Este navegador não oferece suporte à gravação de voz."
     }
   },
   "createMoment": {
@@ -2593,7 +2651,17 @@
       "sign_in_body": "Entre para assistir ou abra no app BananaTalk.",
       "sign_in_title": "Alguém compartilhou um story com você",
       "unavailable": "Este story não está disponível para você."
-    }
+    },
+    "block_author": "Bloquear {{name}}",
+    "block_confirm": "Bloquear",
+    "block_confirm_body": "A pessoa não poderá ver seu perfil, seus momentos ou stories, nem enviar mensagens para você, e você não verá os dela.",
+    "block_confirm_title": "Bloquear {{name}}?",
+    "block_failed": "Não foi possível bloquear esta pessoa. Tente de novo.",
+    "blocked": "{{name}} foi bloqueado",
+    "location_label": "Local",
+    "one_image_only": "Um story mostra uma só foto. Mantivemos a primeira.",
+    "replies_off": "As respostas estão desativadas neste story",
+    "report_story": "Denunciar story"
   },
   "card": {
     "title": "Cartão de idiomas",

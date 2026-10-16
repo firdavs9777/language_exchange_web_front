@@ -589,7 +589,22 @@
       "addMood": "Thêm tâm trạng",
       "addLocation": "Thêm vị trí",
       "addTags": "Thêm thẻ",
-      "tagPlaceholder": "Thêm thẻ..."
+      "tagPlaceholder": "Thêm thẻ...",
+      "attachVideo": "Đính kèm video",
+      "mediaFailedNothingPosted": "Tải lên thất bại nên chưa có gì được đăng. Hãy thử lại.",
+      "mediaFailedPosted": "Đã đăng, nhưng tải phương tiện thất bại — hãy chỉnh sửa khoảnh khắc để thêm vào.",
+      "modePhoto": "Ảnh",
+      "modeText": "Văn bản",
+      "modeVideo": "Video",
+      "modeVoice": "Giọng nói",
+      "moodQuestion": "Bạn đang cảm thấy thế nào?",
+      "placeholder": "{{name}} ơi, bạn đang nghĩ gì?",
+      "recordVoice": "Ghi âm tin nhắn thoại",
+      "remove": "Gỡ",
+      "share": "Chia sẻ",
+      "sharing": "Đang chia sẻ...",
+      "textPreview": "Khoảnh khắc văn bản của bạn",
+      "voiceNoteLength": "Tin nhắn thoại · {{seconds}} giây"
     },
     "promo": {
       "title": "Khoảnh Khắc giờ đã có trong ứng dụng",
@@ -657,7 +672,10 @@
       "react": "Cảm xúc",
       "reply": "Phản hồi",
       "replyPlaceholder": "Viết phản hồi…",
-      "viewReplies": "Xem {{count}} phản hồi"
+      "viewReplies": "Xem {{count}} phản hồi",
+      "deleteOthersBody": "Bình luận này nằm trên khoảnh khắc của bạn nên bạn có thể xóa. Không thể hoàn tác.",
+      "deleteOthersTitle": "Xóa bình luận này?",
+      "removeGif": "Gỡ GIF"
     },
     "filters": {
       "button": "Bộ lọc",
@@ -725,7 +743,11 @@
         "false_information": "Thông tin sai",
         "copyright": "Bản quyền",
         "other": "Lý do khác"
-      }
+      },
+      "alreadyComment": "Bạn đã báo cáo bình luận này rồi.",
+      "alreadyStory": "Bạn đã báo cáo tin này rồi.",
+      "titleComment": "Báo cáo bình luận này",
+      "titleStory": "Báo cáo tin này"
     },
     "schedule": {
       "label": "Lên lịch",
@@ -754,7 +776,43 @@
     "prompt": {
       "answeringPromptOfDay": "Đang trả lời câu hỏi hôm nay",
       "dismissChip": "Ngừng trả lời câu hỏi",
-      "answering": "Trả lời"
+      "answering": "Trả lời",
+      "answer": "Trả lời",
+      "cardSubtitle": "Luyện viết",
+      "cardTitle": "Câu hỏi hôm nay",
+      "dismissCard": "Ẩn câu hỏi hôm nay"
+    },
+    "block": {
+      "done": "Đã chặn {{name}}."
+    },
+    "card": {
+      "bookmark": "Đánh dấu",
+      "likeFailed": "Đã xảy ra lỗi",
+      "loginToLike": "Đăng nhập để thích bài viết",
+      "removeBookmark": "Bỏ đánh dấu",
+      "save": "Lưu",
+      "saved": "Đã lưu",
+      "seeLess": "Thu gọn",
+      "seeMore": "Xem thêm",
+      "unlike": "Bỏ thích"
+    },
+    "saved": {
+      "browseMoments": "Xem khoảnh khắc",
+      "gridView": "Dạng lưới",
+      "listView": "Dạng danh sách",
+      "loadMore": "Tải thêm",
+      "momentCount": "khoảnh khắc đã lưu",
+      "noMoments": "Chưa có khoảnh khắc nào được lưu",
+      "remove": "Gỡ",
+      "removeError": "Không thể gỡ khoảnh khắc",
+      "removeSuccess": "Đã gỡ khỏi mục đã lưu",
+      "title": "Khoảnh khắc đã lưu"
+    },
+    "voice": {
+      "cancel": "Hủy ghi âm",
+      "denied": "Quyền truy cập micrô bị từ chối. Hãy cho phép truy cập micrô để ghi âm tin nhắn thoại.",
+      "stop": "Dừng ghi âm và gửi",
+      "unsupported": "Trình duyệt này không hỗ trợ ghi âm."
     }
   },
   "createMoment": {
@@ -2592,7 +2650,17 @@
       "sign_in_body": "Đăng nhập để xem, hoặc mở trong ứng dụng BananaTalk.",
       "sign_in_title": "Có người đã chia sẻ một tin với bạn",
       "unavailable": "Bạn không thể xem tin này."
-    }
+    },
+    "block_author": "Chặn {{name}}",
+    "block_confirm": "Chặn",
+    "block_confirm_body": "Họ sẽ không thể xem hồ sơ, khoảnh khắc hay tin của bạn, hoặc nhắn tin cho bạn, và bạn cũng sẽ không thấy nội dung của họ.",
+    "block_confirm_title": "Chặn {{name}}?",
+    "block_failed": "Không thể chặn người này. Hãy thử lại.",
+    "blocked": "Đã chặn {{name}}",
+    "location_label": "Vị trí",
+    "one_image_only": "Mỗi tin chỉ hiển thị một ảnh. Chúng tôi đã giữ ảnh đầu tiên.",
+    "replies_off": "Tin này đã tắt trả lời",
+    "report_story": "Báo cáo tin"
   },
   "card": {
     "title": "Thẻ ngôn ngữ",
