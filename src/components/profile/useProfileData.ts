@@ -35,6 +35,18 @@ function countOf(value: any): number {
   return 0;
 }
 
+/**
+ * A follower/following figure from whatever the endpoint sent. Signed-in
+ * readers get the id lists (isFollowing needs them); signed-out readers of
+ * /:id/public get `followersCount` / `followingCount` instead (backend
+ * P1-PRIV-1 drops the lists for anonymous viewers). The list wins when both
+ * are there; a server from before that change sends lists to everyone.
+ */
+function statOf(list: any, count: any): number {
+  if (Array.isArray(list)) return list.length;
+  return countOf(count);
+}
+
 function idOf(entry: any): string {
   if (!entry) return "";
   if (typeof entry === "string") return entry;
@@ -97,8 +109,8 @@ export default function useProfileData(userId?: string): ProfileData {
 
   const stats = useMemo<ProfileStatsData>(
     () => ({
-      followers: countOf(user && user.followers),
-      following: countOf(user && user.following),
+      followers: statOf(user && user.followers, user && user.followersCount),
+      following: statOf(user && user.following, user && user.followingCount),
       moments: momentCount,
     }),
     [user, momentCount]

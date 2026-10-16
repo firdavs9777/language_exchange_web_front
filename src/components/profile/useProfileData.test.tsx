@@ -140,3 +140,26 @@ it("skips every query for a logged-out viewer with no userId", () => {
   expect(mockGetMyMoments.mock.calls[0][1].skip).toBe(true);
   expect(result.current.user).toBeUndefined();
 });
+
+// P1-PRIV-1: signed-out visitors of /:id/public get counts, not id lists.
+// The page read only the arrays, so every shared profile said 0 followers.
+it("counts from followersCount/followingCount when the lists are absent", () => {
+  mockGetPublicProfile.mockReturnValue({
+    ...idle,
+    data: { data: { _id: "u2", name: "Ada", followersCount: 12, followingCount: 3 } },
+  });
+  const { result } = renderHook(() => useProfileData("u2"), { wrapper: wrapper(undefined) });
+  expect(result.current.stats.followers).toBe(12);
+  expect(result.current.stats.following).toBe(3);
+  expect(result.current.isFollowing).toBe(false);
+});
+
+it("prefers the lists when both are present (signed-in viewers)", () => {
+  mockGetPublicProfile.mockReturnValue({
+    ...idle,
+    data: { data: { _id: "u2", followers: ["me", "x"], following: [], followersCount: 99 } },
+  });
+  const { result } = renderHook(() => useProfileData("u2"), { wrapper: wrapper("me") });
+  expect(result.current.stats.followers).toBe(2);
+  expect(result.current.isFollowing).toBe(true);
+});

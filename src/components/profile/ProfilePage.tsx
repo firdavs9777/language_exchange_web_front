@@ -301,6 +301,18 @@ const ProfilePage: React.FC = () => {
     );
   }
 
+  // Someone else's story ring (getUserPublic hasActiveStory, P1-PRIV-2). The
+  // story viewer reads protected endpoints, so a signed-out visitor is sent
+  // to log in first.
+  const hasStory = !isOwn && Boolean(user && user.hasActiveStory);
+  const handleAvatarClick = (): void => {
+    if (!hasStory) {
+      setAvatarOpenAt(0);
+      return;
+    }
+    navigate(viewerId ? `/stories/${profileId}` : "/login");
+  };
+
   return (
     <div className={PAGE}>
       {meta}
@@ -310,7 +322,8 @@ const ProfilePage: React.FC = () => {
             name={displayName}
             username={user.username}
             avatarUrl={images[0]}
-            onAvatarClick={() => setAvatarOpenAt(0)}
+            onAvatarClick={handleAvatarClick}
+            hasStory={hasStory}
             isOnline={user.isOnline}
             birthYear={user.birth_year}
             birthMonth={user.birth_month}

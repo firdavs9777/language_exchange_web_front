@@ -10,6 +10,8 @@ export interface ProfileHeaderProps {
   avatarUrl?: string;
   /** Opens the photo viewer on the avatar, which is also the first photo. */
   onAvatarClick?: () => void;
+  /** The person has a story the viewer may see: ring the avatar, and the tap opens it. */
+  hasStory?: boolean;
   isOnline?: boolean;
   /** Birth fields as the API returns them — strings on the wire. */
   birthYear?: string | number;
@@ -118,6 +120,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   username,
   avatarUrl,
   onAvatarClick,
+  hasStory = false,
   isOnline,
   birthYear,
   birthMonth,
@@ -160,8 +163,13 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               /* This one IS the page -- deferring it would delay the main
                  subject behind whatever else is loading. */
               priority
-              onClick={avatarUrl ? onAvatarClick : undefined}
-              label={t("profile.photos.openAvatar", { name }) || `Open ${name}'s photo`}
+              hasStory={hasStory}
+              onClick={avatarUrl || hasStory ? onAvatarClick : undefined}
+              label={
+                hasStory
+                  ? t("profile.photos.openStory", { name }) || `View ${name}'s story`
+                  : t("profile.photos.openAvatar", { name }) || `Open ${name}'s photo`
+              }
             />
           </div>
         </div>

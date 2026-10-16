@@ -907,3 +907,39 @@ describe("the profile picture", () => {
     expect(screen.queryByRole("button", { name: /Ada's photo/i })).not.toBeInTheDocument();
   });
 });
+
+describe("story ring (community#6)", () => {
+  it("rings the avatar and opens the stories when the person has one", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", imageUrls: ["https://cdn/a.jpg"], hasActiveStory: true } },
+    });
+    renderPage("/profile/u2", "me");
+    expect(screen.getByTestId("avatar-story-ring")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "View Ada's story" }));
+    expect(mockNavigate).toHaveBeenCalledWith("/stories/u2");
+  });
+
+  it("sends a signed-out visitor to log in rather than to a protected viewer", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", imageUrls: ["https://cdn/a.jpg"], hasActiveStory: true } },
+    });
+    renderPage("/profile/u2", null);
+    fireEvent.click(screen.getByRole("button", { name: "View Ada's story" }));
+    expect(mockNavigate).toHaveBeenCalledWith("/login");
+  });
+
+  it("keeps the photo viewer when there is no story", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", imageUrls: ["https://cdn/a.jpg"] } },
+    });
+    renderPage("/profile/u2", "me");
+    expect(screen.queryByTestId("avatar-story-ring")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Open Ada's photo" })).toBeInTheDocument();
+  });
+});

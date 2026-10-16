@@ -270,7 +270,8 @@
       "previous": "Previous photo",
       "next": "Next photo",
       "counter": "{{index}} of {{total}}",
-      "openAvatar": "Open {{name}}'s photo"
+      "openAvatar": "Open {{name}}'s photo",
+      "openStory": "View {{name}}'s story"
     },
     "messages": {
       "image_update_success": "Profile image updated successfully",
