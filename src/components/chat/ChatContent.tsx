@@ -71,6 +71,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import ChatInfoPanel from "./ChatInfoPanel";
+import LocationShareButton from "./components/LocationShareButton";
 
 interface RootState {
   auth: {
@@ -2355,6 +2356,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
               >
                 {mediaPreview ? <ImageIcon size={20} /> : <Paperclip size={20} />}
               </button>
+              <LocationShareButton receiverId={selectedUser} disabled={!!mediaPreview} />
 
               <div className="text-input-wrapper">
                 <input

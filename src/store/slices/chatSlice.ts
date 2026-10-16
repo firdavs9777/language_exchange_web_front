@@ -307,6 +307,32 @@ export const chatApiSlice = apiSlice.injectEndpoints({
       onQueryStarted: refetchFirstPageOnSuccess,
     }),
 
+    // Location — POST /api/v1/messages, JSON {receiver, location}: the body the
+    // app sends (message_provider.dart sendLocationMessage). The server stores
+    // media.type 'location' with an empty text; the bubble draws a map card.
+    sendLocationMessage: builder.mutation({
+      query: ({
+        receiver,
+        latitude,
+        longitude,
+        address,
+        placeName,
+      }: {
+        receiver: string;
+        latitude: number;
+        longitude: number;
+        address?: string;
+        placeName?: string;
+      }) => {
+        const location: { [key: string]: any } = { latitude: latitude, longitude: longitude };
+        if (address) location.address = address;
+        if (placeName) location.placeName = placeName;
+        return { url: `${MESSAGES_URL}`, method: "POST", body: { receiver: receiver, location: location } };
+      },
+      invalidatesTags: ["Conversations"],
+      onQueryStarted: refetchFirstPageOnSuccess,
+    }),
+
     // GET /api/v1/messages/video-config (public): the server's video caps,
     // read before a 1 GB upload rather than after it.
     getVideoMessageConfig: builder.query({
@@ -473,6 +499,8 @@ export const {
   useSendMediaMessageMutation,
   // Video
   useSendVideoMessageMutation,
+  // Location
+  useSendLocationMessageMutation,
   useGetVideoMessageConfigQuery,
   // Pin
   usePinMessageMutation,

@@ -45,6 +45,8 @@ const STRICT_FILES = [
   "ConnectionBanner.tsx",
   "components/CallMessageCard.tsx",
   "components/CorrectionCard.tsx",
+  "components/LocationMessageCard.tsx",
+  "components/LocationShareButton.tsx",
   "components/CorrectionModal.tsx",
   "components/TranslationCard.tsx",
 ];

@@ -358,3 +358,30 @@ describe("call history messages (chat#6)", () => {
     expect(screen.queryByText("File")).toBeNull();
   });
 });
+
+describe("location messages (chat#7)", () => {
+  const locationMessage = (location: any): Message =>
+    message({ message: "", media: { type: "location", url: "", location } as any });
+
+  it("draws a map card that opens the pin in Maps, not a File attachment", () => {
+    renderBubble({
+      message: locationMessage({ latitude: 37.5665, longitude: 126.978, placeName: "Seoul", address: "Jung-gu" }),
+    });
+    const card = screen.getByTestId("location-card");
+    expect(card).toHaveAttribute("href", "https://www.google.com/maps/search/?api=1&query=37.5665,126.978");
+    expect(card).toHaveAttribute("target", "_blank");
+    expect(screen.getByText("Seoul")).toBeInTheDocument();
+    expect(screen.getByText("Jung-gu")).toBeInTheDocument();
+    expect(screen.queryByText("File")).toBeNull();
+  });
+
+  it("titles a pin with no names 'Location'", () => {
+    renderBubble({ message: locationMessage({ latitude: 1, longitude: 2, placeName: null, address: null }) });
+    expect(screen.getByText("Location")).toBeInTheDocument();
+  });
+
+  it("draws a card with no link when the coordinates are missing", () => {
+    renderBubble({ message: locationMessage(undefined) });
+    expect(screen.getByTestId("location-card")).not.toHaveAttribute("href");
+  });
+});

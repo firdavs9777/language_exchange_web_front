@@ -1588,3 +1588,56 @@
   color: var(--chat-muted);
   font-variant-numeric: tabular-nums;
 }
+
+/* Location card (chat#7) */
+.location-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 250px;
+  max-width: 100%;
+  padding: 10px 12px;
+  background: var(--chat-card-in);
+  border: 1px solid var(--chat-line);
+  border-radius: 12px;
+  color: var(--chat-text);
+  text-decoration: none;
+}
+
+.modern-message.sent .location-card {
+  background: var(--chat-card-out);
+  border-color: var(--chat-card-out);
+  color: var(--chat-bubble-out-text);
+}
+
+.location-card:hover {
+  text-decoration: none;
+}
+
+.location-card-pin {
+  flex: none;
+  color: var(--chat-danger);
+}
+
+.location-card-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.location-card-title {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.location-card-sub,
+.location-card-open {
+  font-size: 12px;
+  color: var(--chat-muted);
+}
+
+.location-card--empty .location-card-open {
+  display: none;
+}

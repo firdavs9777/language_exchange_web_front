@@ -17,6 +17,7 @@ import CorrectionCard, { MessageCorrection } from "./components/CorrectionCard";
 import TranslationCard from "./components/TranslationCard";
 import { firstLink } from "./utils/linkDetector";
 import CallMessageCard from "./components/CallMessageCard";
+import LocationMessageCard, { MessageLocation } from "./components/LocationMessageCard";
 import { CallData } from "./lib/callLabel";
 
 /**
@@ -56,6 +57,7 @@ export interface MessageMedia {
   dimensions?: { width: number; height: number };
   /** media.type 'call' (services/callMessageService.js). */
   callData?: CallData;
+  location?: MessageLocation;
 }
 
 export type MessageStatus = "sending" | "sent" | "delivered" | "read" | "error";
@@ -240,8 +242,9 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
   // A call record is media.type 'call' with an English fallback text; it is a
   // card of its own, never an attachment and never a text bubble.
   const isCall = msg.messageType === "call" || msg.media?.type === "call";
-  const hasMedia = !!msg.media?.type && !isVoice && !isCall;
-  const isPlainText = !isSticker && !isGif && !isVoice && !hasMedia && !isCall;
+  const isLocation = msg.media?.type === "location";
+  const hasMedia = !!msg.media?.type && !isVoice && !isCall && !isLocation;
+  const isPlainText = !isSticker && !isGif && !isVoice && !hasMedia && !isCall && !isLocation;
   const link = isPlainText && msg.message ? firstLink(msg.message) : null;
 
   const renderVoiceMessage = () => {
@@ -284,6 +287,9 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
 
     if (mediaType === "voice") {
       return renderVoiceMessage();
+    }
+    if (mediaType === "location") {
+      return <LocationMessageCard location={msg.media.location} />;
     }
 
     if (mediaType === "image" || msg.media.mimeType?.startsWith("image/")) {
@@ -517,7 +523,7 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
           />
         )}
 
-        {!isSent && !isSticker && !isVoice && !hasMedia && !isCall && msg.message && (
+        {!isSent && !isSticker && !isVoice && !hasMedia && !isCall && !isLocation && msg.message && (
           <div className="message-chip-row">
             {/* Hide Correct chip once a correction already exists */}
             {!(msg.corrections && msg.corrections.length > 0) && (

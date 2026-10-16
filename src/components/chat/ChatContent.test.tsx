@@ -70,6 +70,12 @@ jest.mock("../../store/slices/learningSlice", () => ({
 
 // The panel has its own suite (ChatInfoPanel.test.tsx) and its own store
 // hooks; here only the header's job matters -- that "⋯" opens it.
+// Owns its own store hooks; its suite is components/LocationShareButton.test.tsx.
+jest.mock("./components/LocationShareButton", () => ({
+  __esModule: true,
+  default: () => require("react").createElement("span", { "data-testid": "share-location" }),
+}));
+
 jest.mock("./ChatInfoPanel", () => ({
   __esModule: true,
   default: () =>
@@ -823,4 +829,9 @@ it("records AAC where the browser can, and uploads it as .m4a with a matching ty
   const file = form.get("voice") as File;
   expect(file.name).toMatch(/\.m4a$/);
   expect(file.type).toBe("audio/mp4");
+});
+
+it("offers Share location in the composer", () => {
+  renderChat("/chat/u2");
+  expect(screen.getByTestId("share-location")).toBeInTheDocument();
 });

@@ -279,6 +279,18 @@
       "declinedIncomingVoice": "Declined voice call",
       "declinedIncomingVideo": "Declined video call",
       "busy": "{{name}} was on another call"
+    },
+    "location": {
+      "title": "Location",
+      "open": "Open in Maps",
+      "share": "Share location",
+      "confirmTitle": "Share your location?",
+      "send": "Send",
+      "cancel": "Cancel",
+      "unsupported": "This browser can't share a location",
+      "denied": "Location permission was denied",
+      "failed": "Couldn't get your location",
+      "sendFailed": "Couldn't send your location"
     }
   },
   "newChat": {

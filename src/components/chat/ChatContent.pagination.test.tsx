@@ -64,6 +64,12 @@ jest.mock("../../store/slices/learningSlice", () => ({
   useAcceptCorrectionMutation: () => mutation(),
 }));
 
+// Owns its own store hooks; its suite is components/LocationShareButton.test.tsx.
+jest.mock("./components/LocationShareButton", () => ({
+  __esModule: true,
+  default: () => require("react").createElement("span", { "data-testid": "share-location" }),
+}));
+
 jest.mock("./ChatInfoPanel", () => ({
   __esModule: true,
   default: () => require("react").createElement("div", null),
