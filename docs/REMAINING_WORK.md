@@ -150,7 +150,7 @@ Phase 4 Gatherings/clubs (plan `bananatalk_app/docs/superpowers/plans/2026-10-16
 - [x] P4-GATH-PUSH Push unit gatherings (suite + build green, deployed dark, production smoke recorded) — deployed dark 2026-10-16 (suite 4153 pass)
 
 Phase 4 Rooms — voice rooms, language rooms, City/Genders (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
-- [ ] P4-ROOM-1 `livekit-client@2.22.4` behind a JS loader + `.d.ts`, excluded from tsconfig, kept out of the eager graph
+- [x] P4-ROOM-1 `livekit-client@2.22.4` behind a JS loader + `.d.ts`, excluded from tsconfig, kept out of the eager graph
 - [ ] P4-ROOM-2 `lkSession` facade (connect, mic/camera, audio unlock, peers, disconnect reasons) + the shared LiveKit test fake
 - [ ] P4-ROOM-3 Voice rooms REST slice (list, detail, create, join, token, leave, end, promote, RSVP)
 - [ ] P4-ROOM-4 Voice rooms list page with create dialog and scheduled-room RSVP

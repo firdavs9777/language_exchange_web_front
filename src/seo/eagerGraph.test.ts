@@ -50,6 +50,11 @@ const FORBIDDEN_PACKAGE = "bootstrap-icons";
 // which TypeScript 3.7 cannot mark as such -- puts it back in main.js.
 const FORBIDDEN_SOCKET_PACKAGE = "socket.io-client";
 const SOCKET_MODULE = path.join(SRC, "components", "chat", "hooks", "useSocket.ts");
+// Phase 4 (voice rooms, calls): livekit-client is ~151 KB gzipped of WebRTC
+// that only a member joining a room or a call can use. It is reached only
+// through src/lib/livekit/livekitLoader.js, which `import()`s it; a static
+// import anywhere in the eager graph would put it in main.js.
+const FORBIDDEN_LIVEKIT_PACKAGE = "livekit-client";
 // The module that used to carry the stylesheet. Deleted with the last `bi-*`
 // screen; asserted below so a re-introduced copy cannot sneak the font back.
 const RETIRED_MODULE = path.join(SRC, "lazyIcons.ts");
@@ -186,7 +191,9 @@ function walkEagerGraph(): Graph {
         spec === FORBIDDEN_PACKAGE ||
         spec.indexOf(FORBIDDEN_PACKAGE + "/") === 0 ||
         spec === FORBIDDEN_SOCKET_PACKAGE ||
-        spec.indexOf(FORBIDDEN_SOCKET_PACKAGE + "/") === 0
+        spec.indexOf(FORBIDDEN_SOCKET_PACKAGE + "/") === 0 ||
+        spec === FORBIDDEN_LIVEKIT_PACKAGE ||
+        spec.indexOf(FORBIDDEN_LIVEKIT_PACKAGE + "/") === 0
       ) {
         // A package import, but one of the two packages that must never be
         // static here: bootstrap-icons carries the webfont and ~2,000 glyph
@@ -321,4 +328,13 @@ it("proves the locale guard can fire, on the module that really does load them",
   const text = fs.readFileSync(backend, "utf8");
   expect(text).toContain("./locales/kor.json");
   expect(staticSpecifiers(text)).not.toContain("./locales/kor.json");
+});
+
+it("never reaches the LiveKit loader or livekit-client from an eager module", () => {
+  const loader = path.join(SRC, "lib", "livekit", "livekitLoader.js");
+  expect(graph.modules.indexOf(loader)).toBe(-1);
+  expect(graph.packageHits.filter((hit) => hit.indexOf(FORBIDDEN_LIVEKIT_PACKAGE) > -1)).toEqual([]);
+  // The guard can fire: a static import is seen, the loader's import() is not.
+  expect(staticSpecifiers('import { Room } from "livekit-client";\n')).toContain(FORBIDDEN_LIVEKIT_PACKAGE);
+  expect(staticSpecifiers(fs.readFileSync(loader, "utf8"))).not.toContain(FORBIDDEN_LIVEKIT_PACKAGE);
 });
