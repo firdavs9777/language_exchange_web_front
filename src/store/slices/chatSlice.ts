@@ -87,14 +87,6 @@ export const chatApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Conversations"],
     }),
-    createChatRoom: builder.mutation({
-      query: (userId: string) => ({
-        url: `${MESSAGES_URL}/conversations`,
-        method: "POST",
-        body: { userId },
-      }),
-      invalidatesTags: ["Conversations"],
-    }),
     // Conversation actions all live at /api/v1/conversations/:id/... — NOT
     // /api/v1/messages/conversations/... The earlier URL was a typo that
     // 404'd silently against the prod backend.
@@ -449,7 +441,6 @@ export const chatApiSlice = apiSlice.injectEndpoints({
 export const {
   // Conversations
   useGetConversationsQuery,
-  useCreateChatRoomMutation,
   useDeleteConversationMutation,
   useMarkConversationReadMutation,
   useMuteConversationMutation,

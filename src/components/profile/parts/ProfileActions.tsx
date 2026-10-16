@@ -11,7 +11,6 @@ import {
   useReportUserMutation,
   useGetBlockStatusQuery,
 } from "../../../store/slices/usersSlice";
-import { useCreateChatRoomMutation } from "../../../store/slices/chatSlice";
 
 export interface ProfileActionsProps {
   /** The profile being viewed. */
@@ -81,7 +80,6 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
     { skip: !viewerId || isOwn }
   );
   const isBlocked = Boolean(blockStatus?.data?.isBlocked);
-  const [createChatRoom, { isLoading: isCreatingChat }] = useCreateChatRoomMutation();
 
   // Optimistic follow, rollback and the signed-out bounce all live in the
   // hook the list rows use, so the button here and a row in /followersList
@@ -97,7 +95,7 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
   const [dialogError, setDialogError] = useState("");
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  // Block, report and the chat pre-create all await a round trip, and the
+  // Block and report await a round trip, and the
   // block handler navigates away on success — so the component can well be
   // gone by the time the promise settles. Every post-await setState is gated
   // on this rather than firing into a torn-down tree.
@@ -130,18 +128,12 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
 
   const personName = name || t("profile.actions.this_person") || "this person";
 
-  const handleMessage = async (): Promise<void> => {
+  const handleMessage = (): void => {
     if (!viewerId) {
       navigate("/login");
       return;
     }
-    try {
-      await createChatRoom(userId).unwrap();
-    } catch (error) {
-      // The chat screen creates the room itself on first send, so a failed
-      // pre-create must not strand the user on the profile.
-    }
-    if (!mounted.current) return;
+    // Straight to the thread: the first real send creates the conversation.
     navigate(`/chat/${userId}`);
   };
 
@@ -205,7 +197,6 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({
         type="button"
         data-testid="action-message"
         onClick={handleMessage}
-        disabled={isCreatingChat}
         className={PRIMARY}
       >
         <MessageCircle className="h-4 w-4" aria-hidden />

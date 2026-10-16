@@ -1,11 +1,10 @@
 import "@testing-library/jest-dom";
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import ConversationStarters, { buildStarters } from "./ConversationStarters";
 
 const mockNavigate = jest.fn();
-const mockCreateChatRoom = jest.fn();
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -16,18 +15,10 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
 }));
 
-jest.mock("../../../store/slices/chatSlice", () => ({
-  useCreateChatRoomMutation: () => [mockCreateChatRoom, { isLoading: false }],
-}));
-
 const t = () => "";
 
 const viewer = { native_language: "Korean", language_to_learn: "English", topics: ["music"] };
 const target = { native_language: "English", language_to_learn: "Korean", topics: ["music", "food"] };
-
-beforeEach(() => {
-  mockCreateChatRoom.mockReturnValue({ unwrap: () => Promise.resolve({ success: true }) });
-});
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -118,26 +109,6 @@ describe("the card", () => {
     });
   });
 
-  it("only the pressed Send waits -- the other two stay live", async () => {
-    let settle: (value: any) => void = () => undefined;
-    mockCreateChatRoom.mockReturnValue({
-      unwrap: () => new Promise((resolve) => {
-        settle = resolve;
-      }),
-    });
-    renderCard();
-
-    const buttons = screen.getAllByTestId("conversation-starter-send");
-    fireEvent.click(buttons[0]);
-
-    await waitFor(() => expect(buttons[0]).toBeDisabled());
-    expect(buttons[1]).not.toBeDisabled();
-    expect(buttons[2]).not.toBeDisabled();
-
-    settle({ success: true });
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
-  });
-
   it("renders nothing to a signed-out visitor", () => {
     const { container } = render(
       <MemoryRouter>
@@ -147,23 +118,15 @@ describe("the card", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("opens the chat with the starter as a draft", async () => {
+  it("opens the chat with the starter as a draft, without creating anything", () => {
     renderCard();
     const text = screen.getAllByTestId("conversation-starter")[0].textContent || "";
     fireEvent.click(screen.getAllByTestId("conversation-starter-send")[0]);
 
-    await waitFor(() => expect(mockCreateChatRoom).toHaveBeenCalledWith("u2"));
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
+    expect(mockNavigate).toHaveBeenCalledTimes(1);
     const target_ = String(mockNavigate.mock.calls[0][0]);
     expect(target_.startsWith("/chat/u2?draft=")).toBe(true);
     const draft = decodeURIComponent(target_.split("?draft=")[1]);
     expect(text).toContain(draft);
-  });
-
-  it("still opens the chat when the room pre-create fails", async () => {
-    mockCreateChatRoom.mockReturnValue({ unwrap: () => Promise.reject(new Error("nope")) });
-    renderCard();
-    fireEvent.click(screen.getAllByTestId("conversation-starter-send")[0]);
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalled());
   });
 });

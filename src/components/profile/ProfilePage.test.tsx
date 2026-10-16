@@ -23,7 +23,6 @@ const mockUnfollow = jest.fn();
 const mockBlock = jest.fn();
 const mockReport = jest.fn();
 const mockRecordVisit = jest.fn();
-const mockCreateChatRoom = jest.fn();
 const mockGetCommunityMembers = jest.fn();
 const mockSendWave = jest.fn();
 const mockGetUserHighlights = jest.fn();
@@ -61,7 +60,6 @@ jest.mock("../../store/slices/momentsSlice", () => ({
 }));
 
 jest.mock("../../store/slices/chatSlice", () => ({
-  useCreateChatRoomMutation: () => [mockCreateChatRoom, { isLoading: false }],
 }));
 
 // The highlights rail is a real child here (it is what decides whether the
@@ -119,7 +117,6 @@ beforeEach(() => {
   mockFollow.mockReturnValue(resolved());
   mockUnfollow.mockReturnValue(resolved());
   mockReport.mockReturnValue(resolved());
-  mockCreateChatRoom.mockReturnValue(resolved());
   mockRecordVisit.mockReturnValue(resolved());
 });
 

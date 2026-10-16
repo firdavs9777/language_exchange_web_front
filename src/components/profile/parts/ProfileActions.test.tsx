@@ -13,7 +13,6 @@ const mockBlock = jest.fn();
 const mockUnblock = jest.fn();
 const mockReport = jest.fn();
 const mockBlockStatus = jest.fn();
-const mockCreateChatRoom = jest.fn();
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
@@ -31,10 +30,6 @@ jest.mock("../../../store/slices/usersSlice", () => ({
   useUnblockUserMutation: () => [mockUnblock, { isLoading: false }],
   useReportUserMutation: () => [mockReport, { isLoading: false }],
   useGetBlockStatusQuery: (arg: any, opts: any) => mockBlockStatus(arg, opts),
-}));
-
-jest.mock("../../../store/slices/chatSlice", () => ({
-  useCreateChatRoomMutation: () => [mockCreateChatRoom, { isLoading: false }],
 }));
 
 const resolved = () => ({ unwrap: () => Promise.resolve({ success: true }) });
@@ -65,7 +60,6 @@ beforeEach(() => {
   mockUnblock.mockReturnValue(resolved());
   mockReport.mockReturnValue(resolved());
   mockBlockStatus.mockReturnValue({ data: { data: { isBlocked: false } } });
-  mockCreateChatRoom.mockReturnValue(resolved());
 });
 
 afterEach(() => {
@@ -97,24 +91,20 @@ describe("another user's profile", () => {
     expect(screen.queryByTestId("action-edit-profile")).not.toBeInTheDocument();
   });
 
-  it("opens the chat the way the community page does", async () => {
+  it("opens the chat by the other user's id and posts nothing", () => {
+    const fetchSpy = jest.spyOn(global as any, "fetch").mockImplementation(() => {
+      throw new Error("no request expected");
+    });
     renderActions();
     fireEvent.click(screen.getByTestId("action-message"));
-    expect(mockCreateChatRoom).toHaveBeenCalledWith("u2");
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/chat/u2"));
-  });
-
-  it("still opens the chat screen when creating the room fails", async () => {
-    mockCreateChatRoom.mockReturnValue(rejected());
-    renderActions();
-    fireEvent.click(screen.getByTestId("action-message"));
-    await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith("/chat/u2"));
+    expect(mockNavigate).toHaveBeenCalledWith("/chat/u2");
+    expect(fetchSpy).not.toHaveBeenCalled();
+    fetchSpy.mockRestore();
   });
 
   it("sends a logged-out viewer to the login screen instead", () => {
     renderActions({}, null);
     fireEvent.click(screen.getByTestId("action-message"));
-    expect(mockCreateChatRoom).not.toHaveBeenCalled();
     expect(mockNavigate).toHaveBeenCalledWith("/login");
   });
 
