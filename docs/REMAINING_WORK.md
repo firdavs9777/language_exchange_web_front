@@ -188,7 +188,7 @@ Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-
 - [x] P4-APPLE-4 "Sign in with Apple" button: nonce → Apple popup → backend → signed in
 - [x] P4-APPLE-5 Button on Login and Register; hidden while `webAppleSigninEnabled` is off or no Services ID is configured
 - [x] P4-APPLE-I18N New Apple sign-in strings in all 18 locales
-- [ ] P4-APPLE-PUSH Push unit apple (suite + build green, deployed dark, production smoke recorded)
+- [x] P4-APPLE-PUSH Push unit apple (suite + build green, deployed dark, production smoke recorded) — deployed dark 2026-10-16 (suite 3911 pass)
 - [ ] Bundle budget: `npm run test:budget` fails -- first-paint 331.0 KB vs 326 KB budget (origin/main a944011 was already 329.2 KB). Not run by the deploy workflow. S
 
 ## 5. Decided / won't fix
