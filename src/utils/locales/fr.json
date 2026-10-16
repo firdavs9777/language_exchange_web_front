@@ -2948,5 +2948,61 @@
       "signedIn": "Connecté avec Apple",
       "signingIn": "Connexion avec Apple…"
     }
+  },
+  "reels": {
+    "actions": {
+      "block": "Bloquer l'utilisateur",
+      "comments": "Commentaires",
+      "like": "J'aime",
+      "more": "Plus",
+      "profile": "Profil",
+      "report": "Signaler",
+      "unlike": "Je n'aime plus"
+    },
+    "create": {
+      "bad_type": "Ce type de fichier n'est pas pris en charge. Utilisez MP4, MOV ou WebM.",
+      "caption": "Légende",
+      "caption_placeholder": "Qu'est-ce que vous pratiquez ?",
+      "change_video": "Choisir une autre vidéo",
+      "choose_video": "Choisir une vidéo",
+      "failed": "Impossible de publier votre reel. Réessayez.",
+      "hint": "Une courte vidéo d'apprentissage des langues, jusqu'à 3 minutes. Le format vertical (9:16) rend le mieux.",
+      "post": "Publier le reel",
+      "posted": "Votre reel est publié.",
+      "posting": "Publication…",
+      "server_too_long": "Les reels doivent durer 3 minutes ou moins.",
+      "title": "Nouveau reel",
+      "too_big": "Cette vidéo est trop volumineuse pour être envoyée.",
+      "too_long": "Les reels peuvent durer jusqu'à 3:00. Cette vidéo dure {{duration}}.",
+      "upload_failed": "La vidéo n'a pas été envoyée. Rien n'a été publié — réessayez."
+    },
+    "grid": {
+      "create": "Créer un reel",
+      "empty": "Pas encore de reels. Soyez le premier à en publier un.",
+      "error": "Impossible de charger les reels.",
+      "load_more": "Charger plus",
+      "loading": "Chargement des reels…",
+      "open_reel": "Lire le reel de {{name}}",
+      "retry": "Réessayer",
+      "title": "Reels",
+      "unavailable": "Les reels sont actuellement indisponibles."
+    },
+    "moments_link": "Voir les reels",
+    "nav": "Reels",
+    "policy": {
+      "accept": "J'accepte",
+      "body": "Les reels sont de courtes vidéos pour apprendre les langues : réponses au sujet du jour, entraînement à l'oral, explications de locuteurs natifs et clips culturels.\n\nBananaTalk applique une tolérance zéro envers les contenus répréhensibles : pas de nudité, de discours haineux, de harcèlement, de violence ni de contenu illégal. Les vidéos signalées sont automatiquement masquées dans l'attente d'un examen après 2 signalements, et les infractions peuvent entraîner la suppression du contenu ou le bannissement du compte.\n\nVous pouvez signaler ou bloquer depuis n'importe quel reel à tout moment.",
+      "decline": "Refuser",
+      "title": "Règles de contenu des reels"
+    },
+    "viewer": {
+      "close": "Fermer",
+      "label": "Reels",
+      "mute": "Couper le son",
+      "next": "Reel suivant",
+      "previous": "Reel précédent",
+      "tap_to_play": "Touchez pour lire",
+      "unmute": "Activer le son"
+    }
   }
 }

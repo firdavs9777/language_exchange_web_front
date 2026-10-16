@@ -2947,5 +2947,61 @@
       "signedIn": "已通过 Apple 登录",
       "signingIn": "正在通过 Apple 登录…"
     }
+  },
+  "reels": {
+    "actions": {
+      "block": "屏蔽用户",
+      "comments": "评论",
+      "like": "点赞",
+      "more": "更多",
+      "profile": "个人资料",
+      "report": "举报",
+      "unlike": "取消点赞"
+    },
+    "create": {
+      "bad_type": "不支持此文件类型。请使用 MP4、MOV 或 WebM。",
+      "caption": "说明",
+      "caption_placeholder": "你在练习什么？",
+      "change_video": "选择其他视频",
+      "choose_video": "选择视频",
+      "failed": "无法发布你的短视频，请重试。",
+      "hint": "一段简短的语言学习视频，最长 3 分钟。竖屏（9:16）效果最佳。",
+      "post": "发布短视频",
+      "posted": "你的短视频已发布。",
+      "posting": "正在发布…",
+      "server_too_long": "短视频不能超过 3 分钟。",
+      "title": "新短视频",
+      "too_big": "此视频太大，无法上传。",
+      "too_long": "短视频最长 3:00，此视频时长为 {{duration}}。",
+      "upload_failed": "视频未上传，未发布任何内容，请重试。"
+    },
+    "grid": {
+      "create": "创建短视频",
+      "empty": "还没有 Reels，来发布第一个吧。",
+      "error": "无法加载短视频。",
+      "load_more": "加载更多",
+      "loading": "正在加载短视频…",
+      "open_reel": "播放 {{name}} 的短视频",
+      "retry": "重试",
+      "title": "快拍视频",
+      "unavailable": "短视频暂时不可用。"
+    },
+    "moments_link": "观看短视频",
+    "nav": "快拍视频",
+    "policy": {
+      "accept": "我同意",
+      "body": "Reels 是简短的语言学习视频，包括话题回答、口语练习、母语者讲解和文化短片。\n\nBananaTalk 对不当内容零容忍：禁止裸露、仇恨言论、骚扰、暴力或非法内容。被举报的视频在收到 2 次举报后会自动隐藏以待审核，违规可能导致内容被删除或账号被封禁。\n\n你可以随时在任意 Reel 中举报或屏蔽。",
+      "decline": "拒绝",
+      "title": "短视频内容准则"
+    },
+    "viewer": {
+      "close": "关闭",
+      "label": "快拍视频",
+      "mute": "静音",
+      "next": "下一个短视频",
+      "previous": "上一个短视频",
+      "tap_to_play": "点按播放",
+      "unmute": "取消静音"
+    }
   }
 }

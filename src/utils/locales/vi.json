@@ -2947,5 +2947,61 @@
       "signedIn": "Đã đăng nhập bằng Apple",
       "signingIn": "Đang đăng nhập bằng Apple…"
     }
+  },
+  "reels": {
+    "actions": {
+      "block": "Chặn người dùng",
+      "comments": "Bình luận",
+      "like": "Thích",
+      "more": "Thêm",
+      "profile": "Hồ sơ",
+      "report": "Báo cáo",
+      "unlike": "Bỏ thích"
+    },
+    "create": {
+      "bad_type": "Loại tệp này không được hỗ trợ. Hãy dùng MP4, MOV hoặc WebM.",
+      "caption": "Chú thích",
+      "caption_placeholder": "Bạn đang luyện tập điều gì?",
+      "change_video": "Chọn video khác",
+      "choose_video": "Chọn video",
+      "failed": "Không thể đăng reel của bạn. Hãy thử lại.",
+      "hint": "Video ngắn học ngôn ngữ, tối đa 3 phút. Video dọc (9:16) trông đẹp nhất.",
+      "post": "Đăng reel",
+      "posted": "Reel của bạn đã được đăng.",
+      "posting": "Đang đăng…",
+      "server_too_long": "Reel phải dài tối đa 3 phút.",
+      "title": "Reel mới",
+      "too_big": "Video này quá lớn để tải lên.",
+      "too_long": "Reel dài tối đa 3:00. Video này dài {{duration}}.",
+      "upload_failed": "Video chưa được tải lên. Chưa có gì được đăng — hãy thử lại."
+    },
+    "grid": {
+      "create": "Tạo reel",
+      "empty": "Chưa có reel nào. Hãy là người đầu tiên đăng.",
+      "error": "Không thể tải reels.",
+      "load_more": "Tải thêm",
+      "loading": "Đang tải reels…",
+      "open_reel": "Phát reel của {{name}}",
+      "retry": "Thử lại",
+      "title": "Reels",
+      "unavailable": "Reels hiện không khả dụng."
+    },
+    "moments_link": "Xem reels",
+    "nav": "Reels",
+    "policy": {
+      "accept": "Tôi đồng ý",
+      "body": "Reels là các video ngắn học ngôn ngữ — câu trả lời cho chủ đề, luyện nói, giải thích từ người bản xứ và các clip văn hóa.\n\nBananaTalk không khoan nhượng với nội dung phản cảm: không khỏa thân, lời lẽ thù ghét, quấy rối, bạo lực hay nội dung bất hợp pháp. Video bị báo cáo sẽ tự động bị ẩn để chờ xem xét sau 2 báo cáo, và vi phạm có thể dẫn đến gỡ nội dung hoặc khóa tài khoản.\n\nBạn có thể báo cáo hoặc chặn từ bất kỳ reel nào vào bất cứ lúc nào.",
+      "decline": "Từ chối",
+      "title": "Nguyên tắc nội dung reels"
+    },
+    "viewer": {
+      "close": "Đóng",
+      "label": "Reels",
+      "mute": "Tắt tiếng",
+      "next": "Reel tiếp theo",
+      "previous": "Reel trước",
+      "tap_to_play": "Chạm để phát",
+      "unmute": "Bật tiếng"
+    }
   }
 }

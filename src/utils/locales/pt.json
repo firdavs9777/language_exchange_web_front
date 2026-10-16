@@ -2948,5 +2948,61 @@
       "signedIn": "Você entrou com a Apple",
       "signingIn": "Entrando com a Apple…"
     }
+  },
+  "reels": {
+    "actions": {
+      "block": "Bloquear usuário",
+      "comments": "Comentários",
+      "like": "Curtir",
+      "more": "Mais",
+      "profile": "Perfil",
+      "report": "Denunciar",
+      "unlike": "Descurtir"
+    },
+    "create": {
+      "bad_type": "Este tipo de arquivo não é compatível. Use MP4, MOV ou WebM.",
+      "caption": "Legenda",
+      "caption_placeholder": "O que você está praticando?",
+      "change_video": "Escolher outro vídeo",
+      "choose_video": "Escolher um vídeo",
+      "failed": "Não foi possível publicar seu reel. Tente novamente.",
+      "hint": "Um vídeo curto para aprender idiomas, de até 3 minutos. Na vertical (9:16) fica melhor.",
+      "post": "Publicar reel",
+      "posted": "Seu reel foi publicado.",
+      "posting": "Publicando…",
+      "server_too_long": "Os reels devem ter 3 minutos ou menos.",
+      "title": "Novo reel",
+      "too_big": "Este vídeo é grande demais para enviar.",
+      "too_long": "Os reels podem ter até 3:00. Este vídeo tem {{duration}}.",
+      "upload_failed": "O vídeo não foi enviado. Nada foi publicado — tente novamente."
+    },
+    "grid": {
+      "create": "Criar reel",
+      "empty": "Ainda não há reels. Seja o primeiro a publicar.",
+      "error": "Não foi possível carregar os reels.",
+      "load_more": "Carregar mais",
+      "loading": "Carregando reels…",
+      "open_reel": "Reproduzir reel de {{name}}",
+      "retry": "Tentar novamente",
+      "title": "Reels",
+      "unavailable": "Os reels estão indisponíveis no momento."
+    },
+    "moments_link": "Ver reels",
+    "nav": "Reels",
+    "policy": {
+      "accept": "Concordo",
+      "body": "Reels são vídeos curtos para aprender idiomas: respostas ao tema do dia, prática de conversação, explicações de falantes nativos e clipes de cultura.\n\nO BananaTalk tem tolerância zero com conteúdo impróprio: sem nudez, discurso de ódio, assédio, violência ou conteúdo ilegal. Vídeos denunciados são ocultados automaticamente até a análise após 2 denúncias, e violações podem resultar na remoção do conteúdo ou no banimento da conta.\n\nVocê pode denunciar ou bloquear em qualquer reel a qualquer momento.",
+      "decline": "Recusar",
+      "title": "Diretrizes de conteúdo dos reels"
+    },
+    "viewer": {
+      "close": "Fechar",
+      "label": "Reels",
+      "mute": "Silenciar",
+      "next": "Próximo reel",
+      "previous": "Reel anterior",
+      "tap_to_play": "Toque para reproduzir",
+      "unmute": "Ativar som"
+    }
   }
 }

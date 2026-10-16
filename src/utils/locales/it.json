@@ -2948,5 +2948,61 @@
       "signedIn": "Accesso effettuato con Apple",
       "signingIn": "Accesso con Apple…"
     }
+  },
+  "reels": {
+    "actions": {
+      "block": "Blocca utente",
+      "comments": "Commenti",
+      "like": "Mi piace",
+      "more": "Altro",
+      "profile": "Profilo",
+      "report": "Segnala",
+      "unlike": "Non mi piace più"
+    },
+    "create": {
+      "bad_type": "Questo tipo di file non è supportato. Usa MP4, MOV o WebM.",
+      "caption": "Didascalia",
+      "caption_placeholder": "Cosa stai praticando?",
+      "change_video": "Scegli un altro video",
+      "choose_video": "Scegli un video",
+      "failed": "Impossibile pubblicare il reel. Riprova.",
+      "hint": "Un breve video per imparare le lingue, fino a 3 minuti. In verticale (9:16) rende meglio.",
+      "post": "Pubblica reel",
+      "posted": "Il tuo reel è stato pubblicato.",
+      "posting": "Pubblicazione…",
+      "server_too_long": "I reel devono durare al massimo 3 minuti.",
+      "title": "Nuovo reel",
+      "too_big": "Questo video è troppo grande per essere caricato.",
+      "too_long": "I reel possono durare fino a 3:00. Questo video dura {{duration}}.",
+      "upload_failed": "Il video non è stato caricato. Non è stato pubblicato nulla: riprova."
+    },
+    "grid": {
+      "create": "Crea reel",
+      "empty": "Ancora nessun reel. Pubblica tu il primo.",
+      "error": "Impossibile caricare i reel.",
+      "load_more": "Carica altri",
+      "loading": "Caricamento dei reel…",
+      "open_reel": "Riproduci il reel di {{name}}",
+      "retry": "Riprova",
+      "title": "Reels",
+      "unavailable": "I reel non sono al momento disponibili."
+    },
+    "moments_link": "Guarda i reel",
+    "nav": "Reels",
+    "policy": {
+      "accept": "Accetto",
+      "body": "I reel sono brevi video per imparare le lingue: risposte agli spunti, pratica di conversazione, spiegazioni di madrelingua e clip culturali.\n\nBananaTalk ha tolleranza zero per i contenuti inappropriati: niente nudità, discorsi d'odio, molestie, violenza o contenuti illegali. I video segnalati vengono nascosti automaticamente in attesa di revisione dopo 2 segnalazioni e le violazioni possono comportare la rimozione dei contenuti o la sospensione dell'account.\n\nPuoi segnalare o bloccare da qualsiasi reel in qualsiasi momento.",
+      "decline": "Rifiuta",
+      "title": "Linee guida sui contenuti reel"
+    },
+    "viewer": {
+      "close": "Chiudi",
+      "label": "Reels",
+      "mute": "Disattiva audio",
+      "next": "Reel successivo",
+      "previous": "Reel precedente",
+      "tap_to_play": "Tocca per riprodurre",
+      "unmute": "Attiva audio"
+    }
   }
 }

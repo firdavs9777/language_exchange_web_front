@@ -2947,5 +2947,61 @@
       "signedIn": "Mit Apple angemeldet",
       "signingIn": "Anmeldung mit Apple …"
     }
+  },
+  "reels": {
+    "actions": {
+      "block": "Nutzer blockieren",
+      "comments": "Kommentare",
+      "like": "Gefällt mir",
+      "more": "Mehr",
+      "profile": "Profil",
+      "report": "Melden",
+      "unlike": "Gefällt mir nicht mehr"
+    },
+    "create": {
+      "bad_type": "Dieser Dateityp wird nicht unterstützt. Verwende MP4, MOV oder WebM.",
+      "caption": "Beschreibung",
+      "caption_placeholder": "Was übst du gerade?",
+      "change_video": "Anderes Video wählen",
+      "choose_video": "Video auswählen",
+      "failed": "Dein Reel konnte nicht gepostet werden. Versuch es noch einmal.",
+      "hint": "Ein kurzes Sprachlernvideo, bis zu 3 Minuten. Hochformat (9:16) sieht am besten aus.",
+      "post": "Reel posten",
+      "posted": "Dein Reel ist gepostet.",
+      "posting": "Wird gepostet…",
+      "server_too_long": "Reels dürfen höchstens 3 Minuten lang sein.",
+      "title": "Neues Reel",
+      "too_big": "Dieses Video ist zu groß zum Hochladen.",
+      "too_long": "Reels dürfen bis zu 3:00 lang sein. Dieses Video ist {{duration}} lang.",
+      "upload_failed": "Das Video wurde nicht hochgeladen. Es wurde nichts gepostet – versuch es noch einmal."
+    },
+    "grid": {
+      "create": "Reel erstellen",
+      "empty": "Noch keine Reels. Poste als Erste*r eins.",
+      "error": "Reels konnten nicht geladen werden.",
+      "load_more": "Mehr laden",
+      "loading": "Reels werden geladen…",
+      "open_reel": "Reel von {{name}} abspielen",
+      "retry": "Erneut versuchen",
+      "title": "Reels",
+      "unavailable": "Reels sind derzeit nicht verfügbar."
+    },
+    "moments_link": "Reels ansehen",
+    "nav": "Reels",
+    "policy": {
+      "accept": "Ich stimme zu",
+      "body": "Reels sind kurze Sprachlernvideos — Antworten auf Impulse, Sprechübungen, Erklärungen von Muttersprachlern und Kulturclips.\n\nBananaTalk duldet keine anstößigen Inhalte: keine Nacktheit, keine Hassrede, keine Belästigung, keine Gewalt und keine illegalen Inhalte. Gemeldete Videos werden nach 2 Meldungen bis zur Prüfung automatisch ausgeblendet; Verstöße können zur Entfernung von Inhalten oder zur Sperrung des Kontos führen.\n\nDu kannst jederzeit bei jedem Reel melden oder blockieren.",
+      "decline": "Ablehnen",
+      "title": "Reels-Inhaltsrichtlinien"
+    },
+    "viewer": {
+      "close": "Schließen",
+      "label": "Reels",
+      "mute": "Stumm schalten",
+      "next": "Nächstes Reel",
+      "previous": "Vorheriges Reel",
+      "tap_to_play": "Zum Abspielen tippen",
+      "unmute": "Ton einschalten"
+    }
   }
 }

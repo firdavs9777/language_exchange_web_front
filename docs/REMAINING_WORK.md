@@ -132,7 +132,7 @@ Phase 4 Reels (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-pa
 - [x] P4-REEL-5 Viewer actions: like, comments drawer, share, report, block
 - [x] P4-REEL-6 Create a reel: video ≤ 180 s checked before upload, `isReel: true`, rollback on a failed upload
 - [x] P4-REEL-7 Routes, navbar and Moments entry behind `webReelsEnabled` + `reelsEnabled`; flag-off test
-- [ ] P4-REEL-I18N New reels strings in all 18 locales
+- [x] P4-REEL-I18N New reels strings in all 18 locales
 - [ ] P4-REEL-PUSH Push unit reels (suite + build green, deployed dark, production smoke recorded)
 
 Phase 4 Gatherings/clubs (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)

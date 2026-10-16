@@ -2947,5 +2947,61 @@
       "signedIn": "Berhasil masuk dengan Apple",
       "signingIn": "Masuk dengan Apple…"
     }
+  },
+  "reels": {
+    "actions": {
+      "block": "Blokir pengguna",
+      "comments": "Komentar",
+      "like": "Suka",
+      "more": "Lainnya",
+      "profile": "Profil",
+      "report": "Laporkan",
+      "unlike": "Batal suka"
+    },
+    "create": {
+      "bad_type": "Jenis file ini tidak didukung. Gunakan MP4, MOV, atau WebM.",
+      "caption": "Keterangan",
+      "caption_placeholder": "Apa yang sedang kamu latih?",
+      "change_video": "Pilih video lain",
+      "choose_video": "Pilih video",
+      "failed": "Reel kamu gagal diposting. Coba lagi.",
+      "hint": "Video pendek untuk belajar bahasa, maksimal 3 menit. Format vertikal (9:16) terlihat paling bagus.",
+      "post": "Posting reel",
+      "posted": "Reel kamu sudah diposting.",
+      "posting": "Memposting…",
+      "server_too_long": "Reel harus berdurasi 3 menit atau kurang.",
+      "title": "Reel baru",
+      "too_big": "Video ini terlalu besar untuk diunggah.",
+      "too_long": "Reel bisa berdurasi hingga 3:00. Video ini berdurasi {{duration}}.",
+      "upload_failed": "Video gagal diunggah. Tidak ada yang diposting — coba lagi."
+    },
+    "grid": {
+      "create": "Buat reel",
+      "empty": "Belum ada reel. Jadilah yang pertama memposting.",
+      "error": "Tidak dapat memuat reel.",
+      "load_more": "Muat lainnya",
+      "loading": "Memuat reel…",
+      "open_reel": "Putar reel dari {{name}}",
+      "retry": "Coba lagi",
+      "title": "Reels",
+      "unavailable": "Reel sedang tidak tersedia."
+    },
+    "moments_link": "Tonton reel",
+    "nav": "Reels",
+    "policy": {
+      "accept": "Saya setuju",
+      "body": "Reels adalah video pendek untuk belajar bahasa — jawaban topik, latihan berbicara, penjelasan dari penutur asli, dan klip budaya.\n\nBananaTalk tidak menoleransi konten yang tidak pantas: tanpa ketelanjangan, ujaran kebencian, pelecehan, kekerasan, atau konten ilegal. Video yang dilaporkan otomatis disembunyikan menunggu peninjauan setelah 2 laporan, dan pelanggaran dapat berujung pada penghapusan konten atau pemblokiran akun.\n\nAnda dapat melaporkan atau memblokir dari reel mana pun kapan saja.",
+      "decline": "Tolak",
+      "title": "Pedoman konten reel"
+    },
+    "viewer": {
+      "close": "Tutup",
+      "label": "Reels",
+      "mute": "Bisukan",
+      "next": "Reel berikutnya",
+      "previous": "Reel sebelumnya",
+      "tap_to_play": "Ketuk untuk memutar",
+      "unmute": "Bunyikan"
+    }
   }
 }

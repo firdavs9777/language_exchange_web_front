@@ -2947,5 +2947,61 @@
       "signedIn": "已透過 Apple 登入",
       "signingIn": "正在透過 Apple 登入…"
     }
+  },
+  "reels": {
+    "actions": {
+      "block": "封鎖使用者",
+      "comments": "留言",
+      "like": "按讚",
+      "more": "更多",
+      "profile": "個人檔案",
+      "report": "檢舉",
+      "unlike": "收回讚"
+    },
+    "create": {
+      "bad_type": "不支援此檔案類型，請使用 MP4、MOV 或 WebM。",
+      "caption": "說明",
+      "caption_placeholder": "你在練習什麼？",
+      "change_video": "選擇其他影片",
+      "choose_video": "選擇影片",
+      "failed": "無法發布你的短影片，請再試一次。",
+      "hint": "一段簡短的語言學習影片，最長 3 分鐘。直式（9:16）效果最佳。",
+      "post": "發布短影片",
+      "posted": "你的短影片已發布。",
+      "posting": "發布中…",
+      "server_too_long": "短影片不能超過 3 分鐘。",
+      "title": "新短影片",
+      "too_big": "此影片太大，無法上傳。",
+      "too_long": "短影片最長 3:00，此影片長度為 {{duration}}。",
+      "upload_failed": "影片未上傳，沒有發布任何內容，請再試一次。"
+    },
+    "grid": {
+      "create": "建立短影片",
+      "empty": "還沒有 Reels，來發布第一個吧。",
+      "error": "無法載入短影片。",
+      "load_more": "載入更多",
+      "loading": "正在載入短影片…",
+      "open_reel": "播放 {{name}} 的短影片",
+      "retry": "重試",
+      "title": "連續短片",
+      "unavailable": "短影片目前無法使用。"
+    },
+    "moments_link": "觀看短影片",
+    "nav": "連續短片",
+    "policy": {
+      "accept": "我同意",
+      "body": "Reels 是簡短的語言學習影片，包括話題回答、口說練習、母語者講解和文化短片。\n\nBananaTalk 對不當內容零容忍：禁止裸露、仇恨言論、騷擾、暴力或非法內容。被檢舉的影片在收到 2 次檢舉後會自動隱藏以待審核，違規可能導致內容被刪除或帳號被停權。\n\n你可以隨時在任何 Reel 中檢舉或封鎖。",
+      "decline": "拒絕",
+      "title": "短影片內容準則"
+    },
+    "viewer": {
+      "close": "關閉",
+      "label": "連續短片",
+      "mute": "靜音",
+      "next": "下一個短影片",
+      "previous": "上一個短影片",
+      "tap_to_play": "點一下即可播放",
+      "unmute": "取消靜音"
+    }
   }
 }

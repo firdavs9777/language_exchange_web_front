@@ -2947,5 +2947,61 @@
       "signedIn": "Naka-sign in gamit ang Apple",
       "signingIn": "Nagsa-sign in gamit ang Apple…"
     }
+  },
+  "reels": {
+    "actions": {
+      "block": "I-block ang user",
+      "comments": "Mga komento",
+      "like": "I-like",
+      "more": "Iba pa",
+      "profile": "Profile",
+      "report": "I-report",
+      "unlike": "I-unlike"
+    },
+    "create": {
+      "bad_type": "Hindi suportado ang ganitong uri ng file. Gumamit ng MP4, MOV o WebM.",
+      "caption": "Caption",
+      "caption_placeholder": "Ano ang pinapraktis mo?",
+      "change_video": "Pumili ng ibang video",
+      "choose_video": "Pumili ng video",
+      "failed": "Hindi na-post ang reel mo. Subukan ulit.",
+      "hint": "Maikling video para sa pag-aaral ng wika, hanggang 3 minuto. Pinakamaganda ang patayo (9:16).",
+      "post": "I-post ang reel",
+      "posted": "Na-post na ang reel mo.",
+      "posting": "Pino-post…",
+      "server_too_long": "Dapat 3 minuto o mas maikli ang mga reel.",
+      "title": "Bagong reel",
+      "too_big": "Masyadong malaki ang video na ito para i-upload.",
+      "too_long": "Hanggang 3:00 lang ang reel. {{duration}} ang haba ng video na ito.",
+      "upload_failed": "Hindi na-upload ang video. Walang na-post — subukan ulit."
+    },
+    "grid": {
+      "create": "Gumawa ng reel",
+      "empty": "Wala pang reel. Ikaw na ang unang mag-post.",
+      "error": "Hindi ma-load ang mga reel.",
+      "load_more": "Mag-load pa",
+      "loading": "Nilo-load ang mga reel…",
+      "open_reel": "I-play ang reel ni {{name}}",
+      "retry": "Subukan ulit",
+      "title": "Reels",
+      "unavailable": "Hindi available ang mga reel sa ngayon."
+    },
+    "moments_link": "Manood ng reels",
+    "nav": "Reels",
+    "policy": {
+      "accept": "Sumasang-ayon ako",
+      "body": "Ang mga reel ay maiikling video para sa pag-aaral ng wika — mga sagot sa paksa, pagsasanay sa pagsasalita, paliwanag ng mga native speaker, at mga clip tungkol sa kultura.\n\nWalang pagpapaubaya ang BananaTalk sa hindi katanggap-tanggap na nilalaman: bawal ang kahubaran, hate speech, panliligalig, karahasan, o ilegal na nilalaman. Awtomatikong itinatago ang mga na-report na video habang hinihintay ang pagsusuri pagkatapos ng 2 report, at ang mga paglabag ay maaaring humantong sa pagtanggal ng nilalaman o pag-ban sa account.\n\nMaaari kang mag-report o mag-block mula sa anumang reel anumang oras.",
+      "decline": "Tanggihan",
+      "title": "Mga alituntunin sa nilalaman ng reels"
+    },
+    "viewer": {
+      "close": "Isara",
+      "label": "Reels",
+      "mute": "I-mute",
+      "next": "Susunod na reel",
+      "previous": "Nakaraang reel",
+      "tap_to_play": "I-tap para i-play",
+      "unmute": "I-unmute"
+    }
   }
 }

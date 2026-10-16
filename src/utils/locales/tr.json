@@ -2947,5 +2947,61 @@
       "signedIn": "Apple ile giriş yapıldı",
       "signingIn": "Apple ile giriş yapılıyor…"
     }
+  },
+  "reels": {
+    "actions": {
+      "block": "Kullanıcıyı engelle",
+      "comments": "Yorumlar",
+      "like": "Beğen",
+      "more": "Daha fazla",
+      "profile": "Profil",
+      "report": "Bildir",
+      "unlike": "Beğenmekten vazgeç"
+    },
+    "create": {
+      "bad_type": "Bu dosya türü desteklenmiyor. MP4, MOV veya WebM kullan.",
+      "caption": "Açıklama",
+      "caption_placeholder": "Ne pratik yapıyorsun?",
+      "change_video": "Başka bir video seç",
+      "choose_video": "Video seç",
+      "failed": "Reel'in paylaşılamadı. Tekrar dene.",
+      "hint": "En fazla 3 dakikalık kısa bir dil öğrenme videosu. Dikey (9:16) en iyi görünür.",
+      "post": "Reel paylaş",
+      "posted": "Reel'in paylaşıldı.",
+      "posting": "Paylaşılıyor…",
+      "server_too_long": "Reels en fazla 3 dakika olmalıdır.",
+      "title": "Yeni reel",
+      "too_big": "Bu video yüklemek için çok büyük.",
+      "too_long": "Reels en fazla 3:00 olabilir. Bu video {{duration}}.",
+      "upload_failed": "Video yüklenmedi. Hiçbir şey paylaşılmadı — tekrar dene."
+    },
+    "grid": {
+      "create": "Reel oluştur",
+      "empty": "Henüz reel yok. İlk paylaşan sen ol.",
+      "error": "Reels yüklenemedi.",
+      "load_more": "Daha fazla yükle",
+      "loading": "Reels yükleniyor…",
+      "open_reel": "{{name}} adlı kişinin reel'ini oynat",
+      "retry": "Tekrar dene",
+      "title": "Reels",
+      "unavailable": "Reels şu anda kullanılamıyor."
+    },
+    "moments_link": "Reels izle",
+    "nav": "Reels",
+    "policy": {
+      "accept": "Kabul ediyorum",
+      "body": "Reels, dil öğrenmeye yönelik kısa videolardır: konulara yanıtlar, konuşma pratiği, ana dili konuşanların açıklamaları ve kültür klipleri.\n\nBananaTalk, uygunsuz içeriğe sıfır tolerans gösterir: çıplaklık, nefret söylemi, taciz, şiddet veya yasa dışı içerik yasaktır. Bildirilen videolar 2 bildirimden sonra incelenene kadar otomatik olarak gizlenir ve ihlaller içeriğin kaldırılmasına veya hesabın yasaklanmasına yol açabilir.\n\nHerhangi bir reel'den istediğin zaman bildirebilir veya engelleyebilirsin.",
+      "decline": "Reddet",
+      "title": "Reels içerik kuralları"
+    },
+    "viewer": {
+      "close": "Kapat",
+      "label": "Reels",
+      "mute": "Sesi kapat",
+      "next": "Sonraki reel",
+      "previous": "Önceki reel",
+      "tap_to_play": "Oynatmak için dokun",
+      "unmute": "Sesi aç"
+    }
   }
 }

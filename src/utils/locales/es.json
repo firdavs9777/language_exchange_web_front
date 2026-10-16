@@ -2948,5 +2948,61 @@
       "signedIn": "Sesión iniciada con Apple",
       "signingIn": "Iniciando sesión con Apple…"
     }
+  },
+  "reels": {
+    "actions": {
+      "block": "Bloquear usuario",
+      "comments": "Comentarios",
+      "like": "Me gusta",
+      "more": "Más",
+      "profile": "Perfil",
+      "report": "Denunciar",
+      "unlike": "Ya no me gusta"
+    },
+    "create": {
+      "bad_type": "Este tipo de archivo no es compatible. Usa MP4, MOV o WebM.",
+      "caption": "Descripción",
+      "caption_placeholder": "¿Qué estás practicando?",
+      "change_video": "Elegir otro vídeo",
+      "choose_video": "Elegir un vídeo",
+      "failed": "No se pudo publicar tu reel. Inténtalo de nuevo.",
+      "hint": "Un vídeo corto para aprender idiomas, de hasta 3 minutos. En vertical (9:16) se ve mejor.",
+      "post": "Publicar reel",
+      "posted": "Tu reel se ha publicado.",
+      "posting": "Publicando…",
+      "server_too_long": "Los reels deben durar 3 minutos o menos.",
+      "title": "Nuevo reel",
+      "too_big": "Este vídeo es demasiado grande para subirlo.",
+      "too_long": "Los reels pueden durar hasta 3:00. Este vídeo dura {{duration}}.",
+      "upload_failed": "El vídeo no se subió. No se publicó nada; inténtalo de nuevo."
+    },
+    "grid": {
+      "create": "Crear reel",
+      "empty": "Aún no hay reels. Sé el primero en publicar uno.",
+      "error": "No se pudieron cargar los reels.",
+      "load_more": "Cargar más",
+      "loading": "Cargando reels…",
+      "open_reel": "Reproducir reel de {{name}}",
+      "retry": "Reintentar",
+      "title": "Reels",
+      "unavailable": "Los reels no están disponibles en este momento."
+    },
+    "moments_link": "Ver reels",
+    "nav": "Reels",
+    "policy": {
+      "accept": "Acepto",
+      "body": "Los reels son vídeos cortos para aprender idiomas: respuestas al tema del día, práctica de conversación, explicaciones de hablantes nativos y clips de cultura.\n\nBananaTalk tiene tolerancia cero con el contenido inapropiado: nada de desnudos, discurso de odio, acoso, violencia ni contenido ilegal. Los vídeos denunciados se ocultan automáticamente hasta su revisión tras 2 denuncias, y las infracciones pueden suponer la eliminación del contenido o la suspensión de la cuenta.\n\nPuedes denunciar o bloquear desde cualquier reel en cualquier momento.",
+      "decline": "Rechazar",
+      "title": "Normas de contenido para reels"
+    },
+    "viewer": {
+      "close": "Cerrar",
+      "label": "Reels",
+      "mute": "Silenciar",
+      "next": "Reel siguiente",
+      "previous": "Reel anterior",
+      "tap_to_play": "Toca para reproducir",
+      "unmute": "Activar sonido"
+    }
   }
 }
