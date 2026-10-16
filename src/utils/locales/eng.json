@@ -3217,6 +3217,31 @@
       "remove": "Remove from club",
       "removeTitle": "Remove {{name}}?",
       "title": "Members · {{count}}"
+    },
+    "form": {
+      "city": "City (optional)",
+      "create": "Create club",
+      "createTitle": "Start a club",
+      "description": "About the club (optional)",
+      "editTitle": "Edit club",
+      "errors": {
+        "descriptionTooLong": "Keep the description under 2000 characters.",
+        "interestTooLong": "Keep the interest under 60 characters.",
+        "languageRequired": "Pick the club's language.",
+        "nameRequired": "Give your club a name.",
+        "nameTooLong": "Keep the name under 80 characters."
+      },
+      "interest": "What brings you together (e.g. books, K-drama)",
+      "language": "Language",
+      "name": "Name",
+      "notAllowed": "Only the club's owner or an organizer can edit it.",
+      "placeAddress": "Address (optional)",
+      "placeName": "Where you meet (optional)"
+    },
+    "owner": {
+      "delete": "Delete club",
+      "deleteBody": "Members lose the club. Gatherings already planned will still happen.",
+      "deleteTitle": "Delete {{name}}?"
     }
   }
 }
