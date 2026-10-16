@@ -371,7 +371,8 @@
       "report": "Report",
       "this_person": "this person",
       "action_failed": "That didn't work. Try again.",
-      "unblock": "Unblock"
+      "unblock": "Unblock",
+      "followBlocked": "You can't follow this person"
     },
     "buttons": {
       "edit": "Edit",
@@ -516,6 +517,11 @@
     "unblock": {
       "title": "Unblock {{name}}?",
       "body": "They will be able to message you and see your profile again."
+    },
+    "blocked": {
+      "title": "This profile isn't available",
+      "body": "One of you has blocked the other, so you can't message, follow or see each other's posts.",
+      "manage": "Manage blocked people"
     }
   },
   "moments_section": {

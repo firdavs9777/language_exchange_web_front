@@ -272,6 +272,42 @@ const ProfilePage: React.FC = () => {
     );
   }
 
+  // A block either way (backend P1-PRIV-3): the server sends a minimal card
+  // with isBlocked. Rendering it as a profile showed a Message and a Follow
+  // button that could only fail, and empty stats that read as "nobody
+  // follows them". The page says what is going on instead, without saying
+  // who blocked whom.
+  if (!isOwn && user && user.isBlocked === true) {
+    return (
+      <div className={PAGE}>
+        {meta}
+        <div className={COLUMN}>
+          <div className="space-y-3">
+            <ProfileHeader name={displayName} username={user.username} avatarUrl={images[0]} />
+            <SurfaceCard padding="md">
+              <div data-testid="profile-blocked" className="py-4 text-center">
+                <UserX className="mx-auto h-8 w-8 text-ink-400" aria-hidden />
+                <h2 className="pt-3 font-display text-lg text-ink-900 dark:text-ink-50">
+                  {t("profile.blocked.title") || "This profile isn't available"}
+                </h2>
+                <p className="pt-1 text-sm text-ink-500 dark:text-ink-400">
+                  {t("profile.blocked.body") ||
+                    "One of you has blocked the other, so you can't message, follow or see each other's posts."}
+                </p>
+                <Link
+                  to="/settings/blocked"
+                  data-testid="profile-blocked-manage"
+                  className="mt-4 inline-flex items-center justify-center rounded-chip border border-line px-4 py-2 text-sm font-semibold text-ink-700 transition-colors hover:bg-ink-100 dark:border-line-dark dark:text-ink-200 dark:hover:bg-ink-800"
+                >
+                  {t("profile.blocked.manage") || "Manage blocked people"}
+                </Link>
+              </div>
+            </SurfaceCard>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (failed) {
     return (
       <div className={PAGE}>

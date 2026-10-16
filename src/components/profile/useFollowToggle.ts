@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import notify from "../../design/notify";
 import {
   useFollowUserMutation,
   useUnFollowUserMutation,
@@ -33,6 +35,7 @@ export default function useFollowToggle(
   onChanged?: (nowFollowing: boolean) => void
 ): FollowToggle {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const viewerId = useSelector(
     (state: any) => state.auth.userInfo?.user?._id || state.auth.userInfo?._id
   );
@@ -62,8 +65,14 @@ export default function useFollowToggle(
       if (onChanged) onChanged(next);
     } catch (error) {
       setFollowing(!next);
+      // A block either way: followUser answers 403 (backend P1-PRIV-4). Say
+      // so rather than leaving a button that silently flips back. Other
+      // failures keep the quiet rollback.
+      if (error && (error as any).status === 403) {
+        notify.error(t("profile.actions.followBlocked") || "You can't follow this person");
+      }
     }
-  }, [viewerId, targetId, busy, following, followUser, unFollowUser, onChanged, navigate]);
+  }, [viewerId, targetId, busy, following, followUser, unFollowUser, onChanged, navigate, t]);
 
   return { following, busy, toggle };
 }

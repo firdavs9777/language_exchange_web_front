@@ -20,6 +20,13 @@ jest.mock("../../store/slices/usersSlice", () => ({
   useUnFollowUserMutation: () => [mockUnfollow, { isLoading: false }],
 }));
 
+const mockNotifyError = jest.fn();
+jest.mock("../../design/notify", () => ({
+  __esModule: true,
+  default: { error: (...args: any[]) => mockNotifyError(...args), success: jest.fn(), info: jest.fn() },
+}));
+jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
+
 const resolved = () => ({ unwrap: () => Promise.resolve({ success: true }) });
 const rejected = () => ({ unwrap: () => Promise.reject(new Error("nope")) });
 
@@ -54,6 +61,7 @@ function renderProbe(props: ProbeProps = {}, viewerId: string | null = "me") {
 }
 
 beforeEach(() => {
+  mockNotifyError.mockReset();
   mockFollow.mockReturnValue(resolved());
   mockUnfollow.mockReturnValue(resolved());
 });
@@ -128,4 +136,22 @@ it("sends a signed-out visitor to the login page instead of the API", () => {
 
   expect(mockNavigate).toHaveBeenCalledWith("/login");
   expect(mockFollow).not.toHaveBeenCalled();
+});
+
+it("says why when a block refuses the follow (403), and rolls back", async () => {
+  mockFollow.mockReturnValue({
+    unwrap: () => Promise.reject({ status: 403, data: { success: false, error: "Cannot follow this user" } }),
+  });
+  renderProbe({ isFollowing: false });
+  fireEvent.click(screen.getByTestId("probe"));
+  await waitFor(() => expect(mockNotifyError).toHaveBeenCalledWith("You can't follow this person"));
+  expect(screen.getByTestId("probe")).toHaveTextContent("Follow");
+});
+
+it("stays quiet for other failures, as before", async () => {
+  mockFollow.mockReturnValue(rejected());
+  renderProbe({ isFollowing: false });
+  fireEvent.click(screen.getByTestId("probe"));
+  await waitFor(() => expect(screen.getByTestId("probe")).toHaveTextContent("Follow"));
+  expect(mockNotifyError).not.toHaveBeenCalled();
 });

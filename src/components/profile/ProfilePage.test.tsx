@@ -943,3 +943,31 @@ describe("story ring (community#6)", () => {
     expect(screen.getByRole("button", { name: "Open Ada's photo" })).toBeInTheDocument();
   });
 });
+
+describe("blocked (community#5)", () => {
+  it("shows a neutral card with only the header, no actions, stats or tabs", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada", username: "ada", images: [], imageUrls: [], isBlocked: true } },
+    });
+    renderPage("/profile/u2", "me");
+
+    expect(screen.getByTestId("profile-blocked")).toBeInTheDocument();
+    expect(screen.getByText("Ada")).toBeInTheDocument();
+    expect(screen.queryByTestId("action-more")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("profile-tabs")).not.toBeInTheDocument();
+    expect(screen.getByText("Manage blocked people").closest("a")).toHaveAttribute("href", "/settings/blocked");
+  });
+
+  it("renders the full page when isBlocked is absent", () => {
+    mockGetPublicProfile.mockReturnValue({
+      ...idle,
+      refetch: otherRefetch,
+      data: { data: { _id: "u2", name: "Ada" } },
+    });
+    renderPage("/profile/u2", "me");
+    expect(screen.queryByTestId("profile-blocked")).not.toBeInTheDocument();
+    expect(screen.getByTestId("profile-body")).toBeInTheDocument();
+  });
+});
