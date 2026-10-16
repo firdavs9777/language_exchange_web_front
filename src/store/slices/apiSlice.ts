@@ -166,6 +166,9 @@ export const apiSlice = createApi({
     "Conversations",
     "UserMessages",
     "Conversation",
+    // The viewer's saved messages (GET /messages/bookmarks): user-wide, so its
+    // own tag rather than refetching a thread on every bookmark change.
+    "Bookmarks",
     // The shared per-conversation wallpaper (GET/PUT /conversations/:id/theme).
     // Its own tag: a theme save must refresh the pane's colours without
     // refetching a thread of messages, and a new message must not refetch a

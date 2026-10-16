@@ -316,6 +316,20 @@
       "unavailable": "Search isn't available right now",
       "you": "You",
       "notLoaded": "That message is further back. Scroll up to load it."
+    },
+    "bookmarks": {
+      "title": "Saved messages",
+      "close": "Close",
+      "loading": "Loading saved messages…",
+      "error": "Couldn't load saved messages",
+      "empty": "No saved messages yet",
+      "attachment": "Attachment",
+      "open": "Open chat",
+      "remove": "Remove from saved",
+      "removed": "Removed from saved messages",
+      "removeFailed": "Couldn't remove it",
+      "added": "Saved",
+      "addFailed": "Couldn't save the message"
     }
   },
   "newChat": {

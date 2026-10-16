@@ -352,25 +352,26 @@ export const chatApiSlice = apiSlice.injectEndpoints({
     }),
 
     // Bookmarks
+    // Bookmarks — the viewer's saved messages, user-wide (advancedMessages.js).
     bookmarkMessage: builder.mutation({
       query: (messageId: string) => ({
         url: `${MESSAGES_URL}/${messageId}/bookmark`,
         method: "POST",
       }),
-      invalidatesTags: ["Conversation"],
+      invalidatesTags: ["Bookmarks"],
     }),
     unbookmarkMessage: builder.mutation({
       query: (messageId: string) => ({
         url: `${MESSAGES_URL}/${messageId}/bookmark`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Conversation"],
+      invalidatesTags: ["Bookmarks"],
     }),
     getBookmarks: builder.query({
-      query: () => ({
-        url: `${MESSAGES_URL}/bookmarks`,
+      query: ({ page = 1, limit = 50 }: { page?: number; limit?: number } = {}) => ({
+        url: `${MESSAGES_URL}/bookmarks?page=${page}&limit=${limit}`,
       }),
-      providesTags: ["Conversation"],
+      providesTags: ["Bookmarks"],
     }),
 
     // Forward — POST /api/v1/messages/:id/forward, body {receivers: string[]}

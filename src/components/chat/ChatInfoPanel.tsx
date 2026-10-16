@@ -6,6 +6,7 @@ import {
   Ban,
   Bell,
   BellOff,
+  Bookmark,
   ChevronRight,
   Flag,
   Image as ImageIcon,
@@ -22,6 +23,7 @@ import LanguageExchangePill from "../../design/LanguageExchangePill";
 import notify from "../../design/notify";
 import { findConversationWith, CONVERSATIONS_PAGE } from "./lib/conversationMatch";
 import WallpaperPicker from "./WallpaperPicker";
+import BookmarksDialog from "./components/BookmarksDialog";
 import { DEFAULT_WALLPAPER } from "../../design/chatWallpapers";
 import {
   useGetConversationsQuery,
@@ -171,7 +173,7 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
   const [reportUser, { isLoading: isReporting }] = useReportUserMutation();
 
   const [dialog, setDialog] = useState<
-    "block" | "delete" | "report" | "wallpaper" | null
+    "block" | "delete" | "report" | "wallpaper" | "bookmarks" | null
   >(null);
   const [dialogError, setDialogError] = useState("");
   const [reason, setReason] = useState("other");
@@ -355,6 +357,16 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
             <span className="flex-1">{t("chatPage.info.media") || "Shared media"}</span>
             <ChevronRight className="h-4 w-4 shrink-0" aria-hidden />
           </Link>
+          <button
+            type="button"
+            data-testid="chat-info-bookmarks"
+            onClick={() => setDialog("bookmarks")}
+            className={ROW}
+          >
+            <Bookmark className="h-4 w-4 shrink-0" aria-hidden />
+            <span className="flex-1">{t("chatPage.bookmarks.title") || "Saved messages"}</span>
+            <ChevronRight className="h-4 w-4 shrink-0" aria-hidden />
+          </button>
 
           <button
             type="button"
@@ -494,6 +506,8 @@ const ChatInfoPanel: React.FC<ChatInfoPanelProps> = ({
           onClose={closeDialog}
         />
       ) : null}
+
+      {dialog === "bookmarks" ? <BookmarksDialog onClose={closeDialog} /> : null}
 
       {dialog === "report" ? (
         <DialogShell

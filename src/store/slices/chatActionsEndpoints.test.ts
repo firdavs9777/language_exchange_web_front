@@ -233,4 +233,14 @@ describe("dead 404 message routes are removed", () => {
     expect(new URL(calls[0].url).pathname).toBe(`${MESSAGES_URL}/video-config`);
     expect(calls[0].method).toBe("GET");
   });
+
+  it("getBookmarks asks for one page of 50 by default", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch((chatApiSlice.endpoints as any).getBookmarks.initiate({}));
+    const url = new URL(calls[0].url);
+    expect(url.pathname).toBe(`${MESSAGES_URL}/bookmarks`);
+    expect(url.searchParams.get("page")).toBe("1");
+    expect(url.searchParams.get("limit")).toBe("50");
+  });
 });

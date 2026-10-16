@@ -32,6 +32,11 @@ jest.mock("react-router-dom", () => ({
   useNavigate: () => mockNavigate,
 }));
 
+jest.mock("./components/BookmarksDialog", () => ({
+  __esModule: true,
+  default: () => require("react").createElement("div", { "data-testid": "bookmarks-dialog" }),
+}));
+
 jest.mock("../../store/slices/chatSlice", () => ({
   useGetConversationsQuery: (arg: any, opts: any) => mockConversations(arg, opts),
   useGetConversationThemeQuery: (arg: any, opts: any) => mockTheme(arg, opts),
@@ -107,6 +112,12 @@ afterEach(() => {
 });
 
 describe("the entries the panel offers", () => {
+  it("opens the saved messages", () => {
+    renderPanel();
+    fireEvent.click(screen.getByTestId("chat-info-bookmarks"));
+    expect(screen.getByTestId("bookmarks-dialog")).toBeInTheDocument();
+  });
+
   it("links the profile and the media gallery by the OTHER USER's id", () => {
     renderPanel();
     expect(screen.getByTestId("chat-info-panel")).toBeInTheDocument();

@@ -2537,7 +2537,14 @@ const ChatContent: React.FC<ChatContentProps> = ({
               onBookmark={() =>
                 bookmarkMessage(activeActionMsg._id)
                   .unwrap()
-                  .catch((e) => console.error("Bookmark failed:", e))
+                  .then(() => notify.success(t("chatPage.bookmarks.added") || "Saved"))
+                  .catch((e: any) =>
+                    notify.error(
+                      (e && e.data && (e.data.error || e.data.message)) ||
+                        t("chatPage.bookmarks.addFailed") ||
+                        "Couldn't save the message"
+                    )
+                  )
               }
               onTts={() => handleTtsMessage(activeActionMsg)}
               onEdit={() => handleEditMessageAction(activeActionMsg)}
