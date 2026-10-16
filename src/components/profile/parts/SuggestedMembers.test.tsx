@@ -52,9 +52,13 @@ function renderStrip(props: any = {}) {
   );
 }
 
-it("asks for one page of members sharing the profile's language", () => {
+// `language=` is not a parameter of GET /auth/users; the server ignored it
+// and the strip showed the viewer's default list. `nativeLanguage` without
+// matchLanguage is the server's direct branch: native speakers of it.
+it("asks for one page of native speakers of the profile's language", () => {
   renderStrip();
-  expect(mockGetMembers.mock.calls[0][0]).toEqual({ page: 1, limit: 12, language: "English" });
+  expect(mockGetMembers.mock.calls[0][0]).toEqual({ page: 1, limit: 12, nativeLanguage: "English" });
+  expect(mockGetMembers.mock.calls[0][0].matchLanguage).toBeUndefined();
   expect(mockGetMembers.mock.calls[0][1].skip).toBe(false);
 });
 

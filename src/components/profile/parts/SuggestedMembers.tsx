@@ -54,8 +54,12 @@ const SuggestedMembers: React.FC<SuggestedMembersProps> = ({
   // /community/:userId is a public page — so an anonymous visitor must not
   // fire this at all. Skipping is what keeps the logged-out member page on
   // public endpoints, and the strip renders nothing for them anyway.
+  // `nativeLanguage` WITHOUT matchLanguage is the server's direct branch
+  // (controllers/users.js): people whose native language is this one. With
+  // matchLanguage it would flip to "people learning it" -- this profile's
+  // partners, not people like them. `language=` was never a parameter.
   const { data } = useGetCommunityMembersQuery(
-    { page: 1, limit: PAGE_LIMIT, language: language || undefined },
+    { page: 1, limit: PAGE_LIMIT, nativeLanguage: language || undefined },
     { skip: !language || !viewerId }
   );
 

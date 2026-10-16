@@ -521,7 +521,7 @@ describe("the match-aware blocks", () => {
     expect(mockGetCommunityMembers.mock.calls[0][0]).toEqual({
       page: 1,
       limit: 12,
-      language: "English",
+      nativeLanguage: "English",
     });
     expect(screen.getAllByTestId("suggested-member")).toHaveLength(1);
   });
