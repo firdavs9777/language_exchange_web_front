@@ -22,6 +22,8 @@ export interface LanguageFlagProps {
 export type TabType = "all" | "popular" | "new";
 
 
+// Offline fallback only: the filter sheet lists the whole GET /languages
+// catalog (lib/languageOptions.ts) and falls back to these while it loads.
 export const COMMON_LANGUAGES = [
   "English", "Spanish", "French", "German", "Korean", 
   "Japanese", "Chinese", "Portuguese", "Russian", "Italian"

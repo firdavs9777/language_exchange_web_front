@@ -98,7 +98,7 @@ Phase 3 Moments (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-
 Phase 3 Community (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase3.md`)
 - [x] P3-COM-1 Nearby works — real params, real fields, real profile route, privacy toggles (community#2)
 - [x] P3-COM-2 @username search uses the `/auth/users` routes (community#3)
-- [ ] P3-COM-3 Language filter offers the whole catalog, labelled in the reader's language (community#4)
+- [x] P3-COM-3 Language filter offers the whole catalog, labelled in the reader's language (community#4)
 - [ ] P3-COM-4 Waves inbox — archive, reveal, loadable avatars, a real "Find people" route (community#10)
 - [ ] P3-COM-5 Wave cap answers with a VIP dialog, not a raw English toast (community#8)
 - [ ] P3-COM-6 "Serious learners" segment tab (`activeWithin=7d`) (community#9)

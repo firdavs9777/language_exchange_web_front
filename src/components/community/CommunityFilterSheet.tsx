@@ -4,11 +4,13 @@ import { useTranslation } from "react-i18next";
 import { X, Loader2, Users, Link2 } from "lucide-react";
 import { RootState } from "../../store";
 import { COMMON_LANGUAGES } from "./type";
+import { languageOptions, LanguageOption } from "./lib/languageOptions";
 import { CommunityFilters, Me, buildCommunityQuery } from "./lib/buildCommunityQuery";
 import { DEFAULT_FILTERS } from "./lib/filterStorage";
 import { countryOptions } from "./lib/countries";
 import {
   useGetCommunityCountQuery,
+  useGetLanguagesQuery,
   useGetTopicsQuery,
 } from "../../store/slices/communitySlice";
 
@@ -127,6 +129,21 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
   // Labels in the reader's language; recomputed only when it changes.
   const uiLocale = (i18n && i18n.language) || "en";
   const countries = useMemo(() => countryOptions(uiLocale), [uiLocale]);
+  // The whole catalog (GET /languages, the list the app filters on), labelled
+  // in the reader's language. Until it arrives — or if it fails — the ten
+  // common languages keep the filter usable rather than empty.
+  const { data: languagesResult } = useGetLanguagesQuery(undefined, { skip: !open });
+  const catalogLanguages = useMemo<LanguageOption[]>(() => {
+    const built = languageOptions(languagesResult && languagesResult.data, uiLocale);
+    if (built.length > 0) return built;
+    return COMMON_LANGUAGES.map((name) => ({ value: name as string, label: name as string }));
+  }, [languagesResult, uiLocale]);
+
+  /** The list, plus a value from an old link or saved filter it no longer has. */
+  const languageChoices = (current?: string): LanguageOption[] =>
+    current && !catalogLanguages.some((option) => option.value === current)
+      ? [{ value: current, label: current }].concat(catalogLanguages)
+      : catalogLanguages;
 
   const me = useSelector(
     (state: RootState) => state.auth.userInfo?.user
@@ -349,9 +366,9 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
                   className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
                 >
                   <option value="">{t("communityMain.filterSheet.any") || "Any"}</option>
-                  {COMMON_LANGUAGES.map((lang) => (
-                    <option key={lang} value={lang}>
-                      {lang}
+                  {languageChoices(value.nativeLanguage).map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
                     </option>
                   ))}
                 </select>
@@ -366,9 +383,9 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
                   className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
                 >
                   <option value="">{t("communityMain.filterSheet.any") || "Any"}</option>
-                  {COMMON_LANGUAGES.map((lang) => (
-                    <option key={lang} value={lang}>
-                      {lang}
+                  {languageChoices(value.learningLanguage).map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
                     </option>
                   ))}
                 </select>

@@ -364,3 +364,48 @@ describe("the filter sheet under a tab lock", () => {
     expect(countRequests()[0]).toContain("gender=female");
   });
 });
+
+describe("languages come from the catalog (community#4)", () => {
+  const CATALOG = [
+    { code: "en", name: "English", nativeName: "English" },
+    { code: "ko", name: "Korean", nativeName: "한국어" },
+    { code: "uz", name: "Uzbek", nativeName: "Oʻzbek" },
+    { code: "ar", name: "Arabic", nativeName: "العربية" },
+    { code: "ar-EG", name: "Arabic (Egypt)", nativeName: "العربية (مصر)" },
+  ];
+
+  beforeEach(() => {
+    const previous = (global as any).fetch;
+    (global as any).fetch = jest.fn((input: any) => {
+      const url = typeof input === "string" ? input : input?.url || "";
+      if (/\/api\/v1\/languages(\?|$)/.test(url)) {
+        requestedUrls.push(url);
+        return Promise.resolve(
+          new Response(JSON.stringify({ success: true, data: CATALOG }), {
+            status: 200,
+            headers: { "content-type": "application/json" },
+          })
+        );
+      }
+      return previous(input);
+    });
+  });
+
+  const optionValues = (select: Element) =>
+    Array.from(select.querySelectorAll("option")).map((o) => (o as HTMLOptionElement).value);
+
+  it("offers Uzbek and one Arabic, sending the English name", async () => {
+    const { container, onChange } = renderSheet();
+    await waitFor(() => expect(optionValues(selects(container)[0])).toContain("Uzbek"));
+    expect(optionValues(selects(container)[0]).filter((v) => v === "Arabic")).toHaveLength(1);
+    expect(optionValues(selects(container)[0])).not.toContain("Arabic (Egypt)");
+    fireEvent.change(selects(container)[0], { target: { value: "Uzbek" } });
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ nativeLanguage: "Uzbek" }));
+  });
+
+  it("keeps a value from an old link that the catalog no longer lists", async () => {
+    const { container } = renderSheet({ ...DEFAULT_FILTERS, learningLanguage: "Klingon" });
+    await waitFor(() => expect(optionValues(selects(container)[1])).toContain("Uzbek"));
+    expect(optionValues(selects(container)[1])).toContain("Klingon");
+  });
+});
