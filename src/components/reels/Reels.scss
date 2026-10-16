@@ -25,3 +25,13 @@
 .reel-btn-primary { background: #f5b800; color: #111; }
 .reel-btn-ghost { background: transparent; color: #4b5563; }
 .reel-btn:disabled { opacity: 0.5; }
+.reels-page { max-inline-size: 960px; margin-inline: auto; padding: 16px; }
+.reels-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-block-end: 16px; }
+.reels-title { font-size: 1.5rem; font-weight: 800; margin: 0; }
+.reels-state { padding-block: 64px; text-align: center; color: #6b7280; }
+.reels-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+.reel-tile { position: relative; aspect-ratio: 9 / 16; overflow: hidden; border: 0; padding: 0; border-radius: 10px; background: #111; }
+.reel-tile-media { inline-size: 100%; block-size: 100%; object-fit: cover; display: block; }
+.reel-tile-play { position: absolute; inset-block-start: 8px; inset-inline-end: 8px; color: #fff; opacity: 0.85; }
+.reel-tile-meta { position: absolute; inset-inline: 0; inset-block-end: 0; display: flex; justify-content: space-between; padding: 6px 8px; color: #fff; font-size: 0.75rem; font-weight: 700; background: linear-gradient(transparent, rgba(0, 0, 0, 0.6)); }
+.reels-more { display: flex; justify-content: center; margin-block: 16px; }
