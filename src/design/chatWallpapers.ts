@@ -7,8 +7,9 @@
  * names and colours are lifted verbatim from
  * `lib/pages/chat/wallpaper/wallpaper_picker_screen.dart` (`_getPresets` and
  * `_gradients`). The coin-gated `premium_*` pack
- * (`wallpaper/premium_wallpapers.dart`) is deliberately absent: it is not in
- * this plan, and an unknown preset simply falls back to the default surface.
+ * (`wallpaper/premium_wallpapers.dart`) is RENDER-ONLY here (PREMIUM_WALLPAPERS
+ * below): the web sells no unlock, so the picker does not offer it, but a chat
+ * an app user dressed in one paints it.
  *
  * The colours live here rather than in a chat component because the chat
  * folder is token-only now (src/components/chat/chatStyling.test.ts). They are
@@ -77,6 +78,26 @@ export const GRADIENT_WALLPAPERS: ChatWallpaper[] = [
 export const CHAT_WALLPAPERS: ChatWallpaper[] = SOLID_WALLPAPERS.concat(
   GRADIENT_WALLPAPERS
 );
+
+export const PREMIUM_WALLPAPER_PREFIX = "premium_";
+
+/**
+ * The app's coin-unlocked Premium pack (lib/pages/chat/wallpaper/
+ * premium_wallpapers.dart), colours verbatim, drawn top-left to bottom-right.
+ * Not offered by the picker; painted when a conversation already wears one.
+ */
+export const PREMIUM_WALLPAPERS: ChatWallpaper[] = [
+  { name: "premium_aurora_borealis", label: "Aurora Borealis", gradientColors: ["#00c9ff", "#92fe9d", "#fc466b"] },
+  { name: "premium_golden_hour", label: "Golden Hour", gradientColors: ["#ffd700", "#ff8c00", "#ff4500"] },
+  { name: "premium_galaxy", label: "Galaxy", gradientColors: ["#0f0c29", "#302b63", "#24243e"] },
+  { name: "premium_emerald_luxe", label: "Emerald Luxe", gradientColors: ["#11998e", "#38ef7d"] },
+  { name: "premium_royal_velvet", label: "Royal Velvet", gradientColors: ["#360033", "#0b8793"] },
+  { name: "premium_diamond_shine", label: "Diamond Shine", gradientColors: ["#b993d6", "#8ca6db"] },
+];
+
+export function isPremiumWallpaper(name: string | null | undefined): boolean {
+  return typeof name === "string" && name.indexOf(PREMIUM_WALLPAPER_PREFIX) === 0;
+}
 
 /**
  * The body the PUT carries for a preset: the name plus the colours, so the

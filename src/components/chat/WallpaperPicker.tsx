@@ -9,6 +9,7 @@ import {
   SOLID_WALLPAPERS,
   themePayload,
   ChatWallpaper,
+  isPremiumWallpaper,
 } from "../../design/chatWallpapers";
 import { useSetConversationThemeMutation } from "../../store/slices/chatSlice";
 
@@ -149,6 +150,15 @@ const WallpaperPicker: React.FC<WallpaperPickerProps> = ({
         data-chat-theme={selected}
         className="chat-wallpaper-swatch mt-4 h-20 w-full rounded-card border border-line dark:border-line-dark"
       />
+      {isPremiumWallpaper(currentPreset) ? (
+        <p
+          data-testid="wallpaper-premium-hint"
+          className="pt-2 text-xs text-ink-500 dark:text-ink-400"
+        >
+          {t("chatPage.wallpaper.premiumInUse") ||
+            "This chat uses a Premium wallpaper from the app. Choosing another one changes it for both of you."}
+        </p>
+      ) : null}
 
       <h3 className={SECTION}>{t("chatPage.wallpaper.plain") || "Plain"}</h3>
       <div className="grid grid-cols-3 gap-2 pt-2 sm:grid-cols-4">

@@ -146,4 +146,15 @@ describe("WallpaperPicker", () => {
     renderPicker({ conversationId: "" });
     expect(screen.getByTestId("wallpaper-apply")).toBeDisabled();
   });
+
+  it("says when the chat wears a Premium wallpaper chosen in the app", () => {
+    renderPicker({ currentPreset: "premium_galaxy" });
+    expect(screen.getByTestId("wallpaper-premium-hint")).toHaveTextContent("Premium wallpaper");
+    expect(screen.getByTestId("wallpaper-preview")).toHaveAttribute("data-chat-theme", "premium_galaxy");
+  });
+
+  it("says nothing about premium for a free preset", () => {
+    renderPicker({ currentPreset: "navy" });
+    expect(screen.queryByTestId("wallpaper-premium-hint")).toBeNull();
+  });
 });

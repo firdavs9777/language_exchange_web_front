@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { CHAT_WALLPAPERS } from "../../design/chatWallpapers";
+import { CHAT_WALLPAPERS, PREMIUM_WALLPAPERS } from "../../design/chatWallpapers";
 
 /**
  * The chat colour tokens (Task H3).
@@ -178,12 +178,11 @@ describe("the wallpaper presets the picker offers are the ones the CSS can paint
     });
   });
 
-  it("offers no coin-gated premium preset", () => {
+  it("offers no coin-gated premium preset in the picker", () => {
     const premium = CHAT_WALLPAPERS.filter(
       (wallpaper) => wallpaper.name.indexOf("premium") !== -1
     );
     expect(premium).toEqual([]);
-    expect(indexCss).not.toContain('[data-chat-theme="premium');
   });
 
   it("leaves the default preset to the tokens -- it is not a wallpaper", () => {
@@ -195,5 +194,39 @@ describe("the wallpaper presets the picker offers are the ones the CSS can paint
 
   it("paints a swatch from the same rules as the pane", () => {
     expect(indexCss).toMatch(/\.chat-wallpaper-swatch\s*\{\s*background: var\(--chat-bg\);/);
+  });
+});
+
+describe("the app's premium pack renders, though the picker does not offer it (chat#18)", () => {
+  it("is exactly the app's six presets", () => {
+    expect(PREMIUM_WALLPAPERS.map((w) => w.name).sort()).toEqual([
+      "premium_aurora_borealis",
+      "premium_diamond_shine",
+      "premium_emerald_luxe",
+      "premium_galaxy",
+      "premium_golden_hour",
+      "premium_royal_velvet",
+    ]);
+  });
+
+  PREMIUM_WALLPAPERS.forEach((wallpaper) => {
+    it(`${wallpaper.name} has a [data-chat-theme] rule with the app's colours`, () => {
+      const rule = new RegExp(`\\[data-chat-theme="${wallpaper.name}"\\]\\s*\\{[^}]*--chat-bg:[^}]*\\}`);
+      const match = indexCss.match(rule);
+      expect(match).not.toBeNull();
+      (wallpaper.gradientColors as string[]).forEach((colour) => {
+        expect((match as RegExpMatchArray)[0]).toContain(colour);
+      });
+    });
+  });
+
+  it("paints an unknown premium_* preset with a premium gradient, not the default surface", () => {
+    expect(indexCss).toMatch(/\[data-chat-theme\^="premium_"\]\s*\{[^}]*--chat-bg:\s*linear-gradient/);
+  });
+
+  it("declares the prefix rule BEFORE the named rules, so the named ones win", () => {
+    expect(indexCss.indexOf('[data-chat-theme^="premium_"]')).toBeLessThan(
+      indexCss.indexOf('[data-chat-theme="premium_aurora_borealis"]')
+    );
   });
 });

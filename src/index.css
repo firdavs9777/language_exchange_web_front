@@ -368,8 +368,8 @@ html:lang(hi) {
    picker so the chat components stay token-only, and the names are the app's
    own (lib/pages/chat/wallpaper/wallpaper_picker_screen.dart) so a wallpaper
    chosen on a phone renders here and the other way round. The coin-gated
-   `premium_*` pack is deliberately not implemented -- an unknown preset name
-   matches no rule and falls back to --chat-bg, i.e. the default surface.
+   `premium_*` pack is render-only (PREMIUM_WALLPAPERS in
+   src/design/chatWallpapers.ts): painted below, never offered by the picker.
 
    src/design/chatWallpapers.ts holds the same list for the picker, and the
    styling test fails if the two drift apart.
@@ -408,6 +408,17 @@ html:lang(hi) {
 [data-chat-theme="gradient_fire"] { --chat-bg: linear-gradient(160deg, #f12711 0%, #f5af19 100%); }
 [data-chat-theme="gradient_winter"] { --chat-bg: linear-gradient(160deg, #e6dada 0%, #274046 100%); }
 [data-chat-theme="gradient_lavender"] { --chat-bg: linear-gradient(160deg, #ee9ca7 0%, #ffdde1 100%); }
+
+/* Premium pack (render only -- src/design/chatWallpapers.ts PREMIUM_WALLPAPERS).
+   The prefix rule comes first: a premium preset this build does not know yet
+   still reads as premium; the named rules below override it. */
+[data-chat-theme^="premium_"] { --chat-bg: linear-gradient(135deg, #302b63 0%, #b993d6 100%); }
+[data-chat-theme="premium_aurora_borealis"] { --chat-bg: linear-gradient(135deg, #00c9ff 0%, #92fe9d 50%, #fc466b 100%); }
+[data-chat-theme="premium_golden_hour"] { --chat-bg: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #ff4500 100%); }
+[data-chat-theme="premium_galaxy"] { --chat-bg: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); }
+[data-chat-theme="premium_emerald_luxe"] { --chat-bg: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+[data-chat-theme="premium_royal_velvet"] { --chat-bg: linear-gradient(135deg, #360033 0%, #0b8793 100%); }
+[data-chat-theme="premium_diamond_shine"] { --chat-bg: linear-gradient(135deg, #b993d6 0%, #8ca6db 100%); }
 
 /* The picker's swatches paint themselves from the same rules: the swatch
    carries data-chat-theme, so `background: var(--chat-bg)` is the preset. A

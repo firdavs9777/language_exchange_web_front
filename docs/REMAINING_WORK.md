@@ -62,7 +62,7 @@ Phase 3 Chat (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-par
 - [x] P3-CHAT-12 Waves are a greeting card, only 1–3 emoji are sticker-sized, and a bare-id sender lands on the right side (chat#8)
 - [x] P3-CHAT-13 Story shares, replies and reactions keep their story (chat#9)
 - [x] P3-CHAT-14 Live pins, the "edited" label, the "Forwarded" chip and every correction (chat#14)
-- [ ] P3-CHAT-15 The app's six premium wallpapers render on web (chat#18)
+- [x] P3-CHAT-15 The app's six premium wallpapers render on web (chat#18)
 - [ ] P3-CHAT-16 Search the messages of a conversation (chat#17)
 - [ ] P3-CHAT-17 Saved (bookmarked) messages: list, open, unbookmark (chat#17)
 - [ ] P3-CHAT-18 Archive / unarchive conversations, and mute for 1 hour, 8 hours, 1 week or always (chat#17)

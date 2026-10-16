@@ -204,7 +204,8 @@
       "gradient_fire": "Fire",
       "gradient_winter": "Winter",
       "gradient_lavender": "Lavender",
-      "gradient_aurora": "Aurora"
+      "gradient_aurora": "Aurora",
+      "premiumInUse": "This chat uses a Premium wallpaper from the app. Choosing another one changes it for both of you."
     },
     "jumpToLatest": "Jump to latest messages",
     "editDialog": {
