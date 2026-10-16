@@ -11,6 +11,7 @@ import { apiSlice } from "./apiSlice";
 import {
   communityApiSlice,
 } from "./communitySlice";
+import * as communitySliceExports from "./communitySlice";
 import {
   COMMUNITY_WAVES,
   COMMUNITY_WAVES_LIST,
@@ -331,5 +332,37 @@ describe("getWaves archive + reveal (community#10)", () => {
     const plain = new URL(calls[1].url);
     expect(plain.searchParams.get("archive")).toBeNull();
     expect(plain.searchParams.get("reveal")).toBeNull();
+  });
+});
+
+describe("dead endpoints are gone (community#12)", () => {
+  // Each pointed at a route the API does not serve; unused, but they invite
+  // reuse and every reuse is a silent 404.
+  it("has no endpoint for a route the API does not serve", () => {
+    const names = Object.keys((communityApiSlice as any).endpoints);
+    [
+      "getUserTopics",
+      "updateMyLanguages",
+      "getUsersByLanguage",
+      "getOnlineUsers",
+      "getRecentlyActive",
+      "getNewUsers",
+    ].forEach((name) => expect(names).not.toContain(name));
+  });
+
+  it("exports none of their hooks, nor the deprecated wave shims", () => {
+    const exported = communitySliceExports as any;
+    [
+      "useGetUserTopicsQuery",
+      "useUpdateMyLanguagesMutation",
+      "useGetUsersByLanguageQuery",
+      "useGetOnlineUsersQuery",
+      "useGetRecentlyActiveQuery",
+      "useGetNewUsersQuery",
+      "useGetReceivedWavesQuery",
+      "useGetSentWavesQuery",
+      "useMarkWaveReadMutation",
+      "useRespondToWaveMutation",
+    ].forEach((name) => expect(exported[name]).toBeUndefined());
   });
 });

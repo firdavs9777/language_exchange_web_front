@@ -226,12 +226,6 @@ export const communityApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 60,
     }),
-    getUserTopics: builder.query({
-      query: (userId: string) => ({
-        url: `${COMMUNITY_TOPICS}/user/${userId}`,
-      }),
-      providesTags: ["Community"],
-    }),
     // `PUT /api/v1/community/topics/my` with `{ topics }` -- routes/community.js
     // and controllers/community.js `updateMyTopics`. This used to post
     // `{ topicIds }` to `/topics/my-topics`, an endpoint the API has never
@@ -274,52 +268,6 @@ export const communityApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 300, // Cache for 5 minutes
     }),
-    updateMyLanguages: builder.mutation({
-      query: ({ native, learning }: { native: string[]; learning: string[] }) => ({
-        url: `${LANGUAGES_URL}/my-languages`,
-        method: "PUT",
-        body: { native, learning },
-      }),
-      invalidatesTags: ["User"],
-    }),
-    getUsersByLanguage: builder.query({
-      query: ({ languageCode, type = 'all', page = 1, limit = 20 }: {
-        languageCode: string;
-        type?: 'native' | 'learning' | 'all';
-        page?: number;
-        limit?: number;
-      }) => ({
-        url: `${LANGUAGES_URL}/users?language=${languageCode}&type=${type}&page=${page}&limit=${limit}`,
-      }),
-      providesTags: ["Community"],
-    }),
-
-    // Online Status
-    getOnlineUsers: builder.query({
-      query: ({ page = 1, limit = 20 } = {}) => ({
-        url: `${COMMUNITY_URL}/online?page=${page}&limit=${limit}`,
-      }),
-      keepUnusedDataFor: 30,
-      providesTags: ["Community"],
-    }),
-
-    // Recently Active
-    getRecentlyActive: builder.query({
-      query: ({ page = 1, limit = 20 } = {}) => ({
-        url: `${COMMUNITY_URL}/recently-active?page=${page}&limit=${limit}`,
-      }),
-      keepUnusedDataFor: 60,
-      providesTags: ["Community"],
-    }),
-
-    // New Users
-    getNewUsers: builder.query({
-      query: ({ page = 1, limit = 20 } = {}) => ({
-        url: `${COMMUNITY_URL}/new?page=${page}&limit=${limit}`,
-      }),
-      keepUnusedDataFor: 60,
-      providesTags: ["Community"],
-    }),
   }),
 });
 
@@ -340,53 +288,9 @@ export const {
   useMarkWavesReadMutation,
   // Topics
   useGetTopicsQuery,
-  useGetUserTopicsQuery,
   useUpdateMyTopicsMutation,
   useGetUsersByTopicQuery,
   // Languages
   useGetLanguagesQuery,
-  useUpdateMyLanguagesMutation,
-  useGetUsersByLanguageQuery,
-  // Discovery
-  useGetOnlineUsersQuery,
-  useGetRecentlyActiveQuery,
-  useGetNewUsersQuery,
 } = communityApiSlice;
 export default communityApiSlice.reducer;
-
-// ---------------------------------------------------------------------------
-// Deprecated wave-hook compatibility shims
-// ---------------------------------------------------------------------------
-// `src/components/community/Waves.tsx` (pre-existing, NOT part of this task)
-// still imports `useGetReceivedWavesQuery`, `useGetSentWavesQuery`, and
-// `useRespondToWaveMutation`. Those backed `/wave/received`, `/wave/sent`,
-// `/wave/:id/respond` — routes that never existed on the backend and have
-// now been removed from this slice in favor of the real routes above
-// (`getWaves` / `markWavesRead`). The real API has no "received vs sent
-// inbox" split and no accept/decline step (a wave is auto-mutual — see
-// `isMutual` in `sendWave`'s response) — the whole Waves.tsx inbox needs a
-// redesign against the real `{data:{waves, unreadCount}}` contract, tracked
-// as a follow-up "waves-UI" task.
-//
-// These shims exist ONLY so `react-scripts build` stays green until that
-// task lands. `useGetReceivedWavesQuery`/`useGetSentWavesQuery` adapt the new
-// `{data:{waves,unreadCount}}` payload back into the old flat-array `data`
-// shape Waves.tsx expects (so `.filter`/`.map` don't runtime-crash); they do
-// NOT distinguish received vs. sent (the real endpoint returns one combined
-// list). `useRespondToWaveMutation` is aliased to `useMarkWavesReadMutation`
-// and becomes a harmless no-op when called with `{waveId, accept}` (not a
-// `string[]`, so no `waveIds` are sent) — it no longer accepts/declines
-// anything. Do NOT build new features on these; use `useGetWavesQuery` /
-// `useMarkWavesReadMutation` directly instead.
-export function useGetReceivedWavesQuery(arg?: any, options?: any) {
-  const result = useGetWavesQuery(arg, options);
-  return {
-    ...result,
-    data: result?.data
-      ? { ...result.data, data: result.data.data?.waves || [] }
-      : result?.data,
-  };
-}
-export const useGetSentWavesQuery = useGetReceivedWavesQuery;
-export const useMarkWaveReadMutation = useMarkWavesReadMutation;
-export const useRespondToWaveMutation = useMarkWavesReadMutation;
