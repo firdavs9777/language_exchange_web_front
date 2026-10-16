@@ -3251,5 +3251,15 @@
       "deleteBody": "Members lose the club. Gatherings already planned will still happen.",
       "deleteTitle": "Delete {{name}}?"
     }
+  },
+  "voiceRooms": {
+    "errors": {
+      "full": "This room is full.",
+      "ended": "This room has ended.",
+      "blocked": "You can't join this room.",
+      "vipToCreate": "Creating voice rooms needs a VIP plan.",
+      "gone": "This room is no longer available.",
+      "generic": "Something went wrong. Try again."
+    }
   }
 }
