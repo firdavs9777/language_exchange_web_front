@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { MemoryRouter } from "react-router-dom";
+import { toast } from "react-toastify";
 import CreateMoment from "./CreateMoment";
 
 jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "", i18n: { language: "en" } }) }));
@@ -13,9 +14,11 @@ jest.mock("react-toastify", () => ({
 
 const mockCreate = jest.fn();
 const mockUpload = jest.fn();
+const mockDelete = jest.fn();
 let mockAppConfig: any = { data: undefined, isError: false };
 jest.mock("../../store/slices/momentsSlice", () => ({
   useCreateMomentMutation: () => [mockCreate],
+  useDeleteMomentMutation: () => [mockDelete],
   useUploadMomentPhotosMutation: () => [mockUpload],
   useUploadMomentVideoMutation: () => [mockUpload],
   useUploadMomentAudioMutation: () => [mockUpload],
@@ -41,6 +44,7 @@ beforeEach(() => {
   mockAppConfig = { data: undefined, isError: false };
   mockCreate.mockReturnValue({ unwrap: () => Promise.resolve({ data: { _id: "new1" } }) });
   mockUpload.mockReturnValue({ unwrap: () => Promise.resolve({}) });
+  mockDelete.mockReturnValue({ unwrap: () => Promise.resolve({}) });
 });
 
 const describe_ = (text: string) =>
@@ -161,5 +165,75 @@ describe("scheduling", () => {
     describe_("Hi");
     fireEvent.change(screen.getByLabelText("Schedule"), { target: { value: "2020-01-02T09:30" } });
     expect(screen.getByRole("button", { name: "Share" })).toBeDisabled();
+  });
+});
+
+describe("media-only moments (moments#4)", () => {
+  const originalCreate = (URL as any).createObjectURL;
+  const originalRevoke = (URL as any).revokeObjectURL;
+  beforeAll(() => {
+    // jsdom has no object URLs; the composer previews every picked file.
+    (URL as any).createObjectURL = jest.fn(() => "blob:preview");
+    (URL as any).revokeObjectURL = jest.fn();
+  });
+  afterAll(() => {
+    (URL as any).createObjectURL = originalCreate;
+    (URL as any).revokeObjectURL = originalRevoke;
+  });
+
+  const pickPhoto = (container: HTMLElement) => {
+    const input = container.querySelector('input[type="file"][accept="image/*"]') as HTMLInputElement;
+    fireEvent.change(input, {
+      target: { files: [new File(["x"], "a.jpg", { type: "image/jpeg" })] },
+    });
+  };
+
+  it("shares a photo with no caption", async () => {
+    const { container } = renderCreate();
+    expect(screen.getByRole("button", { name: "Share" })).toBeDisabled();
+    pickPhoto(container);
+    expect(screen.getByRole("button", { name: "Share" })).not.toBeDisabled();
+    share();
+    await waitFor(() => expect(mockUpload).toHaveBeenCalled());
+    expect(payload().description).toBe("");
+    expect(mockUpload.mock.calls[0][0].momentId).toBe("new1");
+    expect(mockDelete).not.toHaveBeenCalled();
+  });
+
+  it("shares a video with no caption", async () => {
+    const { container } = renderCreate();
+    fireEvent.click(screen.getByRole("button", { name: /Video/ }));
+    const input = container.querySelector('input[type="file"][accept="video/*"]') as HTMLInputElement;
+    fireEvent.change(input, { target: { files: [new File(["v"], "v.mp4", { type: "video/mp4" })] } });
+    expect(screen.getByRole("button", { name: "Share" })).not.toBeDisabled();
+  });
+
+  it("a text moment still needs words, background or not", () => {
+    renderCreate();
+    fireEvent.click(screen.getByRole("button", { name: /Text/ }));
+    fireEvent.click(screen.getByLabelText("gradient_ocean"));
+    expect(screen.getByRole("button", { name: "Share" })).toBeDisabled();
+  });
+
+  it("a failed upload of a caption-less moment deletes it and stays in the composer", async () => {
+    mockUpload.mockReturnValue({ unwrap: () => Promise.reject({ status: 500 }) });
+    const { container } = renderCreate();
+    pickPhoto(container);
+    share();
+    await waitFor(() => expect(mockDelete).toHaveBeenCalledWith("new1"));
+    expect(toast.error).toHaveBeenCalled();
+    expect(toast.warn).not.toHaveBeenCalled();
+    // Still here, the photo still attached, ready to retry.
+    expect(screen.getByRole("button", { name: "Share" })).not.toBeDisabled();
+  });
+
+  it("a failed upload WITH a caption keeps the moment and warns, as before", async () => {
+    mockUpload.mockReturnValue({ unwrap: () => Promise.reject({ status: 500 }) });
+    const { container } = renderCreate();
+    describe_("Busan");
+    pickPhoto(container);
+    share();
+    await waitFor(() => expect(toast.warn).toHaveBeenCalled());
+    expect(mockDelete).not.toHaveBeenCalled();
   });
 });

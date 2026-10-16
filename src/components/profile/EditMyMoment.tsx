@@ -136,9 +136,11 @@ const EditMyMoment: React.FC = () => {
   );
 
   const total = existingImages.length + imagePreviews.length;
-  // The server requires a description; a title is optional.
+  // A moment is a caption OR media: the caption may be cleared while the
+  // moment keeps (or is about to gain) a photo, video or voice note.
+  const hasMedia = existingImages.length > 0 || selectedImages.length > 0 || hasAvMedia;
   const canSubmit =
-    draft.description.trim() !== "" && !scheduleBlocked && !isUpdating && !isUploading;
+    (draft.description.trim() !== "" || hasMedia) && !scheduleBlocked && !isUpdating && !isUploading;
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>): void => {
     const files = Array.prototype.slice.call(event.target.files || []) as File[];
@@ -186,19 +188,25 @@ const EditMyMoment: React.FC = () => {
       return;
     }
 
+    const uploadPhotos = async () => {
+      if (selectedImages.length === 0) return;
+      const upload = new FormData();
+      selectedImages.forEach((file) => upload.append("file", file));
+      await uploadMomentPhotos({
+        momentId: momentId as string,
+        imageFiles: upload as any,
+      }).unwrap();
+    };
+
     try {
+      // updateMoment checks the photos ALREADY stored when the caption is
+      // cleared, so new photos go up first in that case.
+      const clearingCaption = changes.description !== undefined && changes.description === "";
+      if (clearingCaption) await uploadPhotos();
       if (Object.keys(changes).length > 0) {
         await updateMoment({ id: momentId, momentData: changes }).unwrap();
       }
-
-      if (selectedImages.length > 0) {
-        const upload = new FormData();
-        selectedImages.forEach((file) => upload.append("file", file));
-        await uploadMomentPhotos({
-          momentId: momentId as string,
-          imageFiles: upload as any,
-        }).unwrap();
-      }
+      if (!clearingCaption) await uploadPhotos();
 
       toast.success(t("editMoment.toast.updateSuccess"), TOAST);
       navigate("/my-moments");
@@ -272,7 +280,7 @@ const EditMyMoment: React.FC = () => {
                   onChange={(event) => set("description", event.target.value)}
                   placeholder={t("editMoment.form.descriptionPlaceholder") || ""}
                   className={`${FIELD} resize-none`}
-                  required
+                  required={!hasMedia}
                 />
               </div>
             </div>

@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
 import {
   useCreateMomentMutation,
+  useDeleteMomentMutation,
   useUploadMomentPhotosMutation,
   useUploadMomentVideoMutation,
   useUploadMomentAudioMutation,
@@ -115,6 +116,7 @@ const CreateMoment: React.FC = () => {
   const [uploadMomentPhotos] = useUploadMomentPhotosMutation();
   const [uploadMomentVideo] = useUploadMomentVideoMutation();
   const [uploadMomentAudio] = useUploadMomentAudioMutation();
+  const [deleteMoment] = useDeleteMomentMutation();
   const { t } = useTranslation();
 
   // Read the prompt handoff during the first render, not in an effect, so the
@@ -168,9 +170,15 @@ const CreateMoment: React.FC = () => {
   const videoInputRef = useRef<HTMLInputElement>(null);
   const userInfo = useSelector((state: any) => state.auth.userInfo?.user);
 
+  // A moment is a caption OR media (backend momentValidator + hasMomentContent).
+  // Only the active mode's media counts; a text moment always needs words.
+  const hasMedia =
+    (mediaMode === "photo" && selectedImages.length > 0) ||
+    (mediaMode === "video" && selectedVideo !== null) ||
+    (mediaMode === "voice" && audioNote !== null);
   useEffect(() => {
-    setIsButtonEnabled(description.trim() !== "");
-  }, [description]);
+    setIsButtonEnabled(description.trim() !== "" || hasMedia);
+  }, [description, hasMedia]);
 
   // A later handoff while the composer is already mounted (e.g. Answer tapped
   // again from history). The first one was consumed by the state initialisers
@@ -313,12 +321,26 @@ const CreateMoment: React.FC = () => {
           await uploadMomentAudio({ momentId, formData }).unwrap();
         }
       } catch (uploadError) {
-        toast.warn("Posted, but media upload failed — try editing the moment to add it.", {
-          autoClose: 4000,
-          hideProgressBar: false,
-          theme: "dark",
-          transition: Bounce,
-        });
+        if (description.trim() === "") {
+          // Nothing but the media made this a moment: without it the feed
+          // would show an empty card. Take it back and let the user retry.
+          try {
+            await deleteMoment(momentId).unwrap();
+          } catch (e) {
+            // Best effort; the owner can still delete it from My moments.
+          }
+          toast.error(
+            t("moments_section.create.mediaFailedNothingPosted") ||
+              "The upload failed, so nothing was posted. Try again.",
+            { autoClose: 4000, hideProgressBar: false, theme: "dark", transition: Bounce }
+          );
+          return;
+        }
+        toast.warn(
+          t("moments_section.create.mediaFailedPosted") ||
+            "Posted, but media upload failed — try editing the moment to add it.",
+          { autoClose: 4000, hideProgressBar: false, theme: "dark", transition: Bounce }
+        );
         navigate("/moments");
         return;
       }

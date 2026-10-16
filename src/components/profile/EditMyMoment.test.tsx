@@ -136,8 +136,8 @@ it("saves a moment that has no title", async () => {
   expect(mockUpdateMoment.mock.calls[0][0].momentData).toEqual({ description: "Only words" });
 });
 
-it("refuses to save an empty description", async () => {
-  renderEditor();
+it("refuses to save an empty description on a moment with no media", async () => {
+  renderEditor({ data: { ...MOMENT, imageUrls: [], mediaType: "text" } });
   fireEvent.change(screen.getByTestId("edit-moment-description"), { target: { value: "  " } });
   expect(screen.getByTestId("edit-moment-save")).toBeDisabled();
   fireEvent.submit(screen.getByTestId("edit-moment-form"));
@@ -290,4 +290,45 @@ describe("review fixes", () => {
     await waitFor(() => expect(mockUpdateMoment).toHaveBeenCalledTimes(1));
     expect(mockUpdateMoment.mock.calls[0][0].momentData).toEqual({ mood: "grateful" });
   });
+});
+
+it("clears the caption of a photo moment (moments#4)", async () => {
+  renderEditor();
+  fireEvent.change(screen.getByTestId("edit-moment-description"), { target: { value: "" } });
+  expect(screen.getByTestId("edit-moment-save")).not.toBeDisabled();
+  expect(screen.getByTestId("edit-moment-description")).not.toBeRequired();
+  fireEvent.submit(screen.getByTestId("edit-moment-form"));
+  await waitFor(() => expect(mockUpdateMoment).toHaveBeenCalledTimes(1));
+  expect(mockUpdateMoment.mock.calls[0][0].momentData).toEqual({ description: "" });
+});
+
+it("clears the caption of a video moment", async () => {
+  renderEditor({
+    data: { ...MOMENT, imageUrls: [], mediaType: "video", video: { url: "https://cdn.test/v.mp4" } },
+  });
+  fireEvent.change(screen.getByTestId("edit-moment-description"), { target: { value: "" } });
+  expect(screen.getByTestId("edit-moment-save")).not.toBeDisabled();
+});
+
+it("a text moment that gains photos and loses its caption uploads the photos first", async () => {
+  const order: string[] = [];
+  mockUploadPhotos.mockImplementation(() => {
+    order.push("upload");
+    return resolved();
+  });
+  mockUpdateMoment.mockImplementation(() => {
+    order.push("update");
+    return resolved();
+  });
+  const originalCreate = (URL as any).createObjectURL;
+  (URL as any).createObjectURL = jest.fn(() => "blob:preview");
+  // jsdom has no revokeObjectURL either; the editor revokes its previews on unmount.
+  if (!(URL as any).revokeObjectURL) (URL as any).revokeObjectURL = jest.fn();
+  const { container } = renderEditor({ data: { ...MOMENT, imageUrls: [], mediaType: "text" } });
+  const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+  fireEvent.change(input, { target: { files: [new File(["x"], "a.jpg", { type: "image/jpeg" })] } });
+  fireEvent.change(screen.getByTestId("edit-moment-description"), { target: { value: "" } });
+  fireEvent.submit(screen.getByTestId("edit-moment-form"));
+  await waitFor(() => expect(order).toEqual(["upload", "update"]));
+  (URL as any).createObjectURL = originalCreate;
 });

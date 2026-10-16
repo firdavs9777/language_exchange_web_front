@@ -72,7 +72,7 @@ Phase 3 Chat (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-par
 - [ ] P3-CHAT-PUSH Push unit chat (suite + build green, deployed, production smoke recorded)
 
 Phase 3 Moments (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase3.md`)
-- [ ] P3-MOM-1 Post and save photo-, video- or voice-only moments (moments#4)
+- [x] P3-MOM-1 Post and save photo-, video- or voice-only moments (moments#4)
 - [ ] P3-MOM-2 The app's 20 moment gradients, same colours (moments#5)
 - [ ] P3-MOM-3 Remove the Title field from the composer (moments#6)
 - [ ] P3-MOM-4 The moment's owner can delete other people's comments (moments#9)

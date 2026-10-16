@@ -546,7 +546,9 @@
       "addMood": "Add mood",
       "addLocation": "Add location",
       "addTags": "Add tags",
-      "tagPlaceholder": "Add a tag..."
+      "tagPlaceholder": "Add a tag...",
+      "mediaFailedNothingPosted": "The upload failed, so nothing was posted. Try again.",
+      "mediaFailedPosted": "Posted, but media upload failed — try editing the moment to add it."
     },
     "question": "What's on your mind,",
     "loading": "Loading",
