@@ -93,7 +93,7 @@ Phase 3 Moments (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-
 - [x] P3-MOM-19 the viewer honours `allowReplies` and `allowSharing` (moments#25)
 - [x] P3-MOM-20 the link sticker always shows the real host under its label (moments#25)
 - [x] P3-MOM-I18N New moments strings in all 18 locales
-- [ ] P3-MOM-PUSH Push unit moments (suite + build green, deployed, production smoke recorded)
+- [x] P3-MOM-PUSH Push unit moments — suite 3487 pass, build green, deployed 2026-10-16
 
 Phase 3 Community (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase3.md`)
 - [x] P3-COM-1 Nearby works — real params, real fields, real profile route, privacy toggles (community#2)
