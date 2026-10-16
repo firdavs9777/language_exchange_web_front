@@ -1641,3 +1641,30 @@
 .location-card--empty .location-card-open {
   display: none;
 }
+
+/* Wave greeting card (chat#8): the app's "👋 Hi!" card. */
+.wave-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--chat-card-in);
+  border: 1px solid var(--chat-line);
+  border-radius: 20px;
+}
+
+.modern-message.sent .wave-card {
+  background: var(--chat-card-out);
+  border-color: var(--chat-card-out);
+}
+
+.wave-card-hand {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.wave-card-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--chat-accent);
+}

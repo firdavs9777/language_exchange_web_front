@@ -19,6 +19,7 @@ import { firstLink } from "./utils/linkDetector";
 import CallMessageCard from "./components/CallMessageCard";
 import LocationMessageCard, { MessageLocation } from "./components/LocationMessageCard";
 import { CallData } from "./lib/callLabel";
+import { isEmojiOnly, isWaveText } from "./lib/messageKinds";
 
 /**
  * One message, lifted out of `ChatContent`'s `.map` unchanged — same classes,
@@ -234,7 +235,11 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
   }
 
   const isVoice = msg.messageType === "voice" || msg.media?.type === "voice";
-  const isSticker = msg.messageType === "sticker";
+  // By content, like the app: a lone wave is a greeting card, 1-3 emoji are
+  // sticker-sized, and a sentence stored as 'sticker' (the wave mirror does
+  // that) is ordinary text.
+  const isWave = !msg.media?.type && isWaveText(msg.message);
+  const isSticker = !isWave && !msg.media?.type && isEmojiOnly(msg.message);
   const isGif =
     msg.messageType === "gif" ||
     (typeof msg.message === "string" &&
@@ -244,7 +249,7 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
   const isCall = msg.messageType === "call" || msg.media?.type === "call";
   const isLocation = msg.media?.type === "location";
   const hasMedia = !!msg.media?.type && !isVoice && !isCall && !isLocation;
-  const isPlainText = !isSticker && !isGif && !isVoice && !hasMedia && !isCall && !isLocation;
+  const isPlainText = !isWave && !isSticker && !isGif && !isVoice && !hasMedia && !isCall && !isLocation;
   const link = isPlainText && msg.message ? firstLink(msg.message) : null;
 
   const renderVoiceMessage = () => {
@@ -421,7 +426,7 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
 
       <div className="message-wrapper">
         <div
-          className={`message-bubble${isVoice ? " voice-bubble" : ""}${hasMedia ? " media-bubble" : ""}${isSticker ? " sticker-bubble" : ""}${isCall ? " call-bubble" : ""}${bubblePositionClass(position)}`}
+          className={`message-bubble${isVoice ? " voice-bubble" : ""}${hasMedia ? " media-bubble" : ""}${isSticker ? " sticker-bubble" : ""}${isWave ? " sticker-bubble wave-bubble" : ""}${isCall ? " call-bubble" : ""}${bubblePositionClass(position)}`}
         >
           {isCall ? (
             <CallMessageCard
@@ -430,6 +435,11 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
               isSent={isSent}
               otherName={otherUserName}
             />
+          ) : isWave ? (
+            <div className="wave-card" data-testid="wave-card">
+              <span className="wave-card-hand" aria-hidden="true">{msg.message.trim()}</span>
+              <span className="wave-card-text">{t("chatPage.wave.hi") || "Hi!"}</span>
+            </div>
           ) : isSticker ? (
             <div className="sticker-message">{msg.message}</div>
           ) : isGif ? (
@@ -523,7 +533,7 @@ const MessageBubbleView: React.FC<MessageBubbleProps> = ({
           />
         )}
 
-        {!isSent && !isSticker && !isVoice && !hasMedia && !isCall && !isLocation && msg.message && (
+        {!isSent && !isWave && !isSticker && !isVoice && !hasMedia && !isCall && !isLocation && msg.message && (
           <div className="message-chip-row">
             {/* Hide Correct chip once a correction already exists */}
             {!(msg.corrections && msg.corrections.length > 0) && (

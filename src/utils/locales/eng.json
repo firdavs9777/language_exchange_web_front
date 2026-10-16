@@ -291,6 +291,9 @@
       "denied": "Location permission was denied",
       "failed": "Couldn't get your location",
       "sendFailed": "Couldn't send your location"
+    },
+    "wave": {
+      "hi": "Hi!"
     }
   },
   "newChat": {

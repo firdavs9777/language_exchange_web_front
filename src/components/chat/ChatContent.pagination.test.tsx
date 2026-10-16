@@ -847,3 +847,53 @@ it("still prefers read over delivered", async () => {
   await waitFor(() => expect(screen.getByTestId("msg-status-read")).toBeInTheDocument());
   expect(screen.queryByTestId("msg-status-delivered")).not.toBeInTheDocument();
 });
+
+// --- Bare-id senders (chat#8) ------------------------------------------------
+//
+// The wave mirror and story_share emits carried an UNPOPULATED sender: a bare
+// id string. `msg.sender._id` was undefined, so a wave the web user sent
+// showed as RECEIVED, with a broken avatar, until a reload.
+
+it("puts a wave I sent, with a bare-id sender, on my side", async () => {
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+
+  socket.fire("messageSent", {
+    message: {
+      _id: "wave-1",
+      message: "\u{1F44B}",
+      messageType: "sticker",
+      createdAt: "2026-09-20T12:00:00.000Z",
+      sender: "me",
+      receiver: "u2",
+    },
+    receiverId: "u2",
+  });
+
+  await waitFor(() => expect(renderedIds()).toContain("wave-1"));
+  const bubble = document.querySelector('[data-msg-id="wave-1"]') as HTMLElement;
+  expect(bubble).toHaveClass("sent");
+  expect(bubble.querySelector('[data-testid="wave-card"]')).not.toBeNull();
+});
+
+it("puts their wave, with a bare-id sender, on their side", async () => {
+  const socket = fakeSocket();
+  mockUseSocket.mockReturnValue({ socket, isConnected: true, emit: jest.fn() });
+  renderChat();
+
+  socket.fire("newMessage", {
+    message: {
+      _id: "wave-2",
+      message: "\u{1F44B}",
+      messageType: "sticker",
+      createdAt: "2026-09-20T12:00:00.000Z",
+      sender: "u2",
+      receiver: "me",
+    },
+    unreadCount: 1,
+  });
+
+  await waitFor(() => expect(renderedIds()).toContain("wave-2"));
+  expect(document.querySelector('[data-msg-id="wave-2"]')).toHaveClass("received");
+});

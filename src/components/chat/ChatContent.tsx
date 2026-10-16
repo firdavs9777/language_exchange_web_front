@@ -72,6 +72,7 @@ import {
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import ChatInfoPanel from "./ChatInfoPanel";
 import LocationShareButton from "./components/LocationShareButton";
+import { normalizeMessage, senderIdOf } from "./lib/normalizeMessage";
 
 interface RootState {
   auth: {
@@ -433,7 +434,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       senderId?: string;
     }) => {
       console.log("[ChatContent] newMessage received:", notificationData);
-      const newMsg = notificationData.message;
+      const newMsg = normalizeMessage(notificationData.message);
       const currentSelectedUser = selectedUserRef.current;
 
       const receiverId = getReceiverId(newMsg.receiver);
@@ -468,7 +469,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
     };
 
     const handleMediaMessage = (data: { message: Message }) => {
-      const newMsg = data.message;
+      const newMsg = normalizeMessage(data.message);
       const currentSelectedUser = selectedUserRef.current;
 
       const receiverId = getReceiverId(newMsg.receiver);
@@ -490,14 +491,15 @@ const ChatContent: React.FC<ChatContentProps> = ({
     };
 
     const handleMessageSent = (data: { message: Message; receiverId: string }) => {
+      const sent = normalizeMessage(data.message);
       const currentSelectedUser = selectedUserRef.current;
       if (data.receiverId === currentSelectedUser) {
         setMessages((prev) => {
           // The server has the message. One tick; `messageDelivered` upgrades
           // it to two when the other person's client picks it up.
-          if (prev.some((msg) => msg._id === data.message._id)) {
+          if (prev.some((msg) => msg._id === sent._id)) {
             return prev.map((msg) =>
-              msg._id === data.message._id && statusRank(msg.status) < statusRank("sent")
+              msg._id === sent._id && statusRank(msg.status) < statusRank("sent")
                 ? { ...msg, status: "sent" }
                 : msg
             );
@@ -515,16 +517,16 @@ const ChatContent: React.FC<ChatContentProps> = ({
             (msg) =>
               (msg.isOptimistic ||
                 (msg.status === "error" && String(msg._id).indexOf("temp-") === 0)) &&
-              (msg.message || "") === (data.message.message || "")
+              (msg.message || "") === (sent.message || "")
           );
           if (pending >= 0) {
             const next = [...prev];
-            next[pending] = { ...data.message, status: "sent" };
+            next[pending] = { ...sent, status: "sent" };
             return next;
           }
-          return [...prev, { ...data.message, status: "sent" }];
+          return [...prev, { ...sent, status: "sent" }];
         });
-        rememberInThread(data.message, currentSelectedUser);
+        rememberInThread(sent, currentSelectedUser);
       }
     };
 
@@ -713,7 +715,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
       setMessages((prev) => {
         const existingIds = new Set(prev.map((m) => m._id));
         const incoming = batch
-          .map((entry) => entry?.message)
+          .map((entry) => (entry && entry.message ? normalizeMessage(entry.message) : undefined))
           .filter((msg): msg is Message => {
             if (!msg || !msg._id || existingIds.has(msg._id)) return false;
             const receiverId = getReceiverId(msg.receiver);
@@ -2189,7 +2191,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
             <DateSeparator label={group.date} />
 
             {group.messages.map((msg: Message, index: number) => {
-              const isSent = msg.sender._id === userId;
+              const isSent = senderIdOf(msg) === userId;
               const position = getMessagePosition(group.messages, index);
               const senderImages = msg.sender.images;
               const avatarUrl =

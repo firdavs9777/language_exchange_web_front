@@ -205,11 +205,9 @@ describe("link cards", () => {
     expect(screen.queryByTestId("message-link-card")).not.toBeInTheDocument();
   });
 
-  it("shows no card on a sticker", () => {
-    renderBubble({
-      message: message({ message: "https://example.com", messageType: "sticker" }),
-    });
-    expect(screen.queryByTestId("message-link-card")).not.toBeInTheDocument();
+  it("shows no link card on an emoji sticker", () => {
+    renderBubble({ message: message({ message: "\u{1F602}", messageType: "sticker" }) });
+    expect(screen.queryByTestId("message-link-card")).toBeNull();
   });
 });
 
@@ -383,5 +381,33 @@ describe("location messages (chat#7)", () => {
   it("draws a card with no link when the coordinates are missing", () => {
     renderBubble({ message: locationMessage(undefined) });
     expect(screen.getByTestId("location-card")).not.toHaveAttribute("href");
+  });
+});
+
+describe("waves and stickers are sized by what they say (chat#8)", () => {
+  it("draws a greeting card for a wave, with the hand the message carried", () => {
+    renderBubble({ message: message({ message: "\u{1F44B}\u{1F3FD}", messageType: "sticker" }) });
+    const card = screen.getByTestId("wave-card");
+    expect(card).toHaveTextContent("\u{1F44B}\u{1F3FD}");
+    expect(card).toHaveTextContent("Hi!");
+    expect(document.querySelector(".sticker-message")).toBeNull();
+  });
+
+  it("draws a wave sentence stored as 'sticker' as a normal text bubble", () => {
+    renderBubble({
+      message: message({ message: "\u{1F44B} Hi! I'm learning Korean, want to practise?", messageType: "sticker" }),
+    });
+    expect(document.querySelector(".sticker-message")).toBeNull();
+    expect(document.querySelector(".message-text")).toHaveTextContent("I'm learning Korean");
+  });
+
+  it("draws one to three emoji at sticker size, whatever the messageType", () => {
+    renderBubble({ message: message({ message: "\u{1F602}\u{1F602}", messageType: "text" }) });
+    expect(document.querySelector(".sticker-message")).toHaveTextContent("\u{1F602}\u{1F602}");
+  });
+
+  it("draws four emoji as text", () => {
+    renderBubble({ message: message({ message: "\u{1F602}\u{1F602}\u{1F602}\u{1F602}" }) });
+    expect(document.querySelector(".sticker-message")).toBeNull();
   });
 });
