@@ -3194,6 +3194,29 @@
       "scopeMember": "Joined",
       "scopeMine": "My languages",
       "start": "Start a club"
+    },
+    "detail": {
+      "back": "See other clubs",
+      "edit": "Edit club",
+      "host": "Host a gathering for this club",
+      "join": "Join club",
+      "leave": "Leave club",
+      "leaveTitle": "Leave this club?",
+      "metTimes_one": "Met once",
+      "metTimes_other": "Met {{count}} times",
+      "neverMet": "Hasn't met yet",
+      "noGatherings": "Nothing planned yet.",
+      "upcoming": "Coming up",
+      "youOwn": "You own this club"
+    },
+    "people": {
+      "makeMember": "Remove organizer role",
+      "makeOrganizer": "Make organizer",
+      "organizer": "Organizer",
+      "owner": "Owner",
+      "remove": "Remove from club",
+      "removeTitle": "Remove {{name}}?",
+      "title": "Members · {{count}}"
     }
   }
 }

@@ -142,7 +142,7 @@ Phase 4 Gatherings/clubs (plan `bananatalk_app/docs/superpowers/plans/2026-10-16
 - [x] P4-GATH-4 Gathering page: details, RSVP / request / leave, report or block the host
 - [x] P4-GATH-5 Host a gathering: create and edit form with the backend's limits
 - [x] P4-GATH-6 Host decisions: join requests, run it or call it off, cancel, end
-- [ ] P4-GATH-7 Club page: members and roles, join/leave, upcoming gatherings, manage members
+- [x] P4-GATH-7 Club page: members and roles, join/leave, upcoming gatherings, manage members
 - [ ] P4-GATH-8 Create, edit and delete a club
 - [ ] P4-GATH-9 Optional cover photo for a gathering or a club
 - [ ] P4-GATH-10 Routes and nav entry behind `webGatheringsEnabled`; nothing visible while it is off
