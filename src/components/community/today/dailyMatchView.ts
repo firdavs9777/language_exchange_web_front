@@ -1,17 +1,9 @@
-import { BASE_URL } from "../../../constants";
 import { COUNTRY_CODES } from "../lib/countries";
 import { DailyMatchUser } from "./types";
 
-/**
- * The first photo, as a URL a browser can load. Daily matches carry raw
- * `images` (no `imageUrls`), so this is the rule MainNavbar already uses: an
- * absolute URL as-is, a relative storage path under the API's /uploads.
- */
-export function photoUrl(images: string[] | undefined): string | undefined {
-  const first = (images || []).find((image) => typeof image === "string" && image.trim());
-  if (!first) return undefined;
-  return first.startsWith("http") ? first : `${BASE_URL}/uploads/${first}`;
-}
+// Moved to utils so every surface resolves photos the same way; re-exported
+// so existing imports keep working.
+export { photoUrl } from "../../../utils/photoUrl";
 
 /**
  * Why this person is in today's batch, in the reader's language. The codes

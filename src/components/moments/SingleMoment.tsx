@@ -27,6 +27,8 @@ import MomentOverflowMenu from "./actions/MomentOverflowMenu";
 import ScheduledBadge from "./ScheduledBadge";
 import { isScheduledLater } from "./lib/scheduling";
 import TranslatableText from "./TranslatableText";
+import PromptAnswerTag from "./PromptAnswerTag";
+import { MomentPrompt } from "./types";
 import MomentReactionRow from "./actions/MomentReactionRow";
 import ShareButton from "../linking/ShareButton";
 import MomentVideoPlayer from "./media/MomentVideoPlayer";
@@ -69,6 +71,7 @@ interface MomentProps {
   audio?: { url: string; duration: number; waveform: number[] };
   backgroundColor?: string;
   scheduledFor?: string | null;
+  prompt?: MomentPrompt | null;
 }
 
 interface AuthState {
@@ -102,6 +105,7 @@ const SingleMoment: React.FC<MomentProps> = ({
   audio,
   backgroundColor,
   scheduledFor,
+  prompt,
 }) => {
   const userId = useSelector(
     (state: RootState) => state.auth.userInfo?.user?._id
@@ -429,6 +433,8 @@ const SingleMoment: React.FC<MomentProps> = ({
 
         {/* Content */}
         <div className="px-2 xs:px-3 sm:px-4">
+          <PromptAnswerTag prompt={prompt} />
+
           {/* Text Content */}
           {title && (
             <h2 className="font-semibold text-gray-900 text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl mb-1 xs:mb-2 leading-tight no-underline decoration-none">

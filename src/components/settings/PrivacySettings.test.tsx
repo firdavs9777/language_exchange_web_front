@@ -12,7 +12,9 @@ jest.mock("react-router-dom", () => ({ useNavigate: () => () => {} }));
 // One stable object: the screen's `useEffect` depends on `userInfo.user`, so a
 // fresh literal per call would re-run it on every render for ever.
 const mockUserInfo = { user: { privacySettings: {} } };
-jest.mock("react-redux", () => ({ useSelector: () => mockUserInfo }));
+// A save writes the stored privacySettings back into the session, so the
+// screen also dispatches.
+jest.mock("react-redux", () => ({ useSelector: () => mockUserInfo, useDispatch: () => jest.fn() }));
 jest.mock("../../store/slices/usersSlice", () => ({
   useUpdateUserInfoMutation: () => [() => ({ unwrap: () => Promise.resolve({}) }), { isLoading: false }],
 }));

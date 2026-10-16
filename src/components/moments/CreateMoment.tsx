@@ -33,6 +33,7 @@ import { isFutureInput, localInputToIso } from "./lib/scheduling";
 import { useMomentSchedulingEnabled } from "./lib/useMomentSchedulingEnabled";
 import { useCurrentLocation } from "./fields/useCurrentLocation";
 import VoiceNoteRecorder from "./media/VoiceNoteRecorder";
+import ISO6391 from "iso-639-1";
 
 import {
   FaArrowLeft,
@@ -77,6 +78,36 @@ interface AudioNote {
   wf: number[];
 }
 
+// Prompt-of-the-day handoff: MainMoments navigates here with this router state
+// when the user taps "Answer" on the prompt card.
+interface PromptHandoff {
+  promptText?: string;
+  promptId?: string;
+  promptLanguage?: string;
+  promptEmoji?: string;
+}
+
+interface AnsweredPrompt {
+  id?: string;
+  text: string;
+  emoji?: string;
+}
+
+const readPromptHandoff = (state: unknown): PromptHandoff | null =>
+  state && typeof state === "object" ? (state as PromptHandoff) : null;
+
+const promptFromHandoff = (handoff: PromptHandoff | null): AnsweredPrompt | null =>
+  handoff && handoff.promptText
+    ? { id: handoff.promptId, text: handoff.promptText, emoji: handoff.promptEmoji }
+    : null;
+
+// The prompt's language as the language select's value (an ISO 639-1 code),
+// or null when it is missing or not one the select offers.
+const promptLanguageCode = (handoff: PromptHandoff | null): string | null => {
+  const code = handoff && handoff.promptLanguage ? handoff.promptLanguage.toLowerCase() : "";
+  return code && ISO6391.validate(code) ? code : null;
+};
+
 const CreateMoment: React.FC = () => {
   const navigate = useNavigate();
   const routerLocation = useLocation();
@@ -86,9 +117,20 @@ const CreateMoment: React.FC = () => {
   const [uploadMomentAudio] = useUploadMomentAudioMutation();
   const { t } = useTranslation();
 
+  // Read the prompt handoff during the first render, not in an effect, so the
+  // textarea shows the prompt text on its very first paint.
+  const initialHandoff = readPromptHandoff(routerLocation.state);
+
   // Basic form state
   const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [description, setDescription] = useState<string>(
+    () => (initialHandoff && initialHandoff.promptText) || ""
+  );
+  // The prompt being answered, shown as a dismissible chip. Dismissing it
+  // keeps the text but drops promptId from the payload (the app's behaviour).
+  const [answeredPrompt, setAnsweredPrompt] = useState<AnsweredPrompt | null>(
+    () => promptFromHandoff(initialHandoff)
+  );
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [isButtonEnabled, setIsButtonEnabled] = useState<boolean>(false);
@@ -106,7 +148,10 @@ const CreateMoment: React.FC = () => {
   const [mood, setMood] = useState<string>("");
   const [tags, setTags] = useState<string[]>([]);
   const [privacy, setPrivacy] = useState<string>("public");
-  const [language, setLanguage] = useState<string>("en");
+  // Answering a prompt defaults the moment's language to the prompt's.
+  const [language, setLanguage] = useState<string>(
+    () => promptLanguageCode(initialHandoff) || "en"
+  );
   const [category, setCategory] = useState<string>("general");
   const [scheduledFor, setScheduledFor] = useState<string>(""); // datetime-local; "" = now
   const schedulingEnabled = useMomentSchedulingEnabled();
@@ -122,34 +167,26 @@ const CreateMoment: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const userInfo = useSelector((state: any) => state.auth.userInfo?.user);
-  const user = userInfo?._id;
-
-  // Prompt-of-the-day handoff: MainMoments navigates here with router state
-  // ({ promptText, promptId }) when the user taps "Answer" on a prompt.
-  const promptIdRef = useRef<string | undefined>(
-    (routerLocation.state as { promptId?: string } | null)?.promptId
-  );
 
   useEffect(() => {
     setIsButtonEnabled(description.trim() !== "");
   }, [description]);
 
-  // Prefill the composer when arriving from "Prompt of the Day → Answer".
-  // Only prefill if the description is still empty so we never clobber
-  // anything the user has already typed.
+  // A later handoff while the composer is already mounted (e.g. Answer tapped
+  // again from history). The first one was consumed by the state initialisers
+  // above. Never clobber anything the user has already typed; the functional
+  // update reads the live description rather than a stale closure.
+  const firstLocationKey = useRef(routerLocation.key);
   useEffect(() => {
-    const state = routerLocation.state as
-      | { promptText?: string; promptId?: string }
-      | null
-      | undefined;
-    if (state?.promptId) {
-      promptIdRef.current = state.promptId;
-    }
-    if (state?.promptText && description.trim() === "") {
-      setDescription(state.promptText);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [routerLocation.state]);
+    if (routerLocation.key === firstLocationKey.current) return;
+    const handoff = readPromptHandoff(routerLocation.state);
+    const next = promptFromHandoff(handoff);
+    if (!next) return;
+    setAnsweredPrompt(next);
+    setDescription((current) => (current.trim() === "" ? next.text : current));
+    const code = promptLanguageCode(handoff);
+    if (code) setLanguage(code);
+  }, [routerLocation.key, routerLocation.state]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -231,7 +268,6 @@ const CreateMoment: React.FC = () => {
       const payload: any = {
         title,
         description,
-        user,
         location,
         mood,
         tags,
@@ -246,7 +282,7 @@ const CreateMoment: React.FC = () => {
         payload.mediaType = "text";
         if (backgroundColor) payload.backgroundColor = backgroundColor;
       }
-      if (promptIdRef.current) payload.promptId = promptIdRef.current;
+      if (answeredPrompt && answeredPrompt.id) payload.promptId = answeredPrompt.id;
 
       const response = await createMoment(payload).unwrap();
       const newMoment = response as Moment;
@@ -426,6 +462,31 @@ const CreateMoment: React.FC = () => {
               <div className="text-right text-xs text-gray-400">
                 {title.length}/100
               </div>
+
+              {/* Prompt of the day being answered (dismissible) */}
+              {answeredPrompt && (
+                <div className="flex">
+                  <span
+                    data-testid="create-moment-prompt-chip"
+                    className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-amber-300/60 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 dark:border-amber-600/40 dark:bg-amber-900/20 dark:text-amber-300"
+                  >
+                    <span aria-hidden="true">{answeredPrompt.emoji || "☀️"}</span>
+                    <span className="truncate">
+                      {t("moments_section.prompt.answeringPromptOfDay") || "Answering prompt of the day"}
+                      {": "}
+                      {answeredPrompt.text}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setAnsweredPrompt(null)}
+                      aria-label={t("moments_section.prompt.dismissChip") || "Stop answering the prompt"}
+                      className="ml-0.5 shrink-0 rounded-full p-0.5 hover:bg-amber-100 dark:hover:bg-amber-800/40"
+                    >
+                      <FaTimes className="w-3 h-3" />
+                    </button>
+                  </span>
+                </div>
+              )}
 
               {/* Main textarea */}
               <textarea

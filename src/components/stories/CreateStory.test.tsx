@@ -264,7 +264,19 @@ describe("the composer", () => {
     fireEvent.click(screen.getByTestId("share-story"));
 
     await waitFor(() => expect(mockCreateStory).toHaveBeenCalled());
+    // The app hides a text story's `text` once it has overlays, so the body
+    // travels as the FIRST overlay too: centred, in the story's own colour.
     expect(sentField(mockCreateStory, "overlays")).toEqual([
+      {
+        type: "text",
+        content: "hi",
+        x: 0.5,
+        y: 0.5,
+        scale: 1.5,
+        color: "#FFFFFF",
+        fontStyle: "sans-serif",
+        bgMode: "none",
+      },
       {
         type: "text",
         content: "On the move",

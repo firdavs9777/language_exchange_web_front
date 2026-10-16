@@ -66,19 +66,21 @@ it("imports no react-bootstrap, react-icons or react-toastify", () => {
 // ---------------------------------------------------------------------- hex
 
 /**
- * The only two files allowed to spell a hex colour, and why.
+ * The only three files allowed to spell a hex colour, and why.
  *
- * Both are about VALUES THAT TRAVEL: `storyOverlays.ts` holds the palette the
+ * All are about VALUES THAT TRAVEL: `storyOverlays.ts` holds the palette the
  * composer writes into `overlays[].color` and the `/^#[0-9a-fA-F]{6}$/` the
  * backend validates it with, and `CreateStory.tsx` holds the two text-story
- * colours that are uploaded as `backgroundColor`/`textColor`. A Tailwind class
+ * colours that are uploaded as `backgroundColor`/`textColor`, and
+ * `storyBackground.ts` mirrors the app's `StoryGradient.presets`, because the
+ * app uploads a gradient ID (`gradient_sunset`) as `backgroundColor`. A Tailwind class
  * cannot be sent over the wire, and a story composed on the phone can carry
  * any hex the app allowed -- so a class map would silently lose colours.
  */
-const DATA_HEX_FILES = ["storyOverlays.ts", "CreateStory.tsx"];
+const DATA_HEX_FILES = ["storyOverlays.ts", "CreateStory.tsx", "storyBackground.ts"];
 const HEX = /#[0-9a-fA-F]{3,8}\b/;
 
-it("spells no hex colour outside the two files where a hex is data", () => {
+it("spells no hex colour outside the three files where a hex is data", () => {
   const offenders: string[] = [];
   sourceFiles().forEach((file) => {
     if (DATA_HEX_FILES.indexOf(rel(file)) > -1) return;
@@ -160,11 +162,14 @@ function topLevelParts(body: string): string[] {
  *     gives it. Two numbers read out of JSON at render time.
  *   - `color: <expr>` beside one of those — the overlay's own colour.
  *   - `{ backgroundColor, color }` — a text story's palette, as composed.
+ *   - `...storyBackgroundStyle(value)` beside `color` — the same palette when
+ *     `backgroundColor` carries an app gradient id (a `backgroundImage`).
  *
  * Anything else is a styling decision, and belongs in a class.
  */
 const POSITION_CALL = /^\.\.\.?\s*(overlay|mention)PositionStyle\(.*\)$/;
 const BARE_POSITION_CALL = /^\{\s*(overlay|mention)PositionStyle\(.*\)\s*\}$/;
+const BACKGROUND_CALL = /^\.\.\.\s*storyBackgroundStyle\(.*\)$/;
 const PALETTE_KEYS = ["backgroundColor", "color"];
 
 function isAllowedStyle(expression: string): boolean {
@@ -176,7 +181,9 @@ function isAllowedStyle(expression: string): boolean {
   if (!objectMatch) return false;
 
   return topLevelParts(objectMatch[1]).every((part) => {
-    if (part.indexOf("...") === 0) return POSITION_CALL.test(part.replace(/^\.\.\./, "..."));
+    if (part.indexOf("...") === 0) {
+      return POSITION_CALL.test(part.replace(/^\.\.\./, "...")) || BACKGROUND_CALL.test(part);
+    }
     const key = part.split(":")[0].trim();
     return PALETTE_KEYS.indexOf(key) > -1;
   });
@@ -201,6 +208,8 @@ it("proves the inline-style guard can fire", () => {
   expect(isAllowedStyle("{mentionPositionStyle(mention.position)}")).toBe(true);
   expect(isAllowedStyle("{{ backgroundColor, color: textColor }}")).toBe(true);
   expect(isAllowedStyle("{{ backgroundColor: s.backgroundColor, color: s.textColor }}")).toBe(true);
+  expect(isAllowedStyle("{{ ...storyBackgroundStyle(s.backgroundColor), color: storyTextColor(s.textColor) }}")).toBe(true);
+  expect(isAllowedStyle("{{ ...storyBackgroundStyle(s.backgroundColor), padding: 12 }}")).toBe(false);
   // ...and the shapes that are a styling decision in disguise.
   expect(isAllowedStyle("{{ width: `${percentage}%` }}")).toBe(false);
   expect(isAllowedStyle("{{ backgroundColor: '#000', padding: 12 }}")).toBe(false);

@@ -28,6 +28,10 @@ export const RESET_USER_PASSWORD = "/api/v1/auth/reset-password";
 export const COMMENTS = "comments";
 export const USER_PROFILE_URL = "/api/v1/auth/me";
 export const USER_PROFILE_UPDATE = "/api/v1/auth/updatedetails";
+// Push notification preferences (GET + PUT, flat body merged per key).
+// /auth/updatedetails ignores `notificationSettings`, so this is the only
+// writer -- the same one the mobile app uses.
+export const NOTIFICATION_SETTINGS_URL = "/api/v1/notifications/settings";
 export const STORIES_FEED = "/api/v1/stories/feed";
 export const MY_STORIES = "/api/v1/stories/my-stories";
 export const MAIN_STORIES = "/api/v1/stories";

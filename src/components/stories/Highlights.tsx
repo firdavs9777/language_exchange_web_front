@@ -26,6 +26,7 @@ import {
 } from "../../store/slices/storiesSlice";
 import { Story } from "./types";
 import { storiesOf, mediaOf, coverOf, countOf } from "./highlightStories";
+import { storyBackgroundStyle, storyTextColor } from "./storyBackground";
 
 const PAGE = "min-h-screen bg-canvas px-4 py-6 dark:bg-canvas-dark";
 const COLUMN = "mx-auto w-full max-w-3xl space-y-4";
@@ -67,8 +68,8 @@ const StoryTile: React.FC<{ story: any; testId: string }> = ({ story, testId }) 
       // Data-driven: these are the colours the author chose for the story, so
       // they cannot be expressed as utility classes.
       style={{
-        backgroundColor: (story && story.backgroundColor) || undefined,
-        color: (story && story.textColor) || undefined,
+        ...storyBackgroundStyle(story && story.backgroundColor),
+        color: storyTextColor(story && story.textColor),
       }}
       className="flex h-full w-full items-center justify-center overflow-hidden bg-ink-800 p-2 text-center text-[11px] font-semibold leading-snug text-white"
     >

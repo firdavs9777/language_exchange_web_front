@@ -29,6 +29,7 @@ const TILE_ACTION =
   "rounded-full bg-ink-950/60 p-1.5 text-white transition-colors hover:bg-ink-950/80";
 
 const SKELETONS = [0, 1, 2, 3, 4, 5];
+const PAGE_SIZE = 12;
 
 function countOf(value: any): number {
   if (Array.isArray(value)) return value.length;
@@ -71,10 +72,26 @@ const MyMoments: React.FC = () => {
     (state: any) => state.auth.userInfo?.user?._id || state.auth.userInfo?._id
   );
 
-  const { data, isLoading, error, refetch } = useGetMyMomentsQuery(
-    { userId: userId || "" },
+  // The server pages this list ({data, pagination}); "Load more" asks for the
+  // next page and appends it to the pages already shown.
+  const [page, setPage] = useState(1);
+  const { currentData, isLoading, isFetching, error, refetch } = useGetMyMomentsQuery(
+    { userId: userId || "", page, limit: PAGE_SIZE },
     { skip: !userId }
   );
+  const [pages, setPages] = useState<{ [page: number]: any[] }>({});
+  const [hasMore, setHasMore] = useState(false);
+  useEffect(() => {
+    if (!currentData) return;
+    const rows: any[] = Array.isArray((currentData as any).data) ? (currentData as any).data : [];
+    setPages((prev) => ({ ...prev, [page]: rows }));
+    const pagination = (currentData as any).pagination;
+    setHasMore(
+      pagination && typeof pagination.hasNextPage === "boolean"
+        ? pagination.hasNextPage
+        : rows.length >= PAGE_SIZE
+    );
+  }, [currentData, page]);
   const [deleteMoment, { isLoading: isDeleting }] = useDeleteMomentMutation();
 
   const [pending, setPending] = useState<MomentType | null>(null);
@@ -96,11 +113,29 @@ const MyMoments: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const all: any[] = Array.isArray(data && (data as any).data) ? (data as any).data : [];
-  const moments = useMemo(
-    () => all.filter((moment: any) => moment && !removed[moment._id]),
-    [all, removed]
-  );
+  const moments = useMemo(() => {
+    // The page just served counts before the effect above has stored it, so
+    // the first render with data never flashes the empty state.
+    const all: { [page: number]: any[] } = { ...pages };
+    if (currentData && Array.isArray((currentData as any).data)) {
+      all[page] = (currentData as any).data;
+    }
+    const seen: { [id: string]: boolean } = {};
+    const out: any[] = [];
+    Object.keys(all)
+      .map(Number)
+      .sort((a, b) => a - b)
+      .forEach((key) => {
+        all[key].forEach((moment: any) => {
+          // A delete shifts later pages by one, so a refetched page can repeat
+          // a moment an earlier page already shows.
+          if (!moment || removed[moment._id] || seen[moment._id]) return;
+          seen[moment._id] = true;
+          out.push(moment);
+        });
+      });
+    return out;
+  }, [pages, currentData, page, removed]);
 
   const handleDelete = async (): Promise<void> => {
     if (!pending) return;
@@ -122,7 +157,8 @@ const MyMoments: React.FC = () => {
   if (!userId) return <Navigate to="/login" replace />;
 
   const showSkeleton = isLoading && moments.length === 0;
-  const failed = !isLoading && Boolean(error);
+  const failed = !isLoading && Boolean(error) && moments.length === 0;
+  const loadingMore = isFetching && page > 1 && !currentData;
   const empty = !showSkeleton && !failed && moments.length === 0;
 
   return (
@@ -267,6 +303,30 @@ const MyMoments: React.FC = () => {
                   );
                 })}
               </ul>
+            )}
+
+            {!showSkeleton && moments.length > 0 && (hasMore || Boolean(error)) && (
+              <div className="pt-4 text-center">
+                <button
+                  type="button"
+                  data-testid="my-moments-load-more"
+                  disabled={loadingMore}
+                  onClick={() => {
+                    if (error) {
+                      refetch();
+                    } else {
+                      setPage((current) => current + 1);
+                    }
+                  }}
+                  className={`${CTA} disabled:cursor-not-allowed disabled:opacity-60`}
+                >
+                  {loadingMore
+                    ? t("profile.myMoments.loading_more") || "Loading..."
+                    : error
+                    ? t("profile.myMoments.retry") || "Try again"
+                    : t("profile.myMoments.load_more") || "Load more"}
+                </button>
+              </div>
             )}
           </SurfaceCard>
         </div>

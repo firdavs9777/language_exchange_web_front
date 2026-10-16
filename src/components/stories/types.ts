@@ -20,7 +20,9 @@ export interface StoryView {
 }
 
 export interface StoryReaction {
-  user: User;
+  /** A bare id string on the story routes; populated only where a route
+   * populates it. */
+  user: User | string;
   emoji: string;
   reactedAt: string;
 }
@@ -85,8 +87,9 @@ export interface StoryLink {
 
 export interface PollOption {
   text: string;
-  votes: string[];
-  voteCount: number;
+  /** Every voter for the owner; for anyone else only their own id, or absent. */
+  votes?: string[];
+  voteCount?: number;
   index?: number;
   percentage?: number;
   voted?: boolean;
@@ -97,6 +100,9 @@ export interface StoryPoll {
   options: PollOption[];
   isAnonymous: boolean;
   expiresAt?: string;
+  /** The viewer's own vote (null: not voted). Absent on older backends. */
+  userVoteIndex?: number | null;
+  totalVotes?: number;
 }
 
 export interface QuestionResponse {
@@ -108,7 +114,11 @@ export interface QuestionResponse {
 
 export interface StoryQuestionBox {
   prompt: string;
-  responses: QuestionResponse[];
+  /** Owner only; others get their own responses at most, or nothing. */
+  responses?: QuestionResponse[];
+  /** Whether the viewer answered. Absent on older backends. */
+  hasAnswered?: boolean;
+  responseCount?: number;
 }
 
 export interface StoryMusic {
@@ -154,13 +164,16 @@ export interface Story {
   // Privacy
   privacy: 'public' | 'friends' | 'close_friends';
   
-  // Views
-  views: StoryView[];
+  // Views (owner only on current backends)
+  views?: StoryView[];
   viewCount: number;
   
-  // Reactions
+  // Reactions. For anyone but the owner, `reactions` may hold only the
+  // viewer's own entry; `myReaction` is that entry's emoji (or null) on
+  // backends that send it.
   reactions: StoryReaction[];
   reactionCount: number;
+  myReaction?: string | null;
   
   // Replies
   replies: StoryReply[];

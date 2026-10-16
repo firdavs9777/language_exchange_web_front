@@ -57,7 +57,6 @@ it("posts a plain moment with today's defaults", async () => {
     expect.objectContaining({
       title: "",
       description: "Hello",
-      user: "u1",
       location: null,
       mood: "",
       tags: [],
@@ -66,6 +65,8 @@ it("posts a plain moment with today's defaults", async () => {
       category: "general",
     })
   );
+  // The backend takes the author from the session, never the body.
+  expect(payload()).not.toHaveProperty("user");
 });
 
 it("cannot share without a description", () => {

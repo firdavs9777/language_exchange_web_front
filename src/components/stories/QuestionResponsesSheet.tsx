@@ -7,6 +7,7 @@ import Avatar from "../../design/Avatar";
 import { useGetQuestionResponsesQuery } from "../../store/slices/storiesSlice";
 import { QuestionResponse } from "./types";
 import timeAgo from "../../utils/timeAgo";
+import { userAvatarUrl } from "../../utils/photoUrl";
 
 export interface QuestionResponsesSheetProps {
   storyId: string;
@@ -116,7 +117,7 @@ const QuestionResponsesSheet: React.FC<QuestionResponsesSheetProps> = ({
             const name = masked ? anonymousLabel : user?.name || anonymousLabel;
             const image = masked
               ? undefined
-              : user?.imageUrls?.[0] || user?.images?.[0];
+              : userAvatarUrl(user);
 
             return (
               <div

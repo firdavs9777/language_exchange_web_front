@@ -5,6 +5,34 @@ import {
 } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
+/**
+ * Patch a cached feed after the viewer saw `storyId`: lower its author's
+ * `hasUnviewed` so the ring turns "seen" without a refetch.
+ *
+ * Which stories were unseen is not on the wire (current backends keep `views`
+ * from non-owners), so the counter is read the way it is built: a group's
+ * stories arrive oldest first and are watched in that order, so the unseen
+ * ones are the newest `hasUnviewed` of them, as counted when the feed loaded.
+ */
+export function markSeenInFeed(draft: any, storyId: string): void {
+  const groups: any[] = Array.isArray(draft) ? draft : draft && Array.isArray(draft.data) ? draft.data : [];
+  for (let g = 0; g < groups.length; g += 1) {
+    const group = groups[g];
+    const stories: any[] = group && Array.isArray(group.stories) ? group.stories : [];
+    const index = stories.findIndex((story: any) => story && story._id === storyId);
+    if (index === -1) continue;
+    const story = stories[index];
+    if (story._seenHere) return;
+    story._seenHere = true;
+    const unviewed = typeof group.hasUnviewed === "number" ? group.hasUnviewed : 0;
+    if (unviewed <= 0) return;
+    if (typeof group._loadedUnviewed !== "number") group._loadedUnviewed = unviewed;
+    const firstUnseen = stories.length - group._loadedUnviewed;
+    if (index >= firstUnseen) group.hasUnviewed = unviewed - 1;
+    return;
+  }
+}
+
 export const storiesApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder: any) => ({
     // Get all story feeds
@@ -83,14 +111,30 @@ export const storiesApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 5,
       invalidatesTags: ["Stories"],
     }),
-    // Mark story as viewed
+    // Mark story as viewed.
+    //
+    // Deliberately invalidates nothing: the viewer marks every story it
+    // advances to, and invalidating "Stories" here refetched the feed, my
+    // stories, the archive and the very list being watched on every tap.
+    // The one thing a view changes on screen is the feed's seen ring, so
+    // that is patched in the cache instead; the next real fetch corrects it.
     markIndividualStoryViewed: builder.mutation({
       query: (storyId: string) => ({
         url: `${MAIN_STORIES}/${storyId}/view`,
         method: "POST",
       }),
-      keepUnusedDataFor: 5,
-      invalidatesTags: ["Stories"],
+      async onQueryStarted(storyId: string, { dispatch, queryFulfilled }: any) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          return;
+        }
+        dispatch(
+          (apiSlice.util as any).updateQueryData("getStoryFeeds", undefined, (draft: any) => {
+            markSeenInFeed(draft, storyId);
+          })
+        );
+      },
     }),
     // Total User Viewers
     getStoryViewers: builder.query({
@@ -321,7 +365,6 @@ export const {
   useArchiveStoryMutation,
   useCreateStoryMutation,
   useCreateVideoStoryMutation,
-  useGetIndividualStoryMutation,
   useGetIndividualStoryQuery,
   useDeleteIndividualStoryMutation,
   useGetStoryViewersQuery,

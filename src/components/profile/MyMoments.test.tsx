@@ -24,7 +24,14 @@ jest.mock("react-router-dom", () => ({
 }));
 
 jest.mock("../../store/slices/momentsSlice", () => ({
-  useGetMyMomentsQuery: (arg: any, opts: any) => mockGetMyMoments(arg, opts),
+  // The page reads `currentData` (the result for the CURRENT page arg), which
+  // RTK Query serves next to `data`; the fixtures below only spell `data`.
+  useGetMyMomentsQuery: (arg: any, opts: any) => {
+    const result = mockGetMyMoments(arg, opts);
+    return result && result.currentData === undefined
+      ? { ...result, currentData: result.data }
+      : result;
+  },
   useDeleteMomentMutation: () => [mockDeleteMoment, { isLoading: false }],
 }));
 
@@ -71,8 +78,24 @@ beforeEach(() => {
 
 it("asks for the signed-in user's moments", () => {
   renderPage();
-  expect(mockGetMyMoments.mock.calls[0][0]).toEqual({ userId: "me" });
+  expect(mockGetMyMoments.mock.calls[0][0]).toEqual({ userId: "me", page: 1, limit: 12 });
   expect(mockGetMyMoments.mock.calls[0][1].skip).toBe(false);
+});
+
+it("asks for the next page when the server says there is one", () => {
+  const first = { data: [moment("m1")], pagination: { hasNextPage: true } };
+  mockGetMyMoments.mockReturnValue({ ...idle, refetch, data: first });
+  renderPage();
+  fireEvent.click(screen.getByTestId("my-moments-load-more"));
+  const args = mockGetMyMoments.mock.calls.map((call) => call[0].page);
+  expect(args).toContain(2);
+});
+
+it("offers no Load more on the last page", () => {
+  const only = { data: [moment("m1")], pagination: { hasNextPage: false } };
+  mockGetMyMoments.mockReturnValue({ ...idle, refetch, data: only });
+  renderPage();
+  expect(screen.queryByTestId("my-moments-load-more")).not.toBeInTheDocument();
 });
 
 it("sends a signed-out visitor to the login page", () => {

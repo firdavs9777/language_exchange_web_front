@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import DialogShell from "../../design/DialogShell";
 import { Story } from "./types";
-import { storiesOf, mediaOf } from "./highlightStories";
+import { storiesOf } from "./highlightStories";
+import StoryCanvas from "./StoryCanvas";
 
 export interface HighlightStoryViewerProps {
   /** The highlight as `GET /stories/highlights/user/:id` returns it. */
@@ -33,8 +34,11 @@ const ARROW = [
  * that component would mean either a new prop path across every one of those
  * branches or a viewer whose reply box posts to `undefined`.
  *
- * What a highlight needs is the smaller half of the viewer: the media, a
- * position, and a way forward and back. That is this file. Progress timers,
+ * What a highlight needs is the smaller half of the viewer: the picture, a
+ * position, and a way forward and back. That is this file. The picture itself
+ * is `StoryCanvas`, the same one the viewer draws, so overlays, mentions, the
+ * link sticker, captions and app gradients look the same in both (every field
+ * a highlight's projection carries is used; missing ones simply draw nothing). Progress timers,
  * hold-to-pause and the reply rail stay where they belong -- a highlight is
  * browsed, not watched on a clock.
  */
@@ -50,7 +54,6 @@ const HighlightStoryViewer: React.FC<HighlightStoryViewerProps> = ({
   const total = stories.length;
   const safeIndex = Math.min(Math.max(index, 0), Math.max(total - 1, 0));
   const story: any = stories[safeIndex];
-  const media = mediaOf(story);
 
   const go = (delta: number) => {
     const next = safeIndex + delta;
@@ -117,28 +120,16 @@ const HighlightStoryViewer: React.FC<HighlightStoryViewerProps> = ({
         ) : null}
       </h2>
 
-      <div className="relative min-h-0 flex-1">
-        {media ? (
-          <img
-            data-testid="highlight-story-image"
-            src={media}
-            alt={(highlight && highlight.title) || ""}
-            className="h-full w-full object-contain"
-          />
-        ) : (
-          <div
-            data-testid="highlight-story-text"
-            // Data-driven: the colours are the ones the author picked when the
-            // story was written, so they cannot come from a utility class.
-            style={{
-              backgroundColor: (story && story.backgroundColor) || undefined,
-              color: (story && story.textColor) || undefined,
-            }}
-            className="flex h-full w-full items-center justify-center bg-ink-900 p-8 text-center text-lg font-semibold text-white"
-          >
-            {(story && story.text) || ""}
-          </div>
-        )}
+      <div className="relative min-h-0 flex-1 overflow-hidden">
+        {/* The same canvas as the full-screen viewer, so a highlight shows
+            a story exactly as it was posted: app gradients, overlays,
+            tagged people, the link sticker and the caption. */}
+        <StoryCanvas
+          story={story}
+          testIdPrefix="highlight-story"
+          bodyClassName="text-lg"
+          onNavigate={onClose}
+        />
 
         <button
           type="button"

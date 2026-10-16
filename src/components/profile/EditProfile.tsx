@@ -258,6 +258,7 @@ const EditProfile: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.auth.userInfo?.user?._id);
+  const storedRefreshToken = useSelector((state: RootState) => state.auth.userInfo?.refreshToken);
 
   const { data, isLoading, refetch } = useGetUserProfileQuery({});
   const [uploadUserPhoto, { isLoading: isUploading }] = useUploadUserPhotoMutation();
@@ -393,7 +394,10 @@ const EditProfile: React.FC = () => {
 
     try {
       const result = await updateUserProfile(payload).unwrap();
-      dispatch(setCredentials({ ...result }));
+      // updatedetails answers with a token response whose refreshToken is null
+      // (no device info on this request): keep the stored one, or the session
+      // can no longer refresh itself once the access token expires.
+      dispatch(setCredentials({ ...result, refreshToken: result.refreshToken || storedRefreshToken }));
 
       // Only what actually moved: the endpoint is a different one, and
       // unchanged fields are not worth a second round trip. One request for

@@ -10,6 +10,7 @@ import {
 } from "../../store/slices/storiesSlice";
 import { StoryReaction, StoryView } from "./types";
 import timeAgo from "../../utils/timeAgo";
+import { userAvatarUrl } from "../../utils/photoUrl";
 
 export interface StoryViewersSheetProps {
   storyId: string;
@@ -78,8 +79,10 @@ const StoryViewersSheet: React.FC<StoryViewersSheetProps> = ({
   // rather than keyed under an empty id that would match nothing.
   const emojiByUserId = new Map<string, string>();
   reactions.forEach((reaction) => {
-    if (reaction && reaction.user && reaction.user._id && reaction.emoji) {
-      emojiByUserId.set(reaction.user._id, reaction.emoji);
+    const reactor: any = reaction && reaction.user;
+    const reactorId = typeof reactor === "string" ? reactor : reactor && reactor._id;
+    if (reactorId && reaction.emoji) {
+      emojiByUserId.set(String(reactorId), reaction.emoji);
     }
   });
 
@@ -145,7 +148,7 @@ const StoryViewersSheet: React.FC<StoryViewersSheetProps> = ({
           !error &&
           rows.map((view, index) => {
             const user = view.user;
-            const image = user.imageUrls?.[0] || user.images?.[0];
+            const image = userAvatarUrl(user);
             const emoji = emojiByUserId.get(user._id);
             return (
               <Link

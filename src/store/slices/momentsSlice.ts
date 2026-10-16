@@ -104,10 +104,18 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
     // Tagged so `deleteMoment`/`updateMoment` actually refetch this list.
     // Without it a deleted moment came back on the next visit inside
     // `keepUnusedDataFor`, because nothing invalidated the cached page.
+    // GET /api/v1/moments/user/:userId?page=&limit= → {data, pagination}.
+    // Without page/limit the server serves its first page of 10.
     getMyMoments: builder.query({
-      query: ({ userId }: { userId: string }) => ({
-        url: `${MOMENTS_URL}/user/${userId}`,
-      }),
+      query: ({ userId, page, limit }: { userId: string; page?: number; limit?: number }) => {
+        const params = new URLSearchParams();
+        if (page !== undefined) params.append('page', String(page));
+        if (limit !== undefined) params.append('limit', String(limit));
+        const qs = params.toString();
+        return {
+          url: `${MOMENTS_URL}/user/${userId}${qs ? `?${qs}` : ''}`,
+        };
+      },
       keepUnusedDataFor: 5,
       providesTags: ["Moments"],
     }),
@@ -352,7 +360,7 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
     // Returns {text, emoji, promptId, language}
     getPromptOfDay: builder.query({
       query: ({ language }: { language?: string } = {}) => ({
-        url: `${MOMENTS_URL}/prompt-of-day${language ? `?language=${language}` : ''}`,
+        url: `${MOMENTS_URL}/prompt-of-day${language ? `?language=${encodeURIComponent(language)}` : ''}`,
       }),
       // The prerender ships fulfilled entries in the preloaded state: the first
       // render must match that markup, but a mount must still refresh live data.

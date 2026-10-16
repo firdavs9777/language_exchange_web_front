@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
   useGetUserStoriesQuery,
@@ -34,13 +34,8 @@ import StoryViewersSheet from "./StoryViewersSheet";
 import QuestionResponsesSheet from "./QuestionResponsesSheet";
 import StoryShareSheet from "./StoryShareSheet";
 import { Story, STORY_REACTIONS } from "./types";
-import {
-  OVERLAY_BG_CLASS,
-  OVERLAY_FONT_CLASS,
-  mentionPositionStyle,
-  overlayPositionStyle,
-  overlayScaleClass,
-} from "./storyOverlays";
+import StoryCanvas, { isVideoStory } from "./StoryCanvas";
+import { userAvatarUrl } from "../../utils/photoUrl";
 
 interface RootState {
   auth: {
@@ -97,6 +92,51 @@ const FILL_STEPS = [
 ];
 const fillClass = (percentage: number): string =>
   FILL_STEPS[Math.max(0, Math.min(10, Math.round(percentage / 10)))];
+
+const idOf = (ref: any): string =>
+  typeof ref === "string" ? ref : ref && ref._id ? String(ref._id) : "";
+
+/**
+ * Which option the viewer voted for, or null. Current backends say so in
+ * `poll.userVoteIndex` (and redact everyone else's votes for non-owners);
+ * older ones only send the full `votes[]` per option.
+ */
+function pollVoteIndex(poll: any, userId: string | null): number | null {
+  if (!poll) return null;
+  if (poll.userVoteIndex !== undefined) {
+    return typeof poll.userVoteIndex === "number" && poll.userVoteIndex >= 0
+      ? poll.userVoteIndex
+      : null;
+  }
+  const options: any[] = Array.isArray(poll.options) ? poll.options : [];
+  for (let i = 0; i < options.length; i += 1) {
+    const option = options[i] || {};
+    if (option.voted === true) return i;
+    const votes: any[] = Array.isArray(option.votes) ? option.votes : [];
+    if (userId && votes.some((v) => idOf(v) === userId)) return i;
+  }
+  return null;
+}
+
+/** An option's tally: `voteCount` when sent, else the length of `votes`. */
+const voteCountOf = (option: any): number => {
+  if (option && typeof option.voteCount === "number" && isFinite(option.voteCount)) {
+    return option.voteCount;
+  }
+  return option && Array.isArray(option.votes) ? option.votes.length : 0;
+};
+
+/**
+ * Whether the viewer already answered the question sticker: the server's
+ * `hasAnswered` when sent, else their own entry among the responses (older
+ * backends sent every response to everyone).
+ */
+function hasAnsweredQuestion(questionBox: any, userId: string | null): boolean {
+  if (!questionBox) return false;
+  if (typeof questionBox.hasAnswered === "boolean") return questionBox.hasAnswered;
+  const responses: any[] = Array.isArray(questionBox.responses) ? questionBox.responses : [];
+  return Boolean(userId) && responses.some((r) => r && idOf(r.user) === userId);
+}
 
 const StoryViewer: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -169,13 +209,23 @@ const StoryViewer: React.FC = () => {
     }
   }, [currentStory?._id, isOwner]);
 
-  // Check user's reaction
+  // Restore the viewer's own reaction. The server sends `myReaction` (an
+  // emoji or null) on current backends; older ones only send `reactions[]`,
+  // whose `user` is a bare id string rather than a populated user.
   useEffect(() => {
     if (currentStory && currentUserId) {
-      const reaction = (currentStory.reactions || []).find(
-        (r) => r.user._id === currentUserId
-      );
-      setUserReaction(reaction?.emoji || null);
+      const mine = (currentStory as any).myReaction;
+      if (mine !== undefined) {
+        setUserReaction(typeof mine === "string" && mine ? mine : null);
+        return;
+      }
+      const reaction = (currentStory.reactions || []).find((r: any) => {
+        const reactor = r && r.user;
+        const reactorId =
+          typeof reactor === "string" ? reactor : reactor && reactor._id ? String(reactor._id) : "";
+        return reactorId === currentUserId;
+      });
+      setUserReaction((reaction && reaction.emoji) || null);
     } else {
       setUserReaction(null);
     }
@@ -374,11 +424,7 @@ const StoryViewer: React.FC = () => {
     );
   }
 
-  const isVideo =
-    currentStory.mediaType === "video" ||
-    /\.(mp4|webm|mov|m4v|ogg)$/i.test(
-      currentStory.mediaUrls?.[0] || currentStory.mediaUrl || ""
-    );
+  const isVideo = isVideoStory(currentStory);
   // A video runs to its own length and says when it is done (`onEnded`);
   // everything else gets the five-second clock the segment bar draws.
   const isTimed = !isVideo;
@@ -436,7 +482,7 @@ const StoryViewer: React.FC = () => {
         <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between bg-gradient-to-b from-black/50 to-transparent px-4 pb-4 pt-12">
           <div className="flex min-w-0 items-center gap-3 text-white">
             <Avatar
-              src={currentStory.user.imageUrls?.[0] || currentStory.user.images?.[0]}
+              src={userAvatarUrl(currentStory.user)}
               name={currentStory.user.name}
               size={40}
             />
@@ -471,47 +517,25 @@ const StoryViewer: React.FC = () => {
 
         {/* Story Content */}
         <div className="relative flex flex-1 items-center justify-center overflow-hidden">
-          {currentStory.mediaType === "text" ? (
-            <div
-              data-testid="story-text"
-              // The author's own palette: story DATA, the way an overlay's
-              // colour is. The classes carry the fallback for a story that
-              // arrives without one.
-              style={{
-                backgroundColor: currentStory.backgroundColor,
-                color: currentStory.textColor,
-              }}
-              className="flex h-full w-full items-center justify-center break-words bg-black p-10 text-center text-2xl font-semibold text-white sm:text-3xl"
-            >
-              <p className="m-0 max-w-[90%]">{currentStory.text}</p>
-            </div>
-          ) : isVideo ? (
-            <video
-              src={currentStory.mediaUrls?.[0] || currentStory.mediaUrl}
-              className="h-full w-full object-contain"
-              onEnded={handleNextStory}
-              controls
-              playsInline
-            />
-          ) : (
-            <img
-              src={currentStory.mediaUrls?.[0] || currentStory.mediaUrl}
-              alt="Story"
-              className="h-full w-full object-contain"
-            />
-          )}
+          <StoryCanvas story={currentStory} onVideoEnded={handleNextStory} />
 
           {/* Poll Overlay */}
           {currentStory.poll && (
             <div className={STICKER_CARD}>
               <h3 className="mb-4 text-lg font-semibold">{currentStory.poll.question}</h3>
               {currentStory.poll.options.map((option, index) => {
-                const total = currentStory.poll!.options.reduce(
-                  (sum, opt) => sum + opt.voteCount,
-                  0
-                );
-                const percentage = total > 0 ? (option.voteCount / total) * 100 : 0;
-                const hasVoted = (option.votes || []).includes(currentUserId || "");
+                const poll: any = currentStory.poll;
+                const votedIndex = pollVoteIndex(poll, currentUserId);
+                // Once the viewer has voted, every option shows its share --
+                // the result is what a vote buys. Another option can still be
+                // tapped to change the vote (the server moves it).
+                const showResults = votedIndex !== null;
+                const total =
+                  typeof poll.totalVotes === "number" && poll.totalVotes > 0
+                    ? poll.totalVotes
+                    : (poll.options as any[]).reduce((sum: number, opt: any) => sum + voteCountOf(opt), 0);
+                const percentage = total > 0 ? (voteCountOf(option) / total) * 100 : 0;
+                const hasVoted = votedIndex === index;
 
                 return (
                   <button
@@ -528,7 +552,7 @@ const StoryViewer: React.FC = () => {
                     onClick={() => !hasVoted && handlePollVote(index)}
                     disabled={hasVoted}
                   >
-                    {hasVoted && (
+                    {showResults && (
                       <span
                         aria-hidden
                         className={`absolute inset-y-0 left-0 -z-10 bg-white/40 ${fillClass(
@@ -536,8 +560,11 @@ const StoryViewer: React.FC = () => {
                         )}`}
                       />
                     )}
-                    <span>{option.text}</span>
-                    {hasVoted && (
+                    <span className="flex items-center gap-1.5">
+                      {hasVoted && <Check size={16} aria-hidden />}
+                      {option.text}
+                    </span>
+                    {showResults && (
                       <span className="text-sm font-semibold">{percentage.toFixed(0)}%</span>
                     )}
                   </button>
@@ -551,7 +578,7 @@ const StoryViewer: React.FC = () => {
             <div className={`${STICKER_CARD} text-center`}>
               <p className="mb-4 text-base">{currentStory.questionBox.prompt}</p>
 
-              {answerSent ? (
+              {answerSent || hasAnsweredQuestion(currentStory.questionBox, currentUserId) ? (
                 <p
                   data-testid="story-answer-sent"
                   className="flex items-center justify-center gap-1.5 text-sm font-medium text-white"
@@ -621,76 +648,6 @@ const StoryViewer: React.FC = () => {
             </div>
           )}
 
-          {/* Text and emoji overlays.
-              These are STRUCTURE, not pixels: the composer (web) and the
-              studio (app) both upload `overlays[]` as JSON and never bake the
-              glyphs into the image, so this is the only place they become
-              visible. `left`/`top` are the one thing that has to be an inline
-              style -- two numbers out of the JSON that no utility class can
-              express, on a canvas whose size is whatever the viewport gives
-              it. Everything else (font, weight, plate, size) is a class from
-              `storyOverlays.ts`; `color` is the author's own choice and is
-              data, like the text-story colours beside it. */}
-          {(currentStory.overlays || []).map((overlay, index) => (
-            <span
-              key={index}
-              data-testid={"story-overlay-" + index}
-              style={{
-                ...overlayPositionStyle(overlay.x, overlay.y),
-                color: overlay.color,
-              }}
-              className={[
-                "pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-1/2",
-                "max-w-[80%] whitespace-pre-wrap text-center font-semibold leading-tight",
-                overlayScaleClass(overlay.scale),
-                OVERLAY_FONT_CLASS[overlay.fontStyle] || "font-sans",
-                OVERLAY_BG_CLASS[overlay.bgMode] || "",
-              ].join(" ")}
-            >
-              {overlay.content}
-            </span>
-          ))}
-
-          {/* Tagged people. Tappable, exactly as in the app viewer: a mention
-              nobody can follow is decoration. */}
-          {(currentStory.mentions || []).map((mention, index) => {
-            const mentionUser: any = mention.user;
-            const mentionId =
-              typeof mentionUser === "string" ? mentionUser : mentionUser && mentionUser._id;
-            if (!mentionId) return null;
-            return (
-              <Link
-                key={index}
-                data-testid={"story-mention-" + index}
-                to={"/community/" + mentionId}
-                onClick={(e) => e.stopPropagation()}
-                style={mentionPositionStyle(mention.position)}
-                className="absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-chip bg-white/85 px-2 py-0.5 text-xs font-semibold text-ink-900 no-underline"
-              >
-                @{mention.username || (mentionUser && mentionUser.name) || ""}
-              </Link>
-            );
-          })}
-
-          {/* Link sticker. A real anchor, not window.open: the destination is
-              visible on hover and in the context menu, and `noopener` keeps
-              the opened tab away from this one. The host is shown when the
-              author gave no label, so a tap is never a blind one. */}
-          {currentStory.link && currentStory.link.url && (
-            <a
-              data-testid="story-link-sticker"
-              href={currentStory.link.url}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              onClick={(e) => e.stopPropagation()}
-              className="absolute bottom-24 left-1/2 z-10 -translate-x-1/2 rounded-chip bg-white/90 px-3 py-1.5 text-sm font-semibold text-ink-900 no-underline"
-            >
-              {currentStory.link.displayText ||
-                currentStory.link.title ||
-                currentStory.link.host ||
-                currentStory.link.url}
-            </a>
-          )}
         </div>
 
         {/* Navigation */}

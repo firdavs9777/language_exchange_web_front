@@ -29,6 +29,7 @@ import {
 import StoryViewersSheet from "./StoryViewersSheet";
 import { Story } from "./types";
 import { coverOf, countOf, mediaOf } from "./highlightStories";
+import { storyBackgroundStyle, storyTextColor } from "./storyBackground";
 import timeAgo from "../../utils/timeAgo";
 
 interface RootState {
@@ -287,8 +288,8 @@ const MyStories: React.FC = () => {
                         <span
                           // Data-driven: the author's own story colours.
                           style={{
-                            backgroundColor: story.backgroundColor || undefined,
-                            color: story.textColor || undefined,
+                            ...storyBackgroundStyle(story.backgroundColor),
+                            color: storyTextColor(story.textColor),
                           }}
                           className="flex h-full w-full items-center justify-center overflow-hidden bg-ink-800 p-3 text-center text-xs font-semibold leading-snug text-white"
                         >

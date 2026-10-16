@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
 import Avatar from "../../design/Avatar";
 import { StoryFeedUser, Story } from "./types";
+import { userAvatarUrl } from "../../utils/photoUrl";
 
 /**
  * The ring row, and deliberately nothing else.
@@ -161,7 +162,7 @@ const StoriesFeed: React.FC = () => {
               className={`${RING} ${unviewed ? RING_LIVE : RING_SEEN}`}
             >
               <Avatar
-                src={(user.imageUrls && user.imageUrls[0]) || (user.images && user.images[0])}
+                src={userAvatarUrl(user)}
                 name={user.name || "User"}
                 size={54}
               />

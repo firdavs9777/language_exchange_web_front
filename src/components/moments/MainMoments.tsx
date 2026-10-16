@@ -358,6 +358,8 @@ const MainMoments: React.FC = () => {
       state: {
         promptText: promptOfDay?.text,
         promptId: promptOfDay?.promptId,
+        promptLanguage: promptOfDay?.language,
+        promptEmoji: promptOfDay?.emoji,
       },
     });
   }, [navigate, promptOfDay]);
@@ -526,6 +528,7 @@ const MainMoments: React.FC = () => {
                             mediaType={moment.mediaType}
                             video={moment.video}
                             audio={moment.audio}
+                            prompt={moment.prompt}
                             backgroundColor={moment.backgroundColor}
                             scheduledFor={moment.scheduledFor}
                           />

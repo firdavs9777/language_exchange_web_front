@@ -16,6 +16,7 @@ import {
   CHECK_USERNAME_URL,
   GEOCODE_REVERSE_URL,
   GEOCODE_FORWARD_URL,
+  NOTIFICATION_SETTINGS_URL,
 } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
@@ -306,6 +307,25 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       providesTags: ["User"],
     }),
 
+    // Notification preferences. Both verbs answer `{ success, data: {
+    // ...notificationSettings, quietHours } }`; the PUT takes a flat body
+    // (`{ chatMessages: false, quietHours: { enabled: true } }`) and the
+    // server merges it key by key, so send only what changed.
+    getNotificationSettings: builder.query({
+      query: () => ({ url: NOTIFICATION_SETTINGS_URL }),
+      transformResponse: (r: any) => (r && r.data) || {},
+      providesTags: ["NotificationSettings"],
+    }),
+    updateNotificationSettings: builder.mutation({
+      query: (changes: any) => ({
+        url: NOTIFICATION_SETTINGS_URL,
+        method: "PUT",
+        body: changes,
+      }),
+      transformResponse: (r: any) => (r && r.data) || {},
+      invalidatesTags: ["NotificationSettings"],
+    }),
+
     // Report anything: `POST /api/v1/reports` (routes/report.js). `reportId`
     // is the id of the reported THING — for `type: "user"` that is the user
     // themselves, so it defaults to `reportedUser` rather than making every
@@ -424,4 +444,7 @@ export const {
   useLazyCheckUsernameQuery,
   useLazyReverseGeocodeQuery,
   useLazyForwardGeocodeQuery,
+  // Notification preferences
+  useGetNotificationSettingsQuery,
+  useUpdateNotificationSettingsMutation,
 } = usersApiSlice;

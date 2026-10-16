@@ -27,6 +27,8 @@ import MomentOverflowMenu from "./actions/MomentOverflowMenu";
 import ScheduledBadge from "./ScheduledBadge";
 import { isScheduledLater } from "./lib/scheduling";
 import TranslatableText from "./TranslatableText";
+import PromptAnswerTag from "./PromptAnswerTag";
+import { MomentPrompt } from "./types";
 import CommentList from "./comments/CommentList";
 import AdUnit from "../ads/AdUnit";
 import { AD_SLOTS } from "../ads/adsenseConfig";
@@ -61,6 +63,7 @@ interface User {
 
 interface MomentDetails {
   _id: string;
+  prompt?: MomentPrompt | null;
   title: string;
   description: string;
   likedUsers: string[];
@@ -588,6 +591,10 @@ const MomentDetail: React.FC = () => {
 
           {/* Moment Content */}
           <div className="p-4 sm:p-6">
+            <PromptAnswerTag
+              prompt={momentDetails.prompt}
+              className="mb-3 inline-flex max-w-full items-center gap-1.5 rounded-full border border-amber-300/60 bg-amber-50 px-3 py-1 text-xs sm:text-sm font-medium text-amber-800"
+            />
             {momentDetails.title && (
               <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
                 {momentDetails.title}

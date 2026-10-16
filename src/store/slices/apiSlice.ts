@@ -192,6 +192,9 @@ export const apiSlice = createApi({
     // for the editor, so saving one announcement doesn't refetch another.
     "AdminAnnouncements",
     "AdminAnnouncement",
+    // GET /notifications/settings: its own tag so saving the notification
+    // page does not refetch every "User" query (profile, visitors, blocks).
+    "NotificationSettings",
   ],
   refetchOnFocus: false,
   refetchOnReconnect: true,
