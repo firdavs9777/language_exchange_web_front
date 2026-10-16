@@ -319,7 +319,7 @@ const PrivacyPolicy = () => {
             <p>
               <strong>Website:</strong>{" "}
               <a
-                href="http://banatalk.com"
+                href="https://banatalk.com"
                 target="_blank"
                 rel="noopener noreferrer"
               >
