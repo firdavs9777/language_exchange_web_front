@@ -166,7 +166,7 @@ Phase 4 Rooms — voice rooms, language rooms, City/Genders (plan `bananatalk_ap
 - [x] P4-ROOM-PUSH Push unit rooms (suite + build + livekit checks green, deployed dark, production smoke recorded) — deployed dark 2026-10-16 (suite 4318 pass; livekit in its own chunk). Open: bundle budget over (313.6 vs 307 KB app code); backend: voice-room speaker role/kick, raise-hand event names differ app vs backend, city search ignores location.city; German "Sprachräume" wording clash
 
 Phase 4 Calls (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
-- [x] Calls: website chats offer 'call in the app' (owner decision 2026-10-16: no browser calls)
+- [x] Calls: website chats offer 'call in the app' (owner decision 2026-10-16: no browser calls) — deployed 2026-10-16 (suite 4351 pass); visible to everyone (not flagged)
 
 Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-parity-phase4.md`)
 - [x] P4-APPLE-1 Apple JS loader, nonce and popup sign-in wrapper (script fetched only on click)
