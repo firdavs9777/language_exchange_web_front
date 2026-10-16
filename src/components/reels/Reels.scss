@@ -35,3 +35,18 @@
 .reel-tile-play { position: absolute; inset-block-start: 8px; inset-inline-end: 8px; color: #fff; opacity: 0.85; }
 .reel-tile-meta { position: absolute; inset-inline: 0; inset-block-end: 0; display: flex; justify-content: space-between; padding: 6px 8px; color: #fff; font-size: 0.75rem; font-weight: 700; background: linear-gradient(transparent, rgba(0, 0, 0, 0.6)); }
 .reels-more { display: flex; justify-content: center; margin-block: 16px; }
+.reel-viewer { position: fixed; inset: 0; z-index: 1050; background: #000; display: flex; align-items: center; justify-content: center; touch-action: none; }
+.reel-slide { position: relative; block-size: 100%; inline-size: min(100vw, calc(100vh * 9 / 16)); }
+.reel-video { inline-size: 100%; block-size: 100%; object-fit: cover; background: #000; }
+.reel-video-landscape { object-fit: contain; }
+.reel-tap-to-play { position: absolute; inset: 0; margin: auto; inline-size: 120px; block-size: 120px; border: 0; border-radius: 999px; background: rgba(0, 0, 0, 0.55); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-weight: 700; }
+.reel-caption { position: absolute; inset-inline-start: 12px; inset-inline-end: 72px; inset-block-end: 16px; color: #fff; text-align: start; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); }
+.reel-author { font-weight: 800; }
+.reel-description { margin: 4px 0 0; font-size: 0.875rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.reel-rail { position: absolute; inset-inline-end: 8px; inset-block-end: 24px; display: flex; flex-direction: column; gap: 14px; align-items: center; }
+.reel-icon-btn { border: 0; border-radius: 999px; inline-size: 40px; block-size: 40px; background: rgba(255, 255, 255, 0.15); color: #fff; display: inline-flex; align-items: center; justify-content: center; }
+.reel-icon-btn:disabled { opacity: 0.3; }
+.reel-close { position: absolute; inset-block-start: 16px; inset-inline-start: 16px; }
+.reel-mute { position: absolute; inset-block-start: 16px; inset-inline-end: 16px; }
+.reel-nav { position: absolute; inset-inline-end: 16px; inset-block-start: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; }
+@media (max-width: 640px) { .reel-nav { display: none; } }

@@ -2978,6 +2978,15 @@
       "empty": "No reels yet. Be the first to post one.",
       "load_more": "Load more",
       "open_reel": "Play reel by {{name}}"
+    },
+    "viewer": {
+      "label": "Reels",
+      "tap_to_play": "Tap to play",
+      "close": "Close",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "previous": "Previous reel",
+      "next": "Next reel"
     }
   }
 }

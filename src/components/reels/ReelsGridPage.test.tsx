@@ -7,6 +7,10 @@ import ReelsGridPage from "./ReelsGridPage";
 let mockFeed: any;
 jest.mock("./useReelsFeed", () => ({ useReelsFeed: () => mockFeed }));
 jest.mock("./ReelPolicyGate", () => ({ __esModule: true, default: (p: any) => <>{p.children}</> }));
+jest.mock("./ReelViewer", () => ({
+  __esModule: true,
+  default: (p: any) => <div data-testid="viewer-stub">{p.reels[p.index].id}</div>,
+}));
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
 }));
@@ -74,4 +78,11 @@ it("says reels are unavailable on a 404, and offers a retry on other errors", ()
   renderPage();
   fireEvent.click(screen.getByTestId("reels-retry"));
   expect(mockFeed.reload).toHaveBeenCalled();
+});
+
+it("opens the viewer on the clicked reel and puts it in the URL", () => {
+  mockFeed = feed({ reels: [reel("a"), reel("b")] });
+  renderPage();
+  fireEvent.click(screen.getByTestId("reel-tile-b"));
+  expect(screen.getByTestId("viewer-stub")).toHaveTextContent("b");
 });

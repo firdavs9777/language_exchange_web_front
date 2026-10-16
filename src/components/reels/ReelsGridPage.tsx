@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import ReelPolicyGate from "./ReelPolicyGate";
 import ReelTile from "./ReelTile";
+import ReelViewer from "./ReelViewer";
 import { useReelsFeed } from "./useReelsFeed";
 import "./Reels.scss";
 
@@ -14,8 +15,20 @@ const ReelsGridPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const feed = useReelsFeed();
-  // Read by the viewer (P4-REEL-4).
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  // The open reel lives in the URL (?reel=<id>) so Back closes the viewer
+  // instead of leaving /reels. A link shared by id that is not in this
+  // session's feed simply opens the grid.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const openId = searchParams.get("reel");
+  const openIndex = openId ? feed.reels.findIndex((r) => r.id === openId) : -1;
+  const openReel = (i: number) =>
+    setSearchParams({ reel: feed.reels[i].id }, { state: { reelOpened: true } } as any);
+  const moveTo = (i: number) => setSearchParams({ reel: feed.reels[i].id }, { replace: true, state: location.state } as any);
+  const closeViewer = () => {
+    if (location.state && (location.state as any).reelOpened) navigate(-1);
+    else setSearchParams({}, { replace: true } as any);
+  };
 
   const createLink = (
     <Link to="/reels/new" className="reel-btn reel-btn-primary" data-testid="reels-create">
@@ -52,7 +65,7 @@ const ReelsGridPage: React.FC = () => {
       <>
         <div className="reels-grid">
           {feed.reels.map((reel, i) => (
-            <ReelTile key={reel.id} reel={reel} onOpen={() => setOpenIndex(i)} />
+            <ReelTile key={reel.id} reel={reel} onOpen={() => openReel(i)} />
           ))}
         </div>
         {feed.hasMore && (
@@ -80,7 +93,16 @@ const ReelsGridPage: React.FC = () => {
           {feed.status !== "unavailable" && createLink}
         </header>
         {body}
-        {openIndex !== null && null /* viewer: P4-REEL-4 */}
+        {openIndex >= 0 && (
+          <ReelViewer
+            reels={feed.reels}
+            index={openIndex}
+            hasMore={feed.hasMore}
+            onIndexChange={moveTo}
+            onNeedMore={feed.loadMore}
+            onClose={closeViewer}
+          />
+        )}
       </section>
     </ReelPolicyGate>
   );
