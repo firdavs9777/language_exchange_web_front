@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Mic, Square, X } from 'lucide-react';
+import { pickRecorderMime } from '../../../utils/recorderMime';
 
 interface VoiceNoteRecorderProps {
   maxSeconds?: number;
@@ -134,7 +135,7 @@ const VoiceNoteRecorder: React.FC<VoiceNoteRecorderProps> = ({
         if (recorder.state !== 'inactive') {
           recorder.stop();
         } else {
-          resolve(new Blob(chunksRef.current, { type: 'audio/webm' }));
+          resolve(new Blob(chunksRef.current, { type: recorder.mimeType || 'audio/webm' }));
         }
       });
 
@@ -190,7 +191,15 @@ const VoiceNoteRecorder: React.FC<VoiceNoteRecorderProps> = ({
         levelIntervalRef.current = setInterval(sampleLevel, 100);
       }
 
-      const recorder = new MediaRecorder(stream);
+      // AAC/MP4 where the browser can (plays in the iOS app); otherwise the
+      // browser's default. A typed constructor can throw on Safari < 18.4.
+      const preferred = pickRecorderMime().mimeType;
+      let recorder: MediaRecorder;
+      try {
+        recorder = preferred ? new MediaRecorder(stream, { mimeType: preferred }) : new MediaRecorder(stream);
+      } catch (e) {
+        recorder = new MediaRecorder(stream);
+      }
       mediaRecorderRef.current = recorder;
       chunksRef.current = [];
       stoppedRef.current = false;

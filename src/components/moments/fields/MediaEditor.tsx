@@ -11,6 +11,7 @@ import {
 import MomentVideoPlayer from "../media/MomentVideoPlayer";
 import VoiceNotePlayer from "../media/VoiceNotePlayer";
 import VoiceNoteRecorder from "../media/VoiceNoteRecorder";
+import { audioUpload } from "../../../utils/audioUpload";
 
 interface Props {
   moment: any;
@@ -65,7 +66,8 @@ const MediaEditor: React.FC<Props> = ({ moment }) => {
   const replaceAudio = async (blob: Blob, durationSec: number, waveform: number[]) => {
     setRecording(false);
     const formData = new FormData();
-    formData.append("audio", blob, "voice-note.webm");
+    const upload = audioUpload(blob, "voice-note");
+    formData.append("audio", upload.blob, upload.filename);
     formData.append("duration", String(durationSec));
     formData.append("waveform", JSON.stringify(waveform));
     try {

@@ -35,6 +35,7 @@ import { useMomentSchedulingEnabled } from "./lib/useMomentSchedulingEnabled";
 import { useCurrentLocation } from "./fields/useCurrentLocation";
 import VoiceNoteRecorder from "./media/VoiceNoteRecorder";
 import ISO6391 from "iso-639-1";
+import { audioUpload } from "../../utils/audioUpload";
 
 import {
   FaArrowLeft,
@@ -310,7 +311,8 @@ const CreateMoment: React.FC = () => {
           await uploadMomentVideo({ momentId, formData }).unwrap();
         } else if (mediaMode === "voice" && audioNote && momentId) {
           const formData = new FormData();
-          formData.append("audio", audioNote.blob, "voice-note.webm");
+          const upload = audioUpload(audioNote.blob, "voice-note");
+          formData.append("audio", upload.blob, upload.filename);
           formData.append("duration", String(audioNote.dur));
           formData.append("waveform", JSON.stringify(audioNote.wf));
           await uploadMomentAudio({ momentId, formData }).unwrap();
