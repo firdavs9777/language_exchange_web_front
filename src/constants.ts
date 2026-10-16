@@ -86,6 +86,11 @@ export const PUBLIC_STATS_URL = "/api/v1/public/stats";
 // Unauthenticated, cached for 10 minutes server-side (controllers/public.js):
 // the communities a logged-out visitor and a crawler see on /communities.
 export const PUBLIC_COMMUNITIES_URL = "/api/v1/public/communities";
+// 모임: gatherings and clubs (be/routes/gatherings.js, be/routes/clubs.js).
+// Both behind GATHERINGS_ENABLED (404 while off) and, on the website, behind
+// the webGatheringsEnabled flag (src/utils/webFlags.ts).
+export const GATHERINGS_URL = "/api/v1/gatherings";
+export const CLUBS_URL = "/api/v1/clubs";
 export const ANALYTICS_EVENTS_URL = "/api/v1/analytics/events";
 
 // Admin console. Every route below lives under `protect` + `authorize('admin')`

@@ -197,6 +197,12 @@ export const apiSlice = createApi({
     "AdminAnnouncement",
     // GET /notifications/settings: its own tag so saving the notification
     // page does not refetch every "User" query (profile, visitors, blocks).
+    // Gatherings and clubs (Phase 4). A list tag and a per-id tag each, so an
+    // RSVP refreshes that gathering's page and the list -- not every club.
+    "Gatherings",
+    "Gathering",
+    "Clubs",
+    "Club",
     "NotificationSettings",
   ],
   refetchOnFocus: false,
