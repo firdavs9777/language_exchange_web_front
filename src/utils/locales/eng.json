@@ -2948,6 +2948,9 @@
   },
   "auth": {
     "apple": {
+      "continue": "Continue with Apple",
+      "signingIn": "Signing in with Apple…",
+      "signedIn": "Signed in with Apple",
       "errors": {
         "disabled": "Sign in with Apple isn't available on the website yet.",
         "unavailable": "Sign in with Apple isn't available right now. Try again later.",
