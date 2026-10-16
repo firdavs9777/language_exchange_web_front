@@ -59,7 +59,7 @@ jest.mock("../../store/slices/usersSlice", () => ({
 
 jest.mock("../../design/notify", () => ({
   __esModule: true,
-  default: { success: jest.fn(), error: jest.fn() },
+  default: { success: jest.fn(), error: jest.fn(), info: jest.fn() },
 }));
 
 const VIDEO_CONFIG = {
@@ -464,5 +464,37 @@ describe("the composer", () => {
     fireEvent.click(screen.getByTestId("open-question"));
     expect(screen.queryByTestId("poll-question")).toBeNull();
     expect(screen.getByTestId("question-prompt")).toBeInTheDocument();
+  });
+});
+
+describe("one picture per story (moments#16)", () => {
+  const jpg = (name: string) => new File(["x"], name, { type: "image/jpeg" });
+
+  it("offers a single-picture picker", () => {
+    render(<CreateStory />);
+    expect(screen.getByTestId("photo-input")).not.toHaveAttribute("multiple");
+  });
+
+  it("keeps the first of several pictures, says so, and uploads only that one", async () => {
+    render(<CreateStory />);
+    fireEvent.change(screen.getByTestId("photo-input"), {
+      target: { files: [jpg("a.jpg"), jpg("b.jpg"), jpg("c.jpg")] },
+    });
+    // Every viewer (web and app) draws mediaUrls[0] only; 2-5 were invisible.
+    expect(notify.info).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(screen.getByTestId("share-story"));
+    await waitFor(() => expect(mockCreateStory).toHaveBeenCalled());
+    const form = mockCreateStory.mock.calls[0][0] as FormData;
+    const sent = form.getAll("media") as File[];
+    expect(sent).toHaveLength(1);
+    expect(sent[0].name).toBe("a.jpg");
+  });
+
+  it("does not nag when one picture was picked", () => {
+    render(<CreateStory />);
+    fireEvent.change(screen.getByTestId("photo-input"), { target: { files: [jpg("a.jpg")] } });
+    expect(notify.info).not.toHaveBeenCalled();
+    expect(screen.getByTestId("story-canvas")).toBeInTheDocument();
   });
 });

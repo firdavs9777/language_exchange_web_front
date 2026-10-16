@@ -284,9 +284,17 @@ const CreateStory: React.FC = () => {
       }
 
       if (images.length > 0) {
+        // One picture per story, as in the app: every viewer (this one and
+        // the app's) draws mediaUrls[0] only, so pictures 2-5 used to be
+        // uploaded and never seen by anyone.
+        if (images.length > 1) {
+          notify.info(
+            t("stories.one_image_only") || "A story shows one picture. We kept the first one."
+          );
+        }
         setMediaType("image");
-        setMediaFiles(images.slice(0, 5));
-        setMediaPreviews(images.slice(0, 5).map((file) => URL.createObjectURL(file)));
+        setMediaFiles(images.slice(0, 1));
+        setMediaPreviews(images.slice(0, 1).map((file) => URL.createObjectURL(file)));
         setStep("edit");
       }
     },
@@ -699,7 +707,6 @@ const CreateStory: React.FC = () => {
               data-testid="photo-input"
               type="file"
               accept="image/*"
-              multiple
               onChange={handleFileSelect}
               className="hidden"
             />

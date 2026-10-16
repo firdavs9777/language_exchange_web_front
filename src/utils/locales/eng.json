@@ -2670,7 +2670,8 @@
     "poll_error_max_options": "A poll can have at most four options",
     "question_error_prompt": "Add a question to your question sticker",
     "caption": "Caption",
-    "caption_placeholder": "Add a caption…"
+    "caption_placeholder": "Add a caption…",
+    "one_image_only": "A story shows one picture. We kept the first one."
   },
   "_note": "English source for the homepage promo carousel (src/data/promoSlides.ts, src/components/growth/PromoCarousel.tsx). NOT yet merged into src/utils/locales/*.json: localeParity.test.ts requires all 18 locales to carry the same key set, so this namespace lands in one translation pass. Until then every call site is t(key) || the English below.",
   "invite": {
