@@ -5,10 +5,13 @@
       {
         "appIDs": ["RJF4T5CJ76.com.bananatalk.bananatalkApp"],
         "components": [
+          { "/": "/profile/edit", "exclude": true, "comment": "web-only: edit your profile" },
+          { "/": "/profile/*/followers", "exclude": true, "comment": "web-only list page" },
+          { "/": "/profile/*/following", "exclude": true, "comment": "web-only list page" },
+          { "/": "/community/nearby", "exclude": true, "comment": "web-only page" },
           { "/": "/moment/*" },
           { "/": "/profile/*" },
           { "/": "/community/*" },
-          { "/": "/chat/*" },
           { "/": "/i/*" }
         ]
       }
