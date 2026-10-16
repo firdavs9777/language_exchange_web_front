@@ -10,6 +10,7 @@ import {
 } from "../../store/slices/gatheringsSlice";
 import { isHostDecisionDue, minutesUntil, gatheringErrorText, personName } from "./lib/gatheringFormat";
 import ConfirmDialog from "./ConfirmDialog";
+import CoverEditor from "./CoverEditor";
 import { photoUrl } from "../../utils/photoUrl";
 
 /**
@@ -48,6 +49,7 @@ const GatheringHostPanel: React.FC<{ gathering: Gathering; now?: Date }> = ({ ga
 
   return (
     <div data-testid="host-panel" className="mt-4 grid gap-4">
+      <CoverEditor kind="gathering" id={g._id} hasCover={!!g.coverImage} />
       {requests.length > 0 && (
         <section data-testid="host-requests" className="rounded-2xl border border-gray-200 p-4 dark:border-gray-700">
           <h2 className="text-sm font-extrabold">

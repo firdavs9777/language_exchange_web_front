@@ -21,6 +21,7 @@ jest.mock("./ClubPeople", () => () => <div data-testid="club-people" />);
 jest.mock("./GatheringSafetyMenu", () => () => <div data-testid="safety-menu" />);
 jest.mock("./GatheringCard", () => (p: any) => <div data-testid={`gathering-card-${p.gathering._id}`} />);
 jest.mock("./ClubOwnerActions", () => () => <div data-testid="club-owner-actions" />);
+jest.mock("./CoverEditor", () => () => <div data-testid="cover-editor" />);
 
 const club = (extra: any = {}) => ({
   _id: "c1",

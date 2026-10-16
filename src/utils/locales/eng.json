@@ -3180,6 +3180,13 @@
       "requests_one": "{{count}} waiting to join",
       "requests_other": "{{count}} waiting to join",
       "runAnyway": "Run it anyway"
+    },
+    "cover": {
+      "add": "Add a cover photo",
+      "badType": "Use a JPEG, PNG, GIF or WebP image.",
+      "change": "Change cover photo",
+      "remove": "Remove cover",
+      "tooBig": "That image is over 10 MB."
     }
   },
   "clubs": {

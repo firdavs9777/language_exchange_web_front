@@ -10,6 +10,7 @@ import GatheringSafetyMenu from "./GatheringSafetyMenu";
 import ConfirmDialog from "./ConfirmDialog";
 import ClubPeople from "./ClubPeople";
 import ClubOwnerActions from "./ClubOwnerActions";
+import CoverEditor from "./CoverEditor";
 
 const ClubDetail: React.FC = () => {
   const { id = "" } = useParams();
@@ -92,6 +93,11 @@ const ClubDetail: React.FC = () => {
           </Link>
         )}
       </div>
+      {club.viewerCanManage && (
+        <div className="mt-3">
+          <CoverEditor kind="club" id={club._id} hasCover={!!club.coverImage} />
+        </div>
+      )}
 
       <section className="mt-6">
         <div className="flex items-center">

@@ -4,6 +4,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import GatheringHostPanel from "./GatheringHostPanel";
 
 jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "", i18n: { language: "en" } }) }));
+jest.mock("./CoverEditor", () => () => <div data-testid="cover-editor" />);
 const mockSuccess = jest.fn();
 const mockError = jest.fn();
 jest.mock("../../design/notify", () => ({
