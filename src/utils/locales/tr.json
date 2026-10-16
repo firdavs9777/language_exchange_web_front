@@ -2932,5 +2932,20 @@
     "unknownError": "Bir hata oluştu",
     "usersFound_one": "{{count}} kişi bulundu",
     "usersFound_other": "{{count}} kişi bulundu"
+  },
+  "auth": {
+    "apple": {
+      "continue": "Apple ile devam et",
+      "errors": {
+        "banned": "Bu hesap askıya alındı.",
+        "blocked": "Tarayıcınız Apple penceresini engelledi. banatalk.com için açılır pencerelere izin verin ve tekrar deneyin.",
+        "disabled": "Apple ile giriş henüz web sitesinde kullanılamıyor.",
+        "failed": "Apple ile giriş yapılamadı. Tekrar deneyin.",
+        "rate_limited": "Çok fazla giriş denemesi. Bir dakika bekleyip tekrar deneyin.",
+        "unavailable": "Apple ile giriş şu anda kullanılamıyor. Daha sonra tekrar deneyin."
+      },
+      "signedIn": "Apple ile giriş yapıldı",
+      "signingIn": "Apple ile giriş yapılıyor…"
+    }
   }
 }

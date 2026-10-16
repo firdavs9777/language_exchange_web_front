@@ -2932,5 +2932,20 @@
     "unknownError": "Terjadi kesalahan",
     "usersFound_one": "{{count}} orang ditemukan",
     "usersFound_other": "{{count}} orang ditemukan"
+  },
+  "auth": {
+    "apple": {
+      "continue": "Lanjutkan dengan Apple",
+      "errors": {
+        "banned": "Akun ini telah ditangguhkan.",
+        "blocked": "Browser Anda memblokir jendela Apple. Izinkan pop-up untuk banatalk.com lalu coba lagi.",
+        "disabled": "Masuk dengan Apple belum tersedia di situs web.",
+        "failed": "Tidak dapat masuk dengan Apple. Coba lagi.",
+        "rate_limited": "Terlalu banyak percobaan masuk. Tunggu satu menit lalu coba lagi.",
+        "unavailable": "Masuk dengan Apple sedang tidak tersedia. Coba lagi nanti."
+      },
+      "signedIn": "Berhasil masuk dengan Apple",
+      "signingIn": "Masuk dengan Apple…"
+    }
   }
 }

@@ -2932,5 +2932,20 @@
     "unknownError": "문제가 생겼어요",
     "usersFound_one": "{{count}}명을 찾았어요",
     "usersFound_other": "{{count}}명을 찾았어요"
+  },
+  "auth": {
+    "apple": {
+      "continue": "Apple로 계속하기",
+      "errors": {
+        "banned": "이 계정은 정지되었습니다.",
+        "blocked": "브라우저가 Apple 창을 차단했습니다. banatalk.com의 팝업을 허용한 뒤 다시 시도해 주세요.",
+        "disabled": "Apple로 로그인은 아직 웹사이트에서 사용할 수 없습니다.",
+        "failed": "Apple로 로그인하지 못했습니다. 다시 시도해 주세요.",
+        "rate_limited": "로그인 시도가 너무 많습니다. 1분 후에 다시 시도해 주세요.",
+        "unavailable": "지금은 Apple로 로그인을 사용할 수 없습니다. 잠시 후 다시 시도해 주세요."
+      },
+      "signedIn": "Apple로 로그인했습니다",
+      "signingIn": "Apple로 로그인 중…"
+    }
   }
 }

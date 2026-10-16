@@ -2932,5 +2932,20 @@
     "unknownError": "エラーが発生しました",
     "usersFound_one": "{{count}}人が見つかりました",
     "usersFound_other": "{{count}}人が見つかりました"
+  },
+  "auth": {
+    "apple": {
+      "continue": "Appleで続ける",
+      "errors": {
+        "banned": "このアカウントは停止されています。",
+        "blocked": "ブラウザがAppleのウィンドウをブロックしました。banatalk.comのポップアップを許可して、もう一度お試しください。",
+        "disabled": "Appleでサインインはまだウェブサイトでご利用いただけません。",
+        "failed": "Appleでサインインできませんでした。もう一度お試しください。",
+        "rate_limited": "サインインの試行回数が多すぎます。1分ほど待ってからもう一度お試しください。",
+        "unavailable": "現在Appleでサインインをご利用いただけません。しばらくしてからもう一度お試しください。"
+      },
+      "signedIn": "Appleでサインインしました",
+      "signingIn": "Appleでサインイン中…"
+    }
   }
 }

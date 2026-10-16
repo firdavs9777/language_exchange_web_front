@@ -2932,5 +2932,20 @@
     "unknownError": "Ein Fehler ist aufgetreten",
     "usersFound_one": "{{count}} Person gefunden",
     "usersFound_other": "{{count}} Personen gefunden"
+  },
+  "auth": {
+    "apple": {
+      "continue": "Mit Apple fortfahren",
+      "errors": {
+        "banned": "Dieses Konto wurde gesperrt.",
+        "blocked": "Dein Browser hat das Apple-Fenster blockiert. Erlaube Pop-ups für banatalk.com und versuche es erneut.",
+        "disabled": "„Mit Apple anmelden“ ist auf der Website noch nicht verfügbar.",
+        "failed": "Anmeldung mit Apple fehlgeschlagen. Versuche es erneut.",
+        "rate_limited": "Zu viele Anmeldeversuche. Warte eine Minute und versuche es erneut.",
+        "unavailable": "„Mit Apple anmelden“ ist gerade nicht verfügbar. Versuche es später noch einmal."
+      },
+      "signedIn": "Mit Apple angemeldet",
+      "signingIn": "Anmeldung mit Apple …"
+    }
   }
 }

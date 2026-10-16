@@ -2932,5 +2932,20 @@
     "unknownError": "發生錯誤",
     "usersFound_one": "找到 {{count}} 人",
     "usersFound_other": "找到 {{count}} 人"
+  },
+  "auth": {
+    "apple": {
+      "continue": "透過 Apple 繼續",
+      "errors": {
+        "banned": "此帳號已被停權。",
+        "blocked": "瀏覽器封鎖了 Apple 視窗。請允許 banatalk.com 的彈出式視窗後再試一次。",
+        "disabled": "網站尚未支援「透過 Apple 登入」。",
+        "failed": "無法透過 Apple 登入，請再試一次。",
+        "rate_limited": "登入嘗試次數過多，請等待一分鐘後再試。",
+        "unavailable": "目前無法使用「透過 Apple 登入」，請稍後再試。"
+      },
+      "signedIn": "已透過 Apple 登入",
+      "signingIn": "正在透過 Apple 登入…"
+    }
   }
 }

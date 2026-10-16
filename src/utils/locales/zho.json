@@ -2932,5 +2932,20 @@
     "unknownError": "出了点问题",
     "usersFound_one": "找到 {{count}} 人",
     "usersFound_other": "找到 {{count}} 人"
+  },
+  "auth": {
+    "apple": {
+      "continue": "通过 Apple 继续",
+      "errors": {
+        "banned": "此账号已被封禁。",
+        "blocked": "浏览器拦截了 Apple 窗口。请允许 banatalk.com 的弹出窗口后重试。",
+        "disabled": "网站暂不支持“通过 Apple 登录”。",
+        "failed": "无法通过 Apple 登录，请重试。",
+        "rate_limited": "登录尝试次数过多，请等待一分钟后再试。",
+        "unavailable": "“通过 Apple 登录”目前不可用，请稍后再试。"
+      },
+      "signedIn": "已通过 Apple 登录",
+      "signingIn": "正在通过 Apple 登录…"
+    }
   }
 }

@@ -2933,5 +2933,20 @@
     "unknownError": "Ocurrió un error",
     "usersFound_one": "{{count}} persona encontrada",
     "usersFound_other": "{{count}} personas encontradas"
+  },
+  "auth": {
+    "apple": {
+      "continue": "Continuar con Apple",
+      "errors": {
+        "banned": "Esta cuenta ha sido suspendida.",
+        "blocked": "Tu navegador bloqueó la ventana de Apple. Permite las ventanas emergentes para banatalk.com e inténtalo de nuevo.",
+        "disabled": "Iniciar sesión con Apple aún no está disponible en la web.",
+        "failed": "No se pudo iniciar sesión con Apple. Inténtalo de nuevo.",
+        "rate_limited": "Demasiados intentos de inicio de sesión. Espera un minuto e inténtalo de nuevo.",
+        "unavailable": "Iniciar sesión con Apple no está disponible ahora. Inténtalo más tarde."
+      },
+      "signedIn": "Sesión iniciada con Apple",
+      "signingIn": "Iniciando sesión con Apple…"
+    }
   }
 }

@@ -2932,5 +2932,20 @@
     "unknownError": "May naganap na error",
     "usersFound_one": "{{count}} tao ang nahanap",
     "usersFound_other": "{{count}} tao ang nahanap"
+  },
+  "auth": {
+    "apple": {
+      "continue": "Magpatuloy gamit ang Apple",
+      "errors": {
+        "banned": "Sinuspinde ang account na ito.",
+        "blocked": "Hinarangan ng browser mo ang window ng Apple. Payagan ang mga pop-up para sa banatalk.com at subukan ulit.",
+        "disabled": "Hindi pa available sa website ang Sign in with Apple.",
+        "failed": "Hindi makapag-sign in gamit ang Apple. Subukan ulit.",
+        "rate_limited": "Masyadong maraming pagtatangkang mag-sign in. Maghintay ng isang minuto at subukan ulit.",
+        "unavailable": "Hindi available ngayon ang Sign in with Apple. Subukan ulit mamaya."
+      },
+      "signedIn": "Naka-sign in gamit ang Apple",
+      "signingIn": "Nagsa-sign in gamit ang Apple…"
+    }
   }
 }

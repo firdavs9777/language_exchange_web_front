@@ -2932,5 +2932,20 @@
     "unknownError": "Đã xảy ra lỗi",
     "usersFound_one": "Tìm thấy {{count}} người",
     "usersFound_other": "Tìm thấy {{count}} người"
+  },
+  "auth": {
+    "apple": {
+      "continue": "Tiếp tục với Apple",
+      "errors": {
+        "banned": "Tài khoản này đã bị đình chỉ.",
+        "blocked": "Trình duyệt đã chặn cửa sổ Apple. Hãy cho phép cửa sổ bật lên cho banatalk.com rồi thử lại.",
+        "disabled": "Đăng nhập bằng Apple chưa có trên trang web.",
+        "failed": "Không thể đăng nhập bằng Apple. Hãy thử lại.",
+        "rate_limited": "Quá nhiều lần đăng nhập. Hãy đợi một phút rồi thử lại.",
+        "unavailable": "Đăng nhập bằng Apple hiện không khả dụng. Hãy thử lại sau."
+      },
+      "signedIn": "Đã đăng nhập bằng Apple",
+      "signingIn": "Đang đăng nhập bằng Apple…"
+    }
   }
 }
