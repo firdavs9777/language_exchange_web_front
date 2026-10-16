@@ -122,7 +122,9 @@ it("a text moment carries its background; a photo moment does not", async () => 
   fireEvent.click(screen.getByLabelText("gradient_ocean"));
   share();
   await waitFor(() => expect(mockCreate).toHaveBeenCalled());
-  expect(payload()).toEqual(expect.objectContaining({ mediaType: "text", backgroundColor: "gradient_ocean" }));
+  expect(payload()).toEqual(expect.objectContaining({ backgroundColor: "gradient_ocean" }));
+  // The server ignores mediaType on create (the model defaults to text).
+  expect(payload()).not.toHaveProperty("mediaType");
 });
 
 it("chooses who can see it", async () => {

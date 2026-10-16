@@ -194,7 +194,7 @@ const EditMyMoment: React.FC = () => {
       selectedImages.forEach((file) => upload.append("file", file));
       await uploadMomentPhotos({
         momentId: momentId as string,
-        imageFiles: upload as any,
+        imageFiles: upload,
       }).unwrap();
     };
 

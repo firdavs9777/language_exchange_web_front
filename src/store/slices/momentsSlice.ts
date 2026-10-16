@@ -77,7 +77,9 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
         imageFiles,
       }: {
         momentId: string;
-        imageFiles: File[];
+        /** multipart body with one `file` entry per photo (field name the
+         *  route's uploadMultiple expects). */
+        imageFiles: FormData;
       }) => ({
         url: `${MOMENTS_URL}/${momentId}/photo`,
         method: "PUT",
@@ -152,14 +154,6 @@ export const momentsApiSlice = apiSlice.injectEndpoints({
     getMomentTranslations: builder.query({
       query: (momentId: string) => ({
         url: `${MOMENTS_URL}/${momentId}/translations`,
-      }),
-    }),
-    // Report moment
-    reportMoment: builder.mutation({
-      query: ({ momentId, reason, description }: { momentId: string; reason: string; description?: string }) => ({
-        url: `${MOMENTS_URL}/${momentId}/report`,
-        method: "POST",
-        body: { reason, description },
       }),
     }),
     // Comments
@@ -420,7 +414,6 @@ export const {
   useGetSavedMomentsQuery,
   useTranslateMomentMutation,
   useGetMomentTranslationsQuery,
-  useReportMomentMutation,
   useGetMomentCommentsQuery,
   useAddMomentCommentMutation,
   useDeleteMomentCommentMutation,

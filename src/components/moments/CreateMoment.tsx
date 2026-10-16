@@ -284,10 +284,7 @@ const CreateMoment: React.FC = () => {
       // Only while the server enforces scheduling: otherwise it would post now.
       const scheduledIso = schedulingEnabled && scheduledFor ? localInputToIso(scheduledFor) : null;
       if (scheduledIso) payload.scheduledFor = scheduledIso;
-      if (mediaMode === "text") {
-        payload.mediaType = "text";
-        if (backgroundColor) payload.backgroundColor = backgroundColor;
-      }
+      if (mediaMode === "text" && backgroundColor) payload.backgroundColor = backgroundColor;
       if (answeredPrompt && answeredPrompt.id) payload.promptId = answeredPrompt.id;
 
       const response = await createMoment(payload).unwrap();
