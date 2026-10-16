@@ -50,6 +50,7 @@ import {
   serializeLink,
   serializeMentions,
   serializeOverlays,
+  storyBodyFontClass,
   videoConstraintsOf,
   videoDurationError,
   videoFileError,
@@ -112,7 +113,10 @@ const BG_COLORS = OVERLAY_COLORS.map((c) => c.hex);
 const BODY_OVERLAY_FONT: { [k: string]: OverlayFontStyle } = {
   normal: "sans-serif",
   bold: "bold",
-  italic: "serif",
+  // The overlay vocabulary has no italic. Serif is a different typeface, not
+  // a slant; the plain face is the honest nearest, and the story's own
+  // `fontStyle: "italic"` still travels for clients that read it.
+  italic: "sans-serif",
   handwriting: "handwritten",
 };
 
@@ -616,7 +620,10 @@ const CreateStory: React.FC = () => {
         <div
           // Author data, not theme: the colours they picked for this story.
           style={{ backgroundColor, color: textColor }}
-          className="flex h-full w-full items-center justify-center p-6 text-center text-lg font-semibold"
+          className={
+            "flex h-full w-full items-center justify-center p-6 text-center text-lg " +
+            storyBodyFontClass(fontStyle)
+          }
         >
           {text}
         </div>

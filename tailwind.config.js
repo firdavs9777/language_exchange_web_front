@@ -70,6 +70,11 @@ module.exports = {
           '"Segoe UI"',
           "sans-serif",
         ],
+        // Story handwriting face. The app draws `handwriting` text stories and
+        // `handwritten` overlays in Caveat; no webfont ships for one sticker
+        // style (src/fonts.test.ts pins the self-hosted set), so Caveat is named
+        // first for machines that have it and the OS handwriting faces follow.
+        hand: ['Caveat', '"Segoe Print"', '"Bradley Hand"', '"Comic Sans MS"', "cursive"],
       },
       letterSpacing: {
         // The two negative steps of Tailwind's scale, with their own values,

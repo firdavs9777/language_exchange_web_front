@@ -498,3 +498,19 @@ describe("one picture per story (moments#16)", () => {
     expect(screen.getByTestId("story-canvas")).toBeInTheDocument();
   });
 });
+
+describe("italic text story with stickers (moments#25)", () => {
+  it("sends the body overlay in the plain face, not serif, and keeps fontStyle italic", async () => {
+    openTextEditor();
+    fireEvent.change(screen.getByTestId("story-text"), { target: { value: "hi" } });
+    fireEvent.change(screen.getByTestId("story-font"), { target: { value: "italic" } });
+    fireEvent.click(screen.getByTestId("add-text-overlay"));
+    fireEvent.change(screen.getByTestId("overlay-content-0"), { target: { value: "sticker" } });
+    fireEvent.click(screen.getByTestId("share-story"));
+
+    await waitFor(() => expect(mockCreateStory).toHaveBeenCalled());
+    expect(sentField(mockCreateStory, "overlays")[0].fontStyle).toBe("sans-serif");
+    const form = mockCreateStory.mock.calls[0][0] as FormData;
+    expect(form.get("fontStyle")).toBe("italic");
+  });
+});

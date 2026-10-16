@@ -59,15 +59,34 @@ export const OVERLAY_COLORS: { hex: string; swatch: string }[] = [
   { hex: "#8E8E93", swatch: "bg-gray-400" },
 ];
 
-/** Font styles as classes. There is no handwriting face in the app's stack, so
- * `handwritten` borrows the serif italic rather than shipping a font for one
- * sticker. */
+/**
+ * Font styles as classes, mirroring the app viewer
+ * (`viewer_overlay_layer.dart`): sans is weight 500, serif regular, bold
+ * bold, handwritten the Caveat face in italic (`font-hand`, see
+ * tailwind.config.js -- a system handwriting stack with Caveat first).
+ */
 export const OVERLAY_FONT_CLASS: Record<OverlayFontStyle, string> = {
-  "sans-serif": "font-sans",
-  serif: "font-serif",
+  "sans-serif": "font-sans font-medium",
+  serif: "font-serif font-normal",
   bold: "font-sans font-bold",
-  handwritten: "font-serif italic",
+  handwritten: "font-hand font-normal italic",
 };
+
+/**
+ * A TEXT story's own `fontStyle` (a different vocabulary from overlays:
+ * `models/Story.js` fontStyle enum) as classes, mirroring the app's
+ * `ViewerTextStoryLayer._textStyleOf()`. Missing or unknown is `normal`.
+ */
+const STORY_BODY_FONT_CLASS: { [style: string]: string } = {
+  normal: "font-sans font-normal",
+  bold: "font-sans font-bold",
+  italic: "font-sans font-normal italic",
+  handwriting: "font-hand font-normal",
+};
+
+export function storyBodyFontClass(fontStyle?: string): string {
+  return (fontStyle && STORY_BODY_FONT_CLASS[fontStyle]) || STORY_BODY_FONT_CLASS.normal;
+}
 
 /** `bgMode` is the plate BEHIND the glyphs; the glyph colour is the overlay's
  * own `color` in every mode. */

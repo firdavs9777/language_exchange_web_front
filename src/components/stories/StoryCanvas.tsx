@@ -6,6 +6,7 @@ import {
   mentionPositionStyle,
   overlayPositionStyle,
   overlayScaleClass,
+  storyBodyFontClass,
 } from "./storyOverlays";
 import { storyBackgroundStyle, storyTextColor } from "./storyBackground";
 
@@ -116,7 +117,8 @@ const StoryCanvas: React.FC<StoryCanvasProps> = ({
             color: storyTextColor(story.textColor),
           }}
           className={[
-            "flex h-full w-full items-center justify-center break-words bg-black p-10 text-center font-semibold text-white",
+            "flex h-full w-full items-center justify-center break-words bg-black p-10 text-center text-white",
+            storyBodyFontClass(story.fontStyle),
             bodyClassName,
           ].join(" ")}
         >
@@ -173,9 +175,9 @@ const StoryCanvas: React.FC<StoryCanvasProps> = ({
             }}
             className={[
               "pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-1/2",
-              "max-w-[80%] whitespace-pre-wrap text-center font-semibold leading-tight",
+              "max-w-[80%] whitespace-pre-wrap text-center leading-tight",
               overlayScaleClass(overlay.scale),
-              (OVERLAY_FONT_CLASS as any)[overlay.fontStyle] || "font-sans",
+              (OVERLAY_FONT_CLASS as any)[overlay.fontStyle] || OVERLAY_FONT_CLASS["sans-serif"],
               (OVERLAY_BG_CLASS as any)[overlay.bgMode] || "",
             ].join(" ")}
           >

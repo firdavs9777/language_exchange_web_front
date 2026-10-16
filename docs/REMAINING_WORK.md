@@ -86,7 +86,7 @@ Phase 3 Moments (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-
 - [x] P3-MOM-12 a story carries one picture (moments#16)
 - [x] P3-MOM-13 the story viewer shows the story's location (moments#17)
 - [x] P3-MOM-14 report a story and block its author from the viewer (moments#10, story part)
-- [ ] P3-MOM-15 text-story font style and overlay faces match the app (moments#25)
+- [x] P3-MOM-15 text-story font style and overlay faces match the app (moments#25)
 - [ ] P3-MOM-16 solid and semi plates match the app (moments#25)
 - [ ] P3-MOM-17 overlays honour rotation; centring stays exact; mention pills look like the app's (moments#25)
 - [ ] P3-MOM-18 the viewer shows a story's hashtags (moments#25)
