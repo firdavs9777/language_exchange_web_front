@@ -3334,5 +3334,32 @@
   "common": {
     "cancel": "Cancel",
     "retry": "Retry"
+  },
+  "languageRooms": {
+    "list": {
+      "title": "Language rooms",
+      "create": "New topic room",
+      "error": "Couldn't load language rooms.",
+      "empty": "No rooms yet.",
+      "joined": "Joined",
+      "locked": "Locked"
+    },
+    "create": {
+      "title": "Start a topic room",
+      "name": "Topic",
+      "language": "Language",
+      "description": "Description (optional)",
+      "submit": "Create room"
+    },
+    "errors": {
+      "banned": "You were removed from this room. You can ask the owner to let you back in.",
+      "pending": "Your request is waiting for the owner.",
+      "busy": "This room has too many requests right now. Try later.",
+      "owner": "The owner can't be removed.",
+      "tooMany": "You already have 10 rooms. Delete one to start another.",
+      "titleLength": "The name can be up to 60 characters.",
+      "gone": "This room is no longer available.",
+      "generic": "Something went wrong. Try again."
+    }
   }
 }

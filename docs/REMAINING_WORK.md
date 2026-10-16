@@ -157,7 +157,7 @@ Phase 4 Rooms — voice rooms, language rooms, City/Genders (plan `bananatalk_ap
 - [x] P4-ROOM-5 `useVoiceRoom`: join → token → socket → LiveKit, heartbeat, live events, rejoin after reconnect, leave
 - [x] P4-ROOM-6 Voice room page: listen, take the mic, raise a hand, tap-to-enable-sound, mic-denied help, room chat
 - [x] P4-ROOM-7 Host controls: raised hands, mute all, make co-host, end room
-- [ ] P4-ROOM-8 Language rooms REST slice + list page grouped by language + create topic room
+- [x] P4-ROOM-8 Language rooms REST slice + list page grouped by language + create topic room
 - [ ] P4-ROOM-9 Language room page: history, live messages, send with ack, presence, join/leave/request to join
 - [ ] P4-ROOM-10 Language room owner tools: join requests approve/deny, remove member
 - [ ] P4-ROOM-11 Community City and Genders tabs (community#7), same queries as the app
