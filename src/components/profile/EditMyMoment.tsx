@@ -251,21 +251,26 @@ const EditMyMoment: React.FC = () => {
         <form onSubmit={handleSubmit} data-testid="edit-moment-form" className="space-y-4">
           <SurfaceCard padding="lg">
             <div className="space-y-4">
-              <div>
-                <label className={LABEL} htmlFor="moment-title">
-                  {t("editMoment.form.titleLabel") || "Title"}
-                </label>
-                <input
-                  id="moment-title"
-                  data-testid="edit-moment-title"
-                  type="text"
-                  value={draft.title}
-                  maxLength={100}
-                  onChange={(event) => set("title", event.target.value)}
-                  placeholder={t("editMoment.form.titlePlaceholder") || ""}
-                  className={FIELD}
-                />
-              </div>
+              {/* The app has no title (moments#6). A legacy moment that has
+                  one keeps an editable field so its owner can change or clear
+                  it; nothing new gets a title from the web. */}
+              {original.title.trim() !== "" && (
+                <div>
+                  <label className={LABEL} htmlFor="moment-title">
+                    {t("editMoment.form.titleLabel") || "Title"}
+                  </label>
+                  <input
+                    id="moment-title"
+                    data-testid="edit-moment-title"
+                    type="text"
+                    value={draft.title}
+                    maxLength={100}
+                    onChange={(event) => set("title", event.target.value)}
+                    placeholder={t("editMoment.form.titlePlaceholder") || ""}
+                    className={FIELD}
+                  />
+                </div>
+              )}
 
               <div>
                 <label className={LABEL} htmlFor="moment-description">

@@ -332,3 +332,13 @@ it("a text moment that gains photos and loses its caption uploads the photos fir
   await waitFor(() => expect(order).toEqual(["upload", "update"]));
   (URL as any).createObjectURL = originalCreate;
 });
+
+it("shows no title field for a moment that has no title (moments#6)", () => {
+  renderEditor({ data: { ...MOMENT, title: "" } });
+  expect(screen.queryByTestId("edit-moment-title")).not.toBeInTheDocument();
+});
+
+it("keeps the title field for a legacy moment that has one", () => {
+  renderEditor();
+  expect(screen.getByTestId("edit-moment-title")).toBeInTheDocument();
+});

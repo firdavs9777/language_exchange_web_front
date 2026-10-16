@@ -124,7 +124,6 @@ const CreateMoment: React.FC = () => {
   const initialHandoff = readPromptHandoff(routerLocation.state);
 
   // Basic form state
-  const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>(
     () => (initialHandoff && initialHandoff.promptText) || ""
   );
@@ -274,7 +273,6 @@ const CreateMoment: React.FC = () => {
 
     try {
       const payload: any = {
-        title,
         description,
         location,
         mood,
@@ -470,21 +468,6 @@ const CreateMoment: React.FC = () => {
 
             {/* Content Input */}
             <div className="w-full bg-white border border-gray-300 rounded-lg p-4 space-y-3">
-              {/* Title input */}
-              <input
-                type="text"
-                placeholder={
-                  t("moments_section.create.titlePlaceholder") || "Add a title..."
-                }
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full border-b border-gray-300 outline-none text-lg font-semibold placeholder-gray-500 pb-2"
-                maxLength={100}
-              />
-              <div className="text-right text-xs text-gray-400">
-                {title.length}/100
-              </div>
-
               {/* Prompt of the day being answered (dismissible) */}
               {answeredPrompt && (
                 <div className="flex">

@@ -59,7 +59,6 @@ it("posts a plain moment with today's defaults", async () => {
   await waitFor(() => expect(mockCreate).toHaveBeenCalled());
   expect(payload()).toEqual(
     expect.objectContaining({
-      title: "",
       description: "Hello",
       location: null,
       mood: "",
@@ -71,6 +70,14 @@ it("posts a plain moment with today's defaults", async () => {
   );
   // The backend takes the author from the session, never the body.
   expect(payload()).not.toHaveProperty("user");
+  // The app has no title; the composer no longer collects or sends one (moments#6).
+  expect(payload()).not.toHaveProperty("title");
+});
+
+it("has no Title field (moments#6)", () => {
+  renderCreate();
+  expect(screen.queryByPlaceholderText("Add a title...")).not.toBeInTheDocument();
+  expect(screen.queryByText("0/100")).not.toBeInTheDocument();
 });
 
 it("cannot share without a description", () => {
