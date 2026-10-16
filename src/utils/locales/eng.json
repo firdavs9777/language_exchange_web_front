@@ -3260,6 +3260,40 @@
       "vipToCreate": "Creating voice rooms needs a VIP plan.",
       "gone": "This room is no longer available.",
       "generic": "Something went wrong. Try again."
+    },
+    "list": {
+      "title": "Voice rooms",
+      "create": "Start a room",
+      "live": "Live now",
+      "scheduled": "Coming up",
+      "error": "Couldn't load voice rooms.",
+      "emptyLive": "No one is talking right now. Start a room and invite people in.",
+      "emptyScheduled": "No rooms are scheduled yet.",
+      "full": "Full",
+      "join": "Join",
+      "going": "Going ✓",
+      "rsvp": "Remind me"
+    },
+    "create": {
+      "title": "Start a voice room",
+      "name": "Room name",
+      "description": "What will you talk about? (optional)",
+      "language": "Language",
+      "category": "Kind of room",
+      "max": "Up to how many people",
+      "when": "Start later (optional)",
+      "schedule": "Schedule",
+      "start": "Start room"
+    },
+    "category": {
+      "casual": "Casual chat",
+      "language_practice": "Language practice",
+      "topic": "Topic",
+      "qa": "Q&A"
     }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "retry": "Retry"
   }
 }

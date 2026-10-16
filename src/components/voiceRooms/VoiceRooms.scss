@@ -1,0 +1,29 @@
+.vr-page { max-width: 960px; margin-inline: auto; padding-block: 24px; padding-inline: 16px; }
+.vr-page__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-block-end: 16px; }
+.vr-page__head h1 { font-size: 1.5rem; font-weight: 800; margin: 0; }
+.vr-tabs { display: flex; gap: 8px; margin-block-end: 16px; }
+.vr-tabs button { border: 1px solid var(--bs-border-color, #ddd); background: transparent; border-radius: 999px; padding-block: 6px; padding-inline: 14px; font-weight: 700; }
+.vr-tabs button.is-active { background: #ffd600; border-color: #ffd600; }
+.vr-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.vr-card { border: 1px solid var(--bs-border-color, #eee); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px; text-align: start; }
+.vr-card__top { display: flex; justify-content: space-between; align-items: center; }
+.vr-card__title { font-size: 1.05rem; font-weight: 800; margin: 0; }
+.vr-card__desc { margin: 0; color: #666; font-size: 0.9rem; }
+.vr-card__host { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; }
+.vr-card__host img, .vr-avatar-fallback { inline-size: 28px; block-size: 28px; border-radius: 50%; object-fit: cover; background: #eee; display: inline-block; }
+.vr-card__scheduled { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.vr-chip { background: #fff4b3; border-radius: 999px; padding-block: 2px; padding-inline: 10px; font-size: 0.8rem; font-weight: 700; }
+.vr-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-radius: 999px; padding-block: 8px; padding-inline: 16px; font-weight: 800; border: 0; }
+.vr-btn--primary { background: #ffd600; color: #111; }
+.vr-btn--ghost { background: transparent; border: 1px solid var(--bs-border-color, #ddd); }
+.vr-btn--danger { background: #e53935; color: #fff; }
+.vr-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.vr-link { background: none; border: 0; padding: 0; text-decoration: underline; font-weight: 700; }
+.vr-error { color: #c62828; }
+.vr-empty { color: #666; padding-block: 32px; text-align: center; }
+.vr-dialog-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45); display: flex; align-items: center; justify-content: center; z-index: 1050; }
+.vr-dialog { background: var(--bs-body-bg, #fff); border-radius: 16px; padding: 20px; inline-size: min(440px, 92vw); max-block-size: 90vh; overflow: auto; display: flex; flex-direction: column; gap: 10px; }
+.vr-dialog__title { font-size: 1.2rem; font-weight: 800; margin: 0; }
+.vr-dialog__actions { display: flex; justify-content: flex-end; gap: 8px; }
+.vr-field { display: flex; flex-direction: column; gap: 4px; font-size: 0.9rem; }
+.vr-field input, .vr-field textarea, .vr-field select { border: 1px solid var(--bs-border-color, #ddd); border-radius: 10px; padding: 8px; }

@@ -153,7 +153,7 @@ Phase 4 Rooms — voice rooms, language rooms, City/Genders (plan `bananatalk_ap
 - [x] P4-ROOM-1 `livekit-client@2.22.4` behind a JS loader + `.d.ts`, excluded from tsconfig, kept out of the eager graph
 - [x] P4-ROOM-2 `lkSession` facade (connect, mic/camera, audio unlock, peers, disconnect reasons) + the shared LiveKit test fake
 - [x] P4-ROOM-3 Voice rooms REST slice (list, detail, create, join, token, leave, end, promote, RSVP)
-- [ ] P4-ROOM-4 Voice rooms list page with create dialog and scheduled-room RSVP
+- [x] P4-ROOM-4 Voice rooms list page with create dialog and scheduled-room RSVP
 - [ ] P4-ROOM-5 `useVoiceRoom`: join → token → socket → LiveKit, heartbeat, live events, rejoin after reconnect, leave
 - [ ] P4-ROOM-6 Voice room page: listen, take the mic, raise a hand, tap-to-enable-sound, mic-denied help, room chat
 - [ ] P4-ROOM-7 Host controls: raised hands, mute all, make co-host, end room
