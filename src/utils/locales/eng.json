@@ -3360,6 +3360,23 @@
       "titleLength": "The name can be up to 60 characters.",
       "gone": "This room is no longer available.",
       "generic": "Something went wrong. Try again."
+    },
+    "room": {
+      "back": "All rooms",
+      "online": "online",
+      "pending": "Request sent. The owner will let you in.",
+      "request": "Ask to join",
+      "join": "Join room",
+      "older": "Load earlier messages",
+      "placeholder": "Write in the room's language…",
+      "send": "Send",
+      "leave": "Leave room",
+      "slowDown": "You're sending too fast. Slow down a little.",
+      "notSent": "Not sent. Try again.",
+      "voice": "Voice message — open the app to listen",
+      "media": "Photo or video — open the app to see it",
+      "sticker": "Sticker",
+      "unsupported": "Open the app to see this message"
     }
   }
 }
