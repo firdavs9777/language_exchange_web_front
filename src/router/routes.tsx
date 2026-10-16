@@ -94,6 +94,7 @@ const MainStories = lazyWithRetry("../components/stories/MainStories", () => imp
 const Highlights = lazyWithRetry("../components/stories/Highlights", () => import("../components/stories/Highlights"));
 const CreateStory = lazyWithRetry("../components/stories/CreateStory", () => import("../components/stories/CreateStory"));
 const StoryViewer = lazyWithRetry("../components/stories/StoryViewer", () => import("../components/stories/StoryViewer"));
+const StoryLinkPage = lazyWithRetry("../components/stories/StoryLinkPage", () => import("../components/stories/StoryLinkPage"));
 const MyStories = lazyWithRetry("../components/stories/MyStories", () => import("../components/stories/MyStories"));
 
 // Settings
@@ -248,6 +249,10 @@ export const routes = createRoutesFromElements(
         the author's own archive can never be read as a user id. */}
     <Route path="stories/mine" element={lazyRoute(<MyStories />)} />
     <Route path="stories/:userId" element={lazyRoute(<StoryViewer />)} />
+    {/* Story share links: /story/<storyId> (a STORY id; the viewer above is
+        keyed by the author). Public: signed-out visitors get a sign-in /
+        open-in-app card. Not claimed by the AASA until 2.7.0 dominates. */}
+    <Route path="story/:id" element={lazyRoute(<StoryLinkPage />)} />
     <Route path="highlights" element={lazyRoute(<Highlights />)} />
     <Route path="privacy-policy/" element={<PrivacyPolicy />} />
     <Route path="terms-of-use/" element={<TermsOfUse />} />

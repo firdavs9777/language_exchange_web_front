@@ -116,7 +116,7 @@ Phase 3 Links (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-app-pa
 - [x] P3-LINK-1 Crawler rule sends link-preview bots to the backend OG cards (links#4, links#17, moments#13)
 - [x] P3-LINK-2 AASA stops claiming `/chat/*` and web-only pages (links#6, links#15)
 - [x] P3-LINK-3 Smart banner and app banner open the page being viewed (links#16)
-- [ ] P3-LINK-4 `/story/:id` page — the target of story share links (links#1, moments#1)
+- [x] P3-LINK-4 `/story/:id` page — the target of story share links (links#1, moments#1)
 - [ ] P3-LINK-5 Google sign-in reads the one-time `code` (links#12)
 - [ ] P3-LINK-6 Legal pages link to https://banatalk.com (links#19)
 - [ ] P3-LINK-7 Chat story cards open `/story/:id` (chat#9 follow-up, links#1)

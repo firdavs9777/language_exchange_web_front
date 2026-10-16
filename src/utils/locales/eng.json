@@ -2347,6 +2347,16 @@
     }
   },
   "stories": {
+    "linkPage": {
+      "sign_in_title": "Someone shared a story with you",
+      "sign_in_body": "Sign in to watch it, or open it in the BananaTalk app.",
+      "sign_in": "Sign in",
+      "expired": "This story has expired or was deleted. Stories disappear after 24 hours.",
+      "unavailable": "This story isn't available to you.",
+      "failed": "We couldn't load this story.",
+      "retry": "Try again",
+      "browse": "See current stories"
+    },
     "your_story": "Your Story",
     "create_story": "Create",
     "my_stories": "My stories",

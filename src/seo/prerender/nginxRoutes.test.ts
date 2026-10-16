@@ -22,6 +22,7 @@ it("lists every real top-level segment", () => {
   for (const expected of [
     "login", "register", "chat", "profile", "download", "moments", "communities",
     "settings", "stories", "support", "privacy-policy", "terms-of-use", "data-deletion",
+    "story", "moment", "i", "card",
   ]) {
     expect(segs).toContain(expected);
   }

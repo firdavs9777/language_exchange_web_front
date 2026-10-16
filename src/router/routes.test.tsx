@@ -191,3 +191,13 @@ it("routes /announcement/:id to its own page, not the catch-all", () => {
   expect(matches && matches.length).toBe(2);
   expect(matches![1].route.path).toBe("announcement/:id");
 });
+
+// Story share links (app 2.7.0, chat story cards): /story/<storyId>, a story id,
+// next to -- not inside -- /stories/<userId>, which is keyed by the author.
+it("matches /story/<id> to the story link page, not the catch-all or the viewer", () => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, "/story/507f1f77bcf86cd799439011");
+  expect(matches && matches.length).toBe(2);
+  expect(matches![1].route.path).toBe("story/:id");
+  expect(matchRoutes(routes, "/stories/abc")![1].route.path).toBe("stories/:userId");
+});
