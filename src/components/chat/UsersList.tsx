@@ -187,7 +187,7 @@ const UsersList: React.FC<UsersListProps> = ({
         toast.error(message, { autoClose: 3000, theme: "colored", transition: Bounce });
       }
     },
-    [muteConversation, unmuteConversation, refetchConversations, resolveConversationId, t]
+    [unmuteConversation, refetchConversations, resolveConversationId, t]
   );
 
   const handleMuteFor = useCallback(
