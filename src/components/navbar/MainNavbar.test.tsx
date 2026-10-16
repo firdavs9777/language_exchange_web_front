@@ -6,10 +6,15 @@ import { MemoryRouter } from "react-router-dom";
 import { apiSlice } from "../../store/slices/apiSlice";
 import MainNavbar from "./MainNavbar";
 import { CONVERSATIONS_PAGE } from "../chat/lib/conversationMatch";
+import { mockAppConfig, ALL_WEB_FLAGS_OFF, ALL_WEB_FLAGS_ON } from "../../utils/testing/mockWebFlags";
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (k: string) => k, i18n: { language: "en", changeLanguage: jest.fn() } }),
 }));
+jest.mock("../../store/slices/appConfigSlice", () => require("../../utils/testing/mockWebFlags").appConfigSliceMock());
+
+// Every web flag off is today's navbar; cases that need one on say so.
+beforeEach(() => mockAppConfig(ALL_WEB_FLAGS_OFF));
 
 const mockSocket = {
   on: jest.fn(),
@@ -139,4 +144,18 @@ it("refreshes the badge on the events that change it, sending included", async (
       "messageSent",
     ])
   );
+});
+
+it("has no Reels entry while webReelsEnabled is off", () => {
+  mockConversationsFetch([]);
+  mockAppConfig(ALL_WEB_FLAGS_OFF);
+  const { container } = renderNavbar();
+  expect(container.querySelector('a[href="/reels"]')).toBe(null);
+});
+
+it("shows Reels in the desktop and mobile menus once the flag is on", () => {
+  mockConversationsFetch([]);
+  mockAppConfig(ALL_WEB_FLAGS_ON);
+  const { container } = renderNavbar();
+  expect(container.querySelectorAll('a[href="/reels"]').length).toBeGreaterThanOrEqual(1);
 });

@@ -7,7 +7,8 @@ import {
   FaRedo,
   FaTimes,
 } from "react-icons/fa";
-import { Compass, PenLine, Sparkles, TrendingUp, Users, X } from "lucide-react";
+import { Compass, Film, PenLine, Sparkles, TrendingUp, Users, X } from "lucide-react";
+import { useWebFlag } from "../../utils/webFlags";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Pagination from "../../composables/Pagination";
@@ -279,6 +280,7 @@ const MainMoments: React.FC = () => {
   );
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
   const { t } = useTranslation();
+  const reelsOn = useWebFlag("webReelsEnabled");
   const navigate = useNavigate();
 
   // Feed tabs: labels are localized with English fallbacks; Following only
@@ -487,6 +489,16 @@ const MainMoments: React.FC = () => {
                 <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
                   Stories list
                 </h1>
+                {reelsOn && userInfo && (
+                  <Link
+                    to="/reels"
+                    data-testid="moments-reels-link"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-gray-900 px-3 py-1.5 text-sm font-bold text-white"
+                  >
+                    <Film className="h-4 w-4" aria-hidden="true" />
+                    {t("reels.moments_link") || "Watch reels"}
+                  </Link>
+                )}
               </div>
 
               {/* Filter Component */}

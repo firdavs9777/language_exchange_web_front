@@ -5,10 +5,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { MemoryRouter } from "react-router-dom";
 import MainMoments from "./MainMoments";
 import { clearPrerendered, markPrerendered } from "../../seo/prerender/hydrationFlag";
+import { mockAppConfig, ALL_WEB_FLAGS_OFF, ALL_WEB_FLAGS_ON } from "../../utils/testing/mockWebFlags";
 
 jest.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: () => "" }),
+  useTranslation: () => ({ t: () => "", i18n: { language: "en" } }),
 }));
+jest.mock("../../store/slices/appConfigSlice", () => require("../../utils/testing/mockWebFlags").appConfigSliceMock());
 
 jest.mock("../stories/StoriesFeed", () => () => null);
 jest.mock("../ads/AdUnit", () => () => null);
@@ -74,6 +76,7 @@ let forYouResult: any;
 let followingResult: any;
 
 beforeEach(() => {
+  mockAppConfig(ALL_WEB_FLAGS_OFF);
   forYouResult = emptyFeedResult();
   followingResult = emptyFeedResult();
 
@@ -228,4 +231,15 @@ describe("a shared filtered link on the prerendered page", () => {
     renderMainMoments(undefined, "/moments?lang=ko");
     expect(mockUseGetMomentsQuery.mock.calls[0][0].filters).toEqual({ language: "ko" });
   });
+});
+
+it("offers no Reels link while the flag is off", () => {
+  renderMainMoments(loggedInUser);
+  expect(screen.queryByTestId("moments-reels-link")).not.toBeInTheDocument();
+});
+
+it("links to /reels for a signed-in user once the flag is on", () => {
+  mockAppConfig(ALL_WEB_FLAGS_ON);
+  renderMainMoments(loggedInUser);
+  expect(screen.getByTestId("moments-reels-link")).toHaveAttribute("href", "/reels");
 });

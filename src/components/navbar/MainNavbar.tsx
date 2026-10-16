@@ -13,7 +13,9 @@ import {
   FaUserFriends,
   FaChevronDown,
   FaUserShield,
+  FaFilm,
 } from "react-icons/fa";
+import { useWebFlag } from "../../utils/webFlags";
 import { useTranslation } from "react-i18next";
 import { switchLanguage } from "../../utils/switchLanguage";
 import { useNavigate } from "react-router-dom";
@@ -67,6 +69,7 @@ const MainNavbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t, i18n } = useTranslation();
+  const reelsOn = useWebFlag("webReelsEnabled");
 
   // `resolvedLanguage`, not `language`: since locales load on demand i18next is
   // no longer restricted to bare language codes, so `language` can be "ko-KR"
@@ -245,6 +248,16 @@ const MainNavbar = () => {
                   <span>{t("moments")}</span>
                 </NavLink>
 
+                {reelsOn && (
+                  <NavLink
+                    to="/reels"
+                    className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+                  >
+                    <FaFilm />
+                    <span>{t("reels.nav") || "Reels"}</span>
+                  </NavLink>
+                )}
+
                 {isAdmin && (
                   <NavLink
                     to="/admin"
@@ -406,6 +419,11 @@ const MainNavbar = () => {
                   <NavLink to="/moments" className="mobile-nav-link" onClick={closeMobileMenu}>
                     <FaGlobe /> {t("moments")}
                   </NavLink>
+                  {reelsOn && (
+                    <NavLink to="/reels" className="mobile-nav-link" onClick={closeMobileMenu}>
+                      <FaFilm /> {t("reels.nav") || "Reels"}
+                    </NavLink>
+                  )}
                   {isAdmin && (
                     <NavLink to="/admin" className="mobile-nav-link" onClick={closeMobileMenu}>
                       <FaUserShield /> {t("admin.nav.admin") || "Admin"}

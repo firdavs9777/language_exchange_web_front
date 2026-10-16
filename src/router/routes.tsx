@@ -28,6 +28,8 @@ import MomentLinkRedirect from "./MomentLinkRedirect";
 // Add a page to SEO_PAGES and its component belongs here.
 import HomeScreen from "../components/home/HomeMain";
 import NotFound from "../components/errors/NotFound";
+import FlagRoute from "./FlagRoute";
+import SignedInOnly from "../components/reels/SignedInOnly";
 import MainCommnity from "../components/community/MainCommunity";
 import MainMoments from "../components/moments/MainMoments";
 import PrivacyPolicy from "../components/navbar/PrivacyPolicy";
@@ -96,6 +98,11 @@ const CreateStory = lazyWithRetry("../components/stories/CreateStory", () => imp
 const StoryViewer = lazyWithRetry("../components/stories/StoryViewer", () => import("../components/stories/StoryViewer"));
 const StoryLinkPage = lazyWithRetry("../components/stories/StoryLinkPage", () => import("../components/stories/StoryLinkPage"));
 const MyStories = lazyWithRetry("../components/stories/MyStories", () => import("../components/stories/MyStories"));
+
+// Reels (Phase 4). Dark until /app-config says webReelsEnabled AND
+// reelsEnabled (FlagRoute); a signed-out visitor is sent to /login.
+const ReelsGridPage = lazyWithRetry("../components/reels/ReelsGridPage", () => import("../components/reels/ReelsGridPage"));
+const ReelCreatePage = lazyWithRetry("../components/reels/ReelCreatePage", () => import("../components/reels/ReelCreatePage"));
 
 // Settings
 const Settings = lazyWithRetry("../components/settings/Settings", () => import("../components/settings/Settings"));
@@ -254,6 +261,16 @@ export const routes = createRoutesFromElements(
         open-in-app card. Not claimed by the AASA until 2.7.0 dominates. */}
     <Route path="story/:id" element={lazyRoute(<StoryLinkPage />)} />
     <Route path="highlights" element={lazyRoute(<Highlights />)} />
+    {/* Reels (Phase 4, flag webReelsEnabled). "reels/new" is static and
+        outranks any future "reels/:id". */}
+    <Route
+      path="reels"
+      element={<FlagRoute flag="webReelsEnabled"><SignedInOnly>{lazyRoute(<ReelsGridPage />)}</SignedInOnly></FlagRoute>}
+    />
+    <Route
+      path="reels/new"
+      element={<FlagRoute flag="webReelsEnabled"><SignedInOnly>{lazyRoute(<ReelCreatePage />)}</SignedInOnly></FlagRoute>}
+    />
     <Route path="privacy-policy/" element={<PrivacyPolicy />} />
     <Route path="terms-of-use/" element={<TermsOfUse />} />
     <Route path="download" element={<DownloadApp />} />
