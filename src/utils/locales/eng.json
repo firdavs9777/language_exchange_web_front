@@ -1564,7 +1564,18 @@
     "accept": "Accept",
     "decline": "Decline",
     "noWaves": "No waves yet",
-    "sendWave": "Send a wave to start connecting!"
+    "sendWave": "Send a wave to start connecting!",
+    "subtitle": "People who waved at you",
+    "back": "Back",
+    "noReceived": "No waves received yet",
+    "findPeople": "Find People",
+    "archive": "Older waves",
+    "recent": "Last 7 days",
+    "archiveHint": "Waves from 7 to 30 days ago",
+    "archiveEmpty": "No older waves",
+    "someone": "Someone",
+    "wavedAtYou": "Waved at you 👋",
+    "unread": "Unread"
   },
   "topics": {
     "title": "Topics",

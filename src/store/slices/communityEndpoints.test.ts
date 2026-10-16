@@ -315,3 +315,21 @@ describe("getNearbyUsers (community#2)", () => {
     expect(url.searchParams.get("limit")).toBe("20");
   });
 });
+
+describe("getWaves archive + reveal (community#10)", () => {
+  it("sends archive=true and reveal=1 only when asked", async () => {
+    const calls = mockFetch();
+    const store = makeStore();
+    await store.dispatch(
+      (communityApiSlice.endpoints as any).getWaves.initiate({ page: 1, limit: 20, archive: true, reveal: true })
+    );
+    const url = new URL(calls[0].url);
+    expect(url.searchParams.get("archive")).toBe("true");
+    expect(url.searchParams.get("reveal")).toBe("1");
+
+    await store.dispatch((communityApiSlice.endpoints as any).getWaves.initiate({ page: 2, limit: 20 }));
+    const plain = new URL(calls[1].url);
+    expect(plain.searchParams.get("archive")).toBeNull();
+    expect(plain.searchParams.get("reveal")).toBeNull();
+  });
+});

@@ -193,15 +193,19 @@ export const communityApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Community"],
     }),
     getWaves: builder.query({
-      query: ({ page = 1, limit = 20, unreadOnly, archive }: {
+      query: ({ page = 1, limit = 20, unreadOnly, archive, reveal }: {
         page?: number;
         limit?: number;
         unreadOnly?: boolean;
+        /** 7-30 days old (the main list is the last 7 days). */
         archive?: boolean;
+        /** ?reveal=1 — the app sends it while appConfig.boostsEnabled is on. */
+        reveal?: boolean;
       } = {}) => {
         let url = `${COMMUNITY_WAVES_LIST}?page=${page}&limit=${limit}`;
         if (unreadOnly) url += `&unreadOnly=${unreadOnly}`;
-        if (archive) url += `&archive=${archive}`;
+        if (archive) url += `&archive=true`;
+        if (reveal) url += `&reveal=1`;
         return { url };
       },
       providesTags: ["Community"],
