@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { X, Loader2, PartyPopper, Hand } from "lucide-react";
 import { Bounce, toast } from "react-toastify";
 import { useSendWaveMutation } from "../../store/slices/communitySlice";
+import ConfirmDialog from "../../design/ConfirmDialog";
+
+/** Body code of the daily wave-cap 429 (checkLimitations.js checkWaveLimit). */
+const WAVE_CAP_CODE = "wave_cap";
+const VIP_PAGE = "/settings/vip";
 
 /** Minimal shape needed to send + render a wave target — matches
  * `CommunityMemberCard` (MemberCard.tsx) but kept loose so this sheet can be
@@ -39,8 +45,11 @@ const ICEBREAKER_PROMPTS: string[] = [
 
 const WaveSheet: React.FC<WaveSheetProps> = ({ open, targetUser, onClose }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [alreadyWaved, setAlreadyWaved] = useState(false);
+  // The daily cap was hit: the sheet turns into the VIP dialog.
+  const [capReached, setCapReached] = useState(false);
   const [sendWave, { isLoading }] = useSendWaveMutation();
 
   // Reset local state every time the sheet opens for a (possibly new) target.
@@ -48,12 +57,32 @@ const WaveSheet: React.FC<WaveSheetProps> = ({ open, targetUser, onClose }) => {
     if (open) {
       setMessage("");
       setAlreadyWaved(false);
+      setCapReached(false);
     }
   }, [open, targetUser?._id]);
 
   if (!open || !targetUser) return null;
 
   const avatar = targetUser.imageUrls?.[0];
+  if (capReached) {
+    return (
+      <ConfirmDialog
+        open
+        title={t("waves.cap.title") || "Daily wave limit reached"}
+        body={
+          t("waves.cap.body") ||
+          "You've used today's free waves. VIP members can wave without a daily limit, or try again tomorrow."
+        }
+        confirmLabel={t("waves.cap.seeVip") || "See VIP"}
+        cancelLabel={t("waves.cap.notNow") || "Not now"}
+        onConfirm={() => {
+          onClose();
+          navigate(VIP_PAGE);
+        }}
+        onCancel={onClose}
+      />
+    );
+  }
 
   const handleChipClick = (chipMessage: string) => {
     setMessage(chipMessage.slice(0, MESSAGE_MAX_LENGTH));
@@ -85,6 +114,13 @@ const WaveSheet: React.FC<WaveSheetProps> = ({ open, targetUser, onClose }) => {
       const code = err?.data?.code;
       if (code === "ALREADY_WAVED") {
         setAlreadyWaved(true);
+        return;
+      }
+      // The daily cap. The server answers 429 with this code only while
+      // WAVE_CAP_ENABLED is on; the route's rate limiter sends a 429 with no
+      // code and keeps the plain toast below (the app's waveErrorAction).
+      if (err?.status === 429 && code === WAVE_CAP_CODE) {
+        setCapReached(true);
         return;
       }
       toast.error(

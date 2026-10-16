@@ -1575,7 +1575,13 @@
     "archiveEmpty": "No older waves",
     "someone": "Someone",
     "wavedAtYou": "Waved at you 👋",
-    "unread": "Unread"
+    "unread": "Unread",
+    "cap": {
+      "title": "Daily wave limit reached",
+      "body": "You've used today's free waves. VIP members can wave without a daily limit, or try again tomorrow.",
+      "seeVip": "See VIP",
+      "notNow": "Not now"
+    }
   },
   "topics": {
     "title": "Topics",

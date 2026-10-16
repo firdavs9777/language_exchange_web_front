@@ -100,7 +100,7 @@ Phase 3 Community (plan `bananatalk_app/docs/superpowers/plans/2026-10-16-web-ap
 - [x] P3-COM-2 @username search uses the `/auth/users` routes (community#3)
 - [x] P3-COM-3 Language filter offers the whole catalog, labelled in the reader's language (community#4)
 - [x] P3-COM-4 Waves inbox — archive, reveal, loadable avatars, a real "Find people" route (community#10)
-- [ ] P3-COM-5 Wave cap answers with a VIP dialog, not a raw English toast (community#8)
+- [x] P3-COM-5 Wave cap answers with a VIP dialog, not a raw English toast (community#8)
 - [ ] P3-COM-6 "Serious learners" segment tab (`activeWithin=7d`) (community#9)
 - [ ] P3-COM-7 Smart sort by default when the server offers it; reciprocal ("perfect partners") filter (community#9)
 - [ ] P3-COM-8 "More members like X" asks for people who speak X's language (community#11)
