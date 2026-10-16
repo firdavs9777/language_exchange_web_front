@@ -304,6 +304,7 @@ const SingleMoment: React.FC<MomentProps> = ({
       navigate,
       likeMoment,
       dislikeMoment,
+      t,
     ]
   );
 
