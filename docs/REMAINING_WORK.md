@@ -159,7 +159,7 @@ Phase 4 Rooms — voice rooms, language rooms, City/Genders (plan `bananatalk_ap
 - [x] P4-ROOM-7 Host controls: raised hands, mute all, make co-host, end room
 - [x] P4-ROOM-8 Language rooms REST slice + list page grouped by language + create topic room
 - [x] P4-ROOM-9 Language room page: history, live messages, send with ack, presence, join/leave/request to join
-- [ ] P4-ROOM-10 Language room owner tools: join requests approve/deny, remove member
+- [x] P4-ROOM-10 Language room owner tools: join requests approve/deny, remove member
 - [ ] P4-ROOM-11 Community City and Genders tabs (community#7), same queries as the app
 - [ ] P4-ROOM-12 Routes and nav entries behind `webVoiceRoomsEnabled` / `webLanguageRoomsEnabled`; flag-off test
 - [ ] P4-ROOM-I18N New rooms strings in all 18 locales

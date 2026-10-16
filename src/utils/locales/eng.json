@@ -3377,6 +3377,18 @@
       "media": "Photo or video — open the app to see it",
       "sticker": "Sticker",
       "unsupported": "Open the app to see this message"
+    },
+    "owner": {
+      "requests": "Join requests",
+      "noRequests": "No one is waiting.",
+      "approve": "Let in",
+      "deny": "Decline",
+      "members": "Members",
+      "owner": "owner",
+      "admin": "admin",
+      "remove": "Remove from room",
+      "removeYes": "Remove",
+      "removeNote": "Removed members can ask to come back; you decide."
     }
   }
 }
