@@ -105,3 +105,19 @@ it("points Android visitors at Google Play once the platform is known", () => {
     Object.defineProperty(window.navigator, "userAgent", { value: original, configurable: true });
   }
 });
+
+it("lists the real VIP perks, not the server's stale plan features", () => {
+  mockQuery.mockReturnValue({
+    data: FALLBACK_PLANS.map((p) => ({
+      ...p,
+      features: ["Unlimited daily messages", "Priority partner matching", "Premium support"],
+    })),
+    isError: false,
+    isLoading: false,
+  });
+  const { container } = render(<PricingSection />);
+  const text = container.textContent || "";
+  expect(text).not.toMatch(/Unlimited daily messages|Priority partner matching|Premium support/);
+  expect(text).toContain("15 daily matches instead of 6");
+  expect(text).toContain("See everyone who viewed you");
+});

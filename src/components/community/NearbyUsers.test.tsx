@@ -9,7 +9,13 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { makeStore } from "../../store";
-import NearbyUsers, { formatNearbyDistance, nearbyIsOnline, nearbyPlace } from "./NearbyUsers";
+import NearbyUsers, {
+  formatNearbyDistance,
+  nearbyIsOnline,
+  nearbyPlace,
+  isRadiusLocked,
+  RADIUS_OPTIONS,
+} from "./NearbyUsers";
 
 // The key plus whatever was interpolated: behaviour, not copy.
 jest.mock("react-i18next", () => ({
@@ -48,17 +54,24 @@ const ROWS = [
 ];
 
 const requested: string[] = [];
+let searchMeta: any = undefined;
 const originalFetch = global.fetch;
 const originalGeo = (navigator as any).geolocation;
 
 beforeEach(() => {
   requested.length = 0;
+  searchMeta = undefined;
   (global as any).fetch = jest.fn((input: any) => {
     const url = typeof input === "string" ? input : input?.url || "";
     requested.push(url);
     const body =
       url.indexOf("/community/nearby") >= 0
-        ? { success: true, data: ROWS, pagination: { total: 2, limit: 50, offset: 0, hasMore: false } }
+        ? {
+            success: true,
+            data: ROWS,
+            pagination: { total: 2, limit: 50, offset: 0, hasMore: false },
+            ...(searchMeta ? { search: searchMeta } : {}),
+          }
         : { success: true, data: [] };
     return Promise.resolve(
       new Response(JSON.stringify(body), {
@@ -88,6 +101,7 @@ function renderNearby() {
       <Route path="/">
         <Route path="community/nearby" element={<NearbyUsers />} />
         <Route path="community/:userId" element={<div data-testid="profile-screen" />} />
+        <Route path="settings/vip" element={<div data-testid="vip-screen" />} />
       </Route>
     ),
     { initialEntries: ["/community/nearby"] }
@@ -101,6 +115,34 @@ function renderNearby() {
 }
 
 const nearbyRequests = () => requested.filter((u) => u.indexOf("/community/nearby") >= 0);
+
+describe("Nearby radius cap (free 50 km, VIP 500 km)", () => {
+  it("offers 5..200 km and locks what is above the cap", () => {
+    expect(RADIUS_OPTIONS).toEqual([5, 10, 25, 50, 100, 200]);
+    expect(isRadiusLocked(50)).toBe(false);
+    expect(isRadiusLocked(100)).toBe(true);
+    expect(isRadiusLocked(200, 500)).toBe(false);
+  });
+
+  it("a locked radius opens the VIP page instead of searching", async () => {
+    searchMeta = { radiusKm: 10, maxRadiusKm: 50 };
+    const router = renderNearby();
+    await screen.findByText("Near One");
+    expect(screen.getAllByTestId("nearby-radius-lock")).toHaveLength(2);
+    const before = nearbyRequests().length;
+    fireEvent.click(screen.getByTestId("nearby-radius-100"));
+    await waitFor(() => expect(router.state.location.pathname).toBe("/settings/vip"));
+    expect(nearbyRequests().filter((u) => u.indexOf("radius=100") >= 0)).toHaveLength(0);
+    expect(nearbyRequests().length).toBe(before);
+  });
+
+  it("a VIP cap from the server unlocks every option", async () => {
+    searchMeta = { radiusKm: 10, maxRadiusKm: 500 };
+    renderNearby();
+    await screen.findByText("Near One");
+    await waitFor(() => expect(screen.queryByTestId("nearby-radius-lock")).not.toBeInTheDocument());
+  });
+});
 
 describe("Nearby (community#2)", () => {
   it("asks with the parameter names the server reads", async () => {

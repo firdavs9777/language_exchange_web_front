@@ -122,3 +122,24 @@ export function buildCommunityQuery(
 
   return query;
 }
+
+/**
+ * Filters only VIP accounts may use. GET /users ignores `country` from free
+ * callers (backend controllers/users.js, tier via lib/tier.js), so a free
+ * user's saved or linked country is neither sent nor shown/counted as active.
+ * The saved value itself is kept, so it applies again after an upgrade.
+ */
+export const VIP_ONLY_FILTERS: (keyof CommunityFilters)[] = ['country'];
+
+export function withoutVipOnlyFilters(
+  filters: CommunityFilters,
+  isVip: boolean
+): CommunityFilters {
+  if (isVip) return filters;
+  if (!VIP_ONLY_FILTERS.some((key) => filters[key] !== undefined)) return filters;
+  const next: CommunityFilters = { ...filters };
+  VIP_ONLY_FILTERS.forEach((key) => {
+    delete next[key];
+  });
+  return next;
+}

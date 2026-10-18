@@ -11,7 +11,9 @@ import {
   Users,
   Navigation,
   AlertCircle,
+  Lock,
 } from "lucide-react";
+import { VIP_PATH } from "../vip/vipStatus";
 
 /**
  * One row of GET /api/v1/community/nearby (controllers/community.js
@@ -62,7 +64,18 @@ export function formatNearbyDistance(km?: number): string {
   return `${Math.round(km)}km`;
 }
 
-const RADIUS_OPTIONS = [5, 10, 25, 50, 100];
+export const RADIUS_OPTIONS = [5, 10, 25, 50, 100, 200];
+
+/**
+ * Free accounts are capped at 50 km server-side (VIP 500); the response says
+ * so in `search.maxRadiusKm`. Until it answers, assume the free cap.
+ */
+export const DEFAULT_MAX_RADIUS_KM = 50;
+
+/** A radius above the account's cap is a VIP upsell, not a search. */
+export function isRadiusLocked(radiusKm: number, maxRadiusKm?: number): boolean {
+  return radiusKm > (maxRadiusKm || DEFAULT_MAX_RADIUS_KM);
+}
 
 const NearbyUsers: React.FC = () => {
   const { t } = useTranslation();
@@ -79,10 +92,25 @@ const NearbyUsers: React.FC = () => {
       longitude: location ? location.lng : 0,
       radius,
     },
-    { skip: !location }
+    // Re-read on tab return so the list (and the VIP cap) is not stale.
+    { skip: !location, refetchOnFocus: true }
   );
 
   const nearbyUsers: NearbyUser[] = (data && Array.isArray(data.data) && data.data) || [];
+  const maxRadiusKm: number | undefined =
+    data && data.search && typeof data.search.maxRadiusKm === "number"
+      ? data.search.maxRadiusKm
+      : undefined;
+  const capKm = maxRadiusKm || DEFAULT_MAX_RADIUS_KM;
+  const anyLocked = RADIUS_OPTIONS.some((r) => isRadiusLocked(r, maxRadiusKm));
+
+  const handleRadiusClick = (r: number) => {
+    if (isRadiusLocked(r, maxRadiusKm)) {
+      navigate(VIP_PATH);
+      return;
+    }
+    setRadius(r);
+  };
 
   const requestLocation = () => {
     setIsRequestingLocation(true);
@@ -193,21 +221,37 @@ const NearbyUsers: React.FC = () => {
               {t("communityNearby.searchRadius") || "Search Radius"}
             </span>
           </div>
-          <div className="flex gap-2">
-            {RADIUS_OPTIONS.map((r) => (
-              <button
-                key={r}
-                type="button"
-                onClick={() => setRadius(r)}
-                aria-pressed={radius === r}
-                className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
-                  radius === r ? "bg-white text-teal-600" : "bg-white/20 text-white hover:bg-white/30"
-                }`}
-              >
-                {r}km
-              </button>
-            ))}
+          <div className="flex flex-wrap gap-2">
+            {RADIUS_OPTIONS.map((r) => {
+              const locked = isRadiusLocked(r, maxRadiusKm);
+              return (
+                <button
+                  key={r}
+                  type="button"
+                  data-testid={`nearby-radius-${r}`}
+                  onClick={() => handleRadiusClick(r)}
+                  aria-pressed={radius === r}
+                  aria-label={locked ? `${r}km VIP` : undefined}
+                  className={`flex-1 min-w-[56px] py-2 rounded-lg font-medium transition-colors inline-flex items-center justify-center gap-1 ${
+                    radius === r
+                      ? "bg-white text-teal-600"
+                      : locked
+                      ? "bg-white/10 text-white/70 hover:bg-white/20"
+                      : "bg-white/20 text-white hover:bg-white/30"
+                  }`}
+                >
+                  {locked && <Lock data-testid="nearby-radius-lock" className="w-3.5 h-3.5" aria-hidden />}
+                  {r}km
+                </button>
+              );
+            })}
           </div>
+          {anyLocked && (
+            <p className="text-xs text-white/80 mt-2">
+              {t("communityNearby.radiusLimit", { km: capKm }) ||
+                `Free accounts search up to ${capKm} km. Upgrade to VIP to search further.`}
+            </p>
+          )}
         </div>
       </div>
 

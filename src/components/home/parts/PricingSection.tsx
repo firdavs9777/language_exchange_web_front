@@ -9,6 +9,7 @@ import {
   VipPlan,
 } from "../../../store/slices/plansSlice";
 import StoreLink from "../../growth/StoreLink";
+import { VIP_PERKS } from "../../vip/perks";
 
 const PricingSection: React.FC = () => {
   const { t } = useTranslation();
@@ -109,11 +110,13 @@ const PricingSection: React.FC = () => {
                   </span>
                 )}
 
-                <ul className="mt-4 flex-1 space-y-2">
-                  {plan.features.slice(0, 5).map((f) => (
-                    <li key={f} className="flex gap-2 text-xs text-gray-600 dark:text-gray-300">
+                {/* The real VIP perks, localized -- not `plan.features`, which the
+                    server still fills with perks free users already have. */}
+                <ul data-testid="plan-perks" className="mt-4 flex-1 space-y-2">
+                  {VIP_PERKS.map((perk) => (
+                    <li key={perk.id} className="flex gap-2 text-xs text-gray-600 dark:text-gray-300">
                       <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand" aria-hidden />
-                      <span>{f}</span>
+                      <span>{t(perk.key) || perk.fallback}</span>
                     </li>
                   ))}
                 </ul>
