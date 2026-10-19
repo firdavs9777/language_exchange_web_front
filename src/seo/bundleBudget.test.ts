@@ -55,6 +55,16 @@ const LOCALES = path.join(__dirname, "..", "utils", "locales");
  * paints (latin Inter 400 is 23.1 KB, Plus Jakarta Sans 700 is 12.0 KB).
  * Total 309.1 -> 310.0 KB measured, + 5% = 325.5 -> 326.
  *
+ * 2026-10-19: back under without touching the number. Between D3 and then the
+ * homepage redesign, rooms, VIP parity and Profile Boost had crept the total to
+ * 359.7 KB (app code 323.7). Two moves took 44 KB back: /communities became a
+ * lazy route (members-only, not prerendered since 2026-10-16, yet eager -- its
+ * filter sheet, wave sheet, member cards, Today tab and the boost row with its
+ * slice were 25 KB of JS + CSS), and the moments feed dropped moment.js for
+ * the app's own timeAgo + Intl (its only eager user; ~19 KB). Measured 315.7 KB
+ * total / 279.8 KB app code. The constants stay where they are: the slack is
+ * room for the next feature, not a reason to lower the bar silently.
+ *
  * That headroom is now real headroom, not locale slack: with 17 locales out of
  * the entrypoint this number can only grow if app code grows, so raising it
  * again is the same decision as raising APP_BUDGET_KB and needs the same
@@ -210,6 +220,17 @@ describeIfBuilt("marketing bundle budget", () => {
       "utf8"
     );
     expect(chunk).toContain("engine.io");
+  });
+
+  it("keeps the members-only community page and moment.js out of the entrypoint", () => {
+    // 2026-10-19. A testid from the Community page and one from its Profile
+    // Boost row, and moment.js's own "Invalid date" literal: each was in
+    // main.js before the split and must now live only in lazy chunks.
+    const entryJs = entrypoints.filter((f) => f.endsWith(".js"))[0];
+    const main = fs.readFileSync(path.join(BUILD, entryJs.replace(/^\//, "")), "utf8");
+    expect(main).not.toContain("community-skeletons");
+    expect(main).not.toContain("boost-entry-row");
+    expect(main).not.toContain("Invalid date");
   });
 
   it("emits one chunk per lazy locale and loads none of them up front", () => {

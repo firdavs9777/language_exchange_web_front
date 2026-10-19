@@ -1,4 +1,3 @@
-import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -10,6 +9,7 @@ import { Bookmark, Heart, Smile } from "lucide-react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useHasHydrated } from "../../seo/prerender/useHasHydrated";
+import timeAgo from "../../utils/timeAgo";
 import { Bounce, toast } from "react-toastify";
 import {
   useDislikeMomentMutation,
@@ -91,6 +91,13 @@ interface AuthState {
 interface RootState {
   auth: AuthState;
 }
+
+/** "Oct 7, 2026" in UTC: the same string at prerender (UTC) and on first hydration. */
+const STABLE_DATE = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short", day: "numeric", year: "numeric" });
+const stableDate = (dateString: string): string => {
+  const d = new Date(dateString);
+  return isFinite(d.getTime()) ? STABLE_DATE.format(d) : "";
+};
 
 const SingleMoment: React.FC<MomentProps> = ({
   _id,
@@ -348,7 +355,11 @@ const SingleMoment: React.FC<MomentProps> = ({
     // The stable form is written in UTC: the prerender runs on the deploy
     // runner (UTC) and a visitor hydrates in their own timezone, so a local
     // date reads "Oct 8" on one side of midnight and "Oct 7" on the other.
-    hasHydrated ? moment(dateString).fromNow() : moment.utc(dateString).format("ll");
+    //
+    // No moment.js: it was the feed's only user and ~18 KB gzipped of first
+    // paint. The relative form is the app-wide timeAgo (translated, like the
+    // comments under it); the stable form is Intl's "Oct 7, 2026" in UTC.
+    hasHydrated ? timeAgo(dateString, t, { withAgo: true }) : stableDate(dateString);
 
   const toggleDescription = useCallback(() => {
     setShowFullDescription(!showFullDescription);

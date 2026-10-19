@@ -31,7 +31,6 @@ import RequireSignIn from "../components/gatherings/RequireSignIn";
 import HomeScreen from "../components/home/HomeMain";
 import NotFound from "../components/errors/NotFound";
 import SignedInOnly from "../components/reels/SignedInOnly";
-import MainCommnity from "../components/community/MainCommunity";
 import MainMoments from "../components/moments/MainMoments";
 import PrivacyPolicy from "../components/navbar/PrivacyPolicy";
 import DataDeletion from "../components/navbar/DataDeletion";
@@ -117,8 +116,10 @@ const ChangePassword = lazyWithRetry("../components/settings/ChangePassword", ()
 const LanguageCard = lazyWithRetry("../components/card/LanguageCard", () => import("../components/card/LanguageCard"));
 
 // Community, authenticated. /communities itself (MainCommnity) is members-only
-// and no longer prerendered; it guards itself with RequireSignIn and is still
-// imported eagerly above because every nav bar links to it.
+// and no longer prerendered (it guards itself with RequireSignIn), so it is
+// lazy too: its filter sheet, wave sheet, member cards, Today tab and the
+// Profile Boost row were ~17 KB gzipped of first paint that no visitor uses.
+const MainCommnity = lazyWithRetry("../components/community/MainCommunity", () => import("../components/community/MainCommunity"));
 // There is no CommunityDetail any more: /community/:userId is the profile
 // page, declared with the profile group above.
 const NearbyUsers = lazyWithRetry("../components/community/NearbyUsers", () => import("../components/community/NearbyUsers"));
@@ -229,7 +230,7 @@ export const routes = createRoutesFromElements(
     <Route path="data-deletion/" element={<DataDeletion />} />
     <Route path="register" element={lazyRoute(<Register />)} />
     <Route path="forgot-password" element={lazyRoute(<ForgetPassword />)} />
-    <Route path="communities" element={<MainCommnity />} />
+    <Route path="communities" element={lazyRoute(<MainCommnity />)} />
     {/* The member page. It is the profile page -- the same component, the
         same param name, the same chunk -- because the two pages had drifted
         into two different answers to "who is this person". Every existing

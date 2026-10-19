@@ -180,7 +180,7 @@ Phase 4 Sign in with Apple (plan `bananatalk_app/docs/superpowers/plans/2026-10-
 - [x] P4-APPLE-5 Button on Login and Register; hidden while `webAppleSigninEnabled` is off or no Services ID is configured
 - [x] P4-APPLE-I18N New Apple sign-in strings in all 18 locales
 - [x] P4-APPLE-PUSH Push unit apple (suite + build green, deployed dark, production smoke recorded) — deployed dark 2026-10-16 (suite 3911 pass)
-- [ ] Bundle budget: `npm run test:budget` fails -- first-paint 331.0 KB vs 326 KB budget (origin/main a944011 was already 329.2 KB). Not run by the deploy workflow. S
+- [x] Bundle budget: `npm run test:budget` fails -- first-paint 331.0 KB vs 326 KB budget (origin/main a944011 was already 329.2 KB). Not run by the deploy workflow. S -- FIXED 2026-10-19 (see the last budget line).
   2026-10-16: origin/main 661c06e measures 349.3 KB (app code 315.9 vs 307); the homepage redesign adds +4.0 KB (353.3 KB: +1.5 JS, +2.4 CSS from the new palette's utilities).
 - [x] `PromoCarousel` deleted (2026-10-19): the component, its test, `src/data/promoSlides`, `growth/promoArt/`, the `promo-carousel` gate key and store placement, and the 35 `growth.promo.*` strings in each of the 18 locales. Nothing imported it since the homepage redesign.
 
@@ -189,7 +189,7 @@ Navbar reorganization (owner: "too dense", 2026-10-16)
 - [x] NAV-2 `id="features"` on the homepage feature section (HomeFeatures); the navbar's Features link is `/#features` -- from another page React Router's `<ScrollRestoration>` scrolls to the hash, on the homepage it scrolls smoothly; the showcase test-id fallback and the 300 ms timer are gone.
 - [ ] NAV-3 Add a Learn tab/entry once the web has a learning page; add a notifications bell if a web notifications list ships. S
 - [ ] NAV-4 Device QA: phone tab bar safe-area on iOS Safari, RTL (ar) menus, chat list ends at the tab bar. S
-- [ ] Bundle budget: `npm run test:budget` fails -- first-paint 351.1 KB vs 326 KB budget, app code 317.6 vs 307 KB (main 661c06e was already 349.3 / 315.9; the VIP parity work below adds 1.8 KB). `npm run deploy` now runs `test:budget`, so a deploy through that script stops here until the budget or the bundle is fixed. S
+- [x] Bundle budget: `npm run test:budget` fails -- first-paint 351.1 KB vs 326 KB budget, app code 317.6 vs 307 KB (main 661c06e was already 349.3 / 315.9; the VIP parity work below adds 1.8 KB). `npm run deploy` now runs `test:budget`, so a deploy through that script stops here until the budget or the bundle is fixed. S -- FIXED 2026-10-19 (see the last budget line).
 
 VIP parity with the app (2026-10-18; backend a71aa3c / b2836ac, app d769d971)
 - [x] Nearby radius 5/10/25/50/100/200 km; options above the server's `search.maxRadiusKm` (50 until it answers; VIP 500) show a lock and open `/settings/vip`
@@ -226,7 +226,7 @@ Profile Boost on the website (2026-10-18; backend routes/boosts.js, app boost_sc
 - [ ] The website cannot buy coins: an empty wallet is sent to the app (/download). Decide whether web gets a coin shop. S
 - [ ] Live QA with `BOOSTS_ENABLED=true`: buy, live card, impressions moving, ended → Boost again, entry row states, Boosted labels on another account. S
 - [ ] Native review of the `boost.*` drafts. S
-- [ ] Bundle budget: now 353.9 KB first paint / 319.6 KB app code (was 351.1 / 317.6) after rooms + boost; the Community boost row and its slice are in the eager graph. S
+- [x] Bundle budget: now 353.9 KB first paint / 319.6 KB app code (was 351.1 / 317.6) after rooms + boost; the Community boost row and its slice are in the eager graph. FIXED 2026-10-19: measured 359.7 / 323.7 before (the admin.announcements keys added 1.1 KB of eng.json), 315.6 / 279.7 after, against unchanged budgets 326 / 307. `/communities` is a lazy route (members-only, not prerendered; −25 KB JS+CSS incl. the boost row and boostsSlice) and the moments feed uses timeAgo + Intl instead of moment.js (−19 KB). `bundleBudget.test.ts` now also asserts the Community page, the boost row and moment.js stay out of main.js.
 
 ## 5. Decided / won't fix
 

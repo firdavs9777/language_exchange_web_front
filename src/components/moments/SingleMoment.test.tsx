@@ -236,6 +236,24 @@ describe("SingleMoment prerendered date", () => {
     );
     expect(html).toContain("Oct 7, 2026");
   });
+
+  it("turns relative after hydration, through the translated timeAgo keys", async () => {
+    render(
+      <MemoryRouter>
+        <SingleMoment
+          _id="moment-rel"
+          title="Recent"
+          description="d"
+          likeCount={0}
+          likedUsers={[]}
+          commentCount={0}
+          createdAt={new Date(Date.now() - 5 * 60000).toISOString()}
+          user={{ _id: "author-1", name: "Author" }}
+        />
+      </MemoryRouter>
+    );
+    expect(await screen.findByText("moments_section.timeAgo.minutesAgo")).toBeInTheDocument();
+  });
 });
 
 describe("feed card chips (moments#22)", () => {
