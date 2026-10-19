@@ -44,7 +44,8 @@ Announcements console
 - [ ] Drop or reword the editor's "language targeting can't reach 2.6.1" hint once 2.7.x is the majority build. S
 
 Localization
-- [ ] Admin announcement strings are English fallbacks (`t(...) || "..."`, incl. `admin.announcements.startPassed`); add the `admin.announcements.*` keys when the admin console is localized. M
+- [x] `admin.announcements.*`: all 87 keys the console reads are in the 18 locales (drafts; eng.json equals the inline fallbacks, `adminAnnouncementsKeys.test.ts` keeps them in step).
+- [ ] Admin announcements: a few sentences are still built in code without a key -- the publish dialog's "Sends a push notification to N people …" / "Website only …" bodies and the delivery panel's "— sent to N of M" (need interpolated keys). S
 
 Web/app parity (spec: app `docs/superpowers/specs/2026-10-16-web-app-parity-design.md`)
 - [x] Baseline: 23 local commits squashed, tests restored (moments/stories/privacy audit fixes on top of origin/main; 4 suites' expectations updated for intended changes).
