@@ -394,7 +394,7 @@
       "blockedTitle": "Pesan tidak terkirim",
       "capBody": "Kamu sudah memulai percakapan baru sebanyak batas hari ini. Jadi VIP untuk memulai sebanyak yang kamu mau.",
       "capTitle": "Batas percakapan baru tercapai",
-      "dailyBody": "Kamu sudah mengirim semua pesan untuk hari ini. Jadi VIP untuk pesan tanpa batas, atau kembali besok.",
+      "dailyBody": "Kamu sudah mengirim semua pesan untuk hari ini. Kamu bisa mengirim lagi besok.",
       "dailyTitle": "Batas pesan harian tercapai",
       "firstChatBody": "Kamu bisa mengirim 5 pesan sampai dia membalas. Kamu bisa menulis lagi setelah dia menjawab.",
       "firstChatTitle": "Tunggu balasan",

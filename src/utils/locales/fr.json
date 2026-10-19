@@ -394,7 +394,7 @@
       "blockedTitle": "Message non envoyé",
       "capBody": "Vous avez démarré le nombre maximal de nouvelles conversations pour aujourd'hui. Passez VIP pour en démarrer autant que vous voulez.",
       "capTitle": "Limite de nouvelles conversations atteinte",
-      "dailyBody": "Vous avez envoyé tous vos messages du jour. Passez VIP pour des messages illimités, ou revenez demain.",
+      "dailyBody": "Vous avez envoyé tous vos messages du jour. Vous pourrez en envoyer d'autres demain.",
       "dailyTitle": "Limite quotidienne de messages atteinte",
       "firstChatBody": "Vous pouvez envoyer 5 messages tant que la personne n'a pas répondu. Vous pourrez réécrire dès qu'elle répondra.",
       "firstChatTitle": "Attendez une réponse",

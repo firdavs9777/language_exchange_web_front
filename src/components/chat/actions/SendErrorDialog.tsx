@@ -31,9 +31,10 @@ const SendErrorDialog: React.FC<SendErrorDialogProps> = ({ error, onClose }) => 
     case "dailyLimit":
       title = t("chatPage.sendErrors.dailyTitle") || "Daily message limit reached";
       body =
-        t("chatPage.sendErrors.dailyBody") ||
-        "You've sent all your messages for today. Go VIP for unlimited messages, or come back tomorrow.";
-      offerVip = true;
+        t("chatPage.sendErrors.dailyBody") || "You've sent all your messages for today. You can send more tomorrow.";
+      // No VIP offer: messaging is not a VIP perk (vip.features.* lists it as
+      // free), and the server has no free daily message cap today
+      // (config/limitations.js messagesPerDay -1 for every tier).
       break;
     case "conversationCap":
       title = t("chatPage.sendErrors.capTitle") || "New conversation limit reached";

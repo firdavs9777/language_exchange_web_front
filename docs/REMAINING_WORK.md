@@ -200,7 +200,7 @@ VIP parity with the app (2026-10-18; backend a71aa3c / b2836ac, app d769d971)
 - [x] VIP status (`/auth/me`), the community list and Nearby re-read on tab focus (per query; the global `refetchOnFocus` stays off)
 - [x] New strings in all 18 locales (drafts; native review with the app's batch)
 - [ ] Backend: `GET /purchases/plans` still advertises unlimited messages / profile views / waves / voice rooms / premium support -- fix the source (controllers/iosPurchase.js) so the app store sheets match. S
-- [ ] Chat's daily-message limit dialog still says "Go VIP for unlimited messages" (`chatPage.sendErrors.dailyBody`) -- keep only while the server enforces a free message cap. S
+- [x] Chat's daily-message limit dialog no longer sells VIP as "unlimited messages": `chatPage.sendErrors.dailyBody` is "You've sent all your messages for today. You can send more tomorrow." in all 18 locales and the dialog has no Go VIP button for this case -- messaging is a free perk in `vip.features.*` and the server has no free message cap (backend `config/limitations.js` `messagesPerDay: -1` for every tier). If a cap ever returns, VIP skips it (`User.canSendMessage`) and the offer can come back with matching VIP-page copy.
 - [ ] Native review of the 2026-10-18 VIP strings (vip.features.*, vip.limit.*, countryVipOnly, mutualExchange, activeToday, radiusLimit). S
 
 Language rooms — app parity (2026-10-18; backend 468fa90, app 90b4e425). Still behind `webLanguageRoomsEnabled` (+ `roomsEnabled`)

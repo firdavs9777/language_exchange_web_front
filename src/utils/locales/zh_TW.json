@@ -394,7 +394,7 @@
       "blockedTitle": "訊息未傳送",
       "capBody": "今天可以開啟的新對話已達上限。升級 VIP 就能不限次數開啟新對話。",
       "capTitle": "已達新對話上限",
-      "dailyBody": "今天的訊息額度已用完。升級 VIP 即可無限傳訊息，或明天再來。",
+      "dailyBody": "今天的訊息額度已用完，明天就能再傳訊息。",
       "dailyTitle": "已達每日訊息上限",
       "firstChatBody": "對方回覆前，你最多可以傳 5 則訊息。等對方回覆後就能繼續聊。",
       "firstChatTitle": "等待對方回覆",

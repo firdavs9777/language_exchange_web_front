@@ -23,12 +23,28 @@ function show(kind: string, detail = "") {
   return onClose;
 }
 
-it("daily limit offers VIP and goes to the VIP page", () => {
+it("daily limit says come back tomorrow and does not sell VIP as unlimited messages", () => {
   const onClose = show("dailyLimit");
-  expect(screen.getByTestId("send-error-dialog")).toHaveTextContent("Daily message limit reached");
-  fireEvent.click(screen.getByTestId("send-error-vip"));
-  expect(mockNavigate).toHaveBeenCalledWith("/settings/vip");
+  const dialog = screen.getByTestId("send-error-dialog");
+  expect(dialog).toHaveTextContent("Daily message limit reached");
+  expect(dialog).toHaveTextContent("You can send more tomorrow.");
+  expect(dialog).not.toHaveTextContent(/unlimited/i);
+  expect(screen.queryByTestId("send-error-vip")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByTestId("send-error-close"));
   expect(onClose).toHaveBeenCalled();
+});
+
+it("no locale's daily-limit copy promises unlimited messages with VIP", () => {
+  const fs = require("fs");
+  const path = require("path");
+  const dir = path.resolve(__dirname, "../../../utils/locales");
+  const files = fs.readdirSync(dir).filter((f: string) => f.endsWith(".json"));
+  expect(files).toHaveLength(18);
+  for (const f of files) {
+    const body = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")).chatPage.sendErrors.dailyBody;
+    expect(body).toBeTruthy();
+    expect(body).not.toMatch(/VIP/);
+  }
 });
 
 it("conversation cap offers VIP", () => {

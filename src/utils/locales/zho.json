@@ -394,7 +394,7 @@
       "blockedTitle": "消息未发送",
       "capBody": "今天能发起的新对话已达上限。开通 VIP 即可不限次数发起对话。",
       "capTitle": "已达新对话上限",
-      "dailyBody": "今天的消息条数已用完。开通 VIP 可无限发消息，或者明天再来。",
+      "dailyBody": "今天的消息条数已用完，明天就能再发消息。",
       "dailyTitle": "已达每日消息上限",
       "firstChatBody": "对方回复前，你最多可以发 5 条消息。等对方回复后就能继续聊了。",
       "firstChatTitle": "等待对方回复",

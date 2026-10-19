@@ -394,7 +394,7 @@
       "blockedTitle": "Messaggio non inviato",
       "capBody": "Hai avviato tutte le nuove conversazioni disponibili per oggi. Passa a VIP per avviarne quante vuoi.",
       "capTitle": "Limite di nuove conversazioni raggiunto",
-      "dailyBody": "Hai inviato tutti i messaggi di oggi. Passa a VIP per messaggi illimitati, oppure torna domani.",
+      "dailyBody": "Hai inviato tutti i messaggi di oggi. Potrai inviarne altri domani.",
       "dailyTitle": "Limite giornaliero di messaggi raggiunto",
       "firstChatBody": "Puoi inviare 5 messaggi finché non ti rispondono. Potrai scrivere di nuovo appena risponderanno.",
       "firstChatTitle": "Aspetta una risposta",
