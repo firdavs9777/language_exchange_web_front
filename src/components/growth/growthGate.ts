@@ -1,5 +1,5 @@
-// Trigger and suppression rules for the growth surfaces (promo carousel,
-// download popup, sticky mobile banner).
+// Trigger and suppression rules for the growth surfaces (download popup,
+// sticky mobile banner).
 //
 // Deliberately pure and React-free: these rules decide whether a visitor is
 // interrupted, they are the easiest thing here to get wrong, and they are
@@ -7,7 +7,7 @@
 
 import { STORE_HOSTS } from "./storeUrls";
 
-export type GateKey = "download-popup" | "promo-carousel" | "sticky-banner";
+export type GateKey = "download-popup" | "sticky-banner";
 
 export interface GateContext {
   pathname: string;
@@ -19,7 +19,6 @@ export interface GateContext {
 
 export const SUPPRESSION_DAYS: Record<GateKey, number> = {
   "download-popup": 30,
-  "promo-carousel": 7,
   "sticky-banner": 30,
 };
 

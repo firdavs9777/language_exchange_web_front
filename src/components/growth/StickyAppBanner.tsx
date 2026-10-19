@@ -6,7 +6,8 @@ import { useSurfaceOpen } from "./surfaceRegistry";
 import brandLogo from "../../assets/logo.png";
 
 const StickyAppBanner: React.FC = () => {
-  // Hidden until mounted, for the same reason as PromoCarousel.
+  // Hidden until mounted: the gate reads the viewport, referrer and stored
+  // dismissals, none of which exist at prerender time (ssr.test.tsx).
   const [hidden, setHidden] = useState(true);
   // Take turns with the announcement banner.
   const annBanner = useSurfaceOpen("announcement-banner");

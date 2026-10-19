@@ -2794,41 +2794,6 @@
       "googlePlay": "Google Play",
       "downloadOnThe": "Tải về trên",
       "getItOn": "Tải trên"
-    },
-    "promo": {
-      "tutor": {
-        "eyebrow": "Gia sư AI",
-        "title": "Sửa tiếng Hàn ngay khi bạn gõ",
-        "body": "Sửa lỗi riêng cho từng tin nhắn, cùng các bài quiz và luyện ngữ pháp giữa các cuộc trò chuyện.",
-        "cta": "Tải ứng dụng",
-        "alt": "Hình minh họa một bong bóng chat có một từ bị gạch bỏ và phần sửa đúng nổi lên phía trên, bên cạnh có dấu tích"
-      },
-      "voice": {
-        "eyebrow": "Voice Notes & Rooms",
-        "title": "Nghe cách phát âm thật sự",
-        "body": "Gửi tin nhắn thoại, chia sẻ vị trí của bạn, và tham gia Voice Rooms trực tiếp cùng người bản xứ.",
-        "cta": "Tải ứng dụng",
-        "alt": "Hình minh họa một chiếc micro với sóng âm lan tỏa qua nó và một thẻ vị trí được chia sẻ ở phía sau"
-      },
-      "moments": {
-        "eyebrow": "Moments & Stories",
-        "title": "Chia sẻ tuần của bạn bằng hai ngôn ngữ",
-        "body": "Đăng ảnh và suy nghĩ; bạn bè đọc bản dịch và sửa lỗi cho bạn một cách nhẹ nhàng.",
-        "cta": "Tải ứng dụng",
-        "alt": "Hình minh họa ba tấm ảnh chồng lên nhau cùng một trái tim và ký hiệu dịch từ A sang 가"
-      },
-      "inbox": {
-        "eyebrow": "Trò chuyện thực sự",
-        "title": "Những người thực sự hồi âm",
-        "body": "Tin nhắn, lượt vẫy tay và cảm xúc trong một hộp thư — đọc, dịch, hồi đáp.",
-        "cta": "Tải ứng dụng",
-        "alt": "Hình minh họa ba cuộc trò chuyện xếp chồng trong hộp thư đến, một trong số đó chưa đọc, cùng một bàn tay vẫy chào"
-      },
-      "dismiss": "Đóng quảng cáo ứng dụng",
-      "label": "BananaTalk làm được những gì",
-      "slideLabel": "Trang {{n}} trên {{total}}",
-      "prev": "Slide trước",
-      "next": "Slide tiếp theo"
     }
   },
   "stories": {

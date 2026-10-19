@@ -18,7 +18,6 @@ export type StorePlacement =
   | "download-page"
   | "sticky-banner"
   | "popup"
-  | "promo-carousel"
   | "footer"
   | "meet"
   | "learn-korean"

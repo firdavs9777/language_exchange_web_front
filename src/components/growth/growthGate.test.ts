@@ -30,9 +30,13 @@ it("suppresses after a dismissal, until the window expires", () => {
 });
 
 it("keeps each key's dismissal separate", () => {
-  recordDismissal("download-popup", 1_000);
-  expect(isSuppressed("download-popup", { ...base, now: 1_000 })).toBe(true);
-  expect(isSuppressed("promo-carousel", { ...base, now: 1_000 })).toBe(false);
+  recordDismissal("sticky-banner", 1_000);
+  expect(isSuppressed("sticky-banner", { ...base, viewportWidth: 390, now: 1_000 })).toBe(true);
+  expect(isSuppressed("download-popup", { ...base, now: 1_000 })).toBe(false);
+});
+
+it("gates only the surfaces that are still mounted (PromoCarousel was removed)", () => {
+  expect(Object.keys(SUPPRESSION_DAYS).sort()).toEqual(["download-popup", "sticky-banner"]);
 });
 
 it("suppresses the popup for visitors arriving from an app store", () => {
