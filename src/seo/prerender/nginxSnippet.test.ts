@@ -44,6 +44,28 @@ const HEX = "507f1f77bcf86cd799439011";
 const PREVIEW_PATHS = [`/moment/${HEX}`, `/profile/${HEX}`, `/community/${HEX}`, `/story/${HEX}`, "/i/ABCD2345"];
 const botLocationFor = (p: string) => regexLocations().find((l) => l.regex.test(p) && /http_user_agent/.test(l.body));
 
+describe("old /moments/<id> share links", () => {
+  const legacy = () => regexLocations().find((l) => l.regex.test(`/moments/${HEX}`) && /return 301/.test(l.body));
+
+  it("301s /moments/<id> to /moment/<id>, keeping the query string", () => {
+    const loc = legacy();
+    expect(loc).toBeTruthy();
+    expect(loc!.regex.test(`/moments/${HEX}/`)).toBe(true);
+    expect(loc!.body).toContain("return 301 /moment/$1$is_args$args;");
+  });
+
+  it("leaves /moments and /moments/saved to the app", () => {
+    const loc = legacy()!;
+    for (const p of ["/moments", "/moments/", "/moments/saved", `/moments/${HEX}/comments`]) {
+      expect(loc.regex.test(p)).toBe(false);
+    }
+  });
+
+  it("sits before the generated routes include (which matches /moments/...)", () => {
+    expect(legacy()!.at).toBeLessThan(conf.indexOf("nginx.routes.conf"));
+  });
+});
+
 describe("link-preview crawler rule", () => {
   it("covers all five shareable link types, with or without a trailing slash", () => {
     for (const p of PREVIEW_PATHS) {

@@ -17,14 +17,14 @@ backend `language_exchange_backend_application/docs/REMAINING_WORK.md` (server e
 1. Paste the **upload-key** and **Play app-signing** SHA-256 (Play Console → App integrity → App signing) into
    `public/.well-known/assetlinks.json`, deploy (app handoff `2.7.0-handoff.md` §5; device check is in the app file).
 2. Optional: apply `deploy/nginx.snippet.conf` on the droplet (serves the Apple association file as `application/json`, real 404s).
-3. Phase 5: apply the link-preview locations in `deploy/nginx.snippet.conf` (they must sit above the `nginx.routes.conf` include), `nginx -t`, reload, then run the two `curl` checks in README "Link previews". Previews in KakaoTalk / Telegram / WhatsApp are rows in the app's `docs/qa/regression-suite.csv` (Web area).
+3. Phase 5: apply the link-preview locations (and the `/moments/<id>` 301 above them) in `deploy/nginx.snippet.conf` (they must sit above the `nginx.routes.conf` include), `nginx -t`, reload, then run the two `curl` checks in README "Link previews". Previews in KakaoTalk / Telegram / WhatsApp are rows in the app's `docs/qa/regression-suite.csv` (Web area).
 
 ## 3. Production QA
 
 - [x] `curl https://banatalk.com/.well-known/assetlinks.json` returns the real Play fingerprint (2026-10-16).
 - [ ] Add the upload-key SHA-256 (`keytool -list -v -keystore <upload.jks>` on the keystore MacBook) and enable the skipped test in `src/seo/appLinks.test.ts`. S
 - [ ] First real announcement end-to-end: publish → push → notifications list → in-app pop-up (rows in the app's `docs/qa/onboarding-matrix.md`); the delivery panel shows state, attempts and counts.
-- [ ] An old `https://banatalk.com/moments/<id>` share link lands on `/moment/<id>`.
+- [x] An old `https://banatalk.com/moments/<id>` share link lands on `/moment/<id>` -- checked 2026-10-19: production answers 200 with the SPA shell and the live `main.a5352a78.js` carries the `moments/:id` → `MomentLinkRedirect` route. `deploy/nginx.snippet.conf` now also 301s `/moments/<24-hex id>` → `/moment/<id>` so link previews of old links get the moment card (applied with owner step 3).
 
 ## 4. Code work — open
 
