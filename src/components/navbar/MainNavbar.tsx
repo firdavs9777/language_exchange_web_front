@@ -25,7 +25,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectIsAdmin } from "../../store/slices/authSlice";
 import { Bounce, toast } from "react-toastify";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import { BASE_URL } from "../../constants";
 import logo from "../../assets/logo.png";
@@ -253,22 +253,15 @@ const MainNavbar = () => {
     }
   };
 
-  // "Features" for a visitor: the homepage's feature section if it is on the
-  // page (id="features", or the showcase's test id), otherwise the homepage.
+  // "Features" for a visitor links to /#features (HomeFeatures). From another
+  // page the link navigates there and React Router's <ScrollRestoration>
+  // scrolls to the hash; on the homepage itself it just scrolls smoothly.
   const goToFeatures = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const scroll = () => {
-      const target =
-        document.getElementById("features") || document.querySelector('[data-testid="feature-showcase"]');
-      if (target && typeof (target as HTMLElement).scrollIntoView === "function") {
-        (target as HTMLElement).scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    };
-    if (location.pathname !== "/") {
-      navigate("/");
-      window.setTimeout(scroll, 300);
-    } else {
-      scroll();
+    if (location.pathname !== "/") return;
+    const target = document.getElementById("features");
+    if (target && typeof target.scrollIntoView === "function") {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -375,9 +368,9 @@ const MainNavbar = () => {
               </>
             ) : (
               <>
-                <a href="/" className="nav-item" onClick={goToFeatures}>
+                <Link to="/#features" className="nav-item" onClick={goToFeatures}>
                   <span>{t("nav.features") || "Features"}</span>
-                </a>
+                </Link>
                 <NavLink to="/download" className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
                   <span>{t("nav.downloadApp") || "Download app"}</span>
                 </NavLink>

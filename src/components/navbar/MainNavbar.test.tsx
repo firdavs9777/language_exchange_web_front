@@ -281,3 +281,55 @@ it("keeps the tab bar on the conversation list", () => {
   renderNavbar(undefined, "/chat");
   expect(screen.getByTestId("bottom-tab-chats")).toHaveClass("active");
 });
+
+describe("Features link (NAV-2)", () => {
+  const { createMemoryRouter, RouterProvider, ScrollRestoration, Outlet } = require("react-router-dom");
+  // jsdom has no window.scrollTo; <ScrollRestoration> calls it on every navigation.
+  beforeEach(() => jest.spyOn(window, "scrollTo").mockImplementation(() => {}));
+  afterEach(() => (window.scrollTo as jest.Mock).mockRestore());
+
+  function renderAt(path: string) {
+    const scrolled = jest.fn();
+    const Home = () => (
+      <section id="features" data-testid="features-target" ref={(el) => { if (el) (el as any).scrollIntoView = scrolled; }} />
+    );
+    const Shell = () => (
+      <>
+        <MainNavbar />
+        <Outlet />
+        <ScrollRestoration />
+      </>
+    );
+    const router = createMemoryRouter(
+      [{ path: "/", element: <Shell />, children: [{ index: true, element: <Home /> }, { path: "moments", element: <div /> }] }],
+      { initialEntries: [path] }
+    );
+    render(
+      <Provider store={makeStore(null)}>
+        <RouterProvider router={router} />
+      </Provider>
+    );
+    return { router, scrolled };
+  }
+
+  it("points at /#features", () => {
+    renderNavbar(null, "/moments");
+    expect(screen.getByRole("link", { name: "nav.features" })).toHaveAttribute("href", "/#features");
+  });
+
+  it("from another page, goes to the homepage and scrolls to the feature section", async () => {
+    const { router, scrolled } = renderAt("/moments");
+    fireEvent.click(screen.getByRole("link", { name: "nav.features" }));
+    await waitFor(() => expect(router.state.location.pathname).toBe("/"));
+    expect(router.state.location.hash).toBe("#features");
+    await waitFor(() => expect(scrolled).toHaveBeenCalled());
+  });
+
+  it("on the homepage, scrolls smoothly without navigating", () => {
+    const { router, scrolled } = renderAt("/");
+    const before = router.state.location.key;
+    fireEvent.click(screen.getByRole("link", { name: "nav.features" }));
+    expect(scrolled).toHaveBeenCalledWith({ behavior: "smooth", block: "start" });
+    expect(router.state.location.key).toBe(before);
+  });
+});

@@ -83,7 +83,12 @@ const HomeFeatures: React.FC = () => {
   const k = (f: Feature, field: string) => `home.v2.features.${f.key}.${field}`;
 
   return (
-    <section data-testid="home-features" className="bg-canvas px-[1rem] py-16 sm:py-24 dark:bg-[#0F1417]">
+    // id="features" is the navbar's "Features" target (/#features), from any page.
+    <section
+      id="features"
+      data-testid="home-features"
+      className="scroll-mt-20 bg-canvas px-[1rem] py-16 sm:py-24 dark:bg-[#0F1417]"
+    >
       <div className="mx-[auto] max-w-6xl">
         <div className="[text-align:center]">
           <p className="bt-eyebrow text-brand-deep dark:text-brand-light">

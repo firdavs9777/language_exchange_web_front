@@ -87,6 +87,11 @@ describe("HomeFeatures", () => {
     });
   });
 
+  it("is the navbar's /#features target", () => {
+    render(<HomeFeatures />);
+    expect(screen.getByTestId("home-features")).toHaveAttribute("id", "features");
+  });
+
   it("routes every feature string through home.v2.features.<key>.*", () => {
     mockTMode = "echo";
     render(<HomeFeatures />);
