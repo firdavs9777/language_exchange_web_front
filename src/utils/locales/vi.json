@@ -642,7 +642,8 @@
       "verified": "Đã xác minh",
       "joined": "Tham gia {{date}}",
       "active": "Hoạt động {{time}}",
-      "online": "Đang trực tuyến"
+      "online": "Đang trực tuyến",
+      "activeToday": "Hoạt động hôm nay"
     },
     "block": {
       "title": "Chặn {{name}}?",
@@ -983,7 +984,9 @@
       "alreadyComment": "Bạn đã báo cáo bình luận này rồi.",
       "alreadyStory": "Bạn đã báo cáo tin này rồi.",
       "titleComment": "Báo cáo bình luận này",
-      "titleStory": "Báo cáo tin này"
+      "titleStory": "Báo cáo tin này",
+      "titleMessage": "Báo cáo tin nhắn này",
+      "alreadyMessage": "Bạn đã báo cáo tin nhắn này rồi."
     },
     "schedule": {
       "label": "Lên lịch",
@@ -1359,7 +1362,8 @@
       "matchCount": "{{count}} kết quả phù hợp",
       "lockedByTab": "Được đặt bởi thẻ {{tab}}",
       "reciprocal": "Chỉ đối tác phù hợp",
-      "reciprocalHint": "Họ nói ngôn ngữ bạn học và học ngôn ngữ bạn nói"
+      "reciprocalHint": "Họ nói ngôn ngữ bạn học và học ngôn ngữ bạn nói",
+      "countryVipOnly": "Bộ lọc quốc gia là tính năng VIP"
     },
     "highlighted": {
       "title": "Hồ sơ nổi bật",
@@ -1423,7 +1427,8 @@
       "error": "Không tải được người phù hợp hôm nay",
       "retry": "Thử lại",
       "waved": "Đã vẫy tay"
-    }
+    },
+    "mutualExchange": "Hai bạn đang học ngôn ngữ của nhau"
   },
   "communityDetail": {
     "errors": {
@@ -2265,16 +2270,23 @@
     "cancelSubscription": "Hủy Đăng Ký",
     "manageInApp": "Để quản lý đăng ký, vui lòng sử dụng ứng dụng di động BananaTalk.",
     "features": {
-      "limitedMessages": "Tin nhắn giới hạn mỗi ngày",
       "basicProfile": "Hồ sơ cơ bản",
       "basicSearch": "Tìm kiếm cơ bản",
-      "unlimitedMessages": "Tin nhắn không giới hạn",
-      "seeProfileVisitors": "Xem ai đã truy cập hồ sơ của bạn",
-      "advancedFilters": "Bộ lọc tìm kiếm nâng cao",
       "noAds": "Trải nghiệm không quảng cáo",
-      "prioritySupport": "Hỗ trợ ưu tiên",
       "exclusiveBadge": "Huy hiệu VIP độc quyền",
-      "translationFeature": "Dịch tin nhắn"
+      "unlimitedTutor": "Gia sư AI và nhập vai không giới hạn",
+      "seeAllVisitors": "Xem tất cả những người đã xem hồ sơ của bạn",
+      "moreMatches": "15 ghép đôi mỗi ngày thay vì 6",
+      "advancedPartnerFilters": "Bộ lọc đối tác nâng cao (quốc gia)",
+      "unlimitedTranslations": "Dịch không giới hạn",
+      "freeMessaging": "Trò chuyện với bạn học ngôn ngữ",
+      "freeMatches": "6 ghép đôi mỗi ngày",
+      "freeTranslations": "5 lượt dịch mỗi ngày"
+    },
+    "limit": {
+      "title": "Đã đạt giới hạn hằng ngày",
+      "body": "Bạn đã dùng hết lượt miễn phí hôm nay. VIP không có giới hạn hằng ngày.",
+      "cta": "Nâng cấp VIP"
     }
   },
   "linking": {
@@ -3029,7 +3041,8 @@
     "tryIncreaseRadius": "Hãy thử tăng bán kính tìm kiếm",
     "unknownError": "Đã xảy ra lỗi",
     "usersFound_one": "Tìm thấy {{count}} người",
-    "usersFound_other": "Tìm thấy {{count}} người"
+    "usersFound_other": "Tìm thấy {{count}} người",
+    "radiusLimit": "Tài khoản miễn phí tìm trong phạm vi {{km}} km. Nâng cấp VIP để tìm xa hơn."
   },
   "auth": {
     "apple": {
@@ -3367,7 +3380,8 @@
       "language": "Ngôn ngữ",
       "name": "Chủ đề",
       "submit": "Tạo phòng",
-      "title": "Tạo phòng chủ đề"
+      "title": "Tạo phòng chủ đề",
+      "pickLanguage": "Chọn ngôn ngữ"
     },
     "errors": {
       "banned": "Bạn đã bị xóa khỏi phòng này. Bạn có thể nhờ chủ phòng cho vào lại.",
@@ -3380,12 +3394,14 @@
       "tooMany": "Bạn đã có 10 phòng. Hãy xóa một phòng để tạo phòng mới."
     },
     "list": {
-      "create": "Phòng chủ đề mới",
+      "create": "Phòng mới",
       "empty": "Chưa có phòng nào.",
       "error": "Không tải được phòng ngôn ngữ.",
       "joined": "Đã tham gia",
       "locked": "Đã khóa",
-      "title": "Phòng ngôn ngữ"
+      "title": "Phòng ngôn ngữ",
+      "active": "Hoạt động {{time}}",
+      "refresh": "Làm mới"
     },
     "owner": {
       "admin": "quản trị viên",
@@ -3414,7 +3430,35 @@
       "slowDown": "Bạn đang gửi quá nhanh. Chậm lại một chút nhé.",
       "sticker": "Nhãn dán",
       "unsupported": "Mở ứng dụng để xem tin nhắn này",
-      "voice": "Tin nhắn thoại — mở ứng dụng để nghe"
+      "voice": "Tin nhắn thoại — mở ứng dụng để nghe",
+      "someone": "Thành viên",
+      "photo": "Ảnh",
+      "replyDeleted": "Tin nhắn đã bị xóa",
+      "reply": "Trả lời",
+      "react": "Bày tỏ cảm xúc",
+      "more": "Thêm",
+      "delete": "Xóa",
+      "report": "Báo cáo",
+      "sendFailed": "Không gửi được tin nhắn",
+      "photoFailed": "Không gửi được ảnh. Hãy thử lại.",
+      "photosOnly": "Trong phòng chỉ có thể chia sẻ ảnh.",
+      "questionOfDay": "Câu hỏi hôm nay",
+      "typing": "{{name}} đang nhập…",
+      "removePhoto": "Bỏ ảnh",
+      "addPhoto": "Thêm ảnh",
+      "caption": "Thêm chú thích (không bắt buộc)",
+      "deleteTitle": "Xóa tin nhắn này?",
+      "deleteBody": "Tin nhắn sẽ bị xóa với mọi người trong phòng."
+    },
+    "info": {
+      "hub": "Phòng chính của ngôn ngữ",
+      "topic": "Phòng chủ đề",
+      "members": "thành viên",
+      "noDescription": "Chưa có mô tả.",
+      "viewMembers": "Xem thành viên",
+      "edit": "Chỉnh sửa",
+      "back": "Quay lại",
+      "save": "Lưu"
     }
   },
   "nav": {
@@ -3511,5 +3555,34 @@
       "useHere": "Nghe ở đây",
       "you": "bạn"
     }
+  },
+  "boost": {
+    "title": "Đẩy hồ sơ của tôi",
+    "subtitle": "Được nhiều bạn đồng hành thấy hơn trong 24 giờ",
+    "activeTitle": "Lượt đẩy của bạn đang chạy",
+    "again": "Đẩy lại",
+    "timeLeft": "Còn {{time}}",
+    "seenBy": "Số lần hiển thị đến nay: {{count}}",
+    "lastResult": "Lượt đẩy gần nhất — số lần hiển thị: {{count}}",
+    "endingSoon": "Sắp kết thúc",
+    "durationHm": "{{hours}} giờ {{minutes}} phút",
+    "durationM": "{{minutes}} phút",
+    "sourcePartners": "Danh sách bạn đồng hành",
+    "sourceMatches": "Ghép đôi hằng ngày",
+    "sourceMoments": "Khoảnh khắc của bạn trong Dành cho bạn",
+    "countingHint": "Lượt xem tăng dần khi mọi người mở Bạn đồng hành, ghép đôi hằng ngày và Dành cho bạn.",
+    "tipsTitle": "Tận dụng lượt đẩy tốt hơn",
+    "tipMoment": "Đăng một khoảnh khắc ngay: khoảnh khắc mới nhất của bạn cũng được nổi bật.",
+    "tipProfile": "Ảnh rõ nét và phần giới thiệu ngắn nhận được nhiều phản hồi hơn.",
+    "postMoment": "Đăng khoảnh khắc",
+    "explain": "Trở thành người ghép đôi thứ 6 của mọi người có ngôn ngữ phù hợp với bạn, trong 24 giờ.",
+    "explainMore": "Bạn cũng xuất hiện gần đầu danh sách Bạn đồng hành, và khoảnh khắc mới nhất được nổi bật trong Dành cho bạn.",
+    "costLine": "Giá: {{cost}} xu",
+    "balanceLine": "Số dư của bạn: {{balance}} xu",
+    "confirm": "Xác nhận đẩy",
+    "failed": "Không thể bắt đầu lượt đẩy. Vui lòng thử lại.",
+    "capacityFull": "Hiện đã hết chỗ đẩy — hãy thử lại sau vài giờ",
+    "needCoins": "Bạn cần {{cost}} xu. Xu được mua trong ứng dụng BananaTalk.",
+    "getApp": "Tải ứng dụng"
   }
 }

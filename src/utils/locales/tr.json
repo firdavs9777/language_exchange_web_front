@@ -642,7 +642,8 @@
       "verified": "Doğrulanmış",
       "joined": "Katıldı: {{date}}",
       "active": "Son aktif: {{time}}",
-      "online": "Şu an çevrimiçi"
+      "online": "Şu an çevrimiçi",
+      "activeToday": "Bugün aktif"
     },
     "block": {
       "title": "{{name}} engellensin mi?",
@@ -983,7 +984,9 @@
       "alreadyComment": "Bu yorumu zaten bildirdin.",
       "alreadyStory": "Bu hikâyeyi zaten bildirdin.",
       "titleComment": "Bu yorumu bildir",
-      "titleStory": "Bu hikâyeyi bildir"
+      "titleStory": "Bu hikâyeyi bildir",
+      "titleMessage": "Bu mesajı bildir",
+      "alreadyMessage": "Bu mesajı zaten bildirdin."
     },
     "schedule": {
       "label": "Zamanla",
@@ -1359,7 +1362,8 @@
       "matchCount": "{{count}} eşleşme",
       "lockedByTab": "{{tab}} sekmesi tarafından ayarlandı",
       "reciprocal": "Yalnızca mükemmel partnerler",
-      "reciprocalHint": "Öğrendiğin dili konuşuyor, konuştuğun dili öğreniyorlar"
+      "reciprocalHint": "Öğrendiğin dili konuşuyor, konuştuğun dili öğreniyorlar",
+      "countryVipOnly": "Ülke filtresi bir VIP özelliğidir"
     },
     "highlighted": {
       "title": "Öne çıkan profiller",
@@ -1423,7 +1427,8 @@
       "error": "Bugünkü eşleşmeler yüklenemedi",
       "retry": "Tekrar dene",
       "waved": "El sallandı"
-    }
+    },
+    "mutualExchange": "Birbirinizin dilini öğreniyorsunuz"
   },
   "communityDetail": {
     "errors": {
@@ -2265,16 +2270,23 @@
     "cancelSubscription": "Aboneliği İptal Et",
     "manageInApp": "Aboneliğinizi yönetmek için lütfen BananaTalk mobil uygulamasını kullanın.",
     "features": {
-      "limitedMessages": "Günlük sınırlı mesaj",
       "basicProfile": "Temel profil",
       "basicSearch": "Temel arama",
-      "unlimitedMessages": "Sınırsız mesaj",
-      "seeProfileVisitors": "Profilinizi kimin ziyaret ettiğini görün",
-      "advancedFilters": "Gelişmiş arama filtreleri",
       "noAds": "Reklamsız deneyim",
-      "prioritySupport": "Öncelikli destek",
       "exclusiveBadge": "Özel VIP rozeti",
-      "translationFeature": "Mesaj çevirisi"
+      "unlimitedTutor": "Sınırsız yapay zekâ öğretmeni ve rol yapma",
+      "seeAllVisitors": "Profiline bakan herkesi gör",
+      "moreMatches": "Günde 6 yerine 15 eşleşme",
+      "advancedPartnerFilters": "Gelişmiş partner filtreleri (ülke)",
+      "unlimitedTranslations": "Sınırsız çeviri",
+      "freeMessaging": "Dil partnerleriyle sohbet",
+      "freeMatches": "Günde 6 eşleşme",
+      "freeTranslations": "Günde 5 çeviri"
+    },
+    "limit": {
+      "title": "Günlük sınıra ulaşıldı",
+      "body": "Bugünkü ücretsiz hakkını kullandın. VIP günlük sınırları kaldırır.",
+      "cta": "VIP'ye yükselt"
     }
   },
   "linking": {
@@ -3029,7 +3041,8 @@
     "tryIncreaseRadius": "Arama yarıçapını artırmayı dene",
     "unknownError": "Bir hata oluştu",
     "usersFound_one": "{{count}} kişi bulundu",
-    "usersFound_other": "{{count}} kişi bulundu"
+    "usersFound_other": "{{count}} kişi bulundu",
+    "radiusLimit": "Ücretsiz hesaplar {{km}} km'ye kadar arar. Daha uzağı aramak için VIP'ye yükselt."
   },
   "auth": {
     "apple": {
@@ -3367,7 +3380,8 @@
       "language": "Dil",
       "name": "Konu",
       "submit": "Oda oluştur",
-      "title": "Konu odası başlat"
+      "title": "Konu odası başlat",
+      "pickLanguage": "Bir dil seç"
     },
     "errors": {
       "banned": "Bu odadan çıkarıldınız. Oda sahibinden sizi tekrar almasını isteyebilirsiniz.",
@@ -3380,12 +3394,14 @@
       "tooMany": "Zaten 10 odanız var. Yeni bir oda başlatmak için birini silin."
     },
     "list": {
-      "create": "Yeni konu odası",
+      "create": "Yeni oda",
       "empty": "Henüz oda yok.",
       "error": "Dil odaları yüklenemedi.",
       "joined": "Katıldın",
       "locked": "Kilitli",
-      "title": "Dil odaları"
+      "title": "Dil odaları",
+      "active": "{{time}} aktif",
+      "refresh": "Yenile"
     },
     "owner": {
       "admin": "yönetici",
@@ -3414,7 +3430,35 @@
       "slowDown": "Çok hızlı gönderiyorsunuz. Biraz yavaşlayın.",
       "sticker": "Çıkartma",
       "unsupported": "Bu mesajı görmek için uygulamayı açın",
-      "voice": "Sesli mesaj — dinlemek için uygulamayı açın"
+      "voice": "Sesli mesaj — dinlemek için uygulamayı açın",
+      "someone": "Üye",
+      "photo": "Fotoğraf",
+      "replyDeleted": "Mesaj kaldırıldı",
+      "reply": "Yanıtla",
+      "react": "Tepki ver",
+      "more": "Daha fazla",
+      "delete": "Sil",
+      "report": "Bildir",
+      "sendFailed": "Mesaj gönderilemedi",
+      "photoFailed": "Fotoğraf gönderilemedi. Tekrar dene.",
+      "photosOnly": "Odalarda yalnızca fotoğraf paylaşılabilir.",
+      "questionOfDay": "Günün sorusu",
+      "typing": "{{name}} yazıyor…",
+      "removePhoto": "Fotoğrafı kaldır",
+      "addPhoto": "Fotoğraf ekle",
+      "caption": "Açıklama ekle (isteğe bağlı)",
+      "deleteTitle": "Bu mesaj silinsin mi?",
+      "deleteBody": "Odadaki herkes için kaldırılacak."
+    },
+    "info": {
+      "hub": "Dil merkezi",
+      "topic": "Konu odası",
+      "members": "üye",
+      "noDescription": "Henüz açıklama yok.",
+      "viewMembers": "Üyeleri gör",
+      "edit": "Düzenle",
+      "back": "Geri",
+      "save": "Kaydet"
     }
   },
   "nav": {
@@ -3511,5 +3555,34 @@
       "useHere": "Burada dinle",
       "you": "siz"
     }
+  },
+  "boost": {
+    "title": "Profilimi öne çıkar",
+    "subtitle": "24 saat boyunca daha çok partnere görün",
+    "activeTitle": "Öne çıkarman aktif",
+    "again": "Yeniden öne çıkar",
+    "timeLeft": "{{time}} kaldı",
+    "seenBy": "Şimdiye kadar gösterilme: {{count}}",
+    "lastResult": "Son öne çıkarman — gösterilme: {{count}}",
+    "endingSoon": "Yakında bitiyor",
+    "durationHm": "{{hours}} sa {{minutes}} dk",
+    "durationM": "{{minutes}} dk",
+    "sourcePartners": "Partner listesi",
+    "sourceMatches": "Günlük eşleşmeler",
+    "sourceMoments": "Senin İçin'deki anın",
+    "countingHint": "İnsanlar Partnerler'i, günlük eşleşmelerini ve Senin İçin'i açtıkça görüntülenmeler artar.",
+    "tipsTitle": "Öne çıkarmandan daha fazlasını al",
+    "tipMoment": "Şimdi bir an paylaş: en yeni anın da öne çıkarılır.",
+    "tipProfile": "Net bir fotoğraf ve kısa bir biyografi daha çok yanıt alır.",
+    "postMoment": "An paylaş",
+    "explain": "24 saat boyunca dilleri sana uyan herkesin 6. eşleşmesi ol.",
+    "explainMore": "Ayrıca Partnerler'in üst sıralarında görünürsün ve en yeni anın Senin İçin'de öne çıkarılır.",
+    "costLine": "Ücret: {{cost}} jeton",
+    "balanceLine": "Bakiyen: {{balance}} jeton",
+    "confirm": "Öne çıkarmayı onayla",
+    "failed": "Öne çıkarma başlatılamadı. Lütfen tekrar dene.",
+    "capacityFull": "Şu anda tüm öne çıkarma yerleri dolu — birkaç saat sonra tekrar dene",
+    "needCoins": "{{cost}} jetona ihtiyacın var. Jetonlar BananaTalk uygulamasından alınır.",
+    "getApp": "Uygulamayı indir"
   }
 }

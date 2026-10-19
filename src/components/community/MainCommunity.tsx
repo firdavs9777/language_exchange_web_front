@@ -26,9 +26,17 @@ import ActiveFilterChips from "./ActiveFilterChips";
 import QuickFilterChips from "./QuickFilterChips";
 import WaveSheet from "./WaveSheet";
 import RequireSignIn from "../gatherings/RequireSignIn";
+import BoostEntryRow from "../boost/BoostEntryRow";
 import AdUnit from "../ads/AdUnit";
 import { AD_SLOTS } from "../ads/adsenseConfig";
-import { CommunityFilters, buildCommunityQuery } from "./lib/buildCommunityQuery";
+import {
+  CommunityFilters,
+  buildCommunityQuery,
+  withoutVipOnlyFilters,
+} from "./lib/buildCommunityQuery";
+import { useIsVip } from "../vip/useIsVip";
+import { isMutualExchange } from "./lib/presence";
+import { VIP_PATH } from "../vip/vipStatus";
 import * as filterStorage from "./lib/filterStorage";
 import { DEFAULT_FILTERS } from "./lib/filterStorage";
 import { showsAdAfter } from "./lib/gridInterleave";
@@ -242,6 +250,14 @@ const ModernCommunity: React.FC = () => {
   }, [searchParams, storedFilters]);
 
   const filters = listState.filters;
+  const isVip = useIsVip();
+  // Country is VIP-only (GET /users ignores it for free callers): for a free
+  // member it is not sent, not shown as a chip and not counted. The URL and
+  // the stored filters keep it, so it applies again after an upgrade.
+  const visibleFilters = useMemo(
+    () => withoutVipOnlyFilters(filters, isVip),
+    [filters, isVip]
+  );
   const sort = listState.sort;
   const search = listState.search;
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
@@ -272,11 +288,11 @@ const ModernCommunity: React.FC = () => {
    * tab name in `?tab=` already says everything the link needs to say.
    */
   const effectiveFilters = useMemo<CommunityFilters>(() => {
-    if (activeTab === "online") return { ...filters, onlineOnly: true };
-    if (activeTab === "new") return { ...filters, newUsersOnly: true };
-    if (activeTab === "serious") return { ...filters, activeWithin: "7d" };
-    return filters;
-  }, [filters, activeTab]);
+    if (activeTab === "online") return { ...visibleFilters, onlineOnly: true };
+    if (activeTab === "new") return { ...visibleFilters, newUsersOnly: true };
+    if (activeTab === "serious") return { ...visibleFilters, activeWithin: "7d" };
+    return visibleFilters;
+  }, [visibleFilters, activeTab]);
 
   const [draftFilters, setDraftFilters] = useState<CommunityFilters>(filters);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
@@ -437,6 +453,16 @@ const ModernCommunity: React.FC = () => {
     [current?.native_language, current?.language_to_learn, userInfo]
   );
 
+  // One shared signal on the All list (app parity): each speaks what the
+  // other is learning. Built once so memoized cards see an equal entry.
+  const mutualChip = useMemo(
+    () => ({
+      text: t("communityMain.mutualExchange") || "You're learning each other's language",
+      primary: true,
+    }),
+    [t]
+  );
+
   // Identifies the question the list is currently asking. Paging is tagged
   // with it, so changing filters, search, sort or tab puts the list back to
   // page 1 during render rather than one effect later.
@@ -475,7 +501,12 @@ const ModernCommunity: React.FC = () => {
     isFetching,
     error: errorInfo,
     refetch,
-  } = useGetCommunityMembersQuery(queryArg, { skip: isForYou || isToday || appConfigLoading });
+  } = useGetCommunityMembersQuery(queryArg, {
+    skip: isForYou || isToday || appConfigLoading,
+    // Re-read the visible page on tab return so the list is not stale; only
+    // this subscription refetches, once per focus.
+    refetchOnFocus: true,
+  });
 
   // "For you" asks a different server a different question: no filters, no
   // paging, one scored set. It is skipped entirely off the tab so the tab
@@ -850,7 +881,10 @@ const ModernCommunity: React.FC = () => {
     applyState({ filters: next, search: "", sort: undefined, tab: "all" });
   }, [applyState]);
 
-  const activeFilterCount = useMemo(() => countActiveFilters(filters), [filters]);
+  const activeFilterCount = useMemo(
+    () => countActiveFilters(visibleFilters),
+    [visibleFilters]
+  );
 
   if (errorInfo) {
     return (
@@ -898,6 +932,11 @@ const ModernCommunity: React.FC = () => {
             : undefined
         }
         onClose={() => setIsFilterSheetOpen(false)}
+        isVip={isVip}
+        onUpgrade={() => {
+          setIsFilterSheetOpen(false);
+          navigate(VIP_PATH);
+        }}
       />
 
       <WaveSheet
@@ -908,6 +947,7 @@ const ModernCommunity: React.FC = () => {
       />
 
       <div className="community-page__container">
+        {signedIn && <BoostEntryRow className="mb-3" />}
         {activeTab === "serious" && (
           // The app's explainer line under the active segment.
           <p data-testid="segment-hint" className="px-1 pb-2 text-xs text-ink-500 dark:text-ink-400">
@@ -930,7 +970,7 @@ const ModernCommunity: React.FC = () => {
             {/* The chips show what the *member* chose, not the tab's own lock:
                 a chip you cannot dismiss is a dead control. */}
             <ActiveFilterChips
-              value={filters}
+              value={visibleFilters}
               onRemove={removeFilter}
               onClear={clearAllFilters}
               topicLabels={topicLabels}
@@ -1000,6 +1040,7 @@ const ModernCommunity: React.FC = () => {
                   <div className={CARD_SLOT}>
                     <MemberCard
                       user={member}
+                      reasons={isMutualExchange(member, me) ? [mutualChip] : undefined}
                       onOpen={handleOpenMember}
                       onWave={handleWaveMember}
                     />

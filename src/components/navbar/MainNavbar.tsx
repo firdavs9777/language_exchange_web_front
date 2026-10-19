@@ -16,6 +16,7 @@ import {
   FaSearch,
   FaStream,
   FaRegImages,
+  FaRocket,
 } from "react-icons/fa";
 import { useWebFlag } from "../../utils/webFlags";
 import { useTranslation } from "react-i18next";
@@ -143,6 +144,7 @@ const MainNavbar = () => {
   // Phase 4 rooms: dark until the owner turns the flags on.
   const voiceRoomsOn = useWebFlag("webVoiceRoomsEnabled");
   const languageRoomsOn = useWebFlag("webLanguageRoomsEnabled");
+  const boostsOn = useWebFlag("boostsEnabled");
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -453,6 +455,11 @@ const MainNavbar = () => {
                     <NavLink to="/followersList" className="dropdown-item" onClick={close}>
                       <FaUserFriends /> <span>{t("nav.followersFollowing") || "Followers & following"}</span>
                     </NavLink>
+                    {boostsOn && (
+                      <NavLink to="/boost" className="dropdown-item" data-testid="nav-boost" onClick={close}>
+                        <FaRocket /> <span>{t("boost.title") || "Boost my profile"}</span>
+                      </NavLink>
+                    )}
                     <NavLink to="/settings" className="dropdown-item" onClick={close}>
                       <FaCog /> <span>{t("settings.title") || "Settings"}</span>
                     </NavLink>

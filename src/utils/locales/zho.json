@@ -642,7 +642,8 @@
       "verified": "已认证",
       "joined": "{{date}} 加入",
       "active": "{{time}}活跃",
-      "online": "当前在线"
+      "online": "当前在线",
+      "activeToday": "今天活跃"
     },
     "block": {
       "title": "确定拉黑 {{name}}？",
@@ -983,7 +984,9 @@
       "alreadyComment": "你已经举报过这条评论。",
       "alreadyStory": "你已经举报过这条快拍。",
       "titleComment": "举报这条评论",
-      "titleStory": "举报这条快拍"
+      "titleStory": "举报这条快拍",
+      "titleMessage": "举报这条消息",
+      "alreadyMessage": "你已经举报过这条消息。"
     },
     "schedule": {
       "label": "定时发布",
@@ -1359,7 +1362,8 @@
       "matchCount": "{{count}} 个匹配",
       "lockedByTab": "由“{{tab}}”标签设置",
       "reciprocal": "只看完美语伴",
-      "reciprocalHint": "对方说你在学的语言，也在学你说的语言"
+      "reciprocalHint": "对方说你在学的语言，也在学你说的语言",
+      "countryVipOnly": "按国家筛选是 VIP 功能"
     },
     "highlighted": {
       "title": "推荐资料",
@@ -1423,7 +1427,8 @@
       "error": "无法加载今日匹配",
       "retry": "重试",
       "waved": "已打招呼"
-    }
+    },
+    "mutualExchange": "你们正在学习彼此的语言"
   },
   "communityDetail": {
     "errors": {
@@ -2265,16 +2270,23 @@
     "cancelSubscription": "取消订阅",
     "manageInApp": "请在 BananaTalk 手机 App 内管理你的订阅。",
     "features": {
-      "limitedMessages": "每日消息数量有限",
       "basicProfile": "基础资料",
       "basicSearch": "基础搜索",
-      "unlimitedMessages": "消息不限量",
-      "seeProfileVisitors": "查看谁访问过你的资料",
-      "advancedFilters": "高级搜索筛选",
       "noAds": "无广告体验",
-      "prioritySupport": "优先客服",
       "exclusiveBadge": "VIP 专属徽章",
-      "translationFeature": "消息翻译"
+      "unlimitedTutor": "AI 导师和角色扮演无限次",
+      "seeAllVisitors": "查看所有看过你的人",
+      "moreMatches": "每日匹配从6人增至15人",
+      "advancedPartnerFilters": "高级伙伴筛选（国家）",
+      "unlimitedTranslations": "无限次翻译",
+      "freeMessaging": "与语言伙伴聊天",
+      "freeMatches": "每日6个匹配",
+      "freeTranslations": "每天5次翻译"
+    },
+    "limit": {
+      "title": "已达到每日上限",
+      "body": "你今天的免费额度已用完。VIP 没有每日上限。",
+      "cta": "升级到 VIP"
     }
   },
   "linking": {
@@ -3029,7 +3041,8 @@
     "tryIncreaseRadius": "试试扩大搜索范围",
     "unknownError": "出了点问题",
     "usersFound_one": "找到 {{count}} 人",
-    "usersFound_other": "找到 {{count}} 人"
+    "usersFound_other": "找到 {{count}} 人",
+    "radiusLimit": "免费账户最多搜索 {{km}} 公里。升级到 VIP 可搜索更远。"
   },
   "auth": {
     "apple": {
@@ -3367,7 +3380,8 @@
       "language": "语言",
       "name": "话题",
       "submit": "创建房间",
-      "title": "创建话题房"
+      "title": "创建话题房",
+      "pickLanguage": "选择语言"
     },
     "errors": {
       "banned": "你已被移出此房间，可以请房主让你重新加入。",
@@ -3380,12 +3394,14 @@
       "tooMany": "你已有 10 个房间，删除一个后才能再创建。"
     },
     "list": {
-      "create": "新建话题房",
+      "create": "新建房间",
       "empty": "还没有房间。",
       "error": "无法加载语言房。",
       "joined": "已加入",
       "locked": "已锁定",
-      "title": "语言房"
+      "title": "语言房",
+      "active": "{{time}}活跃",
+      "refresh": "刷新"
     },
     "owner": {
       "admin": "管理员",
@@ -3414,7 +3430,35 @@
       "slowDown": "你发送得太快了，请稍微慢一点。",
       "sticker": "贴纸",
       "unsupported": "打开 App 查看此消息",
-      "voice": "语音消息 — 打开 App 收听"
+      "voice": "语音消息 — 打开 App 收听",
+      "someone": "成员",
+      "photo": "照片",
+      "replyDeleted": "消息已删除",
+      "reply": "回复",
+      "react": "回应",
+      "more": "更多",
+      "delete": "删除",
+      "report": "举报",
+      "sendFailed": "消息发送失败",
+      "photoFailed": "照片发送失败，请重试。",
+      "photosOnly": "房间里只能分享照片。",
+      "questionOfDay": "每日一问",
+      "typing": "{{name}} 正在输入…",
+      "removePhoto": "移除照片",
+      "addPhoto": "添加照片",
+      "caption": "添加说明（可选）",
+      "deleteTitle": "删除这条消息？",
+      "deleteBody": "房间里的所有人都将看不到它。"
+    },
+    "info": {
+      "hub": "语言大厅",
+      "topic": "话题房",
+      "members": "位成员",
+      "noDescription": "暂无简介。",
+      "viewMembers": "查看成员",
+      "edit": "编辑",
+      "back": "返回",
+      "save": "保存"
     }
   },
   "nav": {
@@ -3511,5 +3555,34 @@
       "useHere": "在这里收听",
       "you": "你"
     }
+  },
+  "boost": {
+    "title": "提升我的资料曝光",
+    "subtitle": "24 小时内被更多伙伴看到",
+    "activeTitle": "曝光提升进行中",
+    "again": "再次提升",
+    "timeLeft": "剩余 {{time}}",
+    "seenBy": "目前展示次数：{{count}}",
+    "lastResult": "上次提升的展示次数：{{count}}",
+    "endingSoon": "即将结束",
+    "durationHm": "{{hours}} 小时 {{minutes}} 分",
+    "durationM": "{{minutes}} 分",
+    "sourcePartners": "伙伴列表",
+    "sourceMatches": "每日匹配",
+    "sourceMoments": "推荐里的你的动态",
+    "countingHint": "每当有人打开伙伴、每日匹配和推荐时，展示次数就会增加。",
+    "tipsTitle": "让提升效果更好",
+    "tipMoment": "现在发一条动态：你最新的动态也会被推荐。",
+    "tipProfile": "清晰的照片和简短的介绍能收到更多回复。",
+    "postMoment": "发布动态",
+    "explain": "24 小时内，成为所有语言合适的人的第 6 个匹配。",
+    "explainMore": "你还会出现在伙伴列表前排，最新动态会在推荐中展示。",
+    "costLine": "费用：{{cost}} 金币",
+    "balanceLine": "你的余额：{{balance}} 金币",
+    "confirm": "确认提升",
+    "failed": "无法开始提升，请重试。",
+    "capacityFull": "目前提升名额已满，请几小时后再试",
+    "needCoins": "需要 {{cost}} 金币。金币可在 BananaTalk 应用中购买。",
+    "getApp": "获取应用"
   }
 }

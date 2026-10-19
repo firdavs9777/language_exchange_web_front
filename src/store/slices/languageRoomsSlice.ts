@@ -34,7 +34,10 @@ export function groupRoomsByLanguage(rooms: LanguageRoom[]): Array<{ language: s
     if (room.roomType === "hub" && !groups[lang].hub) groups[lang].hub = room;
     else groups[lang].topics.push(room);
   });
-  return order.map((lang) => groups[lang]);
+  // Languages with a hub first (server order kept within each kind), then
+  // languages that only have user-created rooms.
+  const all = order.map((lang) => groups[lang]);
+  return all.filter((g) => g.hub).concat(all.filter((g) => !g.hub));
 }
 
 const tagged = apiSlice.enhanceEndpoints({ addTagTypes: ["LanguageRooms", "LanguageRoomRequests"] });
@@ -52,10 +55,13 @@ export const languageRoomsApiSlice = tagged.injectEndpoints({
       providesTags: (_r: any, _e: any, id: string) => [{ type: "LanguageRooms", id }],
     }),
     createTopicRoom: builder.mutation({
-      query: (body: { title: string; targetLanguage: string; description?: string }) => ({
+      query: (body: { title: string; targetLanguage: string; description?: string; emojiFlag?: string }) => ({
         url: LANGUAGE_ROOMS_URL,
         method: "POST",
-        body: { title: String(body.title || "").trim(), targetLanguage: body.targetLanguage, description: String(body.description || "").trim() },
+        body: Object.assign(
+          { title: String(body.title || "").trim(), targetLanguage: body.targetLanguage, description: String(body.description || "").trim() },
+          body.emojiFlag ? { emojiFlag: body.emojiFlag } : {}
+        ),
       }),
       invalidatesTags: ["LanguageRooms"],
     }),
@@ -96,6 +102,32 @@ export const languageRoomsApiSlice = tagged.injectEndpoints({
         { type: "LanguageRooms", id: `${a.roomId}:members` },
         { type: "LanguageRooms", id: a.roomId },
       ],
+    }),
+    /** Moderators: PUT /rooms/:id {title, description}. */
+    updateLanguageRoom: builder.mutation({
+      query: ({ roomId, title, description }: { roomId: string; title: string; description: string }) => ({
+        url: `${LANGUAGE_ROOMS_URL}/${roomId}`,
+        method: "PUT",
+        body: { title: String(title || "").trim(), description: String(description || "").trim() },
+      }),
+      invalidatesTags: (_r: any, _e: any, a: { roomId: string }) => ["LanguageRooms", { type: "LanguageRooms", id: a.roomId }],
+    }),
+    /** A photo (plus optional caption / reply) into the room: multipart field "attachment". */
+    uploadLanguageRoomPhoto: builder.mutation({
+      query: ({ roomId, file, caption, replyTo }: { roomId: string; file: File; caption?: string; replyTo?: string }) => {
+        const form = new FormData();
+        form.append("attachment", file);
+        if (caption && caption.trim()) form.append("message", caption.trim());
+        if (replyTo) form.append("replyTo", replyTo);
+        return { url: `${LANGUAGE_ROOMS_URL}/${roomId}/media`, method: "POST", body: form };
+      },
+    }),
+    /** Sender or moderator: removes the message for everyone. */
+    deleteLanguageRoomMessage: builder.mutation({
+      query: ({ roomId, messageId }: { roomId: string; messageId: string }) => ({
+        url: `${LANGUAGE_ROOMS_URL}/${roomId}/messages/${messageId}`,
+        method: "DELETE",
+      }),
     }),
     removeLanguageRoomMember: builder.mutation({
       query: ({ roomId, userId }: { roomId: string; userId: string }) => ({
@@ -138,4 +170,7 @@ export const {
   useGetLanguageRoomRequestsQuery,
   useDecideLanguageRoomRequestMutation,
   useRemoveLanguageRoomMemberMutation,
+  useUpdateLanguageRoomMutation,
+  useUploadLanguageRoomPhotoMutation,
+  useDeleteLanguageRoomMessageMutation,
 } = languageRoomsApiSlice as any;

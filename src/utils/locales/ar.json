@@ -642,7 +642,8 @@
       "verified": "موثّق",
       "joined": "عضو منذ {{date}}",
       "active": "نشط {{time}}",
-      "online": "متصل الآن"
+      "online": "متصل الآن",
+      "activeToday": "نشط اليوم"
     },
     "block": {
       "title": "حظر {{name}}؟",
@@ -983,7 +984,9 @@
       "alreadyComment": "لقد أبلغت عن هذا التعليق من قبل.",
       "alreadyStory": "لقد أبلغت عن هذه القصة من قبل.",
       "titleComment": "الإبلاغ عن هذا التعليق",
-      "titleStory": "الإبلاغ عن هذه القصة"
+      "titleStory": "الإبلاغ عن هذه القصة",
+      "titleMessage": "الإبلاغ عن هذه الرسالة",
+      "alreadyMessage": "لقد أبلغت عن هذه الرسالة بالفعل."
     },
     "schedule": {
       "label": "جدولة",
@@ -1359,7 +1362,8 @@
       "matchCount": "{{count}} تطابق",
       "lockedByTab": "محدد من علامة التبويب {{tab}}",
       "reciprocal": "الشركاء المثاليون فقط",
-      "reciprocalHint": "يتحدثون اللغة التي تتعلمها ويتعلمون اللغة التي تتحدثها"
+      "reciprocalHint": "يتحدثون اللغة التي تتعلمها ويتعلمون اللغة التي تتحدثها",
+      "countryVipOnly": "فلتر الدولة ميزة VIP"
     },
     "highlighted": {
       "title": "ملفات مميزة",
@@ -1427,7 +1431,8 @@
       "error": "تعذّر تحميل مطابقات اليوم",
       "retry": "حاول مجددًا",
       "waved": "تم التلويح"
-    }
+    },
+    "mutualExchange": "كل منكما يتعلم لغة الآخر"
   },
   "communityDetail": {
     "errors": {
@@ -2269,16 +2274,23 @@
     "cancelSubscription": "إلغاء الاشتراك",
     "manageInApp": "لإدارة اشتراكك، يرجى استخدام تطبيق BananaTalk للهاتف.",
     "features": {
-      "limitedMessages": "رسائل محدودة يومياً",
       "basicProfile": "ملف شخصي أساسي",
       "basicSearch": "بحث أساسي",
-      "unlimitedMessages": "رسائل غير محدودة",
-      "seeProfileVisitors": "اعرف من زار ملفك الشخصي",
-      "advancedFilters": "فلاتر بحث متقدمة",
       "noAds": "تجربة بدون إعلانات",
-      "prioritySupport": "دعم ذو أولوية",
       "exclusiveBadge": "شارة VIP حصرية",
-      "translationFeature": "ترجمة الرسائل"
+      "unlimitedTutor": "معلّم ذكي ولعب أدوار بلا حدود",
+      "seeAllVisitors": "شاهد كل من زار ملفك الشخصي",
+      "moreMatches": "15 مطابقة يوميًا بدلًا من 6",
+      "advancedPartnerFilters": "فلاتر متقدمة للشركاء (الدولة)",
+      "unlimitedTranslations": "ترجمات بلا حدود",
+      "freeMessaging": "الدردشة مع شركاء اللغة",
+      "freeMatches": "6 مطابقات يوميًا",
+      "freeTranslations": "5 ترجمات يوميًا"
+    },
+    "limit": {
+      "title": "تم بلوغ الحد اليومي",
+      "body": "لقد استخدمت الحصة المجانية لليوم. VIP يزيل الحدود اليومية.",
+      "cta": "الترقية إلى VIP"
     }
   },
   "linking": {
@@ -3037,7 +3049,8 @@
     "usersFound_zero": "لم يُعثر على أحد",
     "usersFound_two": "تم العثور على شخصين",
     "usersFound_few": "تم العثور على {{count}} أشخاص",
-    "usersFound_many": "تم العثور على {{count}} شخصًا"
+    "usersFound_many": "تم العثور على {{count}} شخصًا",
+    "radiusLimit": "الحسابات المجانية تبحث حتى {{km}} كم. قم بالترقية إلى VIP للبحث أبعد."
   },
   "auth": {
     "apple": {
@@ -3403,7 +3416,8 @@
       "language": "اللغة",
       "name": "الموضوع",
       "submit": "إنشاء غرفة",
-      "title": "ابدأ غرفة موضوع"
+      "title": "ابدأ غرفة موضوع",
+      "pickLanguage": "اختر لغة"
     },
     "errors": {
       "banned": "تمت إزالتك من هذه الغرفة. يمكنك أن تطلب من المالك السماح لك بالعودة.",
@@ -3416,12 +3430,14 @@
       "tooMany": "لديك 10 غرف بالفعل. احذف واحدة لتبدأ أخرى."
     },
     "list": {
-      "create": "غرفة موضوع جديدة",
+      "create": "غرفة جديدة",
       "empty": "لا توجد غرف بعد.",
       "error": "تعذّر تحميل غرف اللغات.",
       "joined": "منضم",
       "locked": "مقفلة",
-      "title": "غرف اللغات"
+      "title": "غرف اللغات",
+      "active": "نشطة {{time}}",
+      "refresh": "تحديث"
     },
     "owner": {
       "admin": "مشرف",
@@ -3450,7 +3466,35 @@
       "slowDown": "أنت ترسل بسرعة كبيرة. تمهّل قليلًا.",
       "sticker": "ملصق",
       "unsupported": "افتح التطبيق لرؤية هذه الرسالة",
-      "voice": "رسالة صوتية — افتح التطبيق للاستماع"
+      "voice": "رسالة صوتية — افتح التطبيق للاستماع",
+      "someone": "عضو",
+      "photo": "صورة",
+      "replyDeleted": "رسالة محذوفة",
+      "reply": "رد",
+      "react": "تفاعل",
+      "more": "المزيد",
+      "delete": "حذف",
+      "report": "إبلاغ",
+      "sendFailed": "تعذّر إرسال الرسالة",
+      "photoFailed": "تعذّر إرسال الصورة. حاول مرة أخرى.",
+      "photosOnly": "يمكن مشاركة الصور فقط في الغرف.",
+      "questionOfDay": "سؤال اليوم",
+      "typing": "{{name}} يكتب…",
+      "removePhoto": "إزالة الصورة",
+      "addPhoto": "إضافة صورة",
+      "caption": "أضف تعليقًا (اختياري)",
+      "deleteTitle": "حذف هذه الرسالة؟",
+      "deleteBody": "ستُحذف لدى الجميع في الغرفة."
+    },
+    "info": {
+      "hub": "مركز اللغة",
+      "topic": "غرفة موضوع",
+      "members": "أعضاء",
+      "noDescription": "لا يوجد وصف بعد.",
+      "viewMembers": "عرض الأعضاء",
+      "edit": "تعديل",
+      "back": "رجوع",
+      "save": "حفظ"
     }
   },
   "nav": {
@@ -3547,5 +3591,34 @@
       "useHere": "استمع هنا بدلًا من ذلك",
       "you": "أنت"
     }
+  },
+  "boost": {
+    "title": "عزّز ملفي الشخصي",
+    "subtitle": "اظهر لشركاء أكثر لمدة 24 ساعة",
+    "activeTitle": "تعزيزك نشط الآن",
+    "again": "عزّز مجددًا",
+    "timeLeft": "متبقٍ {{time}}",
+    "seenBy": "عدد مرات الظهور حتى الآن: {{count}}",
+    "lastResult": "تعزيزك الأخير — مرات الظهور: {{count}}",
+    "endingSoon": "ينتهي قريبًا",
+    "durationHm": "{{hours}} س {{minutes}} د",
+    "durationM": "{{minutes}} د",
+    "sourcePartners": "قائمة الشركاء",
+    "sourceMatches": "التطابقات اليومية",
+    "sourceMoments": "لحظتك في «لك»",
+    "countingHint": "تزداد المشاهدات كلما فتح الناس الشركاء وتطابقاتهم اليومية و«لك».",
+    "tipsTitle": "استفد أكثر من التعزيز",
+    "tipMoment": "انشر لحظة الآن: أحدث لحظة لك تُبرز أيضًا.",
+    "tipProfile": "صورة واضحة ونبذة قصيرة تجلبان ردودًا أكثر.",
+    "postMoment": "انشر لحظة",
+    "explain": "كن التطابق السادس لكل من تناسبك لغاتهم، لمدة 24 ساعة.",
+    "explainMore": "ستظهر أيضًا قرب أعلى قائمة الشركاء، وتُبرز أحدث لحظة لك في «لك».",
+    "costLine": "التكلفة: {{cost}} عملة",
+    "balanceLine": "رصيدك: {{balance}} عملة",
+    "confirm": "تأكيد التعزيز",
+    "failed": "تعذّر بدء التعزيز. حاول مرة أخرى.",
+    "capacityFull": "كل أماكن التعزيز محجوزة الآن — حاول بعد بضع ساعات",
+    "needCoins": "تحتاج إلى {{cost}} عملة. تُشترى العملات من تطبيق BananaTalk.",
+    "getApp": "احصل على التطبيق"
   }
 }

@@ -83,3 +83,49 @@ describe("languageRoomErrorText", () => {
     [{ status: 500 }, "Something went wrong. Try again."],
   ])("%j", (err, text) => expect(languageRoomErrorText(err, t)).toBe(text));
 });
+
+it("edits a room, removes a message and uploads a photo with its caption and reply", async () => {
+  const calls = mockFetch();
+  const store = makeStore();
+  await store.dispatch(ep("updateLanguageRoom").initiate({ roomId: "r1", title: " Travel ", description: " Trips " }));
+  await store.dispatch(ep("deleteLanguageRoomMessage").initiate({ roomId: "r1", messageId: "m1" }));
+  expect([calls[0].method, path(calls[0])]).toEqual(["PUT", `${LANGUAGE_ROOMS_URL}/r1`]);
+  expect(JSON.parse(calls[0].body as string)).toEqual({ title: "Travel", description: "Trips" });
+  expect([calls[1].method, path(calls[1])]).toEqual(["DELETE", `${LANGUAGE_ROOMS_URL}/r1/messages/m1`]);
+});
+
+it("uploads a photo as multipart with the caption and reply", async () => {
+  const seen: any[] = [];
+  (global as any).fetch = jest.fn(async (req: any) => {
+    seen.push({ url: req.url, method: req.method });
+    return new Response(JSON.stringify({ success: true, data: {} }), { status: 201, headers: { "content-type": "application/json" } });
+  });
+  const appended: Array<[string, any]> = [];
+  const realAppend = FormData.prototype.append;
+  FormData.prototype.append = function (k: string, v: any) {
+    appended.push([k, v]);
+    return (realAppend as any).apply(this, arguments as any);
+  };
+  try {
+    const file = new File(["x"], "p.jpg", { type: "image/jpeg" });
+    await makeStore().dispatch(ep("uploadLanguageRoomPhoto").initiate({ roomId: "r1", file, caption: " look ", replyTo: "m2" }));
+    expect([seen[0].method, new URL(seen[0].url).pathname]).toEqual(["POST", `${LANGUAGE_ROOMS_URL}/r1/media`]);
+    expect(appended.map(([k, v]) => [k, typeof v === "string" ? v : "file"])).toEqual([["attachment", "file"], ["message", "look"], ["replyTo", "m2"]]);
+  } finally {
+    FormData.prototype.append = realAppend;
+  }
+});
+
+it("creates a room with an emoji flag only when one is given", async () => {
+  const calls = mockFetch();
+  await makeStore().dispatch(ep("createTopicRoom").initiate({ title: "Café", targetLanguage: "fr", emojiFlag: "🇫🇷" }));
+  expect(JSON.parse(calls[0].body as string)).toEqual({ title: "Café", targetLanguage: "fr", description: "", emojiFlag: "🇫🇷" });
+});
+
+it("puts languages that only have topic rooms after the hub languages", () => {
+  const groups = groupRoomsByLanguage([
+    { _id: "t-uz", roomType: "topic", targetLanguage: "uz", title: "Uzbek chat" },
+    { _id: "h-ko", roomType: "hub", targetLanguage: "ko", title: "Korean" },
+  ] as any);
+  expect(groups.map((g) => g.language)).toEqual(["ko", "uz"]);
+});

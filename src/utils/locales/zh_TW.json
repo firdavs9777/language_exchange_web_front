@@ -642,7 +642,8 @@
       "verified": "已驗證",
       "joined": "{{date}} 加入",
       "active": "{{time}}活躍",
-      "online": "目前在線"
+      "online": "目前在線",
+      "activeToday": "今天活躍"
     },
     "block": {
       "title": "確定要封鎖 {{name}}？",
@@ -983,7 +984,9 @@
       "alreadyComment": "你已經檢舉過這則留言。",
       "alreadyStory": "你已經檢舉過這則限時動態。",
       "titleComment": "檢舉這則留言",
-      "titleStory": "檢舉這則限時動態"
+      "titleStory": "檢舉這則限時動態",
+      "titleMessage": "檢舉這則訊息",
+      "alreadyMessage": "你已經檢舉過這則訊息。"
     },
     "schedule": {
       "label": "排程發布",
@@ -1359,7 +1362,8 @@
       "matchCount": "{{count}} 個匹配",
       "lockedByTab": "由「{{tab}}」分頁設定",
       "reciprocal": "只看完美語伴",
-      "reciprocalHint": "對方會說你在學的語言，也在學你會說的語言"
+      "reciprocalHint": "對方會說你在學的語言，也在學你會說的語言",
+      "countryVipOnly": "依國家篩選是 VIP 功能"
     },
     "highlighted": {
       "title": "精選個人檔案",
@@ -1423,7 +1427,8 @@
       "error": "無法載入今日配對",
       "retry": "重試",
       "waved": "已打招呼"
-    }
+    },
+    "mutualExchange": "你們正在學習彼此的語言"
   },
   "communityDetail": {
     "errors": {
@@ -2265,16 +2270,23 @@
     "cancelSubscription": "取消訂閱",
     "manageInApp": "請使用 BananaTalk 手機 App 管理你的訂閱。",
     "features": {
-      "limitedMessages": "每日訊息數量有限",
       "basicProfile": "基本個人檔案",
       "basicSearch": "基本搜尋",
-      "unlimitedMessages": "訊息無上限",
-      "seeProfileVisitors": "看得到誰來看過你的個人檔案",
-      "advancedFilters": "進階搜尋篩選",
       "noAds": "無廣告體驗",
-      "prioritySupport": "優先客服",
       "exclusiveBadge": "VIP 專屬徽章",
-      "translationFeature": "訊息翻譯"
+      "unlimitedTutor": "AI 導師和角色扮演無限次",
+      "seeAllVisitors": "查看所有看過你的人",
+      "moreMatches": "每日配對從6人增至15人",
+      "advancedPartnerFilters": "進階夥伴篩選（國家）",
+      "unlimitedTranslations": "無限次翻譯",
+      "freeMessaging": "與語言夥伴聊天",
+      "freeMatches": "每日6個配對",
+      "freeTranslations": "每天5次翻譯"
+    },
+    "limit": {
+      "title": "已達到每日上限",
+      "body": "你今天的免費額度已用完。VIP 沒有每日上限。",
+      "cta": "升級到 VIP"
     }
   },
   "linking": {
@@ -3029,7 +3041,8 @@
     "tryIncreaseRadius": "試試擴大搜尋範圍",
     "unknownError": "發生錯誤",
     "usersFound_one": "找到 {{count}} 人",
-    "usersFound_other": "找到 {{count}} 人"
+    "usersFound_other": "找到 {{count}} 人",
+    "radiusLimit": "免費帳戶最多搜尋 {{km}} 公里。升級到 VIP 可搜尋更遠。"
   },
   "auth": {
     "apple": {
@@ -3367,7 +3380,8 @@
       "language": "語言",
       "name": "話題",
       "submit": "建立聊天室",
-      "title": "開一個話題聊天室"
+      "title": "開一個話題聊天室",
+      "pickLanguage": "選擇語言"
     },
     "errors": {
       "banned": "你已被移出這個聊天室，可以請房主讓你重新加入。",
@@ -3380,12 +3394,14 @@
       "tooMany": "你已經有 10 個聊天室，刪除一個才能再建立。"
     },
     "list": {
-      "create": "新增話題聊天室",
+      "create": "新增聊天室",
       "empty": "還沒有聊天室。",
       "error": "無法載入語言聊天室。",
       "joined": "已加入",
       "locked": "已鎖定",
-      "title": "語言聊天室"
+      "title": "語言聊天室",
+      "active": "{{time}}活躍",
+      "refresh": "重新整理"
     },
     "owner": {
       "admin": "管理員",
@@ -3414,7 +3430,35 @@
       "slowDown": "你傳得太快了，請稍微慢一點。",
       "sticker": "貼圖",
       "unsupported": "開啟 App 查看這則訊息",
-      "voice": "語音訊息 — 開啟 App 收聽"
+      "voice": "語音訊息 — 開啟 App 收聽",
+      "someone": "成員",
+      "photo": "照片",
+      "replyDeleted": "訊息已刪除",
+      "reply": "回覆",
+      "react": "回應",
+      "more": "更多",
+      "delete": "刪除",
+      "report": "檢舉",
+      "sendFailed": "訊息傳送失敗",
+      "photoFailed": "照片傳送失敗，請再試一次。",
+      "photosOnly": "聊天室只能分享照片。",
+      "questionOfDay": "每日一問",
+      "typing": "{{name}} 正在輸入…",
+      "removePhoto": "移除照片",
+      "addPhoto": "新增照片",
+      "caption": "新增說明（選填）",
+      "deleteTitle": "要刪除這則訊息嗎？",
+      "deleteBody": "聊天室裡的所有人都將看不到它。"
+    },
+    "info": {
+      "hub": "語言大廳",
+      "topic": "話題聊天室",
+      "members": "位成員",
+      "noDescription": "尚無簡介。",
+      "viewMembers": "查看成員",
+      "edit": "編輯",
+      "back": "返回",
+      "save": "儲存"
     }
   },
   "nav": {
@@ -3511,5 +3555,34 @@
       "useHere": "在這裡收聽",
       "you": "你"
     }
+  },
+  "boost": {
+    "title": "提升我的個人檔案曝光",
+    "subtitle": "24 小時內被更多夥伴看到",
+    "activeTitle": "曝光提升進行中",
+    "again": "再次提升",
+    "timeLeft": "剩餘 {{time}}",
+    "seenBy": "目前展示次數：{{count}}",
+    "lastResult": "上次提升的展示次數：{{count}}",
+    "endingSoon": "即將結束",
+    "durationHm": "{{hours}} 小時 {{minutes}} 分",
+    "durationM": "{{minutes}} 分",
+    "sourcePartners": "夥伴列表",
+    "sourceMatches": "每日配對",
+    "sourceMoments": "推薦裡的你的動態",
+    "countingHint": "每當有人打開夥伴、每日配對和推薦時，展示次數就會增加。",
+    "tipsTitle": "讓提升效果更好",
+    "tipMoment": "現在發一則動態：你最新的動態也會被推薦。",
+    "tipProfile": "清楚的照片和簡短的介紹能收到更多回覆。",
+    "postMoment": "發布動態",
+    "explain": "24 小時內，成為所有語言合適的人的第 6 個配對。",
+    "explainMore": "你也會出現在夥伴列表前排，最新動態會在推薦中展示。",
+    "costLine": "費用：{{cost}} 金幣",
+    "balanceLine": "你的餘額：{{balance}} 金幣",
+    "confirm": "確認提升",
+    "failed": "無法開始提升，請再試一次。",
+    "capacityFull": "目前提升名額已滿，請幾小時後再試",
+    "needCoins": "需要 {{cost}} 金幣。金幣可在 BananaTalk App 中購買。",
+    "getApp": "取得 App"
   }
 }

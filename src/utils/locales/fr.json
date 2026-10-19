@@ -623,7 +623,8 @@
       "verified": "Vérifié",
       "joined": "Membre depuis {{date}}",
       "active": "Actif {{time}}",
-      "online": "En ligne"
+      "online": "En ligne",
+      "activeToday": "Actif aujourd'hui"
     },
     "block": {
       "title": "Bloquer {{name}} ?",
@@ -964,7 +965,9 @@
       "alreadyComment": "Vous avez déjà signalé ce commentaire.",
       "alreadyStory": "Vous avez déjà signalé cette story.",
       "titleComment": "Signaler ce commentaire",
-      "titleStory": "Signaler cette story"
+      "titleStory": "Signaler cette story",
+      "titleMessage": "Signaler ce message",
+      "alreadyMessage": "Tu as déjà signalé ce message."
     },
     "schedule": {
       "label": "Programmer",
@@ -1340,7 +1343,8 @@
       "matchCount": "{{count}} correspondances",
       "lockedByTab": "Défini par l’onglet {{tab}}",
       "reciprocal": "Partenaires idéaux uniquement",
-      "reciprocalHint": "Ils parlent ce que vous apprenez et apprennent ce que vous parlez"
+      "reciprocalHint": "Ils parlent ce que vous apprenez et apprennent ce que vous parlez",
+      "countryVipOnly": "Le filtre par pays est une fonction VIP"
     },
     "highlighted": {
       "title": "Profils en vedette",
@@ -1405,7 +1409,8 @@
       "error": "Impossible de charger les correspondances du jour",
       "retry": "Réessayer",
       "waved": "Salué"
-    }
+    },
+    "mutualExchange": "Vous apprenez chacun la langue de l'autre"
   },
   "communityDetail": {
     "errors": {
@@ -2247,16 +2252,23 @@
     "cancelSubscription": "Annuler l'abonnement",
     "manageInApp": "Pour gérer votre abonnement, veuillez utiliser l'application mobile BananaTalk.",
     "features": {
-      "limitedMessages": "Messages limités par jour",
       "basicProfile": "Profil de base",
       "basicSearch": "Recherche de base",
-      "unlimitedMessages": "Messages illimités",
-      "seeProfileVisitors": "Voir qui a visité votre profil",
-      "advancedFilters": "Filtres de recherche avancés",
       "noAds": "Expérience sans publicité",
-      "prioritySupport": "Support prioritaire",
       "exclusiveBadge": "Badge VIP exclusif",
-      "translationFeature": "Traduction des messages"
+      "unlimitedTutor": "Tuteur IA et jeux de rôle illimités",
+      "seeAllVisitors": "Voir tous ceux qui ont consulté votre profil",
+      "moreMatches": "15 matchs par jour au lieu de 6",
+      "advancedPartnerFilters": "Filtres avancés de partenaires (pays)",
+      "unlimitedTranslations": "Traductions illimitées",
+      "freeMessaging": "Discuter avec des partenaires linguistiques",
+      "freeMatches": "6 matchs par jour",
+      "freeTranslations": "5 traductions par jour"
+    },
+    "limit": {
+      "title": "Limite quotidienne atteinte",
+      "body": "Vous avez utilisé votre quota gratuit du jour. VIP supprime les limites quotidiennes.",
+      "cta": "Passer à VIP"
     }
   },
   "seo": {
@@ -3030,7 +3042,8 @@
     "tryIncreaseRadius": "Essayez d'élargir le rayon de recherche",
     "unknownError": "Une erreur s'est produite",
     "usersFound_one": "{{count}} personne trouvée",
-    "usersFound_other": "{{count}} personnes trouvées"
+    "usersFound_other": "{{count}} personnes trouvées",
+    "radiusLimit": "Les comptes gratuits cherchent jusqu'à {{km}} km. Passez à VIP pour chercher plus loin."
   },
   "auth": {
     "apple": {
@@ -3368,7 +3381,8 @@
       "language": "Langue",
       "name": "Sujet",
       "submit": "Créer le salon",
-      "title": "Lancer un salon thématique"
+      "title": "Lancer un salon thématique",
+      "pickLanguage": "Choisir une langue"
     },
     "errors": {
       "banned": "Vous avez été retiré de ce salon. Vous pouvez demander au propriétaire de vous réintégrer.",
@@ -3381,12 +3395,14 @@
       "tooMany": "Vous avez déjà 10 salons. Supprimez-en un pour en créer un autre."
     },
     "list": {
-      "create": "Nouveau salon thématique",
+      "create": "Nouveau salon",
       "empty": "Aucun salon pour l'instant.",
       "error": "Impossible de charger les salons de langue.",
       "joined": "Rejoint",
       "locked": "Verrouillé",
-      "title": "Salons de langue"
+      "title": "Salons de langue",
+      "active": "Actif {{time}}",
+      "refresh": "Actualiser"
     },
     "owner": {
       "admin": "admin",
@@ -3415,7 +3431,35 @@
       "slowDown": "Vous envoyez trop vite. Ralentissez un peu.",
       "sticker": "Sticker",
       "unsupported": "Ouvrez l'application pour voir ce message",
-      "voice": "Message vocal — ouvrez l'application pour l'écouter"
+      "voice": "Message vocal — ouvrez l'application pour l'écouter",
+      "someone": "Membre",
+      "photo": "Photo",
+      "replyDeleted": "Message supprimé",
+      "reply": "Répondre",
+      "react": "Réagir",
+      "more": "Plus",
+      "delete": "Supprimer",
+      "report": "Signaler",
+      "sendFailed": "Échec de l'envoi du message",
+      "photoFailed": "Impossible d'envoyer la photo. Réessaie.",
+      "photosOnly": "Seules les photos peuvent être partagées dans les salons.",
+      "questionOfDay": "Question du jour",
+      "typing": "{{name}} est en train d'écrire…",
+      "removePhoto": "Retirer la photo",
+      "addPhoto": "Ajouter une photo",
+      "caption": "Ajouter une légende (facultatif)",
+      "deleteTitle": "Supprimer ce message ?",
+      "deleteBody": "Il sera supprimé pour tout le monde dans le salon."
+    },
+    "info": {
+      "hub": "Salon de la langue",
+      "topic": "Salon thématique",
+      "members": "membres",
+      "noDescription": "Pas encore de description.",
+      "viewMembers": "Voir les membres",
+      "edit": "Modifier",
+      "back": "Retour",
+      "save": "Enregistrer"
     }
   },
   "nav": {
@@ -3512,5 +3556,34 @@
       "useHere": "Écouter ici",
       "you": "vous"
     }
+  },
+  "boost": {
+    "title": "Booster mon profil",
+    "subtitle": "Sois vu par plus de partenaires pendant 24 h",
+    "activeTitle": "Ton boost est actif",
+    "again": "Booster à nouveau",
+    "timeLeft": "Encore {{time}}",
+    "seenBy": "Affiché jusqu'ici : {{count}} fois",
+    "lastResult": "Ton dernier boost — affiché : {{count}} fois",
+    "endingSoon": "Se termine bientôt",
+    "durationHm": "{{hours}} h {{minutes}} min",
+    "durationM": "{{minutes}} min",
+    "sourcePartners": "Liste des partenaires",
+    "sourceMatches": "Matchs du jour",
+    "sourceMoments": "Ton moment dans Pour toi",
+    "countingHint": "Les vues s'ajoutent quand les gens ouvrent Partenaires, leurs matchs du jour et Pour toi.",
+    "tipsTitle": "Tire le meilleur de ton boost",
+    "tipMoment": "Publie un moment maintenant : ton moment le plus récent est aussi mis en avant.",
+    "tipProfile": "Une photo nette et une courte bio obtiennent plus de réponses.",
+    "postMoment": "Publier un moment",
+    "explain": "Sois le 6e match de tous ceux dont les langues te correspondent, pendant 24 heures.",
+    "explainMore": "Tu apparais aussi en haut des Partenaires, et ton dernier moment est mis en avant dans Pour toi.",
+    "costLine": "Coût : {{cost}} pièces",
+    "balanceLine": "Ton solde : {{balance}} pièces",
+    "confirm": "Confirmer le boost",
+    "failed": "Impossible de lancer ton boost. Réessaie.",
+    "capacityFull": "Toutes les places de boost sont prises — réessaie dans quelques heures",
+    "needCoins": "Il te faut {{cost}} pièces. Les pièces s'achètent dans l'app BananaTalk.",
+    "getApp": "Obtenir l'app"
   }
 }

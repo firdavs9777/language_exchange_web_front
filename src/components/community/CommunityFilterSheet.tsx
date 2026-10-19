@@ -1,11 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { X, Loader2, Users, Link2 } from "lucide-react";
+import { X, Loader2, Users, Link2, Lock } from "lucide-react";
 import { RootState } from "../../store";
 import { COMMON_LANGUAGES } from "./type";
 import { languageOptions, LanguageOption } from "./lib/languageOptions";
-import { CommunityFilters, Me, buildCommunityQuery } from "./lib/buildCommunityQuery";
+import {
+  CommunityFilters,
+  Me,
+  buildCommunityQuery,
+  withoutVipOnlyFilters,
+} from "./lib/buildCommunityQuery";
 import { DEFAULT_FILTERS } from "./lib/filterStorage";
 import { countryOptions } from "./lib/countries";
 import {
@@ -69,6 +74,13 @@ export interface CommunityFilterSheetProps {
    * they would get.
    */
   lockedTab?: "online" | "new" | "serious";
+  /**
+   * Country is a VIP filter (GET /users ignores it for free callers). For a
+   * free viewer the picker is disabled behind a VIP badge that calls
+   * `onUpgrade`, and the live count is measured without it.
+   */
+  isVip?: boolean;
+  onUpgrade?: () => void;
 }
 
 /** Small pill toggle switch (teal when on) — no new CSS, Tailwind only. */
@@ -124,6 +136,8 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
   onCopyLink,
   canCopyLink = true,
   lockedTab,
+  isVip = false,
+  onUpgrade,
 }) => {
   const { t, i18n } = useTranslation();
   // Labels in the reader's language; recomputed only when it changes.
@@ -163,11 +177,12 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
    * cannot get from where they are standing.
    */
   const lockedDraft = useMemo<CommunityFilters>(() => {
-    if (lockedTab === "online") return { ...debouncedValue, onlineOnly: true };
-    if (lockedTab === "new") return { ...debouncedValue, newUsersOnly: true };
-    if (lockedTab === "serious") return { ...debouncedValue, activeWithin: "7d" };
-    return debouncedValue;
-  }, [debouncedValue, lockedTab]);
+    const draft = withoutVipOnlyFilters(debouncedValue, isVip);
+    if (lockedTab === "online") return { ...draft, onlineOnly: true };
+    if (lockedTab === "new") return { ...draft, newUsersOnly: true };
+    if (lockedTab === "serious") return { ...draft, activeWithin: "7d" };
+    return draft;
+  }, [debouncedValue, lockedTab, isVip]);
 
   const countQuery = useMemo(
     () => buildCommunityQuery(lockedDraft, me || {}, 1, 1),
@@ -396,19 +411,40 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
 
           {/* Country */}
           <section>
-            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-2">
               {t("communityMain.filterSheet.country") || "Country"}
+              {!isVip && (
+                <button
+                  type="button"
+                  data-testid="filter-country-vip"
+                  onClick={onUpgrade}
+                  aria-label={
+                    t("communityMain.filterSheet.countryVipOnly") ||
+                    "Country filter is a VIP feature"
+                  }
+                  className="inline-flex items-center gap-1 normal-case tracking-normal text-[11px] font-bold text-black bg-gradient-to-r from-[#FFD700] to-[#FFA500] rounded-full px-2 py-0.5"
+                >
+                  <Lock className="w-3 h-3" aria-hidden />
+                  VIP
+                </button>
+              )}
             </h3>
+            {!isVip && (
+              <p className="text-xs text-gray-500 mb-2">
+                {t("communityMain.filterSheet.countryVipOnly") || "Country filter is a VIP feature"}
+              </p>
+            )}
             {/* A list of real countries, labelled in the reader's language,
                 each sending its English name -- what the server stores and
                 matches exactly. The text box it replaces was matched by
                 substring, so "Korea" found both Koreas. */}
             <select
               data-testid="filter-country"
-              value={value.country || ""}
+              disabled={!isVip}
+              value={isVip ? value.country || "" : ""}
               onChange={(e) => set("country", e.target.value || undefined)}
               aria-label={t("communityMain.filterSheet.country") || "Country"}
-              className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent"
+              className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-transparent disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <option value="">{t("communityMain.filterSheet.any") || "Any"}</option>
               {value.country &&

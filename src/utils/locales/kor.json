@@ -642,7 +642,8 @@
       "verified": "인증됨",
       "joined": "{{date}} 가입",
       "active": "{{time}} 활동",
-      "online": "지금 접속 중"
+      "online": "지금 접속 중",
+      "activeToday": "오늘 활동"
     },
     "block": {
       "title": "{{name}}님을 차단할까요?",
@@ -983,7 +984,9 @@
       "alreadyComment": "이미 이 댓글을 신고했어요.",
       "alreadyStory": "이미 이 스토리를 신고했어요.",
       "titleComment": "이 댓글 신고",
-      "titleStory": "이 스토리 신고"
+      "titleStory": "이 스토리 신고",
+      "titleMessage": "이 메시지 신고",
+      "alreadyMessage": "이미 신고한 메시지예요."
     },
     "schedule": {
       "label": "예약",
@@ -1359,7 +1362,8 @@
       "matchCount": "{{count}}명 일치",
       "lockedByTab": "{{tab}} 탭에서 설정됨",
       "reciprocal": "완벽한 파트너만",
-      "reciprocalHint": "내가 배우는 언어를 쓰고, 내가 쓰는 언어를 배우는 사람"
+      "reciprocalHint": "내가 배우는 언어를 쓰고, 내가 쓰는 언어를 배우는 사람",
+      "countryVipOnly": "국가 필터는 VIP 기능이에요"
     },
     "highlighted": {
       "title": "추천 프로필",
@@ -1423,7 +1427,8 @@
       "error": "오늘의 매칭을 불러오지 못했어요",
       "retry": "다시 시도",
       "waved": "손 흔듦"
-    }
+    },
+    "mutualExchange": "서로의 언어를 배우고 있어요"
   },
   "communityDetail": {
     "errors": {
@@ -2265,16 +2270,23 @@
     "cancelSubscription": "구독 해지",
     "manageInApp": "구독은 BananaTalk 모바일 앱에서 관리할 수 있어요.",
     "features": {
-      "limitedMessages": "하루 메시지 수 제한",
       "basicProfile": "기본 프로필",
       "basicSearch": "기본 검색",
-      "unlimitedMessages": "메시지 무제한",
-      "seeProfileVisitors": "내 프로필 방문자 확인",
-      "advancedFilters": "상세 검색 필터",
       "noAds": "광고 없이 이용",
-      "prioritySupport": "우선 지원",
       "exclusiveBadge": "VIP 전용 배지",
-      "translationFeature": "메시지 번역"
+      "unlimitedTutor": "AI 튜터·롤플레이 무제한",
+      "seeAllVisitors": "내 프로필을 본 사람 모두 보기",
+      "moreMatches": "하루 매칭 6명 대신 15명",
+      "advancedPartnerFilters": "고급 파트너 필터 (국가)",
+      "unlimitedTranslations": "번역 무제한",
+      "freeMessaging": "언어 파트너와 채팅",
+      "freeMatches": "하루 6명 매칭",
+      "freeTranslations": "하루 번역 5회"
+    },
+    "limit": {
+      "title": "일일 한도에 도달했어요",
+      "body": "오늘의 무료 사용량을 모두 사용했어요. VIP는 일일 한도가 없어요.",
+      "cta": "VIP로 업그레이드"
     }
   },
   "linking": {
@@ -3029,7 +3041,8 @@
     "tryIncreaseRadius": "검색 반경을 넓혀 보세요",
     "unknownError": "문제가 생겼어요",
     "usersFound_one": "{{count}}명을 찾았어요",
-    "usersFound_other": "{{count}}명을 찾았어요"
+    "usersFound_other": "{{count}}명을 찾았어요",
+    "radiusLimit": "무료 계정은 {{km}}km까지 검색해요. 더 멀리 찾으려면 VIP로 업그레이드하세요."
   },
   "auth": {
     "apple": {
@@ -3367,7 +3380,8 @@
       "language": "언어",
       "name": "주제",
       "submit": "룸 만들기",
-      "title": "주제 룸 시작하기"
+      "title": "주제 룸 시작하기",
+      "pickLanguage": "언어 선택"
     },
     "errors": {
       "banned": "이 룸에서 내보내졌어요. 방장에게 다시 들어갈 수 있게 요청할 수 있어요.",
@@ -3380,12 +3394,14 @@
       "tooMany": "이미 룸이 10개 있어요. 새로 만들려면 하나를 삭제해 주세요."
     },
     "list": {
-      "create": "새 주제 룸",
+      "create": "새 룸",
       "empty": "아직 룸이 없어요.",
       "error": "언어 룸을 불러오지 못했어요.",
       "joined": "참여 중",
       "locked": "잠김",
-      "title": "언어 룸"
+      "title": "언어 룸",
+      "active": "{{time}} 활동",
+      "refresh": "새로고침"
     },
     "owner": {
       "admin": "관리자",
@@ -3414,7 +3430,35 @@
       "slowDown": "너무 빨리 보내고 있어요. 조금 천천히 보내 주세요.",
       "sticker": "스티커",
       "unsupported": "앱에서 이 메시지를 확인하세요",
-      "voice": "음성 메시지 — 앱에서 들어 보세요"
+      "voice": "음성 메시지 — 앱에서 들어 보세요",
+      "someone": "멤버",
+      "photo": "사진",
+      "replyDeleted": "삭제된 메시지",
+      "reply": "답장",
+      "react": "반응",
+      "more": "더 보기",
+      "delete": "삭제",
+      "report": "신고",
+      "sendFailed": "메시지를 보내지 못했어요",
+      "photoFailed": "사진을 보내지 못했어요. 다시 시도해 주세요.",
+      "photosOnly": "룸에는 사진만 공유할 수 있어요.",
+      "questionOfDay": "오늘의 질문",
+      "typing": "{{name}}님이 입력 중…",
+      "removePhoto": "사진 빼기",
+      "addPhoto": "사진 추가",
+      "caption": "설명 추가 (선택)",
+      "deleteTitle": "이 메시지를 삭제할까요?",
+      "deleteBody": "룸의 모든 사람에게서 삭제돼요."
+    },
+    "info": {
+      "hub": "언어 허브",
+      "topic": "주제 룸",
+      "members": "명",
+      "noDescription": "아직 설명이 없어요.",
+      "viewMembers": "멤버 보기",
+      "edit": "편집",
+      "back": "뒤로",
+      "save": "저장"
     }
   },
   "nav": {
@@ -3511,5 +3555,34 @@
       "useHere": "여기서 듣기",
       "you": "나"
     }
+  },
+  "boost": {
+    "title": "내 프로필 부스트",
+    "subtitle": "24시간 동안 더 많은 파트너에게 보여요",
+    "activeTitle": "부스트 진행 중",
+    "again": "다시 부스트",
+    "timeLeft": "{{time}} 남음",
+    "seenBy": "지금까지 노출 횟수: {{count}}",
+    "lastResult": "지난 부스트 노출 횟수: {{count}}",
+    "endingSoon": "곧 종료",
+    "durationHm": "{{hours}}시간 {{minutes}}분",
+    "durationM": "{{minutes}}분",
+    "sourcePartners": "파트너 목록",
+    "sourceMatches": "오늘의 매칭",
+    "sourceMoments": "추천 피드의 내 모먼트",
+    "countingHint": "사람들이 파트너, 오늘의 매칭, 추천 피드를 열 때마다 노출이 쌓여요.",
+    "tipsTitle": "부스트 효과 더 높이기",
+    "tipMoment": "지금 모먼트를 올려 보세요. 최신 모먼트도 함께 소개돼요.",
+    "tipProfile": "선명한 사진과 짧은 소개가 더 많은 답장을 받아요.",
+    "postMoment": "모먼트 올리기",
+    "explain": "24시간 동안 언어가 맞는 모든 사람에게 6번째 매칭으로 보여요.",
+    "explainMore": "파트너 목록 상단에도 나오고, 최신 모먼트가 추천 피드에 소개돼요.",
+    "costLine": "비용: {{cost}}코인",
+    "balanceLine": "내 잔액: {{balance}}코인",
+    "confirm": "부스트 시작",
+    "failed": "부스트를 시작하지 못했어요. 다시 시도해 주세요.",
+    "capacityFull": "지금은 부스트 자리가 모두 찼어요. 몇 시간 뒤에 다시 시도해 주세요",
+    "needCoins": "{{cost}}코인이 필요해요. 코인은 BananaTalk 앱에서 구매할 수 있어요.",
+    "getApp": "앱 받기"
   }
 }

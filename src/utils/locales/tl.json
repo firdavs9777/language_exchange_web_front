@@ -642,7 +642,8 @@
       "verified": "Verified",
       "joined": "Sumali noong {{date}}",
       "active": "Aktibo {{time}}",
-      "online": "Online ngayon"
+      "online": "Online ngayon",
+      "activeToday": "Aktibo ngayong araw"
     },
     "block": {
       "title": "I-block {{name}}?",
@@ -983,7 +984,9 @@
       "alreadyComment": "Na-report mo na ang komentong ito.",
       "alreadyStory": "Na-report mo na ang story na ito.",
       "titleComment": "I-report ang komentong ito",
-      "titleStory": "I-report ang story na ito"
+      "titleStory": "I-report ang story na ito",
+      "titleMessage": "I-report ang mensaheng ito",
+      "alreadyMessage": "Na-report mo na ang mensaheng ito."
     },
     "schedule": {
       "label": "I-schedule",
@@ -1359,7 +1362,8 @@
       "matchCount": "{{count}} tugma",
       "lockedByTab": "Itinakda ng tab na {{tab}}",
       "reciprocal": "Perpektong kapartner lang",
-      "reciprocalHint": "Marunong sila ng wikang inaaral mo at inaaral nila ang wikang alam mo"
+      "reciprocalHint": "Marunong sila ng wikang inaaral mo at inaaral nila ang wikang alam mo",
+      "countryVipOnly": "VIP feature ang filter ng bansa"
     },
     "highlighted": {
       "title": "Mga itinatampok na profile",
@@ -1423,7 +1427,8 @@
       "error": "Hindi ma-load ang matches ngayon",
       "retry": "Subukan ulit",
       "waved": "Kinawayan na"
-    }
+    },
+    "mutualExchange": "Pinag-aaralan ninyo ang wika ng isa't isa"
   },
   "communityDetail": {
     "errors": {
@@ -2265,16 +2270,23 @@
     "cancelSubscription": "Kanselahin ang Subscription",
     "manageInApp": "Para pamahalaan ang iyong subscription, mangyaring gamitin ang BananaTalk mobile app.",
     "features": {
-      "limitedMessages": "Limitadong mga mensahe bawat araw",
       "basicProfile": "Basic na profile",
       "basicSearch": "Basic na paghahanap",
-      "unlimitedMessages": "Walang limitasyong mga mensahe",
-      "seeProfileVisitors": "Tingnan kung sino ang bumisita sa iyong profile",
-      "advancedFilters": "Advanced na mga filter sa paghahanap",
       "noAds": "Walang ads na karanasan",
-      "prioritySupport": "Priority na suporta",
       "exclusiveBadge": "Eksklusibong VIP badge",
-      "translationFeature": "Pagsasalin ng mensahe"
+      "unlimitedTutor": "Walang limitasyong AI tutor at roleplay",
+      "seeAllVisitors": "Tingnan ang lahat ng tumingin sa profile mo",
+      "moreMatches": "15 daily match sa halip na 6",
+      "advancedPartnerFilters": "Advanced na partner filters (bansa)",
+      "unlimitedTranslations": "Walang limitasyong pagsasalin",
+      "freeMessaging": "Makipag-chat sa mga language partner",
+      "freeMatches": "6 na daily match",
+      "freeTranslations": "5 pagsasalin bawat araw"
+    },
+    "limit": {
+      "title": "Naabot na ang daily limit",
+      "body": "Nagamit mo na ang libreng quota ngayong araw. Walang daily limit sa VIP.",
+      "cta": "Mag-upgrade sa VIP"
     }
   },
   "linking": {
@@ -3029,7 +3041,8 @@
     "tryIncreaseRadius": "Subukang palakihin ang radius ng paghahanap",
     "unknownError": "May naganap na error",
     "usersFound_one": "{{count}} tao ang nahanap",
-    "usersFound_other": "{{count}} tao ang nahanap"
+    "usersFound_other": "{{count}} tao ang nahanap",
+    "radiusLimit": "Hanggang {{km}} km lang ang paghahanap ng libreng account. Mag-VIP para maghanap nang mas malayo."
   },
   "auth": {
     "apple": {
@@ -3367,7 +3380,8 @@
       "language": "Wika",
       "name": "Paksa",
       "submit": "Gumawa ng room",
-      "title": "Magsimula ng topic room"
+      "title": "Magsimula ng topic room",
+      "pickLanguage": "Pumili ng wika"
     },
     "errors": {
       "banned": "Inalis ka sa room na ito. Puwede mong hilingin sa owner na papasukin ka ulit.",
@@ -3380,12 +3394,14 @@
       "tooMany": "May 10 room ka na. Mag-delete ng isa para makagawa ng bago."
     },
     "list": {
-      "create": "Bagong topic room",
+      "create": "Bagong room",
       "empty": "Wala pang room.",
       "error": "Hindi ma-load ang mga language room.",
       "joined": "Kasali na",
       "locked": "Naka-lock",
-      "title": "Mga language room"
+      "title": "Mga language room",
+      "active": "Aktibo {{time}}",
+      "refresh": "I-refresh"
     },
     "owner": {
       "admin": "admin",
@@ -3414,7 +3430,35 @@
       "slowDown": "Masyado kang mabilis magpadala. Dahan-dahan lang.",
       "sticker": "Sticker",
       "unsupported": "Buksan ang app para makita ang mensaheng ito",
-      "voice": "Voice message — buksan ang app para pakinggan"
+      "voice": "Voice message — buksan ang app para pakinggan",
+      "someone": "Miyembro",
+      "photo": "Larawan",
+      "replyDeleted": "Tinanggal ang mensahe",
+      "reply": "Sumagot",
+      "react": "Mag-react",
+      "more": "Iba pa",
+      "delete": "Burahin",
+      "report": "I-report",
+      "sendFailed": "Hindi naipadala ang mensahe",
+      "photoFailed": "Hindi naipadala ang larawan. Subukan ulit.",
+      "photosOnly": "Mga larawan lang ang puwedeng i-share sa rooms.",
+      "questionOfDay": "Tanong ng araw",
+      "typing": "Nagta-type si {{name}}…",
+      "removePhoto": "Alisin ang larawan",
+      "addPhoto": "Magdagdag ng larawan",
+      "caption": "Magdagdag ng caption (opsyonal)",
+      "deleteTitle": "Burahin ang mensaheng ito?",
+      "deleteBody": "Mawawala ito para sa lahat sa room."
+    },
+    "info": {
+      "hub": "Language hub",
+      "topic": "Topic room",
+      "members": "miyembro",
+      "noDescription": "Wala pang paglalarawan.",
+      "viewMembers": "Tingnan ang mga miyembro",
+      "edit": "I-edit",
+      "back": "Bumalik",
+      "save": "I-save"
     }
   },
   "nav": {
@@ -3511,5 +3555,34 @@
       "useHere": "Dito na lang makinig",
       "you": "ikaw"
     }
+  },
+  "boost": {
+    "title": "I-boost ang profile ko",
+    "subtitle": "Makita ng mas maraming partner sa loob ng 24 oras",
+    "activeTitle": "Aktibo ang boost mo",
+    "again": "Mag-boost ulit",
+    "timeLeft": "{{time}} na lang",
+    "seenBy": "Ilang beses naipakita: {{count}}",
+    "lastResult": "Huling boost mo — ilang beses naipakita: {{count}}",
+    "endingSoon": "Malapit nang matapos",
+    "durationHm": "{{hours}}h {{minutes}}m",
+    "durationM": "{{minutes}}m",
+    "sourcePartners": "Listahan ng partners",
+    "sourceMatches": "Daily matches",
+    "sourceMoments": "Moment mo sa For You",
+    "countingHint": "Nadaragdagan ang views kapag binubuksan ng mga tao ang Partners, kanilang daily matches at For You.",
+    "tipsTitle": "Sulitin ang boost mo",
+    "tipMoment": "Mag-post ng moment ngayon: itinatampok din ang pinakabago mong moment.",
+    "tipProfile": "Mas maraming sagot ang malinaw na larawan at maikling bio.",
+    "postMoment": "Mag-post ng moment",
+    "explain": "Maging ika-6 na match ng lahat ng tugma ang wika sa iyo, sa loob ng 24 oras.",
+    "explainMore": "Lalabas ka rin malapit sa itaas ng Partners, at itatampok ang pinakabago mong moment sa For You.",
+    "costLine": "Halaga: {{cost}} coins",
+    "balanceLine": "Balanse mo: {{balance}} coins",
+    "confirm": "Kumpirmahin ang boost",
+    "failed": "Hindi nasimulan ang boost mo. Subukan ulit.",
+    "capacityFull": "Puno ang lahat ng boost slot ngayon — subukan ulit pagkalipas ng ilang oras",
+    "needCoins": "Kailangan mo ng {{cost}} coins. Nabibili ang coins sa BananaTalk app.",
+    "getApp": "Kunin ang app"
   }
 }

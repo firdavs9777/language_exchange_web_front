@@ -623,7 +623,8 @@
       "verified": "Verificato",
       "joined": "Membro da {{date}}",
       "active": "Attivo {{time}}",
-      "online": "Online ora"
+      "online": "Online ora",
+      "activeToday": "Attivo oggi"
     },
     "block": {
       "title": "Bloccare {{name}}?",
@@ -964,7 +965,9 @@
       "alreadyComment": "Hai già segnalato questo commento.",
       "alreadyStory": "Hai già segnalato questa storia.",
       "titleComment": "Segnala questo commento",
-      "titleStory": "Segnala questa storia"
+      "titleStory": "Segnala questa storia",
+      "titleMessage": "Segnala questo messaggio",
+      "alreadyMessage": "Hai già segnalato questo messaggio."
     },
     "schedule": {
       "label": "Programma",
@@ -1340,7 +1343,8 @@
       "matchCount": "{{count}} corrispondenze",
       "lockedByTab": "Impostato dalla scheda {{tab}}",
       "reciprocal": "Solo partner ideali",
-      "reciprocalHint": "Parlano la lingua che impari e imparano quella che parli"
+      "reciprocalHint": "Parlano la lingua che impari e imparano quella che parli",
+      "countryVipOnly": "Il filtro per paese è una funzione VIP"
     },
     "highlighted": {
       "title": "Profili in evidenza",
@@ -1405,7 +1409,8 @@
       "error": "Impossibile caricare i match di oggi",
       "retry": "Riprova",
       "waved": "Salutato"
-    }
+    },
+    "mutualExchange": "State imparando l'uno la lingua dell'altro"
   },
   "communityDetail": {
     "errors": {
@@ -2247,16 +2252,23 @@
     "cancelSubscription": "Annulla Abbonamento",
     "manageInApp": "Per gestire il tuo abbonamento, utilizza l'app mobile BananaTalk.",
     "features": {
-      "limitedMessages": "Messaggi limitati al giorno",
       "basicProfile": "Profilo base",
       "basicSearch": "Ricerca base",
-      "unlimitedMessages": "Messaggi illimitati",
-      "seeProfileVisitors": "Vedi chi ha visitato il tuo profilo",
-      "advancedFilters": "Filtri di ricerca avanzati",
       "noAds": "Esperienza senza pubblicità",
-      "prioritySupport": "Supporto prioritario",
       "exclusiveBadge": "Badge esclusivo VIP",
-      "translationFeature": "Traduzione messaggi"
+      "unlimitedTutor": "Tutor IA e giochi di ruolo illimitati",
+      "seeAllVisitors": "Vedi tutti quelli che hanno visto il tuo profilo",
+      "moreMatches": "15 match al giorno invece di 6",
+      "advancedPartnerFilters": "Filtri avanzati per partner (paese)",
+      "unlimitedTranslations": "Traduzioni illimitate",
+      "freeMessaging": "Chatta con partner linguistici",
+      "freeMatches": "6 match al giorno",
+      "freeTranslations": "5 traduzioni al giorno"
+    },
+    "limit": {
+      "title": "Limite giornaliero raggiunto",
+      "body": "Hai usato la quota gratuita di oggi. VIP rimuove i limiti giornalieri.",
+      "cta": "Passa a VIP"
     }
   },
   "seo": {
@@ -3030,7 +3042,8 @@
     "tryIncreaseRadius": "Prova ad aumentare il raggio di ricerca",
     "unknownError": "Si è verificato un errore",
     "usersFound_one": "{{count}} persona trovata",
-    "usersFound_other": "{{count}} persone trovate"
+    "usersFound_other": "{{count}} persone trovate",
+    "radiusLimit": "Gli account gratuiti cercano fino a {{km}} km. Passa a VIP per cercare più lontano."
   },
   "auth": {
     "apple": {
@@ -3368,7 +3381,8 @@
       "language": "Lingua",
       "name": "Argomento",
       "submit": "Crea stanza",
-      "title": "Apri una stanza a tema"
+      "title": "Apri una stanza a tema",
+      "pickLanguage": "Scegli una lingua"
     },
     "errors": {
       "banned": "Sei stato rimosso da questa stanza. Puoi chiedere al proprietario di farti rientrare.",
@@ -3381,12 +3395,14 @@
       "tooMany": "Hai già 10 stanze. Eliminane una per crearne un'altra."
     },
     "list": {
-      "create": "Nuova stanza a tema",
+      "create": "Nuova stanza",
       "empty": "Ancora nessuna stanza.",
       "error": "Impossibile caricare le stanze linguistiche.",
       "joined": "Iscritto",
       "locked": "Bloccata",
-      "title": "Stanze linguistiche"
+      "title": "Stanze linguistiche",
+      "active": "Attiva {{time}}",
+      "refresh": "Aggiorna"
     },
     "owner": {
       "admin": "admin",
@@ -3415,7 +3431,35 @@
       "slowDown": "Stai inviando troppo velocemente. Rallenta un po'.",
       "sticker": "Sticker",
       "unsupported": "Apri l'app per vedere questo messaggio",
-      "voice": "Messaggio vocale — apri l'app per ascoltarlo"
+      "voice": "Messaggio vocale — apri l'app per ascoltarlo",
+      "someone": "Membro",
+      "photo": "Foto",
+      "replyDeleted": "Messaggio rimosso",
+      "reply": "Rispondi",
+      "react": "Reagisci",
+      "more": "Altro",
+      "delete": "Elimina",
+      "report": "Segnala",
+      "sendFailed": "Invio del messaggio non riuscito",
+      "photoFailed": "Impossibile inviare la foto. Riprova.",
+      "photosOnly": "Nelle stanze si possono condividere solo foto.",
+      "questionOfDay": "Domanda del giorno",
+      "typing": "{{name}} sta scrivendo…",
+      "removePhoto": "Rimuovi foto",
+      "addPhoto": "Aggiungi una foto",
+      "caption": "Aggiungi una didascalia (facoltativa)",
+      "deleteTitle": "Eliminare questo messaggio?",
+      "deleteBody": "Verrà rimosso per tutti nella stanza."
+    },
+    "info": {
+      "hub": "Stanza della lingua",
+      "topic": "Stanza a tema",
+      "members": "membri",
+      "noDescription": "Ancora nessuna descrizione.",
+      "viewMembers": "Vedi membri",
+      "edit": "Modifica",
+      "back": "Indietro",
+      "save": "Salva"
     }
   },
   "nav": {
@@ -3512,5 +3556,34 @@
       "useHere": "Ascolta qui",
       "you": "tu"
     }
+  },
+  "boost": {
+    "title": "Potenzia il mio profilo",
+    "subtitle": "Fatti vedere da più partner per 24 h",
+    "activeTitle": "Il tuo boost è attivo",
+    "again": "Potenzia di nuovo",
+    "timeLeft": "Mancano {{time}}",
+    "seenBy": "Mostrato finora: {{count}} volte",
+    "lastResult": "Il tuo ultimo boost — mostrato: {{count}} volte",
+    "endingSoon": "Sta per finire",
+    "durationHm": "{{hours}} h {{minutes}} min",
+    "durationM": "{{minutes}} min",
+    "sourcePartners": "Elenco partner",
+    "sourceMatches": "Match del giorno",
+    "sourceMoments": "Il tuo momento in Per te",
+    "countingHint": "Le visualizzazioni crescono quando le persone aprono Partner, i loro match del giorno e Per te.",
+    "tipsTitle": "Sfrutta al meglio il boost",
+    "tipMoment": "Pubblica un momento ora: anche il tuo momento più recente viene messo in evidenza.",
+    "tipProfile": "Una foto nitida e una bio breve ricevono più risposte.",
+    "postMoment": "Pubblica un momento",
+    "explain": "Sii il 6º match di tutte le persone le cui lingue si adattano a te, per 24 ore.",
+    "explainMore": "Compari anche in cima ai Partner, e il tuo ultimo momento viene messo in evidenza in Per te.",
+    "costLine": "Costo: {{cost}} monete",
+    "balanceLine": "Il tuo saldo: {{balance}} monete",
+    "confirm": "Conferma boost",
+    "failed": "Impossibile avviare il boost. Riprova.",
+    "capacityFull": "Tutti i posti boost sono occupati — riprova tra qualche ora",
+    "needCoins": "Ti servono {{cost}} monete. Le monete si acquistano nell'app BananaTalk.",
+    "getApp": "Scarica l'app"
   }
 }

@@ -1,6 +1,6 @@
 # Remaining work — web
 
-Last updated: 2026-10-16. Tick items off in the same commit that finishes them.
+Last updated: 2026-10-18. Tick items off in the same commit that finishes them.
 
 See also: app `bananatalk_app/docs/REMAINING_WORK.md` (release, store consoles, device QA) ·
 backend `language_exchange_backend_application/docs/REMAINING_WORK.md` (server env, prod DB, flags, ops).
@@ -188,6 +188,44 @@ Navbar reorganization (owner: "too dense", 2026-10-16)
 - [ ] NAV-2 Add `id="features"` to the homepage feature section in the home redesign (the navbar's Features link falls back to the showcase's test id). S
 - [ ] NAV-3 Add a Learn tab/entry once the web has a learning page; add a notifications bell if a web notifications list ships. S
 - [ ] NAV-4 Device QA: phone tab bar safe-area on iOS Safari, RTL (ar) menus, chat list ends at the tab bar. S
+- [ ] Bundle budget: `npm run test:budget` fails -- first-paint 351.1 KB vs 326 KB budget, app code 317.6 vs 307 KB (main 661c06e was already 349.3 / 315.9; the VIP parity work below adds 1.8 KB). `npm run deploy` now runs `test:budget`, so a deploy through that script stops here until the budget or the bundle is fixed. S
+
+VIP parity with the app (2026-10-18; backend a71aa3c / b2836ac, app d769d971)
+- [x] Nearby radius 5/10/25/50/100/200 km; options above the server's `search.maxRadiusKm` (50 until it answers; VIP 500) show a lock and open `/settings/vip`
+- [x] VIP page and home pricing list the real perks (no ads, unlimited AI tutor and roleplay, everyone who viewed you, 15 daily matches instead of 6, country filter, unlimited translations); the server's stale plan `features` are no longer rendered
+- [x] Country filter is VIP-only: locked with a VIP badge for free members, not sent, not shown as a chip or counted (gender stays free)
+- [x] Daily limits (moments, comments, stories: 429; translation: 403 `TRANSLATION_LIMIT_REACHED`) show one "Upgrade to VIP" toast (`src/components/vip/dailyLimit.tsx`)
+- [x] Strangers' profiles: "Online now" / "Active today" / nothing (respects `showOnlineStatus`), no join month; the owner still sees both
+- [x] "You're learning each other's language" chip on the All list
+- [x] VIP status (`/auth/me`), the community list and Nearby re-read on tab focus (per query; the global `refetchOnFocus` stays off)
+- [x] New strings in all 18 locales (drafts; native review with the app's batch)
+- [ ] Backend: `GET /purchases/plans` still advertises unlimited messages / profile views / waves / voice rooms / premium support -- fix the source (controllers/iosPurchase.js) so the app store sheets match. S
+- [ ] Chat's daily-message limit dialog still says "Go VIP for unlimited messages" (`chatPage.sendErrors.dailyBody`) -- keep only while the server enforces a free message cap. S
+- [ ] Native review of the 2026-10-18 VIP strings (vip.features.*, vip.limit.*, countryVipOnly, mutualExchange, activeToday, radiusLimit). S
+
+Language rooms — app parity (2026-10-18; backend 468fa90, app 90b4e425). Still behind `webLanguageRoomsEnabled` (+ `roomsEnabled`)
+- [x] Directory: languages named from the room's code in the reader's language with a flag, hub languages first, "Active 5m ago", refresh button, "+ New room"
+- [x] New room in any language: the whole ISO 639-1 list (signup picker's list, localized names), sends the code
+- [x] Opening a room does not join it: visitors read the history and watch live (`room:join`), and get a "Join room" bar instead of the composer; banned users ask to come back
+- [x] Room info from the title: language, members / online, description, View members (members), Edit title + description (moderators), Join / Leave; owner's requests + remove inside "View members"
+- [x] Messages: avatar and name open the profile; reply with quote (`replyTo`); reactions (chat's ReactionRow, `/messages/:id/reactions`, live `messageReaction`); photo with caption (`POST /rooms/:id/media`); delete own / any for moderators (live `room:messageDeleted`); report (shared report dialog, `type: "message"`)
+- [x] Daily prompt pinned as "Question of the day"; typing indicator; blocked senders hidden live; refused send keeps the text and says "Failed to send message"
+- [x] New strings in all 18 locales (drafts)
+- [ ] Live QA with the flag on: visitor watch → join, reply, react, photo, delete (as moderator), report, daily prompt card. S
+- [ ] Native review of the 2026-10-18 `languageRooms.*` drafts. S
+- [ ] Rooms show voice / GIF / sticker messages as a label ("open the app"); the web composer sends text and photos only. S
+
+Profile Boost on the website (2026-10-18; backend routes/boosts.js, app boost_screen.dart). Behind `boostsEnabled` (no web-only flag)
+- [x] `/boost` page (members only): explain (6th match, near the top of Partners, latest moment in For You), 150-coin cost + balance (`/coins/balance`, only while `coinsEnabled`), confirm; 402 → "you need 150 coins, bought in the app" + link to /download; 409 re-reads the live boost; `capacity_full` → slots-taken message
+- [x] While live: 24h progress bar, time left (ticks every 30s, impressions re-read every minute), "Times shown so far: N" with Partners / Daily matches / For You breakdown, hint at 0, tips with "Post a moment"
+- [x] After it ends (last ended boost within 7 days, refunds skipped): "Your last boost — times shown: N" + "Boost again"
+- [x] Entry points: row at the top of the Community list ("Boost my profile" / "Your boost is live · Xh left"), and "Boost my profile" in the navbar profile menu (desktop + mobile)
+- [x] "Boosted" label on community member cards and feed moments when the API sends `boosted: true` (daily matches already had it)
+- [x] New `boost.*` strings in all 18 locales (drafts, non-plural phrasing)
+- [ ] The website cannot buy coins: an empty wallet is sent to the app (/download). Decide whether web gets a coin shop. S
+- [ ] Live QA with `BOOSTS_ENABLED=true`: buy, live card, impressions moving, ended → Boost again, entry row states, Boosted labels on another account. S
+- [ ] Native review of the `boost.*` drafts. S
+- [ ] Bundle budget: now 353.9 KB first paint / 319.6 KB app code (was 351.1 / 317.6) after rooms + boost; the Community boost row and its slice are in the eager graph. S
 
 ## 5. Decided / won't fix
 
