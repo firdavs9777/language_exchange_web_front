@@ -1,3 +1,4 @@
+import { BookOpenText } from "lucide-react";
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import {
   FaUsers,
@@ -62,6 +63,7 @@ const LANGUAGES = [
 const COMMUNITY_PATHS = ["/communities", "/community", "/gatherings", "/clubs", "/voice-rooms", "/rooms", "/waves", "/topics"];
 const MOMENTS_PATHS = ["/moments", "/moment", "/reels", "/my-moments", "/add-moment", "/edit-moment"];
 const CHAT_PATHS = ["/chat"];
+const STUDY_PATHS = ["/learn"];
 const PROFILE_PATHS = ["/profile", "/followersList", "/followingsList", "/visitors", "/visited", "/settings"];
 
 export const under = (pathname: string, prefixes: string[]) =>
@@ -319,7 +321,12 @@ const MainNavbar = () => {
 
   const chatActive = under(path, CHAT_PATHS);
 
+  const studyLabel = t("studyHub.title") || "AI Study";
+  const studyActive = under(path, STUDY_PATHS);
+
+  // Same order as the app's bottom bar: AI Study, Community, Chats, Moments, Profile.
   const tabs = [
+    { key: "study", to: "/learn", label: studyLabel, icon: <BookOpenText size={18} />, active: studyActive, badge: false },
     { key: "community", to: "/communities", label: communityLabel, icon: <FaUsers />, active: under(path, COMMUNITY_PATHS), badge: false },
     { key: "chats", to: "/chat", label: chatsLabel, icon: <FaComment />, active: chatActive, badge: true },
     { key: "moments", to: "/moments", label: momentsLabel, icon: <FaGlobe />, active: under(path, MOMENTS_PATHS), badge: false },
@@ -340,6 +347,14 @@ const MainNavbar = () => {
           <div className="navbar-links">
             {userInfo ? (
               <>
+                <NavLink
+                  to="/learn"
+                  className={`nav-item ${studyActive ? "active" : ""}`}
+                  aria-current={studyActive ? "page" : undefined}
+                >
+                  <BookOpenText size={16} />
+                  <span>{studyLabel}</span>
+                </NavLink>
                 <SectionMenu
                   id="nav-community"
                   label={communityLabel}

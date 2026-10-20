@@ -82,6 +82,12 @@ const EditMyMoment = lazyWithRetry("../components/profile/EditMyMoment", () => i
 // Moments composer and the saved list (the feed and the detail stay eager)
 const CreateMoment = lazyWithRetry("../components/moments/CreateMoment", () => import("../components/moments/CreateMoment"));
 const SavedMoments = lazyWithRetry("../components/moments/SavedMoments", () => import("../components/moments/SavedMoments"));
+const StudyHub = lazyWithRetry("../components/learning/StudyHub", () => import("../components/learning/StudyHub"));
+const VocabularyReview = lazyWithRetry("../components/learning/VocabularyReview", () => import("../components/learning/VocabularyReview"));
+const Vocabulary = lazyWithRetry("../components/learning/Vocabulary", () => import("../components/learning/Vocabulary"));
+const Lessons = lazyWithRetry("../components/learning/Lessons", () => import("../components/learning/Lessons"));
+const LessonDetail = lazyWithRetry("../components/learning/LessonDetail", () => import("../components/learning/LessonDetail"));
+const Leaderboard = lazyWithRetry("../components/learning/Leaderboard", () => import("../components/learning/Leaderboard"));
 
 // Full announcement page (login required; opened from "read more" links)
 const AnnouncementPage = lazyWithRetry("../components/announcements/AnnouncementPage", () => import("../components/announcements/AnnouncementPage"));
@@ -280,6 +286,14 @@ export const routes = createRoutesFromElements(
     <Route path="chat/:userId/media" element={lazyRoute(<MediaGallery />)} />
     <Route path="chat/:userId?" element={lazyRoute(<MainChatWrapper />)} />
     <Route path="courses" element={lazyRoute(<CoursesMain />)} />
+    {/* AI Study: the hub, plus the learning pages the website already has.
+        The hub sends the app-only features to /download. */}
+    <Route path="learn" element={lazyRoute(<StudyHub />)} />
+    <Route path="learn/review" element={lazyRoute(<VocabularyReview />)} />
+    <Route path="learn/vocabulary" element={lazyRoute(<Vocabulary />)} />
+    <Route path="learn/lessons" element={lazyRoute(<Lessons />)} />
+    <Route path="learn/lessons/:lessonId" element={lazyRoute(<LessonDetail />)} />
+    <Route path="learn/leaderboard" element={lazyRoute(<Leaderboard />)} />
     <Route path="support/" element={<SupportPage />} />
     <Route path="stories/" element={lazyRoute(<MainStories />)} />
     <Route path="create-story" element={lazyRoute(<CreateStory />)} />

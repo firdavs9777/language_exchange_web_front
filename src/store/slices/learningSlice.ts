@@ -4,6 +4,15 @@ import { apiSlice } from "./apiSlice";
 export const learningApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder: any) => ({
     // Progress
+    // Today's pack for the AI Study hub: GET /api/v1/study/pack?locale=
+    // {needsLanguage, language, requestedLevel, servedLevel, theme{topic},
+    // stations[], packComplete, levelPlaced}, wrapped in {success, data}.
+    getDailyPack: builder.query({
+      query: (locale?: string) => ({
+        url: `/api/v1/study/pack${locale ? `?locale=${encodeURIComponent(locale)}` : ""}`,
+      }),
+      transformResponse: (response: any) => (response && response.data) || response,
+    }),
     getLearningProgress: builder.query({
       query: () => ({
         url: `${LEARNING_URL}/progress`,
@@ -246,6 +255,7 @@ export const learningApiSlice = apiSlice.injectEndpoints({
 export const {
   // Progress
   useGetLearningProgressQuery,
+  useGetDailyPackQuery,
   useGetLeaderboardQuery,
   useGetDailyGoalsQuery,
   useUpdateDailyGoalsMutation,

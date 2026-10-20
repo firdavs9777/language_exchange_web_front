@@ -3687,5 +3687,79 @@
     "capacityFull": "All boost slots are taken right now — try again in a few hours",
     "needCoins": "You need {{cost}} coins. Coins are bought in the BananaTalk app.",
     "getApp": "Get the app"
+  },
+  "studyHub": {
+    "title": "AI Study",
+    "streak": "{{count}} day streak",
+    "level": "Lv {{level}}",
+    "signIn": "Sign in to see your streak, level and today's pack.",
+    "pack": {
+      "caption": "Today's pack",
+      "start": "Start",
+      "done": "Done for today",
+      "needsLanguage": "What are you learning?",
+      "choose": "Choose",
+      "preparing": "Today's items are still being prepared. Check back soon."
+    },
+    "vocabPacks": {
+      "title": "Vocabulary Packs",
+      "body": "Ready-made word sets by topic. Add one and learn a little every day.",
+      "browse": "Browse packs"
+    },
+    "groups": {
+      "talk": "Talk",
+      "practice": "Practice",
+      "prep": "Prepare & compete"
+    },
+    "tiles": {
+      "tutor": {
+        "title": "AI Tutor",
+        "subtitle": "Chat about anything"
+      },
+      "roleplay": {
+        "title": "Roleplay",
+        "subtitle": "Real-life scenes"
+      },
+      "story": {
+        "title": "Story",
+        "subtitle": "Write a story together"
+      },
+      "photo": {
+        "title": "Photo",
+        "subtitle": "Learn words from a photo"
+      },
+      "speak": {
+        "title": "Speak",
+        "subtitle": "Pronunciation check"
+      },
+      "review": {
+        "title": "Review",
+        "subtitle": "Words due today"
+      },
+      "writing": {
+        "title": "Writing",
+        "subtitle": "Grammar feedback"
+      },
+      "quizzes": {
+        "title": "Quizzes",
+        "subtitle": "Quick AI quizzes"
+      },
+      "exam": {
+        "title": "Exam prep",
+        "subtitle": "TOPIK, JLPT, IELTS…"
+      },
+      "lessons": {
+        "title": "Lessons",
+        "subtitle": "Step-by-step units"
+      },
+      "challenges": {
+        "title": "Challenges",
+        "subtitle": "Daily goals for XP"
+      },
+      "leaderboard": {
+        "title": "Leaderboard",
+        "subtitle": "See this week's ranks"
+      }
+    }
   }
 }
