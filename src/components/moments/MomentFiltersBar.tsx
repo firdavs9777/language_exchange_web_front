@@ -53,11 +53,12 @@ const MomentFiltersBar: React.FC<Props> = ({ filters, onChange, open: openProp, 
   return (
     <div className="mb-4">
       <div className={`flex items-center justify-between gap-2 ${hideToggle && !active ? "hidden" : ""}`}>
+        {!hideToggle && (
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          className={`${hideToggle ? "hidden" : "flex"} items-center gap-2 rounded-lg border border-gray-200 bg-white/80 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-white`}
+          className={`flex items-center gap-2 rounded-lg border border-gray-200 bg-white/80 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-white`}
         >
           <FaFilter className="h-4 w-4 text-gray-600" />
           <span>{tr("moments_section.filters.button", "Filters")}</span>
@@ -65,6 +66,7 @@ const MomentFiltersBar: React.FC<Props> = ({ filters, onChange, open: openProp, 
             <span className="rounded-full bg-blue-500 px-2 py-0.5 text-xs text-white">{activeCount}</span>
           )}
         </button>
+        )}
         {active && (
           <button
             type="button"

@@ -878,7 +878,8 @@
       "forYou": "Dành Cho Bạn",
       "following": "Đang Theo Dõi",
       "explore": "Khám Phá",
-      "trending": "Thịnh Hành"
+      "trending": "Thịnh Hành",
+      "reels": "Reels"
     },
     "following": {
       "empty": "Theo dõi mọi người để xem khoảnh khắc của họ ở đây",
@@ -1052,7 +1053,8 @@
       "denied": "Quyền truy cập micrô bị từ chối. Hãy cho phép truy cập micrô để ghi âm tin nhắn thoại.",
       "stop": "Dừng ghi âm và gửi",
       "unsupported": "Trình duyệt này không hỗ trợ ghi âm."
-    }
+    },
+    "goVip": "Nâng cấp VIP"
   },
   "createMoment": {
     "title": "Tạo Khoảnh Khắc",
@@ -1283,7 +1285,12 @@
       "label": "Các tab cộng đồng",
       "today": "Hôm nay",
       "serious": "Người học nghiêm túc",
-      "seriousHint": "Hoạt động trong tuần này"
+      "seriousHint": "Hoạt động trong tuần này",
+      "matches": "Ghép đôi",
+      "partners": "Bạn học",
+      "gatherings": "Buổi gặp mặt",
+      "rooms": "Phòng",
+      "partnersViews": "Chế độ xem bạn học"
     },
     "filters": {
       "language": "Ngôn Ngữ",
@@ -1428,7 +1435,13 @@
       "retry": "Thử lại",
       "waved": "Đã vẫy tay"
     },
-    "mutualExchange": "Hai bạn đang học ngôn ngữ của nhau"
+    "mutualExchange": "Hai bạn đang học ngôn ngữ của nhau",
+    "appOnly": {
+      "gatheringsTitle": "Buổi gặp mặt có trong ứng dụng",
+      "gatheringsBody": "Tìm câu lạc bộ và buổi gặp mặt với những người học ngôn ngữ của bạn, trong ứng dụng BananaTalk.",
+      "roomsTitle": "Phòng có trong ứng dụng",
+      "roomsBody": "Tham gia trò chuyện nhóm theo ngôn ngữ và chủ đề, hoặc tạo phòng riêng, trong ứng dụng BananaTalk."
+    }
   },
   "communityDetail": {
     "errors": {
@@ -2243,6 +2256,23 @@
         "title": "Cuộc trò chuyện đầu tiên chỉ cách một chạm",
         "subtitle": "Tải miễn phí, bắt đầu miễn phí. Ngay lúc này có người đang học ngôn ngữ của bạn.",
         "web": "Hoặc dùng BananaTalk trên web"
+      }
+    },
+    "screens": {
+      "title": "Xem ứng dụng",
+      "items": {
+        "aiStudy": {
+          "title": "Học với AI",
+          "body": "Gói học mỗi ngày, gia sư AI và bài luyện chỉ mất năm phút."
+        },
+        "community": {
+          "title": "Ghép đôi mỗi ngày",
+          "body": "Bạn học mới mỗi ngày, họ học ngôn ngữ của bạn trong khi bạn học ngôn ngữ của họ."
+        },
+        "moments": {
+          "title": "Khoảnh khắc & Reels",
+          "body": "Chia sẻ ngày của bạn, xem reels và được người bản xứ sửa lỗi."
+        }
       }
     }
   },

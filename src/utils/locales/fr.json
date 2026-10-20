@@ -859,7 +859,8 @@
       "forYou": "Pour vous",
       "following": "Abonnements",
       "explore": "Explorer",
-      "trending": "Tendances"
+      "trending": "Tendances",
+      "reels": "Reels"
     },
     "following": {
       "empty": "Suivez des personnes pour voir leurs moments ici",
@@ -1033,7 +1034,8 @@
       "denied": "L'accès au micro a été refusé. Autorisez l'accès au micro pour enregistrer un message vocal.",
       "stop": "Arrêter l'enregistrement et envoyer",
       "unsupported": "Ce navigateur ne prend pas en charge l'enregistrement vocal."
-    }
+    },
+    "goVip": "Passer VIP"
   },
   "createMoment": {
     "title": "Créer un moment",
@@ -1264,7 +1266,12 @@
       "label": "Onglets de la communauté",
       "today": "Aujourd'hui",
       "serious": "Apprenants assidus",
-      "seriousHint": "Actifs cette semaine"
+      "seriousHint": "Actifs cette semaine",
+      "matches": "Matchs",
+      "partners": "Partenaires",
+      "gatherings": "Rencontres",
+      "rooms": "Salons",
+      "partnersViews": "Vues des partenaires"
     },
     "filters": {
       "language": "Langue",
@@ -1410,7 +1417,13 @@
       "retry": "Réessayer",
       "waved": "Salué"
     },
-    "mutualExchange": "Vous apprenez chacun la langue de l'autre"
+    "mutualExchange": "Vous apprenez chacun la langue de l'autre",
+    "appOnly": {
+      "gatheringsTitle": "Les rencontres sont dans l'appli",
+      "gatheringsBody": "Trouve des clubs et des rencontres avec des personnes qui apprennent ta langue, dans l'appli BananaTalk.",
+      "roomsTitle": "Les salons sont dans l'appli",
+      "roomsBody": "Rejoins des discussions de groupe par langue et par thème, ou crée ton propre salon, dans l'appli BananaTalk."
+    }
   },
   "communityDetail": {
     "errors": {
@@ -2225,6 +2238,23 @@
         "title": "Votre première conversation est à portée de doigt",
         "subtitle": "Gratuit à télécharger, gratuit pour commencer. Quelqu'un apprend votre langue en ce moment.",
         "web": "Ou utilisez BananaTalk sur le web"
+      }
+    },
+    "screens": {
+      "title": "Découvrir l'appli",
+      "items": {
+        "aiStudy": {
+          "title": "Étude IA",
+          "body": "Un pack quotidien, un tuteur IA et des exercices qui tiennent en cinq minutes."
+        },
+        "community": {
+          "title": "Matchs du jour",
+          "body": "De nouveaux partenaires chaque jour, qui apprennent ta langue pendant que tu apprends la leur."
+        },
+        "moments": {
+          "title": "Moments et Reels",
+          "body": "Partage ta journée, regarde des reels et fais-toi corriger par des natifs."
+        }
       }
     }
   },

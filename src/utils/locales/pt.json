@@ -859,7 +859,8 @@
       "forYou": "Para você",
       "following": "Seguindo",
       "explore": "Explorar",
-      "trending": "Tendências"
+      "trending": "Tendências",
+      "reels": "Reels"
     },
     "following": {
       "empty": "Siga pessoas para ver os momentos delas aqui",
@@ -1033,7 +1034,8 @@
       "denied": "O acesso ao microfone foi negado. Permita o acesso ao microfone para gravar uma mensagem de voz.",
       "stop": "Parar gravação e enviar",
       "unsupported": "Este navegador não oferece suporte à gravação de voz."
-    }
+    },
+    "goVip": "Seja VIP"
   },
   "createMoment": {
     "title": "Criar Momento",
@@ -1264,7 +1266,12 @@
       "label": "Abas da comunidade",
       "today": "Hoje",
       "serious": "Estudantes dedicados",
-      "seriousHint": "Ativos esta semana"
+      "seriousHint": "Ativos esta semana",
+      "matches": "Matches",
+      "partners": "Parceiros",
+      "gatherings": "Encontros",
+      "rooms": "Salas",
+      "partnersViews": "Visualizações de parceiros"
     },
     "filters": {
       "language": "Idioma",
@@ -1410,7 +1417,13 @@
       "retry": "Tentar novamente",
       "waved": "Acenou"
     },
-    "mutualExchange": "Vocês estão aprendendo o idioma um do outro"
+    "mutualExchange": "Vocês estão aprendendo o idioma um do outro",
+    "appOnly": {
+      "gatheringsTitle": "Os encontros estão no app",
+      "gatheringsBody": "Encontre clubes e encontros com pessoas que aprendem seu idioma, no app BananaTalk.",
+      "roomsTitle": "As salas estão no app",
+      "roomsBody": "Entre em chats em grupo por idioma e tema, ou crie sua própria sala, no app BananaTalk."
+    }
   },
   "communityDetail": {
     "errors": {
@@ -2225,6 +2238,23 @@
         "title": "Sua primeira conversa está a um toque",
         "subtitle": "Grátis para baixar, grátis para começar. Alguém está aprendendo seu idioma agora mesmo.",
         "web": "Ou use o BananaTalk na web"
+      }
+    },
+    "screens": {
+      "title": "Veja o app",
+      "items": {
+        "aiStudy": {
+          "title": "Estudo com IA",
+          "body": "Um pacote diário, um tutor de IA e prática que cabe em cinco minutos."
+        },
+        "community": {
+          "title": "Matches diários",
+          "body": "Novos parceiros todo dia que aprendem seu idioma enquanto você aprende o deles."
+        },
+        "moments": {
+          "title": "Momentos e Reels",
+          "body": "Compartilhe seu dia, assista a reels e receba correções de falantes nativos."
+        }
       }
     }
   },

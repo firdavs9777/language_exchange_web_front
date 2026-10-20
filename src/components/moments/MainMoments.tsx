@@ -408,7 +408,7 @@ const MainMoments: React.FC = () => {
               <button
                 type="button"
                 onClick={() => (searchOpen ? closeSearch() : setSearchOpen(true))}
-                aria-label={searchOpen ? t("close") || "Close" : t("moments_section.filters.search") || "Search"}
+                aria-label={searchOpen ? t("close") || "Close" : t("moments_section.filters.searchPlaceholder") || "Search moments"}
                 className="flex h-10 w-10 items-center justify-center rounded-full text-gray-800 hover:bg-gray-100"
               >
                 {searchOpen ? <X className="h-5 w-5" /> : <Search className="h-6 w-6" />}

@@ -878,7 +878,8 @@
       "forYou": "추천",
       "following": "팔로잉",
       "explore": "탐색",
-      "trending": "인기"
+      "trending": "인기",
+      "reels": "릴스"
     },
     "following": {
       "empty": "팔로우한 사람들의 모멘트가 여기에 표시돼요",
@@ -1052,7 +1053,8 @@
       "denied": "마이크 접근이 거부되었어요. 음성 메시지를 녹음하려면 마이크 접근을 허용해 주세요.",
       "stop": "녹음 중지 후 보내기",
       "unsupported": "이 브라우저에서는 음성 녹음을 지원하지 않아요."
-    }
+    },
+    "goVip": "VIP 시작하기"
   },
   "createMoment": {
     "title": "모멘트 작성",
@@ -1283,7 +1285,12 @@
       "label": "커뮤니티 탭",
       "today": "오늘",
       "serious": "열심히 배우는 학습자",
-      "seriousHint": "이번 주 활동"
+      "seriousHint": "이번 주 활동",
+      "matches": "매칭",
+      "partners": "파트너",
+      "gatherings": "모임",
+      "rooms": "방",
+      "partnersViews": "파트너 보기"
     },
     "filters": {
       "language": "언어",
@@ -1428,7 +1435,13 @@
       "retry": "다시 시도",
       "waved": "손 흔듦"
     },
-    "mutualExchange": "서로의 언어를 배우고 있어요"
+    "mutualExchange": "서로의 언어를 배우고 있어요",
+    "appOnly": {
+      "gatheringsTitle": "모임은 앱에서 이용할 수 있어요",
+      "gatheringsBody": "BananaTalk 앱에서 내 언어를 배우는 사람들과 클럽과 모임을 찾아보세요.",
+      "roomsTitle": "방은 앱에서 이용할 수 있어요",
+      "roomsBody": "BananaTalk 앱에서 언어와 주제별 그룹 채팅에 참여하거나 나만의 방을 만들어 보세요."
+    }
   },
   "communityDetail": {
     "errors": {
@@ -2243,6 +2256,23 @@
         "title": "첫 대화까지 한 번의 탭이면 충분해요",
         "subtitle": "무료로 다운로드하고 무료로 시작하세요. 지금 누군가가 당신의 언어를 배우고 있어요.",
         "web": "또는 웹에서 BananaTalk 사용하기"
+      }
+    },
+    "screens": {
+      "title": "앱 둘러보기",
+      "items": {
+        "aiStudy": {
+          "title": "AI 학습",
+          "body": "매일 학습 팩, AI 튜터, 5분이면 끝나는 연습."
+        },
+        "community": {
+          "title": "오늘의 매칭",
+          "body": "내 언어를 배우는 새로운 파트너를 매일 만나 보세요."
+        },
+        "moments": {
+          "title": "모먼트 & 릴스",
+          "body": "하루를 공유하고, 릴스를 보고, 원어민에게 교정을 받아 보세요."
+        }
       }
     }
   },

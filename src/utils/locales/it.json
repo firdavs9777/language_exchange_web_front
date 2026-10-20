@@ -859,7 +859,8 @@
       "forYou": "Per te",
       "following": "Seguiti",
       "explore": "Esplora",
-      "trending": "Tendenze"
+      "trending": "Tendenze",
+      "reels": "Reels"
     },
     "following": {
       "empty": "Segui altre persone per vedere i loro momenti qui",
@@ -1033,7 +1034,8 @@
       "denied": "L'accesso al microfono è stato negato. Consenti l'accesso al microfono per registrare un messaggio vocale.",
       "stop": "Interrompi la registrazione e invia",
       "unsupported": "Questo browser non supporta la registrazione vocale."
-    }
+    },
+    "goVip": "Passa a VIP"
   },
   "createMoment": {
     "title": "Crea Momento",
@@ -1264,7 +1266,12 @@
       "label": "Schede della community",
       "today": "Oggi",
       "serious": "Studenti costanti",
-      "seriousHint": "Attivi questa settimana"
+      "seriousHint": "Attivi questa settimana",
+      "matches": "Match",
+      "partners": "Partner",
+      "gatherings": "Incontri",
+      "rooms": "Stanze",
+      "partnersViews": "Viste partner"
     },
     "filters": {
       "language": "Lingua",
@@ -1410,7 +1417,13 @@
       "retry": "Riprova",
       "waved": "Salutato"
     },
-    "mutualExchange": "State imparando l'uno la lingua dell'altro"
+    "mutualExchange": "State imparando l'uno la lingua dell'altro",
+    "appOnly": {
+      "gatheringsTitle": "Gli incontri sono nell'app",
+      "gatheringsBody": "Trova club e incontri con persone che imparano la tua lingua, nell'app BananaTalk.",
+      "roomsTitle": "Le stanze sono nell'app",
+      "roomsBody": "Unisciti a chat di gruppo per lingua e argomento, o crea la tua stanza, nell'app BananaTalk."
+    }
   },
   "communityDetail": {
     "errors": {
@@ -2225,6 +2238,23 @@
         "title": "La tua prima conversazione è a un tocco",
         "subtitle": "Gratis da scaricare, gratis per iniziare. Qualcuno sta imparando la tua lingua proprio ora.",
         "web": "Oppure usa BananaTalk sul web"
+      }
+    },
+    "screens": {
+      "title": "Guarda l'app",
+      "items": {
+        "aiStudy": {
+          "title": "Studio con IA",
+          "body": "Un pacchetto al giorno, un tutor IA ed esercizi che stanno in cinque minuti."
+        },
+        "community": {
+          "title": "Match del giorno",
+          "body": "Nuovi partner ogni giorno che imparano la tua lingua mentre tu impari la loro."
+        },
+        "moments": {
+          "title": "Momenti e Reels",
+          "body": "Condividi la tua giornata, guarda i reels e fatti correggere da madrelingua."
+        }
       }
     }
   },

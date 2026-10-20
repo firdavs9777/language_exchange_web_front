@@ -878,7 +878,8 @@
       "forYou": "Senin İçin",
       "following": "Takip Edilenler",
       "explore": "Keşfet",
-      "trending": "Gündem"
+      "trending": "Gündem",
+      "reels": "Reels"
     },
     "following": {
       "empty": "İnsanları takip et, anlarını burada gör",
@@ -1052,7 +1053,8 @@
       "denied": "Mikrofon erişimi reddedildi. Sesli not kaydetmek için mikrofon erişimine izin ver.",
       "stop": "Kaydı durdur ve gönder",
       "unsupported": "Bu tarayıcı ses kaydını desteklemiyor."
-    }
+    },
+    "goVip": "VIP ol"
   },
   "createMoment": {
     "title": "An Oluştur",
@@ -1283,7 +1285,12 @@
       "label": "Topluluk sekmeleri",
       "today": "Bugün",
       "serious": "Azimli öğrenenler",
-      "seriousHint": "Bu hafta aktif"
+      "seriousHint": "Bu hafta aktif",
+      "matches": "Eşleşmeler",
+      "partners": "Partnerler",
+      "gatherings": "Buluşmalar",
+      "rooms": "Odalar",
+      "partnersViews": "Partner görünümleri"
     },
     "filters": {
       "language": "Dil",
@@ -1428,7 +1435,13 @@
       "retry": "Tekrar dene",
       "waved": "El sallandı"
     },
-    "mutualExchange": "Birbirinizin dilini öğreniyorsunuz"
+    "mutualExchange": "Birbirinizin dilini öğreniyorsunuz",
+    "appOnly": {
+      "gatheringsTitle": "Buluşmalar uygulamada",
+      "gatheringsBody": "Dilini öğrenen insanlarla kulüpleri ve buluşmaları BananaTalk uygulamasında bul.",
+      "roomsTitle": "Odalar uygulamada",
+      "roomsBody": "Dile ve konuya göre grup sohbetlerine katıl ya da kendi odanı aç; hepsi BananaTalk uygulamasında."
+    }
   },
   "communityDetail": {
     "errors": {
@@ -2243,6 +2256,23 @@
         "title": "İlk sohbetin bir dokunuş uzağında",
         "subtitle": "İndirmesi ücretsiz, başlaması ücretsiz. Şu anda biri senin dilini öğreniyor.",
         "web": "Ya da BananaTalk'u web'de kullan"
+      }
+    },
+    "screens": {
+      "title": "Uygulamayı gör",
+      "items": {
+        "aiStudy": {
+          "title": "Yapay Zekâ ile Çalış",
+          "body": "Günlük bir paket, yapay zekâ öğretmeni ve beş dakikalık pratik."
+        },
+        "community": {
+          "title": "Günlük eşleşmeler",
+          "body": "Sen onların dilini öğrenirken senin dilini öğrenen yeni partnerler, her gün."
+        },
+        "moments": {
+          "title": "Anlar ve Reels",
+          "body": "Gününü paylaş, reels izle ve anadili konuşanlardan düzeltme al."
+        }
       }
     }
   },

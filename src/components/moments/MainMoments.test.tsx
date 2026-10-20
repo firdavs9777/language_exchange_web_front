@@ -148,16 +148,18 @@ describe("filters run on the server", () => {
     );
   });
 
-  it("the same filters follow the reader to Trending and Explore", () => {
+  it("the same filters follow the reader to Trending", () => {
     renderMainMoments(undefined, "/moments?mood=happy");
     fireEvent.click(screen.getByRole("tab", { name: /Trending/i }));
     expect(lastArgs(mockUseGetTrendingMomentsQuery)).toEqual(
       expect.objectContaining({ filters: { mood: "happy" } })
     );
-    fireEvent.click(screen.getByRole("tab", { name: /Explore/i }));
-    expect(lastArgs(mockUseGetExploreMomentsQuery)).toEqual(
-      expect.objectContaining({ filters: { mood: "happy" } })
-    );
+  });
+
+  // The app has no Explore tab: For You, Reels, Following, Trending.
+  it("offers no Explore tab", () => {
+    renderMainMoments();
+    expect(screen.queryByRole("tab", { name: /Explore/i })).not.toBeInTheDocument();
   });
 
   it("an unfiltered feed sends no filters (the prerender cache key stays put)", () => {

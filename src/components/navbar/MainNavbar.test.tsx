@@ -263,7 +263,7 @@ it("renders the phone tab bar with the unread badge on Chats", async () => {
   const bar = screen.getByTestId("bottom-tabs");
   const tabs = Array.from(bar.querySelectorAll("a")).map((a) => a.getAttribute("href"));
   // Learn is left out until the web has a learning surface (/courses is a stub).
-  expect(tabs).toEqual(["/communities", "/chat", "/moments", "/profile"]);
+  expect(tabs).toEqual(["/learn", "/communities", "/chat", "/moments", "/profile"]);
   await waitFor(() => expect(screen.getByTestId("chat-unread-badge-mobile")).toHaveTextContent("4"));
   expect(screen.getByTestId("bottom-tab-chats")).toContainElement(screen.getByTestId("chat-unread-badge-mobile"));
   expect(document.body).toHaveClass("has-bottom-tabs");

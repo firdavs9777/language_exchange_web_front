@@ -878,7 +878,8 @@
       "forYou": "Für dich",
       "following": "Folge ich",
       "explore": "Entdecken",
-      "trending": "Trends"
+      "trending": "Trends",
+      "reels": "Reels"
     },
     "following": {
       "empty": "Folge Leuten, um ihre Momente hier zu sehen",
@@ -1052,7 +1053,8 @@
       "denied": "Der Mikrofonzugriff wurde verweigert. Erlaube den Mikrofonzugriff, um eine Sprachnachricht aufzunehmen.",
       "stop": "Aufnahme beenden und senden",
       "unsupported": "Dieser Browser unterstützt keine Sprachaufnahme."
-    }
+    },
+    "goVip": "VIP holen"
   },
   "createMoment": {
     "title": "Moment erstellen",
@@ -1283,7 +1285,12 @@
       "label": "Community-Tabs",
       "today": "Heute",
       "serious": "Engagierte Lernende",
-      "seriousHint": "Diese Woche aktiv"
+      "seriousHint": "Diese Woche aktiv",
+      "matches": "Matches",
+      "partners": "Partner",
+      "gatherings": "Treffen",
+      "rooms": "Räume",
+      "partnersViews": "Partneransichten"
     },
     "filters": {
       "language": "Sprache",
@@ -1428,7 +1435,13 @@
       "retry": "Erneut versuchen",
       "waved": "Gewinkt"
     },
-    "mutualExchange": "Ihr lernt gegenseitig eure Sprache"
+    "mutualExchange": "Ihr lernt gegenseitig eure Sprache",
+    "appOnly": {
+      "gatheringsTitle": "Treffen gibt es in der App",
+      "gatheringsBody": "Finde Clubs und Treffen mit Leuten, die deine Sprache lernen – in der BananaTalk-App.",
+      "roomsTitle": "Räume gibt es in der App",
+      "roomsBody": "Tritt Gruppenchats nach Sprache und Thema bei oder eröffne deinen eigenen Raum – in der BananaTalk-App."
+    }
   },
   "communityDetail": {
     "errors": {
@@ -2243,6 +2256,23 @@
         "title": "Dein erstes Gespräch ist nur einen Tipp entfernt",
         "subtitle": "Kostenlos herunterladen, kostenlos starten. Gerade lernt jemand deine Sprache.",
         "web": "Oder nutze BananaTalk im Web"
+      }
+    },
+    "screens": {
+      "title": "Die App ansehen",
+      "items": {
+        "aiStudy": {
+          "title": "KI-Lernen",
+          "body": "Ein Tagespaket, ein KI-Tutor und Übungen, die in fünf Minuten passen."
+        },
+        "community": {
+          "title": "Tägliche Matches",
+          "body": "Jeden Tag neue Partner, die deine Sprache lernen, während du ihre lernst."
+        },
+        "moments": {
+          "title": "Momente & Reels",
+          "body": "Teile deinen Tag, schau Reels und lass dich von Muttersprachlern korrigieren."
+        }
       }
     }
   },

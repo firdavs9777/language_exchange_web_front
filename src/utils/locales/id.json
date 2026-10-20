@@ -878,7 +878,8 @@
       "forYou": "Untukmu",
       "following": "Mengikuti",
       "explore": "Jelajahi",
-      "trending": "Trending"
+      "trending": "Trending",
+      "reels": "Reels"
     },
     "following": {
       "empty": "Ikuti orang lain untuk melihat momen mereka di sini",
@@ -1052,7 +1053,8 @@
       "denied": "Akses mikrofon ditolak. Izinkan akses mikrofon untuk merekam pesan suara.",
       "stop": "Hentikan rekaman dan kirim",
       "unsupported": "Browser ini tidak mendukung rekaman suara."
-    }
+    },
+    "goVip": "Jadi VIP"
   },
   "createMoment": {
     "title": "Buat Momen",
@@ -1283,7 +1285,12 @@
       "label": "Tab komunitas",
       "today": "Hari ini",
       "serious": "Pelajar serius",
-      "seriousHint": "Aktif minggu ini"
+      "seriousHint": "Aktif minggu ini",
+      "matches": "Kecocokan",
+      "partners": "Partner",
+      "gatherings": "Pertemuan",
+      "rooms": "Ruang",
+      "partnersViews": "Tampilan partner"
     },
     "filters": {
       "language": "Bahasa",
@@ -1428,7 +1435,13 @@
       "retry": "Coba lagi",
       "waved": "Sudah disapa"
     },
-    "mutualExchange": "Kalian saling mempelajari bahasa masing-masing"
+    "mutualExchange": "Kalian saling mempelajari bahasa masing-masing",
+    "appOnly": {
+      "gatheringsTitle": "Pertemuan ada di aplikasi",
+      "gatheringsBody": "Temukan klub dan pertemuan dengan orang yang belajar bahasamu, di aplikasi BananaTalk.",
+      "roomsTitle": "Ruang ada di aplikasi",
+      "roomsBody": "Gabung obrolan grup berdasarkan bahasa dan topik, atau buat ruangmu sendiri, di aplikasi BananaTalk."
+    }
   },
   "communityDetail": {
     "errors": {
@@ -2243,6 +2256,23 @@
         "title": "Obrolan pertamamu tinggal satu ketukan",
         "subtitle": "Gratis diunduh, gratis untuk mulai. Seseorang sedang belajar bahasamu sekarang.",
         "web": "Atau gunakan BananaTalk di web"
+      }
+    },
+    "screens": {
+      "title": "Lihat aplikasinya",
+      "items": {
+        "aiStudy": {
+          "title": "Belajar AI",
+          "body": "Paket harian, tutor AI, dan latihan yang cukup lima menit."
+        },
+        "community": {
+          "title": "Kecocokan harian",
+          "body": "Partner baru setiap hari yang belajar bahasamu sementara kamu belajar bahasa mereka."
+        },
+        "moments": {
+          "title": "Momen & Reels",
+          "body": "Bagikan harimu, tonton reels, dan dapatkan koreksi dari penutur asli."
+        }
       }
     }
   },

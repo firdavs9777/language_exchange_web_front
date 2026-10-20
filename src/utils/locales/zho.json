@@ -878,7 +878,8 @@
       "forYou": "推荐",
       "following": "关注",
       "explore": "发现",
-      "trending": "热门"
+      "trending": "热门",
+      "reels": "Reels"
     },
     "following": {
       "empty": "关注别人，才能在这里看到他们的动态",
@@ -1052,7 +1053,8 @@
       "denied": "麦克风权限被拒绝。请允许使用麦克风以录制语音。",
       "stop": "停止录音并发送",
       "unsupported": "此浏览器不支持录音。"
-    }
+    },
+    "goVip": "升级 VIP"
   },
   "createMoment": {
     "title": "发布动态",
@@ -1283,7 +1285,12 @@
       "label": "社区标签页",
       "today": "今天",
       "serious": "认真学习者",
-      "seriousHint": "本周活跃"
+      "seriousHint": "本周活跃",
+      "matches": "配对",
+      "partners": "语伴",
+      "gatherings": "聚会",
+      "rooms": "聊天室",
+      "partnersViews": "语伴视图"
     },
     "filters": {
       "language": "语言",
@@ -1428,7 +1435,13 @@
       "retry": "重试",
       "waved": "已打招呼"
     },
-    "mutualExchange": "你们正在学习彼此的语言"
+    "mutualExchange": "你们正在学习彼此的语言",
+    "appOnly": {
+      "gatheringsTitle": "聚会功能在 App 中",
+      "gatheringsBody": "在 BananaTalk App 中，找到正在学你语言的人一起参加俱乐部和聚会。",
+      "roomsTitle": "聊天室功能在 App 中",
+      "roomsBody": "在 BananaTalk App 中，按语言和话题加入群聊，或创建你自己的聊天室。"
+    }
   },
   "communityDetail": {
     "errors": {
@@ -2243,6 +2256,23 @@
         "title": "第一次对话，只需轻点一下",
         "subtitle": "免费下载，免费开始。此刻就有人在学习你的语言。",
         "web": "或在网页上使用 BananaTalk"
+      }
+    },
+    "screens": {
+      "title": "看看 App",
+      "items": {
+        "aiStudy": {
+          "title": "AI 学习",
+          "body": "每日学习包、AI 导师，以及五分钟就能完成的练习。"
+        },
+        "community": {
+          "title": "每日配对",
+          "body": "每天结识新语伴，他们学你的语言，你学他们的。"
+        },
+        "moments": {
+          "title": "动态与 Reels",
+          "body": "分享你的日常、观看 Reels，并请母语者帮你修改。"
+        }
       }
     }
   },

@@ -32,27 +32,42 @@ function renderNav(props: Partial<React.ComponentProps<typeof CommunitySubNav>> 
 }
 
 describe("the community sub-nav", () => {
-  it("offers the five in-page tabs inside one tablist, in app order", () => {
-    renderNav();
+  // The app's row: Matches · Partners · Gatherings · Rooms. Matches only
+  // shows with today's matches on; Partners' views are a second tablist.
+  it("offers the app's top tabs, then the Partners views, in app order", () => {
+    renderNav({ showToday: true });
 
-    const tabs = screen.getAllByRole("tab");
-    expect(tabs.map((tab) => tab.textContent)).toEqual([
-      "communityMain.tabs.forYou",
+    const [top, views] = screen.getAllByRole("tablist");
+    expect(Array.from(top.querySelectorAll('[role="tab"]')).map((tab) => tab.textContent)).toEqual([
+      "communityMain.tabs.matches",
+      "communityMain.tabs.partners",
+      "communityMain.tabs.gatherings",
+      "communityMain.tabs.rooms",
+    ]);
+    expect(Array.from(views.querySelectorAll('[role="tab"]')).map((tab) => tab.textContent)).toEqual([
       "communityMain.tabs.all",
+      "communityMain.tabs.forYou",
       "communityMain.tabs.serious",
       "communityMain.tabs.online",
       "communityMain.tabs.new",
     ]);
   });
 
-  it("marks only the active tab as selected", () => {
+  it("shows no Partners views off the Partners tab", () => {
+    renderNav({ activeTab: "today" as CommunityNavTab, showToday: true });
+    expect(screen.getAllByRole("tablist")).toHaveLength(1);
+  });
+
+  it("marks Partners and the active view as selected", () => {
     renderNav({ activeTab: "online" as CommunityNavTab });
 
     const selected = screen
       .getAllByRole("tab")
       .filter((tab) => tab.getAttribute("aria-selected") === "true");
-    expect(selected).toHaveLength(1);
-    expect(selected[0]).toHaveTextContent("communityMain.tabs.online");
+    expect(selected.map((tab) => tab.textContent)).toEqual([
+      "communityMain.tabs.partners",
+      "communityMain.tabs.online",
+    ]);
   });
 
   it("hands an in-page tab back to the page instead of navigating", () => {
@@ -79,8 +94,8 @@ describe("the community sub-nav", () => {
       "href",
       "/topics"
     );
-    // ...and they are not tabs.
-    expect(screen.getAllByRole("tab")).toHaveLength(5);
+    // ...and they are not tabs (3 top tabs without Matches, 5 Partners views).
+    expect(screen.getAllByRole("tab")).toHaveLength(8);
   });
 
   // A page you are leaving should not first rewrite the URL you are leaving:

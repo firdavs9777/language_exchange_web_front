@@ -878,7 +878,8 @@
       "forYou": "Para Sa'yo",
       "following": "Sinusundan",
       "explore": "Tuklasin",
-      "trending": "Trending"
+      "trending": "Trending",
+      "reels": "Reels"
     },
     "following": {
       "empty": "Sundan ang mga tao para makita ang kanilang mga sandali dito",
@@ -1052,7 +1053,8 @@
       "denied": "Tinanggihan ang access sa mikropono. Payagan ang access sa mikropono para mag-record ng voice note.",
       "stop": "Ihinto ang recording at ipadala",
       "unsupported": "Hindi sinusuportahan ng browser na ito ang voice recording."
-    }
+    },
+    "goVip": "Mag-VIP"
   },
   "createMoment": {
     "title": "Gumawa ng Sandali",
@@ -1283,7 +1285,12 @@
       "label": "Mga tab ng komunidad",
       "today": "Ngayon",
       "serious": "Seryosong nag-aaral",
-      "seriousHint": "Aktibo ngayong linggo"
+      "seriousHint": "Aktibo ngayong linggo",
+      "matches": "Mga Match",
+      "partners": "Mga Partner",
+      "gatherings": "Mga Pagtitipon",
+      "rooms": "Mga Room",
+      "partnersViews": "Mga view ng partner"
     },
     "filters": {
       "language": "Wika",
@@ -1428,7 +1435,13 @@
       "retry": "Subukan ulit",
       "waved": "Kinawayan na"
     },
-    "mutualExchange": "Pinag-aaralan ninyo ang wika ng isa't isa"
+    "mutualExchange": "Pinag-aaralan ninyo ang wika ng isa't isa",
+    "appOnly": {
+      "gatheringsTitle": "Nasa app ang mga pagtitipon",
+      "gatheringsBody": "Maghanap ng mga club at meetup kasama ang mga nag-aaral ng wika mo, sa BananaTalk app.",
+      "roomsTitle": "Nasa app ang mga room",
+      "roomsBody": "Sumali sa mga group chat ayon sa wika at paksa, o gumawa ng sarili mong room, sa BananaTalk app."
+    }
   },
   "communityDetail": {
     "errors": {
@@ -2243,6 +2256,23 @@
         "title": "Isang tap na lang ang unang usapan mo",
         "subtitle": "Libreng i-download, libreng magsimula. May nag-aaral ng wika mo ngayon mismo.",
         "web": "O gamitin ang BananaTalk sa web"
+      }
+    },
+    "screens": {
+      "title": "Tingnan ang app",
+      "items": {
+        "aiStudy": {
+          "title": "AI Study",
+          "body": "Isang pang-araw-araw na pack, AI tutor, at praktis na kasya sa limang minuto."
+        },
+        "community": {
+          "title": "Mga match araw-araw",
+          "body": "Bagong mga partner araw-araw na nag-aaral ng wika mo habang inaaral mo ang sa kanila."
+        },
+        "moments": {
+          "title": "Moments at Reels",
+          "body": "Ibahagi ang araw mo, manood ng reels, at magpatama sa mga katutubong nagsasalita."
+        }
       }
     }
   },

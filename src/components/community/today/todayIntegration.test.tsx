@@ -86,12 +86,14 @@ describe("Today on /communities", () => {
     expect(router.state.location.search).toBe("");
   });
 
-  it("Today hides filters, search and the carousel, and writes no filter params", async () => {
+  // As in the app, Matches keeps the filter button (applying it shows
+  // Partners) but has no search box, and writes no filter params.
+  it("Matches hides search and the carousel, keeps the filter button, and writes no filter params", async () => {
     const router = renderAt("/communities");
     await screen.findByText("Daily One");
     expect((router as any).container.querySelector(".community-subnav__search")).toBeNull();
-    expect(screen.queryByLabelText(/communityMain\.subnav\.filters/)).not.toBeInTheDocument();
-    expect((router as any).container.querySelector("#community-tab-today")).not.toBeNull();
+    expect(screen.getByLabelText(/communityMain\.subnav\.filters/)).toBeInTheDocument();
+    expect((router as any).container.querySelector("#community-tab-matches")).not.toBeNull();
     expect(router.state.location.search).toBe("");
   });
 
