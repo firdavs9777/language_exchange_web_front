@@ -7,13 +7,12 @@ import {
   FaRedo,
   FaTimes,
 } from "react-icons/fa";
-import { Compass, Film, PenLine, Sparkles, TrendingUp, Users, X } from "lucide-react";
+import { Crown, PenLine, Search, SlidersHorizontal, Sparkles, TrendingUp, Users, X } from "lucide-react";
 import { useWebFlag } from "../../utils/webFlags";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Pagination from "../../composables/Pagination";
 import {
-  useGetExploreMomentsQuery,
   useGetMomentsQuery,
   useGetPromptOfDayQuery,
   useGetTrendingMomentsQuery,
@@ -32,6 +31,7 @@ import {
 import SingleMoment from "./SingleMoment";
 import { MomentType } from "./types";
 import StoriesFeed from "../stories/StoriesFeed";
+import { isVipUser } from "../ads/adsGate";
 import AdUnit from "../ads/AdUnit";
 import { AD_SLOTS } from "../ads/adsenseConfig";
 
@@ -41,9 +41,13 @@ interface User {
   images?: string[];
   imageUrls?: string[];
   language_to_learn?: string;
+  userMode?: string;
+  vipSubscription?: { isActive?: boolean } | null;
 }
 
-type FeedTab = "forYou" | "trending" | "explore" | "following";
+// Same order as the app: For You, Reels, Following, Trending. Reels is the
+// /reels page (behind webReelsEnabled), so it is a link in the tab row.
+type FeedTab = "forYou" | "following" | "trending";
 
 interface PromptOfDay {
   text?: string;
@@ -78,13 +82,6 @@ interface MomentsResponse {
   };
 }
 
-interface CreatePostCardProps {
-  userImage: string;
-  userName: string;
-  handleAddMoment: () => void;
-  t: (key: string) => string;
-}
-
 interface LoadingStateProps {
   t: (key: string) => string;
 }
@@ -97,46 +94,6 @@ interface ErrorStateProps {
 interface FloatingActionButtonProps {
   onClick: () => void;
 }
-
-// Mobile-optimized Create Post Card
-const CreatePostCard: React.FC<CreatePostCardProps> = ({
-  userImage,
-  userName,
-  handleAddMoment,
-  t,
-}) => (
-  <div className="relative mb-4 sm:mb-6 overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-br from-white/80 to-gray-50/50 backdrop-blur-xl border border-white/20 shadow-xl">
-    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5"></div>
-    <div className="relative p-3 sm:p-6">
-      <div className="flex items-center gap-2 sm:gap-4">
-        <div className="relative">
-          <div className="relative overflow-hidden rounded-full ring-2 ring-white/50 shadow-lg">
-            <img
-              src={userImage}
-              alt="User"
-              className="h-8 w-8 sm:h-12 sm:w-12 object-cover transition-transform duration-300 hover:scale-110"
-            />
-          </div>
-          <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 sm:h-4 sm:w-4 rounded-full bg-gradient-to-r from-green-400 to-green-500 ring-2 ring-white shadow-sm"></div>
-        </div>
-        <button
-          onClick={handleAddMoment}
-          className="group flex-1 rounded-full bg-white/60 backdrop-blur-sm border border-white/30 px-3 py-2 sm:px-6 sm:py-3 text-left shadow-lg transition-all duration-300 hover:bg-white/80 hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
-        >
-          <span className="text-sm sm:text-base text-gray-600 font-medium group-hover:text-gray-700 transition-colors">
-            {t("moments_section.question")} {userName.split(" ")[0]}?
-          </span>
-        </button>
-        <button
-          onClick={handleAddMoment}
-          className="hidden sm:group sm:flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-110 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-400/50"
-        >
-          <FaPlus className="h-4 w-4 text-white transition-transform group-hover:rotate-90" />
-        </button>
-      </div>
-    </div>
-  </div>
-);
 
 // Mobile-optimized loading state
 const LoadingState: React.FC<LoadingStateProps> = ({ t }) => (
@@ -191,10 +148,10 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-  <div className="bt-lift-above-tabs fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 lg:hidden">
+  <div className="bt-lift-above-tabs fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
     <button
       onClick={onClick}
-      className="group flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 shadow-2xl transition-all duration-300 hover:shadow-3xl hover:scale-110 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-400/50 active:scale-95"
+      className="group flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500 shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-400/50 active:scale-95"
       aria-label={t("moments_section.create.header") || "Create moment"}
     >
       <FaPlus className="h-4 w-4 sm:h-5 sm:w-5 text-white transition-transform group-hover:rotate-90" />
@@ -245,6 +202,12 @@ const MainMoments: React.FC = () => {
   // Feed tab state (For You / Trending / Explore)
   const [activeTab, setActiveTab] = useState<FeedTab>("forYou");
   const [promptDismissed, setPromptDismissed] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(() => !!filters.q);
+  const [searchDraft, setSearchDraft] = useState(filters.q || "");
+  useEffect(() => {
+    setSearchDraft(filters.q || "");
+  }, [filters.q]);
 
   // Fetch only the active tab's feed; other tabs are skipped (lazy).
   const forYouFeed = useGetMomentsQuery(
@@ -255,10 +218,6 @@ const MainMoments: React.FC = () => {
     { page: currentPage, limit, filters: queryFilters },
     { skip: activeTab !== "trending" }
   );
-  const exploreFeed = useGetExploreMomentsQuery(
-    { page: currentPage, limit, filters: queryFilters },
-    { skip: activeTab !== "explore" }
-  );
   const followingFeed = useGetMomentsQuery(
     { page: currentPage, limit, feed: "following", filters: queryFilters },
     { skip: activeTab !== "following" }
@@ -268,8 +227,6 @@ const MainMoments: React.FC = () => {
   const activeFeed =
     activeTab === "trending"
       ? trendingFeed
-      : activeTab === "explore"
-      ? exploreFeed
       : activeTab === "following"
       ? followingFeed
       : forYouFeed;
@@ -292,16 +249,6 @@ const MainMoments: React.FC = () => {
         label: t("moments_section.tabs.forYou") || "For You",
         Icon: Sparkles,
       },
-      {
-        key: "trending",
-        label: t("moments_section.tabs.trending") || "Trending",
-        Icon: TrendingUp,
-      },
-      {
-        key: "explore",
-        label: t("moments_section.tabs.explore") || "Explore",
-        Icon: Compass,
-      },
     ];
     if (userInfo?.user) {
       tabs.push({
@@ -310,6 +257,11 @@ const MainMoments: React.FC = () => {
         Icon: Users,
       });
     }
+    tabs.push({
+      key: "trending",
+      label: t("moments_section.tabs.trending") || "Trending",
+      Icon: TrendingUp,
+    });
     return tabs;
   }, [t, userInfo]);
 
@@ -322,17 +274,6 @@ const MainMoments: React.FC = () => {
       setCurrentPage(1);
     }
   }, [activeTab, userInfo, setCurrentPage]);
-
-  // Memoize user data with proper typing
-  const { userName, userImage } = useMemo(
-    () => ({
-      userName: userInfo?.user?.name || "User",
-      userImage:
-        userInfo?.user?.imageUrls?.[0] ||
-        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face",
-    }),
-    [userInfo]
-  );
 
   // Prompt of the day (For You tab only). Degrades gracefully on 404/error.
   const promptLanguage = userInfo?.user?.language_to_learn || undefined;
@@ -380,6 +321,29 @@ const MainMoments: React.FC = () => {
   const totalPages = pagination ? pagination.totalPages || 1 : 1;
   const filtersActive = hasMomentFilters(filters);
 
+  const isVip = isVipUser(userInfo?.user);
+
+  // Header search writes the same `q` filter the filter panel does.
+  const submitSearch = useCallback(
+    (event: React.FormEvent) => {
+      event.preventDefault();
+      const q = searchDraft.trim();
+      const next: MomentFilters = { ...filters, q: q || undefined };
+      if (!q) delete next.q;
+      applyFilters(next);
+    },
+    [searchDraft, filters, applyFilters]
+  );
+
+  const closeSearch = useCallback(() => {
+    setSearchOpen(false);
+    if (filters.q) {
+      const next: MomentFilters = { ...filters };
+      delete next.q;
+      applyFilters(next);
+    }
+  }, [filters, applyFilters]);
+
   // Callback for adding a new moment
   const handleAddMoment = useCallback(() => {
     navigate("/add-moment");
@@ -404,49 +368,105 @@ const MainMoments: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
 
           <div className="relative">
+            {/* Header: title, VIP badge, search (the app's Moments app bar) */}
+            <div className="flex items-center gap-3 px-3 sm:px-4 lg:px-6 pt-3 sm:pt-4 pb-2">
+              {searchOpen ? (
+                <form role="search" onSubmit={submitSearch} className="flex-1">
+                  <input
+                    type="search"
+                    autoFocus
+                    value={searchDraft}
+                    maxLength={100}
+                    onChange={(e) => setSearchDraft(e.target.value)}
+                    placeholder={t("moments_section.filters.searchPlaceholder") || "Search moments"}
+                    aria-label={t("moments_section.filters.searchPlaceholder") || "Search moments"}
+                    className="w-full rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-800 focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-400/30"
+                  />
+                </form>
+              ) : (
+                <div className="flex flex-1 items-center gap-2 min-w-0">
+                  <h1 className="text-2xl font-bold text-gray-900 truncate">
+                    {t("moments") || "Moments"}
+                  </h1>
+                  {userInfo?.user &&
+                    (isVip ? (
+                      <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-amber-400 to-yellow-400 px-2 py-0.5 text-xs font-bold text-white shadow-sm">
+                        <Crown className="h-3.5 w-3.5" aria-hidden="true" />
+                        VIP
+                      </span>
+                    ) : (
+                      <Link
+                        to="/settings/vip"
+                        className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700 hover:bg-amber-100"
+                      >
+                        <Crown className="h-3.5 w-3.5" aria-hidden="true" />
+                        {t("moments_section.goVip") || "Go VIP"}
+                      </Link>
+                    ))}
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => (searchOpen ? closeSearch() : setSearchOpen(true))}
+                aria-label={searchOpen ? t("close") || "Close" : t("moments_section.filters.search") || "Search"}
+                className="flex h-10 w-10 items-center justify-center rounded-full text-gray-800 hover:bg-gray-100"
+              >
+                {searchOpen ? <X className="h-5 w-5" /> : <Search className="h-6 w-6" />}
+              </button>
+            </div>
+
             {/* Stories ring strip */}
-            <div className="px-3 sm:px-4 lg:px-6 pt-3 sm:pt-4">
+            <div className="bg-gray-50/80 px-3 sm:px-4 lg:px-6 py-3">
               <StoriesFeed />
             </div>
 
-            {/* Create post area */}
-            <div className="p-3 sm:p-4 lg:p-6">
-              <CreatePostCard
-                userImage={userImage}
-                userName={userName}
-                handleAddMoment={handleAddMoment}
-                t={t}
-              />
-            </div>
-
-            <div className="px-3 sm:px-4 lg:px-6">
-              {/* Feed tabs: For You / Trending / Explore */}
-              <div
-                role="tablist"
-                aria-label="Feed"
-                className="mb-4 flex gap-1 rounded-full bg-white/60 dark:bg-gray-800/50 backdrop-blur-sm border border-white/30 dark:border-gray-700/50 p-1 shadow-lg"
-              >
-                {feedTabs.map(({ key, label, Icon }) => {
+            {/* Feed tabs: For You / Reels / Following / Trending + filter */}
+            <div className="flex items-center border-b border-gray-200 px-1 sm:px-3 lg:px-5">
+              <div role="tablist" aria-label="Feed" className="flex flex-1 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+                {feedTabs.map(({ key, label }, index) => {
                   const isActive = activeTab === key;
                   return (
-                    <button
-                      key={key}
-                      role="tab"
-                      aria-selected={isActive}
-                      onClick={() => handleTabChange(key)}
-                      className={`flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2 text-xs sm:text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-teal-400/50 ${
-                        isActive
-                          ? "bg-gradient-to-r from-teal-500 to-indigo-500 text-white shadow"
-                          : "text-gray-600 dark:text-gray-300 hover:bg-white/70 dark:hover:bg-gray-700/50"
-                      }`}
-                    >
-                      <Icon className="h-4 w-4" />
-                      <span>{label}</span>
-                    </button>
+                    <React.Fragment key={key}>
+                      <button
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => handleTabChange(key)}
+                        className={`relative whitespace-nowrap px-3 sm:px-4 py-3 text-base transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/50 ${
+                          isActive ? "font-bold text-gray-900" : "font-medium text-gray-600 hover:text-gray-900"
+                        }`}
+                      >
+                        {label}
+                        {isActive && <span className="absolute inset-x-1 bottom-0 h-[3px] rounded-full bg-teal-500" />}
+                      </button>
+                      {/* Reels sits second, as in the app; it is its own page. */}
+                      {index === 0 && reelsOn && userInfo?.user && (
+                        <Link
+                          to="/reels"
+                          data-testid="moments-reels-link"
+                          className="whitespace-nowrap px-3 sm:px-4 py-3 text-base font-medium text-gray-600 hover:text-gray-900"
+                        >
+                          {t("moments_section.tabs.reels") || "Reels"}
+                        </Link>
+                      )}
+                    </React.Fragment>
                   );
                 })}
               </div>
+              <button
+                type="button"
+                onClick={() => setFiltersOpen((v) => !v)}
+                aria-expanded={filtersOpen}
+                aria-label={t("moments_section.filters.button") || "Filters"}
+                className={`relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full hover:bg-gray-100 ${
+                  filtersActive ? "text-teal-600" : "text-gray-800"
+                }`}
+              >
+                <SlidersHorizontal className="h-5 w-5" />
+                {filtersActive && <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-teal-500" />}
+              </button>
+            </div>
 
+            <div className="px-3 sm:px-4 lg:px-6 pt-3">
               {/* Prompt of the Day (For You tab only) */}
               {showPrompt && promptOfDay && (
                 <div className="mb-4 relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-br from-teal-50/80 to-indigo-50/60 dark:from-teal-900/30 dark:to-indigo-900/20 backdrop-blur-xl border border-teal-200/40 dark:border-teal-700/40 shadow-lg">
@@ -485,24 +505,8 @@ const MainMoments: React.FC = () => {
                 </div>
               )}
 
-              <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-                  Stories list
-                </h1>
-                {reelsOn && userInfo && (
-                  <Link
-                    to="/reels"
-                    data-testid="moments-reels-link"
-                    className="inline-flex items-center gap-1.5 rounded-full bg-gray-900 px-3 py-1.5 text-sm font-bold text-white"
-                  >
-                    <Film className="h-4 w-4" aria-hidden="true" />
-                    {t("reels.moments_link") || "Watch reels"}
-                  </Link>
-                )}
-              </div>
-
-              {/* Filter Component */}
-              <MomentFiltersBar filters={filters} onChange={applyFilters} />
+              {/* Filter panel, opened from the tab row's sliders icon */}
+              <MomentFiltersBar filters={filters} onChange={applyFilters} open={filtersOpen} hideToggle />
             </div>
 
             {/* Content states */}

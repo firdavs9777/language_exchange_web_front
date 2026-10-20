@@ -8,6 +8,10 @@ import { languageOptions } from "./lib/languageOptions";
 interface Props {
   filters: MomentFilters;
   onChange: (next: MomentFilters) => void;
+  /** Controlled panel state, for a caller that renders its own toggle. */
+  open?: boolean;
+  /** Hide the bar's own "Filters" button (the caller renders the toggle). */
+  hideToggle?: boolean;
 }
 
 const SELECT =
@@ -18,10 +22,11 @@ const LABEL = "mb-1 block text-xs font-medium text-gray-600";
  * The moments feed's filter bar. It only edits the filter state; the server
  * does the filtering, over every moment rather than the page on screen.
  */
-const MomentFiltersBar: React.FC<Props> = ({ filters, onChange }) => {
+const MomentFiltersBar: React.FC<Props> = ({ filters, onChange, open: openProp, hideToggle }) => {
   const { t, i18n } = useTranslation();
   const tr = (key: string, fallback: string) => t(key) || fallback;
-  const [open, setOpen] = useState(false);
+  const [openState, setOpen] = useState(false);
+  const open = openProp !== undefined ? openProp : openState;
   const [searchInput, setSearchInput] = useState(filters.q || "");
 
   // A Back/Forward or a cleared filter changes `q` from outside.
@@ -47,12 +52,12 @@ const MomentFiltersBar: React.FC<Props> = ({ filters, onChange }) => {
 
   return (
     <div className="mb-4">
-      <div className="flex items-center justify-between gap-2">
+      <div className={`flex items-center justify-between gap-2 ${hideToggle && !active ? "hidden" : ""}`}>
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white/80 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-white"
+          className={`${hideToggle ? "hidden" : "flex"} items-center gap-2 rounded-lg border border-gray-200 bg-white/80 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-white`}
         >
           <FaFilter className="h-4 w-4 text-gray-600" />
           <span>{tr("moments_section.filters.button", "Filters")}</span>

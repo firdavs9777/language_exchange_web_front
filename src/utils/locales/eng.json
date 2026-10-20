@@ -878,7 +878,8 @@
       "forYou": "For You",
       "following": "Following",
       "explore": "Explore",
-      "trending": "Trending"
+      "trending": "Trending",
+      "reels": "Reels"
     },
     "following": {
       "empty": "Follow people to see their moments here",
@@ -1052,7 +1053,8 @@
       "denied": "Microphone access was denied. Please allow microphone access to record a voice note.",
       "cancel": "Cancel recording",
       "stop": "Stop recording and send"
-    }
+    },
+    "goVip": "Go VIP"
   },
   "createMoment": {
     "title": "Create Moment",
