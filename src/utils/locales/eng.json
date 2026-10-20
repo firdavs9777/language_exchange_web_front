@@ -1285,7 +1285,12 @@
       "label": "Community tabs",
       "today": "Today",
       "serious": "Serious learners",
-      "seriousHint": "Active this week"
+      "seriousHint": "Active this week",
+      "matches": "Matches",
+      "partners": "Partners",
+      "gatherings": "Gatherings",
+      "rooms": "Rooms",
+      "partnersViews": "Partner views"
     },
     "filters": {
       "language": "Language",
@@ -1410,7 +1415,7 @@
       "same_country": "Same country"
     },
     "today": {
-      "title": "Today's matches ({{count}})",
+      "title": "Your {{count}} matches today",
       "refreshes": "Refreshes at {{time}}",
       "refreshesMidnight": "Refreshes at midnight",
       "emptyTitle": "That's everyone for today",
@@ -1430,7 +1435,13 @@
       "retry": "Try again",
       "waved": "Waved"
     },
-    "mutualExchange": "You're learning each other's language"
+    "mutualExchange": "You're learning each other's language",
+    "appOnly": {
+      "gatheringsTitle": "Gatherings are in the app",
+      "gatheringsBody": "Find clubs and meetups with people learning your language, in the BananaTalk app.",
+      "roomsTitle": "Rooms are in the app",
+      "roomsBody": "Join group chats by language and topic, or start your own room, in the BananaTalk app."
+    }
   },
   "communityNearby": {
     "title": "Nearby Users",

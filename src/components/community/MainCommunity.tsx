@@ -16,6 +16,7 @@ import { RootState } from "../../store";
 import { useDebounce } from "./utils";
 
 import CommunitySubNav, { CommunityNavTab } from "./tandem/CommunitySubNav";
+import AppOnlyTab from "./AppOnlyTab";
 import TodayTab from "./today/TodayTab";
 import { DailyMatch } from "./today/types";
 import { photoUrl } from "./today/dailyMatchView";
@@ -277,6 +278,8 @@ const ModernCommunity: React.FC = () => {
   const activeTab: CommunityNavTab = urlTab === "today" && todayOff ? "all" : urlTab;
   const isForYou = activeTab === "foryou";
   const isToday = activeTab === "today";
+  // Gatherings and Rooms live in the app for now; the tabs say so.
+  const isAppOnly = activeTab === "gatherings" || activeTab === "rooms";
 
   /**
    * Online and New are the All list with one switch held down. The member
@@ -502,7 +505,7 @@ const ModernCommunity: React.FC = () => {
     error: errorInfo,
     refetch,
   } = useGetCommunityMembersQuery(queryArg, {
-    skip: isForYou || isToday || appConfigLoading,
+    skip: isForYou || isToday || isAppOnly || appConfigLoading,
     // Re-read the visible page on tab return so the list is not stale; only
     // this subscription refetches, once per focus.
     refetchOnFocus: true,
@@ -730,10 +733,11 @@ const ModernCommunity: React.FC = () => {
 
   const applyFilters = useCallback(
     (next: CommunityFilters) => {
-      applyState({ filters: next });
+      // As in the app: filtering from a tab that has no list shows Partners.
+      applyState(isToday || isAppOnly ? { filters: next, tab: "all" } : { filters: next });
       setIsFilterSheetOpen(false);
     },
-    [applyState]
+    [applyState, isToday, isAppOnly]
   );
 
   // Reset ALL discovery filters back to defaults (used by the sheet's
@@ -912,8 +916,8 @@ const ModernCommunity: React.FC = () => {
         onOpenFilters={openFilterSheet}
         hasActiveFilters={activeFilterCount > 0}
         activeFilterCount={activeFilterCount}
-        showFilterButton={!isForYou && !isToday}
-        showSearch={!isForYou && !isToday}
+        showFilterButton={!isForYou}
+        showSearch={!isForYou && !isToday && !isAppOnly}
         showToday={signedIn && !todayOff}
         visitorsCount={activeTab === "all" ? visitorsTotal : 0}
       />
@@ -957,7 +961,7 @@ const ModernCommunity: React.FC = () => {
         {/* No filter or sort control on "For you": the tab is the server's
             answer to who you should meet, and a control that cannot change the
             answer is worse than no control. */}
-        {!isForYou && (
+        {!isForYou && !isToday && !isAppOnly && (
           <>
             <QuickFilterChips
               filters={effectiveFilters}
@@ -978,7 +982,9 @@ const ModernCommunity: React.FC = () => {
           </>
         )}
 
-        {isToday ? (
+        {isAppOnly ? (
+          <AppOnlyTab kind={activeTab as "gatherings" | "rooms"} />
+        ) : isToday ? (
           <TodayTab
             response={dailyData as any}
             isLoading={dailyLoading}

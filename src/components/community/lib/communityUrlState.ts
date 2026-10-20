@@ -39,7 +39,9 @@ export type CommunityUrlTab =
   | 'online'
   | 'new'
   | 'nearby'
-  | 'topics';
+  | 'topics'
+  | 'gatherings'
+  | 'rooms';
 
 export interface CommunityUrlState {
   filters: CommunityFilters;
@@ -90,6 +92,8 @@ const TABS: CommunityUrlTab[] = [
   'new',
   'nearby',
   'topics',
+  'gatherings',
+  'rooms',
 ];
 
 /** Mirrors the filter sheet's own bounds (CommunityFilterSheet.tsx). */

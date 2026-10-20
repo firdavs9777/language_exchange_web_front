@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
-  CalendarHeart,
   Hash,
   MapPin,
   Radio,
@@ -35,7 +34,23 @@ export type CommunityNavTab =
   | "online"
   | "new"
   | "nearby"
-  | "topics";
+  | "topics"
+  | "gatherings"
+  | "rooms";
+
+/**
+ * The app's top row: Matches · Partners · Gatherings · Rooms. Matches is the
+ * `today` tab; Partners is the member list, whose four views (All, For you,
+ * Online, New) keep their own `?tab=` keys and show as a second row of chips.
+ */
+const PARTNER_VIEWS: CommunityNavTab[] = ["all", "foryou", "serious", "online", "new"];
+
+const TOP_TABS: { id: CommunityNavTab; copyKey: string; fallback: string }[] = [
+  { id: "today", copyKey: "communityMain.tabs.matches", fallback: "Matches" },
+  { id: "all", copyKey: "communityMain.tabs.partners", fallback: "Partners" },
+  { id: "gatherings", copyKey: "communityMain.tabs.gatherings", fallback: "Gatherings" },
+  { id: "rooms", copyKey: "communityMain.tabs.rooms", fallback: "Rooms" },
+];
 
 /** The tabs rendered in place, in the order the app shows them. */
 const IN_PAGE_TABS: {
@@ -44,19 +59,13 @@ const IN_PAGE_TABS: {
   fallback: string;
   Icon?: React.ComponentType<{ size?: number }>;
 }[] = [
-  {
-    id: "today",
-    copyKey: "communityMain.tabs.today",
-    fallback: "Today",
-    Icon: CalendarHeart,
-  },
+  { id: "all", copyKey: "communityMain.tabs.all", fallback: "All" },
   {
     id: "foryou",
     copyKey: "communityMain.tabs.forYou",
     fallback: "For you",
     Icon: Sparkles,
   },
-  { id: "all", copyKey: "communityMain.tabs.all", fallback: "All" },
   {
     // The app's "Serious learners" segment (partner_segment_chips.dart):
     // the All list, active this week.
@@ -147,27 +156,25 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
             aria-label={t("communityMain.tabs.label") || "Community tabs"}
             className="flex items-center gap-2 flex-nowrap"
           >
-            {IN_PAGE_TABS.filter(({ id }) => showToday || id !== "today").map(({ id, copyKey, fallback, Icon }) => {
-              const active = activeTab === id;
+            {TOP_TABS.filter(({ id }) => showToday || id !== "today").map(({ id, copyKey, fallback }) => {
+              const active =
+                id === "all" ? PARTNER_VIEWS.indexOf(activeTab) >= 0 : activeTab === id;
               return (
                 <button
                   key={id}
                   type="button"
                   role="tab"
-                  id={`community-tab-${id}`}
+                  id={`community-tab-${id === "all" ? "partners" : id === "today" ? "matches" : id}`}
                   aria-selected={active}
                   tabIndex={active ? 0 : -1}
                   ref={active ? activeRef : undefined}
-                  className={`community-subnav__btn shrink-0 ${
-                    Icon ? "community-subnav__btn--icon" : ""
-                  } ${active ? "community-subnav__btn--active" : ""}`}
-                  onClick={() => onTabChange(id)}
+                  className={`community-subnav__btn shrink-0 ${active ? "community-subnav__btn--active" : ""}`}
+                  onClick={() => {
+                    // Partners keeps whichever view the member was already on.
+                    if (id === "all" && PARTNER_VIEWS.indexOf(activeTab) >= 0) return;
+                    onTabChange(id);
+                  }}
                 >
-                  {Icon && (
-                    <span className="community-subnav__icon">
-                      <Icon size={14} />
-                    </span>
-                  )}
                   <span>{t(copyKey) || fallback}</span>
                 </button>
               );
@@ -217,6 +224,36 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
             </>
           )}
         </div>
+
+        {PARTNER_VIEWS.indexOf(activeTab) >= 0 && (
+          <div
+            role="tablist"
+            aria-label={t("communityMain.tabs.partnersViews") || "Partner views"}
+            className="order-last flex w-full items-center gap-2 overflow-x-auto flex-nowrap [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {IN_PAGE_TABS.map(({ id, copyKey, fallback, Icon }) => {
+              const active = activeTab === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  role="tab"
+                  id={`community-tab-${id}`}
+                  aria-selected={active}
+                  onClick={() => onTabChange(id)}
+                  className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium transition-colors ${
+                    active
+                      ? "border-teal-500 bg-teal-50 text-teal-700 dark:bg-teal-500/15 dark:text-teal-200"
+                      : "border-gray-200 text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
+                  }`}
+                >
+                  {Icon && <Icon size={13} />}
+                  <span>{t(copyKey) || fallback}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         <div className="community-subnav__actions">
           {/* Governed only by its own guard -- it must not vanish just
