@@ -25,6 +25,7 @@ An audit (2026-10-21) found the current setup cannot deliver this:
    - Headline numbers: visitors, page views, web sign-ups, active members, pages per visit, average visit duration.
    - Line chart: visitors and page views per day (per day for week and month views; per hour for the day view).
    - Countries, sources (search, social, direct, campaigns), top pages with average time, visitor-to-member funnel, devices and site languages, members' use by section.
+   - **App store clicks** (promotion results): iOS and Android taps over time; by button (hero, download page, sticky banner, popup and others); and by the source or campaign that brought the visit. This replaces the Reach page's store-tap tables, and the emails carry a summary.
    - App activity from existing models: all-platform sign-ups, active members, messages, moments, new VIP.
 6. **Emailed reports** to every user with `role: 'admin'` that has an email, through the existing Mailgun sender (`utils/sendEmail.js` / `services/emailService.js`):
    - Daily at 09:00 KST for the previous day.
@@ -63,7 +64,8 @@ An audit (2026-10-21) found the current setup cannot deliver this:
 | `page_leave` | when the route changes, on `pagehide`, and when `visibilitychange` goes hidden | `path`, `durationMs` (visible time on that page, capped at 30 min) |
 | `store_tap` | existing | existing |
 | `signup_start` | `/register` is shown | — |
-| `signup_complete` | registration succeeds (email and social) | — |
+
+Completed web sign-ups are not a browser event. They are counted on the server from `User.signupPlatform === 'web'` with `isRegistrationComplete: true`, so an ad blocker can't hide them.
 
 Rules:
 - `sessionId` stays per tab in sessionStorage (existing). A session ends after 30 minutes without an event; the next event starts a new session id.
@@ -103,7 +105,7 @@ Definitions, shown as tooltips on the page:
 - **Visitors:** distinct `visitorId` in the period. A week that crosses a month boundary can count a visitor twice; this is accepted and noted in the tooltip.
 - **Page views:** count of `page_view`.
 - **Visits:** distinct `sessionId`. **Pages per visit:** page views ÷ visits. **Average visit duration:** mean over visits of the summed `page_leave.durationMs`.
-- **Web sign-ups:** `signup_complete` events. **All sign-ups:** `User.createdAt` in the period.
+- **Web sign-ups:** users created in the period with `signupPlatform: 'web'` and `isRegistrationComplete: true`. **All sign-ups:** see Members & VIP below.
 - **Active members:** distinct users with a `UserActivityDay` row in the period. Day, week and month give real DAU, WAU and MAU for any past period. `User.lastActive` is not used, because every request overwrites it. *(Builder-check call: real counts, not approximations.)*
 - **Members' use by section:** distinct `userId` and mean `durationMs` per section. A section is a path prefix: `/chat` Chat, `/communities` + `/community` Community, `/moments` + `/moment` + `/reels` Moments, `/learn` AI Study, `/profile` Profile.
 - **App activity:** reuse the existing counts in `adminReportJob.js` (messages, conversations, moments, stories, calls, new VIP), with the VIP plan field fixed to `plan`.
