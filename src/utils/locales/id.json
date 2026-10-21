@@ -2189,7 +2189,7 @@
       "alt": {
         "chat": "Obrolan BananaTalk dengan penutur asli",
         "study": "Study Hub BananaTalk dengan pelajaran hari ini, XP, dan streak",
-        "community": "Komunitas BananaTalk dengan daftar partner bahasa"
+        "community": "Komunitas BananaTalk dengan kecocokan partner bahasa hari ini"
       },
       "steps": {
         "eyebrow": "Cara kerjanya",
@@ -2242,11 +2242,11 @@
         "community": {
           "eyebrow": "Komunitas",
           "title": "Temukan teman sefrekuensi di seluruh dunia",
-          "body": "Jelajahi kecocokan, masuk ke ruang suara, dan ikuti pertemuan di dekatmu.",
-          "b1": "Pencocokan partner cerdas",
-          "b2": "Ruang suara langsung",
+          "body": "Dapatkan partner baru yang cocok setiap hari, mengobrol di ruang bahasa, dan ikuti pertemuan di dekatmu.",
+          "b1": "Kecocokan harian, dipilih untukmu",
+          "b2": "Ruang bahasa",
           "b3": "Pertemuan lokal",
-          "alt": "Komunitas BananaTalk dengan daftar partner bahasa"
+          "alt": "Komunitas BananaTalk dengan kecocokan partner bahasa hari ini"
         }
       },
       "languages": {

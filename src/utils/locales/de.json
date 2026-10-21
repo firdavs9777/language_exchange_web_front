@@ -2189,7 +2189,7 @@
       "alt": {
         "chat": "Ein BananaTalk-Chat mit einem Muttersprachler",
         "study": "BananaTalk Study Hub mit Tageslektion, XP und Serie",
-        "community": "BananaTalk-Community mit einer Liste von Sprachpartnern"
+        "community": "BananaTalk-Community mit den heutigen Sprachpartner-Matches"
       },
       "steps": {
         "eyebrow": "So funktioniert's",
@@ -2242,11 +2242,11 @@
         "community": {
           "eyebrow": "Community",
           "title": "Finde deine Leute – überall auf der Welt",
-          "body": "Stöbere in Matches, komm in Sprachräume und triff dich bei Treffen in deiner Nähe.",
-          "b1": "Clevere Partner-Matches",
-          "b2": "Live-Sprachräume",
+          "body": "Jeden Tag neue passende Partner, Chats in Sprachräumen und Treffen in deiner Nähe.",
+          "b1": "Tägliche Matches, für dich ausgewählt",
+          "b2": "Sprachräume",
           "b3": "Lokale Treffen",
-          "alt": "BananaTalk-Community mit einer Liste von Sprachpartnern"
+          "alt": "BananaTalk-Community mit den heutigen Sprachpartner-Matches"
         }
       },
       "languages": {

@@ -2189,7 +2189,7 @@
       "alt": {
         "chat": "与母语者的 BananaTalk 聊天",
         "study": "显示每日课程、经验值和连续天数的 BananaTalk 学习中心",
-        "community": "显示语言伙伴列表的 BananaTalk 社区"
+        "community": "BananaTalk 社区，显示今天的语伴配对"
       },
       "steps": {
         "eyebrow": "如何使用",
@@ -2242,11 +2242,11 @@
         "community": {
           "eyebrow": "社区",
           "title": "在世界任何地方找到志同道合的人",
-          "body": "浏览匹配、加入语音房间、参加附近的聚会。",
-          "b1": "智能伙伴匹配",
-          "b2": "实时语音房间",
+          "body": "每天都有新的语伴配对，在语言聊天室聊天，参加你附近的聚会。",
+          "b1": "为你挑选的每日配对",
+          "b2": "语言聊天室",
           "b3": "本地聚会",
-          "alt": "显示语言伙伴列表的 BananaTalk 社区"
+          "alt": "BananaTalk 社区，显示今天的语伴配对"
         }
       },
       "languages": {

@@ -125,7 +125,7 @@ const HomeHero: React.FC = () => {
           />
           <PhoneFrame
             shot="app-community"
-            alt={t("home.v2.alt.community") || "BananaTalk community list of language partners"}
+            alt={t("home.v2.alt.community") || "BananaTalk Community with today's language partner matches"}
             className="absolute end-[0px] top-10 z-10 w-[9.5rem] rotate-6 rtl:-rotate-6 sm:end-2 sm:w-[12.5rem] lg:end-6 lg:w-[14rem]"
           />
           <PhoneFrame

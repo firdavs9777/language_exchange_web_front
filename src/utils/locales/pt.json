@@ -2171,7 +2171,7 @@
       "alt": {
         "chat": "Um chat do BananaTalk com um falante nativo",
         "study": "Study Hub do BananaTalk com a lição do dia, XP e sequência",
-        "community": "Comunidade do BananaTalk com uma lista de parceiros de idioma"
+        "community": "Comunidade do BananaTalk com os matches de parceiros de hoje"
       },
       "steps": {
         "eyebrow": "Como funciona",
@@ -2224,11 +2224,11 @@
         "community": {
           "eyebrow": "Comunidade",
           "title": "Encontre sua turma, em qualquer lugar do mundo",
-          "body": "Veja combinações, entre em salas de voz e participe de encontros perto de você.",
-          "b1": "Combinações inteligentes",
-          "b2": "Salas de voz ao vivo",
+          "body": "Receba novos parceiros todos os dias, converse em salas de idiomas e participe de encontros perto de você.",
+          "b1": "Matches diários, escolhidos para você",
+          "b2": "Salas de idiomas",
           "b3": "Encontros locais",
-          "alt": "Comunidade do BananaTalk com uma lista de parceiros de idioma"
+          "alt": "Comunidade do BananaTalk com os matches de parceiros de hoje"
         }
       },
       "languages": {

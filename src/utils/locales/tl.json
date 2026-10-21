@@ -2189,7 +2189,7 @@
       "alt": {
         "chat": "Isang BananaTalk chat kasama ang native speaker",
         "study": "BananaTalk Study Hub na may aralin ngayong araw, XP at streak",
-        "community": "BananaTalk community na may listahan ng language partner"
+        "community": "BananaTalk Community na may mga language partner match ngayong araw"
       },
       "steps": {
         "eyebrow": "Paano ito gumagana",
@@ -2242,11 +2242,11 @@
         "community": {
           "eyebrow": "Komunidad",
           "title": "Hanapin ang iyong mga kapareho, saanman sa mundo",
-          "body": "Mag-browse ng match, sumali sa voice room at sa mga pagtitipon malapit sa iyo.",
-          "b1": "Matalinong partner match",
-          "b2": "Live na voice room",
+          "body": "Makakuha ng bagong mga partner araw-araw, makipag-chat sa mga language room, at sumali sa mga pagtitipon malapit sa iyo.",
+          "b1": "Mga match araw-araw, pinili para sa iyo",
+          "b2": "Mga language room",
           "b3": "Lokal na pagtitipon",
-          "alt": "BananaTalk community na may listahan ng language partner"
+          "alt": "BananaTalk Community na may mga language partner match ngayong araw"
         }
       },
       "languages": {

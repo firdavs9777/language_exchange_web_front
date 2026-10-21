@@ -2210,7 +2210,7 @@
       "alt": {
         "chat": "A BananaTalk chat with a native speaker",
         "study": "BananaTalk Study Hub with a daily lesson, XP and streak",
-        "community": "BananaTalk community list of language partners"
+        "community": "BananaTalk Community with today's language partner matches"
       },
       "steps": {
         "eyebrow": "How it works",
@@ -2263,11 +2263,11 @@
         "community": {
           "eyebrow": "Community",
           "title": "Find your people, anywhere in the world",
-          "body": "Browse matches, drop into voice rooms and join gatherings near you.",
-          "b1": "Smart partner matches",
-          "b2": "Live voice rooms",
+          "body": "Get fresh partner matches every day, chat in language rooms and join gatherings near you.",
+          "b1": "Daily matches, picked for you",
+          "b2": "Language rooms",
           "b3": "Local gatherings",
-          "alt": "BananaTalk community list of language partners"
+          "alt": "BananaTalk Community with today's language partner matches"
         }
       },
       "languages": {

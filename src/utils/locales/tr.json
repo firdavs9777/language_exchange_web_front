@@ -2189,7 +2189,7 @@
       "alt": {
         "chat": "Ana dili konuşan biriyle BananaTalk sohbeti",
         "study": "Günün dersi, XP ve seriyle BananaTalk Study Hub",
-        "community": "Dil partnerleri listesiyle BananaTalk topluluğu"
+        "community": "Bugünün dil partneri eşleşmeleriyle BananaTalk Topluluğu"
       },
       "steps": {
         "eyebrow": "Nasıl çalışır",
@@ -2242,11 +2242,11 @@
         "community": {
           "eyebrow": "Topluluk",
           "title": "Dünyanın her yerinde kendi insanlarını bul",
-          "body": "Eşleşmelere göz at, sesli odalara katıl ve yakınındaki buluşmalara git.",
-          "b1": "Akıllı partner eşleşmeleri",
-          "b2": "Canlı sesli odalar",
+          "body": "Her gün yeni partner eşleşmeleri al, dil odalarında sohbet et ve yakınındaki buluşmalara katıl.",
+          "b1": "Senin için seçilen günlük eşleşmeler",
+          "b2": "Dil odaları",
           "b3": "Yerel buluşmalar",
-          "alt": "Dil partnerleri listesiyle BananaTalk topluluğu"
+          "alt": "Bugünün dil partneri eşleşmeleriyle BananaTalk Topluluğu"
         }
       },
       "languages": {

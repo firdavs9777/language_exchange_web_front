@@ -72,9 +72,9 @@ const FEATURES: Feature[] = [
     stage: "from-[#FFF5C7] to-[#FFE27A] dark:from-[#352E12] dark:to-[#26210D]",
     eyebrow: "Community",
     title: "Find your people, anywhere in the world",
-    body: "Browse matches, drop into voice rooms and join gatherings near you.",
-    bullets: ["Smart partner matches", "Live voice rooms", "Local gatherings"],
-    alt: "BananaTalk community list of language partners",
+    body: "Get fresh partner matches every day, chat in language rooms and join gatherings near you.",
+    bullets: ["Daily matches, picked for you", "Language rooms", "Local gatherings"],
+    alt: "BananaTalk Community with today's language partner matches",
   },
 ];
 

@@ -2189,7 +2189,7 @@
       "alt": {
         "chat": "Cuộc trò chuyện BananaTalk với người bản xứ",
         "study": "Study Hub của BananaTalk với bài học hôm nay, XP và chuỗi ngày",
-        "community": "Cộng đồng BananaTalk với danh sách bạn học ngôn ngữ"
+        "community": "Cộng đồng BananaTalk với các ghép đôi bạn học hôm nay"
       },
       "steps": {
         "eyebrow": "Cách hoạt động",
@@ -2242,11 +2242,11 @@
         "community": {
           "eyebrow": "Cộng đồng",
           "title": "Tìm người hợp với bạn, ở bất cứ đâu trên thế giới",
-          "body": "Xem các kết nối, tham gia phòng thoại và các buổi gặp mặt gần bạn.",
-          "b1": "Ghép bạn thông minh",
-          "b2": "Phòng thoại trực tiếp",
+          "body": "Nhận bạn học mới phù hợp mỗi ngày, trò chuyện trong phòng ngôn ngữ và tham gia buổi gặp mặt gần bạn.",
+          "b1": "Ghép đôi mỗi ngày, chọn riêng cho bạn",
+          "b2": "Phòng ngôn ngữ",
           "b3": "Gặp mặt tại địa phương",
-          "alt": "Cộng đồng BananaTalk với danh sách bạn học ngôn ngữ"
+          "alt": "Cộng đồng BananaTalk với các ghép đôi bạn học hôm nay"
         }
       },
       "languages": {
