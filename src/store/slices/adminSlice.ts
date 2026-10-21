@@ -687,6 +687,12 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       providesTags: ["AdminReportSettings"],
     }),
     // Sends only the keys it is given: the backend updates any subset.
+    //
+    // The cached settings are the toggles' only source of truth, so they are
+    // patched here rather than invalidated: optimistically before the PUT, then
+    // with the server's answer, and rolled back if it fails. An invalidation
+    // would refetch, and until that refetch landed the cache (and so the
+    // checkbox) would show the old value again — on, off, on.
     updateAdminReportSettings: builder.mutation({
       query: (body: Partial<AdminReportSettings>) => ({
         url: `${ADMIN_URL}/reports/settings`,
@@ -695,7 +701,26 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: unwrap,
       extraOptions: { maxRetries: 0 },
-      invalidatesTags: ["AdminReportSettings"],
+      async onQueryStarted(body: Partial<AdminReportSettings>, { dispatch, queryFulfilled }: any) {
+        const util: any = apiSlice.util;
+        const patch = dispatch(
+          util.updateQueryData("getAdminReportSettings", undefined, (draft: any) => {
+            if (draft) Object.assign(draft, body);
+          })
+        );
+        try {
+          const { data } = await queryFulfilled;
+          if (data && typeof data === "object") {
+            dispatch(
+              util.updateQueryData("getAdminReportSettings", undefined, (draft: any) => {
+                if (draft) Object.assign(draft, data);
+              })
+            );
+          }
+        } catch (e) {
+          patch.undo();
+        }
+      },
     }),
 
     // --- Announcements (spec 2026-10-12 §5.3) --------------------------------

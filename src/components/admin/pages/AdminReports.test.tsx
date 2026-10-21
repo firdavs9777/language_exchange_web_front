@@ -20,6 +20,7 @@ jest.mock("../../../store/slices/adminSlice", () => ({
 
 const ok = (data: any, extra: any = {}) => ({
   data,
+  currentData: data,
   isLoading: false,
   isFetching: false,
   isError: false,
@@ -275,4 +276,66 @@ it("shows a loading state while the report is in flight", () => {
   mockReport.mockReturnValue(ok(undefined, { isLoading: true }));
   renderAt();
   expect(screen.getByTestId("section-loading")).toBeInTheDocument();
+});
+
+it("shares are of the true totals, not of the top-10 rows the backend sends", () => {
+  mockReport.mockReturnValue(
+    ok({
+      ...REPORT_FIXTURE,
+      web: {
+        ...REPORT_FIXTURE.web,
+        visits: 10000,
+        visitors: 1000,
+        // A long tail: the rows shown sum to far less than the totals.
+        sources: [
+          { type: "search", name: "google", count: 2000 },
+          { type: "direct", name: "direct", count: 500 },
+        ],
+        devices: [{ device: "mobile", count: 500 }],
+        languages: [{ language: "ko", count: 300 }],
+      },
+    })
+  );
+  const { container } = renderAt();
+  const sources = screen.getByTestId("report-sources");
+  expect(sources).toHaveTextContent("20%");
+  expect(sources).toHaveTextContent("5%");
+  expect(sources).not.toHaveTextContent("80%");
+  const devices = screen.getByTestId("report-devices");
+  expect(devices).toHaveTextContent("50%");
+  expect(devices).not.toHaveTextContent("100%");
+  expect(devices).toHaveTextContent("Korean 30%");
+  expect(container.innerHTML).not.toMatch(/NaN|Infinity/);
+});
+
+it("a share never exceeds 100% and a zero total shows —", () => {
+  mockReport.mockReturnValue(
+    ok({
+      ...REPORT_FIXTURE,
+      web: {
+        ...REPORT_FIXTURE.web,
+        visits: 0,
+        visitors: 10,
+        sources: [{ type: "search", name: "google", count: 3 }],
+        // A visitor seen on two devices is counted under each.
+        devices: [{ device: "mobile", count: 12 }],
+      },
+    })
+  );
+  renderAt();
+  const sourceBar = within(screen.getByTestId("report-sources")).getByTestId("report-bar");
+  expect(sourceBar).toHaveTextContent("—");
+  expect(sourceBar).not.toHaveTextContent("%");
+  expect(screen.getByTestId("report-devices")).toHaveTextContent("100%");
+  expect(screen.getByTestId("report-devices")).not.toHaveTextContent("120%");
+});
+
+it("while another period loads it shows loading, not the previous period's numbers", () => {
+  // RTK keeps the last report in `data` during a refetch with new args;
+  // `currentData` is undefined until the new one arrives.
+  mockReport.mockReturnValue(ok(REPORT_FIXTURE, { currentData: undefined, isFetching: true }));
+  renderAt("/admin/reports?period=day&date=2026-10-20");
+  expect(screen.getByTestId("section-loading")).toBeInTheDocument();
+  expect(screen.queryByText(/Oct 12 – 18, 2026/)).not.toBeInTheDocument();
+  expect(screen.queryByTestId("report-countries")).not.toBeInTheDocument();
 });

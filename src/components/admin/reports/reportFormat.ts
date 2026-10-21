@@ -9,9 +9,11 @@ const finite = (v: any): v is number => typeof v === "number" && isFinite(v);
 /** `—` rather than `0` for a number the backend didn't send: they differ. */
 export const num = (value: any): string => (finite(value) ? value.toLocaleString("en-US") : "—");
 
-/** A share of a total, whole percent; `—` when there is no total. */
+/** A share of a total, whole percent, never above 100%; `—` when there is no total. */
 export const pct = (part: any, total: any): string =>
-  finite(part) && finite(total) && total > 0 ? `${Math.round((part / total) * 100)}%` : "—";
+  finite(part) && finite(total) && total > 0 && part >= 0
+    ? `${Math.min(100, Math.round((part / total) * 100))}%`
+    : "—";
 
 /** A 0..1 fraction as a whole percent, or `—`. */
 export const fraction = (value: any): string => (finite(value) ? `${Math.round(value * 100)}%` : "—");

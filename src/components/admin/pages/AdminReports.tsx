@@ -83,9 +83,8 @@ const AdminReports: React.FC = () => {
   const report = useGetAdminReportQuery({ period, date });
   const settings = useGetAdminReportSettingsQuery(undefined as any);
   const [updateSettings] = useUpdateAdminReportSettingsMutation();
-  // A toggle shows its new state at once; it falls back to the server's value
-  // if the save fails.
-  const [pending, setPending] = React.useState<Partial<AdminReportSettings>>({});
+  // A toggle shows its new state at once (the mutation patches the cached
+  // settings) and falls back to the server's value if the save fails.
   const [saveError, setSaveError] = React.useState(false);
 
   const setQuery = (next: { period?: ReportPeriod; date?: string }) => {
@@ -98,25 +97,21 @@ const AdminReports: React.FC = () => {
   };
 
   const emptyText = t("admin.common.empty") || "Nothing to show yet.";
-  const data: Report | undefined = report.data;
+  // `currentData`, not `data`: after a period or date change RTK keeps the
+  // previous report in `data` while the new one loads, which would label one
+  // period's numbers with another's heading. The loading state shows instead.
+  const data: Report | undefined = report.currentData;
   const notEnabled = report.isError && (report as any).error && (report as any).error.status === 404;
 
   const onToggle = (key: keyof AdminReportSettings, value: boolean) => {
     setSaveError(false);
-    setPending((p) => ({ ...p, [key]: value }));
     const body = { [key]: value } as Partial<AdminReportSettings>;
     const result: any = updateSettings(body);
-    const settle = () =>
-      setPending((p) => {
-        const next = { ...p };
-        delete next[key];
-        return next;
-      });
     if (result && typeof result.unwrap === "function") {
-      result.unwrap().then(settle, () => {
-        settle();
-        setSaveError(true);
-      });
+      result.unwrap().then(
+        () => undefined,
+        () => setSaveError(true)
+      );
     }
   };
 
@@ -153,7 +148,7 @@ const AdminReports: React.FC = () => {
 
   const renderEmails = () => {
     if (!settings.data) return null;
-    const current: any = { ...settings.data, ...pending };
+    const current: any = settings.data;
     return (
       <SurfaceCard padding="md">
         <div data-testid="report-emails" className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
@@ -187,9 +182,14 @@ const AdminReports: React.FC = () => {
 
   const renderBody = (r: Report) => {
     const web = r.web;
-    const sourcesTotal = (web.sources || []).reduce((s, x) => s + (Number(x.count) || 0), 0);
-    const devicesTotal = (web.devices || []).reduce((s, x) => s + (Number(x.count) || 0), 0);
-    const languagesTotal = (web.languages || []).reduce((s, x) => s + (Number(x.count) || 0), 0);
+    // Shares are of the true totals, not of the rows shown: the backend sends
+    // only the top 10, and dividing by their sum would inflate every share
+    // when there is a long tail. Sources are counted per visit; devices and
+    // languages per distinct visitor. `pct` caps at 100% and shows — for a
+    // zero total.
+    const sourcesTotal = web.visits;
+    const devicesTotal = web.visitors;
+    const languagesTotal = web.visitors;
     const hourly = r.period === "day";
     const b = r.members.breakdowns || ({} as any);
 
