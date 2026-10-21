@@ -2394,18 +2394,18 @@
   },
   "consent": {
     "label": "Cookie consent",
-    "message": "We use analytics cookies to understand what brings people here.",
+    "message": "We use cookies to show ads and, where enabled, to measure how the site is used. Say OK to allow personalized ads and analytics; say No thanks and ads stay non-personalized.",
     "accept": "OK",
     "decline": "No thanks",
     "manage": {
       "title": "Privacy choices",
-      "body": "Analytics cookies tell us which pages people find useful. Nothing else.",
-      "current_granted": "Analytics cookies are on.",
-      "current_denied": "Analytics cookies are off.",
+      "body": "This choice controls personalized ads (by Google AdSense) and analytics cookies, if we use them. If you say no, you still see ads, but they aren't based on your browsing.",
+      "current_granted": "Personalized ads and analytics are on.",
+      "current_denied": "Personalized ads and analytics are off.",
       "accept": "Turn on",
       "decline": "Turn off",
       "privacyChoices": "Privacy choices",
-      "analyticsCookies": "Analytics cookies",
+      "analyticsCookies": "Ads and analytics cookies",
       "done": "Done"
     }
   },

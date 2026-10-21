@@ -2367,18 +2367,18 @@
   },
   "consent": {
     "label": "Persetujuan cookie",
-    "message": "Kami menggunakan cookie analitik untuk memahami apa yang membawa orang ke sini.",
+    "message": "Kami menggunakan cookie untuk menampilkan iklan dan, jika diaktifkan, untuk mengukur penggunaan situs. Pilih OK untuk mengizinkan iklan yang dipersonalisasi dan analitik; pilih Tidak, terima kasih agar iklan tetap tidak dipersonalisasi.",
     "accept": "OK",
     "decline": "Tidak, terima kasih",
     "manage": {
       "title": "Pilihan privasi",
-      "body": "Cookie analitik memberi tahu kami halaman mana yang berguna. Tidak lebih.",
-      "current_granted": "Cookie analitik aktif.",
-      "current_denied": "Cookie analitik nonaktif.",
+      "body": "Pilihan ini mengatur iklan yang dipersonalisasi (oleh Google AdSense) dan cookie analitik, jika kami menggunakannya. Jika Anda menolak, Anda tetap melihat iklan, tetapi tidak berdasarkan aktivitas penjelajahan Anda.",
+      "current_granted": "Iklan yang dipersonalisasi dan analitik aktif.",
+      "current_denied": "Iklan yang dipersonalisasi dan analitik nonaktif.",
       "accept": "Aktifkan",
       "decline": "Nonaktifkan",
       "privacyChoices": "Pilihan privasi",
-      "analyticsCookies": "Cookie analitik",
+      "analyticsCookies": "Cookie iklan dan analitik",
       "done": "Selesai"
     }
   },

@@ -2367,18 +2367,18 @@
   },
   "consent": {
     "label": "Cookie-Einwilligung",
-    "message": "Wir verwenden Analyse-Cookies, um zu verstehen, was Besucher hierher bringt.",
+    "message": "Wir verwenden Cookies, um Werbung anzuzeigen und – sofern aktiviert – die Nutzung der Website zu messen. Mit „OK“ erlaubst du personalisierte Werbung und Analysen; mit „Nein danke“ bleibt die Werbung nicht personalisiert.",
     "accept": "OK",
     "decline": "Nein, danke",
     "manage": {
       "title": "Datenschutz-Einstellungen",
-      "body": "Analyse-Cookies zeigen uns, welche Seiten nützlich sind. Mehr nicht.",
-      "current_granted": "Analyse-Cookies sind an.",
-      "current_denied": "Analyse-Cookies sind aus.",
+      "body": "Diese Auswahl steuert personalisierte Werbung (von Google AdSense) und Analyse-Cookies, falls wir sie einsetzen. Wenn du ablehnst, siehst du weiterhin Werbung, die aber nicht auf deinem Surfverhalten basiert.",
+      "current_granted": "Personalisierte Werbung und Analysen sind an.",
+      "current_denied": "Personalisierte Werbung und Analysen sind aus.",
       "accept": "Einschalten",
       "decline": "Ausschalten",
       "privacyChoices": "Datenschutz-Einstellungen",
-      "analyticsCookies": "Analyse-Cookies",
+      "analyticsCookies": "Werbe- und Analyse-Cookies",
       "done": "Fertig"
     }
   },

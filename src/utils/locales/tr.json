@@ -2367,18 +2367,18 @@
   },
   "consent": {
     "label": "Çerez izni",
-    "message": "Ziyaretçileri buraya neyin getirdiğini anlamak için analiz çerezleri kullanıyoruz.",
+    "message": "Reklam göstermek ve etkinse sitenin nasıl kullanıldığını ölçmek için çerezler kullanıyoruz. Kişiselleştirilmiş reklamlara ve analize izin vermek için Tamam'ı seçin; Hayır, teşekkürler derseniz reklamlar kişiselleştirilmemiş kalır.",
     "accept": "Tamam",
     "decline": "Hayır, teşekkürler",
     "manage": {
       "title": "Gizlilik tercihleri",
-      "body": "Analiz çerezleri yalnızca hangi sayfaların işe yaradığını gösterir, başka bir şey değil.",
-      "current_granted": "Analiz çerezleri açık.",
-      "current_denied": "Analiz çerezleri kapalı.",
+      "body": "Bu seçim, kişiselleştirilmiş reklamları (Google AdSense) ve kullanıyorsak analiz çerezlerini kontrol eder. Reddederseniz yine reklam görürsünüz, ancak bunlar gezinme geçmişinize dayanmaz.",
+      "current_granted": "Kişiselleştirilmiş reklamlar ve analiz açık.",
+      "current_denied": "Kişiselleştirilmiş reklamlar ve analiz kapalı.",
       "accept": "Aç",
       "decline": "Kapat",
       "privacyChoices": "Gizlilik tercihleri",
-      "analyticsCookies": "Analiz çerezleri",
+      "analyticsCookies": "Reklam ve analiz çerezleri",
       "done": "Bitti"
     }
   },

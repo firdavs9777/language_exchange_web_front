@@ -273,10 +273,10 @@ const PrivacyPolicy = () => {
               <>
                 <h3>6.7 Analytics and Ad Cookies</h3>
                 <p>
-                  You can turn analytics and ad cookies on or off at any time,
-                  and turning them off deletes the analytics cookies already on
-                  this device. You can also manage ad personalization in
-                  Google's Ads Settings (https://adssettings.google.com):{" "}
+                  You can choose at any time whether ads are personalized and
+                  whether analytics cookies are used; turning analytics off
+                  deletes the analytics cookies already on this device. You
+                  can also manage ad personalization in Google's Ads Settings (https://adssettings.google.com):{" "}
                   <button
                     type="button"
                     className="policy-inline-button"

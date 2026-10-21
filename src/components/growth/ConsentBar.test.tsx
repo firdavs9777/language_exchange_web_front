@@ -68,7 +68,7 @@ describe("manage mode", () => {
     expect(screen.queryByTestId("consent-manager")).not.toBeInTheDocument();
     act(() => openConsentManager());
     expect(screen.getByTestId("consent-manager")).toBeInTheDocument();
-    expect(screen.getByText("Analytics cookies are on.")).toBeInTheDocument();
+    expect(screen.getByText("Personalized ads and analytics are on.")).toBeInTheDocument();
   });
 
   it("declining withdraws: denied, ga-disable set, _ga cookies expired", () => {
@@ -79,7 +79,7 @@ describe("manage mode", () => {
     expect(window.localStorage.getItem("bt.consent")).toBe("denied");
     expect(isGaDisabled("G-TEST")).toBe(true);
     expect(document.cookie).not.toContain("_ga=");
-    expect(screen.getByText("Analytics cookies are off.")).toBeInTheDocument();
+    expect(screen.getByText("Personalized ads and analytics are off.")).toBeInTheDocument();
   });
 
   it("re-accepting clears the flag and loads GA again", () => {

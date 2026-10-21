@@ -2367,18 +2367,18 @@
   },
   "consent": {
     "label": "Cookie 同意",
-    "message": "我們使用分析 Cookie，了解大家是怎麼找到這裡的。",
+    "message": "我們使用 Cookie 來顯示廣告,並在啟用時衡量網站的使用情況。選擇「OK」即允許個人化廣告與分析;選擇「不用了」,廣告將維持非個人化。",
     "accept": "好",
     "decline": "不用了，謝謝",
     "manage": {
       "title": "隱私選擇",
-      "body": "分析 Cookie 只告訴我們哪些頁面有幫助，沒有別的。",
-      "current_granted": "分析 Cookie 已開啟。",
-      "current_denied": "分析 Cookie 已關閉。",
+      "body": "此選項控制個人化廣告(由 Google AdSense 提供)以及分析 Cookie(若我們有使用)。若選擇拒絕,您仍會看到廣告,但不會依據您的瀏覽行為。",
+      "current_granted": "個人化廣告與分析已開啟。",
+      "current_denied": "個人化廣告與分析已關閉。",
       "accept": "開啟",
       "decline": "關閉",
       "privacyChoices": "隱私選擇",
-      "analyticsCookies": "分析 Cookie",
+      "analyticsCookies": "廣告與分析 Cookie",
       "done": "完成"
     }
   },

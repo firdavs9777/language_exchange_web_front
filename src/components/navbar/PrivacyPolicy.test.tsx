@@ -10,6 +10,9 @@ const text = () =>
   (render(<MemoryRouter><PrivacyPolicy /></MemoryRouter>).container.textContent || "").replace(/\s+/g, " ");
 
 describe("privacy policy states what is collected", () => {
+  afterEach(() => {
+    delete process.env.REACT_APP_ADSENSE_AUTO_ADS;
+  });
   it("is dated October 21, 2026", () => {
     const t = text();
     expect(t).toMatch(/Last Updated:\s*October 21, 2026/);
@@ -41,6 +44,6 @@ describe("privacy policy states what is collected", () => {
     process.env.REACT_APP_ADSENSE_AUTO_ADS = "true";
     const { getByTestId } = render(<MemoryRouter><PrivacyPolicy /></MemoryRouter>);
     expect(getByTestId("policy-privacy-choices")).toBeInTheDocument();
-    delete process.env.REACT_APP_ADSENSE_AUTO_ADS;
+    expect(document.body.textContent).toMatch(/choose at any time whether ads are personalized and whether analytics cookies are used/);
   });
 });

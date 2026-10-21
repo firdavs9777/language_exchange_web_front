@@ -2336,18 +2336,18 @@
   },
   "consent": {
     "label": "Consentimiento de cookies",
-    "message": "Usamos cookies de análisis para entender qué trae a la gente hasta aquí.",
+    "message": "Usamos cookies para mostrar anuncios y, cuando está activado, para medir cómo se usa el sitio. Elige Aceptar para permitir anuncios personalizados y analíticas; con «No, gracias» los anuncios seguirán sin personalizarse.",
     "accept": "OK",
     "decline": "No, gracias",
     "manage": {
       "title": "Opciones de privacidad",
-      "body": "Las cookies de análisis nos dicen qué páginas resultan útiles. Nada más.",
-      "current_granted": "Las cookies de análisis están activadas.",
-      "current_denied": "Las cookies de análisis están desactivadas.",
+      "body": "Esta opción controla los anuncios personalizados (de Google AdSense) y las cookies de analítica, si las usamos. Si dices que no, seguirás viendo anuncios, pero no se basarán en tu navegación.",
+      "current_granted": "Los anuncios personalizados y la analítica están activados.",
+      "current_denied": "Los anuncios personalizados y la analítica están desactivados.",
       "accept": "Activar",
       "decline": "Desactivar",
       "privacyChoices": "Opciones de privacidad",
-      "analyticsCookies": "Cookies de análisis",
+      "analyticsCookies": "Cookies de anuncios y analítica",
       "done": "Listo"
     }
   },

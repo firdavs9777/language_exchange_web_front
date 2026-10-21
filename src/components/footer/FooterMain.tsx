@@ -120,8 +120,8 @@ const FooterMain: React.FC = () => {
           <div className="footer-legal">
             <Link to="/privacy-policy">Privacy Policy</Link>
             <Link to="/terms-of-use">Terms of Service</Link>
-            {/* Only where analytics actually runs. With no measurement id
-                nothing is collected, so a withdrawal control would be
+            {/* Only where there is a choice to make: a measurement id is
+                set or ads run. With neither, a withdrawal control would be
                 theatre -- and the footer stays exactly as it was. The id is
                 a build-time value, identical on the server and in the
                 browser, so this is safe on the prerendered pages. */}

@@ -2336,18 +2336,18 @@
   },
   "consent": {
     "label": "Consenso ai cookie",
-    "message": "Utilizziamo cookie di analisi per capire cosa porta le persone qui.",
+    "message": "Usiamo i cookie per mostrare annunci e, dove attivato, per misurare come viene usato il sito. Scegli OK per consentire annunci personalizzati e analisi; con «No, grazie» gli annunci restano non personalizzati.",
     "accept": "OK",
     "decline": "No grazie",
     "manage": {
       "title": "Scelte sulla privacy",
-      "body": "I cookie di analisi ci dicono quali pagine risultano utili. Nient'altro.",
-      "current_granted": "I cookie di analisi sono attivi.",
-      "current_denied": "I cookie di analisi sono disattivati.",
+      "body": "Questa scelta controlla gli annunci personalizzati (di Google AdSense) e i cookie di analisi, se li usiamo. Se rifiuti, vedrai comunque annunci, ma non basati sulla tua navigazione.",
+      "current_granted": "Annunci personalizzati e analisi attivi.",
+      "current_denied": "Annunci personalizzati e analisi disattivati.",
       "accept": "Attiva",
       "decline": "Disattiva",
       "privacyChoices": "Scelte sulla privacy",
-      "analyticsCookies": "Cookie di analisi",
+      "analyticsCookies": "Cookie per annunci e analisi",
       "done": "Fatto"
     }
   },

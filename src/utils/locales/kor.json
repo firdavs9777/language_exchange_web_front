@@ -2367,18 +2367,18 @@
   },
   "consent": {
     "label": "쿠키 동의",
-    "message": "어떤 경로로 오셨는지 파악하기 위해 분석 쿠키를 사용해요.",
+    "message": "광고를 표시하고, 사용 설정된 경우 사이트 이용 현황을 측정하기 위해 쿠키를 사용합니다. 'OK'를 누르면 맞춤 광고와 분석을 허용하고, '아니요'를 누르면 광고는 맞춤형이 아닌 상태로 유지됩니다.",
     "accept": "확인",
     "decline": "괜찮아요",
     "manage": {
       "title": "개인정보 선택",
-      "body": "분석 쿠키는 어떤 페이지가 도움이 되는지 알려줄 뿐이에요.",
-      "current_granted": "분석 쿠키가 켜져 있어요.",
-      "current_denied": "분석 쿠키가 꺼져 있어요.",
+      "body": "이 선택은 맞춤 광고(Google AdSense)와, 사용하는 경우 분석 쿠키를 제어합니다. 거부해도 광고는 계속 표시되지만 회원님의 탐색 기록을 기반으로 하지 않습니다.",
+      "current_granted": "맞춤 광고와 분석이 켜져 있습니다.",
+      "current_denied": "맞춤 광고와 분석이 꺼져 있습니다.",
       "accept": "켜기",
       "decline": "끄기",
       "privacyChoices": "개인정보 선택",
-      "analyticsCookies": "분석 쿠키",
+      "analyticsCookies": "광고 및 분석 쿠키",
       "done": "완료"
     }
   },

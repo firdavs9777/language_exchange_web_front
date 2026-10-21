@@ -2367,18 +2367,18 @@
   },
   "consent": {
     "label": "Cookie 同意",
-    "message": "我们使用分析 Cookie，了解大家是怎么找到这里的。",
+    "message": "我们使用 Cookie 来展示广告,并在启用时衡量网站的使用情况。选择“OK”即允许个性化广告和分析;选择“不用了”,广告将保持非个性化。",
     "accept": "好的",
     "decline": "不用了",
     "manage": {
       "title": "隐私选择",
-      "body": "分析 Cookie 只告诉我们哪些页面有帮助，没有别的。",
-      "current_granted": "分析 Cookie 已开启。",
-      "current_denied": "分析 Cookie 已关闭。",
+      "body": "此选项控制个性化广告(由 Google AdSense 提供)以及分析 Cookie(如果我们使用)。如果拒绝,您仍会看到广告,但不会基于您的浏览行为。",
+      "current_granted": "个性化广告和分析已开启。",
+      "current_denied": "个性化广告和分析已关闭。",
       "accept": "开启",
       "decline": "关闭",
       "privacyChoices": "隐私选择",
-      "analyticsCookies": "分析 Cookie",
+      "analyticsCookies": "广告和分析 Cookie",
       "done": "完成"
     }
   },

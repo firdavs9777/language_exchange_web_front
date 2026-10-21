@@ -2367,18 +2367,18 @@
   },
   "consent": {
     "label": "Pahintulot sa cookie",
-    "message": "Gumagamit kami ng analytics cookies para maunawaan kung ano ang nagdadala ng mga tao rito.",
+    "message": "Gumagamit kami ng cookies para magpakita ng mga ad at, kung naka-enable, para sukatin kung paano ginagamit ang site. Piliin ang OK para payagan ang personalized na ad at analytics; piliin ang Hindi, salamat para manatiling hindi personalized ang mga ad.",
     "accept": "OK",
     "decline": "Huwag na lang",
     "manage": {
       "title": "Mga pagpipilian sa privacy",
-      "body": "Sinasabi ng analytics cookies kung aling mga pahina ang nakakatulong. Wala nang iba.",
-      "current_granted": "Naka-on ang analytics cookies.",
-      "current_denied": "Naka-off ang analytics cookies.",
+      "body": "Kinokontrol ng pagpiling ito ang personalized na ad (ng Google AdSense) at analytics cookies, kung ginagamit namin ang mga ito. Kung tatanggi ka, makakakita ka pa rin ng mga ad, pero hindi ito batay sa iyong pagba-browse.",
+      "current_granted": "Naka-on ang personalized na ad at analytics.",
+      "current_denied": "Naka-off ang personalized na ad at analytics.",
       "accept": "I-on",
       "decline": "I-off",
       "privacyChoices": "Mga pagpipilian sa privacy",
-      "analyticsCookies": "Analytics cookies",
+      "analyticsCookies": "Mga cookie ng ad at analytics",
       "done": "Tapos na"
     }
   },

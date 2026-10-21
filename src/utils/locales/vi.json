@@ -2367,18 +2367,18 @@
   },
   "consent": {
     "label": "Đồng ý sử dụng cookie",
-    "message": "Chúng tôi sử dụng cookie phân tích để hiểu điều gì đã đưa mọi người đến đây.",
+    "message": "Chúng tôi dùng cookie để hiển thị quảng cáo và, khi được bật, để đo lường cách trang web được sử dụng. Chọn OK để cho phép quảng cáo được cá nhân hóa và phân tích; chọn Không, cảm ơn thì quảng cáo vẫn không được cá nhân hóa.",
     "accept": "OK",
     "decline": "Không, cảm ơn",
     "manage": {
       "title": "Lựa chọn quyền riêng tư",
-      "body": "Cookie phân tích chỉ cho chúng tôi biết trang nào hữu ích, không gì khác.",
-      "current_granted": "Cookie phân tích đang bật.",
-      "current_denied": "Cookie phân tích đang tắt.",
+      "body": "Lựa chọn này điều khiển quảng cáo được cá nhân hóa (bởi Google AdSense) và cookie phân tích, nếu chúng tôi sử dụng. Nếu bạn từ chối, bạn vẫn thấy quảng cáo, nhưng không dựa trên hoạt động duyệt web của bạn.",
+      "current_granted": "Quảng cáo cá nhân hóa và phân tích đang bật.",
+      "current_denied": "Quảng cáo cá nhân hóa và phân tích đang tắt.",
       "accept": "Bật",
       "decline": "Tắt",
       "privacyChoices": "Lựa chọn quyền riêng tư",
-      "analyticsCookies": "Cookie phân tích",
+      "analyticsCookies": "Cookie quảng cáo và phân tích",
       "done": "Xong"
     }
   },
