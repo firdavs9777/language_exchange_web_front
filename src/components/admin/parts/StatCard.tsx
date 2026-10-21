@@ -2,8 +2,9 @@ import React from "react";
 import { SurfaceCard } from "../../../design";
 
 export interface StatCardProps {
-  /** What the number counts, in sentence case ("Total users"). */
-  label: string;
+  /** What the number counts, in sentence case ("Total users"). A node so a
+   *  page can attach a definition tooltip to it. */
+  label: React.ReactNode;
   /** Pre-formatted: the card never decides thousands separators or units. */
   value: React.ReactNode;
   /** One line of context under the number — a comparison, a period, a ratio. */

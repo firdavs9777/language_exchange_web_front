@@ -8,7 +8,9 @@ jest.mock("react-i18next", () => ({ useTranslation: () => ({ t: () => "" }) }));
 const mockStats = jest.fn();
 const mockActivity = jest.fn();
 const mockVisits = jest.fn();
+const mockReport = jest.fn();
 jest.mock("../../../store/slices/adminSlice", () => ({
+  useGetAdminReportQuery: (...args: any[]) => mockReport(...args),
   useGetAdminStatsQuery: (...args: any[]) => mockStats(...args),
   useGetAdminActivityQuery: (...args: any[]) => mockActivity(...args),
   useGetAnalyticsVisitsQuery: (...args: any[]) => mockVisits(...args),
@@ -67,6 +69,8 @@ beforeEach(() => {
   mockStats.mockReset().mockReturnValue(ok(STATS));
   mockActivity.mockReset().mockReturnValue(ok(ACTIVITY));
   mockVisits.mockReset().mockReturnValue(ok(VISITS));
+  // Reports switched off (the backend answers 404): the tile reads visits.
+  mockReport.mockReset().mockReturnValue(ok(undefined, { isError: true, error: { status: 404 } }));
 });
 
 it("renders the page heading", () => {
@@ -153,4 +157,33 @@ it("renders without crashing when the payloads are empty", () => {
   const { container } = render(<AdminOverview />);
   expect(container.textContent).not.toContain("NaN");
   expect(screen.getByRole("heading", { level: 1 })).toBeInTheDocument();
+});
+
+describe("when reports are switched on", () => {
+  const week = (web: any, previous: any) => ok({ period: "week", web, previous });
+
+  it("asks for the current week's report", () => {
+    mockReport.mockReturnValue(week({ visitors: 4812 }, { visitors: 4296 }));
+    render(<AdminOverview />);
+    expect(mockReport).toHaveBeenCalledWith({ period: "week" });
+  });
+
+  it("the visits tile shows this week's visitors against last week's", () => {
+    mockReport.mockReturnValue(week({ visitors: 4812 }, { visitors: 4296 }));
+    render(<AdminOverview />);
+    const card = cardFor("Visitors this week");
+    expect(card).toHaveTextContent("4,812");
+    expect(card).toHaveTextContent("4,296");
+    expect(card).toHaveTextContent("+12%");
+    expect(screen.queryByText("Visits this week")).not.toBeInTheDocument();
+  });
+
+  it("shows — rather than a percentage when last week has no history", () => {
+    mockReport.mockReturnValue(week({ visitors: 120 }, null));
+    render(<AdminOverview />);
+    const card = cardFor("Visitors this week");
+    expect(card).toHaveTextContent("120");
+    expect(card).toHaveTextContent("—");
+    expect(card.textContent).not.toMatch(/%|NaN|Infinity/);
+  });
 });

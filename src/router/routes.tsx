@@ -168,7 +168,10 @@ const ClubForm = lazyWithRetry("../components/gatherings/ClubForm", () => import
 // actually renders, so /admin costs nothing to anyone who never opens it.
 const AdminLayout = lazyWithRetry("../components/admin/AdminLayout", () => import("../components/admin/AdminLayout"));
 const AdminOverview = lazyWithRetry("../components/admin/pages/AdminOverview", () => import("../components/admin/pages/AdminOverview"));
-const AdminReach = lazyWithRetry("../components/admin/pages/AdminReach", () => import("../components/admin/pages/AdminReach"));
+// /admin/reach goes through a gate: once the backend has reports switched on
+// it redirects to /admin/reports; until then it renders Reach as before.
+const AdminReachGate = lazyWithRetry("../components/admin/pages/AdminReachGate", () => import("../components/admin/pages/AdminReachGate"));
+const AdminReports = lazyWithRetry("../components/admin/pages/AdminReports", () => import("../components/admin/pages/AdminReports"));
 const AdminUsers = lazyWithRetry("../components/admin/pages/AdminUsers", () => import("../components/admin/pages/AdminUsers"));
 const AdminContent = lazyWithRetry("../components/admin/pages/AdminContent", () => import("../components/admin/pages/AdminContent"));
 const AdminAiUsage = lazyWithRetry("../components/admin/pages/AdminAiUsage", () => import("../components/admin/pages/AdminAiUsage"));
@@ -368,7 +371,8 @@ export const routes = createRoutesFromElements(
         by default — RouteMeta marks every path outside SEO_PAGES. */}
     <Route path="admin" element={lazyAdminRoute(<AdminLayout />)}>
       <Route index element={lazyAdminRoute(<AdminOverview />)} />
-      <Route path="reach" element={lazyAdminRoute(<AdminReach />)} />
+      <Route path="reports" element={lazyAdminRoute(<AdminReports />)} />
+      <Route path="reach" element={lazyAdminRoute(<AdminReachGate />)} />
       <Route path="users" element={lazyAdminRoute(<AdminUsers />)} />
       <Route path="content" element={lazyAdminRoute(<AdminContent />)} />
       <Route path="ai-usage" element={lazyAdminRoute(<AdminAiUsage />)} />
