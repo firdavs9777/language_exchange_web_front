@@ -4,6 +4,9 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { mockAppConfig, ALL_WEB_FLAGS_OFF, ALL_WEB_FLAGS_ON } from "../../utils/testing/mockWebFlags";
 import Register from "./Register";
+import { trackEvent } from "../../analytics/track";
+
+jest.mock("../../analytics/track", () => ({ trackEvent: jest.fn() }));
 
 jest.mock("../../store/slices/appConfigSlice", () => require("../../utils/testing/mockWebFlags").appConfigSliceMock());
 jest.mock("react-redux", () => ({
@@ -73,4 +76,18 @@ it("never in OAuth completion mode, even with the flag on", () => {
     },
   });
   expect(screen.queryByTestId("apple-signin-button")).not.toBeInTheDocument();
+});
+
+it("signup_start fires once on mount, not on re-render", () => {
+  (trackEvent as jest.Mock).mockClear();
+  mockAppConfig(ALL_WEB_FLAGS_OFF);
+  const { rerender } = renderAt("/register");
+  rerender(
+    <MemoryRouter initialEntries={["/register"]}>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </MemoryRouter>
+  );
+  expect((trackEvent as jest.Mock).mock.calls.filter(([n]) => n === "signup_start")).toHaveLength(1);
 });
