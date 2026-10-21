@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { subscribeConsentManager } from "../../analytics/consent";
 import { useConsentChoice } from "../../analytics/useConsentChoice";
-import { GA_MEASUREMENT_ID } from "../../analytics/ga";
+import { consentControlsEnabled } from "../../analytics/consentGate";
 import DialogShell from "../../design/DialogShell";
-import { useSurfaceOpen } from "./surfaceRegistry";
+import { openSurface, closeSurface, useSurfaceOpen } from "./surfaceRegistry";
 
 const ACCEPT_CLASS =
   "rounded-full bg-brand-deep px-4 py-1.5 text-sm font-extrabold text-white transition-colors hover:bg-brand-deepest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-deep";
@@ -21,14 +21,24 @@ const ConsentBar: React.FC = () => {
   const annOpen = useSurfaceOpen("announcement-popup");
   const closeManage = useCallback(() => setManage(false), []);
 
+  // While the bar is up it covers the store banner's Install button on phones,
+  // so the banner takes turns and stays hidden until the bar is answered.
+  const barShown =
+    consentControlsEnabled() && !manage && state === null && !popupOpen && !annOpen;
+  useEffect(() => {
+    if (!barShown) return;
+    openSurface("consent-bar");
+    return () => closeSurface("consent-bar");
+  }, [barShown]);
+
   // The footer link, the settings row and the policy page all reach the
   // manager through this, from wherever they are in the tree.
   useEffect(() => subscribeConsentManager(() => setManage(true)), []);
 
-  // No measurement id: GA is inert, so asking for consent — or offering to
-  // withdraw it — collects a decision nothing acts on. Below the hooks so they
-  // still run unconditionally.
-  if (!GA_MEASUREMENT_ID) return null;
+  // Neither a measurement id nor ads: nothing acts on a decision, so asking for
+  // consent — or offering to withdraw it — would be theatre. Below the hooks so
+  // they still run unconditionally.
+  if (!consentControlsEnabled()) return null;
 
   // Opened deliberately — from the footer, the policy page or privacy
   // settings, all of them far from here in the tree — so it is a dialog, not
@@ -47,10 +57,10 @@ const ConsentBar: React.FC = () => {
         <p className="mt-1 text-sm leading-snug text-ink-700 dark:text-ink-200">
           {state === "granted" || state === "denied"
             ? state === "granted"
-              ? t("consent.manage.current_granted") || "Analytics cookies are on."
-              : t("consent.manage.current_denied") || "Analytics cookies are off."
+              ? t("consent.manage.current_granted") || "Personalized ads and analytics are on."
+              : t("consent.manage.current_denied") || "Personalized ads and analytics are off."
             : t("consent.manage.body") ||
-              "Analytics cookies tell us which pages people find useful. Nothing else."}
+              "This choice controls personalized ads (by Google AdSense) and analytics cookies, if we use them. If you say no, you still see ads, but they aren't based on your browsing."}
         </p>
         <div className="mt-4 flex flex-wrap justify-end gap-2">
           <button type="button" onClick={decline} className={QUIET_CLASS}>
@@ -78,7 +88,7 @@ const ConsentBar: React.FC = () => {
     >
       <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-3">
         <p className="text-sm leading-snug text-ink-700 dark:text-ink-200">
-          {t("consent.message") || "We use analytics cookies to understand what brings people here."}
+          {t("consent.message") || "We use cookies to show ads and, where enabled, to measure how the site is used. Say OK to allow personalized ads and analytics; say No thanks and ads stay non-personalized."}
         </p>
         {/* `brand-deep`, not `brand`: white on #00BFA5 is 2.33:1 and fails
             AA. The accept button is the one control here that must be read

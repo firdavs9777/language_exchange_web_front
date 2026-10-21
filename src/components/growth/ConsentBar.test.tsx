@@ -68,7 +68,7 @@ describe("manage mode", () => {
     expect(screen.queryByTestId("consent-manager")).not.toBeInTheDocument();
     act(() => openConsentManager());
     expect(screen.getByTestId("consent-manager")).toBeInTheDocument();
-    expect(screen.getByText("Analytics cookies are on.")).toBeInTheDocument();
+    expect(screen.getByText("Personalized ads and analytics are on.")).toBeInTheDocument();
   });
 
   it("declining withdraws: denied, ga-disable set, _ga cookies expired", () => {
@@ -79,7 +79,7 @@ describe("manage mode", () => {
     expect(window.localStorage.getItem("bt.consent")).toBe("denied");
     expect(isGaDisabled("G-TEST")).toBe(true);
     expect(document.cookie).not.toContain("_ga=");
-    expect(screen.getByText("Analytics cookies are off.")).toBeInTheDocument();
+    expect(screen.getByText("Personalized ads and analytics are off.")).toBeInTheDocument();
   });
 
   it("re-accepting clears the flag and loads GA again", () => {
@@ -138,4 +138,19 @@ describe("manage mode", () => {
     act(() => openConsentManager());
     expect(screen.getByTestId("consent-manager")).toBeInTheDocument();
   });
+});
+
+it("keeps the sticky store banner hidden while the bar is open, and brings it back after", () => {
+  const StickyAppBanner = require("./StickyAppBanner").default;
+  Object.defineProperty(window, "innerWidth", { writable: true, configurable: true, value: 375 });
+  render(
+    <>
+      <ConsentBar />
+      <StickyAppBanner />
+    </>
+  );
+  expect(screen.getByTestId("consent-bar")).toBeInTheDocument();
+  expect(screen.queryByTestId("sticky-app-banner")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByText("No thanks"));
+  expect(screen.getByTestId("sticky-app-banner")).toBeInTheDocument();
 });

@@ -199,6 +199,98 @@ export interface AudienceCount {
   reason?: "web_only";
 }
 
+/** `GET /admin/reports/settings`: the signed-in admin's own report emails. */
+export interface AdminReportSettings {
+  daily: boolean;
+  weekly: boolean;
+  monthly: boolean;
+}
+
+export type ReportPeriod = "day" | "week" | "month";
+
+export interface ReportKeyCount {
+  key: string;
+  count: number;
+}
+
+/**
+ * `GET /admin/reports` — one period, built by the backend's `buildReport`
+ * (lib/analyticsReport.js). The page, the CSV and the emails all read this
+ * same object. `previous` is null before any history exists, and each of its
+ * web/active fields is null on its own until that history exists: a
+ * comparison against null shows "—", never 0%.
+ */
+export interface Report {
+  period: ReportPeriod;
+  periodKey: string;
+  label: string;
+  start: string;
+  end: string;
+  complete: boolean;
+  web: {
+    visitors: number;
+    pageViews: number;
+    visits: number;
+    pagesPerVisit: number;
+    avgVisitMs: number;
+    /** `HH:00` per hour for a day, `YYYY-MM-DD` per KST day otherwise. */
+    series: { x: string; visitors: number; pageViews: number }[];
+    countries: { code: string; count: number }[];
+    sources: { type: string; name: string; count: number }[];
+    /** `avgMs`: mean time per view. */
+    topPages: { path: string; views: number; avgMs: number }[];
+    devices: { device: string; count: number }[];
+    languages: { language: string; count: number }[];
+    funnel: { visited: number; signupStarted: number; signedUp: number; storeTaps: number };
+    storeTaps: {
+      total: number;
+      ios: number;
+      android: number;
+      byPlacement: { placement: string; ios: number; android: number }[];
+      bySource: { type: string; name: string; ios: number; android: number }[];
+      series: { x: string; ios: number; android: number }[];
+    };
+    /** `avgMs`: mean time per member in the section. */
+    sections: {
+      section: string;
+      members: number;
+      avgMs: number;
+      topPages: { path: string; views: number }[];
+    }[];
+  };
+  members: {
+    signups: number;
+    signupsStarted: number;
+    webSignups: number;
+    active: number;
+    totalUsers: number;
+    completedUsers: number;
+    /** 0..1, or null until there is enough activity history. */
+    retention: number | null;
+    appPlatforms: ReportKeyCount[];
+    breakdowns: {
+      native: ReportKeyCount[];
+      learning: ReportKeyCount[];
+      country: ReportKeyCount[];
+      platform: ReportKeyCount[];
+      gender: ReportKeyCount[];
+    };
+  };
+  app: { messages: number; conversations: number; moments: number; stories: number; calls: number };
+  vip: { newVip: number; activeByPlan: { plan: string; count: number }[]; expiringSoon: number };
+  previous: {
+    visitors: number | null;
+    pageViews: number | null;
+    visits: number | null;
+    webSignups: number | null;
+    signups: number | null;
+    active: number | null;
+    storeTaps: number | null;
+    iosTaps: number | null;
+    androidTaps: number | null;
+  } | null;
+}
+
 /**
  * The admin console's data layer: one endpoint per route in the backend's
  * `routes/admin.js`, and nothing the backend doesn't serve. Every route below
@@ -576,6 +668,57 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       transformResponse: unwrap,
     }),
 
+    // --- Reports (behind ANALYTICS_REPORTS_ENABLED: 404 while it is off) ----
+    // A 404 here is an answer ("not switched on"), not a blip.
+    getAdminReport: builder.query({
+      query: (arg: { period: ReportPeriod; date?: string }) => ({
+        url: `${ADMIN_URL}/reports`,
+        params: params(arg),
+      }),
+      transformResponse: unwrap,
+      providesTags: ["AdminReportData"],
+    }),
+    getAdminReportSettings: builder.query({
+      query: () => ({ url: `${ADMIN_URL}/reports/settings` }),
+      transformResponse: unwrap,
+      providesTags: ["AdminReportSettings"],
+    }),
+    // Sends only the keys it is given: the backend updates any subset.
+    //
+    // The cached settings are the toggles' only source of truth, so they are
+    // patched here rather than invalidated: optimistically before the PUT, then
+    // with the server's answer, and rolled back if it fails. An invalidation
+    // would refetch, and until that refetch landed the cache (and so the
+    // checkbox) would show the old value again — on, off, on.
+    updateAdminReportSettings: builder.mutation({
+      query: (body: Partial<AdminReportSettings>) => ({
+        url: `${ADMIN_URL}/reports/settings`,
+        method: "PUT",
+        body,
+      }),
+      transformResponse: unwrap,
+      async onQueryStarted(body: Partial<AdminReportSettings>, { dispatch, queryFulfilled }: any) {
+        const util: any = apiSlice.util;
+        const patch = dispatch(
+          util.updateQueryData("getAdminReportSettings", undefined, (draft: any) => {
+            if (draft) Object.assign(draft, body);
+          })
+        );
+        try {
+          const { data } = await queryFulfilled;
+          if (data && typeof data === "object") {
+            dispatch(
+              util.updateQueryData("getAdminReportSettings", undefined, (draft: any) => {
+                if (draft) Object.assign(draft, data);
+              })
+            );
+          }
+        } catch (e) {
+          patch.undo();
+        }
+      },
+    }),
+
     // --- Announcements (spec 2026-10-12 §5.3) --------------------------------
     // Writes are never retried: a publish that silently repeats is a second
     // push to every user (the backend dedupes per user, but it should never
@@ -683,6 +826,9 @@ export const {
   useDismissReportMutation,
   useGetAnalyticsEventsQuery,
   useGetAnalyticsVisitsQuery,
+  useGetAdminReportQuery,
+  useGetAdminReportSettingsQuery,
+  useUpdateAdminReportSettingsMutation,
   useListAnnouncementsQuery,
   useGetAnnouncementQuery,
   useCreateAnnouncementMutation,

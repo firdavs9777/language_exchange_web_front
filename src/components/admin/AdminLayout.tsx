@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import RequireAdmin from "./RequireAdmin";
+import { useReportsEnabled } from "./reports/useReportsEnabled";
 
 /**
  * The console's frame: a left rail of sections and a content pane.
@@ -16,6 +17,7 @@ import RequireAdmin from "./RequireAdmin";
 
 const SECTIONS: { to: string; key: string; label: string; end?: boolean }[] = [
   { to: "/admin", key: "admin.nav.overview", label: "Overview", end: true },
+  { to: "/admin/reports", key: "admin.nav.reports", label: "Reports" },
   { to: "/admin/reach", key: "admin.nav.reach", label: "Reach" },
   { to: "/admin/users", key: "admin.nav.users", label: "Users" },
   { to: "/admin/content", key: "admin.nav.content", label: "Content" },
@@ -33,34 +35,45 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
       : "text-ink-600 hover:bg-ink-100 dark:text-ink-300 dark:hover:bg-ink-800",
   ].join(" ");
 
-const AdminLayout: React.FC = () => {
+/**
+ * The frame itself, rendered only inside RequireAdmin so its one query (are
+ * reports switched on?) is never sent for a visitor who isn't an admin.
+ * Reports replaces Reach once they are on; until then both are listed.
+ */
+const AdminShell: React.FC = () => {
   const { t } = useTranslation();
+  const { enabled: reportsOn } = useReportsEnabled();
+  const sections = reportsOn ? SECTIONS.filter((s) => s.to !== "/admin/reach") : SECTIONS;
 
   return (
-    <RequireAdmin>
-      <div className="min-h-screen bg-canvas dark:bg-canvas-dark">
-        <div className="mx-auto w-full max-w-7xl px-4 py-6 md:flex md:gap-8">
-          <nav
-            aria-label={t("admin.nav.admin") || "Admin"}
-            className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-2 md:mx-0 md:w-52 md:shrink-0 md:flex-col md:gap-1 md:overflow-visible md:px-0 md:pb-0"
-          >
-            <div className="hidden px-4 pb-3 text-eyebrow uppercase text-ink-400 md:block">
-              {t("admin.nav.admin") || "Admin"}
-            </div>
-            {SECTIONS.map((s) => (
-              <NavLink key={s.to} to={s.to} end={s.end} className={linkClass}>
-                {t(s.key) || s.label}
-              </NavLink>
-            ))}
-          </nav>
+    <div className="min-h-screen bg-canvas dark:bg-canvas-dark">
+      <div className="mx-auto w-full max-w-7xl px-4 py-6 md:flex md:gap-8">
+        <nav
+          aria-label={t("admin.nav.admin") || "Admin"}
+          className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-2 md:mx-0 md:w-52 md:shrink-0 md:flex-col md:gap-1 md:overflow-visible md:px-0 md:pb-0"
+        >
+          <div className="hidden px-4 pb-3 text-eyebrow uppercase text-ink-400 md:block">
+            {t("admin.nav.admin") || "Admin"}
+          </div>
+          {sections.map((s) => (
+            <NavLink key={s.to} to={s.to} end={s.end} className={linkClass}>
+              {t(s.key) || s.label}
+            </NavLink>
+          ))}
+        </nav>
 
-          <main className="min-w-0 flex-1 pt-2 md:pt-0">
-            <Outlet />
-          </main>
-        </div>
+        <main className="min-w-0 flex-1 pt-2 md:pt-0">
+          <Outlet />
+        </main>
       </div>
-    </RequireAdmin>
+    </div>
   );
 };
+
+const AdminLayout: React.FC = () => (
+  <RequireAdmin>
+    <AdminShell />
+  </RequireAdmin>
+);
 
 export default AdminLayout;

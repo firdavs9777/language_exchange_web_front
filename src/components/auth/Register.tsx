@@ -23,6 +23,7 @@ import {
 import { Bounce, toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+import { trackEvent } from "../../analytics/track";
 import { setCredentials } from "../../store/slices/authSlice";
 
 import { SIGNUP_STEPS, STEP_LABELS, SignupStep } from "./register/steps";
@@ -179,6 +180,14 @@ const Register = () => {
     value: code,
     label: ISO6391.getName(code),
   }));
+
+  // The signup funnel's first step: once per visit to the page.
+  const signupStarted = useRef(false);
+  useEffect(() => {
+    if (signupStarted.current) return;
+    signupStarted.current = true;
+    trackEvent("signup_start");
+  }, []);
 
   // Clean up object URLs to avoid memory leaks
   useEffect(() => {

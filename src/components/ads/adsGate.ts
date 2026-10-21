@@ -4,8 +4,8 @@
 // 1. VIP users never see ads: "ad-free" is a benefit the app sells, and the
 //    web reads the same user document (`userMode === "vip"`, or an active
 //    `vipSubscription`), so a subscription bought in the app is honoured here.
-// 2. A visitor who declined the consent bar still sees ads, but
-//    non-personalized ones: AdSense reads `requestNonPersonalizedAds` from the
+// 2. A visitor who declined, or has not yet decided on, the consent bar still
+//    sees ads, but non-personalized ones (personalized only after "granted"): AdSense reads `requestNonPersonalizedAds` from the
 //    queue object before the first request. This is the site's own bar;
 //    Google's certified GDPR message (Privacy & messaging in AdSense) sits on
 //    top of it for EU visitors and needs no code.
@@ -40,5 +40,5 @@ export function applyAdConsent(consent: Consent | null): void {
   if (typeof window === "undefined") return;
   const w = window as any;
   const queue: AdsQueue = (w.adsbygoogle = w.adsbygoogle || []);
-  queue.requestNonPersonalizedAds = consent === "denied" ? 1 : 0;
+  queue.requestNonPersonalizedAds = consent === "granted" ? 0 : 1;
 }

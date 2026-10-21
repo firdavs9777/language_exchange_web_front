@@ -33,11 +33,14 @@ describe("applyAdConsent", () => {
     expect((window as any).adsbygoogle.requestNonPersonalizedAds).toBe(1);
   });
 
-  it("requests personalized ads when granted or undecided", () => {
+  it("requests personalized ads only once granted", () => {
     applyAdConsent("granted");
     expect((window as any).adsbygoogle.requestNonPersonalizedAds).toBe(0);
+  });
+
+  it("undecided consent is non-personalized", () => {
     applyAdConsent(null);
-    expect((window as any).adsbygoogle.requestNonPersonalizedAds).toBe(0);
+    expect((window as any).adsbygoogle.requestNonPersonalizedAds).toBe(1);
   });
 
   it("keeps an existing queue and its pending pushes", () => {

@@ -20,7 +20,7 @@ import {
   Newspaper,
   ShieldCheck,
 } from "lucide-react";
-import { GA_MEASUREMENT_ID } from "../../analytics/ga";
+import { consentControlsEnabled } from "../../analytics/consentGate";
 import { useConsentChoice } from "../../analytics/useConsentChoice";
 import notify from "../../design/notify";
 
@@ -59,32 +59,32 @@ const Toggle: React.FC<ToggleProps> = ({ label, description, value, onChange, ic
 );
 
 /**
- * Analytics consent, in the one place a signed-in visitor looks for it. The
- * same decision the consent bar takes on a first visit, changeable here for
- * as long as the account exists -- and absent when no measurement id is
- * configured, because then nothing is being collected to withdraw.
+ * Ads and analytics consent, in the one place a signed-in visitor looks for
+ * it. The same decision the consent bar takes on a first visit, changeable
+ * here for as long as the account exists -- and absent when there is neither
+ * a measurement id nor ads, because then there is no choice to make.
  */
 const AnalyticsRow: React.FC = () => {
   const { t } = useTranslation();
   const { state, accept, decline } = useConsentChoice();
 
-  if (!GA_MEASUREMENT_ID) return null;
+  if (!consentControlsEnabled()) return null;
 
   const description =
     state === "granted"
-      ? t("consent.manage.current_granted") || "Analytics cookies are on."
+      ? t("consent.manage.current_granted") || "Personalized ads and analytics are on."
       : state === "denied"
-      ? t("consent.manage.current_denied") || "Analytics cookies are off."
+      ? t("consent.manage.current_denied") || "Personalized ads and analytics are off."
       : t("consent.manage.body") ||
-        "Analytics cookies tell us which pages people find useful. Nothing else.";
+        "This choice controls personalized ads (by Google AdSense) and analytics cookies, if we use them. If you say no, you still see ads, but they aren't based on your browsing.";
 
   const change = (on: boolean) => {
     if (on) accept();
     else decline();
     notify.success(
       on
-        ? t("consent.manage.current_granted") || "Analytics cookies are on."
-        : t("consent.manage.current_denied") || "Analytics cookies are off."
+        ? t("consent.manage.current_granted") || "Personalized ads and analytics are on."
+        : t("consent.manage.current_denied") || "Personalized ads and analytics are off."
     );
   };
 
@@ -99,7 +99,7 @@ const AnalyticsRow: React.FC = () => {
           Save flow and says so by confirming immediately. */}
       <Toggle
         icon={<BarChart3 className="w-5 h-5" />}
-        label={t("consent.manage.analyticsCookies") || "Analytics cookies"}
+        label={t("consent.manage.analyticsCookies") || "Ads and analytics cookies"}
         description={description}
         value={state === "granted"}
         onChange={change}

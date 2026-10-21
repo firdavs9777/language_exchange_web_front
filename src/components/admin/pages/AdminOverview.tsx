@@ -4,6 +4,7 @@ import {
   useGetAdminStatsQuery,
   useGetAdminActivityQuery,
   useGetAnalyticsVisitsQuery,
+  useGetAdminReportQuery,
 } from "../../../store/slices/adminSlice";
 import { SurfaceCard } from "../../../design";
 import StatCard from "../parts/StatCard";
@@ -34,6 +35,10 @@ const AdminOverview: React.FC = () => {
   const stats = useGetAdminStatsQuery(undefined as any);
   const activity = useGetAdminActivityQuery({} as any);
   const visits = useGetAnalyticsVisitsQuery(undefined as any);
+  // The current week's report, when the backend has reports switched on. A
+  // 404 (switched off) or any other failure falls back to the old visit ping
+  // numbers, so the tile looks exactly as before until launch.
+  const weekReport = useGetAdminReportQuery({ period: "week" });
 
   const loadError = t("admin.common.loadError") || "Couldn't load this section.";
   const loadingText = t("admin.common.loading") || "Loading…";
@@ -72,6 +77,14 @@ const AdminOverview: React.FC = () => {
   const s = stats.data || {};
   const thisWeek = (visits.data && visits.data.thisWeek) || {};
   const lastWeek = (visits.data && visits.data.lastWeek) || {};
+  const reportWeb = weekReport.data && weekReport.data.web;
+  const reportPrev = weekReport.data && weekReport.data.previous;
+  const prevVisitors = reportPrev ? reportPrev.visitors : null;
+  // Last week with no history (null) or no visitors (0) has no percentage.
+  const visitorsDelta =
+    reportWeb && typeof reportWeb.visitors === "number" && typeof prevVisitors === "number" && prevVisitors > 0
+      ? Math.round(((reportWeb.visitors - prevVisitors) / prevVisitors) * 100)
+      : null;
   const visitsDelta =
     typeof thisWeek.totalVisits === "number" &&
     typeof lastWeek.totalVisits === "number" &&
@@ -123,11 +136,12 @@ const AdminOverview: React.FC = () => {
         </h1>
         <RefreshButton
           label={t("admin.common.refresh") || "Refresh"}
-          isFetching={stats.isFetching || activity.isFetching || visits.isFetching}
+          isFetching={stats.isFetching || activity.isFetching || visits.isFetching || !!weekReport.isFetching}
           onRefresh={() => {
             stats.refetch();
             activity.refetch();
             visits.refetch();
+            if (weekReport.data) weekReport.refetch();
           }}
         />
       </header>
@@ -162,10 +176,18 @@ const AdminOverview: React.FC = () => {
           </>
         )}
 
-        {visits.isError ? (
-          errorBox()
-        ) : visits.isLoading ? (
+        {reportWeb ? (
+          <StatCard
+            label={t("admin.overview.visitorsThisWeek") || "Visitors this week"}
+            value={num(reportWeb.visitors)}
+            hint={`${t("admin.overview.vs") || "vs"} ${num(prevVisitors)} ${
+              t("admin.overview.lastWeek") || "last week"
+            }${visitorsDelta === null ? "" : ` (${visitorsDelta >= 0 ? "+" : ""}${visitorsDelta}%)`}`}
+          />
+        ) : weekReport.isLoading || visits.isLoading ? (
           loadingBox()
+        ) : visits.isError ? (
+          errorBox()
         ) : (
           <StatCard
             label={t("admin.overview.visitsThisWeek") || "Visits this week"}

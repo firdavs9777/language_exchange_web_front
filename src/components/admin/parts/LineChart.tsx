@@ -11,6 +11,14 @@ export interface LineChartSeries {
   /** A brand token hex — see CHART_COLORS. */
   color: string;
   points: LineChartPoint[];
+  /**
+   * What the legend prints beside the name. By default the sum of the
+   * points, which is right for additive counts (page views, taps). A distinct
+   * count (unique visitors) doesn't add up across buckets — the same person
+   * on two days is one visitor — so such a series passes its real period
+   * total here, or `null` to print no number.
+   */
+  total?: number | null;
 }
 
 export interface LineChartProps {
@@ -136,12 +144,17 @@ const LineChart: React.FC<LineChartProps> = ({
   const tickIndexes =
     n === 0 ? [] : n === 1 ? [0] : [0, Math.floor((n - 1) / 2), n - 1].filter((v, i, a) => a.indexOf(v) === i);
 
-  const totals = rows.map((row) => row.values.reduce((sum, v) => sum + v, 0));
+  const totals: (number | null)[] = rows.map((row) => {
+    const given = row.series.total;
+    if (given === null) return null;
+    if (typeof given === "number" && isFinite(given)) return given;
+    return row.values.reduce((sum, v) => sum + v, 0);
+  });
   const ariaLabel =
     n === 0
       ? emptyText
       : rows
-          .map((row, i) => `${row.series.name}: ${totals[i]} over ${n} days`)
+          .map((row, i) => (totals[i] === null ? row.series.name : `${row.series.name}: ${totals[i]} over ${n} days`))
           .join("; ");
 
   return (
@@ -243,9 +256,11 @@ const LineChart: React.FC<LineChartProps> = ({
               style={{ backgroundColor: row.series.color }}
             />
             <span>{row.series.name}</span>
-            <span className="tabular-nums text-ink-900 dark:text-ink-50">
-              {totals[i].toLocaleString()}
-            </span>
+            {totals[i] === null ? null : (
+              <span className="tabular-nums text-ink-900 dark:text-ink-50">
+                {(totals[i] as number).toLocaleString()}
+              </span>
+            )}
           </li>
         ))}
       </ul>

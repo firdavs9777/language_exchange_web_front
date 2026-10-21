@@ -195,6 +195,10 @@ export const apiSlice = createApi({
     // for the editor, so saving one announcement doesn't refetch another.
     "AdminAnnouncements",
     "AdminAnnouncement",
+    // Analytics reports (GET /admin/reports) and the admin's own report-email
+    // toggles: separate so flipping a toggle never rebuilds a report.
+    "AdminReportData",
+    "AdminReportSettings",
     // GET /notifications/settings: its own tag so saving the notification
     // page does not refetch every "User" query (profile, visitors, blocks).
     // Gatherings and clubs (Phase 4). A list tag and a per-id tag each, so an

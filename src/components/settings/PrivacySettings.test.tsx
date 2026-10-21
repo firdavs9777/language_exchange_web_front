@@ -35,14 +35,14 @@ it("carries an analytics cookies row that withdraws and restores consent", () =>
   // The same switch as the six rows above it, not a second control language.
   const row = screen.getByTestId("analytics-consent-row");
   const toggle = row.querySelector("button") as HTMLButtonElement;
-  expect(screen.getByText("Analytics cookies")).toBeInTheDocument();
-  expect(screen.getByText("Analytics cookies are on.")).toBeInTheDocument();
+  expect(screen.getByText("Ads and analytics cookies")).toBeInTheDocument();
+  expect(screen.getByText("Personalized ads and analytics are on.")).toBeInTheDocument();
 
   fireEvent.click(toggle);
   expect(window.localStorage.getItem("bt.consent")).toBe("denied");
   expect(isGaDisabled("G-TEST")).toBe(true);
   expect(document.cookie).not.toContain("_ga=");
-  expect(screen.getByText("Analytics cookies are off.")).toBeInTheDocument();
+  expect(screen.getByText("Personalized ads and analytics are off.")).toBeInTheDocument();
 
   (loadGa as jest.Mock).mockClear();
   fireEvent.click(toggle);

@@ -11,6 +11,8 @@ const StickyAppBanner: React.FC = () => {
   const [hidden, setHidden] = useState(true);
   // Take turns with the announcement banner.
   const annBanner = useSurfaceOpen("announcement-banner");
+  // ...and with the consent bar, which would sit on top of the Install button.
+  const consentBar = useSurfaceOpen("consent-bar");
 
   // "ios" until the user agent says otherwise, and it only says so after
   // mount: reading navigator during render would bake one store into the
@@ -34,7 +36,7 @@ const StickyAppBanner: React.FC = () => {
     setHidden(true);
   }, []);
 
-  if (hidden || annBanner) return null;
+  if (hidden || annBanner || consentBar) return null;
 
   return (
     // `line`/`ink` rather than `gray-*`: Tailwind's gray is cool-blue and

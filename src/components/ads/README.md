@@ -42,7 +42,7 @@ the tests share one answer:
   reads the same user document (`userMode === "vip"`, or an active
   `vipSubscription`), so a subscription bought in the app is honoured here. The
   unit renders nothing and never pushes to the queue.
-- **Declining the consent bar gives non-personalized ads, not no ads.**
+- **Declining, or not yet deciding on, the consent bar gives non-personalized ads, not no ads.**
   `AdsBootstrap` mirrors the decision onto `adsbygoogle.requestNonPersonalizedAds`
   on mount and on every later change. Google's own certified GDPR message
   (Privacy & messaging in the AdSense console) sits on top of this for EU
