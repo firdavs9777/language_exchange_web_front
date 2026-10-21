@@ -32,11 +32,17 @@ const ReportBars: React.FC<{
         const width = peak > 0 ? Math.min(100, Math.max(0, (v / peak) * 100)) : 0;
         return (
           <li key={row.key} data-testid="report-bar" className="flex items-center gap-2">
-            <span className="w-36 shrink-0 truncate text-ink-800 dark:text-ink-100 sm:w-44">{row.label}</span>
-            <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-ink-100 dark:bg-ink-800" aria-hidden="true">
+            {/* The label and the bar both shrink (min-w-0), so a narrow card
+                truncates the label and shortens the bar instead of pushing
+                the number past the card's edge. */}
+            <span className="min-w-0 flex-[0_1_11rem] truncate text-ink-800 dark:text-ink-100">{row.label}</span>
+            <span
+              className="h-2.5 min-w-[1.5rem] flex-1 overflow-hidden rounded-full bg-ink-100 dark:bg-ink-800"
+              aria-hidden="true"
+            >
               <span className={`block h-full rounded-full ${barClassName}`} style={{ width: `${width}%` }} />
             </span>
-            <span className="w-16 shrink-0 text-right tabular-nums text-ink-700 dark:text-ink-200">
+            <span className="w-12 shrink-0 text-right tabular-nums text-ink-700 dark:text-ink-200">
               {row.display !== undefined ? row.display : v.toLocaleString("en-US")}
             </span>
           </li>

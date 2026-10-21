@@ -339,3 +339,53 @@ it("while another period loads it shows loading, not the previous period's numbe
   expect(screen.queryByText(/Oct 12 – 18, 2026/)).not.toBeInTheDocument();
   expect(screen.queryByTestId("report-countries")).not.toBeInTheDocument();
 });
+
+it("the visitors legend shows the period's unique visitors, not the sum of the days", () => {
+  mockReport.mockReturnValue(
+    ok({
+      ...REPORT_FIXTURE,
+      web: {
+        ...REPORT_FIXTURE.web,
+        visitors: 6,
+        pageViews: 68,
+        // The same person on two days counts once in the period.
+        series: [
+          { x: "2026-10-19", visitors: 3, pageViews: 30 },
+          { x: "2026-10-20", visitors: 4, pageViews: 38 },
+        ],
+      },
+    })
+  );
+  renderAt();
+  const items = within(screen.getByTestId("report-traffic")).getByTestId("line-legend").querySelectorAll("li");
+  expect(items[0]).toHaveTextContent(/^Visitors6$/);
+  expect(items[1]).toHaveTextContent(/^Page views68$/);
+});
+
+// Phone layout guard. A CSS grid without an explicit template sizes its track
+// by the widest content (a table's nowrap header), and a grid item's default
+// `min-width: auto` lets that content widen it: the page then scrolls sideways
+// at 320-390px. Every grid on the page must declare a minmax(0, 1fr) base
+// template (grid-cols-N, unprefixed), and every card must carry min-w-0.
+it("every grid declares a base column template and every card can shrink (no sideways scroll on a phone)", () => {
+  const { container } = renderAt();
+  const grids = Array.from(container.querySelectorAll<HTMLElement>(".grid"));
+  expect(grids.length).toBeGreaterThan(5);
+  grids.forEach((g) => {
+    const classes = (g.getAttribute("class") || "").split(/\s+/);
+    expect(classes.some((c) => /^grid-cols-\d+$/.test(c))).toBe(true);
+  });
+  screen.getAllByTestId("surface-card").forEach((card) => {
+    if (card.closest(".grid")) {
+      const inKpis = card.parentElement && /\[&>\*\]:min-w-0/.test(card.parentElement.className);
+      expect(inKpis || card.className.split(/\s+/).includes("min-w-0")).toBe(true);
+    }
+  });
+  // A bar row's label and bar shrink, so only the short number is fixed-width.
+  screen.getAllByTestId("report-bar").forEach((row) => {
+    const [label, bar] = Array.from(row.children);
+    expect(label.className.split(/\s+/)).toContain("min-w-0");
+    expect(label.className).not.toMatch(/(^|\s)shrink-0(\s|$)/);
+    expect(bar.className).toMatch(/(^|\s)flex-1(\s|$)/);
+  });
+});

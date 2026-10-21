@@ -21,7 +21,7 @@ const ReportStoreTaps: React.FC<{ report: Report; emptyText: string }> = ({ repo
   const total = (row: { ios: number; android: number }) => (Number(row.ios) || 0) + (Number(row.android) || 0);
 
   const tile = (testId: string, label: string, value: number, previous: any) => (
-    <div data-testid={testId} className="rounded-card bg-ink-50 px-4 py-3 dark:bg-ink-900">
+    <div data-testid={testId} className="min-w-0 rounded-card bg-ink-50 px-4 py-3 dark:bg-ink-900">
       <div className="text-xs font-medium uppercase tracking-wide text-ink-500 dark:text-ink-400">{label}</div>
       <div className="font-display text-2xl tabular-nums text-ink-900 dark:text-ink-50">{num(value)}</div>
       <div className="text-xs">
@@ -59,7 +59,7 @@ const ReportStoreTaps: React.FC<{ report: Report; emptyText: string }> = ({ repo
 
   return (
     <div>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {tile("taps-total", t("admin.reports.total") || "Total", taps.total, prev.storeTaps)}
         {tile("taps-ios", ios, taps.ios, prev.iosTaps)}
         {tile("taps-android", android, taps.android, prev.androidTaps)}
@@ -84,8 +84,8 @@ const ReportStoreTaps: React.FC<{ report: Report; emptyText: string }> = ({ repo
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div data-testid="taps-by-button">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div data-testid="taps-by-button" className="min-w-0">
           {subTitle(t("admin.reports.byButton") || "By button")}
           <DataTable
             rows={taps.byPlacement || []}
@@ -101,7 +101,7 @@ const ReportStoreTaps: React.FC<{ report: Report; emptyText: string }> = ({ repo
             ]}
           />
         </div>
-        <div data-testid="taps-by-source">
+        <div data-testid="taps-by-source" className="min-w-0">
           {subTitle(t("admin.reports.bySource") || "By source or campaign")}
           <DataTable
             rows={taps.bySource || []}

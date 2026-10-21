@@ -127,3 +127,28 @@ it("uses brand tokens that stay readable on a light surface", () => {
   expect(CHART_COLORS.pageViews).toBe("#00BFA5");
   expect(CHART_COLORS.storeTaps).toBe("#C9A415");
 });
+
+it("prints a series' given total in the legend instead of the sum of its points", () => {
+  render(
+    <LineChart
+      series={[
+        { name: "Visitors", color: "#00BFA5", total: 3, points: [{ x: "2026-10-19", y: 2 }, { x: "2026-10-20", y: 2 }] },
+        { name: "Page views", color: "#C9A415", points: [{ x: "2026-10-19", y: 5 }, { x: "2026-10-20", y: 6 }] },
+      ]}
+    />
+  );
+  const items = screen.getByTestId("line-legend").querySelectorAll("li");
+  expect(items[0]).toHaveTextContent(/^Visitors3$/);
+  expect(items[1]).toHaveTextContent(/^Page views11$/);
+  expect(screen.getByTestId("line-chart-svg").getAttribute("aria-label")).toContain("Visitors: 3");
+});
+
+it("prints no number for a series whose total is null", () => {
+  render(
+    <LineChart
+      series={[{ name: "Visitors", color: "#00BFA5", total: null, points: [{ x: "2026-10-19", y: 2 }] }]}
+    />
+  );
+  expect(screen.getByTestId("line-legend").querySelector("li")).toHaveTextContent(/^Visitors$/);
+  expect(screen.getByTestId("line-chart-svg").getAttribute("aria-label")).not.toMatch(/NaN|null/);
+});

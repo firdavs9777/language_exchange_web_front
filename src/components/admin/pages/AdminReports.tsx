@@ -115,8 +115,12 @@ const AdminReports: React.FC = () => {
     }
   };
 
+  // `min-w-0` on every card and `grid-cols-1` (minmax(0, 1fr)) on every grid:
+  // without them a grid track is sized by its widest content — a table's
+  // nowrap header row — and the page scrolls sideways on a phone instead of
+  // the table scrolling inside its own box.
   const card = (testId: string, title: React.ReactNode, body: React.ReactNode, className = "") => (
-    <SurfaceCard padding="lg" className={className}>
+    <SurfaceCard padding="lg" className={["min-w-0", className].filter(Boolean).join(" ")}>
       <div data-testid={testId}>
         <h2 className="pb-3 text-xs font-semibold uppercase tracking-wide text-ink-600 dark:text-ink-300">
           {title}
@@ -240,6 +244,9 @@ const AdminReports: React.FC = () => {
               {
                 name: t("admin.reports.visitors") || "Visitors",
                 color: CHART_COLORS.pageViews,
+                // Unique visitors per bucket don't sum to the period's unique
+                // visitors; the legend shows the real total, as the KPI does.
+                total: web.visitors,
                 points: (web.series || []).map((p) => ({ x: String(p.x), y: Number(p.visitors) || 0 })),
               },
               {
@@ -251,7 +258,7 @@ const AdminReports: React.FC = () => {
           />
         )}
 
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {card(
             "report-countries",
             t("admin.reports.countries") || "Countries",
@@ -289,7 +296,7 @@ const AdminReports: React.FC = () => {
           )}
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {card(
             "report-top-pages",
             titleWithTip(
@@ -360,7 +367,7 @@ const AdminReports: React.FC = () => {
           <ReportStoreTaps report={r} emptyText={emptyText} />
         )}
 
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {card(
             "report-devices",
             t("admin.reports.devices") || "Devices & languages",
@@ -402,7 +409,7 @@ const AdminReports: React.FC = () => {
           )}
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           {card(
             "report-members",
             t("admin.reports.membersTitle") || "Members",

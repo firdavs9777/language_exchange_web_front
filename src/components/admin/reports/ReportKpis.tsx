@@ -56,7 +56,7 @@ const ReportKpis: React.FC<{ report: Report }> = ({ report }) => {
   const avg = visitDuration(web.avgVisitMs);
 
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5 [&>*]:min-w-0">
       <StatCard
         label={label(
           "visitors",
