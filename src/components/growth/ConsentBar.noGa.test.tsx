@@ -30,10 +30,14 @@ it("cannot be opened by the manager either: there is nothing to manage", () => {
 
 describe("with ads on and no GA id", () => {
   const prev = process.env.REACT_APP_ADSENSE_AUTO_ADS;
+  const prevClient = process.env.REACT_APP_ADSENSE_CLIENT;
   beforeEach(() => {
     process.env.REACT_APP_ADSENSE_AUTO_ADS = "true";
+    process.env.REACT_APP_ADSENSE_CLIENT = "ca-pub-1234567890123456";
   });
   afterEach(() => {
+    if (prevClient === undefined) delete process.env.REACT_APP_ADSENSE_CLIENT;
+    else process.env.REACT_APP_ADSENSE_CLIENT = prevClient;
     if (prev === undefined) delete process.env.REACT_APP_ADSENSE_AUTO_ADS;
     else process.env.REACT_APP_ADSENSE_AUTO_ADS = prev;
   });
@@ -48,4 +52,19 @@ describe("with ads on and no GA id", () => {
     act(() => openConsentManager());
     expect(screen.getByTestId("consent-manager")).toBeInTheDocument();
   });
+});
+
+it("stays hidden with auto ads on but no AdSense client id: no ads load", () => {
+  const prev = process.env.REACT_APP_ADSENSE_AUTO_ADS;
+  const prevClient = process.env.REACT_APP_ADSENSE_CLIENT;
+  process.env.REACT_APP_ADSENSE_AUTO_ADS = "true";
+  delete process.env.REACT_APP_ADSENSE_CLIENT;
+  try {
+    render(<ConsentBar />);
+    expect(screen.queryByTestId("consent-bar")).not.toBeInTheDocument();
+  } finally {
+    if (prev === undefined) delete process.env.REACT_APP_ADSENSE_AUTO_ADS;
+    else process.env.REACT_APP_ADSENSE_AUTO_ADS = prev;
+    if (prevClient !== undefined) process.env.REACT_APP_ADSENSE_CLIENT = prevClient;
+  }
 });

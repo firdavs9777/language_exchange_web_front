@@ -669,21 +669,18 @@ export const adminApiSlice = apiSlice.injectEndpoints({
     }),
 
     // --- Reports (behind ANALYTICS_REPORTS_ENABLED: 404 while it is off) ----
-    // No retry on the report: a 404 is an answer ("not switched on"), not a
-    // blip, and a month report can take seconds to build server-side.
+    // A 404 here is an answer ("not switched on"), not a blip.
     getAdminReport: builder.query({
       query: (arg: { period: ReportPeriod; date?: string }) => ({
         url: `${ADMIN_URL}/reports`,
         params: params(arg),
       }),
       transformResponse: unwrap,
-      extraOptions: { maxRetries: 0 },
       providesTags: ["AdminReportData"],
     }),
     getAdminReportSettings: builder.query({
       query: () => ({ url: `${ADMIN_URL}/reports/settings` }),
       transformResponse: unwrap,
-      extraOptions: { maxRetries: 0 },
       providesTags: ["AdminReportSettings"],
     }),
     // Sends only the keys it is given: the backend updates any subset.
@@ -700,7 +697,6 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         body,
       }),
       transformResponse: unwrap,
-      extraOptions: { maxRetries: 0 },
       async onQueryStarted(body: Partial<AdminReportSettings>, { dispatch, queryFulfilled }: any) {
         const util: any = apiSlice.util;
         const patch = dispatch(

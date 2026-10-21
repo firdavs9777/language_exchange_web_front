@@ -127,3 +127,21 @@ it("starts a new session after 30 minutes idle and the next view is a landing", 
     jest.useRealTimers();
   }
 });
+
+describe("first page_view on a prerendered page (store still logged out)", () => {
+  afterEach(() => window.localStorage.removeItem("userInfo"));
+  const lastHeaders = () => ((global as any).fetch as jest.Mock).mock.calls.at(-1)[1].headers;
+
+  it("carries the login restored from storage", async () => {
+    window.localStorage.setItem("userInfo", JSON.stringify({ token: "stored-tok", user: { _id: "u1" } }));
+    trackEvent("page_view", { path: "/" });
+    await flush();
+    expect(lastHeaders().Authorization).toBe("Bearer stored-tok");
+  });
+
+  it("sends no Authorization with neither store nor storage", async () => {
+    trackEvent("page_view", { path: "/" });
+    await flush();
+    expect(lastHeaders().Authorization).toBeUndefined();
+  });
+});

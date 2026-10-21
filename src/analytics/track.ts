@@ -126,7 +126,17 @@ function getAuthToken(): string | undefined {
   try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const store = require("../store").default;
-    return store?.getState?.()?.auth?.userInfo?.token || undefined;
+    const fromStore = store?.getState?.()?.auth?.userInfo?.token;
+    if (fromStore) return fromStore;
+  } catch {
+    /* fall through to storage */
+  }
+  // Prerendered pages start the store logged out and restore the session in
+  // App's mount effect, which runs after the first page_view: read storage.
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { readStoredUserInfo } = require("../store/slices/authSlice");
+    return readStoredUserInfo()?.token || undefined;
   } catch {
     return undefined;
   }

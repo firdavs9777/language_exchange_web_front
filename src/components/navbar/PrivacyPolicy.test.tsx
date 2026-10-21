@@ -12,6 +12,7 @@ const text = () =>
 describe("privacy policy states what is collected", () => {
   afterEach(() => {
     delete process.env.REACT_APP_ADSENSE_AUTO_ADS;
+    delete process.env.REACT_APP_ADSENSE_CLIENT;
   });
   it("is dated October 21, 2026", () => {
     const t = text();
@@ -42,6 +43,7 @@ describe("privacy policy states what is collected", () => {
   });
   it("offers the privacy choices control when ads run, even with no GA id", () => {
     process.env.REACT_APP_ADSENSE_AUTO_ADS = "true";
+    process.env.REACT_APP_ADSENSE_CLIENT = "ca-pub-1234567890123456";
     const { getByTestId } = render(<MemoryRouter><PrivacyPolicy /></MemoryRouter>);
     expect(getByTestId("policy-privacy-choices")).toBeInTheDocument();
     expect(document.body.textContent).toMatch(/choose at any time whether ads are personalized and whether analytics cookies are used/);

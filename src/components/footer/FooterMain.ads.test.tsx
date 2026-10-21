@@ -12,10 +12,12 @@ jest.mock("../../analytics/ga", () => ({ GA_MEASUREMENT_ID: "", loadGa: jest.fn(
 
 afterEach(() => {
   delete process.env.REACT_APP_ADSENSE_AUTO_ADS;
+  delete process.env.REACT_APP_ADSENSE_CLIENT;
 });
 
 it("shows Privacy choices when ads run, even with no GA id", () => {
   process.env.REACT_APP_ADSENSE_AUTO_ADS = "true";
+  process.env.REACT_APP_ADSENSE_CLIENT = "ca-pub-1234567890123456";
   render(<MemoryRouter><FooterMain /></MemoryRouter>);
   expect(screen.getByText("Privacy choices")).toBeInTheDocument();
 });

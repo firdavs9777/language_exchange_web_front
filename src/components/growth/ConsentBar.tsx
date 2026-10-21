@@ -4,7 +4,7 @@ import { subscribeConsentManager } from "../../analytics/consent";
 import { useConsentChoice } from "../../analytics/useConsentChoice";
 import { consentControlsEnabled } from "../../analytics/consentGate";
 import DialogShell from "../../design/DialogShell";
-import { useSurfaceOpen } from "./surfaceRegistry";
+import { openSurface, closeSurface, useSurfaceOpen } from "./surfaceRegistry";
 
 const ACCEPT_CLASS =
   "rounded-full bg-brand-deep px-4 py-1.5 text-sm font-extrabold text-white transition-colors hover:bg-brand-deepest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-deep";
@@ -20,6 +20,16 @@ const ConsentBar: React.FC = () => {
   const popupOpen = useSurfaceOpen("download-popup");
   const annOpen = useSurfaceOpen("announcement-popup");
   const closeManage = useCallback(() => setManage(false), []);
+
+  // While the bar is up it covers the store banner's Install button on phones,
+  // so the banner takes turns and stays hidden until the bar is answered.
+  const barShown =
+    consentControlsEnabled() && !manage && state === null && !popupOpen && !annOpen;
+  useEffect(() => {
+    if (!barShown) return;
+    openSurface("consent-bar");
+    return () => closeSurface("consent-bar");
+  }, [barShown]);
 
   // The footer link, the settings row and the policy page all reach the
   // manager through this, from wherever they are in the tree.

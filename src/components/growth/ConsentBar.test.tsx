@@ -139,3 +139,18 @@ describe("manage mode", () => {
     expect(screen.getByTestId("consent-manager")).toBeInTheDocument();
   });
 });
+
+it("keeps the sticky store banner hidden while the bar is open, and brings it back after", () => {
+  const StickyAppBanner = require("./StickyAppBanner").default;
+  Object.defineProperty(window, "innerWidth", { writable: true, configurable: true, value: 375 });
+  render(
+    <>
+      <ConsentBar />
+      <StickyAppBanner />
+    </>
+  );
+  expect(screen.getByTestId("consent-bar")).toBeInTheDocument();
+  expect(screen.queryByTestId("sticky-app-banner")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByText("No thanks"));
+  expect(screen.getByTestId("sticky-app-banner")).toBeInTheDocument();
+});
