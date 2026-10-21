@@ -2257,23 +2257,6 @@
         "subtitle": "Kostenlos herunterladen, kostenlos starten. Gerade lernt jemand deine Sprache.",
         "web": "Oder nutze BananaTalk im Web"
       }
-    },
-    "screens": {
-      "title": "Die App ansehen",
-      "items": {
-        "aiStudy": {
-          "title": "KI-Lernen",
-          "body": "Ein Tagespaket, ein KI-Tutor und Übungen, die in fünf Minuten passen."
-        },
-        "community": {
-          "title": "Tägliche Matches",
-          "body": "Jeden Tag neue Partner, die deine Sprache lernen, während du ihre lernst."
-        },
-        "moments": {
-          "title": "Momente & Reels",
-          "body": "Teile deinen Tag, schau Reels und lass dich von Muttersprachlern korrigieren."
-        }
-      }
     }
   },
   "vip": {
