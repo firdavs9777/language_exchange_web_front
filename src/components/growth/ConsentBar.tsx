@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { subscribeConsentManager } from "../../analytics/consent";
 import { useConsentChoice } from "../../analytics/useConsentChoice";
-import { GA_MEASUREMENT_ID } from "../../analytics/ga";
+import { consentControlsEnabled } from "../../analytics/consentGate";
 import DialogShell from "../../design/DialogShell";
 import { useSurfaceOpen } from "./surfaceRegistry";
 
@@ -25,10 +25,10 @@ const ConsentBar: React.FC = () => {
   // manager through this, from wherever they are in the tree.
   useEffect(() => subscribeConsentManager(() => setManage(true)), []);
 
-  // No measurement id: GA is inert, so asking for consent — or offering to
-  // withdraw it — collects a decision nothing acts on. Below the hooks so they
-  // still run unconditionally.
-  if (!GA_MEASUREMENT_ID) return null;
+  // Neither a measurement id nor ads: nothing acts on a decision, so asking for
+  // consent — or offering to withdraw it — would be theatre. Below the hooks so
+  // they still run unconditionally.
+  if (!consentControlsEnabled()) return null;
 
   // Opened deliberately — from the footer, the policy page or privacy
   // settings, all of them far from here in the tree — so it is a dialog, not

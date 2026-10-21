@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import StoreLink from "../growth/StoreLink";
 import { openConsentManager } from "../../analytics/consent";
-import { GA_MEASUREMENT_ID } from "../../analytics/ga";
+import { consentControlsEnabled } from "../../analytics/consentGate";
 import "./FooterMain.scss";
 import brandLogo from "../../assets/logo.png";
 
@@ -125,7 +125,7 @@ const FooterMain: React.FC = () => {
                 theatre -- and the footer stays exactly as it was. The id is
                 a build-time value, identical on the server and in the
                 browser, so this is safe on the prerendered pages. */}
-            {GA_MEASUREMENT_ID ? (
+            {consentControlsEnabled() ? (
               <button
                 type="button"
                 data-testid="footer-privacy-choices"

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { openConsentManager } from "../../analytics/consent";
-import { GA_MEASUREMENT_ID } from "../../analytics/ga";
+import { consentControlsEnabled } from "../../analytics/consentGate";
 import "./PrivacyPolicy.css";
 const PrivacyPolicy = () => {
   return (
@@ -10,10 +10,10 @@ const PrivacyPolicy = () => {
         <div className="privacy-policy-content">
           <h1>Privacy Policy for BananaTalk</h1>
           <p className="effective-date">
-            <strong>Effective Date:</strong> October 23, 2025
+            <strong>Effective Date:</strong> October 21, 2026
           </p>
           <p className="last-updated">
-            <strong>Last Updated:</strong> October 23, 2025
+            <strong>Last Updated:</strong> October 21, 2026
           </p>
 
           <section className="policy-section">
@@ -76,7 +76,55 @@ const PrivacyPolicy = () => {
               </li>
             </ul>
 
-            <h3>2.3 Information from Third Parties</h3>
+            <h3>2.3 Website Analytics and Advertising</h3>
+            <p>
+              On our website we collect a small amount of first-party usage
+              data to see which pages help people and where visitors come from:
+            </p>
+            <ul>
+              <li>
+                Page views and time on page, the page that referred you and any
+                campaign (UTM) tags on the link, and taps on our app-store
+                buttons
+              </li>
+              <li>
+                Your device type, operating system and browser family, and the
+                language of the site
+              </li>
+              <li>
+                If you are signed in, these events are linked to your account.
+                Bots and BananaTalk administrators are excluded.
+              </li>
+            </ul>
+            <p>
+              We use your IP address only to look up your country and to
+              compute an anonymous visitor ID that changes every month. Your IP
+              address is not stored for analytics. Analytics data is kept for
+              13 months and then deleted. A random session ID is kept in your
+              browser's session storage for the current tab; it is not a
+              cookie, and we set no analytics cookies of our own.
+            </p>
+            <p>
+              Separately, login security records keep the IP addresses of your
+              last 20 logins so we can detect and investigate suspicious
+              access.
+            </p>
+            <p>
+              This product includes GeoLite2 data created by MaxMind, available
+              from https://www.maxmind.com
+            </p>
+            <p>
+              Google AdSense shows ads on our website (members with a VIP
+              subscription see none). AdSense uses ad cookies. Until you agree,
+              the ads you see are non-personalized. Visitors in the European
+              Economic Area, the United Kingdom and Switzerland also see
+              Google's own consent message. You can change your choice at any
+              time with the "Privacy choices" link in our footer, and you can
+              manage ad personalization with Google's Ads Settings at
+              https://adssettings.google.com
+            </p>
+
+            <h3>2.4 Information from Third Parties</h3>
             <ul>
               <li>
                 <strong>Social Media:</strong> If you choose to connect your
@@ -217,16 +265,18 @@ const PrivacyPolicy = () => {
               machine-readable format.
             </p>
 
-            {/* Only where analytics actually runs: with no measurement id
-                nothing is collected on the web, so there is nothing here to
-                withdraw. The id is a build-time value, so this page renders
-                the same in the prerender and in the browser. */}
-            {GA_MEASUREMENT_ID ? (
+            {/* Shown wherever there is a choice to make: Google Analytics is
+                configured, or ads (and so ad cookies) run. A build-time
+                value, so this page renders the same in the prerender and in
+                the browser. */}
+            {consentControlsEnabled() ? (
               <>
-                <h3>6.7 Analytics Cookies</h3>
+                <h3>6.7 Analytics and Ad Cookies</h3>
                 <p>
-                  You can turn analytics cookies on or off at any time, and
-                  turning them off deletes the ones already on this device:{" "}
+                  You can turn analytics and ad cookies on or off at any time,
+                  and turning them off deletes the analytics cookies already on
+                  this device. You can also manage ad personalization in
+                  Google's Ads Settings (https://adssettings.google.com):{" "}
                   <button
                     type="button"
                     className="policy-inline-button"

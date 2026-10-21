@@ -20,7 +20,7 @@ import {
   Newspaper,
   ShieldCheck,
 } from "lucide-react";
-import { GA_MEASUREMENT_ID } from "../../analytics/ga";
+import { consentControlsEnabled } from "../../analytics/consentGate";
 import { useConsentChoice } from "../../analytics/useConsentChoice";
 import notify from "../../design/notify";
 
@@ -68,7 +68,7 @@ const AnalyticsRow: React.FC = () => {
   const { t } = useTranslation();
   const { state, accept, decline } = useConsentChoice();
 
-  if (!GA_MEASUREMENT_ID) return null;
+  if (!consentControlsEnabled()) return null;
 
   const description =
     state === "granted"

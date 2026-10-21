@@ -27,3 +27,25 @@ it("cannot be opened by the manager either: there is nothing to manage", () => {
   act(() => openConsentManager());
   expect(screen.queryByTestId("consent-manager")).not.toBeInTheDocument();
 });
+
+describe("with ads on and no GA id", () => {
+  const prev = process.env.REACT_APP_ADSENSE_AUTO_ADS;
+  beforeEach(() => {
+    process.env.REACT_APP_ADSENSE_AUTO_ADS = "true";
+  });
+  afterEach(() => {
+    if (prev === undefined) delete process.env.REACT_APP_ADSENSE_AUTO_ADS;
+    else process.env.REACT_APP_ADSENSE_AUTO_ADS = prev;
+  });
+
+  it("bar shows with ads on and no GA id", () => {
+    render(<ConsentBar />);
+    expect(screen.getByTestId("consent-bar")).toBeInTheDocument();
+  });
+
+  it("the manager opens", () => {
+    render(<ConsentBar />);
+    act(() => openConsentManager());
+    expect(screen.getByTestId("consent-manager")).toBeInTheDocument();
+  });
+});
