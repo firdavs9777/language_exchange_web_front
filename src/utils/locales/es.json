@@ -2239,23 +2239,6 @@
         "subtitle": "Gratis para descargar y para empezar. Alguien está aprendiendo tu idioma ahora mismo.",
         "web": "O usa BananaTalk en la web"
       }
-    },
-    "screens": {
-      "title": "Mira la app",
-      "items": {
-        "aiStudy": {
-          "title": "Estudio con IA",
-          "body": "Un paquete diario, un tutor de IA y práctica que cabe en cinco minutos."
-        },
-        "community": {
-          "title": "Coincidencias diarias",
-          "body": "Compañeros nuevos cada día que aprenden tu idioma mientras tú aprendes el suyo."
-        },
-        "moments": {
-          "title": "Momentos y Reels",
-          "body": "Comparte tu día, mira reels y recibe correcciones de hablantes nativos."
-        }
-      }
     }
   },
   "vip": {

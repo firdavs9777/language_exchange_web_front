@@ -2257,23 +2257,6 @@
         "subtitle": "Tải miễn phí, bắt đầu miễn phí. Ngay lúc này có người đang học ngôn ngữ của bạn.",
         "web": "Hoặc dùng BananaTalk trên web"
       }
-    },
-    "screens": {
-      "title": "Xem ứng dụng",
-      "items": {
-        "aiStudy": {
-          "title": "Học với AI",
-          "body": "Gói học mỗi ngày, gia sư AI và bài luyện chỉ mất năm phút."
-        },
-        "community": {
-          "title": "Ghép đôi mỗi ngày",
-          "body": "Bạn học mới mỗi ngày, họ học ngôn ngữ của bạn trong khi bạn học ngôn ngữ của họ."
-        },
-        "moments": {
-          "title": "Khoảnh khắc & Reels",
-          "body": "Chia sẻ ngày của bạn, xem reels và được người bản xứ sửa lỗi."
-        }
-      }
     }
   },
   "vip": {

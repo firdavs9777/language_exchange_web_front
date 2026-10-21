@@ -2257,23 +2257,6 @@
         "subtitle": "Gratis diunduh, gratis untuk mulai. Seseorang sedang belajar bahasamu sekarang.",
         "web": "Atau gunakan BananaTalk di web"
       }
-    },
-    "screens": {
-      "title": "Lihat aplikasinya",
-      "items": {
-        "aiStudy": {
-          "title": "Belajar AI",
-          "body": "Paket harian, tutor AI, dan latihan yang cukup lima menit."
-        },
-        "community": {
-          "title": "Kecocokan harian",
-          "body": "Partner baru setiap hari yang belajar bahasamu sementara kamu belajar bahasa mereka."
-        },
-        "moments": {
-          "title": "Momen & Reels",
-          "body": "Bagikan harimu, tonton reels, dan dapatkan koreksi dari penutur asli."
-        }
-      }
     }
   },
   "vip": {

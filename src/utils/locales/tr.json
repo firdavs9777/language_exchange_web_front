@@ -2257,23 +2257,6 @@
         "subtitle": "İndirmesi ücretsiz, başlaması ücretsiz. Şu anda biri senin dilini öğreniyor.",
         "web": "Ya da BananaTalk'u web'de kullan"
       }
-    },
-    "screens": {
-      "title": "Uygulamayı gör",
-      "items": {
-        "aiStudy": {
-          "title": "Yapay Zekâ ile Çalış",
-          "body": "Günlük bir paket, yapay zekâ öğretmeni ve beş dakikalık pratik."
-        },
-        "community": {
-          "title": "Günlük eşleşmeler",
-          "body": "Sen onların dilini öğrenirken senin dilini öğrenen yeni partnerler, her gün."
-        },
-        "moments": {
-          "title": "Anlar ve Reels",
-          "body": "Gününü paylaş, reels izle ve anadili konuşanlardan düzeltme al."
-        }
-      }
     }
   },
   "vip": {

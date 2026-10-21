@@ -2257,23 +2257,6 @@
         "subtitle": "Libreng i-download, libreng magsimula. May nag-aaral ng wika mo ngayon mismo.",
         "web": "O gamitin ang BananaTalk sa web"
       }
-    },
-    "screens": {
-      "title": "Tingnan ang app",
-      "items": {
-        "aiStudy": {
-          "title": "AI Study",
-          "body": "Isang pang-araw-araw na pack, AI tutor, at praktis na kasya sa limang minuto."
-        },
-        "community": {
-          "title": "Mga match araw-araw",
-          "body": "Bagong mga partner araw-araw na nag-aaral ng wika mo habang inaaral mo ang sa kanila."
-        },
-        "moments": {
-          "title": "Moments at Reels",
-          "body": "Ibahagi ang araw mo, manood ng reels, at magpatama sa mga katutubong nagsasalita."
-        }
-      }
     }
   },
   "vip": {

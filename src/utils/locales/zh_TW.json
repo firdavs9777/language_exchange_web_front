@@ -2257,23 +2257,6 @@
         "subtitle": "免費下載，免費開始。此刻就有人在學習你的語言。",
         "web": "或在網頁上使用 BananaTalk"
       }
-    },
-    "screens": {
-      "title": "看看 App",
-      "items": {
-        "aiStudy": {
-          "title": "AI 學習",
-          "body": "每日學習包、AI 家教，以及五分鐘就能完成的練習。"
-        },
-        "community": {
-          "title": "每日配對",
-          "body": "每天認識新語伴，他們學你的語言，你學他們的。"
-        },
-        "moments": {
-          "title": "動態與 Reels",
-          "body": "分享你的日常、觀看 Reels，並請母語人士幫你修改。"
-        }
-      }
     }
   },
   "vip": {

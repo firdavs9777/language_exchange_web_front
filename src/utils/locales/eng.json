@@ -2278,23 +2278,6 @@
         "subtitle": "Free to download, free to start. Someone is learning your language right now.",
         "web": "Or use BananaTalk on the web"
       }
-    },
-    "screens": {
-      "title": "See the app",
-      "items": {
-        "aiStudy": {
-          "title": "AI Study",
-          "body": "A daily pack, an AI tutor and practice that fits in five minutes."
-        },
-        "community": {
-          "title": "Daily matches",
-          "body": "Fresh partners every day who learn your language while you learn theirs."
-        },
-        "moments": {
-          "title": "Moments & Reels",
-          "body": "Share your day, watch reels, get corrected by native speakers."
-        }
-      }
     }
   },
   "vip": {
