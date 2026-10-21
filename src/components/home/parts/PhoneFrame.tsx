@@ -3,6 +3,12 @@ import React from "react";
 /** Screenshots in public/images/app/, all exported at the same size. */
 export type AppShot = "app-chat" | "app-study" | "app-community" | "app-moments";
 
+/**
+ * Bump when the screenshots are replaced: the file names stay the same, so
+ * browsers that cached the old ones only refetch for a new URL.
+ */
+export const SHOTS_VERSION = "2026-10-21";
+
 export const SHOT_WIDTH = 590;
 export const SHOT_HEIGHT = 1278;
 
@@ -33,9 +39,9 @@ const PhoneFrame: React.FC<PhoneFrameProps> = ({ shot, alt, eager = false, class
   >
     <div className="overflow-hidden rounded-[1.9rem] bg-[#fff] sm:rounded-[2.1rem]">
       <picture>
-        <source srcSet={`/images/app/${shot}.webp`} type="image/webp" />
+        <source srcSet={`/images/app/${shot}.webp?v=${SHOTS_VERSION}`} type="image/webp" />
         <img
-          src={`/images/app/${shot}.png`}
+          src={`/images/app/${shot}.png?v=${SHOTS_VERSION}`}
           alt={alt}
           width={SHOT_WIDTH}
           height={SHOT_HEIGHT}

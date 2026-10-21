@@ -65,7 +65,7 @@ it("gives every screenshot alt text and lazy-loads all but the hero's front phon
   });
   const eager = shots.filter((img) => img.getAttribute("loading") !== "lazy");
   expect(eager).toHaveLength(1);
-  expect(eager[0].getAttribute("src")).toBe("/images/app/app-chat.png");
+  expect(eager[0].getAttribute("src")).toMatch(/^\/images\/app\/app-chat\.png(\?v=.+)?$/);
 });
 
 it("ends the steps, features and languages sections with a call to action", () => {
