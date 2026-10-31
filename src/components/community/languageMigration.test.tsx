@@ -1,7 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import MemberCard, { CommunityMemberCard } from "./MemberCard";
-import { getLanguageFlag } from "./utils";
 import LanguageFlagChip from "./tandem/LanguageFlagChip";
 
 const member: CommunityMemberCard = {
@@ -17,12 +16,6 @@ it("MemberCard renders the corrected flag, not the collision", () => {
   // The avatar corner carries the native-language flag.
   expect(screen.getByTitle("Estonian")).toHaveTextContent("🇪🇪");
   expect(screen.getByTitle("Estonian")).not.toHaveTextContent("🇪🇸");
-});
-
-it("community/utils getLanguageFlag resolves through the shared module", () => {
-  expect(getLanguageFlag("Estonian")).toBe("🇪🇪");
-  expect(getLanguageFlag("Persian")).toBe("🇮🇷");
-  expect(getLanguageFlag("Chinese (Traditional)")).toBe("🇹🇼");
 });
 
 // tandem/LanguageFlagChip carried its own 13-entry map, and Uzbek was one of

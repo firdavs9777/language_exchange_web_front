@@ -255,4 +255,5 @@ Not deployed: pushing web main deploys; the owner says "deploy it".
 - [x] Sign-in gates on /community/nearby and /waves; Nearby and Waves show errors (not "nobody"); arrow keys across the top tabs; Escape closes the wave sheet; block/unblock refresh Partners, For you and Today; public/default-avatar.png exists; the Pro carousel shows VIPs only and "Try Pro" opens /settings/vip; card "New" and "Wave at" translated.
 - [ ] Not done (low effect, riskier): MemberCard is still role="button" with a nested wave button; WaveSheet has Escape but no focus trap. S
 - [x] One app-config cache entry (`useWebAppConfig`, shared with the flags); visitors only on All; the filter sheet asks one count per open; filter and wave sheets lazy-loaded and mounted only while open; no backdrop blur on cards and Nearby rows; lazy avatars on Nearby, Waves, the carousel. `npm run build` passes.
-- [ ] Dead code. S
+- [x] Dead code: `generateRandomStats`, `getLanguageFlag` (+ its test), every unused type in `community/type.ts`.
+- [ ] Left: ~25 unused selectors in `tandem/tandem-community.scss` (nested BEM, removal needs a careful pass); the `!signedIn` half of `todayOff` (harmless guard). S
