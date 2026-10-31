@@ -31,3 +31,17 @@ it("blocking someone refetches the member list", async () => {
   expect(urls.filter((u) => u.indexOf("/auth/users?") >= 0).length).toBeGreaterThan(before);
   sub.unsubscribe();
 });
+
+// Final review: only the last cached page refetched after a block, so a
+// blocked member on page 1 stayed on the grid on Back. A block now drops
+// the cached pages.
+it("blocking someone clears the cached list pages", async () => {
+  const { pagedListCacheSize, resetPagedListCache, primePagedListCache } = require("../../components/community/lib/usePagedList");
+  resetPagedListCache();
+  primePagedListCache("k", [[{ _id: "a" }]]);
+  expect(pagedListCacheSize()).toBe(1);
+  const store = makeStore({ auth: { userInfo: { user: { _id: "u1" }, token: "t" } } } as any);
+  const block: any = (usersApiSlice as any).endpoints.blockUser;
+  await store.dispatch(block.initiate("x"));
+  expect(pagedListCacheSize()).toBe(0);
+});

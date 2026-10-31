@@ -3,7 +3,6 @@ import {
   createRoutesFromElements,
   Route,
   useParams,
-  Navigate,
 } from "react-router-dom";
 import App from "../App";
 import Loader from "../components/Loader";
@@ -12,6 +11,7 @@ import { lazyWithRetry } from "./lazyWithRetry";
 import MomentLinkRedirect from "./MomentLinkRedirect";
 import FlagRoute from "./FlagRoute";
 import RequireSignIn from "../components/gatherings/RequireSignIn";
+import LegacyCommunityRedirect from "../components/community/LegacyCommunityRedirect";
 
 // --- Eager: the prerendered public pages ------------------------------------
 //
@@ -343,15 +343,15 @@ export const routes = createRoutesFromElements(
     <Route path="waves" element={lazyRoute(<RequireSignIn><Waves /></RequireSignIn>)} />
     {/* Topics, City and Genders are Partners chips now (2026-10-31); old
         links land on the list with the matching chip. */}
-    <Route path="topics" element={<Navigate replace to="/communities" />} />
+    <Route path="topics" element={<LegacyCommunityRedirect />} />
     {/* Phase 4 — rooms. Dark until their flags are on (FlagRoute → 404). */}
     <Route path="voice-rooms" element={lazyRoute(<FlagRoute flag="webVoiceRoomsEnabled"><VoiceRoomsPage /></FlagRoute>)} />
     <Route path="voice-rooms/:id" element={lazyRoute(<FlagRoute flag="webVoiceRoomsEnabled"><VoiceRoomPage /></FlagRoute>)} />
     <Route path="rooms" element={lazyRoute(<FlagRoute flag="webLanguageRoomsEnabled"><LanguageRoomsPage /></FlagRoute>)} />
     <Route path="rooms/:id" element={lazyRoute(<FlagRoute flag="webLanguageRoomsEnabled"><LanguageRoomPage /></FlagRoute>)} />
     <Route path="boost" element={lazyRoute(<FlagRoute flag="boostsEnabled"><RequireSignIn><BoostPage /></RequireSignIn></FlagRoute>)} />
-    <Route path="community/city" element={<Navigate replace to="/communities?city=1" />} />
-    <Route path="community/genders" element={<Navigate replace to="/communities?gender=female" />} />
+    <Route path="community/city" element={<LegacyCommunityRedirect add={{ city: "1" }} />} />
+    <Route path="community/genders" element={<LegacyCommunityRedirect add={{ gender: "female" }} />} />
 
     {/* Moments */}
     <Route path="moments/saved" element={lazyRoute(<SavedMoments />)} />

@@ -65,11 +65,10 @@ const HighlightedProfilesCarousel: React.FC<HighlightedProfilesCarouselProps> = 
             >
               <div className="highlighted-card__avatar">
                 <img
-                loading="lazy"
-                decoding="async"
                   src={member.imageUrls?.[0] || "/default-avatar.png"}
                   alt={member.name}
                   loading="lazy"
+                  decoding="async"
                 />
                 {isPro && (
                   <span className="highlighted-card__pro-badge" aria-label="Pro">

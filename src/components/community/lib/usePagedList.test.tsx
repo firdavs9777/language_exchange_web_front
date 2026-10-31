@@ -1,5 +1,5 @@
 import { act, renderHook } from "@testing-library/react";
-import { usePagedList, resetPagedListCache } from "./usePagedList";
+import { usePagedList, resetPagedListCache, listCacheKey, PAGED_CACHE_TTL_MS } from "./usePagedList";
 
 /**
  * One paging hook for the community lists (audit 2026-10-30): four
@@ -88,4 +88,51 @@ it("a remount with the same key restores every loaded page at once", () => {
   first.unmount();
   const again = setup("R", { "R:2": { isFetching: true } });
   expect(again.result.current.items.map((r) => r._id)).toEqual(["r1", "r2"]);
+});
+
+// Final review (2026-10-31) -------------------------------------------------
+
+// #1: the key must be the question as sent (languages, sort, viewer), not
+// just the filters, or a language change resumes on another question's pages.
+it("the cache key covers the whole first-page query and the viewer", () => {
+  const a = listCacheKey("u1", { nativeLanguage: "English", learningLanguage: "Spanish" });
+  expect(listCacheKey("u1", { nativeLanguage: "English", learningLanguage: "French" })).not.toBe(a);
+  expect(listCacheKey("u2", { nativeLanguage: "English", learningLanguage: "Spanish" })).not.toBe(a);
+  expect(listCacheKey("u1", { learningLanguage: "Spanish", nativeLanguage: "English" })).toBe(a);
+});
+
+// #2: cached pages are for a quick Back, not forever.
+it("pages older than the TTL are dropped on the next mount", () => {
+  const now = jest.spyOn(Date, "now");
+  now.mockReturnValue(1_000_000);
+  const answers = {
+    "T:1": { currentData: body(["t1"], { pages: 3 }) },
+    "T:2": { currentData: body(["t2"], { pages: 3 }) },
+  };
+  const first = setup("T", answers);
+  act(() => first.result.current.loadMore());
+  first.unmount();
+  now.mockReturnValue(1_000_000 + PAGED_CACHE_TTL_MS + 1);
+  const again = setup("T", { "T:1": { isFetching: true } });
+  expect(again.result.current.items).toEqual([]);
+  expect(again.result.current.initialLoading).toBe(true);
+  now.mockRestore();
+});
+
+// #4: a skipped list (Today, For you, Gatherings, Rooms) must not take a
+// cache slot and push the Partners list out.
+it("skipped keys never evict a real one", () => {
+  const answers = { "P:1": { currentData: body(["p1"], { pages: 1 }) } };
+  const real = setup("P", answers);
+  real.unmount();
+  for (const k of ["s1", "s2", "s3", "s4", "s5", "s6"]) {
+    renderHook(() =>
+      usePagedList<Row, string>({
+        key: k, argFor: (p) => `${k}:${p}`, useQuery: fakeQuery({}),
+        items: (d: any) => d.data, hasMore: () => false, skip: true,
+      })
+    ).unmount();
+  }
+  const back = setup("P", { "P:1": { isFetching: true } });
+  expect(back.result.current.items.map((r) => r._id)).toEqual(["p1"]);
 });

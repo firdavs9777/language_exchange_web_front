@@ -1,3 +1,4 @@
+import { resetPagedListCache } from "../../components/community/lib/usePagedList";
 import {
   LOGOUT_URL,
   REGISTER_URL,
@@ -284,6 +285,16 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       // reader back to it right after a block.
       // Community + Recommendations: a blocked member left Partners, For you
       // and Today only on reload.
+      // Earlier cached list pages never refetch on invalidation; drop them
+      // so a blocked member is not still on the grid on Back.
+      async onQueryStarted(_arg: any, { queryFulfilled }: any) {
+        try {
+          await queryFulfilled;
+          resetPagedListCache();
+        } catch {
+          /* the block failed; the lists are unchanged */
+        }
+      },
       invalidatesTags: ["User", "Conversations", "Moments", "Comments", "Stories", "Community", "Recommendations"],
     }),
     unblockUser: builder.mutation({
@@ -293,6 +304,16 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       // Moments + Comments: the server drops a blocked author from feeds and
       // comment lists, so open lists refetch and their content disappears.
+      // Earlier cached list pages never refetch on invalidation; drop them
+      // so a blocked member is not still on the grid on Back.
+      async onQueryStarted(_arg: any, { queryFulfilled }: any) {
+        try {
+          await queryFulfilled;
+          resetPagedListCache();
+        } catch {
+          /* the block failed; the lists are unchanged */
+        }
+      },
       invalidatesTags: ["User", "Conversations", "Moments", "Comments", "Community", "Recommendations"],
     }),
     // `GET /api/v1/users/:userId/blocked` — the id in the path is the

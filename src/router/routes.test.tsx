@@ -206,15 +206,15 @@ it("matches /story/<id> to the story link page, not the catch-all or the viewer"
 // chips. Old links (pasted, bookmarked, in the app's share text) still land
 // on the list with the matching chip, replacing the old entry in history.
 it.each([
-  ["/community/city", "/communities?city=1"],
-  ["/community/genders", "/communities?gender=female"],
-  ["/topics", "/communities"],
-])("redirects %s to %s", (path, to) => {
+  ["/community/city", { city: "1" }],
+  ["/community/genders", { gender: "female" }],
+  ["/topics", undefined],
+])("redirects %s to Partners with its chip", (path, add) => {
   const { routes } = require("./routes");
   const matches = matchRoutes(routes, path);
   const element = matches![matches!.length - 1].route.element as any;
-  expect(element.props.to).toBe(to);
-  expect(element.props.replace).toBe(true);
+  expect(element.type.name).toBe("LegacyCommunityRedirect");
+  expect(element.props.add).toEqual(add);
 });
 
 // Audit 2026-10-30: a signed-out visitor on Nearby was asked for their

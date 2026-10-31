@@ -45,15 +45,37 @@ export interface PagedList<T> {
 interface Entry {
   pages: unknown[][];
   hasMore: boolean;
+  savedAt: number;
 }
 
 const MAX_KEYS = 5;
+/** Cached pages serve a quick Back; older ones start fresh (they go stale). */
+export const PAGED_CACHE_TTL_MS = 2 * 60 * 1000;
 const cache = new Map<string, Entry>();
+
+/**
+ * The cache key for a list: the viewer plus the FIRST-PAGE QUERY as sent
+ * (languages, sort, filters, search), key order ignored. Keying on the
+ * filters alone resumed another question's pages after a language change.
+ */
+export function listCacheKey(viewerId: string, firstPageArg: Record<string, unknown>): string {
+  const sorted = Object.keys(firstPageArg)
+    .sort()
+    .map((k) => [k, firstPageArg[k]]);
+  return `${viewerId}|${JSON.stringify(sorted)}`;
+}
+
+/** Called when a list is (re)entered: an old entry starts fresh. */
+function resumeEntry(key: string): Entry {
+  const entry = cache.get(key);
+  if (entry && Date.now() - entry.savedAt > PAGED_CACHE_TTL_MS) cache.delete(key);
+  return entryFor(key);
+}
 
 function entryFor(key: string): Entry {
   let entry = cache.get(key);
   if (!entry) {
-    entry = { pages: [], hasMore: true };
+    entry = { pages: [], hasMore: true, savedAt: Date.now() };
     cache.set(key, entry);
     while (cache.size > MAX_KEYS) {
       const oldest = cache.keys().next().value as string;
@@ -67,37 +89,62 @@ function entryFor(key: string): Entry {
   return entry;
 }
 
-/** Tests only. */
+/**
+ * Drops every cached page. Called after a block / unblock: only the last
+ * subscribed page refetches on invalidation, so a blocked member on an
+ * earlier cached page would stay on the grid.
+ */
 export function resetPagedListCache(): void {
   cache.clear();
 }
+
+/** Tests only. */
+export function pagedListCacheSize(): number {
+  return cache.size;
+}
+
+/** Tests only. */
+export function primePagedListCache(key: string, pages: unknown[][]): void {
+  cache.set(key, { pages, hasMore: true, savedAt: Date.now() });
+}
+
+const SKIPPED: Entry = { pages: [], hasMore: false, savedAt: 0 };
 
 export function usePagedList<T extends { _id: string }, A>(
   args: UsePagedListArgs<T, A>
 ): PagedList<T> {
   const { key, argFor, useQuery, items, hasMore, skip, refetchOnFocus } = args;
   const [, rerender] = useReducer((n: number) => n + 1, 0);
-  const entry = entryFor(key);
 
   // The page we are subscribed to, and the question it belongs to. A new
-  // question resumes at its last cached page (1 when there is none).
-  const [subscribed, setSubscribed] = useState({ key, page: Math.max(1, entry.pages.length) });
+  // question (or a remount) resumes at its last cached page -- 1 when there
+  // is none or the cached pages are older than the TTL. A skipped list
+  // (another tab is showing) takes no cache slot.
+  const [subscribed, setSubscribed] = useState(() => ({
+    key,
+    page: skip ? 1 : Math.max(1, resumeEntry(key).pages.length),
+  }));
   const current =
-    subscribed.key === key ? subscribed : { key, page: Math.max(1, entry.pages.length) };
+    subscribed.key === key
+      ? subscribed
+      : { key, page: skip ? 1 : Math.max(1, resumeEntry(key).pages.length) };
   if (current !== subscribed) setSubscribed(current);
+  const entry = skip ? SKIPPED : entryFor(key);
 
   const result = useQuery(argFor(current.page), { skip, refetchOnFocus });
   const data = result.currentData;
 
   useEffect(() => {
     if (data === undefined) return;
+    if (skip) return;
     const target = entryFor(key);
     target.pages[current.page - 1] = items(data) as unknown[];
     target.hasMore = hasMore(data, current.page);
+    target.savedAt = Date.now();
     rerender();
     // `items`/`hasMore` are pure mappers; the answer is keyed by data + page.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, key, current.page]);
+  }, [data, key, current.page, skip]);
 
   const loaded = entry.pages.filter(Boolean).length;
   const canLoadMore = entry.hasMore && loaded >= current.page && !result.isFetching;

@@ -33,7 +33,7 @@ import {
   buildCommunityQuery,
   withoutVipOnlyFilters,
 } from "./lib/buildCommunityQuery";
-import { usePagedList } from "./lib/usePagedList";
+import { usePagedList, listCacheKey } from "./lib/usePagedList";
 import { useIsVip } from "../vip/useIsVip";
 import { useWebAppConfig } from "../../utils/useWebAppConfig";
 import { isMutualExchange } from "./lib/presence";
@@ -495,8 +495,14 @@ const ModernCommunity: React.FC = () => {
       ),
     [effectiveFilters, debouncedSearch, listSort, me]
   );
+  // Keyed on the question as sent (languages, sort, viewer included): the
+  // filters alone resumed another question's pages after a language change.
+  const listKey = useMemo(
+    () => `${activeTab}|${listCacheKey(currentUser._id || "", argFor(1))}`,
+    [activeTab, currentUser._id, argFor]
+  );
   const paged = usePagedList<CommunityMemberCard, Record<string, string>>({
-    key: filterKey,
+    key: listKey,
     argFor,
     useQuery: useGetCommunityMembersQuery as any,
     items: (d: any) => (Array.isArray(d?.data) ? d.data : []),
