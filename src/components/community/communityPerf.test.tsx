@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import { makeStore } from "../../store";
 import MainCommunity from "./MainCommunity";
+import { resetPagedListCache } from "./lib/usePagedList";
 jest.mock("../../utils/webFlags", () => ({ useWebFlag: () => false, useWebFlagState: () => ({ on: false, ready: true }) }));
 
 /**
@@ -107,6 +108,9 @@ const intersect = () =>
       .forEach((o) => o.callback([{ isIntersecting: true, target: o.element }]));
   });
 
+// Loaded pages are cached per question across mounts (Back restores them);
+// every test starts from an empty cache.
+beforeEach(() => resetPagedListCache());
 beforeEach(() => {
   requestedUrls.length = 0;
   observers = [];

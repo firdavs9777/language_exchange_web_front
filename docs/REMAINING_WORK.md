@@ -245,3 +245,13 @@ Profile Boost on the website (2026-10-18; backend routes/boosts.js, app boost_sc
 - [x] Homepage redesign (2026-10-16): marketing-first hero (benefit headline, store buttons + "use on the web", live learner count, 3 real app screenshots in CSS phone frames with floating chips, colour blobs), 3-step how-it-works, 4 benefit-led feature rows, languages strip, colourful stat tiles, pricing kept at `#pricing`, teal CTA band; 58 `home.v2.*` strings in 18 locales; EarlyAdopterBand removed.
 
 - [x] VIP prices on the website match the stores (2026-10-16): $3.99 / $9.99 / $24.99 in the pricing fallback, Terms of Use, VIP settings card and the /download SEO description (were $9.99/$23.99/$71.99 and $79.99 in the Terms).
+
+## Community optimization phase 3 (2026-10-31, branch feat/community-p3; plan app docs/superpowers/plans/2026-10-31-community-phase3-web.md)
+Not deployed: pushing web main deploys; the owner says "deploy it".
+- [x] One paging hook (`community/lib/usePagedList.ts`) for the Partners list: `currentData` only (another filter's members can no longer be stapled on), the server's `hasMore`, inline errors under the sub-nav (first page and "couldn't load more"), loaded pages cached per question so Back restores them; the client VIP/online re-sort and the sessionStorage scroll hack are gone.
+- [ ] Waves: own cache tag, error state, header badge. S
+- [ ] Chips Same city / Women / Men / Topic on Partners; filter count = list query. M
+- [ ] City / Genders / Topics pages → chips with redirects; AppOnlyTab `replace`. S
+- [ ] Sign-in gates (nearby, waves), error-not-empty states, keyboard access, block refresh, default avatar, carousel. M
+- [ ] One app-config request, lazy sheets, fewer requests and repaints. M
+- [ ] Dead code. S
