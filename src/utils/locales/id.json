@@ -1290,7 +1290,11 @@
       "partners": "Partner",
       "gatherings": "Pertemuan",
       "rooms": "Ruang",
-      "partnersViews": "Tampilan partner"
+      "partnersViews": "Tampilan partner",
+      "sameCity": "Kota yang sama",
+      "women": "Perempuan",
+      "men": "Laki-laki",
+      "topic": "Topik"
     },
     "filters": {
       "language": "Bahasa",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "Ups! Terjadi kesalahan",
       "loadError": "Kami tidak dapat memuat komunitas. Silakan coba lagi.",
-      "tryAgain": "Coba Lagi"
+      "tryAgain": "Coba Lagi",
+      "loadMoreFailed": "Tidak dapat memuat lagi."
     },
     "loadMore": {
       "loading": "Memuat...",

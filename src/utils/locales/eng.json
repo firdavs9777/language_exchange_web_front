@@ -1290,7 +1290,11 @@
       "partners": "Partners",
       "gatherings": "Gatherings",
       "rooms": "Rooms",
-      "partnersViews": "Partner views"
+      "partnersViews": "Partner views",
+      "sameCity": "Same city",
+      "women": "Women",
+      "men": "Men",
+      "topic": "Topic"
     },
     "filters": {
       "language": "Language",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "Oops! Something went wrong",
       "loadError": "We couldn't load the community. Please try again.",
-      "tryAgain": "Try Again"
+      "tryAgain": "Try Again",
+      "loadMoreFailed": "Couldn't load more."
     },
     "loadMore": {
       "loading": "Loading...",

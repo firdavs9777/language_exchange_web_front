@@ -397,6 +397,19 @@ const ModernCommunity: React.FC = () => {
   // it must not close over that render's `applyState` -- a filter change in
   // between would be overwritten with the state as it was when the member
   // last pressed a key.
+  // A Partners chip (Same city / Women / Men / Topic) changes the applied
+  // filters directly -- the same fields the sheet writes.
+  const handleFiltersPatch = useCallback(
+    (patch: Partial<CommunityFilters>) => {
+      const next: CommunityFilters = { ...filters, ...patch };
+      (Object.keys(patch) as (keyof CommunityFilters)[]).forEach((k) => {
+        if (patch[k] === undefined) delete next[k];
+      });
+      applyState({ filters: next });
+    },
+    [filters, applyState]
+  );
+
   const applyStateRef = useRef(applyState);
   useEffect(() => {
     applyStateRef.current = applyState;
@@ -509,6 +522,14 @@ const ModernCommunity: React.FC = () => {
   }, [recommendationsData, currentUser._id]);
 
   const { data: topicsResult } = useGetTopicsQuery({});
+  const topicOptions = useMemo(() => {
+    const raw = topicsResult?.data;
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map((topic: any) => ({ id: String(topic._id || topic.id || topic.name || ""), name: String(topic.name || "") }))
+      .filter((topic) => topic.id && topic.name);
+  }, [topicsResult]);
+
   const topicLabels = useMemo<Record<string, string>>(() => {
     const raw = topicsResult?.data;
     if (!Array.isArray(raw)) return {};
@@ -784,6 +805,9 @@ const ModernCommunity: React.FC = () => {
         showSearch={!isForYou && !isToday && !isAppOnly}
         showToday={signedIn && !todayOff}
         wavesUnread={wavesUnread}
+        filters={filters}
+        onFiltersPatch={handleFiltersPatch}
+        topicOptions={topicOptions}
         visitorsCount={activeTab === "all" ? visitorsTotal : 0}
       />
 
@@ -801,6 +825,7 @@ const ModernCommunity: React.FC = () => {
             : undefined
         }
         onClose={() => setIsFilterSheetOpen(false)}
+        me={me}
         isVip={isVip}
         onUpgrade={() => {
           setIsFilterSheetOpen(false);

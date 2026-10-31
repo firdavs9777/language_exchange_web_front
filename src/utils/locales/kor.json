@@ -1290,7 +1290,11 @@
       "partners": "파트너",
       "gatherings": "모임",
       "rooms": "방",
-      "partnersViews": "파트너 보기"
+      "partnersViews": "파트너 보기",
+      "sameCity": "같은 도시",
+      "women": "여성",
+      "men": "남성",
+      "topic": "주제"
     },
     "filters": {
       "language": "언어",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "앗, 문제가 생겼어요",
       "loadError": "커뮤니티를 불러오지 못했어요. 다시 시도해 주세요.",
-      "tryAgain": "다시 시도"
+      "tryAgain": "다시 시도",
+      "loadMoreFailed": "더 불러오지 못했어요."
     },
     "loadMore": {
       "loading": "불러오는 중…",

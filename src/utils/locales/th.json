@@ -1290,7 +1290,11 @@
       "partners": "พาร์ทเนอร์",
       "gatherings": "กิจกรรมพบปะ",
       "rooms": "ห้อง",
-      "partnersViews": "มุมมองพาร์ทเนอร์"
+      "partnersViews": "มุมมองพาร์ทเนอร์",
+      "sameCity": "เมืองเดียวกัน",
+      "women": "ผู้หญิง",
+      "men": "ผู้ชาย",
+      "topic": "หัวข้อ"
     },
     "filters": {
       "language": "ภาษา",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "อ๊ะ! มีบางอย่างผิดพลาด",
       "loadError": "ไม่สามารถโหลดชุมชนได้ กรุณาลองใหม่",
-      "tryAgain": "ลองใหม่"
+      "tryAgain": "ลองใหม่",
+      "loadMoreFailed": "โหลดเพิ่มไม่ได้"
     },
     "loadMore": {
       "loading": "กำลังโหลด...",

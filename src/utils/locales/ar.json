@@ -1290,7 +1290,11 @@
       "partners": "الشركاء",
       "gatherings": "اللقاءات",
       "rooms": "الغرف",
-      "partnersViews": "عروض الشركاء"
+      "partnersViews": "عروض الشركاء",
+      "sameCity": "نفس المدينة",
+      "women": "نساء",
+      "men": "رجال",
+      "topic": "موضوع"
     },
     "filters": {
       "language": "اللغة",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "عذراً! حدث خطأ ما",
       "loadError": "لم نتمكن من تحميل المجتمع. يرجى المحاولة مرة أخرى.",
-      "tryAgain": "حاول مرة أخرى"
+      "tryAgain": "حاول مرة أخرى",
+      "loadMoreFailed": "تعذّر تحميل المزيد."
     },
     "loadMore": {
       "loading": "جارٍ التحميل...",

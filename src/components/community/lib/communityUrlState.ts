@@ -75,6 +75,7 @@ export const URL_KEYS: string[] = [
   'online',
   'new',
   'pair',
+  'city',
   'sort',
   'q',
   'tab',
@@ -177,6 +178,7 @@ export function encodeCommunityState(
   if (filters.onlineOnly) params.set('online', '1');
   if (filters.newUsersOnly) params.set('new', '1');
   if (filters.reciprocal) params.set('pair', '1');
+  if (filters.sameCity) params.set('city', '1');
 
   const sort = text(state.sort);
   if (SORTS.indexOf(sort) >= 0) params.set('sort', sort);
@@ -266,6 +268,11 @@ export function decodeCommunityState(
       filters.topicsAtLeast = count;
       hasFilter = true;
     }
+  }
+
+  if (read('city') === '1') {
+    filters.sameCity = true;
+    hasFilter = true;
   }
 
   if (read('online') === '1') {

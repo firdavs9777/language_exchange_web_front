@@ -74,6 +74,8 @@ export interface CommunityFilterSheetProps {
    * they would get.
    */
   lockedTab?: "online" | "new" | "serious";
+  /** The viewer's current languages (refreshed /auth/me), for the count. */
+  me?: Me;
   /**
    * Country is a VIP filter (GET /users ignores it for free callers). For a
    * free viewer the picker is disabled behind a VIP badge that calls
@@ -136,6 +138,7 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
   onCopyLink,
   canCopyLink = true,
   lockedTab,
+  me: meFromPage,
   isVip = false,
   onUpgrade,
 }) => {
@@ -159,9 +162,13 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
       ? [{ value: current, label: current }].concat(catalogLanguages)
       : catalogLanguages;
 
-  const me = useSelector(
+  // The page passes the refreshed /auth/me languages; the login snapshot is
+  // only the fallback (after a language change elsewhere the count promised a
+  // different list from the one shown).
+  const loginMe = useSelector(
     (state: RootState) => state.auth.userInfo?.user
   ) as Me | undefined;
+  const me = meFromPage || loginMe;
 
   // --- Live debounced match count -------------------------------------------------
   const [debouncedValue, setDebouncedValue] = useState<CommunityFilters>(value);

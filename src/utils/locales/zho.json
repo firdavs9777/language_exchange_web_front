@@ -1290,7 +1290,11 @@
       "partners": "语伴",
       "gatherings": "聚会",
       "rooms": "聊天室",
-      "partnersViews": "语伴视图"
+      "partnersViews": "语伴视图",
+      "sameCity": "同城",
+      "women": "女生",
+      "men": "男生",
+      "topic": "话题"
     },
     "filters": {
       "language": "语言",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "哎呀，出了点问题",
       "loadError": "社区加载失败，请重试。",
-      "tryAgain": "重试"
+      "tryAgain": "重试",
+      "loadMoreFailed": "无法加载更多。"
     },
     "loadMore": {
       "loading": "加载中…",

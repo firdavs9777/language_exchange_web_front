@@ -1290,7 +1290,11 @@
       "partners": "Partner",
       "gatherings": "Treffen",
       "rooms": "Räume",
-      "partnersViews": "Partneransichten"
+      "partnersViews": "Partneransichten",
+      "sameCity": "Gleiche Stadt",
+      "women": "Frauen",
+      "men": "Männer",
+      "topic": "Thema"
     },
     "filters": {
       "language": "Sprache",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "Ups! Etwas ist schiefgelaufen",
       "loadError": "Die Community konnte nicht geladen werden. Bitte versuche es erneut.",
-      "tryAgain": "Erneut versuchen"
+      "tryAgain": "Erneut versuchen",
+      "loadMoreFailed": "Mehr konnte nicht geladen werden."
     },
     "loadMore": {
       "loading": "Wird geladen…",

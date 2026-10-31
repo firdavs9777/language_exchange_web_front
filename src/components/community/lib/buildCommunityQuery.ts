@@ -43,6 +43,8 @@ export interface CommunityFilters {
    * (controllers/users.js `reciprocal=true`).
    */
   reciprocal?: boolean;
+  /** "Same city" chip: the viewer's own city (backend cc5064b+). */
+  sameCity?: boolean;
 }
 
 export interface Me {
@@ -116,6 +118,7 @@ export function buildCommunityQuery(
   // The app's PartnerSegment.serious (controllers/users.js reads 7d/30d).
   if (filters.activeWithin) query.activeWithin = filters.activeWithin;
   if (filters.reciprocal) query.reciprocal = 'true';
+  if (filters.sameCity) query.sameCity = 'true';
 
   query.page = String(page);
   query.limit = String(limit);

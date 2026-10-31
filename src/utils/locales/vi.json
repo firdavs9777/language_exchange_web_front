@@ -1290,7 +1290,11 @@
       "partners": "Bạn học",
       "gatherings": "Buổi gặp mặt",
       "rooms": "Phòng",
-      "partnersViews": "Chế độ xem bạn học"
+      "partnersViews": "Chế độ xem bạn học",
+      "sameCity": "Cùng thành phố",
+      "women": "Nữ",
+      "men": "Nam",
+      "topic": "Chủ đề"
     },
     "filters": {
       "language": "Ngôn Ngữ",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "Ôi! Đã xảy ra lỗi",
       "loadError": "Chúng tôi không thể tải cộng đồng. Vui lòng thử lại.",
-      "tryAgain": "Thử Lại"
+      "tryAgain": "Thử Lại",
+      "loadMoreFailed": "Không tải thêm được."
     },
     "loadMore": {
       "loading": "Đang tải...",

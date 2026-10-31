@@ -1290,7 +1290,11 @@
       "partners": "パートナー",
       "gatherings": "集まり",
       "rooms": "ルーム",
-      "partnersViews": "パートナー表示"
+      "partnersViews": "パートナー表示",
+      "sameCity": "同じ街",
+      "women": "女性",
+      "men": "男性",
+      "topic": "トピック"
     },
     "filters": {
       "language": "言語",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "エラーが発生しました",
       "loadError": "コミュニティを読み込めませんでした。もう一度お試しください。",
-      "tryAgain": "再試行"
+      "tryAgain": "再試行",
+      "loadMoreFailed": "これ以上読み込めませんでした。"
     },
     "loadMore": {
       "loading": "読み込み中…",

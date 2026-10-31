@@ -1,0 +1,236 @@
+{
+  "eng": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "Same city",
+        "women": "Women",
+        "men": "Men",
+        "topic": "Topic"
+      },
+      "errors": {
+        "loadMoreFailed": "Couldn't load more."
+      }
+    }
+  },
+  "ar": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "نفس المدينة",
+        "women": "نساء",
+        "men": "رجال",
+        "topic": "موضوع"
+      },
+      "errors": {
+        "loadMoreFailed": "تعذّر تحميل المزيد."
+      }
+    }
+  },
+  "de": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "Gleiche Stadt",
+        "women": "Frauen",
+        "men": "Männer",
+        "topic": "Thema"
+      },
+      "errors": {
+        "loadMoreFailed": "Mehr konnte nicht geladen werden."
+      }
+    }
+  },
+  "es": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "Misma ciudad",
+        "women": "Mujeres",
+        "men": "Hombres",
+        "topic": "Tema"
+      },
+      "errors": {
+        "loadMoreFailed": "No se pudo cargar más."
+      }
+    }
+  },
+  "fr": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "Même ville",
+        "women": "Femmes",
+        "men": "Hommes",
+        "topic": "Sujet"
+      },
+      "errors": {
+        "loadMoreFailed": "Impossible d'en charger plus."
+      }
+    }
+  },
+  "hi": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "एक ही शहर",
+        "women": "महिलाएँ",
+        "men": "पुरुष",
+        "topic": "विषय"
+      },
+      "errors": {
+        "loadMoreFailed": "और लोड नहीं हो सका।"
+      }
+    }
+  },
+  "id": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "Kota yang sama",
+        "women": "Perempuan",
+        "men": "Laki-laki",
+        "topic": "Topik"
+      },
+      "errors": {
+        "loadMoreFailed": "Tidak dapat memuat lagi."
+      }
+    }
+  },
+  "it": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "Stessa città",
+        "women": "Donne",
+        "men": "Uomini",
+        "topic": "Argomento"
+      },
+      "errors": {
+        "loadMoreFailed": "Impossibile caricarne altri."
+      }
+    }
+  },
+  "ja": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "同じ街",
+        "women": "女性",
+        "men": "男性",
+        "topic": "トピック"
+      },
+      "errors": {
+        "loadMoreFailed": "これ以上読み込めませんでした。"
+      }
+    }
+  },
+  "kor": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "같은 도시",
+        "women": "여성",
+        "men": "남성",
+        "topic": "주제"
+      },
+      "errors": {
+        "loadMoreFailed": "더 불러오지 못했어요."
+      }
+    }
+  },
+  "pt": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "Mesma cidade",
+        "women": "Mulheres",
+        "men": "Homens",
+        "topic": "Tema"
+      },
+      "errors": {
+        "loadMoreFailed": "Não foi possível carregar mais."
+      }
+    }
+  },
+  "ru": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "Тот же город",
+        "women": "Женщины",
+        "men": "Мужчины",
+        "topic": "Тема"
+      },
+      "errors": {
+        "loadMoreFailed": "Не удалось загрузить ещё."
+      }
+    }
+  },
+  "th": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "เมืองเดียวกัน",
+        "women": "ผู้หญิง",
+        "men": "ผู้ชาย",
+        "topic": "หัวข้อ"
+      },
+      "errors": {
+        "loadMoreFailed": "โหลดเพิ่มไม่ได้"
+      }
+    }
+  },
+  "tl": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "Parehong lungsod",
+        "women": "Babae",
+        "men": "Lalaki",
+        "topic": "Paksa"
+      },
+      "errors": {
+        "loadMoreFailed": "Hindi makapag-load ng higit pa."
+      }
+    }
+  },
+  "tr": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "Aynı şehir",
+        "women": "Kadınlar",
+        "men": "Erkekler",
+        "topic": "Konu"
+      },
+      "errors": {
+        "loadMoreFailed": "Daha fazlası yüklenemedi."
+      }
+    }
+  },
+  "vi": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "Cùng thành phố",
+        "women": "Nữ",
+        "men": "Nam",
+        "topic": "Chủ đề"
+      },
+      "errors": {
+        "loadMoreFailed": "Không tải thêm được."
+      }
+    }
+  },
+  "zh_TW": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "同城",
+        "women": "女生",
+        "men": "男生",
+        "topic": "話題"
+      },
+      "errors": {
+        "loadMoreFailed": "無法載入更多。"
+      }
+    }
+  },
+  "zho": {
+    "communityMain": {
+      "tabs": {
+        "sameCity": "同城",
+        "women": "女生",
+        "men": "男生",
+        "topic": "话题"
+      },
+      "errors": {
+        "loadMoreFailed": "无法加载更多。"
+      }
+    }
+  }
+}

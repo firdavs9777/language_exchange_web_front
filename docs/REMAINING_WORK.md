@@ -250,7 +250,7 @@ Profile Boost on the website (2026-10-18; backend routes/boosts.js, app boost_sc
 Not deployed: pushing web main deploys; the owner says "deploy it".
 - [x] One paging hook (`community/lib/usePagedList.ts`) for the Partners list: `currentData` only (another filter's members can no longer be stapled on), the server's `hasMore`, inline errors under the sub-nav (first page and "couldn't load more"), loaded pages cached per question so Back restores them; the client VIP/online re-sort and the sessionStorage scroll hack are gone.
 - [x] Waves: own cache tag ("Waves"; a wave no longer refetches member lists), error state with Try again, a sub-nav link with the unread badge; waved cards show ✓ instead of a second wave.
-- [ ] Chips Same city / Women / Men / Topic on Partners; filter count = list query. M
+- [x] Chips on Partners: Nearby (link), Same city (`city=1` → sameCity=true), Women / Men (the existing `gender` filter), Topic ▾ (the existing `topics` filter); the City / Genders / Topics sub-nav links are gone; the filter count uses the refreshed /auth/me languages. 5 new strings in 18 locales.
 - [ ] City / Genders / Topics pages → chips with redirects; AppOnlyTab `replace`. S
 - [ ] Sign-in gates (nearby, waves), error-not-empty states, keyboard access, block refresh, default avatar, carousel. M
 - [ ] One app-config request, lazy sheets, fewer requests and repaints. M

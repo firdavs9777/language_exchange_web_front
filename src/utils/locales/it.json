@@ -1271,7 +1271,11 @@
       "partners": "Partner",
       "gatherings": "Incontri",
       "rooms": "Stanze",
-      "partnersViews": "Viste partner"
+      "partnersViews": "Viste partner",
+      "sameCity": "Stessa città",
+      "women": "Donne",
+      "men": "Uomini",
+      "topic": "Argomento"
     },
     "filters": {
       "language": "Lingua",
@@ -1290,7 +1294,8 @@
     "errors": {
       "generic": "Ops! Qualcosa è andato storto",
       "loadError": "Non è stato possibile caricare la comunità. Riprova.",
-      "tryAgain": "Riprova"
+      "tryAgain": "Riprova",
+      "loadMoreFailed": "Impossibile caricarne altri."
     },
     "loadMore": {
       "loading": "Caricamento...",

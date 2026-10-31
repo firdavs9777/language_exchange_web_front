@@ -1290,7 +1290,11 @@
       "partners": "Partnerler",
       "gatherings": "Buluşmalar",
       "rooms": "Odalar",
-      "partnersViews": "Partner görünümleri"
+      "partnersViews": "Partner görünümleri",
+      "sameCity": "Aynı şehir",
+      "women": "Kadınlar",
+      "men": "Erkekler",
+      "topic": "Konu"
     },
     "filters": {
       "language": "Dil",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "Hay aksi! Bir şeyler ters gitti",
       "loadError": "Topluluğu yükleyemedik. Lütfen tekrar deneyin.",
-      "tryAgain": "Tekrar Dene"
+      "tryAgain": "Tekrar Dene",
+      "loadMoreFailed": "Daha fazlası yüklenemedi."
     },
     "loadMore": {
       "loading": "Yükleniyor…",
