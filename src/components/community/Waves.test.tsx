@@ -32,6 +32,7 @@ let recent: any[] = [];
 let archived: any[] = [];
 let unread = 0;
 let boostsEnabled = false;
+let wavesStatus = 200;
 const requests: { url: string; method: string }[] = [];
 const originalFetch = global.fetch;
 
@@ -40,6 +41,7 @@ beforeEach(() => {
   archived = [wave("w9", "Old Bob")];
   unread = 0;
   boostsEnabled = false;
+  wavesStatus = 200;
   requests.length = 0;
   (global as any).fetch = jest.fn((input: any) => {
     const url = typeof input === "string" ? input : input?.url || "";
@@ -58,8 +60,9 @@ beforeEach(() => {
         pagination: { total: 1, page: 1, limit: 20, hasMore: false },
       };
     }
+    const status = url.indexOf("/community/waves") >= 0 ? wavesStatus : 200;
     return Promise.resolve(
-      new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } })
+      new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } })
     );
   });
 });
@@ -148,4 +151,12 @@ describe("waves inbox (community#10)", () => {
     );
     expect(waveAvatarUrl(null)).toBeUndefined();
   });
+});
+
+// Audit 2026-10-30: a failed load said "No waves received yet".
+it("a failed load shows an error with Try again, not the empty inbox", async () => {
+  wavesStatus = 500;
+  renderWaves();
+  expect(await screen.findByText("communityMain.errors.tryAgain")).toBeInTheDocument();
+  expect(screen.queryByText("waves.noReceived")).not.toBeInTheDocument();
 });

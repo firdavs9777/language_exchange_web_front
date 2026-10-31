@@ -109,6 +109,8 @@ interface CommunitySubNavProps {
   showSearch?: boolean;
   /** How many people visited the viewer's profile. Absent or 0 renders nothing. */
   visitorsCount?: number;
+  /** Unread waves; the waves inbox link shows it as a badge. */
+  wavesUnread?: number;
   /**
    * Today's matches. Off for a signed-out visitor and when the server answers
    * /matching/daily with 404 (DAILY_MATCHES_ENABLED off) -- a tab for a
@@ -128,6 +130,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
   showFilterButton = true,
   showSearch = true,
   visitorsCount,
+  wavesUnread = 0,
   showToday = false,
 }) => {
   const { t } = useTranslation();
@@ -259,6 +262,21 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
           {/* Governed only by its own guard -- it must not vanish just
               because the search box or filter button is hidden on a tab
               like "For you". */}
+          {/* Waves inbox (it was a page nothing linked to), with the unread count. */}
+          <Link
+            to="/waves"
+            data-testid="community-waves-link"
+            className="community-subnav__btn community-subnav__btn--icon shrink-0 no-underline relative"
+            aria-label={t("waves.title") || "Waves"}
+            title={t("waves.title") || "Waves"}
+          >
+            <span aria-hidden>👋</span>
+            {wavesUnread > 0 && (
+              <span className="ml-1 rounded-full bg-red-500 text-white text-[11px] leading-none px-1.5 py-0.5">
+                {wavesUnread > 99 ? "99+" : wavesUnread}
+              </span>
+            )}
+          </Link>
           {typeof visitorsCount === "number" && visitorsCount > 0 && (
             <Link
               to="/visitors"

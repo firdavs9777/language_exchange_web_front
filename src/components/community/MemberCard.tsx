@@ -44,6 +44,8 @@ export interface MemberCardProps {
    */
   compact?: boolean;
   onWave: (user: CommunityMemberCard) => void;
+  /** Already waved this visit: the button shows ✓ and does nothing. */
+  waved?: boolean;
   onOpen: (user: CommunityMemberCard) => void;
 }
 
@@ -93,7 +95,7 @@ const orderReasons = (reasons: Array<string | ReasonChip>): ReasonChip[] => {
   return [...chips.filter((chip) => chip.primary), ...chips.filter((chip) => !chip.primary)];
 };
 
-const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWave, onOpen }) => {
+const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWave, onOpen, waved = false }) => {
   const { t } = useTranslation();
   const age = getAge(user.birth_year);
   const isNew = !!user.isNew || isRecentlyCreated(user.createdAt);
@@ -105,6 +107,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
 
   const handleWaveClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (waved) return;
     onWave(user);
   };
 
@@ -307,6 +310,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
         type="button"
         data-testid="member-card-wave"
         onClick={handleWaveClick}
+        disabled={waved}
         aria-label={`Wave at ${user.name}`}
         className={
           compact
@@ -315,7 +319,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
         }
       >
         <span className="text-lg leading-none" aria-hidden>
-          👋
+          {waved ? "✓" : "👋"}
         </span>
       </button>
     </div>

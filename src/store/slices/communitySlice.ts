@@ -190,7 +190,7 @@ export const communityApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { targetUserId, message },
       }),
-      invalidatesTags: ["Community"],
+      invalidatesTags: ["Waves"],
     }),
     getWaves: builder.query({
       query: ({ page = 1, limit = 20, unreadOnly, archive, reveal }: {
@@ -208,7 +208,7 @@ export const communityApiSlice = apiSlice.injectEndpoints({
         if (reveal) url += `&reveal=1`;
         return { url };
       },
-      providesTags: ["Community"],
+      providesTags: ["Waves"],
     }),
     markWavesRead: builder.mutation({
       query: (waveIds?: string[]) => ({
@@ -216,7 +216,7 @@ export const communityApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: waveIds ? { waveIds } : {},
       }),
-      invalidatesTags: ["Community"],
+      invalidatesTags: ["Waves"],
     }),
 
     // Topics System

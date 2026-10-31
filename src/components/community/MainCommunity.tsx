@@ -9,6 +9,7 @@ import {
   useGetRecommendationsQuery,
   useGetDailyMatchesQuery,
   useGetTopicsQuery,
+  useGetWavesQuery,
 } from "../../store/slices/communitySlice";
 import { useGetProfileVisitorsQuery, useGetUserProfileQuery } from "../../store/slices/usersSlice";
 import { useGetAppConfigQuery } from "../../store/slices/appConfigSlice";
@@ -519,6 +520,13 @@ const ModernCommunity: React.FC = () => {
     return map;
   }, [topicsResult]);
 
+  // The waves badge in the sub-nav (the inbox is a header link now).
+  const { data: unreadWaves } = useGetWavesQuery(
+    { unreadOnly: true, limit: 1 },
+    { skip: !currentUser._id }
+  );
+  const wavesUnread = Number((unreadWaves as any)?.data?.unreadCount) || 0;
+
   const { data: visitorsData } = useGetProfileVisitorsQuery(
     { userId: currentUser._id || "", page: 1, limit: 8 },
     { skip: !currentUser._id }
@@ -775,6 +783,7 @@ const ModernCommunity: React.FC = () => {
         showFilterButton={!isForYou}
         showSearch={!isForYou && !isToday && !isAppOnly}
         showToday={signedIn && !todayOff}
+        wavesUnread={wavesUnread}
         visitorsCount={activeTab === "all" ? visitorsTotal : 0}
       />
 
@@ -912,6 +921,7 @@ const ModernCommunity: React.FC = () => {
                   <div className={CARD_SLOT}>
                     <MemberCard
                       user={member}
+                      waved={wavedIds.indexOf(member._id) > -1}
                       reasons={isMutualExchange(member, me) ? [mutualChip] : undefined}
                       onOpen={handleOpenMember}
                       onWave={handleWaveMember}

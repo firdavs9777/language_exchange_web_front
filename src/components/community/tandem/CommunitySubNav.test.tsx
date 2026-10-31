@@ -178,3 +178,11 @@ describe("the community sub-nav", () => {
     expect(screen.queryByTestId("subnav-visitors")).not.toBeInTheDocument();
   });
 });
+
+// Waves moved to a header icon with the unread count (2026-10-31).
+it("shows a waves link with the unread count", () => {
+  renderNav({ wavesUnread: 3 });
+  const link = screen.getByTestId("community-waves-link");
+  expect(link).toHaveAttribute("href", "/waves");
+  expect(link).toHaveTextContent("3");
+});
