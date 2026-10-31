@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import { makeStore } from "../../store";
 import MainCommunity from "./MainCommunity";
+import { resetPagedListCache } from "./lib/usePagedList";
 import { STORAGE_KEY } from "./lib/filterStorage";
 
 // The list's copy is not what this suite is about: `t` returns the key, so a
@@ -45,6 +46,8 @@ let memberCount = 3;
 const requestedUrls: string[] = [];
 const originalFetch = global.fetch;
 
+// Loaded pages are cached per question across mounts; start each test empty.
+beforeEach(() => resetPagedListCache());
 beforeEach(() => {
   requestedUrls.length = 0;
   memberCount = 3;

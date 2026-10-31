@@ -1428,6 +1428,10 @@
       "gatheringsBody": "Trouve des clubs et des rencontres avec des personnes qui apprennent ta langue, dans l'appli BananaTalk.",
       "roomsTitle": "Les salons sont dans l'appli",
       "roomsBody": "Rejoins des discussions de groupe par langue et par thème, ou crée ton propre salon, dans l'appli BananaTalk."
+    },
+    "card": {
+      "new": "Nouveau",
+      "waveAt": "Faire coucou à {{name}}"
     }
   },
   "communityDetail": {

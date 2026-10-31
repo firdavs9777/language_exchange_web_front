@@ -337,8 +337,10 @@ export const routes = createRoutesFromElements(
     <Route path="settings/close-friends" element={lazyRoute(<CloseFriends />)} />
 
     {/* Community */}
-    <Route path="community/nearby" element={lazyRoute(<NearbyUsers />)} />
-    <Route path="waves" element={lazyRoute(<Waves />)} />
+    {/* Members-only: signed out, Nearby asked for a location and then
+        showed a 401 as "nobody nearby". */}
+    <Route path="community/nearby" element={lazyRoute(<RequireSignIn><NearbyUsers /></RequireSignIn>)} />
+    <Route path="waves" element={lazyRoute(<RequireSignIn><Waves /></RequireSignIn>)} />
     {/* Topics, City and Genders are Partners chips now (2026-10-31); old
         links land on the list with the matching chip. */}
     <Route path="topics" element={<Navigate replace to="/communities" />} />

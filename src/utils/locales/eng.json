@@ -1446,6 +1446,10 @@
       "gatheringsBody": "Find clubs and meetups with people learning your language, in the BananaTalk app.",
       "roomsTitle": "Rooms are in the app",
       "roomsBody": "Join group chats by language and topic, or start your own room, in the BananaTalk app."
+    },
+    "card": {
+      "new": "New",
+      "waveAt": "Wave at {{name}}"
     }
   },
   "communityNearby": {

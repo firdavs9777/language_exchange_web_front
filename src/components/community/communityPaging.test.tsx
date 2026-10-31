@@ -101,3 +101,12 @@ it("cards keep the server's order", async () => {
   const names = screen.getAllByTestId("member-card-root").map((n) => n.textContent || "");
   expect(names[0]).toContain("Plain");
 });
+
+// Audit 2026-10-30: the "Pro" carousel was padded with non-VIP members, so it
+// repeated the grid under a heading that was not true.
+it("shows no Pro carousel when nobody on the page is VIP", async () => {
+  membersBody = { success: true, total: PAGE_LIMIT, pages: 1, data: page };
+  const { container } = renderList();
+  await waitFor(() => expect(screen.getAllByTestId("member-card-root")).toHaveLength(PAGE_LIMIT));
+  expect(container.querySelector(".community-highlights")).toBeNull();
+});

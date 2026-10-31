@@ -1446,6 +1446,10 @@
       "gatheringsBody": "BananaTalk ऐप में अपनी भाषा सीखने वालों के साथ क्लब और मुलाक़ातें खोजें।",
       "roomsTitle": "रूम ऐप में हैं",
       "roomsBody": "BananaTalk ऐप में भाषा और विषय के हिसाब से ग्रुप चैट से जुड़ें या अपना रूम बनाएँ।"
+    },
+    "card": {
+      "new": "नया",
+      "waveAt": "{{name}} को वेव करें"
     }
   },
   "communityDetail": {

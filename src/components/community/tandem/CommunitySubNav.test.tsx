@@ -210,3 +210,14 @@ describe("partner chips", () => {
     expect(onFiltersPatch).toHaveBeenLastCalledWith({ topics: ["music"] });
   });
 });
+
+// Audit 2026-10-30: inactive tabs had tabIndex=-1 and no arrow keys, so a
+// keyboard user could not reach Matches, Gatherings or Rooms.
+it("arrow keys move between the top tabs", () => {
+  const { onTabChange } = renderNav({ activeTab: "all" as CommunityNavTab });
+  const partners = document.getElementById("community-tab-partners")!;
+  partners.focus();
+  fireEvent.keyDown(partners, { key: "ArrowRight" });
+  expect(onTabChange).toHaveBeenLastCalledWith("gatherings");
+  expect(document.activeElement).toBe(document.getElementById("community-tab-gatherings"));
+});

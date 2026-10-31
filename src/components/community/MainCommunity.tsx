@@ -561,11 +561,11 @@ const ModernCommunity: React.FC = () => {
     [paged.items, currentUser._id]
   );
 
-  const highlightedProfiles = useMemo(() => {
-    const pros = allMembers.filter((m) => m.isVIP);
-    const fillers = allMembers.filter((m) => !m.isVIP);
-    return [...pros, ...fillers].slice(0, 12);
-  }, [allMembers]);
+  // VIP members only: non-VIP "fillers" repeated the grid under a Pro heading.
+  const highlightedProfiles = useMemo(
+    () => allMembers.filter((m) => m.isVIP).slice(0, 12),
+    [allMembers]
+  );
 
   // What goes BETWEEN the members: the periodic ad (lib/gridInterleave).
   const interleave = { total: allMembers.length };
@@ -937,6 +937,7 @@ const ModernCommunity: React.FC = () => {
                 <HighlightedProfilesCarousel
                   profiles={highlightedProfiles as any}
                   currentUser={currentUser}
+                  onTryPro={() => navigate("/settings/vip")}
                 />
               </div>
             )}

@@ -216,3 +216,18 @@ it.each([
   expect(element.props.to).toBe(to);
   expect(element.props.replace).toBe(true);
 });
+
+// Audit 2026-10-30: a signed-out visitor on Nearby was asked for their
+// location, then shown "nobody nearby" (a 401). Both pages are members-only.
+const wraps = (el: any, name: string): boolean => {
+  if (!el || typeof el !== "object") return false;
+  const type = el.type;
+  if (type && (type.name === name || type.displayName === name)) return true;
+  const kids = el.props && el.props.children;
+  return Array.isArray(kids) ? kids.some((k: any) => wraps(k, name)) : wraps(kids, name);
+};
+it.each(["/community/nearby", "/waves"])("%s requires sign-in", (path) => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, path);
+  expect(wraps(matches![matches!.length - 1].route.element, "RequireSignIn")).toBe(true);
+});

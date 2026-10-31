@@ -169,3 +169,11 @@ describe("WaveSheet", () => {
     await waitFor(() => expect(onWaved).toHaveBeenCalledWith("user-2", false));
   });
 });
+
+// Audit 2026-10-30: the sheet ignored Escape.
+it("Escape closes the sheet", () => {
+  const onClose = jest.fn();
+  renderSheet({ onClose });
+  fireEvent.keyDown(document, { key: "Escape" });
+  expect(onClose).toHaveBeenCalled();
+});

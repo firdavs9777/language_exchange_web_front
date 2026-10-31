@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { createMemoryRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import { makeStore } from "../../../store";
 import MainCommunity from "../MainCommunity";
+import { resetPagedListCache } from "../lib/usePagedList";
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (key: string, o?: any) => (o ? `${key} ${Object.values(o).join(" ")}` : key), i18n: { language: "en" } }),
@@ -25,6 +26,8 @@ const requested: string[] = [];
 const originalFetch = global.fetch;
 let dailyStatus = 200;
 
+// Loaded pages are cached per question across mounts; start each test empty.
+beforeEach(() => resetPagedListCache());
 beforeEach(() => {
   requested.length = 0;
   dailyStatus = 200;

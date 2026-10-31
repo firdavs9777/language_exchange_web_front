@@ -1446,6 +1446,10 @@
       "gatheringsBody": "BananaTalk 앱에서 내 언어를 배우는 사람들과 클럽과 모임을 찾아보세요.",
       "roomsTitle": "방은 앱에서 이용할 수 있어요",
       "roomsBody": "BananaTalk 앱에서 언어와 주제별 그룹 채팅에 참여하거나 나만의 방을 만들어 보세요."
+    },
+    "card": {
+      "new": "신규",
+      "waveAt": "{{name}}님에게 손 흔들기"
     }
   },
   "communityDetail": {

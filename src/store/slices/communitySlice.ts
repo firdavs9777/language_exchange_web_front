@@ -140,6 +140,8 @@ export const communityApiSlice = apiSlice.injectEndpoints({
     getDailyMatches: builder.query({
       query: () => ({ url: "/api/v1/matching/daily" }),
       keepUnusedDataFor: 60,
+      // Refetched after a block (usersSlice invalidates Recommendations).
+      providesTags: ["Recommendations"],
     }),
     // POST /api/v1/interactions/skip { targetUserId }. Fire-and-forget from
     // the Today card: the card leaves at once whatever this answers.

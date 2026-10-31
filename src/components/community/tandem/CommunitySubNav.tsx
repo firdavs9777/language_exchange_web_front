@@ -153,6 +153,25 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
     node.scrollIntoView({ block: "nearest", inline: "nearest" });
   }, [activeTab]);
 
+  const visibleTopTabs = TOP_TABS.filter(({ id }) => showToday || id !== "today");
+  const domIdOf = (id: CommunityNavTab) =>
+    `community-tab-${id === "all" ? "partners" : id === "today" ? "matches" : id}`;
+  /** Roving tabs: inactive tabs are tabIndex -1, so arrows are how a keyboard reaches them. */
+  const moveTab = (e: React.KeyboardEvent, from: CommunityNavTab) => {
+    const step =
+      e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    const ids = visibleTopTabs.map((tab) => tab.id);
+    let target: CommunityNavTab | undefined;
+    if (step) target = ids[(ids.indexOf(from) + step + ids.length) % ids.length];
+    else if (e.key === "Home") target = ids[0];
+    else if (e.key === "End") target = ids[ids.length - 1];
+    if (!target) return;
+    e.preventDefault();
+    const partnersAlready = target === "all" && PARTNER_VIEWS.indexOf(activeTab) >= 0;
+    if (!partnersAlready) onTabChange(target);
+    document.getElementById(domIdOf(target))?.focus();
+  };
+
   return (
     <div className="community-subnav">
       <div className="community-subnav__container">
@@ -165,7 +184,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
             aria-label={t("communityMain.tabs.label") || "Community tabs"}
             className="flex items-center gap-2 flex-nowrap"
           >
-            {TOP_TABS.filter(({ id }) => showToday || id !== "today").map(({ id, copyKey, fallback }) => {
+            {visibleTopTabs.map(({ id, copyKey, fallback }) => {
               const active =
                 id === "all" ? PARTNER_VIEWS.indexOf(activeTab) >= 0 : activeTab === id;
               return (
@@ -173,11 +192,12 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
                   key={id}
                   type="button"
                   role="tab"
-                  id={`community-tab-${id === "all" ? "partners" : id === "today" ? "matches" : id}`}
+                  id={domIdOf(id)}
                   aria-selected={active}
                   tabIndex={active ? 0 : -1}
                   ref={active ? activeRef : undefined}
                   className={`community-subnav__btn shrink-0 ${active ? "community-subnav__btn--active" : ""}`}
+                  onKeyDown={(e) => moveTab(e, id)}
                   onClick={() => {
                     // Partners keeps whichever view the member was already on.
                     if (id === "all" && PARTNER_VIEWS.indexOf(activeTab) >= 0) return;

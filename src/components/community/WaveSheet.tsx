@@ -70,6 +70,16 @@ const WaveSheet: React.FC<WaveSheetProps> = ({ open, targetUser, onClose, onWave
     }
   }, [open, targetUser?._id]);
 
+  // Escape closes the sheet, like every other dialog on the site.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
   if (!open || !targetUser) return null;
 
   const avatar = targetUser.imageUrls?.[0];

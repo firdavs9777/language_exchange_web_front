@@ -252,6 +252,7 @@ Not deployed: pushing web main deploys; the owner says "deploy it".
 - [x] Waves: own cache tag ("Waves"; a wave no longer refetches member lists), error state with Try again, a sub-nav link with the unread badge; waved cards show ✓ instead of a second wave.
 - [x] Chips on Partners: Nearby (link), Same city (`city=1` → sameCity=true), Women / Men (the existing `gender` filter), Topic ▾ (the existing `topics` filter); the City / Genders / Topics sub-nav links are gone; the filter count uses the refreshed /auth/me languages. 5 new strings in 18 locales.
 - [x] City / Genders / Topics pages deleted; /community/city → /communities?city=1, /community/genders → ?gender=female, /topics → /communities (history replace); AppOnlyTab hands over with `replace` (Back no longer loops).
-- [ ] Sign-in gates (nearby, waves), error-not-empty states, keyboard access, block refresh, default avatar, carousel. M
+- [x] Sign-in gates on /community/nearby and /waves; Nearby and Waves show errors (not "nobody"); arrow keys across the top tabs; Escape closes the wave sheet; block/unblock refresh Partners, For you and Today; public/default-avatar.png exists; the Pro carousel shows VIPs only and "Try Pro" opens /settings/vip; card "New" and "Wave at" translated.
+- [ ] Not done (low effect, riskier): MemberCard is still role="button" with a nested wave button; WaveSheet has Escape but no focus trap. S
 - [ ] One app-config request, lazy sheets, fewer requests and repaints. M
 - [ ] Dead code. S

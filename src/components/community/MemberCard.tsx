@@ -201,7 +201,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
               data-testid="member-card-new-badge"
               className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-white bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full px-2 py-0.5"
             >
-              New
+              {t("communityMain.card.new") || "New"}
             </span>
           )}
 
@@ -311,7 +311,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
         data-testid="member-card-wave"
         onClick={handleWaveClick}
         disabled={waved}
-        aria-label={`Wave at ${user.name}`}
+        aria-label={t("communityMain.card.waveAt", { name: user.name }) || `Wave at ${user.name}`}
         className={
           compact
             ? "shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-white bg-gradient-to-r from-[#00BFA5] to-[#00ACC1] hover:brightness-105 active:scale-95 transition-all"

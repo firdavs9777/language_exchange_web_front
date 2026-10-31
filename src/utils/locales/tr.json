@@ -1446,6 +1446,10 @@
       "gatheringsBody": "Dilini öğrenen insanlarla kulüpleri ve buluşmaları BananaTalk uygulamasında bul.",
       "roomsTitle": "Odalar uygulamada",
       "roomsBody": "Dile ve konuya göre grup sohbetlerine katıl ya da kendi odanı aç; hepsi BananaTalk uygulamasında."
+    },
+    "card": {
+      "new": "Yeni",
+      "waveAt": "{{name}} kişisine el salla"
     }
   },
   "communityDetail": {

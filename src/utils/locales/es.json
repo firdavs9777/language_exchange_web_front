@@ -1428,6 +1428,10 @@
       "gatheringsBody": "Encuentra clubes y quedadas con gente que aprende tu idioma, en la app de BananaTalk.",
       "roomsTitle": "Las salas están en la app",
       "roomsBody": "Únete a chats grupales por idioma y tema, o crea tu propia sala, en la app de BananaTalk."
+    },
+    "card": {
+      "new": "Nuevo",
+      "waveAt": "Saludar a {{name}}"
     }
   },
   "communityDetail": {

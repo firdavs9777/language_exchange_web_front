@@ -1446,6 +1446,10 @@
       "gatheringsBody": "Tìm câu lạc bộ và buổi gặp mặt với những người học ngôn ngữ của bạn, trong ứng dụng BananaTalk.",
       "roomsTitle": "Phòng có trong ứng dụng",
       "roomsBody": "Tham gia trò chuyện nhóm theo ngôn ngữ và chủ đề, hoặc tạo phòng riêng, trong ứng dụng BananaTalk."
+    },
+    "card": {
+      "new": "Mới",
+      "waveAt": "Vẫy tay chào {{name}}"
     }
   },
   "communityDetail": {

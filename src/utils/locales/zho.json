@@ -1446,6 +1446,10 @@
       "gatheringsBody": "在 BananaTalk App 中，找到正在学你语言的人一起参加俱乐部和聚会。",
       "roomsTitle": "聊天室功能在 App 中",
       "roomsBody": "在 BananaTalk App 中，按语言和话题加入群聊，或创建你自己的聊天室。"
+    },
+    "card": {
+      "new": "新",
+      "waveAt": "向 {{name}} 挥手"
     }
   },
   "communityDetail": {

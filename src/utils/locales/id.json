@@ -1446,6 +1446,10 @@
       "gatheringsBody": "Temukan klub dan pertemuan dengan orang yang belajar bahasamu, di aplikasi BananaTalk.",
       "roomsTitle": "Ruang ada di aplikasi",
       "roomsBody": "Gabung obrolan grup berdasarkan bahasa dan topik, atau buat ruangmu sendiri, di aplikasi BananaTalk."
+    },
+    "card": {
+      "new": "Baru",
+      "waveAt": "Lambaikan tangan ke {{name}}"
     }
   },
   "communityDetail": {

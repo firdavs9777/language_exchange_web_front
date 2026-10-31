@@ -9,6 +9,10 @@
       },
       "errors": {
         "loadMoreFailed": "Couldn't load more."
+      },
+      "card": {
+        "new": "New",
+        "waveAt": "Wave at {{name}}"
       }
     }
   },
@@ -22,6 +26,10 @@
       },
       "errors": {
         "loadMoreFailed": "تعذّر تحميل المزيد."
+      },
+      "card": {
+        "new": "جديد",
+        "waveAt": "لوّح لـ {{name}}"
       }
     }
   },
@@ -35,6 +43,10 @@
       },
       "errors": {
         "loadMoreFailed": "Mehr konnte nicht geladen werden."
+      },
+      "card": {
+        "new": "Neu",
+        "waveAt": "{{name}} zuwinken"
       }
     }
   },
@@ -48,6 +60,10 @@
       },
       "errors": {
         "loadMoreFailed": "No se pudo cargar más."
+      },
+      "card": {
+        "new": "Nuevo",
+        "waveAt": "Saludar a {{name}}"
       }
     }
   },
@@ -61,6 +77,10 @@
       },
       "errors": {
         "loadMoreFailed": "Impossible d'en charger plus."
+      },
+      "card": {
+        "new": "Nouveau",
+        "waveAt": "Faire coucou à {{name}}"
       }
     }
   },
@@ -74,6 +94,10 @@
       },
       "errors": {
         "loadMoreFailed": "और लोड नहीं हो सका।"
+      },
+      "card": {
+        "new": "नया",
+        "waveAt": "{{name}} को वेव करें"
       }
     }
   },
@@ -87,6 +111,10 @@
       },
       "errors": {
         "loadMoreFailed": "Tidak dapat memuat lagi."
+      },
+      "card": {
+        "new": "Baru",
+        "waveAt": "Lambaikan tangan ke {{name}}"
       }
     }
   },
@@ -100,6 +128,10 @@
       },
       "errors": {
         "loadMoreFailed": "Impossibile caricarne altri."
+      },
+      "card": {
+        "new": "Nuovo",
+        "waveAt": "Saluta {{name}}"
       }
     }
   },
@@ -113,6 +145,10 @@
       },
       "errors": {
         "loadMoreFailed": "これ以上読み込めませんでした。"
+      },
+      "card": {
+        "new": "新着",
+        "waveAt": "{{name}}さんに手を振る"
       }
     }
   },
@@ -126,6 +162,10 @@
       },
       "errors": {
         "loadMoreFailed": "더 불러오지 못했어요."
+      },
+      "card": {
+        "new": "신규",
+        "waveAt": "{{name}}님에게 손 흔들기"
       }
     }
   },
@@ -139,6 +179,10 @@
       },
       "errors": {
         "loadMoreFailed": "Não foi possível carregar mais."
+      },
+      "card": {
+        "new": "Novo",
+        "waveAt": "Acenar para {{name}}"
       }
     }
   },
@@ -152,6 +196,10 @@
       },
       "errors": {
         "loadMoreFailed": "Не удалось загрузить ещё."
+      },
+      "card": {
+        "new": "Новый",
+        "waveAt": "Помахать {{name}}"
       }
     }
   },
@@ -165,6 +213,10 @@
       },
       "errors": {
         "loadMoreFailed": "โหลดเพิ่มไม่ได้"
+      },
+      "card": {
+        "new": "ใหม่",
+        "waveAt": "โบกมือให้ {{name}}"
       }
     }
   },
@@ -178,6 +230,10 @@
       },
       "errors": {
         "loadMoreFailed": "Hindi makapag-load ng higit pa."
+      },
+      "card": {
+        "new": "Bago",
+        "waveAt": "Kawayan si {{name}}"
       }
     }
   },
@@ -191,6 +247,10 @@
       },
       "errors": {
         "loadMoreFailed": "Daha fazlası yüklenemedi."
+      },
+      "card": {
+        "new": "Yeni",
+        "waveAt": "{{name}} kişisine el salla"
       }
     }
   },
@@ -204,6 +264,10 @@
       },
       "errors": {
         "loadMoreFailed": "Không tải thêm được."
+      },
+      "card": {
+        "new": "Mới",
+        "waveAt": "Vẫy tay chào {{name}}"
       }
     }
   },
@@ -217,6 +281,10 @@
       },
       "errors": {
         "loadMoreFailed": "無法載入更多。"
+      },
+      "card": {
+        "new": "新",
+        "waveAt": "向 {{name}} 揮手"
       }
     }
   },
@@ -230,6 +298,10 @@
       },
       "errors": {
         "loadMoreFailed": "无法加载更多。"
+      },
+      "card": {
+        "new": "新",
+        "waveAt": "向 {{name}} 挥手"
       }
     }
   }

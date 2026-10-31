@@ -1446,6 +1446,10 @@
       "gatheringsBody": "Maghanap ng mga club at meetup kasama ang mga nag-aaral ng wika mo, sa BananaTalk app.",
       "roomsTitle": "Nasa app ang mga room",
       "roomsBody": "Sumali sa mga group chat ayon sa wika at paksa, o gumawa ng sarili mong room, sa BananaTalk app."
+    },
+    "card": {
+      "new": "Bago",
+      "waveAt": "Kawayan si {{name}}"
     }
   },
   "communityDetail": {

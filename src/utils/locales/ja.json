@@ -1446,6 +1446,10 @@
       "gatheringsBody": "BananaTalkアプリで、あなたの言語を学ぶ人とのクラブや集まりを見つけましょう。",
       "roomsTitle": "ルームはアプリで利用できます",
       "roomsBody": "BananaTalkアプリで、言語やトピック別のグループチャットに参加したり、自分のルームを作ったりできます。"
+    },
+    "card": {
+      "new": "新着",
+      "waveAt": "{{name}}さんに手を振る"
     }
   },
   "communityDetail": {
