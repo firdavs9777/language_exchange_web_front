@@ -6,7 +6,7 @@ import {
   useGetWavesQuery,
   useMarkWavesReadMutation,
 } from "../../store/slices/communitySlice";
-import { useGetAppConfigQuery } from "../../store/slices/appConfigSlice";
+import { useWebAppConfig } from "../../utils/useWebAppConfig";
 import { photoUrl } from "../../utils/photoUrl";
 import { timeAgo } from "../../utils/timeAgo";
 
@@ -63,7 +63,7 @@ const Waves: React.FC = () => {
   // The app sends ?reveal=1 only while boostsEnabled is on (waves_tab.dart).
   // Waiting for the config keeps it to one request, not one without and one
   // with; a failed config read counts as "off".
-  const { data: appConfig, isLoading: configLoading } = useGetAppConfigQuery();
+  const { data: appConfig, isLoading: configLoading } = useWebAppConfig();
   const reveal = Boolean(appConfig && (appConfig as any).boostsEnabled);
 
   // currentData, not data: after the archive switch `data` still holds the
@@ -224,7 +224,7 @@ const Waves: React.FC = () => {
                 >
                   <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-teal-100 to-cyan-50 shrink-0 flex items-center justify-center">
                     {avatar ? (
-                      <img src={avatar} alt={name} className="w-full h-full object-cover" />
+                      <img src={avatar} alt={name} loading="lazy" decoding="async" width={56} height={56} className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-lg font-semibold text-teal-600">
                         {name ? name[0].toUpperCase() : "?"}

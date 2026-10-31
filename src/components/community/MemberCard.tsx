@@ -132,8 +132,8 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
       onKeyDown={handleCardKeyDown}
       className={
         compact
-          ? "flex flex-row items-center gap-3 p-3 bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 hover:shadow-xl transition-all cursor-pointer"
-          : "flex flex-col h-full bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
+          ? "flex flex-row items-center gap-3 p-3 bg-white rounded-2xl shadow-lg border border-white/30 hover:shadow-xl transition-all cursor-pointer"
+          : "flex flex-col h-full bg-white rounded-2xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
       }
     >
       {/* Photo. A grid cell gets a 16:10 banner; a carousel row gets a 56px

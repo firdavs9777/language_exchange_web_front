@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { X, Loader2, Users, Link2, Lock } from "lucide-react";
@@ -172,6 +172,11 @@ const CommunityFilterSheet: React.FC<CommunityFilterSheetProps> = ({
 
   // --- Live debounced match count -------------------------------------------------
   const [debouncedValue, setDebouncedValue] = useState<CommunityFilters>(value);
+  // Opening starts from the current draft, not the one from mount time
+  // (which cost a stale count request and then the real one).
+  const wasOpen = useRef(open);
+  if (open && !wasOpen.current) setDebouncedValue(value);
+  wasOpen.current = open;
   useEffect(() => {
     if (!open) return;
     const handle = setTimeout(() => setDebouncedValue(value), DEBOUNCE_MS);

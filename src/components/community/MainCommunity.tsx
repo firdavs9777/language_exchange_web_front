@@ -1,4 +1,4 @@
-import { Fragment, useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { Fragment, Suspense, lazy, useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Loader2, RefreshCw, Search, Sparkles } from "lucide-react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -12,7 +12,6 @@ import {
   useGetWavesQuery,
 } from "../../store/slices/communitySlice";
 import { useGetProfileVisitorsQuery, useGetUserProfileQuery } from "../../store/slices/usersSlice";
-import { useGetAppConfigQuery } from "../../store/slices/appConfigSlice";
 import { RootState } from "../../store";
 import { useDebounce } from "./utils";
 
@@ -23,10 +22,8 @@ import { DailyMatch } from "./today/types";
 import { photoUrl } from "./today/dailyMatchView";
 import HighlightedProfilesCarousel from "./tandem/HighlightedProfilesCarousel";
 import MemberCard, { CommunityMemberCard } from "./MemberCard";
-import CommunityFilterSheet from "./CommunityFilterSheet";
 import ActiveFilterChips from "./ActiveFilterChips";
 import QuickFilterChips from "./QuickFilterChips";
-import WaveSheet from "./WaveSheet";
 import RequireSignIn from "../gatherings/RequireSignIn";
 import BoostEntryRow from "../boost/BoostEntryRow";
 import AdUnit from "../ads/AdUnit";
@@ -38,6 +35,7 @@ import {
 } from "./lib/buildCommunityQuery";
 import { usePagedList } from "./lib/usePagedList";
 import { useIsVip } from "../vip/useIsVip";
+import { useWebAppConfig } from "../../utils/useWebAppConfig";
 import { isMutualExchange } from "./lib/presence";
 import { VIP_PATH } from "../vip/vipStatus";
 import * as filterStorage from "./lib/filterStorage";
@@ -52,6 +50,11 @@ import {
 } from "./lib/communityUrlState";
 import notify from "../../design/notify";
 import "./tandem/tandem-community.scss";
+
+// Both sheets are closed on first paint: load their code (the filter sheet
+// carries the country and language tables) only when one opens.
+const CommunityFilterSheet = lazy(() => import("./CommunityFilterSheet"));
+const WaveSheet = lazy(() => import("./WaveSheet"));
 
 const PAGE_LIMIT = 20;
 
@@ -476,7 +479,7 @@ const ModernCommunity: React.FC = () => {
   // (the app's _sortFor): a sort the member chose always wins. The list waits
   // for the config so the first request is already the right one -- not a
   // VIP-first list that reshuffles a moment later.
-  const { data: appConfig, isLoading: appConfigLoading } = useGetAppConfigQuery();
+  const { data: appConfig, isLoading: appConfigLoading } = useWebAppConfig();
   const smartSort = Boolean(appConfig && (appConfig as any).smartSortEnabled);
   const listSort: CommunityFilters["sort"] = sort || (smartSort ? "smart" : undefined);
 
@@ -548,9 +551,10 @@ const ModernCommunity: React.FC = () => {
   );
   const wavesUnread = Number((unreadWaves as any)?.data?.unreadCount) || 0;
 
+  // The visitors pill only shows on All; the other views never asked for it.
   const { data: visitorsData } = useGetProfileVisitorsQuery(
     { userId: currentUser._id || "", page: 1, limit: 8 },
-    { skip: !currentUser._id }
+    { skip: !currentUser._id || activeTab !== "all" }
   );
 
   // Persist scroll position continuously (throttled with rAF).
@@ -811,34 +815,42 @@ const ModernCommunity: React.FC = () => {
         visitorsCount={activeTab === "all" ? visitorsTotal : 0}
       />
 
-      <CommunityFilterSheet
-        open={isFilterSheetOpen}
-        value={draftFilters}
-        onChange={setDraftFilters}
-        onApply={applyFilters}
-        onClear={clearAllFilters}
-        onCopyLink={handleCopyLink}
-        canCopyLink={draftMatchesApplied}
-        lockedTab={
-          activeTab === "online" || activeTab === "new" || activeTab === "serious"
-            ? activeTab
-            : undefined
-        }
-        onClose={() => setIsFilterSheetOpen(false)}
-        me={me}
-        isVip={isVip}
-        onUpgrade={() => {
-          setIsFilterSheetOpen(false);
-          navigate(VIP_PATH);
-        }}
-      />
+      {isFilterSheetOpen && (
+        <Suspense fallback={null}>
+          <CommunityFilterSheet
+            open={isFilterSheetOpen}
+            value={draftFilters}
+            onChange={setDraftFilters}
+            onApply={applyFilters}
+            onClear={clearAllFilters}
+            onCopyLink={handleCopyLink}
+            canCopyLink={draftMatchesApplied}
+            lockedTab={
+              activeTab === "online" || activeTab === "new" || activeTab === "serious"
+                ? activeTab
+                : undefined
+            }
+            onClose={() => setIsFilterSheetOpen(false)}
+            me={me}
+            isVip={isVip}
+            onUpgrade={() => {
+              setIsFilterSheetOpen(false);
+              navigate(VIP_PATH);
+            }}
+          />
+        </Suspense>
+      )}
 
-      <WaveSheet
-        open={!!waveTarget}
-        targetUser={waveTarget}
-        onClose={() => setWaveTarget(null)}
-        onWaved={handleWaved}
-      />
+      {waveTarget && (
+        <Suspense fallback={null}>
+          <WaveSheet
+            open={!!waveTarget}
+            targetUser={waveTarget}
+            onClose={() => setWaveTarget(null)}
+            onWaved={handleWaved}
+          />
+        </Suspense>
+      )}
 
       <div className="community-page__container">
         {signedIn && <BoostEntryRow className="mb-3" />}

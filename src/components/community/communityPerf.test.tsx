@@ -349,3 +349,22 @@ describe("what the Today landing costs", () => {
     expect(requestedUrls.filter((u) => /\/auth\/users\?/.test(u))).toHaveLength(0);
   });
 });
+
+describe("phase 3 request trims (2026-10-31)", () => {
+  // MainCommunity read app-config with no args, a different cache entry from
+  // the flags/announcements hook ({platform:"web", lang}): two requests.
+  it("reads app-config with the shared web args", async () => {
+    renderList();
+    await waitFor(() => expect(cards().length).toBe(PAGE_LIMIT));
+    const config = requestedUrls.filter((u) => u.indexOf("/app-config") >= 0);
+    expect(config).toHaveLength(1);
+    expect(config[0]).toContain("platform=web");
+  });
+
+  // The visitors pill only shows on All; other views asked anyway.
+  it("does not ask for visitors on the Online view", async () => {
+    renderList(["/communities?tab=online"]);
+    await waitFor(() => expect(cards().length).toBe(PAGE_LIMIT));
+    expect(requestedUrls.filter((u) => u.indexOf("/visitors") >= 0)).toHaveLength(0);
+  });
+});

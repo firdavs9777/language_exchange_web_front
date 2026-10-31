@@ -254,5 +254,5 @@ Not deployed: pushing web main deploys; the owner says "deploy it".
 - [x] City / Genders / Topics pages deleted; /community/city → /communities?city=1, /community/genders → ?gender=female, /topics → /communities (history replace); AppOnlyTab hands over with `replace` (Back no longer loops).
 - [x] Sign-in gates on /community/nearby and /waves; Nearby and Waves show errors (not "nobody"); arrow keys across the top tabs; Escape closes the wave sheet; block/unblock refresh Partners, For you and Today; public/default-avatar.png exists; the Pro carousel shows VIPs only and "Try Pro" opens /settings/vip; card "New" and "Wave at" translated.
 - [ ] Not done (low effect, riskier): MemberCard is still role="button" with a nested wave button; WaveSheet has Escape but no focus trap. S
-- [ ] One app-config request, lazy sheets, fewer requests and repaints. M
+- [x] One app-config cache entry (`useWebAppConfig`, shared with the flags); visitors only on All; the filter sheet asks one count per open; filter and wave sheets lazy-loaded and mounted only while open; no backdrop blur on cards and Nearby rows; lazy avatars on Nearby, Waves, the carousel. `npm run build` passes.
 - [ ] Dead code. S

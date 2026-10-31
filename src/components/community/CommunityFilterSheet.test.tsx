@@ -439,3 +439,24 @@ describe("the country filter is VIP-only", () => {
     expect(screen.queryByTestId("filter-country-vip")).not.toBeInTheDocument();
   });
 });
+
+// Audit 2026-10-30: the debounced value started from the mount-time draft,
+// so opening the sheet asked for a stale count and then the real one.
+it("opening the sheet asks for one count, for the current draft", async () => {
+  const props = { onChange: jest.fn(), onApply: jest.fn(), onClear: jest.fn(), onClose: jest.fn(), isVip: true };
+  const store = makeStore(SIGNED_IN);
+  const { rerender } = render(
+    <Provider store={store}>
+      <CommunityFilterSheet open={false} value={{ ...DEFAULT_FILTERS }} {...props} />
+    </Provider>
+  );
+  rerender(
+    <Provider store={store}>
+      <CommunityFilterSheet open value={{ ...DEFAULT_FILTERS, gender: "female" }} {...props} />
+    </Provider>
+  );
+  await waitFor(() => expect(countRequests().length).toBeGreaterThan(0));
+  await new Promise((r) => setTimeout(r, 500));
+  expect(countRequests()).toHaveLength(1);
+  expect(countRequests()[0]).toContain("gender=female");
+});
