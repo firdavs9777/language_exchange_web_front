@@ -238,28 +238,6 @@ export const communityApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Community", "User"],
     }),
-    // `onlineOnly` is a real query param on `getTopicUsers` (it filters on the
-    // persisted isOnline flag, the same one behind the green presence dots);
-    // it is only ever sent when true so the cache key of the default list
-    // stays `?page&limit`.
-    getUsersByTopic: builder.query({
-      query: ({
-        topicId,
-        page = 1,
-        limit = 20,
-        onlineOnly = false,
-      }: {
-        topicId: string;
-        page?: number;
-        limit?: number;
-        onlineOnly?: boolean;
-      }) => ({
-        url: `${COMMUNITY_TOPICS}/${topicId}/users?page=${page}&limit=${limit}${
-          onlineOnly ? "&onlineOnly=true" : ""
-        }`,
-      }),
-      providesTags: ["Community"],
-    }),
 
     // Languages
     getLanguages: builder.query({
@@ -289,7 +267,6 @@ export const {
   // Topics
   useGetTopicsQuery,
   useUpdateMyTopicsMutation,
-  useGetUsersByTopicQuery,
   // Languages
   useGetLanguagesQuery,
 } = communityApiSlice;

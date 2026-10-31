@@ -201,3 +201,18 @@ it("matches /story/<id> to the story link page, not the catch-all or the viewer"
   expect(matches![1].route.path).toBe("story/:id");
   expect(matchRoutes(routes, "/stories/abc")![1].route.path).toBe("stories/:userId");
 });
+
+// Community phase 3 (2026-10-31): City, Genders and Topics became Partners
+// chips. Old links (pasted, bookmarked, in the app's share text) still land
+// on the list with the matching chip, replacing the old entry in history.
+it.each([
+  ["/community/city", "/communities?city=1"],
+  ["/community/genders", "/communities?gender=female"],
+  ["/topics", "/communities"],
+])("redirects %s to %s", (path, to) => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, path);
+  const element = matches![matches!.length - 1].route.element as any;
+  expect(element.props.to).toBe(to);
+  expect(element.props.replace).toBe(true);
+});
