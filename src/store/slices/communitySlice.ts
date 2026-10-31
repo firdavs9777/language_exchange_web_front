@@ -140,6 +140,8 @@ export const communityApiSlice = apiSlice.injectEndpoints({
     getDailyMatches: builder.query({
       query: () => ({ url: "/api/v1/matching/daily" }),
       keepUnusedDataFor: 60,
+      // Refetched after a block (usersSlice invalidates Recommendations).
+      providesTags: ["Recommendations"],
     }),
     // POST /api/v1/interactions/skip { targetUserId }. Fire-and-forget from
     // the Today card: the card leaves at once whatever this answers.
@@ -190,7 +192,7 @@ export const communityApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { targetUserId, message },
       }),
-      invalidatesTags: ["Community"],
+      invalidatesTags: ["Waves"],
     }),
     getWaves: builder.query({
       query: ({ page = 1, limit = 20, unreadOnly, archive, reveal }: {
@@ -208,7 +210,7 @@ export const communityApiSlice = apiSlice.injectEndpoints({
         if (reveal) url += `&reveal=1`;
         return { url };
       },
-      providesTags: ["Community"],
+      providesTags: ["Waves"],
     }),
     markWavesRead: builder.mutation({
       query: (waveIds?: string[]) => ({
@@ -216,7 +218,7 @@ export const communityApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: waveIds ? { waveIds } : {},
       }),
-      invalidatesTags: ["Community"],
+      invalidatesTags: ["Waves"],
     }),
 
     // Topics System
@@ -237,28 +239,6 @@ export const communityApiSlice = apiSlice.injectEndpoints({
         body: { topics: topicIds },
       }),
       invalidatesTags: ["Community", "User"],
-    }),
-    // `onlineOnly` is a real query param on `getTopicUsers` (it filters on the
-    // persisted isOnline flag, the same one behind the green presence dots);
-    // it is only ever sent when true so the cache key of the default list
-    // stays `?page&limit`.
-    getUsersByTopic: builder.query({
-      query: ({
-        topicId,
-        page = 1,
-        limit = 20,
-        onlineOnly = false,
-      }: {
-        topicId: string;
-        page?: number;
-        limit?: number;
-        onlineOnly?: boolean;
-      }) => ({
-        url: `${COMMUNITY_TOPICS}/${topicId}/users?page=${page}&limit=${limit}${
-          onlineOnly ? "&onlineOnly=true" : ""
-        }`,
-      }),
-      providesTags: ["Community"],
     }),
 
     // Languages
@@ -289,7 +269,6 @@ export const {
   // Topics
   useGetTopicsQuery,
   useUpdateMyTopicsMutation,
-  useGetUsersByTopicQuery,
   // Languages
   useGetLanguagesQuery,
 } = communityApiSlice;

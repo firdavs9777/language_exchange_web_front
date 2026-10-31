@@ -1290,7 +1290,11 @@
       "partners": "語伴",
       "gatherings": "聚會",
       "rooms": "聊天室",
-      "partnersViews": "語伴檢視"
+      "partnersViews": "語伴檢視",
+      "sameCity": "同城",
+      "women": "女生",
+      "men": "男生",
+      "topic": "話題"
     },
     "filters": {
       "language": "語言",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "糟糕，出了點狀況",
       "loadError": "社群載入失敗，請再試一次。",
-      "tryAgain": "再試一次"
+      "tryAgain": "再試一次",
+      "loadMoreFailed": "無法載入更多。"
     },
     "loadMore": {
       "loading": "載入中…",
@@ -1441,6 +1446,10 @@
       "gatheringsBody": "在 BananaTalk App 中，找到正在學你語言的人一起參加社團與聚會。",
       "roomsTitle": "聊天室功能在 App 中",
       "roomsBody": "在 BananaTalk App 中，依語言和主題加入群組聊天，或建立你自己的聊天室。"
+    },
+    "card": {
+      "new": "新",
+      "waveAt": "向 {{name}} 揮手"
     }
   },
   "communityDetail": {

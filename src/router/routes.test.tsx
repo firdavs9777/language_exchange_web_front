@@ -201,3 +201,33 @@ it("matches /story/<id> to the story link page, not the catch-all or the viewer"
   expect(matches![1].route.path).toBe("story/:id");
   expect(matchRoutes(routes, "/stories/abc")![1].route.path).toBe("stories/:userId");
 });
+
+// Community phase 3 (2026-10-31): City, Genders and Topics became Partners
+// chips. Old links (pasted, bookmarked, in the app's share text) still land
+// on the list with the matching chip, replacing the old entry in history.
+it.each([
+  ["/community/city", { city: "1" }],
+  ["/community/genders", { gender: "female" }],
+  ["/topics", undefined],
+])("redirects %s to Partners with its chip", (path, add) => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, path);
+  const element = matches![matches!.length - 1].route.element as any;
+  expect(element.type.name).toBe("LegacyCommunityRedirect");
+  expect(element.props.add).toEqual(add);
+});
+
+// Audit 2026-10-30: a signed-out visitor on Nearby was asked for their
+// location, then shown "nobody nearby" (a 401). Both pages are members-only.
+const wraps = (el: any, name: string): boolean => {
+  if (!el || typeof el !== "object") return false;
+  const type = el.type;
+  if (type && (type.name === name || type.displayName === name)) return true;
+  const kids = el.props && el.props.children;
+  return Array.isArray(kids) ? kids.some((k: any) => wraps(k, name)) : wraps(kids, name);
+};
+it.each(["/community/nearby", "/waves"])("%s requires sign-in", (path) => {
+  const { routes } = require("./routes");
+  const matches = matchRoutes(routes, path);
+  expect(wraps(matches![matches!.length - 1].route.element, "RequireSignIn")).toBe(true);
+});

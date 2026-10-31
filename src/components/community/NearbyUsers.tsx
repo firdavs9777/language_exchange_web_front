@@ -86,7 +86,7 @@ const NearbyUsers: React.FC = () => {
   const [locationError, setLocationError] = useState<string | null>(null);
   const [isRequestingLocation, setIsRequestingLocation] = useState(false);
 
-  const { data, isLoading, refetch } = useGetNearbyUsersQuery(
+  const { data, isLoading, isError, refetch } = useGetNearbyUsersQuery(
     {
       latitude: location ? location.lat : 0,
       longitude: location ? location.lng : 0,
@@ -274,7 +274,19 @@ const NearbyUsers: React.FC = () => {
           </button>
         </div>
 
-        {isLoading ? (
+        {isError && !data ? (
+          // A failed request used to read as "No users found nearby".
+          <div className="text-center py-12" role="alert">
+            <p className="text-gray-500">{t("communityMain.errors.loadError") || "We couldn't load this."}</p>
+            <button
+              type="button"
+              onClick={() => refetch()}
+              className="mt-4 px-6 py-3 rounded-full bg-gray-100 text-gray-700 font-medium hover:bg-gray-200"
+            >
+              {t("communityMain.errors.tryAgain") || "Try again"}
+            </button>
+          </div>
+        ) : isLoading ? (
           <div className="flex justify-center py-12">
             <Loader2 className="w-10 h-10 text-teal-500 animate-spin" />
           </div>
@@ -299,12 +311,12 @@ const NearbyUsers: React.FC = () => {
                   type="button"
                   data-testid="nearby-user"
                   onClick={() => navigate(`/community/${user._id}`)}
-                  className="w-full flex items-center gap-4 p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-white/30 hover:bg-white/80 hover:shadow-lg transition-all"
+                  className="w-full flex items-center gap-4 p-4 bg-white rounded-xl border border-white/30 hover:bg-white/80 hover:shadow-lg transition-all"
                 >
                   <div className="relative">
                     <div className="w-14 h-14 rounded-full bg-gradient-to-br from-teal-400 to-blue-500 overflow-hidden">
                       {avatar ? (
-                        <img src={avatar} alt={user.name} className="w-full h-full object-cover" />
+                        <img src={avatar} alt={user.name} loading="lazy" decoding="async" width={64} height={64} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-white text-xl font-bold">
                           {user.name ? user.name[0] : "?"}

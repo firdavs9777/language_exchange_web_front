@@ -1,4 +1,4 @@
-import { Fragment, useState, useMemo, useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { Fragment, Suspense, lazy, useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Loader2, RefreshCw, Search, Sparkles } from "lucide-react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -9,9 +9,9 @@ import {
   useGetRecommendationsQuery,
   useGetDailyMatchesQuery,
   useGetTopicsQuery,
+  useGetWavesQuery,
 } from "../../store/slices/communitySlice";
 import { useGetProfileVisitorsQuery, useGetUserProfileQuery } from "../../store/slices/usersSlice";
-import { useGetAppConfigQuery } from "../../store/slices/appConfigSlice";
 import { RootState } from "../../store";
 import { useDebounce } from "./utils";
 
@@ -22,10 +22,8 @@ import { DailyMatch } from "./today/types";
 import { photoUrl } from "./today/dailyMatchView";
 import HighlightedProfilesCarousel from "./tandem/HighlightedProfilesCarousel";
 import MemberCard, { CommunityMemberCard } from "./MemberCard";
-import CommunityFilterSheet from "./CommunityFilterSheet";
 import ActiveFilterChips from "./ActiveFilterChips";
 import QuickFilterChips from "./QuickFilterChips";
-import WaveSheet from "./WaveSheet";
 import RequireSignIn from "../gatherings/RequireSignIn";
 import BoostEntryRow from "../boost/BoostEntryRow";
 import AdUnit from "../ads/AdUnit";
@@ -35,7 +33,9 @@ import {
   buildCommunityQuery,
   withoutVipOnlyFilters,
 } from "./lib/buildCommunityQuery";
+import { usePagedList, listCacheKey } from "./lib/usePagedList";
 import { useIsVip } from "../vip/useIsVip";
+import { useWebAppConfig } from "../../utils/useWebAppConfig";
 import { isMutualExchange } from "./lib/presence";
 import { VIP_PATH } from "../vip/vipStatus";
 import * as filterStorage from "./lib/filterStorage";
@@ -50,6 +50,11 @@ import {
 } from "./lib/communityUrlState";
 import notify from "../../design/notify";
 import "./tandem/tandem-community.scss";
+
+// Both sheets are closed on first paint: load their code (the filter sheet
+// carries the country and language tables) only when one opens.
+const CommunityFilterSheet = lazy(() => import("./CommunityFilterSheet"));
+const WaveSheet = lazy(() => import("./WaveSheet"));
 
 const PAGE_LIMIT = 20;
 
@@ -77,7 +82,6 @@ const CARD_SLOT = "community-card-slot";
 
 /** Nothing appended yet. A module-level constant so the memos below see a
  *  stable identity rather than a fresh `[]` on every render. */
-const NO_EXTRA_PAGES: CommunityMemberCard[] = [];
 
 /** How many skeleton cells stand in for the first page while it loads. */
 const SKELETON_ROWS = 6;
@@ -308,25 +312,6 @@ const ModernCommunity: React.FC = () => {
     setWavedIds((prev) => (prev.indexOf(targetUserId) > -1 ? prev : prev.concat([targetUserId])));
   }, []);
   /**
-   * Where the list has got to, tagged with the question it is an answer to.
-   *
-   * The tag is the point. Resetting the page in an effect when the filters
-   * change means one render in between where the *new* filters are paired
-   * with the *old* page number -- and RTK Query fires that request before the
-   * effect can take it back. Tagging lets the reset happen during render:
-   * a `pager` that belongs to another question simply does not count.
-   *
-   * Page 1 itself is never stored here; it is read straight off the RTK Query
-   * cache below, so coming back from /community/:id shows the cached list on
-   * the first render instead of flashing the empty state.
-   */
-  const [pager, setPager] = useState<{
-    key: string;
-    page: number;
-    extra: CommunityMemberCard[];
-  }>({ key: "", page: 1, extra: NO_EXTRA_PAGES });
-
-  /**
    * What the search box shows, right now.
    *
    * The URL is still the source of truth -- this is its echo, so that typing
@@ -415,6 +400,19 @@ const ModernCommunity: React.FC = () => {
   // it must not close over that render's `applyState` -- a filter change in
   // between would be overwritten with the state as it was when the member
   // last pressed a key.
+  // A Partners chip (Same city / Women / Men / Topic) changes the applied
+  // filters directly -- the same fields the sheet writes.
+  const handleFiltersPatch = useCallback(
+    (patch: Partial<CommunityFilters>) => {
+      const next: CommunityFilters = { ...filters, ...patch };
+      (Object.keys(patch) as (keyof CommunityFilters)[]).forEach((k) => {
+        if (patch[k] === undefined) delete next[k];
+      });
+      applyState({ filters: next });
+    },
+    [filters, applyState]
+  );
+
   const applyStateRef = useRef(applyState);
   useEffect(() => {
     applyStateRef.current = applyState;
@@ -474,8 +472,6 @@ const ModernCommunity: React.FC = () => {
     [effectiveFilters, debouncedSearch, sort, activeTab]
   );
 
-  const page = pager.key === filterKey ? pager.page : 1;
-  const extraPages = pager.key === filterKey ? pager.extra : NO_EXTRA_PAGES;
 
   // Single source of truth for the server query — ALL filters map to real
   // params here (inverted-language semantics handled inside the mapper).
@@ -483,37 +479,43 @@ const ModernCommunity: React.FC = () => {
   // (the app's _sortFor): a sort the member chose always wins. The list waits
   // for the config so the first request is already the right one -- not a
   // VIP-first list that reshuffles a moment later.
-  const { data: appConfig, isLoading: appConfigLoading } = useGetAppConfigQuery();
+  const { data: appConfig, isLoading: appConfigLoading } = useWebAppConfig();
   const smartSort = Boolean(appConfig && (appConfig as any).smartSortEnabled);
   const listSort: CommunityFilters["sort"] = sort || (smartSort ? "smart" : undefined);
 
-  const queryArg = useMemo(
-    () =>
+  // The Partners list: one paging hook (lib/usePagedList) -- no mixed
+  // pages, the server's hasMore, inline errors, Back restores pages.
+  const argFor = useCallback(
+    (page: number) =>
       buildCommunityQuery(
         { ...effectiveFilters, search: debouncedSearch || undefined, sort: listSort },
         me,
         page,
         PAGE_LIMIT
       ),
-    [effectiveFilters, debouncedSearch, listSort, me, page]
+    [effectiveFilters, debouncedSearch, listSort, me]
   );
-
-  const {
-    data: communityData,
-    isLoading,
-    isFetching,
-    error: errorInfo,
-    refetch,
-  } = useGetCommunityMembersQuery(queryArg, {
+  // Keyed on the question as sent (languages, sort, viewer included): the
+  // filters alone resumed another question's pages after a language change.
+  const listKey = useMemo(
+    () => `${activeTab}|${listCacheKey(currentUser._id || "", argFor(1))}`,
+    [activeTab, currentUser._id, argFor]
+  );
+  const paged = usePagedList<CommunityMemberCard, Record<string, string>>({
+    key: listKey,
+    argFor,
+    useQuery: useGetCommunityMembersQuery as any,
+    items: (d: any) => (Array.isArray(d?.data) ? d.data : []),
+    hasMore: (d: any, page) =>
+      typeof d?.hasMore === "boolean"
+        ? d.hasMore
+        : typeof d?.pages === "number"
+          ? page < d.pages
+          : Array.isArray(d?.data) && d.data.length === PAGE_LIMIT,
     skip: isForYou || isToday || isAppOnly || appConfigLoading,
-    // Re-read the visible page on tab return so the list is not stale; only
-    // this subscription refetches, once per focus.
     refetchOnFocus: true,
   });
 
-  // "For you" asks a different server a different question: no filters, no
-  // paging, one scored set. It is skipped entirely off the tab so the tab
-  // costs nothing to anyone who never opens it.
   const {
     data: recommendationsData,
     isFetching: isRecommendationsFetching,
@@ -529,6 +531,14 @@ const ModernCommunity: React.FC = () => {
   }, [recommendationsData, currentUser._id]);
 
   const { data: topicsResult } = useGetTopicsQuery({});
+  const topicOptions = useMemo(() => {
+    const raw = topicsResult?.data;
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .map((topic: any) => ({ id: String(topic._id || topic.id || topic.name || ""), name: String(topic.name || "") }))
+      .filter((topic) => topic.id && topic.name);
+  }, [topicsResult]);
+
   const topicLabels = useMemo<Record<string, string>>(() => {
     const raw = topicsResult?.data;
     if (!Array.isArray(raw)) return {};
@@ -540,105 +550,32 @@ const ModernCommunity: React.FC = () => {
     return map;
   }, [topicsResult]);
 
+  // The waves badge in the sub-nav (the inbox is a header link now).
+  const { data: unreadWaves } = useGetWavesQuery(
+    { unreadOnly: true, limit: 1 },
+    { skip: !currentUser._id }
+  );
+  const wavesUnread = Number((unreadWaves as any)?.data?.unreadCount) || 0;
+
+  // The visitors pill only shows on All; the other views never asked for it.
   const { data: visitorsData } = useGetProfileVisitorsQuery(
     { userId: currentUser._id || "", page: 1, limit: 8 },
-    { skip: !currentUser._id }
+    { skip: !currentUser._id || activeTab !== "all" }
   );
 
   // Persist scroll position continuously (throttled with rAF).
-  useEffect(() => {
-    let pending = false;
-    const onScroll = () => {
-      if (pending) return;
-      pending = true;
-      requestAnimationFrame(() => {
-        sessionStorage.setItem("communityScroll", String(window.scrollY));
-        pending = false;
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  // Server order stands: the client re-sort (VIP, then online) overrode the
+  // chosen sort and made cards jump as pages arrived.
+  const allMembers = useMemo<CommunityMemberCard[]>(
+    () => paged.items.filter((m) => (currentUser._id ? m._id !== currentUser._id : true)),
+    [paged.items, currentUser._id]
+  );
 
-  const hasRestoredScroll = useRef(false);
-
-  /**
-   * The last page we asked for, and the question it belonged to.
-   *
-   * The sentinel can fire more than once before `isFetching` has had a chance
-   * to flip (two entries in one callback, a resize, a fast flick), and every
-   * one of those would be a duplicate request for the same page.
-   */
-  const requestedPage = useRef<{ key: string; page: number }>({ key: "", page: 1 });
-
-  /**
-   * Append a "Load more" / sentinel page.
-   *
-   * RTK Query already drops a superseded request -- the query arg changed, so
-   * the old subscription's result never reaches this component -- and the key
-   * check is the second lock: a page that arrived for a question we have since
-   * left is ignored rather than stapled onto the answer to a different one.
-   */
-  useEffect(() => {
-    if (!communityData?.data || page === 1) return;
-    setPager((prev) => {
-      if (prev.key !== filterKey) return prev;
-      const existingIds = new Set(prev.extra.map((m) => m._id));
-      const newOnes = (communityData.data as CommunityMemberCard[]).filter(
-        (m) => !existingIds.has(m._id)
-      );
-      if (newOnes.length === 0) return prev;
-      return { ...prev, extra: [...prev.extra, ...newOnes] };
-    });
-  }, [communityData, page, filterKey]);
-
-  // Derived union of the first page (cache) + accumulated extra pages, with a
-  // stable VIP-first then online-first tiebreak. `Array.prototype.sort` is
-  // stable, so equal-rank members keep server order.
-  const allMembers = useMemo<CommunityMemberCard[]>(() => {
-    const firstPage = (communityData?.data as CommunityMemberCard[]) || [];
-    const merged: CommunityMemberCard[] = [...firstPage];
-    if (extraPages.length) {
-      const seen = new Set(firstPage.map((m) => m._id));
-      for (const m of extraPages) {
-        if (!seen.has(m._id)) {
-          seen.add(m._id);
-          merged.push(m);
-        }
-      }
-    }
-    const list = merged.filter((m) => (currentUser._id ? m._id !== currentUser._id : true));
-    return list.sort((a, b) => {
-      const av = a.isVIP ? 1 : 0;
-      const bv = b.isVIP ? 1 : 0;
-      if (av !== bv) return bv - av;
-      const ao = a.isOnline ? 1 : 0;
-      const bo = b.isOnline ? 1 : 0;
-      return bo - ao;
-    });
-  }, [communityData, extraPages, currentUser._id]);
-
-  // Restore scroll exactly once, the first time the grid has rows.
-  useLayoutEffect(() => {
-    if (hasRestoredScroll.current) return;
-    if (allMembers.length === 0) return;
-    const saved = sessionStorage.getItem("communityScroll");
-    if (!saved) {
-      hasRestoredScroll.current = true;
-      return;
-    }
-    const y = parseInt(saved, 10);
-    if (!Number.isNaN(y) && y > 0) {
-      window.scrollTo({ top: y, left: 0, behavior: "instant" as ScrollBehavior });
-    }
-    hasRestoredScroll.current = true;
-  }, [allMembers.length]);
-
-  const highlightedProfiles = useMemo(() => {
-    const pros = allMembers.filter((m) => m.isVIP);
-    const fillers = allMembers.filter((m) => !m.isVIP);
-    return [...pros, ...fillers].slice(0, 12);
-  }, [allMembers]);
+  // VIP members only: non-VIP "fillers" repeated the grid under a Pro heading.
+  const highlightedProfiles = useMemo(
+    () => allMembers.filter((m) => m.isVIP).slice(0, 12),
+    [allMembers]
+  );
 
   // What goes BETWEEN the members: the periodic ad (lib/gridInterleave).
   const interleave = { total: allMembers.length };
@@ -661,41 +598,14 @@ const ModernCommunity: React.FC = () => {
     );
   }, [visitorsData, visitorsCount]);
 
-  // The server says how many pages there are (GET /auth/users returns `pages`).
-  // Guessing from a full page showed a phantom "load more" -- and fetched an
-  // empty page -- whenever the last page was exactly full. The guess remains
-  // only as the fallback for a response that carries no count.
-  const serverPages = (communityData as any)?.pages;
-  const hasMore =
-    typeof serverPages === "number"
-      ? page < serverPages
-      : communityData?.data?.length === PAGE_LIMIT;
-
-  // The observer callback lives outside React's render, so it reads the paging
-  // state through a ref rather than through a closure that would be one render
-  // out of date the moment a page lands.
-  const pagingState = useRef({ isFetching, hasMore, page, key: filterKey });
-  useEffect(() => {
-    pagingState.current = { isFetching, hasMore, page, key: filterKey };
-  }, [isFetching, hasMore, page, filterKey]);
-
-  /**
-   * Ask for the next page -- the one path the "Load more" button and the
-   * sentinel both take, so the two can never disagree about which page is
-   * next or ask for it twice.
-   */
-  const requestNextPage = useCallback(() => {
-    const { isFetching: fetching, hasMore: more, page: current, key } = pagingState.current;
-    if (fetching || !more) return;
-    const next = current + 1;
-    if (requestedPage.current.key === key && requestedPage.current.page >= next) return;
-    requestedPage.current = { key, page: next };
-    setPager((prev) =>
-      prev.key === key
-        ? { ...prev, page: next }
-        : { key, page: next, extra: NO_EXTRA_PAGES }
-    );
-  }, []);
+  const hasMore = paged.hasMore;
+  const listShown = allMembers.length > 0;
+  const loadingMore = paged.loadingMore;
+  // The observer callback lives outside React's render: read the latest
+  // loadMore through a ref.
+  const loadMoreRef = useRef(paged.loadMore);
+  loadMoreRef.current = paged.loadMore;
+  const requestNextPage = useCallback(() => loadMoreRef.current(), []);
 
   /**
    * Paging without a button press.
@@ -719,9 +629,10 @@ const ModernCommunity: React.FC = () => {
     );
     observer.observe(node);
     return () => observer.disconnect();
-    // `hasMore` re-runs this when the sentinel is mounted or unmounted, and
+    // Re-run when the sentinel is mounted or unmounted (`hasMore`, and the
+    // list appearing at all -- hasMore starts true before page 1 lands), and
     // `filterKey` when the list underneath it became a different list.
-  }, [hasMore, filterKey, requestNextPage]);
+  }, [hasMore, listShown, filterKey, requestNextPage]);
 
   const openFilterSheet = useCallback(() => {
     // The sheet opens on what is actually applied -- the tab's lock included,
@@ -890,22 +801,6 @@ const ModernCommunity: React.FC = () => {
     [visibleFilters]
   );
 
-  if (errorInfo) {
-    return (
-      <div className="community-page">
-        <div className="community-page__container">
-          <div className="community-empty">
-            <h3>{t("communityMain.errors.generic") || "Something went wrong"}</h3>
-            <p>{t("communityMain.errors.loadError") || "We couldn't load the community."}</p>
-            <button type="button" onClick={() => refetch()} className="community-empty__action">
-              {t("communityMain.errors.tryAgain") || "Try again"}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="community-page">
       <CommunitySubNav
@@ -919,36 +814,49 @@ const ModernCommunity: React.FC = () => {
         showFilterButton={!isForYou}
         showSearch={!isForYou && !isToday && !isAppOnly}
         showToday={signedIn && !todayOff}
+        wavesUnread={wavesUnread}
+        filters={filters}
+        onFiltersPatch={handleFiltersPatch}
+        topicOptions={topicOptions}
         visitorsCount={activeTab === "all" ? visitorsTotal : 0}
       />
 
-      <CommunityFilterSheet
-        open={isFilterSheetOpen}
-        value={draftFilters}
-        onChange={setDraftFilters}
-        onApply={applyFilters}
-        onClear={clearAllFilters}
-        onCopyLink={handleCopyLink}
-        canCopyLink={draftMatchesApplied}
-        lockedTab={
-          activeTab === "online" || activeTab === "new" || activeTab === "serious"
-            ? activeTab
-            : undefined
-        }
-        onClose={() => setIsFilterSheetOpen(false)}
-        isVip={isVip}
-        onUpgrade={() => {
-          setIsFilterSheetOpen(false);
-          navigate(VIP_PATH);
-        }}
-      />
+      {isFilterSheetOpen && (
+        <Suspense fallback={null}>
+          <CommunityFilterSheet
+            open={isFilterSheetOpen}
+            value={draftFilters}
+            onChange={setDraftFilters}
+            onApply={applyFilters}
+            onClear={clearAllFilters}
+            onCopyLink={handleCopyLink}
+            canCopyLink={draftMatchesApplied}
+            lockedTab={
+              activeTab === "online" || activeTab === "new" || activeTab === "serious"
+                ? activeTab
+                : undefined
+            }
+            onClose={() => setIsFilterSheetOpen(false)}
+            me={me}
+            isVip={isVip}
+            onUpgrade={() => {
+              setIsFilterSheetOpen(false);
+              navigate(VIP_PATH);
+            }}
+          />
+        </Suspense>
+      )}
 
-      <WaveSheet
-        open={!!waveTarget}
-        targetUser={waveTarget}
-        onClose={() => setWaveTarget(null)}
-        onWaved={handleWaved}
-      />
+      {waveTarget && (
+        <Suspense fallback={null}>
+          <WaveSheet
+            open={!!waveTarget}
+            targetUser={waveTarget}
+            onClose={() => setWaveTarget(null)}
+            onWaved={handleWaved}
+          />
+        </Suspense>
+      )}
 
       <div className="community-page__container">
         {signedIn && <BoostEntryRow className="mb-3" />}
@@ -1003,7 +911,17 @@ const ModernCommunity: React.FC = () => {
             onWave={handleWaveMember}
             t={t}
           />
-        ) : isLoading || appConfigLoading ? (
+        ) : paged.firstPageError ? (
+          // Inline, under the sub-nav: the member can still switch tab or
+          // clear the filter that failed (it used to replace the page).
+          <div className="community-empty" role="alert">
+            <h3>{t("communityMain.errors.generic") || "Something went wrong"}</h3>
+            <p>{t("communityMain.errors.loadError") || "We couldn't load the community."}</p>
+            <button type="button" onClick={paged.retry} className="community-empty__action">
+              {t("communityMain.errors.tryAgain") || "Try again"}
+            </button>
+          </div>
+        ) : paged.initialLoading || appConfigLoading ? (
           // Cell-shaped placeholders rather than a centred spinner: the page
           // reaches its final height before the first member arrives, so
           // nothing under the grid jumps when it does.
@@ -1037,6 +955,7 @@ const ModernCommunity: React.FC = () => {
                 <HighlightedProfilesCarousel
                   profiles={highlightedProfiles as any}
                   currentUser={currentUser}
+                  onTryPro={() => navigate("/settings/vip")}
                 />
               </div>
             )}
@@ -1046,6 +965,7 @@ const ModernCommunity: React.FC = () => {
                   <div className={CARD_SLOT}>
                     <MemberCard
                       user={member}
+                      waved={wavedIds.indexOf(member._id) > -1}
                       reasons={isMutualExchange(member, me) ? [mutualChip] : undefined}
                       onOpen={handleOpenMember}
                       onWave={handleWaveMember}
@@ -1059,7 +979,14 @@ const ModernCommunity: React.FC = () => {
                 </Fragment>
               ))}
             </div>
-            {hasMore && (
+            {paged.pageError ? (
+              <div className="community-loadmore" role="alert">
+                <span>{t("communityMain.errors.loadMoreFailed") || "Couldn't load more."}</span>{" "}
+                <button type="button" onClick={paged.retry}>
+                  {t("communityMain.errors.tryAgain") || "Try again"}
+                </button>
+              </div>
+            ) : hasMore && (
               <>
                 {/* Reaching this means the member is at the end of the list;
                     the next page is already on its way by the time they get
@@ -1074,9 +1001,9 @@ const ModernCommunity: React.FC = () => {
                   <button
                     type="button"
                     onClick={requestNextPage}
-                    disabled={isFetching}
+                    disabled={loadingMore}
                   >
-                    {isFetching
+                    {loadingMore
                       ? t("communityMain.loadMore.loading") || "Loading..."
                       : t("communityMain.loadMore.button") || "Load more"}
                   </button>

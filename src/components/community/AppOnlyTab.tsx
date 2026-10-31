@@ -27,8 +27,9 @@ const AppOnlyTab: React.FC<{ kind: "gatherings" | "rooms" }> = ({ kind }) => {
       : t("communityMain.appOnly.gatheringsBody") ||
         "Find clubs and meetups with people learning your language, in the BananaTalk app.";
 
-  if (kind === "gatherings" && gatheringsOn) return <Navigate to="/gatherings" />;
-  if (kind === "rooms" && roomsOn) return <Navigate to="/rooms" />;
+  // `replace`: otherwise Back returns to ?tab=gatherings, which forwards again.
+  if (kind === "gatherings" && gatheringsOn) return <Navigate replace to="/gatherings" />;
+  if (kind === "rooms" && roomsOn) return <Navigate replace to="/rooms" />;
 
   return (
     <div className="community-empty" data-testid={`community-app-only-${kind}`}>

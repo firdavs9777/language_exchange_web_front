@@ -11,6 +11,7 @@ import { lazyWithRetry } from "./lazyWithRetry";
 import MomentLinkRedirect from "./MomentLinkRedirect";
 import FlagRoute from "./FlagRoute";
 import RequireSignIn from "../components/gatherings/RequireSignIn";
+import LegacyCommunityRedirect from "../components/community/LegacyCommunityRedirect";
 
 // --- Eager: the prerendered public pages ------------------------------------
 //
@@ -130,7 +131,6 @@ const MainCommnity = lazyWithRetry("../components/community/MainCommunity", () =
 // page, declared with the profile group above.
 const NearbyUsers = lazyWithRetry("../components/community/NearbyUsers", () => import("../components/community/NearbyUsers"));
 const Waves = lazyWithRetry("../components/community/Waves", () => import("../components/community/Waves"));
-const Topics = lazyWithRetry("../components/community/Topics", () => import("../components/community/Topics"));
 
 // Phase 4 — rooms (dark until webVoiceRoomsEnabled / webLanguageRoomsEnabled).
 // Every element is wrapped in FlagRoute, so with the flag off these paths are
@@ -141,8 +141,6 @@ const LanguageRoomsPage = lazyWithRetry("../components/languageRooms/LanguageRoo
 const LanguageRoomPage = lazyWithRetry("../components/languageRooms/LanguageRoomPage", () => import("../components/languageRooms/LanguageRoomPage"));
 // Profile Boost (dark until boostsEnabled), members only.
 const BoostPage = lazyWithRetry("../components/boost/BoostPage", () => import("../components/boost/BoostPage"));
-const CityPage = lazyWithRetry("../components/community/cityGenders/CityPage", () => import("../components/community/cityGenders/CityPage"));
-const GendersPage = lazyWithRetry("../components/community/cityGenders/GendersPage", () => import("../components/community/cityGenders/GendersPage"));
 
 // Invite landing (/i/:code). Public, never prerendered (the code is dynamic):
 // it falls back to the SPA shell like /profile/:userId. Lazy for the same
@@ -339,17 +337,21 @@ export const routes = createRoutesFromElements(
     <Route path="settings/close-friends" element={lazyRoute(<CloseFriends />)} />
 
     {/* Community */}
-    <Route path="community/nearby" element={lazyRoute(<NearbyUsers />)} />
-    <Route path="waves" element={lazyRoute(<Waves />)} />
-    <Route path="topics" element={lazyRoute(<Topics />)} />
+    {/* Members-only: signed out, Nearby asked for a location and then
+        showed a 401 as "nobody nearby". */}
+    <Route path="community/nearby" element={lazyRoute(<RequireSignIn><NearbyUsers /></RequireSignIn>)} />
+    <Route path="waves" element={lazyRoute(<RequireSignIn><Waves /></RequireSignIn>)} />
+    {/* Topics, City and Genders are Partners chips now (2026-10-31); old
+        links land on the list with the matching chip. */}
+    <Route path="topics" element={<LegacyCommunityRedirect />} />
     {/* Phase 4 — rooms. Dark until their flags are on (FlagRoute → 404). */}
     <Route path="voice-rooms" element={lazyRoute(<FlagRoute flag="webVoiceRoomsEnabled"><VoiceRoomsPage /></FlagRoute>)} />
     <Route path="voice-rooms/:id" element={lazyRoute(<FlagRoute flag="webVoiceRoomsEnabled"><VoiceRoomPage /></FlagRoute>)} />
     <Route path="rooms" element={lazyRoute(<FlagRoute flag="webLanguageRoomsEnabled"><LanguageRoomsPage /></FlagRoute>)} />
     <Route path="rooms/:id" element={lazyRoute(<FlagRoute flag="webLanguageRoomsEnabled"><LanguageRoomPage /></FlagRoute>)} />
     <Route path="boost" element={lazyRoute(<FlagRoute flag="boostsEnabled"><RequireSignIn><BoostPage /></RequireSignIn></FlagRoute>)} />
-    <Route path="community/city" element={lazyRoute(<FlagRoute flag="webLanguageRoomsEnabled"><CityPage /></FlagRoute>)} />
-    <Route path="community/genders" element={lazyRoute(<FlagRoute flag="webLanguageRoomsEnabled"><GendersPage /></FlagRoute>)} />
+    <Route path="community/city" element={<LegacyCommunityRedirect add={{ city: "1" }} />} />
+    <Route path="community/genders" element={<LegacyCommunityRedirect add={{ gender: "female" }} />} />
 
     {/* Moments */}
     <Route path="moments/saved" element={lazyRoute(<SavedMoments />)} />

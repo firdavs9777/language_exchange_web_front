@@ -147,6 +147,9 @@ const baseQueryWithReauth: BaseQueryFn<
 export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: [
+    // Waves have their own tag: a wave used to invalidate "Community" and
+    // refetch every member list (audit 2026-10-30).
+    "Waves",
     "Community",
     // The matching engine's "For you" feed. Deliberately separate from
     // "Community": the list invalidating on a wave or a follow must not throw

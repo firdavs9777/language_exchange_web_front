@@ -83,29 +83,25 @@ describe("the community sub-nav", () => {
   // Nearby and Topics are whole pages of their own. As links they can be
   // opened in a new tab, middle-clicked and read correctly by a screen reader
   // -- none of which a button pretending to be a tab can do.
-  it("sends Nearby and Topics to their own routes as real links", () => {
+  it("sends Nearby to its own route as a real link; Topics is a chip now", () => {
     renderNav();
 
     expect(screen.getByText("communityMain.subnav.nearby").closest("a")).toHaveAttribute(
       "href",
       "/community/nearby"
     );
-    expect(screen.getByText("communityMain.subnav.topics").closest("a")).toHaveAttribute(
-      "href",
-      "/topics"
-    );
-    // ...and they are not tabs (3 top tabs without Matches, 5 Partners views).
+    expect(screen.queryByText("communityMain.subnav.topics")).not.toBeInTheDocument();
+    // ...and it is not a tab (3 top tabs without Matches, 5 Partners views).
     expect(screen.getAllByRole("tab")).toHaveLength(8);
   });
 
   // A page you are leaving should not first rewrite the URL you are leaving:
   // stamping `?tab=nearby` onto /communities on the way out means Back drops
   // you on the list with a tab nobody chose instead of the one you were on.
-  it("writes no tab state on the way to Nearby or Topics", () => {
+  it("writes no tab state on the way to Nearby", () => {
     const { onTabChange } = renderNav({ activeTab: "online" as CommunityNavTab });
 
     fireEvent.click(screen.getByText("communityMain.subnav.nearby"));
-    fireEvent.click(screen.getByText("communityMain.subnav.topics"));
 
     expect(onTabChange).not.toHaveBeenCalled();
   });
@@ -177,4 +173,51 @@ describe("the community sub-nav", () => {
     renderNav({});
     expect(screen.queryByTestId("subnav-visitors")).not.toBeInTheDocument();
   });
+});
+
+// Waves moved to a header icon with the unread count (2026-10-31).
+it("shows a waves link with the unread count", () => {
+  renderNav({ wavesUnread: 3 });
+  const link = screen.getByTestId("community-waves-link");
+  expect(link).toHaveAttribute("href", "/waves");
+  expect(link).toHaveTextContent("3");
+});
+
+// Chips on Partners (2026-10-31): Same city, Women, Men, Topic. They write the
+// same filter fields as the sheet, so the two never disagree.
+describe("partner chips", () => {
+  it("Same city, Women and Men patch the filters", () => {
+    const onFiltersPatch = jest.fn();
+    renderNav({ filters: {}, onFiltersPatch });
+    fireEvent.click(screen.getByText("communityMain.tabs.sameCity"));
+    expect(onFiltersPatch).toHaveBeenLastCalledWith({ sameCity: true });
+    fireEvent.click(screen.getByText("communityMain.tabs.women"));
+    expect(onFiltersPatch).toHaveBeenLastCalledWith({ gender: "female" });
+  });
+
+  it("tapping the active Women chip clears the gender", () => {
+    const onFiltersPatch = jest.fn();
+    renderNav({ filters: { gender: "female" }, onFiltersPatch });
+    fireEvent.click(screen.getByText("communityMain.tabs.women"));
+    expect(onFiltersPatch).toHaveBeenLastCalledWith({ gender: undefined });
+  });
+
+  it("the Topic chip lists topics and picks one", () => {
+    const onFiltersPatch = jest.fn();
+    renderNav({ filters: {}, onFiltersPatch, topicOptions: [{ id: "music", name: "Music" }] });
+    fireEvent.click(screen.getByText("communityMain.tabs.topic"));
+    fireEvent.click(screen.getByText("Music"));
+    expect(onFiltersPatch).toHaveBeenLastCalledWith({ topics: ["music"] });
+  });
+});
+
+// Audit 2026-10-30: inactive tabs had tabIndex=-1 and no arrow keys, so a
+// keyboard user could not reach Matches, Gatherings or Rooms.
+it("arrow keys move between the top tabs", () => {
+  const { onTabChange } = renderNav({ activeTab: "all" as CommunityNavTab });
+  const partners = document.getElementById("community-tab-partners")!;
+  partners.focus();
+  fireEvent.keyDown(partners, { key: "ArrowRight" });
+  expect(onTabChange).toHaveBeenLastCalledWith("gatherings");
+  expect(document.activeElement).toBe(document.getElementById("community-tab-gatherings"));
 });

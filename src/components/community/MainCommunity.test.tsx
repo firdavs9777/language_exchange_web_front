@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes, useLocation } from "react-router-dom";
 import { makeStore } from "../../store";
 import MainCommunity from "./MainCommunity";
+import { resetPagedListCache } from "./lib/usePagedList";
 
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (key: string) => key }),
@@ -15,6 +16,8 @@ jest.mock("react-i18next", () => ({
 }));
 
 const originalFetch = global.fetch;
+// Loaded pages are cached per question across mounts; start each test empty.
+beforeEach(() => resetPagedListCache());
 beforeEach(() => {
   (global as any).fetch = jest.fn(() =>
     Promise.resolve(

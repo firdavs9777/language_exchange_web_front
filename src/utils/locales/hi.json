@@ -1290,7 +1290,11 @@
       "partners": "पार्टनर",
       "gatherings": "मुलाक़ातें",
       "rooms": "रूम",
-      "partnersViews": "पार्टनर व्यू"
+      "partnersViews": "पार्टनर व्यू",
+      "sameCity": "एक ही शहर",
+      "women": "महिलाएँ",
+      "men": "पुरुष",
+      "topic": "विषय"
     },
     "filters": {
       "language": "भाषा",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "उफ़! कुछ गलत हो गया",
       "loadError": "हम समुदाय लोड नहीं कर सके। कृपया पुनः प्रयास करें।",
-      "tryAgain": "पुनः प्रयास करें"
+      "tryAgain": "पुनः प्रयास करें",
+      "loadMoreFailed": "और लोड नहीं हो सका।"
     },
     "loadMore": {
       "loading": "लोड हो रहा है...",
@@ -1441,6 +1446,10 @@
       "gatheringsBody": "BananaTalk ऐप में अपनी भाषा सीखने वालों के साथ क्लब और मुलाक़ातें खोजें।",
       "roomsTitle": "रूम ऐप में हैं",
       "roomsBody": "BananaTalk ऐप में भाषा और विषय के हिसाब से ग्रुप चैट से जुड़ें या अपना रूम बनाएँ।"
+    },
+    "card": {
+      "new": "नया",
+      "waveAt": "{{name}} को वेव करें"
     }
   },
   "communityDetail": {

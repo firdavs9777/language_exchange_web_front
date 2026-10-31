@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import { makeStore } from "../../store";
 import MainCommunity from "./MainCommunity";
+import { resetPagedListCache } from "./lib/usePagedList";
 jest.mock("../../utils/webFlags", () => ({ useWebFlag: () => false, useWebFlagState: () => ({ on: false, ready: true }) }));
 
 /**
@@ -107,6 +108,9 @@ const intersect = () =>
       .forEach((o) => o.callback([{ isIntersecting: true, target: o.element }]));
   });
 
+// Loaded pages are cached per question across mounts (Back restores them);
+// every test starts from an empty cache.
+beforeEach(() => resetPagedListCache());
 beforeEach(() => {
   requestedUrls.length = 0;
   observers = [];
@@ -185,14 +189,15 @@ describe("what a mount costs", () => {
   // (asserted below). Plus /matching/daily: whether the Today tab exists at
   // all is the server's answer (404 = the feature is off), so a signed-in
   // mount asks once even on All. Anything else on this page is a regression.
-  it("asks for the list, the topics, the visitors, the account, today's batch and the app config -- and nothing else", async () => {
+  it("asks for the list, the topics, the visitors, the account, today's batch, the waves badge and the app config -- and nothing else", async () => {
     renderList();
 
     await waitFor(() => expect(cards().length).toBe(PAGE_LIMIT));
 
     // app-config decides the default sort (smart only while the server
     // offers it), so the list waits for it rather than asking twice.
-    expect(requestedUrls).toHaveLength(6);
+    expect(requestedUrls).toHaveLength(7);
+    expect(requestedUrls.filter((u) => u.indexOf("/community/waves") >= 0)).toHaveLength(1);
     expect(requestedUrls.filter((u) => u.indexOf("/app-config") >= 0)).toHaveLength(1);
     expect(requestedUrls.filter((u) => u.indexOf("/matching/daily") >= 0)).toHaveLength(1);
     expect(requestedUrls.filter((u) => /\/auth\/me(\?|$)/.test(u))).toHaveLength(1);
@@ -342,5 +347,24 @@ describe("what the Today landing costs", () => {
     renderList(["/communities"]);
     await waitFor(() => expect(requestedUrls.filter((u) => u.indexOf("/matching/daily") >= 0)).toHaveLength(1));
     expect(requestedUrls.filter((u) => /\/auth\/users\?/.test(u))).toHaveLength(0);
+  });
+});
+
+describe("phase 3 request trims (2026-10-31)", () => {
+  // MainCommunity read app-config with no args, a different cache entry from
+  // the flags/announcements hook ({platform:"web", lang}): two requests.
+  it("reads app-config with the shared web args", async () => {
+    renderList();
+    await waitFor(() => expect(cards().length).toBe(PAGE_LIMIT));
+    const config = requestedUrls.filter((u) => u.indexOf("/app-config") >= 0);
+    expect(config).toHaveLength(1);
+    expect(config[0]).toContain("platform=web");
+  });
+
+  // The visitors pill only shows on All; other views asked anyway.
+  it("does not ask for visitors on the Online view", async () => {
+    renderList(["/communities?tab=online"]);
+    await waitFor(() => expect(cards().length).toBe(PAGE_LIMIT));
+    expect(requestedUrls.filter((u) => u.indexOf("/visitors") >= 0)).toHaveLength(0);
   });
 });

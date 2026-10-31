@@ -1290,7 +1290,11 @@
       "partners": "Partner",
       "gatherings": "Pertemuan",
       "rooms": "Ruang",
-      "partnersViews": "Tampilan partner"
+      "partnersViews": "Tampilan partner",
+      "sameCity": "Kota yang sama",
+      "women": "Perempuan",
+      "men": "Laki-laki",
+      "topic": "Topik"
     },
     "filters": {
       "language": "Bahasa",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "Ups! Terjadi kesalahan",
       "loadError": "Kami tidak dapat memuat komunitas. Silakan coba lagi.",
-      "tryAgain": "Coba Lagi"
+      "tryAgain": "Coba Lagi",
+      "loadMoreFailed": "Tidak dapat memuat lagi."
     },
     "loadMore": {
       "loading": "Memuat...",
@@ -1441,6 +1446,10 @@
       "gatheringsBody": "Temukan klub dan pertemuan dengan orang yang belajar bahasamu, di aplikasi BananaTalk.",
       "roomsTitle": "Ruang ada di aplikasi",
       "roomsBody": "Gabung obrolan grup berdasarkan bahasa dan topik, atau buat ruangmu sendiri, di aplikasi BananaTalk."
+    },
+    "card": {
+      "new": "Baru",
+      "waveAt": "Lambaikan tangan ke {{name}}"
     }
   },
   "communityDetail": {

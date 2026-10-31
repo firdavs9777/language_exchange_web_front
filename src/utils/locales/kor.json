@@ -1290,7 +1290,11 @@
       "partners": "파트너",
       "gatherings": "모임",
       "rooms": "방",
-      "partnersViews": "파트너 보기"
+      "partnersViews": "파트너 보기",
+      "sameCity": "같은 도시",
+      "women": "여성",
+      "men": "남성",
+      "topic": "주제"
     },
     "filters": {
       "language": "언어",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "앗, 문제가 생겼어요",
       "loadError": "커뮤니티를 불러오지 못했어요. 다시 시도해 주세요.",
-      "tryAgain": "다시 시도"
+      "tryAgain": "다시 시도",
+      "loadMoreFailed": "더 불러오지 못했어요."
     },
     "loadMore": {
       "loading": "불러오는 중…",
@@ -1441,6 +1446,10 @@
       "gatheringsBody": "BananaTalk 앱에서 내 언어를 배우는 사람들과 클럽과 모임을 찾아보세요.",
       "roomsTitle": "방은 앱에서 이용할 수 있어요",
       "roomsBody": "BananaTalk 앱에서 언어와 주제별 그룹 채팅에 참여하거나 나만의 방을 만들어 보세요."
+    },
+    "card": {
+      "new": "신규",
+      "waveAt": "{{name}}님에게 손 흔들기"
     }
   },
   "communityDetail": {

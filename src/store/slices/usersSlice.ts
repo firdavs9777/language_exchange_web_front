@@ -1,3 +1,4 @@
+import { resetPagedListCache } from "../../components/community/lib/usePagedList";
 import {
   LOGOUT_URL,
   REGISTER_URL,
@@ -282,7 +283,19 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       // `Stories` too: the feed would otherwise keep the blocked author's
       // ring until its 5-second cache expired, and the story viewer sends the
       // reader back to it right after a block.
-      invalidatesTags: ["User", "Conversations", "Moments", "Comments", "Stories"],
+      // Community + Recommendations: a blocked member left Partners, For you
+      // and Today only on reload.
+      // Earlier cached list pages never refetch on invalidation; drop them
+      // so a blocked member is not still on the grid on Back.
+      async onQueryStarted(_arg: any, { queryFulfilled }: any) {
+        try {
+          await queryFulfilled;
+          resetPagedListCache();
+        } catch {
+          /* the block failed; the lists are unchanged */
+        }
+      },
+      invalidatesTags: ["User", "Conversations", "Moments", "Comments", "Stories", "Community", "Recommendations"],
     }),
     unblockUser: builder.mutation({
       query: (userId: string) => ({
@@ -291,7 +304,17 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       }),
       // Moments + Comments: the server drops a blocked author from feeds and
       // comment lists, so open lists refetch and their content disappears.
-      invalidatesTags: ["User", "Conversations", "Moments", "Comments"],
+      // Earlier cached list pages never refetch on invalidation; drop them
+      // so a blocked member is not still on the grid on Back.
+      async onQueryStarted(_arg: any, { queryFulfilled }: any) {
+        try {
+          await queryFulfilled;
+          resetPagedListCache();
+        } catch {
+          /* the block failed; the lists are unchanged */
+        }
+      },
+      invalidatesTags: ["User", "Conversations", "Moments", "Comments", "Community", "Recommendations"],
     }),
     // `GET /api/v1/users/:userId/blocked` — the id in the path is the
     // VIEWER's own (controllers/userBlocks.js 403s when it is anyone else's).

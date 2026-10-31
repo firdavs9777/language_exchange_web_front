@@ -1,5 +1,5 @@
-import { useTranslation } from "react-i18next";
-import { useGetAppConfigQuery, AppConfig } from "../store/slices/appConfigSlice";
+import { AppConfig } from "../store/slices/appConfigSlice";
+import { useWebAppConfig } from "./useWebAppConfig";
 
 /**
  * The website-only feature flags (web parity spec §4). Server env
@@ -43,17 +43,7 @@ export interface WebFlagState {
 }
 
 export function useWebFlagState(flag: WebFlag): WebFlagState {
-  const { i18n } = useTranslation();
-  // Some suites mock react-i18next without `i18n`; fall back to "en" so the
-  // hook never crashes a screen that merely shows a flagged button.
-  const lang = (i18n && i18n.language) || "en";
-  // Same args as useWebAnnouncements: one cache entry, one request. Re-read on
-  // window focus (setupListeners, Phase 3) so a flag the owner flips shows up
-  // without a reload -- and a flag flipped off hides its entry points.
-  const { data, isError } = useGetAppConfigQuery(
-    { platform: "web", lang },
-    { refetchOnFocus: true }
-  );
+  const { data, isError } = useWebAppConfig();
   if (isError && !data) return { on: false, ready: true };
   if (!data) return { on: false, ready: false };
   return { on: isWebFlagOn(data, flag), ready: true };

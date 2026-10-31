@@ -8,8 +8,6 @@ const FLAGGED: Array<[string, string]> = [
   ["/voice-rooms/r1", "webVoiceRoomsEnabled"],
   ["/rooms", "webLanguageRoomsEnabled"],
   ["/rooms/r1", "webLanguageRoomsEnabled"],
-  ["/community/city", "webLanguageRoomsEnabled"],
-  ["/community/genders", "webLanguageRoomsEnabled"],
   ["/boost", "boostsEnabled"],
 ];
 

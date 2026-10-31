@@ -34,6 +34,8 @@ const HighlightedProfilesCarousel: React.FC<HighlightedProfilesCarouselProps> = 
           <article className="highlighted-card highlighted-card--self">
             <div className="highlighted-card__avatar">
               <img
+                loading="lazy"
+                decoding="async"
                 src={currentUser.imageUrls?.[0] || "/default-avatar.png"}
                 alt={currentUser.name || "You"}
               />
@@ -66,6 +68,7 @@ const HighlightedProfilesCarousel: React.FC<HighlightedProfilesCarouselProps> = 
                   src={member.imageUrls?.[0] || "/default-avatar.png"}
                   alt={member.name}
                   loading="lazy"
+                  decoding="async"
                 />
                 {isPro && (
                   <span className="highlighted-card__pro-badge" aria-label="Pro">

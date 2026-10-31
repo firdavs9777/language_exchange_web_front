@@ -58,7 +58,9 @@ let searchMeta: any = undefined;
 const originalFetch = global.fetch;
 const originalGeo = (navigator as any).geolocation;
 
+let nearbyStatus = 200;
 beforeEach(() => {
+  nearbyStatus = 200;
   requested.length = 0;
   searchMeta = undefined;
   (global as any).fetch = jest.fn((input: any) => {
@@ -75,7 +77,7 @@ beforeEach(() => {
         : { success: true, data: [] };
     return Promise.resolve(
       new Response(JSON.stringify(body), {
-        status: 200,
+        status: url.indexOf("/community/nearby") >= 0 ? nearbyStatus : 200,
         headers: { "content-type": "application/json" },
       })
     );
@@ -206,4 +208,11 @@ describe("Nearby (community#2)", () => {
       })
     ).toBe("Seoul");
   });
+});
+
+// Audit 2026-10-30: a failed request read as "No users found nearby".
+it("a failed load shows an error with Try again, not 'nobody nearby'", async () => {
+  nearbyStatus = 500;
+  renderNearby();
+  expect(await screen.findByText("communityMain.errors.tryAgain")).toBeInTheDocument();
 });

@@ -23,6 +23,7 @@ describe('communityUrlState', () => {
         'online',
         'new',
         'pair',
+        'city',
         'sort',
         'q',
         'tab',
@@ -293,5 +294,13 @@ describe("today is the default tab", () => {
   });
   it("an absent tab decodes as absent -- the page decides the default", () => {
     expect(decodeCommunityState(new URLSearchParams("native=Korean")).tab).toBeUndefined();
+  });
+});
+
+describe("the Same city chip", () => {
+  it("round-trips as city=1", () => {
+    const params = encodeCommunityState({ filters: { sameCity: true }, search: "", tab: "all" });
+    expect(params.get("city")).toBe("1");
+    expect(decodeCommunityState(params).filters?.sameCity).toBe(true);
   });
 });

@@ -1271,7 +1271,11 @@
       "partners": "Partner",
       "gatherings": "Incontri",
       "rooms": "Stanze",
-      "partnersViews": "Viste partner"
+      "partnersViews": "Viste partner",
+      "sameCity": "Stessa città",
+      "women": "Donne",
+      "men": "Uomini",
+      "topic": "Argomento"
     },
     "filters": {
       "language": "Lingua",
@@ -1290,7 +1294,8 @@
     "errors": {
       "generic": "Ops! Qualcosa è andato storto",
       "loadError": "Non è stato possibile caricare la comunità. Riprova.",
-      "tryAgain": "Riprova"
+      "tryAgain": "Riprova",
+      "loadMoreFailed": "Impossibile caricarne altri."
     },
     "loadMore": {
       "loading": "Caricamento...",
@@ -1423,6 +1428,10 @@
       "gatheringsBody": "Trova club e incontri con persone che imparano la tua lingua, nell'app BananaTalk.",
       "roomsTitle": "Le stanze sono nell'app",
       "roomsBody": "Unisciti a chat di gruppo per lingua e argomento, o crea la tua stanza, nell'app BananaTalk."
+    },
+    "card": {
+      "new": "Nuovo",
+      "waveAt": "Saluta {{name}}"
     }
   },
   "communityDetail": {

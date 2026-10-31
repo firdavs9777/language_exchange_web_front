@@ -44,6 +44,8 @@ export interface MemberCardProps {
    */
   compact?: boolean;
   onWave: (user: CommunityMemberCard) => void;
+  /** Already waved this visit: the button shows ✓ and does nothing. */
+  waved?: boolean;
   onOpen: (user: CommunityMemberCard) => void;
 }
 
@@ -93,7 +95,7 @@ const orderReasons = (reasons: Array<string | ReasonChip>): ReasonChip[] => {
   return [...chips.filter((chip) => chip.primary), ...chips.filter((chip) => !chip.primary)];
 };
 
-const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWave, onOpen }) => {
+const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWave, onOpen, waved = false }) => {
   const { t } = useTranslation();
   const age = getAge(user.birth_year);
   const isNew = !!user.isNew || isRecentlyCreated(user.createdAt);
@@ -105,6 +107,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
 
   const handleWaveClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (waved) return;
     onWave(user);
   };
 
@@ -129,8 +132,8 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
       onKeyDown={handleCardKeyDown}
       className={
         compact
-          ? "flex flex-row items-center gap-3 p-3 bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 hover:shadow-xl transition-all cursor-pointer"
-          : "flex flex-col h-full bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
+          ? "flex flex-row items-center gap-3 p-3 bg-white rounded-2xl shadow-lg border border-white/30 hover:shadow-xl transition-all cursor-pointer"
+          : "flex flex-col h-full bg-white rounded-2xl shadow-lg border border-white/30 overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
       }
     >
       {/* Photo. A grid cell gets a 16:10 banner; a carousel row gets a 56px
@@ -198,7 +201,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
               data-testid="member-card-new-badge"
               className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-white bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full px-2 py-0.5"
             >
-              New
+              {t("communityMain.card.new") || "New"}
             </span>
           )}
 
@@ -307,7 +310,8 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
         type="button"
         data-testid="member-card-wave"
         onClick={handleWaveClick}
-        aria-label={`Wave at ${user.name}`}
+        disabled={waved}
+        aria-label={t("communityMain.card.waveAt", { name: user.name }) || `Wave at ${user.name}`}
         className={
           compact
             ? "shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-white bg-gradient-to-r from-[#00BFA5] to-[#00ACC1] hover:brightness-105 active:scale-95 transition-all"
@@ -315,7 +319,7 @@ const MemberCardRow: React.FC<MemberCardProps> = ({ user, reasons, compact, onWa
         }
       >
         <span className="text-lg leading-none" aria-hidden>
-          👋
+          {waved ? "✓" : "👋"}
         </span>
       </button>
     </div>

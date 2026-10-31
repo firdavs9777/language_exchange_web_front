@@ -70,6 +70,16 @@ const WaveSheet: React.FC<WaveSheetProps> = ({ open, targetUser, onClose, onWave
     }
   }, [open, targetUser?._id]);
 
+  // Escape closes the sheet, like every other dialog on the site.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
   if (!open || !targetUser) return null;
 
   const avatar = targetUser.imageUrls?.[0];
@@ -170,7 +180,7 @@ const WaveSheet: React.FC<WaveSheetProps> = ({ open, targetUser, onClose, onWave
         <div className="bg-gradient-to-r from-[#00BFA5] to-[#00ACC1] text-white px-5 py-4 flex items-center gap-3">
           <div className="w-11 h-11 rounded-full overflow-hidden bg-white/20 shrink-0 flex items-center justify-center">
             {avatar ? (
-              <img src={avatar} alt={targetUser.name} className="w-full h-full object-cover" />
+              <img src={avatar} alt={targetUser.name} decoding="async" width={64} height={64} className="w-full h-full object-cover" />
             ) : (
               <span className="text-lg font-semibold">
                 {targetUser.name?.[0]?.toUpperCase() || "?"}

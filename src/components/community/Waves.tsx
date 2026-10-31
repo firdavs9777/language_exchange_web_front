@@ -6,7 +6,7 @@ import {
   useGetWavesQuery,
   useMarkWavesReadMutation,
 } from "../../store/slices/communitySlice";
-import { useGetAppConfigQuery } from "../../store/slices/appConfigSlice";
+import { useWebAppConfig } from "../../utils/useWebAppConfig";
 import { photoUrl } from "../../utils/photoUrl";
 import { timeAgo } from "../../utils/timeAgo";
 
@@ -63,12 +63,12 @@ const Waves: React.FC = () => {
   // The app sends ?reveal=1 only while boostsEnabled is on (waves_tab.dart).
   // Waiting for the config keeps it to one request, not one without and one
   // with; a failed config read counts as "off".
-  const { data: appConfig, isLoading: configLoading } = useGetAppConfigQuery();
+  const { data: appConfig, isLoading: configLoading } = useWebAppConfig();
   const reveal = Boolean(appConfig && (appConfig as any).boostsEnabled);
 
   // currentData, not data: after the archive switch `data` still holds the
   // other list until the new one lands, and would be merged into it.
-  const { currentData, isLoading, isFetching } = useGetWavesQuery(
+  const { currentData, isLoading, isFetching, isError, refetch } = useGetWavesQuery(
     {
       page,
       limit: PAGE_LIMIT,
@@ -172,7 +172,21 @@ const Waves: React.FC = () => {
           </button>
         </div>
 
-        {loading ? (
+        {isError && accumulatedWaves.length === 0 ? (
+          // A failed load used to read as "No waves received yet".
+          <div className="text-center py-12" role="alert">
+            <p className="text-gray-500">
+              {t("communityMain.errors.loadError") || "We couldn't load this."}
+            </p>
+            <button
+              type="button"
+              onClick={() => refetch()}
+              className="mt-4 px-6 py-3 rounded-full bg-gray-100 text-gray-700 font-medium hover:bg-gray-200"
+            >
+              {t("communityMain.errors.tryAgain") || "Try again"}
+            </button>
+          </div>
+        ) : loading ? (
           <div className="flex justify-center py-12">
             <Loader2 className="w-10 h-10 text-teal-500 animate-spin" />
           </div>
@@ -210,7 +224,7 @@ const Waves: React.FC = () => {
                 >
                   <div className="w-12 h-12 rounded-full overflow-hidden bg-gradient-to-br from-teal-100 to-cyan-50 shrink-0 flex items-center justify-center">
                     {avatar ? (
-                      <img src={avatar} alt={name} className="w-full h-full object-cover" />
+                      <img src={avatar} alt={name} loading="lazy" decoding="async" width={56} height={56} className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-lg font-semibold text-teal-600">
                         {name ? name[0].toUpperCase() : "?"}

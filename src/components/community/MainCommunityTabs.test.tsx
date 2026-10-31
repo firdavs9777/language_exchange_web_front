@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import { makeStore } from "../../store";
 import MainCommunity from "./MainCommunity";
+import { resetPagedListCache } from "./lib/usePagedList";
 
 // `t` returns the key: these tests are about which request is made and what is
 // on the page, never about the wording.
@@ -54,6 +55,8 @@ let appConfig: any = {};
 const requestedUrls: string[] = [];
 const originalFetch = global.fetch;
 
+// Loaded pages are cached per question across mounts; start each test empty.
+beforeEach(() => resetPagedListCache());
 beforeEach(() => {
   requestedUrls.length = 0;
   appConfig = {};
@@ -83,7 +86,8 @@ beforeEach(() => {
         data: [{ _id: "v1", name: "Vera", imageUrls: [] }],
       };
     } else if (url.indexOf("/auth/users") >= 0) {
-      body = { success: true, data: [member(1), member(2), member(3)] };
+      // Member 1 is VIP: the carousel shows VIP members only (2026-10-31).
+      body = { success: true, data: [{ ...member(1), vipSubscription: { isActive: true } }, member(2), member(3)] };
     }
     return Promise.resolve(
       new Response(JSON.stringify(body), {
@@ -251,7 +255,7 @@ describe("the community tabs", () => {
       if (/\/auth\/users\?/.test(url)) {
         return Promise.resolve(new Response(JSON.stringify({
           success: true,
-          data: [member(1), member(2), member(3), member(4), member(5), member(6), member(7)],
+          data: [{ ...member(1), vipSubscription: { isActive: true } }, member(2), member(3), member(4), member(5), member(6), member(7)],
         }), { status: 200, headers: { "Content-Type": "application/json" } }));
       }
       return (realFetch as any)(input);

@@ -1290,7 +1290,11 @@
       "partners": "Bạn học",
       "gatherings": "Buổi gặp mặt",
       "rooms": "Phòng",
-      "partnersViews": "Chế độ xem bạn học"
+      "partnersViews": "Chế độ xem bạn học",
+      "sameCity": "Cùng thành phố",
+      "women": "Nữ",
+      "men": "Nam",
+      "topic": "Chủ đề"
     },
     "filters": {
       "language": "Ngôn Ngữ",
@@ -1309,7 +1313,8 @@
     "errors": {
       "generic": "Ôi! Đã xảy ra lỗi",
       "loadError": "Chúng tôi không thể tải cộng đồng. Vui lòng thử lại.",
-      "tryAgain": "Thử Lại"
+      "tryAgain": "Thử Lại",
+      "loadMoreFailed": "Không tải thêm được."
     },
     "loadMore": {
       "loading": "Đang tải...",
@@ -1441,6 +1446,10 @@
       "gatheringsBody": "Tìm câu lạc bộ và buổi gặp mặt với những người học ngôn ngữ của bạn, trong ứng dụng BananaTalk.",
       "roomsTitle": "Phòng có trong ứng dụng",
       "roomsBody": "Tham gia trò chuyện nhóm theo ngôn ngữ và chủ đề, hoặc tạo phòng riêng, trong ứng dụng BananaTalk."
+    },
+    "card": {
+      "new": "Mới",
+      "waveAt": "Vẫy tay chào {{name}}"
     }
   },
   "communityDetail": {

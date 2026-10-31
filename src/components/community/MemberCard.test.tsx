@@ -508,3 +508,13 @@ describe("MemberCard boosted label", () => {
     expect(screen.queryByTestId("member-card-boosted-badge")).not.toBeInTheDocument();
   });
 });
+
+// A waved card says so (waves no longer refetch the list to drop the person).
+it("a waved card shows Waved and does not wave again", () => {
+  const onWave = jest.fn();
+  render(<MemberCard user={{ _id: "w", name: "Wen" } as any} onWave={onWave} onOpen={jest.fn()} waved />);
+  const button = screen.getByTestId("member-card-wave");
+  expect(button).toBeDisabled();
+  fireEvent.click(button);
+  expect(onWave).not.toHaveBeenCalled();
+});

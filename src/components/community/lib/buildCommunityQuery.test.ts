@@ -124,3 +124,9 @@ it('drops the VIP-only country filter for free users, keeps it for VIP', () => {
   // The saved filter itself is untouched, so it applies again after an upgrade.
   expect(filters.country).toBe('Japan');
 });
+
+// "Same city" chip (backend cc5064b: /users?sameCity=true is the viewer's own city).
+it('sameCity sends sameCity=true, and nothing when off', () => {
+  expect(buildCommunityQuery({ sameCity: true }, {}, 1, 20).sameCity).toBe('true');
+  expect(buildCommunityQuery({}, {}, 1, 20).sameCity).toBeUndefined();
+});

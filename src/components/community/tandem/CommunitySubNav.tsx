@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Hash,
@@ -10,11 +10,9 @@ import {
   Star,
   X,
   Flame,
-  Building2,
-  Users,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useWebFlag } from "../../../utils/webFlags";
+import { CommunityFilters } from "../lib/buildCommunityQuery";
 
 /**
  * Six destinations, two kinds.
@@ -109,6 +107,14 @@ interface CommunitySubNavProps {
   showSearch?: boolean;
   /** How many people visited the viewer's profile. Absent or 0 renders nothing. */
   visitorsCount?: number;
+  /** Unread waves; the waves inbox link shows it as a badge. */
+  wavesUnread?: number;
+  /** Applied filters, for the Same city / Women / Men / Topic chips. */
+  filters?: CommunityFilters;
+  /** A chip changed some filters; absent = no chips. */
+  onFiltersPatch?: (patch: Partial<CommunityFilters>) => void;
+  /** Topics the Topic chip offers. */
+  topicOptions?: { id: string; name: string }[];
   /**
    * Today's matches. Off for a signed-out visitor and when the server answers
    * /matching/daily with 404 (DAILY_MATCHES_ENABLED off) -- a tab for a
@@ -128,11 +134,14 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
   showFilterButton = true,
   showSearch = true,
   visitorsCount,
+  wavesUnread = 0,
+  filters = {},
+  onFiltersPatch,
+  topicOptions = [],
   showToday = false,
 }) => {
   const { t } = useTranslation();
   const activeRef = useRef<HTMLButtonElement | null>(null);
-  const cityGendersOn = useWebFlag("webLanguageRoomsEnabled");
 
   // On a phone the six destinations do not fit, so the row scrolls. Whatever
   // the URL says is selected is pulled back into view after the fact (never
@@ -143,6 +152,25 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
     if (!node || typeof node.scrollIntoView !== "function") return;
     node.scrollIntoView({ block: "nearest", inline: "nearest" });
   }, [activeTab]);
+
+  const visibleTopTabs = TOP_TABS.filter(({ id }) => showToday || id !== "today");
+  const domIdOf = (id: CommunityNavTab) =>
+    `community-tab-${id === "all" ? "partners" : id === "today" ? "matches" : id}`;
+  /** Roving tabs: inactive tabs are tabIndex -1, so arrows are how a keyboard reaches them. */
+  const moveTab = (e: React.KeyboardEvent, from: CommunityNavTab) => {
+    const step =
+      e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    const ids = visibleTopTabs.map((tab) => tab.id);
+    let target: CommunityNavTab | undefined;
+    if (step) target = ids[(ids.indexOf(from) + step + ids.length) % ids.length];
+    else if (e.key === "Home") target = ids[0];
+    else if (e.key === "End") target = ids[ids.length - 1];
+    if (!target) return;
+    e.preventDefault();
+    const partnersAlready = target === "all" && PARTNER_VIEWS.indexOf(activeTab) >= 0;
+    if (!partnersAlready) onTabChange(target);
+    document.getElementById(domIdOf(target))?.focus();
+  };
 
   return (
     <div className="community-subnav">
@@ -156,7 +184,7 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
             aria-label={t("communityMain.tabs.label") || "Community tabs"}
             className="flex items-center gap-2 flex-nowrap"
           >
-            {TOP_TABS.filter(({ id }) => showToday || id !== "today").map(({ id, copyKey, fallback }) => {
+            {visibleTopTabs.map(({ id, copyKey, fallback }) => {
               const active =
                 id === "all" ? PARTNER_VIEWS.indexOf(activeTab) >= 0 : activeTab === id;
               return (
@@ -164,11 +192,12 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
                   key={id}
                   type="button"
                   role="tab"
-                  id={`community-tab-${id === "all" ? "partners" : id === "today" ? "matches" : id}`}
+                  id={domIdOf(id)}
                   aria-selected={active}
                   tabIndex={active ? 0 : -1}
                   ref={active ? activeRef : undefined}
                   className={`community-subnav__btn shrink-0 ${active ? "community-subnav__btn--active" : ""}`}
+                  onKeyDown={(e) => moveTab(e, id)}
                   onClick={() => {
                     // Partners keeps whichever view the member was already on.
                     if (id === "all" && PARTNER_VIEWS.indexOf(activeTab) >= 0) return;
@@ -181,48 +210,6 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
             })}
           </div>
 
-          <Link
-            to="/community/nearby"
-            className="community-subnav__btn community-subnav__btn--icon shrink-0 no-underline"
-          >
-            <span className="community-subnav__icon">
-              <MapPin size={14} />
-            </span>
-            <span>{t("communityMain.subnav.nearby") || "Nearby"}</span>
-          </Link>
-          <Link
-            to="/topics"
-            className="community-subnav__btn community-subnav__btn--icon shrink-0 no-underline"
-          >
-            <span className="community-subnav__icon">
-              <Hash size={14} />
-            </span>
-            <span>{t("communityMain.subnav.topics") || "Topics"}</span>
-          </Link>
-          {cityGendersOn && (
-            <>
-              <Link
-                to="/community/city"
-                data-testid="subnav-city"
-                className="community-subnav__btn community-subnav__btn--icon shrink-0 no-underline"
-              >
-                <span className="community-subnav__icon">
-                  <Building2 size={14} />
-                </span>
-                <span>{t("communityMain.subnav.city") || "City"}</span>
-              </Link>
-              <Link
-                to="/community/genders"
-                data-testid="subnav-genders"
-                className="community-subnav__btn community-subnav__btn--icon shrink-0 no-underline"
-              >
-                <span className="community-subnav__icon">
-                  <Users size={14} />
-                </span>
-                <span>{t("communityMain.subnav.genders") || "Genders"}</span>
-              </Link>
-            </>
-          )}
         </div>
 
         {PARTNER_VIEWS.indexOf(activeTab) >= 0 && (
@@ -252,6 +239,45 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
                 </button>
               );
             })}
+            {/* Chips (2026-10-31): Nearby is its own page; the rest write the
+                same filter fields as the sheet, so the two never disagree. */}
+            <Link
+              to="/community/nearby"
+              data-testid="chip-nearby"
+              className="inline-flex shrink-0 items-center gap-1 rounded-full border border-gray-200 px-3 py-1 text-sm font-medium text-gray-600 no-underline hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
+            >
+              <MapPin size={13} />
+              <span>{t("communityMain.subnav.nearby") || "Nearby"}</span>
+            </Link>
+            {onFiltersPatch &&
+              ([
+                ["sameCity", t("communityMain.tabs.sameCity") || "Same city", Boolean(filters.sameCity), { sameCity: !filters.sameCity || undefined }],
+                ["women", t("communityMain.tabs.women") || "Women", filters.gender === "female", { gender: filters.gender === "female" ? undefined : "female" }],
+                ["men", t("communityMain.tabs.men") || "Men", filters.gender === "male", { gender: filters.gender === "male" ? undefined : "male" }],
+              ] as [string, string, boolean, Partial<CommunityFilters>][]).map(([id, label, on, patch]) => (
+                <button
+                  key={id}
+                  type="button"
+                  data-testid={`chip-${id}`}
+                  aria-pressed={on}
+                  onClick={() => onFiltersPatch(patch)}
+                  className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium transition-colors ${
+                    on
+                      ? "border-teal-500 bg-teal-50 text-teal-700 dark:bg-teal-500/15 dark:text-teal-200"
+                      : "border-gray-200 text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
+                  }`}
+                >
+                  <span>{label}</span>
+                </button>
+              ))}
+            {onFiltersPatch && (
+              <TopicChip
+                topics={topicOptions}
+                selected={filters.topics && filters.topics.length === 1 ? filters.topics[0] : undefined}
+                label={t("communityMain.tabs.topic") || "Topic"}
+                onPick={(id) => onFiltersPatch({ topics: id ? [id] : undefined })}
+              />
+            )}
           </div>
         )}
 
@@ -259,6 +285,21 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
           {/* Governed only by its own guard -- it must not vanish just
               because the search box or filter button is hidden on a tab
               like "For you". */}
+          {/* Waves inbox (it was a page nothing linked to), with the unread count. */}
+          <Link
+            to="/waves"
+            data-testid="community-waves-link"
+            className="community-subnav__btn community-subnav__btn--icon shrink-0 no-underline relative"
+            aria-label={t("waves.title") || "Waves"}
+            title={t("waves.title") || "Waves"}
+          >
+            <span aria-hidden>👋</span>
+            {wavesUnread > 0 && (
+              <span className="ml-1 rounded-full bg-red-500 text-white text-[11px] leading-none px-1.5 py-0.5">
+                {wavesUnread > 99 ? "99+" : wavesUnread}
+              </span>
+            )}
+          </Link>
           {typeof visitorsCount === "number" && visitorsCount > 0 && (
             <Link
               to="/visitors"
@@ -336,3 +377,58 @@ const CommunitySubNav: React.FC<CommunitySubNavProps> = ({
 };
 
 export default CommunitySubNav;
+
+/** "Topic ▾": a small menu of topics; picking the selected one clears it. */
+const TopicChip: React.FC<{
+  topics: { id: string; name: string }[];
+  selected?: string;
+  label: string;
+  onPick: (id: string | undefined) => void;
+}> = ({ topics, selected, label, onPick }) => {
+  const [open, setOpen] = useState(false);
+  const name = topics.find((topic) => topic.id === selected)?.name;
+  return (
+    <div className="relative shrink-0">
+      <button
+        type="button"
+        data-testid="chip-topic"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-pressed={Boolean(selected)}
+        onClick={() => setOpen((was) => !was)}
+        className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium transition-colors ${
+          selected
+            ? "border-teal-500 bg-teal-50 text-teal-700 dark:bg-teal-500/15 dark:text-teal-200"
+            : "border-gray-200 text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
+        }`}
+      >
+        <Hash size={13} />
+        <span>{name || label}</span>
+      </button>
+      {open && (
+        <ul
+          role="listbox"
+          aria-label={label}
+          className="absolute z-20 mt-1 max-h-64 w-48 overflow-auto rounded-xl border border-gray-200 bg-white p-1 shadow-lg dark:border-gray-700 dark:bg-gray-900"
+        >
+          {topics.map((topic) => (
+            <li key={topic.id}>
+              <button
+                type="button"
+                role="option"
+                aria-selected={topic.id === selected}
+                onClick={() => {
+                  setOpen(false);
+                  onPick(topic.id === selected ? undefined : topic.id);
+                }}
+                className="w-full rounded-lg px-3 py-1.5 text-left text-sm hover:bg-gray-50 dark:hover:bg-white/5"
+              >
+                {topic.name}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
