@@ -32,6 +32,7 @@ Profile follow summary (2026-11-12)
 - [x] Profile reads take `followersCount` / `followingCount` and `isFollowing` from the server (backend followSummary, deployed a4d22de) for every viewer; the follower id lists are only a fallback for older servers. Unblocks backend step 2: dropping follower lists from other people's profiles.
 - [x] StoryViewer already reads `myReaction` and `poll.userVoteIndex` (backend item was stale).
 - [ ] Deploy, then tell the backend it may drop `followers`/`following` arrays from `/auth/users/:id/public` for non-owners.
+- [x] Composer sends no `language` until the author (or a prompt) picks one; the server files it by the caption / native language (backend 0ac5b2f). Was English for 152 of 157 posts.
 
 Web announcements (plan 2026-10-13)
 - [x] Data layer: app-config `platform`/`lang` args, `webTargetFor` link mapping, dismissals storage, `useWebAnnouncements` hook.
