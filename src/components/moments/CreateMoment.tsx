@@ -1,6 +1,7 @@
 import React, {
   ChangeEvent,
   FormEvent,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -155,6 +156,16 @@ const CreateMoment: React.FC = () => {
   const [language, setLanguage] = useState<string>(
     () => promptLanguageCode(initialHandoff) || "en"
   );
+  // Until the author (or a prompt) picks a language, none is sent and the
+  // server files the moment by its caption / the author's native language;
+  // an English default put 152 of 157 posts under `en`.
+  const [languageChosen, setLanguageChosen] = useState<boolean>(
+    () => Boolean(promptLanguageCode(initialHandoff))
+  );
+  const chooseLanguage = useCallback((code: string) => {
+    setLanguage(code);
+    setLanguageChosen(true);
+  }, []);
   const [category, setCategory] = useState<string>("general");
   const [scheduledFor, setScheduledFor] = useState<string>(""); // datetime-local; "" = now
   const schedulingEnabled = useMomentSchedulingEnabled();
@@ -194,8 +205,8 @@ const CreateMoment: React.FC = () => {
     setAnsweredPrompt(next);
     setDescription((current) => (current.trim() === "" ? next.text : current));
     const code = promptLanguageCode(handoff);
-    if (code) setLanguage(code);
-  }, [routerLocation.key, routerLocation.state]);
+    if (code) chooseLanguage(code);
+  }, [routerLocation.key, routerLocation.state, chooseLanguage]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -280,9 +291,9 @@ const CreateMoment: React.FC = () => {
         mood,
         tags,
         privacy,
-        language,
         category,
       };
+      if (languageChosen) payload.language = language;
       // Only while the server enforces scheduling: otherwise it would post now.
       const scheduledIso = schedulingEnabled && scheduledFor ? localInputToIso(scheduledFor) : null;
       if (scheduledIso) payload.scheduledFor = scheduledIso;
@@ -722,7 +733,7 @@ const CreateMoment: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm p-4">
           <div className="grid grid-cols-2 gap-4">
             <CategoryField value={category} onChange={setCategory} />
-            <LanguageField value={language} onChange={setLanguage} />
+            <LanguageField value={language} onChange={chooseLanguage} />
           </div>
 
           {/* Tag Input */}

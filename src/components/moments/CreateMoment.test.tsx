@@ -64,10 +64,11 @@ it("posts a plain moment with today's defaults", async () => {
       mood: "",
       tags: [],
       privacy: "public",
-      language: "en",
       category: "general",
     })
   );
+  // No language picked: none is sent, the server files it by the caption.
+  expect(payload()).not.toHaveProperty("language");
   // The backend takes the author from the session, never the body.
   expect(payload()).not.toHaveProperty("user");
   // The app has no title; the composer no longer collects or sends one (moments#6).
