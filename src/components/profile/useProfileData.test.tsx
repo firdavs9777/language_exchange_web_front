@@ -154,12 +154,29 @@ it("counts from followersCount/followingCount when the lists are absent", () => 
   expect(result.current.isFollowing).toBe(false);
 });
 
-it("prefers the lists when both are present (signed-in viewers)", () => {
+it("prefers the server's counts and isFollowing over the lists", () => {
+  // The lists are leaving other people's profiles; followSummary is the source.
   mockGetPublicProfile.mockReturnValue({
     ...idle,
-    data: { data: { _id: "u2", followers: ["me", "x"], following: [], followersCount: 99 } },
+    data: {
+      data: {
+        _id: "u2", followers: ["x"], following: [],
+        followersCount: 99, followingCount: 4, isFollowing: true,
+      },
+    },
   });
   const { result } = renderHook(() => useProfileData("u2"), { wrapper: wrapper("me") });
-  expect(result.current.stats.followers).toBe(2);
+  expect(result.current.stats.followers).toBe(99);
+  expect(result.current.stats.following).toBe(4);
   expect(result.current.isFollowing).toBe(true);
+});
+
+it("reads isFollowing: false without any follower list", () => {
+  mockGetPublicProfile.mockReturnValue({
+    ...idle,
+    data: { data: { _id: "u2", followersCount: 3, followingCount: 1, isFollowing: false } },
+  });
+  const { result } = renderHook(() => useProfileData("u2"), { wrapper: wrapper("me") });
+  expect(result.current.isFollowing).toBe(false);
+  expect(result.current.stats.followers).toBe(3);
 });

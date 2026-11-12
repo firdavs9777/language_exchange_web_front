@@ -36,15 +36,15 @@ function countOf(value: any): number {
 }
 
 /**
- * A follower/following figure from whatever the endpoint sent. Signed-in
- * readers get the id lists (isFollowing needs them); signed-out readers of
- * /:id/public get `followersCount` / `followingCount` instead (backend
- * P1-PRIV-1 drops the lists for anonymous viewers). The list wins when both
- * are there; a server from before that change sends lists to everyone.
+ * A follower/following figure from whatever the endpoint sent. Profile reads
+ * now carry `followersCount` / `followingCount` for every viewer (backend
+ * followSummary, 2026-11-11), and the count wins: the id lists are on their
+ * way out of other people's profiles. A server from before that sends only
+ * the lists, so they remain the fallback.
  */
 function statOf(list: any, count: any): number {
-  if (Array.isArray(list)) return list.length;
-  return countOf(count);
+  if (typeof count === "number" && isFinite(count)) return count;
+  return countOf(list);
 }
 
 function idOf(entry: any): string {
@@ -65,9 +65,9 @@ function idOf(entry: any): string {
  * gifting level are dropped when the owner turned them off). Both endpoints
  * return `{ success, data }`, so a single parser covers them.
  *
- * Follow state is derived from the target's own `followers` array rather than
- * from a second request: the array is already in the response, and a separate
- * source would let the badge and the button disagree.
+ * Follow state is the server's `isFollowing` (sent to signed-in viewers with
+ * the profile, so the badge and the button never disagree). Older servers
+ * don't send it; then it's derived from the target's `followers` array.
  */
 export default function useProfileData(userId?: string): ProfileData {
   const viewerId = useSelector(
@@ -117,7 +117,9 @@ export default function useProfileData(userId?: string): ProfileData {
   );
 
   const isFollowing = useMemo(() => {
-    if (isOwn || !viewerId || !user || !Array.isArray(user.followers)) return false;
+    if (isOwn || !viewerId || !user) return false;
+    if (typeof user.isFollowing === "boolean") return user.isFollowing;
+    if (!Array.isArray(user.followers)) return false;
     return user.followers.some((entry: any) => idOf(entry) === viewerId);
   }, [isOwn, viewerId, user]);
 
