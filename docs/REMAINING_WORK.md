@@ -28,6 +28,11 @@ backend `language_exchange_backend_application/docs/REMAINING_WORK.md` (server e
 
 ## 4. Code work — open
 
+Profile follow summary (2026-11-12)
+- [x] Profile reads take `followersCount` / `followingCount` and `isFollowing` from the server (backend followSummary, deployed a4d22de) for every viewer; the follower id lists are only a fallback for older servers. Unblocks backend step 2: dropping follower lists from other people's profiles.
+- [x] StoryViewer already reads `myReaction` and `poll.userVoteIndex` (backend item was stale).
+- [ ] Deploy, then tell the backend it may drop `followers`/`following` arrays from `/auth/users/:id/public` for non-owners.
+
 Web announcements (plan 2026-10-13)
 - [x] Data layer: app-config `platform`/`lang` args, `webTargetFor` link mapping, dismissals storage, `useWebAnnouncements` hook.
 - [x] Popup component + banner component (`AnnouncementModal` hero card, `AnnouncementBanner` floating card, `useAnnouncementActions`, 5 `announcements.*` strings in 18 locales); not yet mounted.
